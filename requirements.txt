@@ -1,3 +1,4 @@
+Django==1.6.5
 PopIt-Python==0.1.7
 PyYAML==3.11
 Unidecode==0.04.16
