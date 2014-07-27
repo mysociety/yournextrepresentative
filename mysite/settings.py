@@ -10,14 +10,20 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+configuration_file = os.path.join(
+    BASE_DIR, 'conf', 'general.yml'
+)
+with open(configuration_file) as f:
+    conf = yaml.load(f)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'cyttslvoz3ep-5pi!v23b!sl@e_ji1w1nyviz)0+i%4hsvt@+h'
+SECRET_KEY = conf['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
