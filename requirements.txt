@@ -1,0 +1,8 @@
+PopIt-Python==0.1.7
+PyYAML==3.11
+Unidecode==0.04.16
+argparse==1.2.1
+python-slugify==0.0.7
+requests==0.14.2
+slumber==0.6.0
+wsgiref==0.1.2

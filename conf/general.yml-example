@@ -1,0 +1,4 @@
+POPIT_INSTANCE: yournextmp
+POPIT_HOSTNAME: popit.mysociety.org
+POPIT_USER: someone@example.org
+POPIT_PASSWORD: popitinstancepassword
