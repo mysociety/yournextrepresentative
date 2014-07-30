@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <link rel="stylesheet"e href="{% static 'candidates/style.css' %}" />
+    <title>{% block title %}Help find candidates for the 2015 UK general election!{% endblock %}</title>
+</head>
+
+<body>
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+</body>
+</html>
