@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load staticfiles %}
-    <link rel="stylesheet"e href="{% static 'candidates/style.css' %}" />
+    {% load compressed %}
+    {% compressed_css 'all' %}
     <title>{% block title %}Help find candidates for the 2015 UK general election!{% endblock %}</title>
 </head>
 
