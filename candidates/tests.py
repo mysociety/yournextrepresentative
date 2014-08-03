@@ -1,3 +1,8 @@
-from django.test import TestCase
+from django_webtest import WebTest
 
-# Create your tests here.
+class TestConstituencyFinderView(WebTest):
+
+    def test_front_page(self):
+        response = self.app.get('/')
+        # Check that there is a form on that page
+        form = response.form

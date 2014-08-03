@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_nose',
     'pipeline',
     'candidates',
 )
@@ -107,3 +108,5 @@ PIPELINE_CSS = {
 
 PIPELINE_JS = {
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
