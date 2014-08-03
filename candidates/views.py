@@ -57,6 +57,7 @@ class ConstituencyFinderView(FormView):
             context['bad_postcode'] = bad_postcode
         return context
 
+
 class ConstituencyDetailView(TemplateView):
     template_name = 'candidates/constituency.html'
 
