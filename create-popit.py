@@ -11,7 +11,7 @@ import requests
 import slumber
 import sys
 
-from popit import PopIt
+from popit_api import PopIt
 from slugify import slugify
 import yaml
 
