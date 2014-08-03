@@ -3,6 +3,10 @@
 {% block content %}
   <h1>hellooooo</h1>
 
+  {% if bad_postcode %}
+  <div class="postcode-form-error">'{{ bad_postcode }}' was not a valid postcode</div>
+  {% endif %}
+
   <p>Enter your postcode below:</p>
 
   <form action="" method="post">
