@@ -58,6 +58,11 @@ class ConstituencyFinderView(FormView):
         return context
 
 
+def get_candidate_ids(api, candidate_list_id):
+    candidate_data = api.organizations(candidate_list_id).get()['result']
+    return [ m['person_id'] for m in candidate_data['memberships'] ]
+
+
 class ConstituencyDetailView(TemplateView):
     template_name = 'candidates/constituency.html'
 
@@ -67,6 +72,7 @@ class ConstituencyDetailView(TemplateView):
         constituency_name = kwargs['constituency_name']
 
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
+        new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
 
         api = PopIt(
             instance=settings.POPIT_INSTANCE,
@@ -77,13 +83,20 @@ class ConstituencyDetailView(TemplateView):
             append_slash=False,
         )
 
-        old_candidate_list_data = api.organizations(old_candidate_list_id).get()
+        old_candidate_ids = get_candidate_ids(api, old_candidate_list_id)
+        new_candidate_ids = get_candidate_ids(api, new_candidate_list_id)
+
+        person_id_to_person_data = {
+            person_id: api.persons(person_id).get()['result']
+            for person_id in set(old_candidate_ids + new_candidate_ids)
+        }
 
         context['candidates_2010'] = [
-            api.persons(membership['person_id']).get()['result']
-            for membership in old_candidate_list_data['result']['memberships']
+            person_id_to_person_data[p_id] for p_id in old_candidate_ids
         ]
-
+        context['candidates_2015'] = [
+            person_id_to_person_data[p_id] for p_id in new_candidate_ids
+        ]
         context['constituency_name'] = constituency_name
 
         return context
