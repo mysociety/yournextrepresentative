@@ -19,6 +19,13 @@ configuration_file = os.path.join(
 with open(configuration_file) as f:
     conf = yaml.load(f)
 
+# Load the credentials for the PopIt instance
+
+POPIT_INSTANCE = conf['POPIT_INSTANCE']
+POPIT_HOSTNAME = conf['POPIT_HOSTNAME']
+POPIT_USER = conf['POPIT_USER']
+POPIT_PASSWORD = conf['POPIT_PASSWORD']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 

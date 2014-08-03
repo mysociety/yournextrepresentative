@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>a page about the constituency</h1>
+  <h1>Candidates for {{ constituency_name }}</h1>
+
+  <h3>Known candidates for the 2015 general election</h3>
+
+  <h3>Is a candidate from the 2010 election standing again?</h3>
+
+    {% for c in candidates_2010 %}
+        <form>
+          {{ c.name }}
+          <input type="submit" value="Standing again?" />
+        </form>
+    {% endfor %}
 
 {% endblock %}

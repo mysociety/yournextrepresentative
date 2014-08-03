@@ -1,8 +1,10 @@
 import json
 
+from popit_api import PopIt
 from slugify import slugify
 import requests
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -57,3 +59,30 @@ class ConstituencyFinderView(FormView):
 
 class ConstituencyDetailView(TemplateView):
     template_name = 'candidates/constituency.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
+
+        constituency_name = kwargs['constituency_name']
+
+        old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
+
+        api = PopIt(
+            instance=settings.POPIT_INSTANCE,
+            hostname=settings.POPIT_HOSTNAME,
+            api_version='v0.1',
+            user=settings.POPIT_USER,
+            password=settings.POPIT_PASSWORD,
+            append_slash=False,
+        )
+
+        old_candidate_list_data = api.organizations(old_candidate_list_id).get()
+
+        context['candidates_2010'] = [
+            api.persons(membership['person_id']).get()['result']
+            for membership in old_candidate_list_data['result']['memberships']
+        ]
+
+        context['constituency_name'] = constituency_name
+
+        return context
