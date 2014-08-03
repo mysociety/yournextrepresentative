@@ -2,4 +2,13 @@
 
 {% block content %}
   <h1>hellooooo</h1>
+
+  <p>Enter your postcode below:</p>
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+  </form>
+
 {% endblock %}
