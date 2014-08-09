@@ -20,6 +20,10 @@ class PopItPerson(object):
     def name(self):
         return self.popit_data['name']
 
+    @property
+    def id(self):
+        return self.popit_data['id']
+
     def _update_party(self):
         for m in self.popit_data['memberships']:
             # FIXME: note that this fetches a huge object from the
