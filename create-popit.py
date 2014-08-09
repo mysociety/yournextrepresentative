@@ -108,6 +108,7 @@ try:
         # FIXME: add identifiers
         api.organizations.post({
             'id': slug,
+            'classification': 'Party',
             'name': party['name']
         })
         party_id_to_organisation[party_id] = slug
