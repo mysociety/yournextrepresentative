@@ -51,4 +51,5 @@ class TestConstituencyDetailView(WebTest):
 
     def test_any_constituency_page(self):
         # Just a smoke test for the moment:
-        self.app.get('/constituency/Dulwich%20and%20West%20Norwood')
+        response = self.app.get('/constituency/Dulwich%20and%20West%20Norwood')
+        response.mustcontain('Tessa Jowell (Labour Party)')
