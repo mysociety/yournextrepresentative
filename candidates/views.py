@@ -14,6 +14,21 @@ from django.views.generic import FormView, TemplateView
 from .forms import PostcodeForm
 from .models import PopItPerson
 
+
+class PopItApiMixin(object):
+
+    def __init__(self, *args, **kwargs):
+        super(PopItApiMixin, self).__init__(*args, **kwargs)
+        self.api = PopIt(
+            instance=settings.POPIT_INSTANCE,
+            hostname=settings.POPIT_HOSTNAME,
+            api_version='v0.1',
+            user=settings.POPIT_USER,
+            password=settings.POPIT_PASSWORD,
+            append_slash=False,
+        )
+
+
 def get_candidate_list_popit_id(constituency_name, year):
     """Return the PopIt organization ID for a constituency's candidate list
 
@@ -63,7 +78,7 @@ def get_candidate_ids(api, candidate_list_id):
     return [ m['person_id'] for m in candidate_data['memberships'] ]
 
 
-class ConstituencyDetailView(TemplateView):
+class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
     def get_context_data(self, **kwargs):
@@ -74,20 +89,11 @@ class ConstituencyDetailView(TemplateView):
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
 
-        api = PopIt(
-            instance=settings.POPIT_INSTANCE,
-            hostname=settings.POPIT_HOSTNAME,
-            api_version='v0.1',
-            user=settings.POPIT_USER,
-            password=settings.POPIT_PASSWORD,
-            append_slash=False,
-        )
-
-        old_candidate_ids = get_candidate_ids(api, old_candidate_list_id)
-        new_candidate_ids = get_candidate_ids(api, new_candidate_list_id)
+        old_candidate_ids = get_candidate_ids(self.api, old_candidate_list_id)
+        new_candidate_ids = get_candidate_ids(self.api, new_candidate_list_id)
 
         person_id_to_person_data = {
-            person_id: PopItPerson.create_from_popit(api, person_id)
+            person_id: PopItPerson.create_from_popit(self.api, person_id)
             for person_id in set(old_candidate_ids + new_candidate_ids)
         }
 
