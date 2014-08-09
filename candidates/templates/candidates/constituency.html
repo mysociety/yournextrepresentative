@@ -16,7 +16,7 @@
 
     {% for c in candidates_2010 %}
         <form>
-          {{ c.name }} ({{ c.get_party.name }})
+          {{ c.name }} ({{ c.party.name }})
           <input type="submit" value="Standing again?" />
         </form>
     {% endfor %}

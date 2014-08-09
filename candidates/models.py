@@ -7,17 +7,20 @@ class PopItPerson(object):
     def __init__(self, api=None, popit_data=None):
         self.popit_data = popit_data
         self.api = api
+        self.party = None
 
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
         popit_data = api.persons(popit_person_id).get()['result']
-        return cls(api=api, popit_data=popit_data)
+        new_person = cls(api=api, popit_data=popit_data)
+        new_person._update_party()
+        return new_person
 
     @property
     def name(self):
         return self.popit_data['name']
 
-    def get_party(self):
+    def _update_party(self):
         for m in self.popit_data['memberships']:
             # FIXME: note that this fetches a huge object from the
             # API, since the organisation object for a party has a
@@ -34,5 +37,5 @@ class PopItPerson(object):
             # information for party memberships either, so let's deal
             # with that later.
             if o['classification'] == 'Party':
-                return o
-        return None
+                self.party = o
+                return
