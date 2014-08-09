@@ -12,7 +12,7 @@ from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView
 
 from .forms import PostcodeForm
-
+from .models import PopItPerson
 
 def get_candidate_list_popit_id(constituency_name, year):
     """Return the PopIt organization ID for a constituency's candidate list
@@ -87,7 +87,7 @@ class ConstituencyDetailView(TemplateView):
         new_candidate_ids = get_candidate_ids(api, new_candidate_list_id)
 
         person_id_to_person_data = {
-            person_id: api.persons(person_id).get()['result']
+            person_id: PopItPerson.create_from_popit(api, person_id)
             for person_id in set(old_candidate_ids + new_candidate_ids)
         }
 
