@@ -127,6 +127,7 @@ class CandidacyView(PopItApiMixin, FormView):
         person_id = form.cleaned_data['person_id']
         try:
             candidate_list_data = self.api.organizations(candidate_list_id).get()['result']
+            candidate_list_name = candidate_list_data['name']
             self.api.persons(person_id).get()
         except HttpClientError as e:
             if e.response.status_code == 404:
@@ -138,7 +139,6 @@ class CandidacyView(PopItApiMixin, FormView):
             'organization_id': candidate_list_id,
             'person_id': person_id,
         })
-        candidate_list_name = candidate_list_data['name']
         m = re.search(r'^Candidates for (.*) in \d+$', candidate_list_name)
         if m:
             constituency_name = m.group(1)
