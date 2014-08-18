@@ -14,18 +14,20 @@
 
   <h3>Is a candidate from the 2010 election standing again?</h3>
 
-    {% for c in candidates_2010 %}
-        {% comment %}
-           FIXME: Don't show the "Standing again?" form if
-           they're already in the new candidate list.
-        {% endcomment %}
-        <form method="post" action="{% url 'candidacy-create' %}">
-          {{ c.name }} ({{ c.party.name }})
-          {% csrf_token %}
-          <input type="hidden" name="person_id" value="{{ c.id }}"/>
-          <input type="hidden" name="candidate_list_id" value="{{ new_candidate_list_id }}"/>
-          <input type="submit" value="Standing again?" />
-        </form>
+  <ul>
+    {% for c, already_standing in candidates_2010 %}
+      <li>
+        {{ c.name }} ({{ c.party.name }})
+        {% if not already_standing %}
+          <form method="post" action="{% url 'candidacy-create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="person_id" value="{{ c.id }}"/>
+            <input type="hidden" name="candidate_list_id" value="{{ new_candidate_list_id }}"/>
+            <input type="submit" value="Standing again?" />
+          </form>
+        {% endif %}
+      </li>
     {% endfor %}
+  </ul>
 
 {% endblock %}

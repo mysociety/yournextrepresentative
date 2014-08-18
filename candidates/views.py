@@ -106,7 +106,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['new_candidate_list_id'] = new_candidate_list_id
 
         context['candidates_2010'] = [
-            person_id_to_person_data[p_id] for p_id in old_candidate_ids
+            (person_id_to_person_data[p_id], p_id in new_candidate_ids)
+            for p_id in old_candidate_ids
         ]
         context['candidates_2015'] = [
             person_id_to_person_data[p_id] for p_id in new_candidate_ids
