@@ -5,12 +5,14 @@
 
   <h3>Known candidates for the 2015 general election</h3>
 
+  <ul>
     {% for c in candidates_2015 %}
-      <p>{{ c.name }}</p>
+      <li>{{ c.name }}</li>
     {% empty %}
-      <p>We don't know of any candidates in {{ constituency_name }}
-      for the 2015 general election yet.</p>
+      <li>We don't know of any candidates in {{ constituency_name }}
+      for the 2015 general election yet.</li>
     {% endfor %}
+  </ul>
 
   <h3>Is a candidate from the 2010 election standing again?</h3>
 
