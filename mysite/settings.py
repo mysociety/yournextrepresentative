@@ -23,6 +23,7 @@ with open(configuration_file) as f:
 
 POPIT_INSTANCE = conf['POPIT_INSTANCE']
 POPIT_HOSTNAME = conf['POPIT_HOSTNAME']
+POPIT_PORT = conf.get('POPIT_PORT', 80)
 POPIT_USER = conf['POPIT_USER']
 POPIT_PASSWORD = conf['POPIT_PASSWORD']
 

@@ -25,6 +25,7 @@ try:
     api = PopIt(
         instance=conf['POPIT_INSTANCE'],
         hostname=conf['POPIT_HOSTNAME'],
+        port=conf.get('POPIT_PORT', 80),
         api_version='v0.1',
         user=conf['POPIT_USER'],
         password=conf['POPIT_PASSWORD'],

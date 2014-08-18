@@ -24,6 +24,7 @@ class PopItApiMixin(object):
         self.api = PopIt(
             instance=settings.POPIT_INSTANCE,
             hostname=settings.POPIT_HOSTNAME,
+            port=settings.POPIT_PORT,
             api_version='v0.1',
             user=settings.POPIT_USER,
             password=settings.POPIT_PASSWORD,
