@@ -134,11 +134,13 @@ class CandidacyView(PopItApiMixin, FormView):
                 return HttpResponseBadRequest('Unknown organization_id or person_id')
             else:
                 raise
-        # Try to create the new membership
-        self.api.memberships.post({
-            'organization_id': candidate_list_id,
-            'person_id': person_id,
-        })
+        # Check that that membership doesn't already exist:
+        if not membership_exists(self.api, person_id, candidate_list_id):
+            # Try to create the new membership
+            self.api.memberships.post({
+                'organization_id': candidate_list_id,
+                'person_id': person_id,
+            })
         m = re.search(r'^Candidates for (.*) in \d+$', candidate_list_name)
         if m:
             constituency_name = m.group(1)
