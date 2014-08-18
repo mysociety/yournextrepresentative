@@ -14,6 +14,6 @@ urlpatterns = patterns('',
         name='constituency'),
     url(r'^candidacy$',
         CandidacyView.as_view(),
-        name='candidacy'),
+        name='candidacy-create'),
     url(r'^admin/', include(admin.site.urls)),
 )

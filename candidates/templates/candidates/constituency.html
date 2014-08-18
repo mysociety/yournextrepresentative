@@ -19,7 +19,7 @@
            FIXME: Don't show the "Standing again?" form if
            they're already in the new candidate list.
         {% endcomment %}
-        <form method="post" action="{% url 'candidacy' %}">
+        <form method="post" action="{% url 'candidacy-create' %}">
           {{ c.name }} ({{ c.party.name }})
           {% csrf_token %}
           <input type="hidden" name="person_id" value="{{ c.id }}"/>
