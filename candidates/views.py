@@ -80,6 +80,9 @@ def get_members(api, organization_id):
     candidate_data = api.organizations(organization_id).get()['result']
     return [ m['person_id'] for m in candidate_data['memberships'] ]
 
+def membership_exists(api, person_id, organization_id):
+    return person_id in get_members(api, organization_id)
+
 
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
