@@ -11,7 +11,7 @@ class CandidacyForm(forms.Form):
         label='Person ID',
         max_length=256,
     )
-    candidate_list_id = forms.CharField(
+    organization_id = forms.CharField(
         label='Candidate List ID',
         max_length=256,
     )

@@ -117,32 +117,28 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         return context
 
 
-class CandidacyView(PopItApiMixin, FormView):
+class CandidacyMixin(object):
 
-    form_class = CandidacyForm
-
-    def form_valid(self, form):
+    def get_person_and_organization(self, form):
         # If either of these don't exist, an HttpClientError will be
         # thrown, which is fine for error checking at the moment
-        candidate_list_id = form.cleaned_data['candidate_list_id']
+        organization_id = form.cleaned_data['organization_id']
         person_id = form.cleaned_data['person_id']
         try:
-            candidate_list_data = self.api.organizations(candidate_list_id).get()['result']
-            candidate_list_name = candidate_list_data['name']
-            self.api.persons(person_id).get()
+            organization_data = self.api.organizations(organization_id).get()['result']
+            person_data = self.api.persons(person_id).get()['result']
         except HttpClientError as e:
             if e.response.status_code == 404:
                 return HttpResponseBadRequest('Unknown organization_id or person_id')
             else:
                 raise
-        # Check that that membership doesn't already exist:
-        if not membership_exists(self.api, person_id, candidate_list_id):
-            # Try to create the new membership
-            self.api.memberships.post({
-                'organization_id': candidate_list_id,
-                'person_id': person_id,
-            })
-        m = re.search(r'^Candidates for (.*) in \d+$', candidate_list_name)
+        return (person_data, organization_data)
+
+    def redirect_to_constituency(self, candidate_list_data):
+        m = re.search(
+            r'^Candidates for (.*) in \d+$',
+            candidate_list_data['name']
+        )
         if m:
             constituency_name = m.group(1)
             return HttpResponseRedirect(

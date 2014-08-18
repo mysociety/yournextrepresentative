@@ -22,7 +22,7 @@
           <form method="post" action="{% url 'candidacy-create' %}">
             {% csrf_token %}
             <input type="hidden" name="person_id" value="{{ c.id }}"/>
-            <input type="hidden" name="candidate_list_id" value="{{ new_candidate_list_id }}"/>
+            <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
             <input type="submit" value="Standing again?" />
           </form>
         {% endif %}
