@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.http import urlquote
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView, TemplateView, DeleteView
 
 from .forms import PostcodeForm, CandidacyForm
 from .models import PopItPerson
@@ -83,6 +83,12 @@ def get_members(api, organization_id):
 def membership_exists(api, person_id, organization_id):
     return person_id in get_members(api, organization_id)
 
+def delete_membership(api, person_id, organization_id):
+    candidate_data = api.organizations(organization_id).get()['result']
+    for m in candidate_data['memberships']:
+        if m['person_id'] == person_id:
+            api.memberships(m['id']).delete()
+
 
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -148,3 +154,34 @@ class CandidacyMixin(object):
         else:
             message = "Failed to parse the candidate_list_name '{0}'"
             raise Exception(message.format(candidate_list_name))
+
+
+class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
+
+    form_class = CandidacyForm
+
+    def form_valid(self, form):
+        person_data, organization_data = self.get_person_and_organization(form)
+        print json.dumps(person_data, indent=4)
+        person_id = person_data['id']
+        candidate_list_id = organization_data['id']
+        # Check that that membership doesn't already exist:
+        if not membership_exists(self.api, person_id, candidate_list_id):
+            # Try to create the new membership
+            self.api.memberships.post({
+                'organization_id': candidate_list_id,
+                'person_id': person_id,
+            })
+        return self.redirect_to_constituency(organization_data)
+
+
+class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
+
+    form_class = CandidacyForm
+
+    def form_valid(self, form):
+        person_data, organization_data = self.get_person_and_organization(form)
+        person_id = person_data['id']
+        candidate_list_id = organization_data['id']
+        delete_membership(self.api, person_id, candidate_list_id)
+        return self.redirect_to_constituency(organization_data)
