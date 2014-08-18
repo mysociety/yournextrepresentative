@@ -7,7 +7,15 @@
 
   <ul>
     {% for c in candidates_2015 %}
-      <li>{{ c.name }}</li>
+      <li>
+        {{ c.name }} ({{c.party.name }})
+        <form method="post" action="{% url 'candidacy-delete' %}">
+          {% csrf_token %}
+          <input type="hidden" name="person_id" value="{{ c.id }}"/>
+          <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
+          <input type="submit" value="Not actually standing?" />
+        </form>
+      </li>
     {% empty %}
       <li>We don't know of any candidates in {{ constituency_name }}
       for the 2015 general election yet.</li>
