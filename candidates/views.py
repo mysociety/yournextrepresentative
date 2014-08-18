@@ -76,8 +76,8 @@ class ConstituencyFinderView(FormView):
         return context
 
 
-def get_candidate_ids(api, candidate_list_id):
-    candidate_data = api.organizations(candidate_list_id).get()['result']
+def get_members(api, organization_id):
+    candidate_data = api.organizations(organization_id).get()['result']
     return [ m['person_id'] for m in candidate_data['memberships'] ]
 
 
@@ -92,8 +92,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
 
-        old_candidate_ids = get_candidate_ids(self.api, old_candidate_list_id)
-        new_candidate_ids = get_candidate_ids(self.api, new_candidate_list_id)
+        old_candidate_ids = get_members(self.api, old_candidate_list_id)
+        new_candidate_ids = get_members(self.api, new_candidate_list_id)
 
         person_id_to_person_data = {
             person_id: PopItPerson.create_from_popit(self.api, person_id)
