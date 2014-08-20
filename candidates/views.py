@@ -5,6 +5,7 @@ from slumber.exceptions import HttpClientError
 from popit_api import PopIt
 from slugify import slugify
 import requests
+from urlparse import urlunsplit
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -30,6 +31,17 @@ class PopItApiMixin(object):
             password=settings.POPIT_PASSWORD,
             append_slash=False,
         )
+
+    def get_search_url(self, collection, query):
+        port = settings.POPIT_PORT
+        instance_hostname = settings.POPIT_INSTANCE + \
+            '.' + settings.POPIT_HOSTNAME
+        if port != 80:
+            instance_hostname += ':' + str(port)
+        base_search_url = urlunsplit(
+            ('http', instance_hostname, '/api/v0.1/search/', '', '')
+        )
+        return base_search_url + collection + '?q=' + urlquote(query)
 
 
 def get_candidate_list_popit_id(constituency_name, year):
