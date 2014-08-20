@@ -20,6 +20,8 @@ from .models import PopItPerson
 
 class PopItApiMixin(object):
 
+    """This provides helper methods for manipulating data in a PopIt instance"""
+
     def __init__(self, *args, **kwargs):
         super(PopItApiMixin, self).__init__(*args, **kwargs)
         self.api = PopIt(
