@@ -14,8 +14,8 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, DeleteView
 
-from .forms import PostcodeForm, CandidacyForm, NewPersonForm
-from .models import PopItPerson
+from .forms import PostcodeForm, CandidacyForm, NewPersonForm, ConstituencyForm
+from .models import PopItPerson, MapItData
 
 
 class PopItApiMixin(object):
@@ -105,6 +105,7 @@ class ConstituencyFinderView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyFinderView, self).get_context_data(**kwargs)
+        context['constituency_form'] = ConstituencyForm()
         bad_postcode = self.request.GET.get('bad_postcode')
         if bad_postcode:
             context['bad_postcode'] = bad_postcode

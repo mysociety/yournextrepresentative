@@ -1,9 +1,24 @@
+from .models import MapItData
+
 from django import forms
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
         label='Postcode',
         max_length=20
+    )
+
+class ConstituencyForm(forms.Form):
+    constituency = forms.ChoiceField(
+        label='Constituency',
+        choices=sorted(
+            [
+                (mapit_id, constituency['name'])
+                for mapit_id, constituency
+                in MapItData.constituencies_2010.items()
+            ],
+            key=lambda t: t[1]
+        )
     )
 
 class CandidacyForm(forms.Form):

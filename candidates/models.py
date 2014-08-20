@@ -1,6 +1,18 @@
+import json
+from os.path import dirname, join, abspath
+
 from django.db import models
 
-# Create your models here.
+data_directory = abspath(join(dirname(__file__), '..', 'data'))
+
+def get_mapit_constituencies(basename):
+    with open(join(data_directory, basename)) as f:
+        return json.load(f)
+
+
+class MapItData(object):
+    constituencies_2010 = get_mapit_constituencies('mapit-WMC-generation-13.json')
+
 
 class PopItPerson(object):
 
