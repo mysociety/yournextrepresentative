@@ -15,3 +15,42 @@ class CandidacyForm(forms.Form):
         label='Candidate List ID',
         max_length=256,
     )
+
+class NewPersonForm(forms.Form):
+    name = forms.CharField(
+        label="Full name",
+        max_length=256,
+    )
+    party = forms.CharField(
+        label="Party",
+        max_length=256,
+    )
+    email = forms.CharField(
+        label="Email",
+        max_length=256,
+        required=False,
+    )
+    date_of_birth = forms.DateField(
+        label="Date of birth",
+        required=False,
+    )
+    wikipedia_url = forms.CharField(
+        label="Wikipedia URL",
+        max_length=256,
+        required=False,
+    )
+    homepage_url = forms.CharField(
+        label="Homepage URL",
+        max_length=256,
+        required=False,
+    )
+    twitter_username = forms.CharField(
+        label="Twitter username",
+        max_length=256,
+        required=False,
+    )
+    organization_id = forms.CharField(
+        label="The candidate lists's organization ID",
+        max_length=256,
+        widget=forms.HiddenInput(),
+    )

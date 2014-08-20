@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 from candidates.views import (ConstituencyFinderView,
-    ConstituencyDetailView, CandidacyView, CandidacyDeleteView)
+    ConstituencyDetailView, CandidacyView, CandidacyDeleteView, NewPersonView)
 
 admin.autodiscover()
 
@@ -18,5 +18,8 @@ urlpatterns = patterns('',
     url(r'^candidacy/delete$',
         CandidacyDeleteView.as_view(),
         name='candidacy-delete'),
+    url(r'^person$',
+        NewPersonView.as_view(),
+        name='person-create'),
     url(r'^admin/', include(admin.site.urls)),
 )

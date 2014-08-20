@@ -22,6 +22,22 @@
     {% endfor %}
   </ul>
 
+  <h4>Add a new candidate</h4>
+
+  <form method="post" action="{% url 'person-create' %}">
+    {% csrf_token %}
+    <ul>
+      {% for field in add_candidate_form.visible_fields %}
+        <li>
+          {{ field.errors }}
+          {{ field.label_tag }} {{ field }}
+        </li>
+      {% endfor %}
+      <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}">
+    </ul>
+    <input type="submit" value="Add new candidate">
+  </form>
+
   <h3>Is a candidate from the 2010 election standing again?</h3>
 
   <ul>

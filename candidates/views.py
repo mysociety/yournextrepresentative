@@ -14,7 +14,7 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, DeleteView
 
-from .forms import PostcodeForm, CandidacyForm
+from .forms import PostcodeForm, CandidacyForm, NewPersonForm
 from .models import PopItPerson
 
 
@@ -109,6 +109,21 @@ def create_membership_if_not_exists(api, person_id, organization_id):
             'person_id': person_id,
         })
 
+def normalize_party_name(original_party_name):
+    """Mangle the party name into a normalized form
+
+    >>> normalize_party_name('The Labour Party')
+    'labour'
+    >>> normalize_party_name('Labour Party')
+    'labour'
+    >>> normalize_party_name('Labour')
+    'labour'
+    """
+    result = original_party_name.lower()
+    result = re.sub(r'^\s*the\s+', '', result)
+    result = re.sub(r'\s+party\s*$', '', result)
+    return result.strip()
+
 
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -139,6 +154,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             person_id_to_person_data[p_id] for p_id in new_candidate_ids
         ]
         context['constituency_name'] = constituency_name
+
+        context['add_candidate_form'] = NewPersonForm()
 
         return context
 
@@ -175,6 +192,17 @@ class CandidacyMixin(object):
             message = "Failed to parse the candidate_list_name '{0}'"
             raise Exception(message.format(candidate_list_name))
 
+    def get_party(self, party_name):
+        search_url = self.get_search_url(
+            'organizations',
+            'classification:Party AND name:"{0}"'.format(party_name),
+        )
+        r = requests.get(search_url)
+        wanted_party_name = normalize_party_name(party_name)
+        for party in r.json['result']:
+            if wanted_party_name == normalize_party_name(party['name']):
+                return party
+        return None
 
 class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
 
@@ -199,4 +227,88 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
         person_id = person_data['id']
         candidate_list_id = organization_data['id']
         delete_membership(self.api, person_id, candidate_list_id)
+        return self.redirect_to_constituency(organization_data)
+
+def get_person_data_from_form(form, existing_data=None):
+    if existing_data is None:
+        result = {}
+    else:
+        result = existing_data
+    cleaned = form.cleaned_data
+    # First deal with fields that simply map to top level fields in
+    # Popolo.
+    for field_name in ('name', 'email', 'date_of_birth'):
+        if cleaned[field_name]:
+            result[field_name] = unicode(cleaned[field_name])
+    result['id'] = slugify(result['name'])
+    for link_type, field_name in (
+        ('wikipedia', 'wikipedia_url'),
+        ('homepage', 'homepage_url'),
+    ):
+        if cleaned[field_name]:
+            # Remove any existing links of that type:
+            new_links = [
+                l for l in result.get('links', [])
+                if l.get('note') != link_type
+            ]
+            new_links.append({
+                'note': link_type,
+                'url': cleaned[field_name]
+            })
+            result['links'] = new_links
+    # FIXME: do some DRY refactoring with this and the loop above
+    for contact_type, field_name in (
+        ('twitter', 'twitter_username'),
+    ):
+        if cleaned[field_name]:
+            new_contacts = [
+                c for c in result.get('contact_details', [])
+                if c.get('type') != contact_type
+            ]
+            new_contacts.append({
+                'type': contact_type,
+                'value': cleaned[field_name]
+            })
+            result['contact_details'] = new_contacts
+    return result
+
+
+class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
+    template_name = 'candidates/person.html'
+    form_class = NewPersonForm
+
+    def form_valid(self, form):
+        cleaned = form.cleaned_data
+        # Check that the candidate list organization exists:
+        organization_data = self.api.organizations(
+            form.cleaned_data['organization_id']
+        ).get()['result']
+        # Try to get an existing party with that name, if not, create
+        # a new one.
+        party_name = cleaned['party']
+        party_name = re.sub(r'\s+', ' ', party_name).strip()
+        party = self.get_party(party_name)
+        if not party:
+            # Then create a new party:
+            party = {
+                'id': slugify(party_name),
+                'name': party_name,
+                'classification': 'Party',
+            }
+            self.api.organizations.post(party)
+        person_data = get_person_data_from_form(form)
+        # Create that person:
+        person_result = self.api.persons.post(person_data)
+        # Create the party membership:
+        create_membership_if_not_exists(
+            self.api,
+            person_result['result']['id'],
+            party['id']
+        )
+        # Create the candidate list membership:
+        create_membership_if_not_exists(
+            self.api,
+            person_result['result']['id'],
+            organization_data['id'],
+        )
         return self.redirect_to_constituency(organization_data)
