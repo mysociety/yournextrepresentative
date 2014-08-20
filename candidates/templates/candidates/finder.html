@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>hellooooo</h1>
+  <h1>Do you know about UK election candidates?</h1>
+
+  <div class="subtitle">Help build a database of candidates for the 2015 general election!</div>
 
   {% if bad_postcode %}
   <div class="postcode-form-error">'{{ bad_postcode }}' was not a valid postcode</div>
   {% endif %}
 
-  <p>Enter your postcode below:</p>
+  <h2>Enter your postcode below:</h2>
 
   <form action="" method="post">
     {% csrf_token %}
