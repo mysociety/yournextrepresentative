@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'django_nose',
     'pipeline',
     'candidates',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
