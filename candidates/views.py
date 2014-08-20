@@ -43,6 +43,27 @@ class PopItApiMixin(object):
         )
         return base_search_url + collection + '?q=' + urlquote(query)
 
+    def get_members(self, organization_id):
+        candidate_data = self.api.organizations(organization_id).get()['result']
+        return [ m['person_id'] for m in candidate_data['memberships'] ]
+
+    def membership_exists(self, person_id, organization_id):
+        return person_id in self.get_members(organization_id)
+
+    def create_membership_if_not_exists(self, person_id, organization_id):
+        if not self.membership_exists(person_id, organization_id):
+            # Try to create the new membership
+            self.api.memberships.post({
+                'organization_id': organization_id,
+                'person_id': person_id,
+            })
+
+    def delete_membership(self, person_id, organization_id):
+        candidate_data = self.api.organizations(organization_id).get()['result']
+        for m in candidate_data['memberships']:
+            if m['person_id'] == person_id:
+                self.api.memberships(m['id']).delete()
+
 
 def get_candidate_list_popit_id(constituency_name, year):
     """Return the PopIt organization ID for a constituency's candidate list
@@ -88,27 +109,6 @@ class ConstituencyFinderView(FormView):
         return context
 
 
-def get_members(api, organization_id):
-    candidate_data = api.organizations(organization_id).get()['result']
-    return [ m['person_id'] for m in candidate_data['memberships'] ]
-
-def membership_exists(api, person_id, organization_id):
-    return person_id in get_members(api, organization_id)
-
-def delete_membership(api, person_id, organization_id):
-    candidate_data = api.organizations(organization_id).get()['result']
-    for m in candidate_data['memberships']:
-        if m['person_id'] == person_id:
-            api.memberships(m['id']).delete()
-
-def create_membership_if_not_exists(api, person_id, organization_id):
-    if not membership_exists(api, person_id, organization_id):
-        # Try to create the new membership
-        api.memberships.post({
-            'organization_id': organization_id,
-            'person_id': person_id,
-        })
-
 def normalize_party_name(original_party_name):
     """Mangle the party name into a normalized form
 
@@ -136,8 +136,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
 
-        old_candidate_ids = get_members(self.api, old_candidate_list_id)
-        new_candidate_ids = get_members(self.api, new_candidate_list_id)
+        old_candidate_ids = self.get_members(old_candidate_list_id)
+        new_candidate_ids = self.get_members(new_candidate_list_id)
 
         person_id_to_person_data = {
             person_id: PopItPerson.create_from_popit(self.api, person_id)
@@ -214,7 +214,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
         person_id = person_data['id']
         candidate_list_id = organization_data['id']
         # Check that that membership doesn't already exist:
-        create_membership_if_not_exists(self,api, person_id, candidate_list_id)
+        self.create_membership_if_not_exists(person_id, candidate_list_id)
         return self.redirect_to_constituency(organization_data)
 
 
@@ -226,8 +226,9 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
         person_data, organization_data = self.get_person_and_organization(form)
         person_id = person_data['id']
         candidate_list_id = organization_data['id']
-        delete_membership(self.api, person_id, candidate_list_id)
+        self.delete_membership(person_id, candidate_list_id)
         return self.redirect_to_constituency(organization_data)
+
 
 def get_person_data_from_form(form, existing_data=None):
     if existing_data is None:
@@ -300,14 +301,12 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         # Create that person:
         person_result = self.api.persons.post(person_data)
         # Create the party membership:
-        create_membership_if_not_exists(
-            self.api,
+        self.create_membership_if_not_exists(
             person_result['result']['id'],
             party['id']
         )
         # Create the candidate list membership:
-        create_membership_if_not_exists(
-            self.api,
+        self.create_membership_if_not_exists(
             person_result['result']['id'],
             organization_data['id'],
         )
