@@ -109,14 +109,44 @@ STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 PIPELINE_CSS = {
     'all': {
         'source_filenames': (
-            'candidates/style.css',
+            'candidates/style.scss',
         ),
         'output_filename': 'css/all.css',
     }
 }
 
 PIPELINE_JS = {
+    'all': {
+        'source_filenames': (
+            'jquery/jquery-1.11.1.js',
+            'foundation/js/foundation/foundation.js',
+            'foundation/js/foundation/foundation.equalizer.js',
+            'foundation/js/foundation/foundation.dropdown.js',
+            'foundation/js/foundation/foundation.tooltip.js',
+            'foundation/js/foundation/foundation.offcanvas.js',
+            'foundation/js/foundation/foundation.accordion.js',
+            'foundation/js/foundation/foundation.joyride.js',
+            'foundation/js/foundation/foundation.alert.js',
+            'foundation/js/foundation/foundation.topbar.js',
+            'foundation/js/foundation/foundation.reveal.js',
+            'foundation/js/foundation/foundation.slider.js',
+            'foundation/js/foundation/foundation.magellan.js',
+            'foundation/js/foundation/foundation.clearing.js',
+            'foundation/js/foundation/foundation.orbit.js',
+            'foundation/js/foundation/foundation.interchange.js',
+            'foundation/js/foundation/foundation.abide.js',
+            'foundation/js/foundation/foundation.tab.js',
+        ),
+        'output_filename': 'js/all.js'
+    }
 }
+
+PIPELINE_COMPILERS = (
+  'pipeline.compilers.sass.SASSCompiler',
+)
+
+PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yui.YUICompressor'
+PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yui.YUICompressor'
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 

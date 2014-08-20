@@ -1,0 +1,3 @@
+[submodule "foundation"]
+	path = candidates/static/foundation
+	url = https://github.com/zurb/foundation.git
