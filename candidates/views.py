@@ -204,6 +204,7 @@ class CandidacyMixin(object):
                 return party
         return None
 
+
 class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
 
     form_class = CandidacyForm
