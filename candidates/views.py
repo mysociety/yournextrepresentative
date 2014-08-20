@@ -101,6 +101,14 @@ def delete_membership(api, person_id, organization_id):
         if m['person_id'] == person_id:
             api.memberships(m['id']).delete()
 
+def create_membership_if_not_exists(api, person_id, organization_id):
+    if not membership_exists(api, person_id, organization_id):
+        # Try to create the new membership
+        api.memberships.post({
+            'organization_id': organization_id,
+            'person_id': person_id,
+        })
+
 
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -178,12 +186,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
         person_id = person_data['id']
         candidate_list_id = organization_data['id']
         # Check that that membership doesn't already exist:
-        if not membership_exists(self.api, person_id, candidate_list_id):
-            # Try to create the new membership
-            self.api.memberships.post({
-                'organization_id': candidate_list_id,
-                'person_id': person_id,
-            })
+        create_membership_if_not_exists(self,api, person_id, candidate_list_id)
         return self.redirect_to_constituency(organization_data)
 
 
