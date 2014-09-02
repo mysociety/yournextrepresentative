@@ -69,8 +69,8 @@ it over for the next couple of weeks.
   elections, and creates an organisation for each party in that
   2010 data. (See below for more about this data model.)
 
-* A front page that lets you enter a postcode, and takes you to
-  a page for the constituency that postcode is in.
+* A front page that lets you enter a postcode or a constituency
+  and takes you to a constituency page.
 
 * A constituency page that:
 
@@ -97,10 +97,6 @@ tool.
 * Add *some* reasonable CSS at least - I've added foundation and
   put everything in a 12 wide column, but otherwise spent no
   time on that.
-
-* On the constituency finder page, allow people to select a
-  constituency by typing a constituency name, autocompleted with
-  a select2 box perhaps.
 
 * Allow people to edit the contact details, etc. of a person.
 
