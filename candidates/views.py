@@ -112,6 +112,41 @@ class ConstituencyPostcodeFinderView(FormView):
         return context
 
 
+def get_constituency_name_from_mapit_id(mapit_id_str):
+    constituency_data = MapItData.constituencies_2010.get(mapit_id_str)
+    if constituency_data:
+        return constituency_data['name']
+    return None
+
+
+class ConstituencyNameFinderView(FormView):
+    template_name = 'candidates/finder.html'
+    form_class = ConstituencyForm
+
+    def form_valid(self, form):
+        constituency_id = form.cleaned_data['constituency']
+        constituency_name = get_constituency_name_from_mapit_id(
+            constituency_id
+        )
+        if constituency_name:
+            constituency_url = reverse(
+                'constituency',
+                kwargs={'constituency_name': constituency_name}
+            )
+            return HttpResponseRedirect(constituency_url)
+        else:
+            error_url = reverse('finder')
+            error_url += '?bad_constituency_id=' + urlquote(constituency_id)
+            return HttpResponseRedirect(error_url)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
+        context['form'] = PostcodeForm()
+        context['constituency_form'] = ConstituencyForm()
+        return context
+
+
 def normalize_party_name(original_party_name):
     """Mangle the party name into a normalized form
 
