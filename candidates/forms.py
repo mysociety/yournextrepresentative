@@ -11,7 +11,7 @@ class PostcodeForm(forms.Form):
 class ConstituencyForm(forms.Form):
     constituency = forms.ChoiceField(
         label='Constituency',
-        choices=sorted(
+        choices=[('', '')] + sorted(
             [
                 (mapit_id, constituency['name'])
                 for mapit_id, constituency

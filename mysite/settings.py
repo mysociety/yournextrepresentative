@@ -110,6 +110,7 @@ PIPELINE_CSS = {
     'all': {
         'source_filenames': (
             'candidates/style.scss',
+            'select2/select2.css',
         ),
         'output_filename': 'css/all.css',
     }
@@ -136,6 +137,7 @@ PIPELINE_JS = {
             'foundation/js/foundation/foundation.interchange.js',
             'foundation/js/foundation/foundation.abide.js',
             'foundation/js/foundation/foundation.tab.js',
+            'select2/select2.js',
         ),
         'output_filename': 'js/all.js'
     }

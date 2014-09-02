@@ -1,5 +1,17 @@
 {% extends 'base.html' %}
 
+{% block extra_js %}
+  <script>
+    $(document).ready(function() {
+      $('#id_constituency').select2({
+        placeholder: 'Constituency',
+        allowClear: true,
+        width: '100%'
+      });
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
   <h1>Do you know about UK election candidates?</h1>
 
@@ -21,9 +33,8 @@
 
   <form id="form-name" action="{% url 'lookup-name' %}" method="post">
     {% csrf_token %}
-    {{ constituency_form }}
+    {{ constituency_form.as_p }}
     <input type="submit" value="Submit" />
   </form>
-
 
 {% endblock %}
