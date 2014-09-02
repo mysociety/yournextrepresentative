@@ -9,6 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
+    url(r'^lookup/postcode$', ConstituencyPostcodeFinderView.as_view(), name='lookup-postcode'),
     url(r'^constituency/(?P<constituency_name>.*)$',
         ConstituencyDetailView.as_view(),
         name='constituency'),
