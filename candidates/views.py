@@ -80,6 +80,24 @@ def get_candidate_list_popit_id(constituency_name, year):
         slugified_name=slugify(constituency_name),
     )
 
+def get_constituency_name_from_mapit_id(mapit_id):
+    constituency_data = MapItData.constituencies_2010.get(str(mapit_id))
+    if constituency_data:
+        return constituency_data['name']
+    return None
+
+def get_redirect_from_mapit_id(mapit_id_str):
+    constituency_name = get_constituency_name_from_mapit_id(mapit_id_str)
+    if constituency_name is None:
+        error_url = reverse('finder')
+        error_url += '?bad_constituency_id=' + urlquote(mapit_id_str)
+        return HttpResponseRedirect(error_url)
+    constituency_url = reverse(
+        'constituency',
+        kwargs={'constituency_name': constituency_name}
+    )
+    return HttpResponseRedirect(constituency_url)
+
 
 class ConstituencyPostcodeFinderView(FormView):
     template_name = 'candidates/finder.html'
@@ -91,13 +109,7 @@ class ConstituencyPostcodeFinderView(FormView):
         r = requests.get(url)
         if r.status_code == 200:
             mapit_result = r.json
-            mapit_constituency_id = mapit_result['shortcuts']['WMC']
-            mapit_constituency_data = mapit_result['areas'][str(mapit_constituency_id)]
-            constituency_url = reverse(
-                'constituency',
-                kwargs={'constituency_name': mapit_constituency_data['name']}
-            )
-            return HttpResponseRedirect(constituency_url)
+            return get_redirect_from_mapit_id(mapit_result['shortcuts']['WMC'])
         else:
             error_url = reverse('finder')
             error_url += '?bad_postcode=' + urlquote(postcode)
@@ -109,14 +121,10 @@ class ConstituencyPostcodeFinderView(FormView):
         bad_postcode = self.request.GET.get('bad_postcode')
         if bad_postcode:
             context['bad_postcode'] = bad_postcode
+        bad_constituency_id = self.request.GET.get('bad_constituency_id')
+        if bad_constituency_id:
+            context['bad_constituency_id'] = bad_constituency_id
         return context
-
-
-def get_constituency_name_from_mapit_id(mapit_id_str):
-    constituency_data = MapItData.constituencies_2010.get(mapit_id_str)
-    if constituency_data:
-        return constituency_data['name']
-    return None
 
 
 class ConstituencyNameFinderView(FormView):
@@ -125,20 +133,7 @@ class ConstituencyNameFinderView(FormView):
 
     def form_valid(self, form):
         constituency_id = form.cleaned_data['constituency']
-        constituency_name = get_constituency_name_from_mapit_id(
-            constituency_id
-        )
-        if constituency_name:
-            constituency_url = reverse(
-                'constituency',
-                kwargs={'constituency_name': constituency_name}
-            )
-            return HttpResponseRedirect(constituency_url)
-        else:
-            error_url = reverse('finder')
-            error_url += '?bad_constituency_id=' + urlquote(constituency_id)
-            return HttpResponseRedirect(error_url)
-
+        return get_redirect_from_mapit_id(constituency_id)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
