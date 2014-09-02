@@ -81,7 +81,7 @@ def get_candidate_list_popit_id(constituency_name, year):
     )
 
 
-class ConstituencyFinderView(FormView):
+class ConstituencyPostcodeFinderView(FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
 
@@ -104,7 +104,7 @@ class ConstituencyFinderView(FormView):
             return HttpResponseRedirect(error_url)
 
     def get_context_data(self, **kwargs):
-        context = super(ConstituencyFinderView, self).get_context_data(**kwargs)
+        context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
         context['constituency_form'] = ConstituencyForm()
         bad_postcode = self.request.GET.get('bad_postcode')
         if bad_postcode:

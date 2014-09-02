@@ -2,13 +2,13 @@ from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
 
-from candidates.views import (ConstituencyFinderView,
+from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyDetailView, CandidacyView, CandidacyDeleteView, NewPersonView)
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', ConstituencyFinderView.as_view(), name='finder'),
+    url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
     url(r'^constituency/(?P<constituency_name>.*)$',
         ConstituencyDetailView.as_view(),
         name='constituency'),

@@ -2,7 +2,7 @@ from urlparse import urlsplit
 
 from django_webtest import WebTest
 
-class TestConstituencyFinderView(WebTest):
+class TestConstituencyPostcodeFinderView(WebTest):
 
     def test_front_page(self):
         response = self.app.get('/')
