@@ -91,9 +91,6 @@ tool.
 
 ## Things Still To Do:
 
-* When creating memberships of the candidate list, set the area
-  to the constituency.
-
 * Add *some* reasonable CSS at least - I've added foundation and
   put everything in a 12 wide column, but otherwise spent no
   time on that.

@@ -59,13 +59,36 @@ class PopItApiMixin(object):
         _, members = self.get_organization_and_members(organization_id)
         return person_id in members
 
+    def get_area_from_organization(self, organization):
+        if organization['classification'] != "Candidate List":
+            return None
+        m = re.search(r'Candidates for (.*) in \d{4}', organization['name'])
+        if not m:
+            message = "Found a Candidate List with an unparseable name: '{0}'"
+            raise Exception(message.format(organization['name']))
+        constituency_name = m.group(1)
+        mapit_data = MapItData.constituencies_2010_name_map.get(constituency_name)
+        if mapit_data is None:
+            message = "Couldn't find the constituency: '{0}'"
+            raise Exception(message.format(constituency_name))
+        url_format = 'http://mapit.mysociety.org/area/{0}'
+        return {
+            'name': constituency_name,
+            'id': url_format.format(mapit_data['id'])
+        }
+
     def create_membership_if_not_exists(self, person_id, organization_id):
-        if not self.membership_exists(person_id, organization_id):
+        organization, members = self.get_organization_and_members(organization_id)
+        if person_id not in members:
             # Try to create the new membership
-            self.api.memberships.post({
+            properties = {
                 'organization_id': organization_id,
                 'person_id': person_id,
-            })
+            }
+            area = self.get_area_from_organization(organization)
+            if area is not None:
+                properties['area'] = area
+            self.api.memberships.post(properties)
 
     def delete_membership(self, person_id, organization_id):
         candidate_data = self.api.organizations(organization_id).get()['result']

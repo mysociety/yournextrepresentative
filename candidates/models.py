@@ -9,10 +9,17 @@ def get_mapit_constituencies(basename):
     with open(join(data_directory, basename)) as f:
         return json.load(f)
 
+def get_constituency_name_map(basename):
+    result = {}
+    for constituency in get_mapit_constituencies(basename).values():
+        result[constituency['name']] = constituency
+    return result
 
 class MapItData(object):
-    constituencies_2010 = get_mapit_constituencies('mapit-WMC-generation-13.json')
-
+    constituencies_2010 = \
+        get_mapit_constituencies('mapit-WMC-generation-13.json')
+    constituencies_2010_name_map = \
+        get_constituency_name_map('mapit-WMC-generation-13.json')
 
 class PopItPerson(object):
 
