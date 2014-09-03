@@ -45,12 +45,19 @@ class PopItApiMixin(object):
         )
         return base_search_url + collection + '?q=' + urlquote(query)
 
-    def get_members(self, organization_id):
-        candidate_data = self.api.organizations(organization_id).get()['result']
-        return [ m['person_id'] for m in candidate_data['memberships'] ]
+    def get_organization(self, organization_id):
+        return self.api.organizations(organization_id).get()['result']
+
+    def get_organization_and_members(self, organization_id):
+        organization = self.get_organization(organization_id)
+        return (
+            organization,
+            [ m['person_id'] for m in organization['memberships'] ]
+        )
 
     def membership_exists(self, person_id, organization_id):
-        return person_id in self.get_members(organization_id)
+        _, members = self.get_organization_and_members(organization_id)
+        return person_id in members
 
     def create_membership_if_not_exists(self, person_id, organization_id):
         if not self.membership_exists(person_id, organization_id):
@@ -169,8 +176,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
 
-        old_candidate_ids = self.get_members(old_candidate_list_id)
-        new_candidate_ids = self.get_members(new_candidate_list_id)
+        _, old_candidate_ids = self.get_organization_and_members(old_candidate_list_id)
+        _, new_candidate_ids = self.get_organization_and_members(new_candidate_list_id)
 
         person_id_to_person_data = {
             person_id: PopItPerson.create_from_popit(self.api, person_id)
