@@ -121,6 +121,11 @@ tool.
   with that post with role "candidate" and start and end dates
   indicating which election that was for.
 
+* Add photo upload once
+  https://github.com/mysociety/popit/issues/431 ,
+  https://github.com/mysociety/popit/issues/470 and
+  https://github.com/mysociety/popit/issues/214 are resolved.
+
 * Reduce the number of requests made to PopIt once
   https://github.com/mysociety/popit/issues/593 (or something
   similar) is done.
