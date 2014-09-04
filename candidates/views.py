@@ -293,6 +293,90 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
         self.delete_membership(person_id, candidate_list_id)
         return self.redirect_to_constituency(organization_data)
 
+def update_values_in_sub_array(data, location, new_value):
+    """Ensure that only a particular value is present in a sub-dict
+
+    This is useful for replacing values nested in sub-objects of JSON
+    data.  This is best demonstrated with an example: if we wanted to
+    change the homepage URL in a person record, you could do it like
+    this:
+
+    >>> person_data = {
+    ...     'id': "john-doe",
+    ...     'name': "John Doe",
+    ...     'email': "john-doe@example.org",
+    ...     'links': [
+    ...         {
+    ...             'note': "wikipedia",
+    ...             'url': "http://en.wikipedia.org/wiki/John_Doe"
+    ...         },
+    ...         {
+    ...             'note': "homepage",
+    ...             'url': "http://www.geocities.com"
+    ...         },
+    ...         {
+    ...             'note': "homepage",
+    ...             'url': "http://oops.duplicate.example.org"
+    ...         }
+    ...     ],
+    ... }
+    >>> update_values_in_sub_array(
+    ...     person_data,
+    ...     {'sub_array': 'links',
+    ...      'info_type_key': 'note',
+    ...      'info_value_key': 'url',
+    ...      'info_type': 'homepage'},
+    ...     "http://john.doe.example.org"
+    ... )
+    >>> print json.dumps(person_data, indent=4) # doctest: +NORMALIZE_WHITESPACE
+    {
+        "email": "john-doe@example.org",
+        "id": "john-doe",
+        "links": [
+            {
+                "note": "wikipedia",
+                "url": "http://en.wikipedia.org/wiki/John_Doe"
+            },
+            {
+                "note": "homepage",
+                "url": "http://john.doe.example.org"
+            }
+        ],
+        "name": "John Doe"
+    }
+    """
+    new_info = [
+        c for c in data.get(location['sub_array'], [])
+        if c.get(location['info_type_key']) != location['info_type']
+    ]
+    new_info.append({
+        location['info_type_key']: location['info_type'],
+        location['info_value_key']: new_value
+    })
+    data[location['sub_array']] = new_info
+
+simple_fields = ('name', 'email', 'date_of_birth')
+
+complex_fields_locations = {
+    'wikipedia_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'wikipedia',
+    },
+    'homepage_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'homepage',
+    },
+    'twitter_username': {
+        'sub_array': 'contact_details',
+        'info_type_key': 'type',
+        'info_value_key': 'value',
+        'info_type': 'twitter',
+    },
+}
 
 def get_person_data_from_form(form, existing_data=None):
     if existing_data is None:
@@ -302,39 +386,16 @@ def get_person_data_from_form(form, existing_data=None):
     cleaned = form.cleaned_data
     # First deal with fields that simply map to top level fields in
     # Popolo.
-    for field_name in ('name', 'email', 'date_of_birth'):
+    for field_name in simple_fields:
         if cleaned[field_name]:
             result[field_name] = unicode(cleaned[field_name])
     result['id'] = slugify(result['name'])
-    for link_type, field_name in (
-        ('wikipedia', 'wikipedia_url'),
-        ('homepage', 'homepage_url'),
-    ):
-        if cleaned[field_name]:
-            # Remove any existing links of that type:
-            new_links = [
-                l for l in result.get('links', [])
-                if l.get('note') != link_type
-            ]
-            new_links.append({
-                'note': link_type,
-                'url': cleaned[field_name]
-            })
-            result['links'] = new_links
-    # FIXME: do some DRY refactoring with this and the loop above
-    for contact_type, field_name in (
-        ('twitter', 'twitter_username'),
-    ):
-        if cleaned[field_name]:
-            new_contacts = [
-                c for c in result.get('contact_details', [])
-                if c.get('type') != contact_type
-            ]
-            new_contacts.append({
-                'type': contact_type,
-                'value': cleaned[field_name]
-            })
-            result['contact_details'] = new_contacts
+    # These are fields which are represented by values in a sub-object
+    # in Popolo's JSON serialization:
+    for field_name, location in complex_fields_locations.items():
+        new_value = cleaned[field_name]
+        if new_value:
+            update_values_in_sub_array(result, location, new_value)
     return result
 
 
