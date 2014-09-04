@@ -1,7 +1,7 @@
 import json
 import re
 
-from slumber.exceptions import HttpClientError
+from slumber.exceptions import HttpClientError, HttpServerError
 from popit_api import PopIt
 from slugify import slugify
 import requests
@@ -12,7 +12,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.utils.http import urlquote
-from django.views.generic import FormView, TemplateView, DeleteView
+from django.views.generic import FormView, TemplateView, DeleteView, UpdateView
 
 from .forms import PostcodeForm, CandidacyForm, NewPersonForm, UpdatePersonForm, ConstituencyForm
 from .models import (
@@ -387,6 +387,8 @@ complex_fields_locations = {
     },
 }
 
+all_fields = list(simple_fields) + complex_fields_locations.keys()
+
 def get_person_data_from_form(form, existing_data=None):
     if existing_data is None:
         result = {}
@@ -469,6 +471,75 @@ def get_value_from_person_data(field_name, person_data):
         else:
             return ''
     raise Exception, "Unknown field name {0}".format(field_name)
+
+class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
+    template_name = 'candidates/person.html'
+    form_class = UpdatePersonForm
+
+    def get_initial(self):
+        initial_data = super(UpdatePersonView, self).get_initial()
+        person = PopItPerson.create_from_popit(
+            self.api, self.kwargs['person_id']
+        )
+        for field_name in all_fields:
+            initial_data[field_name] = get_value_from_person_data(
+                field_name,
+                person.popit_data
+            )
+        initial_data['party'] = ''
+        if person.party:
+            initial_data['party'] = person.party['name']
+        if person.constituency_2015:
+            initial_data['constituency'] = \
+                MapItData.constituencies_2010_name_map[
+                    extract_constituency_name(person.constituency_2015)
+                ]['id']
+        initial_data['standing'] = bool(person.constituency_2015)
+        return initial_data
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdatePersonView, self).get_context_data(**kwargs)
+
+        context['person'] = self.api.persons(
+            self.kwargs['person_id']
+        ).get()['result']
+
+        return context
+
+    def form_valid(self, form):
+        cleaned = form.cleaned_data
+        constituency_name = None
+        person = PopItPerson.create_from_popit(
+            self.api, self.kwargs['person_id']
+        )
+        if cleaned['standing']:
+            constituency_name = get_constituency_name_from_mapit_id(
+                cleaned['constituency']
+            )
+            if not constituency_name:
+                message = "Failed to find a constituency with MapIt ID {}"
+                raise Exception(message.format(cleaned['constituency']))
+            organization_id = 'candidates-2015-{0}'.format(
+                slugify(constituency_name)
+            )
+            self.create_membership_if_not_exists(
+                person.id,
+                organization_id
+            )
+        else:
+            # Remove any membership of a 2015 candidate list:
+            for membership_id in person.get_2015_candidate_list_memberships():
+                self.api.memberships(membership_id).delete()
+        person_data = get_person_data_from_form(form)
+        # Update that person:
+        person_result = self.api.persons(person.id).put(
+            person_data
+        )
+        self.set_party_membership(
+            cleaned['party'],
+            person.id
+        )
+        return self.redirect_to_constituency_name(constituency_name)
 
 class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
     template_name = 'candidates/person.html'

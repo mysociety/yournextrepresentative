@@ -31,7 +31,7 @@ class CandidacyForm(forms.Form):
         max_length=256,
     )
 
-class NewPersonForm(forms.Form):
+class BasePersonForm(forms.Form):
     name = forms.CharField(
         label="Full name",
         max_length=256,
@@ -64,8 +64,29 @@ class NewPersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+
+
+class NewPersonForm(BasePersonForm):
     organization_id = forms.CharField(
         label="The candidate lists's organization ID",
         max_length=256,
         widget=forms.HiddenInput(),
+    )
+
+class UpdatePersonForm(BasePersonForm):
+    standing = forms.BooleanField(
+        label='Standing in 2015',
+        required=False,
+    )
+    constituency = forms.ChoiceField(
+        label='Constituency in 2015',
+        required=False,
+        choices=[('', '')] + sorted(
+            [
+                (mapit_id, constituency['name'])
+                for mapit_id, constituency
+                in MapItData.constituencies_2010.items()
+            ],
+            key=lambda t: t[1]
+        )
     )

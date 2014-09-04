@@ -8,7 +8,7 @@
   <ul>
     {% for c in candidates_2015 %}
       <li>
-        {{ c.name }} ({{c.party.name }})
+        {{ c.name }} ({{c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
         <form method="post" action="{% url 'candidacy-delete' %}">
           {% csrf_token %}
           <input type="hidden" name="person_id" value="{{ c.id }}"/>
@@ -43,7 +43,7 @@
   <ul>
     {% for c, already_standing in candidates_2010 %}
       <li>
-        {{ c.name }} ({{ c.party.name }})
+        {{ c.name }} ({{ c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
         {% if not already_standing %}
           <form method="post" action="{% url 'candidacy-create' %}">
             {% csrf_token %}

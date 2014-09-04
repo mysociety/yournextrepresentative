@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
-    CandidacyDeleteView, NewPersonView)
+    CandidacyDeleteView, NewPersonView, UpdatePersonView)
 
 admin.autodiscover()
 
@@ -24,5 +24,8 @@ urlpatterns = patterns('',
     url(r'^person$',
         NewPersonView.as_view(),
         name='person-create'),
+    url(r'^person/(?P<person_id>.*)/update$',
+        UpdatePersonView.as_view(),
+        name='person-update'),
     url(r'^admin/', include(admin.site.urls)),
 )

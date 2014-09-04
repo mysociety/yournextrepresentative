@@ -1,8 +1,39 @@
 {% extends 'base.html' %}
 
+{% block extra_js %}
+  <script>
+    $(document).ready(function() {
+      var standingCheckbox = $('#person-details input#id_standing'),
+        constituencySelect = $('#id_constituency');
+      /* Enable Select2 for any constituency selector */
+      constituencySelect.select2({
+        placeholder: 'Constituency',
+        allowClear: true,
+        width: '100%'
+      });
+      /* Disable the constituencySelect box based on whether the
+         'standing' checkbox is selected or not. */
+      if (standingCheckbox.length) {
+        constituencySelect.prop(
+          'disabled',
+          !standingCheckbox.prop('checked')
+        );
+      }
+      /* And if the state of the statnding checkbox is changed, disable
+         or enable the constituency select box. */
+      standingCheckbox.on('change', function() {
+        constituencySelect.prop(
+          'disabled',
+          !$(this).prop('checked')
+        );
+      });
+    });
+  </script>
+{% endblock %}
+
 {% block content %}
-  <h1>New Candidate for {{ }}</h1>
-  <form action="{% url 'person-create' %}" method="post">
+  <h1>Edit the details of {{ person.name }}</h1>
+  <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit">
