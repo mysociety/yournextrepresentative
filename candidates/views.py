@@ -110,6 +110,27 @@ def get_candidate_list_popit_id(constituency_name, year):
         slugified_name=slugify(constituency_name),
     )
 
+def extract_constituency_name(candidate_list_organization):
+    """Return the constituency name from a candidate list organization
+
+    >>> extract_constituency_name({
+    ...     'name': 'Candidates for Altrincham and Sale West in 2015'
+    ... })
+    'Altrincham and Sale West'
+    >>> constituency_name = extract_constituency_name({
+    ...     'name': 'Another Organization'
+    ... })
+    >>> print constituency_name
+    None
+    """
+    m = re.search(
+        r'^Candidates for (.*) in \d+$',
+        candidate_list_organization['name']
+    )
+    if m:
+        return m.group(1)
+    return None
+
 def get_constituency_name_from_mapit_id(mapit_id):
     constituency_data = MapItData.constituencies_2010.get(str(mapit_id))
     if constituency_data:
@@ -241,12 +262,8 @@ class CandidacyMixin(object):
         return (person_data, organization_data)
 
     def redirect_to_constituency(self, candidate_list_data):
-        m = re.search(
-            r'^Candidates for (.*) in \d+$',
-            candidate_list_data['name']
-        )
-        if m:
-            constituency_name = m.group(1)
+        constituency_name = extract_constituency_name(candidate_list_data)
+        if constituency_name:
             return HttpResponseRedirect(
                 reverse('constituency',
                         kwargs={'constituency_name': constituency_name})
