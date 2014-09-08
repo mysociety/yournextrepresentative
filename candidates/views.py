@@ -14,9 +14,11 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, DeleteView
 
-from .forms import PostcodeForm, CandidacyForm, NewPersonForm, ConstituencyForm
-from .models import PopItPerson, MapItData
-
+from .forms import PostcodeForm, CandidacyForm, NewPersonForm, UpdatePersonForm, ConstituencyForm
+from .models import (
+    PopItPerson, MapItData, get_candidate_list_popit_id,
+    get_constituency_name_from_mapit_id, extract_constituency_name
+)
 
 class PopItApiMixin(object):
 
@@ -96,46 +98,6 @@ class PopItApiMixin(object):
             if m['person_id'] == person_id:
                 self.api.memberships(m['id']).delete()
 
-
-def get_candidate_list_popit_id(constituency_name, year):
-    """Return the PopIt organization ID for a constituency's candidate list
-
-    >>> get_candidate_list_popit_id('Leeds North East', 2010)
-    'candidates-2010-leeds-north-east'
-    >>> get_candidate_list_popit_id('Ayr, Carrick and Cumnock', 2015)
-    'candidates-2015-ayr-carrick-and-cumnock'
-    """
-    return 'candidates-{year}-{slugified_name}'.format(
-        year=year,
-        slugified_name=slugify(constituency_name),
-    )
-
-def extract_constituency_name(candidate_list_organization):
-    """Return the constituency name from a candidate list organization
-
-    >>> extract_constituency_name({
-    ...     'name': 'Candidates for Altrincham and Sale West in 2015'
-    ... })
-    'Altrincham and Sale West'
-    >>> constituency_name = extract_constituency_name({
-    ...     'name': 'Another Organization'
-    ... })
-    >>> print constituency_name
-    None
-    """
-    m = re.search(
-        r'^Candidates for (.*) in \d+$',
-        candidate_list_organization['name']
-    )
-    if m:
-        return m.group(1)
-    return None
-
-def get_constituency_name_from_mapit_id(mapit_id):
-    constituency_data = MapItData.constituencies_2010.get(str(mapit_id))
-    if constituency_data:
-        return constituency_data['name']
-    return None
 
 def get_redirect_from_mapit_id(mapit_id_str):
     constituency_name = get_constituency_name_from_mapit_id(mapit_id_str)

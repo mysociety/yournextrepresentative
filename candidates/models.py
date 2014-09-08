@@ -1,5 +1,7 @@
 import json
 from os.path import dirname, join, abspath
+import re
+from slugify import slugify
 
 from django.db import models
 
@@ -20,6 +22,47 @@ class MapItData(object):
         get_mapit_constituencies('mapit-WMC-generation-13.json')
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
+
+
+def get_candidate_list_popit_id(constituency_name, year):
+    """Return the PopIt organization ID for a constituency's candidate list
+
+    >>> get_candidate_list_popit_id('Leeds North East', 2010)
+    'candidates-2010-leeds-north-east'
+    >>> get_candidate_list_popit_id('Ayr, Carrick and Cumnock', 2015)
+    'candidates-2015-ayr-carrick-and-cumnock'
+    """
+    return 'candidates-{year}-{slugified_name}'.format(
+        year=year,
+        slugified_name=slugify(constituency_name),
+    )
+
+def extract_constituency_name(candidate_list_organization):
+    """Return the constituency name from a candidate list organization
+
+    >>> extract_constituency_name({
+    ...     'name': 'Candidates for Altrincham and Sale West in 2015'
+    ... })
+    'Altrincham and Sale West'
+    >>> constituency_name = extract_constituency_name({
+    ...     'name': 'Another Organization'
+    ... })
+    >>> print constituency_name
+    None
+    """
+    m = re.search(
+        r'^Candidates for (.*) in \d+$',
+        candidate_list_organization['name']
+    )
+    if m:
+        return m.group(1)
+    return None
+
+def get_constituency_name_from_mapit_id(mapit_id):
+    constituency_data = MapItData.constituencies_2010.get(str(mapit_id))
+    if constituency_data:
+        return constituency_data['name']
+    return None
 
 class PopItPerson(object):
 
