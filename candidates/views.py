@@ -453,6 +453,9 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         organization_data = self.api.organizations(
             form.cleaned_data['organization_id']
         ).get()['result']
+        person_data = get_person_data_from_form(form)
+        # Create that person:
+        person_result = self.api.persons.post(person_data)
         # Try to get an existing party with that name, if not, create
         # a new one.
         party_name = cleaned['party']
@@ -466,9 +469,6 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
                 'classification': 'Party',
             }
             self.api.organizations.post(party)
-        person_data = get_person_data_from_form(form)
-        # Create that person:
-        person_result = self.api.persons.post(person_data)
         # Create the party membership:
         self.create_membership_if_not_exists(
             person_result['result']['id'],
