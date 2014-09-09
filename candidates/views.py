@@ -223,13 +223,16 @@ class CandidacyMixin(object):
                 raise
         return (person_data, organization_data)
 
+    def redirect_to_constituency_name(self, constituency_name):
+        return HttpResponseRedirect(
+            reverse('constituency',
+                    kwargs={'constituency_name': constituency_name})
+        )
+
     def redirect_to_constituency(self, candidate_list_data):
         constituency_name = extract_constituency_name(candidate_list_data)
         if constituency_name:
-            return HttpResponseRedirect(
-                reverse('constituency',
-                        kwargs={'constituency_name': constituency_name})
-            )
+            return self.redirect_to_constituency_name(constituency_name)
         else:
             message = "Failed to parse the candidate_list_name '{0}'"
             raise Exception(message.format(candidate_list_name))
