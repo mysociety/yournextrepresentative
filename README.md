@@ -97,6 +97,8 @@ tool.
 
 * Allow people to edit the contact details, etc. of a person.
 
+* Auto-complete parties
+
 * Add an attribute of a person to indicate that they're not
   standing, so that can be recorded with a source and username.
 
