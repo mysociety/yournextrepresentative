@@ -97,6 +97,9 @@ tool.
 
 * Allow people to edit the contact details, etc. of a person.
 
+* Add an attribute of a person to indicate that they're not
+  standing, so that can be recorded with a source and username.
+
 * Allow search for a candidate based on their name.
 
 * Allow you to indicate that someone who stood for constituency
