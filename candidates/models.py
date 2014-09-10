@@ -70,12 +70,13 @@ class PopItPerson(object):
         self.popit_data = popit_data
         self.api = api
         self.party = None
+        self.constituency_2015 = None
 
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
         popit_data = api.persons(popit_person_id).get()['result']
         new_person = cls(api=api, popit_data=popit_data)
-        new_person._update_party()
+        new_person._update_organizations()
         return new_person
 
     @property
@@ -86,7 +87,7 @@ class PopItPerson(object):
     def id(self):
         return self.popit_data['id']
 
-    def _update_party(self):
+    def _update_organizations(self):
         for m in self.popit_data['memberships']:
             # FIXME: note that this fetches a huge object from the
             # API, since the organisation object for a party has a
