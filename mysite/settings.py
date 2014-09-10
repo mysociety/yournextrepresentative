@@ -150,6 +150,10 @@ PIPELINE_COMPILERS = (
 PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yui.YUICompressor'
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yui.YUICompressor'
 
+# On some platforms this might be called "yuicompressor", so it may be
+# necessary to symlink it into your PATH as "yui-compressor".
+PIPELINE_YUI_BINARY = '/usr/bin/env yui-compressor'
+
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = ['--with-doctest']
