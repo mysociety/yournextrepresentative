@@ -1,3 +1,10 @@
+# Is this a staging server?
+STAGING: '1'
+
+# The path to the gems directory:
+GEMS_DIRECTORY: ''
+
+# The PopIt instance login details
 POPIT_INSTANCE: yournextmp
 POPIT_HOSTNAME: popit.mysociety.org
 POPIT_USER: someone@example.org
