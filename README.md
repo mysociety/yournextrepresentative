@@ -189,19 +189,17 @@ Create a virtualenv with all the Python packages you'll need:
 
     yournextmp-popit/bin/pre-deploy
 
-Edit the .bashrc to make the gems that has installed available.
-Add these lines to the end of `~/.bashrc`:
+Edit the .bashrc to make the gems that has installed available
+and the virtualenv be activated on login. Add these lines to the
+end of `~/.bashrc`:
 
     export PATH="/home/vagrant/gems/bin:$PATH"
     export GEM_HOME='/home/vagrant/gems'
+    source ~/venv/bin/activate
 
-Now source your `.bashrc` for that change to take effect:
+Now source your `.bashrc` for those changes to take effect:
 
     source ~/.bashrc
-
-Activate the virtualenv:
-
-    source venv/bin/activate
 
 Run the development server:
 
@@ -217,6 +215,5 @@ Now you should be able to see the site at:
 After logging in again, the only steps you should need to run
 the development server again are:
 
-    source venv/bin/activate
     cd yournextmp-popit
     ./manage.py runserver 0.0.0.0:8000
