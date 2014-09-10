@@ -2,3 +2,7 @@ POPIT_INSTANCE: yournextmp
 POPIT_HOSTNAME: popit.mysociety.org
 POPIT_USER: someone@example.org
 POPIT_PASSWORD: popitinstancepassword
+
+# SECRET_KEY should be a random string of characters
+SECRET_KEY: '098nadkafy123asidftqaer0aoejfoasdfa'
+
