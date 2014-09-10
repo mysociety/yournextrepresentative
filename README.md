@@ -134,3 +134,89 @@ tool.
 * Reduce the number of requests made to PopIt once
   https://github.com/mysociety/popit/issues/593 (or something
   similar) is done.
+
+## Getting a development version running:
+
+(These are very rough instructions, written for a colleague who
+who's using Vagrant v1 for local development.)
+
+Make a new directory, change into that directory and create a
+`Vagrantfile` with:
+
+    vagrant init precise64
+
+Edit the Vagrantfile to forward a local port to the port that
+the development server will be listening to, by adding this
+line:
+
+    config.vm.network :forwarded_port, guest: 8000, host: 8080
+
+... in the `Vagrant.configure` block.
+
+Start that vagrant box with:
+
+    vagrant up
+
+Log in to the box with:
+
+    vagrant ssh
+
+Install git, which you'll need to clone the repository:
+
+    sudo apt-get update
+    sudo apt-get install git
+
+Clone the repository with:
+
+    git clone --recursive <REPOSITORY-URL>
+
+Copy the example configuration file to `conf/general.yml`:
+
+    cp yournextmp-popit/conf/general.yml{-example,}
+
+Edit `yournextmp-popit/conf/general.yml` to fill in details of
+the PopIt instance you're using.
+
+If that instance hasn't already been set up, then you can create
+basic data in it with the `create-popit.py` script. (FIXME: add
+more instructions for this.)
+
+Install some required packages:
+
+    sudo apt-get install python-virtualenv curl yui-compressor
+
+Create a virtualenv with all the Python packages you'll need:
+
+    yournextmp-popit/bin/pre-deploy
+
+Edit the .bashrc to make the gems that has installed available.
+Add these lines to the end of `~/.bashrc`:
+
+    export PATH="/home/vagrant/gems/bin:$PATH"
+    export GEM_HOME='/home/vagrant/gems'
+
+Now source your `.bashrc` for that change to take effect:
+
+    source ~/.bashrc
+
+Activate the virtualenv:
+
+    source venv/bin/activate
+
+Run the development server:
+
+    cd yournextmp-popit
+    ./manage.py runserver 0.0.0.0:8000
+
+Now you should be able to see the site at:
+
+    http://localhost:8080/
+
+### Restarting the development server after logging out
+
+After logging in again, the only steps you should need to run
+the development server again are:
+
+    source venv/bin/activate
+    cd yournextmp-popit
+    ./manage.py runserver 0.0.0.0:8000
