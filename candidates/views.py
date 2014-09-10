@@ -249,6 +249,33 @@ class CandidacyMixin(object):
                 return party
         return None
 
+    def set_party_membership(self, original_party_name, person_id):
+        # Remove any existing party memberships:
+        person = PopItPerson.create_from_popit(self.api, person_id)
+        existing_party_memberships = person.get_party_memberships()
+        for m in existing_party_memberships:
+            self.api.memberships(m).delete()
+        # FIXME: if any of those parties now have zero memberships as
+        # a result, we should just completely delete the party.
+
+        # Try to get an existing party with that name, if not, create
+        # a new one.
+        party_name = re.sub(r'\s+', ' ', original_party_name).strip()
+        party = self.get_party(party_name)
+        if not party:
+            # Then create a new party:
+            party = {
+                'id': slugify(party_name),
+                'name': party_name,
+                'classification': 'Party',
+            }
+            self.api.organizations.post(party)
+        # Create the party membership:
+        self.create_membership_if_not_exists(
+            person_id,
+            party['id']
+        )
+
 
 class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
 
@@ -456,23 +483,10 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         person_data = get_person_data_from_form(form)
         # Create that person:
         person_result = self.api.persons.post(person_data)
-        # Try to get an existing party with that name, if not, create
-        # a new one.
-        party_name = cleaned['party']
-        party_name = re.sub(r'\s+', ' ', party_name).strip()
-        party = self.get_party(party_name)
-        if not party:
-            # Then create a new party:
-            party = {
-                'id': slugify(party_name),
-                'name': party_name,
-                'classification': 'Party',
-            }
-            self.api.organizations.post(party)
-        # Create the party membership:
-        self.create_membership_if_not_exists(
-            person_result['result']['id'],
-            party['id']
+        # And update their party:
+        self.set_party_membership(
+            cleaned['party'],
+            person_result['result']['id']
         )
         # Create the candidate list membership:
         self.create_membership_if_not_exists(
