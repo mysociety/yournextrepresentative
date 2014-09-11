@@ -3,23 +3,43 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     {% load compressed %}
     {% compressed_css 'all' %}
-    {% compressed_js 'all' %}
 
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//html5base.googlecode.com/svn-history/r38/trunk/js/selectivizr-1.0.3b.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+    <![endif]-->
+
+    {% compressed_js 'all' %}
     {% block extra_js %}
     {% endblock %}
 
     <title>{% block title %}Help find candidates for the 2015 UK general election!{% endblock %}</title>
 </head>
 
-<body>
-    <div class="row">
-       <div id="content" class="large-12 columns">
-         {% block content %}
-         {% endblock %}
-       </div>
+<body class="{% block body_class %}{% endblock %}">
+  <div class="header">
+    <div class="container">
+      <div class="header__nav">
+        <a href="/" class="header__nav__logo">YourNextMP</a>
+        <a href="#" class="header__nav__login">Log in</a>
+      </div>
+      <div class="header__hero">
+        {% block hero %}
+        {% endblock %}
+      </div>
     </div>
+  </div>
+  <div class="content">
+    <div class="container">
+     <div class="content__inner">
+       {% block content %}
+       {% endblock %}
+     </div>
+  </div>
 </body>
 </html>

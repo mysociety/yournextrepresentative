@@ -1,7 +1,191 @@
+@import "../foundation/scss/foundation/functions";
+
+$color-orange: #f97d3d;
+$color-red: #c55e59;
+$color-gold: #ba9f50;
+$color-blue: #085184;
+$color-cyan: #029db9;
+$color-teal: #09a691;
+$color-offwhite: #ece7e1;
+$color-cream: #e4dfdb;
+
+// Override Foundation variables here
+$primary-color: $color-cyan;
+$secondary-color: $color-cream;
+$button-tny: rem-calc(6);
+$button-sml: rem-calc(8);
+$button-med: rem-calc(10);
+$button-lrg: rem-calc(14);
+$button-radius: 3px;
+
 @import "../foundation/scss/normalize";
 @import "../foundation/scss/foundation";
 
-.subtitle {
-  font-size: larger;
-  margin-bottom: 2em;
+.container {
+  @include grid-row();
+}
+
+.button, input[type="submit"].button {
+  @extend .radius;
+}
+
+.header {
+  background: $color-teal;
+  color: #fff;
+
+  a, h1, h2, h3 {
+    color: inherit;
+  }
+
+  a:hover, a:focus {
+    display: inline-block;
+    border-bottom: 1px solid mix($color-teal, #fff, 50%);
+    margin-bottom: -1px;
+  }
+
+  h1 {
+    line-height: 1.2em;
+  }
+
+  .lead {
+    color: mix($color-teal, #fff, 30%);
+  }
+}
+
+.header__nav,
+.header__hero,
+.content__inner {
+  @include grid-column(12);
+}
+
+.header__nav {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.header__nav__logo {
+  float: left;
+  font-weight: bold;
+}
+
+.header__nav__login {
+  float: right;
+}
+
+.header__hero {
+  padding-bottom: 1.5em;
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.content__inner {
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+body.finder .content__inner {
+  text-align: center;
+
+  label {
+    font-size: 1.4em;
+    margin-bottom: 0.4em;
+  }
+
+  form {
+    margin: 3em auto;
+    max-width: 320px;
+  }
+
+  #form-name {
+    display: none; // hide constituency select box by default
+  }
+
+  .select2-container {
+    text-align: left;
+  }
+
+  .show-other-form {
+    display: block;
+    margin-top: 1em;
+  }
+}
+
+.candidates__known,
+.candidates__new,
+.candidates__previous {
+  margin-bottom: 3em;
+
+  @media #{$medium-up} {
+    padding-left: 100px;
+    background: transparent url(img/icon-candidates.gif) 0 0 no-repeat;
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+  }
+}
+
+.candidates__new {
+  display: none;
+
+  @media #{$medium-up} {
+    background-image: url(img/icon-add-candidate.gif);
+  }
+
+  .button + .button {
+    margin-left: 1em;
+  }
+}
+
+.no-candidates {
+  background: #FDF2D5; // lighter version of $color-gold
+  border: 1px solid lighten($color-gold, 30%);
+  border-radius: 3px;
+
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+
+  p + p {
+    margin-bottom: 0;
+  }
+
+  @media #{$medium-up} {
+    p {
+      margin-bottom: 0;
+    }
+
+    p + p {
+      text-align: right;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
+  }
+}
+
+.candidates__previous {
+  @media #{$medium-up} {
+    background-image: url(img/icon-question.gif);
+  }
+
+  form {
+    margin-top: 0.5em;
+  }
+
+  input.button {
+    background-color: $color-orange;
+    margin-right: 0.8em;
+
+    &:hover, &:focus {
+      background-color: scale-color($color-orange, $lightness: $button-function-factor);
+    }
+  }
 }

@@ -4,13 +4,13 @@ from django import forms
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
-        label='Postcode',
+        label='Enter your postcode',
         max_length=20
     )
 
 class ConstituencyForm(forms.Form):
     constituency = forms.ChoiceField(
-        label='Constituency',
+        label='Select a constituency',
         choices=[('', '')] + sorted(
             [
                 (mapit_id, constituency['name'])

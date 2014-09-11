@@ -1,44 +1,52 @@
 {% extends 'base.html' %}
 
+{% block body_class %}finder{% endblock %}
+
 {% block extra_js %}
   <script>
-    $(document).ready(function() {
+    $(function() {
       $('#id_constituency').select2({
         placeholder: 'Constituency',
         allowClear: true,
         width: '100%'
       });
+      $('.show-other-form').on('click', function(){
+        $(this).parents('form').hide().siblings('form').show();
+      })
     });
   </script>
 {% endblock %}
 
-{% block content %}
+{% block hero %}
+
   <h1>Do you know about UK election candidates?</h1>
 
-  <div class="subtitle">Help build a database of candidates for the 2015 general election!</div>
+  <p class="lead">Help build a database of candidates for the 2015 general election!</p>
+
+{% endblock %}
+
+{% block content %}
 
   {% if bad_postcode %}
   <div class="postcode-form-error">'{{ bad_postcode }}' was not a valid postcode</div>
   {% endif %}
 
-  <h2>Enter your postcode below:</h2>
-
-  <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post">
+  <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if bad_constituency_id %}style="display: none"{% endif %}>
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" class="button" value="Show candidates" />
+    <a class="show-other-form">Or select a constituency</a>
   </form>
 
   {% if bad_constituency_id %}
   <div class="name-form-error">'{{ bad_constituency_id }}' was not a valid constituency ID</div>
   {% endif %}
 
-  <h2>... or select a constituency:</h2>
-
-  <form id="form-name" action="{% url 'lookup-name' %}" method="post">
+  <form id="form-name" action="{% url 'lookup-name' %}" method="post" {% if bad_constituency_id %}style="display: block"{% endif %}>
     {% csrf_token %}
     {{ constituency_form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" class="button" value="Show candidates" />
+    <a class="show-other-form">Or search by postcode</a>
   </form>
 
 {% endblock %}

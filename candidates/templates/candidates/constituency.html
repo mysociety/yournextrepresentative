@@ -1,59 +1,101 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block body_class %}constituency{% endblock %}
+
+{% block extra_js %}
+  <script>
+    $(function() {
+      $('.show-new-candidate-form').on('click', function(){
+        $('.candidates__new').slideDown(function(){
+          $('.candidates__new input:text').eq(0).focus();
+        });
+      });
+      $('.hide-new-candidate-form').on('click', function(){
+        $('.candidates__new').slideUp();
+      });
+    });
+  </script>
+{% endblock %}
+{% block hero %}
   <h1>Candidates for {{ constituency_name }}</h1>
+{% endblock %}
 
-  <h3>Known candidates for the 2015 general election</h3>
+{% block content %}
 
-  <ul>
+  <div class="candidates__known">
+
+    <h3>Known candidates for the 2015 general election</h3>
+
     {% for c in candidates_2015 %}
-      <li>
-        {{ c.name }} ({{c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
-        <form method="post" action="{% url 'candidacy-delete' %}">
-          {% csrf_token %}
-          <input type="hidden" name="person_id" value="{{ c.id }}"/>
-          <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
-          <input type="submit" value="Not actually standing?" />
-        </form>
-      </li>
-    {% empty %}
-      <li>We don't know of any candidates in {{ constituency_name }}
-      for the 2015 general election yet.</li>
-    {% endfor %}
-  </ul>
+      {% if forloop.first %}
+        <ul>
+      {% endif %}
 
-  <h4>Add a new candidate</h4>
-
-  <form method="post" action="{% url 'person-create' %}">
-    {% csrf_token %}
-    <ul>
-      {% for field in add_candidate_form.visible_fields %}
         <li>
-          {{ field.errors }}
-          {{ field.label_tag }} {{ field }}
-        </li>
-      {% endfor %}
-      <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}">
-    </ul>
-    <input type="submit" value="Add new candidate">
-  </form>
-
-  <h3>Is a candidate from the 2010 election standing again?</h3>
-
-  <ul>
-    {% for c, already_standing in candidates_2010 %}
-      <li>
-        {{ c.name }} ({{ c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
-        {% if not already_standing %}
-          <form method="post" action="{% url 'candidacy-create' %}">
+          {{ c.name }} ({{c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
+          <form method="post" action="{% url 'candidacy-delete' %}">
             {% csrf_token %}
             <input type="hidden" name="person_id" value="{{ c.id }}"/>
             <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
-            <input type="submit" value="Standing again?" />
+            <input type="submit" value="Not actually standing?" />
           </form>
-        {% endif %}
-      </li>
+        </li>
+
+      {% if forloop.last %}
+        </ul>
+      {% endif %}
+    {% empty %}
+      <div class="no-candidates row">
+        <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ constituency_name }}
+        for the 2015 general election yet.</p>
+        <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
+      </div>
     {% endfor %}
-  </ul>
+
+  </div>
+
+  <div class="candidates__new" {% if add_candidate_form.errors %}style="display: block"{% endif %}>
+
+    <h4>Add a new candidate</h4>
+
+    <form method="post" action="{% url 'person-create' %}">
+      {% csrf_token %}
+        {% for field in add_candidate_form.visible_fields %}
+          <p>
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+          </p>
+        {% endfor %}
+        <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}">
+      <input type="submit" class="button" value="Add new candidate">
+      <a class="hide-new-candidate-form button secondary">Cancel</a>
+    </form>
+
+  </div>
+
+{% if candidates_2010 %}
+  <div class="candidates__previous">
+
+    <h3>Is a candidate from the 2010 election standing again?</h3>
+
+    <ul>
+      {% for c, already_standing in candidates_2010 %}
+        <li>
+          {{ c.name }} ({{ c.party.name }})
+          {% if not already_standing %}
+            <form method="post" action="{% url 'candidacy-create' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person_id" value="{{ c.id }}"/>
+              <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
+              <input type="submit" class="button tiny" value="Standing again" />
+              <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+{% endif %}
 
 {% endblock %}

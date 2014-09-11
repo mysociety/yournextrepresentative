@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block body_class %}person{% endblock %}
+
 {% block extra_js %}
   <script>
     $(document).ready(function() {
@@ -31,11 +33,14 @@
   </script>
 {% endblock %}
 
-{% block content %}
+{% block hero %}
   <h1>Edit the details of {{ person.name }}</h1>
+{% endblock %}
+
+{% block content %}
   <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit">
+    <input type="submit" class="button" value="Save changes">
   </form>
 {% endblock %}
