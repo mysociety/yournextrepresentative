@@ -32,12 +32,13 @@
       {% endif %}
 
         <li>
-          {{ c.name }} ({{c.party.name }}) <a href="{% url 'person-update' person_id=c.id %}">Edit</a>
+          {{ c.name }} ({{c.party.name }})
           <form method="post" action="{% url 'candidacy-delete' %}">
             {% csrf_token %}
             <input type="hidden" name="person_id" value="{{ c.id }}"/>
             <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
-            <input type="submit" value="Not actually standing?" />
+            <input type="submit" class="button tiny" value="Not actually standing?" />
+            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
           </form>
         </li>
 
