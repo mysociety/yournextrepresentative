@@ -53,6 +53,12 @@
       </div>
     {% endfor %}
 
+    {% if candidates_2015 %}
+      <div class="row">
+        <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
+      </div>
+    {% endif %}
+
   </div>
 
   <div class="candidates__new" {% if add_candidate_form.errors %}style="display: block"{% endif %}>
