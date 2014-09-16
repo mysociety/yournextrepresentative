@@ -85,17 +85,14 @@ it over for the next couple of weeks.
   * A form to add a new candidate with their basic contact
     details, Twitter username, etc.
 
+  * Similarly, allow the contact details (or 2015 constituency)
+    of any candidate to be edited.
+
 So this is enough for basic entry of candidate data, but there's
 a lot more that should be done to make this a useful and usable
 tool.
 
 ## Things Still To Do:
-
-* Add *some* reasonable CSS at least - I've added foundation and
-  put everything in a 12 wide column, but otherwise spent no
-  time on that.
-
-* Allow people to edit the contact details, etc. of a person.
 
 * Auto-complete parties
 
@@ -103,9 +100,6 @@ tool.
   standing, so that can be recorded with a source and username.
 
 * Allow search for a candidate based on their name.
-
-* Allow you to indicate that someone who stood for constituency
-  A in 2010 is standing in constituency B in 2015.
 
 * Stub out the PopIt API in tests (or this could be provided in
   the PopIt-Python module so that it's reusable).
