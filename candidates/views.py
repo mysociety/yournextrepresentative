@@ -542,6 +542,45 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
         )
         return self.redirect_to_constituency_name(constituency_name)
 
+def get_next_id(current_id):
+    """Increment the trailing digit in an ID
+
+    For example:
+
+    >>> get_next_id('foo-10')
+    u'foo-11'
+    >>> get_next_id('bar-')
+    u'bar-1'
+    >>> get_next_id('quux-13-20')
+    u'quux-13-21'
+    >>> get_next_id('john-smith')
+    u'john-smith-1'
+    """
+    current_id = re.sub(r'-$', '', current_id)
+    # If it ends in '-1', '-2', etc. then just increment that number,
+    # otherwise assume it's the first numbered slug and add '-1'
+    m = re.search(r'^(.*)-(\d+)$', current_id)
+    if m:
+        last_id = int(m.group(2), 10)
+        return u'{0}-{1}'.format(m.group(1), last_id + 1)
+    else:
+        return u'{0}-1'.format(current_id)
+
+def update_id(person_data):
+    """Update the ID in person_data
+
+    For example:
+
+    >>> pd = {'id': 'john-smith', 'name': 'John Smith'}
+    >>> update_id(pd)
+    >>> json.dumps(pd, sort_keys=True)
+    '{"id": "john-smith-1", "name": "John Smith"}'
+    >>> update_id(pd)
+    >>> json.dumps(pd, sort_keys=True)
+    '{"id": "john-smith-2", "name": "John Smith"}'
+    """
+    person_data['id'] = get_next_id(person_data['id'])
+
 class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = NewPersonForm
@@ -554,7 +593,19 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         ).get()['result']
         person_data = get_person_data_from_form(form, generate_id=True)
         # Create that person:
-        person_result = self.api.persons.post(person_data)
+        while True:
+            try:
+                person_result = self.api.persons.post(person_data)
+                break
+            except HttpServerError as hse:
+                # Sometimes the ID that we try will be taken already, so
+                # detect that case, otherwise just reraise the exception.
+                error = json.loads(hse.content)
+                if error.get('error', {}).get('code') == 11000:
+                    update_id(person_data)
+                    continue
+                else:
+                    raise
         # And update their party:
         self.set_party_membership(
             cleaned['party'],
