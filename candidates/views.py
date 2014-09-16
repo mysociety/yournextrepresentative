@@ -389,7 +389,7 @@ complex_fields_locations = {
 
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
-def get_person_data_from_form(form, existing_data=None):
+def get_person_data_from_form(form, generate_id, existing_data=None):
     if existing_data is None:
         result = {}
     else:
@@ -400,7 +400,8 @@ def get_person_data_from_form(form, existing_data=None):
     for field_name in simple_fields:
         if cleaned[field_name]:
             result[field_name] = unicode(cleaned[field_name])
-    result['id'] = slugify(result['name'])
+    if generate_id:
+        result['id'] = slugify(result['name'])
     # These are fields which are represented by values in a sub-object
     # in Popolo's JSON serialization:
     for field_name, location in complex_fields_locations.items():
@@ -530,7 +531,7 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
             # Remove any membership of a 2015 candidate list:
             for membership_id in person.get_2015_candidate_list_memberships():
                 self.api.memberships(membership_id).delete()
-        person_data = get_person_data_from_form(form)
+        person_data = get_person_data_from_form(form, generate_id=False)
         # Update that person:
         person_result = self.api.persons(person.id).put(
             person_data
@@ -551,7 +552,7 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         organization_data = self.api.organizations(
             form.cleaned_data['organization_id']
         ).get()['result']
-        person_data = get_person_data_from_form(form)
+        person_data = get_person_data_from_form(form, generate_id=True)
         # Create that person:
         person_result = self.api.persons.post(person_data)
         # And update their party:
