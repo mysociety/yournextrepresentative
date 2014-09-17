@@ -88,7 +88,7 @@ class PopItPerson(object):
         return self.popit_data['id']
 
     def _update_organizations(self):
-        for m in self.popit_data['memberships']:
+        for m in self.popit_data.get('memberships', []):
             # FIXME: note that this fetches a huge object from the
             # API, since the organisation object for a party has a
             # list of all its memberships inline, which can be
@@ -114,7 +114,7 @@ class PopItPerson(object):
         # there is full organization information in the memberships
         # array:
         return [
-            m for m in self.popit_data['memberships']
+            m for m in self.popit_data.get('memberships', [])
             if re.search(r'^candidates-2015-', m['id'])
         ]
 
@@ -122,7 +122,7 @@ class PopItPerson(object):
         # Similarly to the previous method, this should be rewritten
         # when that change is deployed:
         result = []
-        for m in self.popit_data['memberships']:
+        for m in self.popit_data.get('memberships', []):
             o = self.api.organizations(m['organization_id']).get()['result']
             if o['classification'] == 'Party':
                 result.append(m)

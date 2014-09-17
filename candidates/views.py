@@ -58,7 +58,7 @@ class PopItApiMixin(object):
         organization = self.get_organization(organization_id)
         return (
             organization,
-            [ m['person_id'] for m in organization['memberships'] ]
+            [ m['person_id'] for m in organization.get('memberships', []) ]
         )
 
     def membership_exists(self, person_id, organization_id):
@@ -98,7 +98,7 @@ class PopItApiMixin(object):
 
     def delete_membership(self, person_id, organization_id):
         candidate_data = self.api.organizations(organization_id).get()['result']
-        for m in candidate_data['memberships']:
+        for m in candidate_data.get('memberships', []):
             if m['person_id'] == person_id:
                 self.api.memberships(m['id']).delete()
 
