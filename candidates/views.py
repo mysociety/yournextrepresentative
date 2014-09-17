@@ -17,7 +17,9 @@ from django.views.generic import FormView, TemplateView, DeleteView, UpdateView
 from .forms import PostcodeForm, CandidacyForm, NewPersonForm, UpdatePersonForm, ConstituencyForm
 from .models import (
     PopItPerson, MapItData, get_candidate_list_popit_id,
-    get_constituency_name_from_mapit_id, extract_constituency_name
+    get_constituency_name_from_mapit_id, extract_constituency_name,
+    simple_fields, complex_fields_locations, all_fields,
+    get_person_data_from_dict, get_next_id, update_id
 )
 
 class PopItApiMixin(object):
@@ -368,51 +370,6 @@ def update_values_in_sub_array(data, location, new_value):
     })
     data[location['sub_array']] = new_info
 
-simple_fields = ('name', 'email', 'date_of_birth')
-
-complex_fields_locations = {
-    'wikipedia_url': {
-        'sub_array': 'links',
-        'info_type_key': 'note',
-        'info_value_key': 'url',
-        'info_type': 'wikipedia',
-    },
-    'homepage_url': {
-        'sub_array': 'links',
-        'info_type_key': 'note',
-        'info_value_key': 'url',
-        'info_type': 'homepage',
-    },
-    'twitter_username': {
-        'sub_array': 'contact_details',
-        'info_type_key': 'type',
-        'info_value_key': 'value',
-        'info_type': 'twitter',
-    },
-}
-
-all_fields = list(simple_fields) + complex_fields_locations.keys()
-
-def get_person_data_from_dict(data, generate_id, existing_data=None):
-    if existing_data is None:
-        result = {}
-    else:
-        result = existing_data
-    # First deal with fields that simply map to top level fields in
-    # Popolo.
-    for field_name in simple_fields:
-        if data[field_name]:
-            result[field_name] = unicode(data[field_name])
-    if generate_id:
-        result['id'] = slugify(result['name'])
-    # These are fields which are represented by values in a sub-object
-    # in Popolo's JSON serialization:
-    for field_name, location in complex_fields_locations.items():
-        new_value = data[field_name]
-        if new_value:
-            update_values_in_sub_array(result, location, new_value)
-    return result
-
 def get_value_from_person_data(field_name, person_data):
     """Extract a value from a Popolo person data object for a form field name
 
@@ -545,44 +502,6 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
         )
         return self.redirect_to_constituency_name(constituency_name)
 
-def get_next_id(current_id):
-    """Increment the trailing digit in an ID
-
-    For example:
-
-    >>> get_next_id('foo-10')
-    u'foo-11'
-    >>> get_next_id('bar-')
-    u'bar-1'
-    >>> get_next_id('quux-13-20')
-    u'quux-13-21'
-    >>> get_next_id('john-smith')
-    u'john-smith-1'
-    """
-    current_id = re.sub(r'-$', '', current_id)
-    # If it ends in '-1', '-2', etc. then just increment that number,
-    # otherwise assume it's the first numbered slug and add '-1'
-    m = re.search(r'^(.*)-(\d+)$', current_id)
-    if m:
-        last_id = int(m.group(2), 10)
-        return u'{0}-{1}'.format(m.group(1), last_id + 1)
-    else:
-        return u'{0}-1'.format(current_id)
-
-def update_id(person_data):
-    """Update the ID in person_data
-
-    For example:
-
-    >>> pd = {'id': 'john-smith', 'name': 'John Smith'}
-    >>> update_id(pd)
-    >>> json.dumps(pd, sort_keys=True)
-    '{"id": "john-smith-1", "name": "John Smith"}'
-    >>> update_id(pd)
-    >>> json.dumps(pd, sort_keys=True)
-    '{"id": "john-smith-2", "name": "John Smith"}'
-    """
-    person_data['id'] = get_next_id(person_data['id'])
 
 class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
     template_name = 'candidates/person.html'
