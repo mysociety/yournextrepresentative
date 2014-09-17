@@ -85,18 +85,26 @@ class PopItApiMixin(object):
             'id': url_format.format(mapit_data['id'])
         }
 
+    def create_membership(self, person_id, organization_id,
+                          start_date=None, end_date=None):
+        properties = {
+            'organization_id': organization_id,
+            'person_id': person_id,
+        }
+        if start_date is not None:
+            properties['start_date'] = start_date
+        if end_date is not None:
+            properties['end_date'] = end_date
+        area = self.get_area_from_organization(organization)
+        if area is not None:
+            properties['area'] = area
+        self.api.memberships.post(properties)
+
     def create_membership_if_not_exists(self, person_id, organization_id):
         organization, members = self.get_organization_and_members(organization_id)
         if person_id not in members:
             # Try to create the new membership
-            properties = {
-                'organization_id': organization_id,
-                'person_id': person_id,
-            }
-            area = self.get_area_from_organization(organization)
-            if area is not None:
-                properties['area'] = area
-            self.api.memberships.post(properties)
+            self.create_membership(person_id, organization_id)
 
     def delete_membership(self, person_id, organization_id):
         candidate_data = self.api.organizations(organization_id).get()['result']
