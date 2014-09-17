@@ -497,7 +497,7 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
             )
         else:
             # Remove any membership of a 2015 candidate list:
-            for membership_id in person.get_2015_candidate_list_memberships():
+            for membership_id in person.get_candidate_list_memberships('2015'):
                 self.api.memberships(membership_id).delete()
         person_data = get_person_data_from_dict(form.cleaned_data, generate_id=False)
         # Update that person:
