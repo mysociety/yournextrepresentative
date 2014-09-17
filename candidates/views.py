@@ -242,6 +242,7 @@ class CandidacyMixin(object):
             raise Exception(message.format(candidate_list_name))
 
     def get_party(self, party_name):
+        party_name = re.sub(r'\s+', ' ', party_name).strip()
         search_url = self.get_search_url(
             'organizations',
             'classification:Party AND name:"{0}"'.format(party_name),
@@ -264,8 +265,7 @@ class CandidacyMixin(object):
 
         # Try to get an existing party with that name, if not, create
         # a new one.
-        party_name = re.sub(r'\s+', ' ', original_party_name).strip()
-        party = self.get_party(party_name)
+        party = self.get_party(original_party_name)
         if not party:
             # Then create a new party:
             party = {
