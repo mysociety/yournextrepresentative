@@ -26,15 +26,19 @@ class PopItApiMixin(object):
 
     def __init__(self, *args, **kwargs):
         super(PopItApiMixin, self).__init__(*args, **kwargs)
-        self.api = PopIt(
-            instance=settings.POPIT_INSTANCE,
-            hostname=settings.POPIT_HOSTNAME,
-            port=settings.POPIT_PORT,
-            api_version='v0.1',
-            user=settings.POPIT_USER,
-            password=settings.POPIT_PASSWORD,
-            append_slash=False,
-        )
+        api_properties = {
+            'instance': settings.POPIT_INSTANCE,
+            'hostname': settings.POPIT_HOSTNAME,
+            'port': settings.POPIT_PORT,
+            'api_version': 'v0.1',
+            'append_slash': False,
+        }
+        if settings.POPIT_API_KEY:
+            api_properties['api_key'] = settings.POPIT_API_KEY
+        else:
+            api_properties['user'] = settings.POPIT_USER
+            api_properties['password'] = settings.POPIT_PASSWORD
+        self.api = PopIt(**api_properties)
 
     def get_search_url(self, collection, query):
         port = settings.POPIT_PORT

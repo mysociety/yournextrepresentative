@@ -24,8 +24,9 @@ with open(configuration_file) as f:
 POPIT_INSTANCE = conf['POPIT_INSTANCE']
 POPIT_HOSTNAME = conf['POPIT_HOSTNAME']
 POPIT_PORT = conf.get('POPIT_PORT', 80)
-POPIT_USER = conf['POPIT_USER']
-POPIT_PASSWORD = conf['POPIT_PASSWORD']
+POPIT_USER = conf.get('POPIT_USER', '')
+POPIT_PASSWORD = conf.get('POPIT_PASSWORD', '')
+POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
