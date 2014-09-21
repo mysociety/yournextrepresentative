@@ -167,6 +167,7 @@ class PopItPerson(object):
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
         popit_data = api.persons(popit_person_id).get()['result']
+        print "when getting {0} the length of membership was {1}".format(popit_person_id, len(popit_data.get('memberships', [])))
         new_person = cls(api=api, popit_data=popit_data)
         new_person._update_organizations()
         return new_person
@@ -215,7 +216,8 @@ class PopItPerson(object):
         return result
 
     def party_and_candidate_lists_iter(self):
-        for m in self.popit_data['memberships']:
+        print "when iterating over {0} the length of membership was {1}".format(self.id, len(self.popit_data.get('memberships', [])))
+        for m in self.popit_data.get('memberships', []):
             o = self.api.organizations(m['organization_id']).get(embed='')['result']
             if o['classification'] in ('Party', 'Candidate List'):
                 yield m, o

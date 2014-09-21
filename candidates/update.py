@@ -407,12 +407,15 @@ class PersonUpdateMixin(object):
         person_id = data['id']
         basic_person_data = get_person_data_from_dict(data, generate_id=False)
         basic_person_data['standing_in'] = data['standing_in']
+        print "putting basic_person_data:", json.dumps(basic_person_data, indent=4)
         person_result = self.api.persons(person_id).put(basic_person_data)
         person = PopItPerson.create_from_popit(self.api, data['id'])
 
         # Now remove any party or candidate list memberships; this
         # leaves any other memberships someone might have added.
-        for membership, _ in person.party_and_candidate_lists_iter():
+        print "### considering deletions:"
+        for membership, o in person.party_and_candidate_lists_iter():
+            print "### deleting membership of:", o['name']
             self.api.memberships(membership['id']).delete()
 
         # And then create any that should be there:
