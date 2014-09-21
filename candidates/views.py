@@ -317,67 +317,8 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
         self.delete_membership(person_id, candidate_list_id)
         return self.redirect_to_constituency(organization_data)
 
-def update_values_in_sub_array(data, location, new_value):
-    """Ensure that only a particular value is present in a sub-dict
 
-    This is useful for replacing values nested in sub-objects of JSON
-    data.  This is best demonstrated with an example: if we wanted to
-    change the homepage URL in a person record, you could do it like
-    this:
 
-    >>> person_data = {
-    ...     'id': "john-doe",
-    ...     'name': "John Doe",
-    ...     'email': "john-doe@example.org",
-    ...     'links': [
-    ...         {
-    ...             'note': "wikipedia",
-    ...             'url': "http://en.wikipedia.org/wiki/John_Doe"
-    ...         },
-    ...         {
-    ...             'note': "homepage",
-    ...             'url': "http://www.geocities.com"
-    ...         },
-    ...         {
-    ...             'note': "homepage",
-    ...             'url': "http://oops.duplicate.example.org"
-    ...         }
-    ...     ],
-    ... }
-    >>> update_values_in_sub_array(
-    ...     person_data,
-    ...     {'sub_array': 'links',
-    ...      'info_type_key': 'note',
-    ...      'info_value_key': 'url',
-    ...      'info_type': 'homepage'},
-    ...     "http://john.doe.example.org"
-    ... )
-    >>> print json.dumps(person_data, indent=4) # doctest: +NORMALIZE_WHITESPACE
-    {
-        "email": "john-doe@example.org",
-        "id": "john-doe",
-        "links": [
-            {
-                "note": "wikipedia",
-                "url": "http://en.wikipedia.org/wiki/John_Doe"
-            },
-            {
-                "note": "homepage",
-                "url": "http://john.doe.example.org"
-            }
-        ],
-        "name": "John Doe"
-    }
-    """
-    new_info = [
-        c for c in data.get(location['sub_array'], [])
-        if c.get(location['info_type_key']) != location['info_type']
-    ]
-    new_info.append({
-        location['info_type_key']: location['info_type'],
-        location['info_value_key']: new_value
-    })
-    data[location['sub_array']] = new_info
 
 def get_value_from_person_data(field_name, person_data):
     """Extract a value from a Popolo person data object for a form field name
