@@ -96,8 +96,15 @@ tool.
 
 * Auto-complete parties
 
+* Make "Party in 2015" optional if "standing" isn't ticked
+
 * Add an attribute of a person to indicate that they're not
   standing, so that can be recorded with a source and username.
+
+* It's really weird that constituencies are sometimes referred
+  to in parameters by either (a) the full name (b) the MapIt ID
+  or (c) the Candidate List organization ID. This should really
+  be consistent.
 
 * Allow search for a candidate based on their name.
 
