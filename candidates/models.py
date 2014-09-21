@@ -181,13 +181,7 @@ class PopItPerson(object):
 
     def _update_organizations(self):
         for m in self.popit_data.get('memberships', []):
-            # FIXME: note that this fetches a huge object from the
-            # API, since the organisation object for a party has a
-            # list of all its memberships inline, which can be
-            # hundreds of people for a major party. See the comment on
-            # the related issue here:
-            # https://github.com/mysociety/popit/issues/593#issuecomment-51690405
-            o = self.api.organizations(m['organization_id']).get()['result']
+            o = self.api.organizations(m['organization_id']).get(embed='')['result']
             # FIXME: this is just quick and broken implementation -
             # it's obviously not correct, because if someone changes
             # parties between the 2010 and 2015 elections, they'll
@@ -215,14 +209,14 @@ class PopItPerson(object):
         # when that change is deployed:
         result = []
         for m in self.popit_data.get('memberships', []):
-            o = self.api.organizations(m['organization_id']).get()['result']
+            o = self.api.organizations(m['organization_id']).get(embed='')['result']
             if o['classification'] == 'Party':
                 result.append(m)
         return result
 
     def party_and_candidate_lists_iter(self):
         for m in self.popit_data['memberships']:
-            o = self.api.organizations(m['organization_id']).get()['result']
+            o = self.api.organizations(m['organization_id']).get(embed='')['result']
             if o['classification'] in ('Party', 'Candidate List'):
                 yield m, o
 
