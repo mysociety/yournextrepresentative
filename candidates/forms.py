@@ -37,7 +37,7 @@ class BasePersonForm(forms.Form):
         max_length=256,
     )
     party = forms.CharField(
-        label="Party",
+        label="Party in 2015",
         max_length=256,
     )
     email = forms.CharField(
