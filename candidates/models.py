@@ -32,6 +32,8 @@ complex_fields_locations = {
 
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
+candidate_list_name_re = re.compile(r'^Candidates for (.*) in (\d+)$')
+
 def get_mapit_constituencies(basename):
     with open(join(data_directory, basename)) as f:
         return json.load(f)
@@ -113,8 +115,7 @@ def extract_constituency_name(candidate_list_organization):
     >>> print constituency_name
     None
     """
-    m = re.search(
-        r'^Candidates for (.*) in \d+$',
+    m = candidate_list_name_re.search(
         candidate_list_organization['name']
     )
     if m:

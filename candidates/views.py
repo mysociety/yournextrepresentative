@@ -19,7 +19,8 @@ from .models import (
     PopItPerson, MapItData, get_candidate_list_popit_id,
     get_constituency_name_from_mapit_id, extract_constituency_name,
     simple_fields, complex_fields_locations, all_fields,
-    get_person_data_from_dict, get_next_id, update_id
+    get_person_data_from_dict, get_next_id, update_id,
+    candidate_list_name_re
 )
 
 class PopItApiMixin(object):
@@ -70,7 +71,7 @@ class PopItApiMixin(object):
     def get_area_from_organization(self, organization):
         if organization['classification'] != "Candidate List":
             return None
-        m = re.search(r'Candidates for (.*) in \d{4}', organization['name'])
+        m = candidate_list_name_re.search(organization['name'])
         if not m:
             message = "Found a Candidate List with an unparseable name: '{0}'"
             raise Exception(message.format(organization['name']))
