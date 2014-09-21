@@ -52,6 +52,12 @@ class MapItData(object):
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
 
+def get_mapit_id_from_mapit_url(mapit_url):
+    m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
+    if not m:
+        raise Exception("Failed to parse the MapIt URL: {0}".format(mapit_url))
+    return m.group(1)
+
 def get_next_id(current_id):
     """Increment the trailing digit in an ID
 
