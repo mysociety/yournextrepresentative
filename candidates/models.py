@@ -1,3 +1,4 @@
+from datetime import date
 import json
 from os.path import dirname, join, abspath
 import re
@@ -31,6 +32,9 @@ complex_fields_locations = {
         'info_type': 'twitter',
     },
 }
+
+election_date_2005 = date(2005, 5, 5)
+election_date_2010 = date(2010, 5, 6)
 
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
@@ -215,6 +219,12 @@ class PopItPerson(object):
             if o['classification'] == 'Party':
                 result.append(m)
         return result
+
+    def party_and_candidate_lists_iter(self):
+        for m in self.popit_data['memberships']:
+            o = self.api.organizations(m['organization_id']).get()['result']
+            if o['classification'] in ('Party', 'Candidate List'):
+                yield m, o
 
 def update_values_in_sub_array(data, location, new_value):
     """Ensure that only a particular value is present in a sub-dict

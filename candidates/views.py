@@ -20,8 +20,10 @@ from .models import (
     get_constituency_name_from_mapit_id, extract_constituency_name,
     simple_fields, complex_fields_locations, all_fields,
     get_person_data_from_dict, get_next_id, update_id,
-    candidate_list_name_re
+    candidate_list_name_re, get_mapit_id_from_mapit_url
 )
+
+from .update import PersonParseMixin, PersonUpdateMixin
 
 class PopItApiMixin(object):
 
@@ -68,7 +70,8 @@ class PopItApiMixin(object):
         _, members = self.get_organization_and_members(organization_id)
         return person_id in members
 
-    def get_area_from_organization(self, organization):
+    def get_area_from_organization(self, organization, mapit_url_key='id'):
+        print "got organization:", json.dumps(organization, indent=4)
         if organization['classification'] != "Candidate List":
             return None
         m = candidate_list_name_re.search(organization['name'])
@@ -83,7 +86,7 @@ class PopItApiMixin(object):
         url_format = 'http://mapit.mysociety.org/area/{0}'
         return {
             'name': constituency_name,
-            'id': url_format.format(mapit_data['id'])
+            mapit_url_key: url_format.format(mapit_data['id'])
         }
 
     def create_membership(self, person_id, organization_id,
@@ -96,6 +99,7 @@ class PopItApiMixin(object):
             properties['start_date'] = start_date
         if end_date is not None:
             properties['end_date'] = end_date
+        organization = self.api.organizations(organization_id).get(embed='')['result']
         area = self.get_area_from_organization(organization)
         if area is not None:
             properties['area'] = area
@@ -286,39 +290,52 @@ class CandidacyMixin(object):
             }
             self.api.organizations.post(party)
         # Create the party membership:
-        self.create_membership_if_not_exists(
-            person_id,
-            party['id']
+        self.create_party_membership(person_id, party['id'])
+
+
+class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+
+    form_class = CandidacyForm
+
+    def form_valid(self, form):
+        person_data, organization_data = self.get_person_and_organization(form)
+        our_person = self.get_person(form.cleaned_data['person_id'])
+
+        print "Going to mark this person as *standing*:"
+        print json.dumps(our_person, indent=4)
+
+        our_person['standing_in']['2015'] = self.get_area_from_organization(
+            organization_data,
+            mapit_url_key='mapit_url'
         )
+        our_person['party_memberships']['2015'] = our_person['party_memberships']['2010']
+
+        print "... by updating with this data:"
+        print json.dumps(our_person, indent=4)
+
+        self.update_person(our_person)
+        return self.redirect_to_constituency(organization_data)
 
 
-class CandidacyView(PopItApiMixin, CandidacyMixin, FormView):
+class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyForm
 
     def form_valid(self, form):
         person_data, organization_data = self.get_person_and_organization(form)
-        print json.dumps(person_data, indent=4)
-        person_id = person_data['id']
-        candidate_list_id = organization_data['id']
-        # Check that that membership doesn't already exist:
-        self.create_membership_if_not_exists(person_id, candidate_list_id)
+        our_person = self.get_person(form.cleaned_data['person_id'])
+
+        print "Going to mark this person as *not* standing:"
+        print json.dumps(our_person, indent=4)
+
+        our_person['standing_in']['2015'] = None
+        del our_person['party_memberships']['2015']
+
+        print "... by updating with this data:"
+        print json.dumps(our_person, indent=4)
+
+        self.update_person(our_person)
         return self.redirect_to_constituency(organization_data)
-
-
-class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, FormView):
-
-    form_class = CandidacyForm
-
-    def form_valid(self, form):
-        person_data, organization_data = self.get_person_and_organization(form)
-        person_id = person_data['id']
-        candidate_list_id = organization_data['id']
-        self.delete_membership(person_id, candidate_list_id)
-        return self.redirect_to_constituency(organization_data)
-
-
-
 
 def get_value_from_person_data(field_name, person_data):
     """Extract a value from a Popolo person data object for a form field name
@@ -383,29 +400,38 @@ def get_value_from_person_data(field_name, person_data):
             return ''
     raise Exception, "Unknown field name {0}".format(field_name)
 
-class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
+def get_previous_constituency_name(standing_in):
+    for year in reversed(standing_in.keys()):
+        if standing_in[year]:
+            return standing_in[year]['name']
+    return None
+
+def copy_person_form_data(cleaned_data):
+    result = cleaned_data.copy()
+    # The date is returned as a datetime.date, so if that's set, turn
+    # it into a string:
+    date_of_birth_date = result['date_of_birth']
+    if date_of_birth_date:
+        result['date_of_birth'] = str(date_of_birth_date)
+    return result
+
+class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = UpdatePersonForm
 
     def get_initial(self):
         initial_data = super(UpdatePersonView, self).get_initial()
-        person = PopItPerson.create_from_popit(
-            self.api, self.kwargs['person_id']
-        )
+        our_person = self.get_person(self.kwargs['person_id'])
         for field_name in all_fields:
-            initial_data[field_name] = get_value_from_person_data(
-                field_name,
-                person.popit_data
-            )
-        initial_data['party'] = ''
-        if person.party:
-            initial_data['party'] = person.party['name']
-        if person.constituency_2015:
-            initial_data['constituency'] = \
-                MapItData.constituencies_2010_name_map[
-                    extract_constituency_name(person.constituency_2015)
-                ]['id']
-        initial_data['standing'] = bool(person.constituency_2015)
+            initial_data[field_name] = our_person.get(field_name)
+        initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
+        if initial_data['standing']:
+            party_data_2015 = our_person['party_memberships'].get('2015', {})
+            initial_data['party'] = party_data_2015.get('name', '')
+            cons_data_2015 = our_person['standing_in'].get('2015', {})
+            mapit_url = cons_data_2015.get('mapit_url')
+            if mapit_url:
+                initial_data['constituency'] = get_mapit_id_from_mapit_url(mapit_url)
         return initial_data
 
     def get_context_data(self, **kwargs):
@@ -418,65 +444,95 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, FormView):
         return context
 
     def form_valid(self, form):
-        cleaned = form.cleaned_data
-        constituency_name = None
-        person = PopItPerson.create_from_popit(
-            self.api, self.kwargs['person_id']
+        # First parse that person's data from PopIt into our more
+        # usable data structure:
+
+        our_person = self.get_person(self.kwargs['person_id'])
+
+        print "Going to update this person:"
+        print json.dumps(our_person, indent=4)
+
+        previous_constituency_name = get_previous_constituency_name(
+            our_person['standing_in']
         )
-        if cleaned['standing']:
+
+        # Now we need to make any changes to that data structure based
+        # on information given in the form.
+
+        data_for_update = copy_person_form_data(form.cleaned_data)
+
+        # Extract some fields that we will deal with separately:
+        standing = data_for_update.pop('standing')
+        constituency_2015_mapit_id = data_for_update.pop('constituency')
+        party_2015 = data_for_update.pop('party')
+
+        # Update our representation with data from the form:
+        our_person.update(data_for_update)
+
+        if standing:
             constituency_name = get_constituency_name_from_mapit_id(
-                cleaned['constituency']
+                constituency_2015_mapit_id
             )
             if not constituency_name:
                 message = "Failed to find a constituency with MapIt ID {}"
                 raise Exception(message.format(cleaned['constituency']))
-            organization_id = 'candidates-2015-{0}'.format(
-                slugify(constituency_name)
-            )
-            self.create_membership_if_not_exists(
-                person.id,
-                organization_id
-            )
+            our_person['standing_in']['2015'] = {
+                'name': constituency_name,
+                'mapit_url': 'http://mapit.mysociety.org/area/{0}'.format(constituency_2015_mapit_id)
+            }
+            our_person['party_memberships']['2015'] = {'name': party_2015}
         else:
-            # Remove any membership of a 2015 candidate list:
-            for membership_id in person.get_candidate_list_memberships('2015'):
-                self.api.memberships(membership_id).delete()
-        person_data = get_person_data_from_dict(form.cleaned_data, generate_id=False)
-        # Update that person:
-        person_result = self.api.persons(person.id).put(
-            person_data
-        )
-        self.set_party_membership(
-            cleaned['party'],
-            person.id
-        )
-        return self.redirect_to_constituency_name(constituency_name)
+            # If the person is not standing in 2015, record that
+            # they're not and remove the party membership for 2015:
+            our_person['standing_in']['2015'] = None
+            del our_person['party_memberships']['2015']
+
+        print "Going to update that person with this data:"
+        print json.dumps(our_person, indent=4)
+
+        self.update_person(our_person)
+
+        if standing:
+            return self.redirect_to_constituency_name(constituency_name)
+        else:
+            if previous_constituency_name:
+                return self.redirect_to_constituency_name(previous_constituency_name)
+            else:
+                return HttpResponseRedirect(reverse('finder'))
 
 
-class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
+class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = NewPersonForm
 
     def form_valid(self, form):
-        cleaned = form.cleaned_data
+        data_for_creation = copy_person_form_data(form.cleaned_data)
+
+        # Extract these fields, since we'll present them in the
+        # standing_in and party_memberships fields.
+        party = data_for_creation.pop('party')
+        organization_id = data_for_creation.pop('organization_id')
+
+        data_for_creation['party_memberships'] = {
+            '2015': {
+                'name': party
+            }
+        }
+
         # Check that the candidate list organization exists:
         organization_data = self.api.organizations(
             form.cleaned_data['organization_id']
         ).get()['result']
-        person_data = get_person_data_from_dict(form.cleaned_data, generate_id=True)
-        # Create that person:
-        person_result = create_with_id_retries(
-            self.api.persons,
-            person_data
-        )
-        # And update their party:
-        self.set_party_membership(
-            cleaned['party'],
-            person_result['result']['id']
-        )
-        # Create the candidate list membership:
-        self.create_membership_if_not_exists(
-            person_result['result']['id'],
-            organization_data['id'],
-        )
+
+        data_for_creation['standing_in'] = {
+            '2015': self.get_area_from_organization(
+                organization_data,
+                mapit_url_key='mapit_url',
+            )
+        }
+
+        print "Going to create a new person from this data:"
+        print json.dumps(data_for_creation, indent=4)
+
+        self.create_person(data_for_creation)
         return self.redirect_to_constituency(organization_data)
