@@ -5,6 +5,8 @@ from slugify import slugify
 
 from django.db import models
 
+from slumber.exceptions import HttpServerError
+
 data_directory = abspath(join(dirname(__file__), '..', 'data'))
 
 simple_fields = ('name', 'email', 'date_of_birth')
@@ -88,6 +90,22 @@ def update_id(person_data):
     '{"id": "john-smith-2", "name": "John Smith"}'
     """
     person_data['id'] = get_next_id(person_data['id'])
+
+def create_with_id_retries(api_collection, data):
+    while True:
+        try:
+            result = api_collection.post(data)
+            break
+        except HttpServerError as hse:
+            # Sometimes the ID that we try will be taken already, so
+            # detect that case, otherwise just reraise the exception.
+            error = json.loads(hse.content)
+            if error.get('error', {}).get('code') == 11000:
+                update_id(data)
+                continue
+            else:
+                raise
+    return result
 
 def get_candidate_list_popit_id(constituency_name, year):
     """Return the PopIt organization ID for a constituency's candidate list

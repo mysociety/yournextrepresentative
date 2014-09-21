@@ -1,7 +1,7 @@
 import json
 import re
 
-from slumber.exceptions import HttpClientError, HttpServerError
+from slumber.exceptions import HttpClientError
 from popit_api import PopIt
 from slugify import slugify
 import requests
@@ -524,19 +524,10 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, FormView):
         ).get()['result']
         person_data = get_person_data_from_dict(form.cleaned_data, generate_id=True)
         # Create that person:
-        while True:
-            try:
-                person_result = self.api.persons.post(person_data)
-                break
-            except HttpServerError as hse:
-                # Sometimes the ID that we try will be taken already, so
-                # detect that case, otherwise just reraise the exception.
-                error = json.loads(hse.content)
-                if error.get('error', {}).get('code') == 11000:
-                    update_id(person_data)
-                    continue
-                else:
-                    raise
+        person_result = create_with_id_retries(
+            self.api.persons,
+            person_data
+        )
         # And update their party:
         self.set_party_membership(
             cleaned['party'],
