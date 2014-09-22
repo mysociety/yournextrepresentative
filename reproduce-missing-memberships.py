@@ -101,7 +101,6 @@ try:
     person_data = api.persons(person_id).get()
     print "The number of memberships is:", len(person_data['result'].get('memberships', []))
 
-    time.sleep(5)
     print "Now re-getting person data yet again with GET:"
     person_data = api.persons(person_id).get()
     print "The number of memberships is:", len(person_data['result'].get('memberships', []))
