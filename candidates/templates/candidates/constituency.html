@@ -36,7 +36,7 @@
           <form method="post" action="{% url 'candidacy-delete' %}">
             {% csrf_token %}
             <input type="hidden" name="person_id" value="{{ c.id }}"/>
-            <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
+            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
             <label for="id_source">Information source for this change</label>
             <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
             <input type="submit" class="button tiny" value="Not actually standing?" />
@@ -95,7 +95,7 @@
             <form method="post" action="{% url 'candidacy-create' %}">
               {% csrf_token %}
               <input type="hidden" name="person_id" value="{{ c.id }}"/>
-              <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}"/>
+              <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
               <label for="id_source">Information source for this change</label>
               <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
               <input type="submit" class="button tiny" value="Standing again" />

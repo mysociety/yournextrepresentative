@@ -196,7 +196,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
-        mapit_area_id = kwargs['mapit_area_id']
+        context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
 
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
@@ -229,10 +229,12 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 class CandidacyMixin(object):
 
     def get_person_and_organization(self, form):
+        mapit_area_id = form.cleaned_data['mapit_area_id']
+        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
         # If either of these don't exist, an HttpClientError will be
         # thrown, which is fine for error checking at the moment
-        organization_id = form.cleaned_data['organization_id']
         person_id = form.cleaned_data['person_id']
+        organization_id = get_candidate_list_popit_id(constituency_name, 2015)
         try:
             organization_data = self.api.organizations(organization_id).get()['result']
             person_data = self.api.persons(person_id).get()['result']
@@ -334,7 +336,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdat
         print json.dumps(our_person, indent=4)
 
         self.update_person(our_person, change_metadata, previous_versions)
-        return self.redirect_to_constituency(organization_data)
+        return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
 
 class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
@@ -359,7 +361,7 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, Perso
         print json.dumps(our_person, indent=4)
 
         self.update_person(our_person, change_metadata, previous_versions)
-        return self.redirect_to_constituency(organization_data)
+        return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
 def get_value_from_person_data(field_name, person_data):
     """Extract a value from a Popolo person data object for a form field name

@@ -26,8 +26,8 @@ class CandidacyForm(forms.Form):
         label='Person ID',
         max_length=256,
     )
-    organization_id = forms.CharField(
-        label='Candidate List ID',
+    mapit_area_id = forms.CharField(
+        label='MapIt Area ID',
         max_length=256,
     )
     source = forms.CharField(
