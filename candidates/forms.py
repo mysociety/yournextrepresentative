@@ -71,8 +71,8 @@ class BasePersonForm(forms.Form):
 
 
 class NewPersonForm(BasePersonForm):
-    organization_id = forms.CharField(
-        label="The candidate lists's organization ID",
+    constituency = forms.CharField(
+        label="Constituency in 2015",
         max_length=256,
         widget=forms.HiddenInput(),
     )

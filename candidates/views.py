@@ -210,8 +210,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             for person_id in set(old_candidate_ids + new_candidate_ids)
         }
 
-        context['new_candidate_list_id'] = new_candidate_list_id
-
         context['candidates_2010'] = [
             (person_id_to_person_data[p_id], p_id in new_candidate_ids)
             for p_id in old_candidate_ids
@@ -261,10 +259,8 @@ class CandidacyMixin(object):
         }
 
     def redirect_to_constituency_name(self, constituency_name):
-        return HttpResponseRedirect(
-            reverse('constituency',
-                    kwargs={'constituency_name': constituency_name})
-        )
+        mapit_data = MapItData.constituencies_2010_name_map.get(constituency_name)
+        return get_redirect_from_mapit_id(mapit_data['id'])
 
     def redirect_to_constituency(self, candidate_list_data):
         constituency_name = extract_constituency_name(candidate_list_data)
@@ -544,7 +540,9 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
         # Extract these fields, since we'll present them in the
         # standing_in and party_memberships fields.
         party = data_for_creation.pop('party')
-        organization_id = data_for_creation.pop('organization_id')
+        mapit_area_id = data_for_creation.pop('constituency')
+        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
+        organization_id = get_candidate_list_popit_id(constituency_name, 2015)
 
         data_for_creation['party_memberships'] = {
             '2015': {
@@ -554,7 +552,7 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
 
         # Check that the candidate list organization exists:
         organization_data = self.api.organizations(
-            form.cleaned_data['organization_id']
+            organization_id
         ).get()['result']
 
         data_for_creation['standing_in'] = {

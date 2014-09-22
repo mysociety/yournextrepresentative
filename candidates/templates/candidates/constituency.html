@@ -75,7 +75,7 @@
             {{ field.label_tag }} {{ field }}
           </p>
         {% endfor %}
-        <input type="hidden" name="organization_id" value="{{ new_candidate_list_id }}">
+        <input type="hidden" id="id_constituency" name="constituency" value="{{ mapit_area_id }}">
       <input type="submit" class="button" value="Add new candidate">
       <a class="hide-new-candidate-form button secondary">Cancel</a>
     </form>
