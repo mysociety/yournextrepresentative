@@ -91,11 +91,12 @@ try:
 
     print "Now updating the person with PUT:"
     date_of_birth = "1970-04-" + str(randint(1, 30))
-    api.persons(person_id).put({
+    put_result = api.persons(person_id).put({
         'id': person_id,
         'name': 'Joe Example Bloggs',
         'date_of_birth': date_of_birth
     })
+    print "The number of memberships is:", len(put_result['result'].get('memberships', []))
 
     print "Now re-getting person data with GET:"
     person_data = api.persons(person_id).get()
