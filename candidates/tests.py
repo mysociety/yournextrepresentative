@@ -19,7 +19,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/constituency/Cities%20of%20London%20and%20Westminster'
+            '/constituency/65759/cities-of-london-and-westminster'
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self):
@@ -52,5 +52,5 @@ class TestConstituencyDetailView(WebTest):
 
     def test_any_constituency_page(self):
         # Just a smoke test for the moment:
-        response = self.app.get('/constituency/Dulwich%20and%20West%20Norwood')
+        response = self.app.get('/constituency/65808/dulwich-and-west-norwood')
         response.mustcontain('Tessa Jowell (Labour Party)')

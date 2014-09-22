@@ -118,17 +118,17 @@ class PopItApiMixin(object):
                 self.api.memberships(m['id']).delete()
 
 
-def get_redirect_from_mapit_id(mapit_id_str):
-    constituency_name = get_constituency_name_from_mapit_id(mapit_id_str)
-    if constituency_name is None:
-        error_url = reverse('finder')
-        error_url += '?bad_constituency_id=' + urlquote(mapit_id_str)
-        return HttpResponseRedirect(error_url)
-    constituency_url = reverse(
-        'constituency',
-        kwargs={'constituency_name': constituency_name}
+def get_redirect_from_mapit_id(mapit_id):
+    constituency_name = get_constituency_name_from_mapit_id(mapit_id)
+    return HttpResponseRedirect(
+        reverse(
+            'constituency',
+            kwargs={
+                'mapit_area_id': mapit_id,
+                'ignored_slug': slugify(constituency_name),
+            }
+        )
     )
-    return HttpResponseRedirect(constituency_url)
 
 
 class ConstituencyPostcodeFinderView(FormView):
@@ -196,7 +196,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
-        constituency_name = kwargs['constituency_name']
+        mapit_area_id = kwargs['mapit_area_id']
+        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
 
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
