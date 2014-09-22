@@ -296,6 +296,7 @@ class PersonParseMixin(object):
             result[field] = person.popit_data.get(field, '')
         for field, location in complex_fields_locations.items():
             result[field] = get_value_from_location(location, person.popit_data)
+        result['versions'] = person.popit_data.get('versions', [])
 
         # We'll need details of party memberships and candidate lists
         # from PopIt:
@@ -393,20 +394,31 @@ class PersonUpdateMixin(object):
                     get_candidate_list_popit_id(name, election_year)
                 self.create_membership(**membership)
 
-    def create_person(self, data):
+    def create_person(self, data, information_source):
         # Create the person:
         basic_person_data = get_person_data_from_dict(data, generate_id=True)
         basic_person_data['standing_in'] = data['standing_in']
         basic_person_data['id'] = slugify(basic_person_data['name'])
+        version = {
+            'information_source': information_source,
+            'data': data,
+        }
+        basic_person_data['versions'] = [version]
         person_result = create_with_id_retries(self.api.persons, basic_person_data)
         person_id = person_result['result']['id']
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
 
-    def update_person(self, data):
+    def update_person(self, data, information_source, previous_versions):
         person_id = data['id']
         basic_person_data = get_person_data_from_dict(data, generate_id=False)
         basic_person_data['standing_in'] = data['standing_in']
+        new_version = {
+            'information_source': information_source,
+            'data': data,
+        }
+        versions = [new_version] + previous_versions
+        basic_person_data['versions'] = versions
         print "putting basic_person_data:", json.dumps(basic_person_data, indent=4)
         person_result = self.api.persons(person_id).put(basic_person_data)
         person = PopItPerson.create_from_popit(self.api, data['id'])

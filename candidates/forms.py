@@ -30,6 +30,10 @@ class CandidacyForm(forms.Form):
         label='Candidate List ID',
         max_length=256,
     )
+    source = forms.CharField(
+        label="Information source for this change",
+        max_length=512,
+    )
 
 class BasePersonForm(forms.Form):
     name = forms.CharField(
@@ -72,6 +76,10 @@ class NewPersonForm(BasePersonForm):
         max_length=256,
         widget=forms.HiddenInput(),
     )
+    source = forms.CharField(
+        label="Source of information",
+        max_length=512,
+    )
 
 class UpdatePersonForm(BasePersonForm):
     standing = forms.BooleanField(
@@ -89,4 +97,8 @@ class UpdatePersonForm(BasePersonForm):
             ],
             key=lambda t: t[1]
         )
+    )
+    source = forms.CharField(
+        label="Source of information for this change",
+        max_length=512,
     )
