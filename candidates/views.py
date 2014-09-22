@@ -242,6 +242,21 @@ class CandidacyMixin(object):
                 raise
         return (person_data, organization_data)
 
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def get_change_metadata(self, request, information_source):
+        return {
+            'username': None,
+            'ip': self.get_client_ip(request),
+            'information_source': information_source,
+        }
+
     def redirect_to_constituency_name(self, constituency_name):
         return HttpResponseRedirect(
             reverse('constituency',
@@ -299,7 +314,9 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdat
 
     def form_valid(self, form):
         person_data, organization_data = self.get_person_and_organization(form)
-        information_source = form.cleaned_data['source']
+        change_metadata = self.get_change_metadata(
+            self.request, form.cleaned_data['source']
+        )
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
@@ -315,7 +332,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdat
         print "... by updating with this data:"
         print json.dumps(our_person, indent=4)
 
-        self.update_person(our_person, information_source, previous_versions)
+        self.update_person(our_person, change_metadata, previous_versions)
         return self.redirect_to_constituency(organization_data)
 
 
@@ -325,7 +342,9 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, Perso
 
     def form_valid(self, form):
         person_data, organization_data = self.get_person_and_organization(form)
-        information_source = form.cleaned_data['source']
+        change_metadata = self.get_change_metadata(
+            self.request, form.cleaned_data['source']
+        )
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
@@ -338,7 +357,7 @@ class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, Perso
         print "... by updating with this data:"
         print json.dumps(our_person, indent=4)
 
-        self.update_person(our_person, information_source, previous_versions)
+        self.update_person(our_person, change_metadata, previous_versions)
         return self.redirect_to_constituency(organization_data)
 
 def get_value_from_person_data(field_name, person_data):
@@ -467,7 +486,9 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUp
         data_for_update = copy_person_form_data(form.cleaned_data)
 
         # Extract some fields that we will deal with separately:
-        information_source = data_for_update.pop('source')
+        change_metadata = self.get_change_metadata(
+            self.request, data_for_update.pop('source')
+        )
         standing = data_for_update.pop('standing')
         constituency_2015_mapit_id = data_for_update.pop('constituency')
         party_2015 = data_for_update.pop('party')
@@ -496,7 +517,7 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUp
         print "Going to update that person with this data:"
         print json.dumps(our_person, indent=4)
 
-        self.update_person(our_person, information_source, previous_versions)
+        self.update_person(our_person, change_metadata, previous_versions)
 
         if standing:
             return self.redirect_to_constituency_name(constituency_name)
@@ -514,7 +535,9 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
     def form_valid(self, form):
         data_for_creation = copy_person_form_data(form.cleaned_data)
 
-        information_source = data_for_creation.pop('source')
+        change_metadata = self.get_change_metadata(
+            self.request, data_for_creation.pop('source')
+        )
         # Extract these fields, since we'll present them in the
         # standing_in and party_memberships fields.
         party = data_for_creation.pop('party')
@@ -541,5 +564,5 @@ class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
         print "Going to create a new person from this data:"
         print json.dumps(data_for_creation, indent=4)
 
-        self.create_person(data_for_creation, information_source)
+        self.create_person(data_for_creation, change_metadata)
         return self.redirect_to_constituency(organization_data)
