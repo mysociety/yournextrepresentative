@@ -1,4 +1,5 @@
-# Is this a staging server?
+# Is this a staging or development server? Set STAGING to 1 if so,
+# otherwise set 0 for a production site
 STAGING: '1'
 
 # The path to the gems directory:
