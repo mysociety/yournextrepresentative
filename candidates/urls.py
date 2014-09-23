@@ -4,12 +4,14 @@ from django.contrib import admin
 
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
-    CandidacyDeleteView, NewPersonView, UpdatePersonView)
+    CandidacyDeleteView, NewPersonView, UpdatePersonView,
+    AutocompletePartyView)
 
 urlpatterns = patterns('',
     url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
     url(r'^lookup/name$', ConstituencyNameFinderView.as_view(), name='lookup-name'),
     url(r'^lookup/postcode$', ConstituencyPostcodeFinderView.as_view(), name='lookup-postcode'),
+    url(r'^autocomplete/party$', AutocompletePartyView.as_view(), name='autocomplete-party'),
     url(r'^constituency/(?P<mapit_area_id>\d+)/(?P<ignored_slug>.*)$',
         ConstituencyDetailView.as_view(),
         name='constituency'),

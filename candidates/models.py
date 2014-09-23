@@ -1,3 +1,4 @@
+import csv
 from datetime import date
 import json
 from os.path import dirname, join, abspath
@@ -55,6 +56,20 @@ class MapItData(object):
         get_mapit_constituencies('mapit-WMC-generation-13.json')
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
+
+def get_party_counts_2010():
+    result = {}
+    with open(join(
+            data_directory,
+            'parties-2010-rough-candidate-counts.csv')) as f:
+        reader = csv.reader(f)
+        for row in reader:
+            result[row[1]] = int(row[2], 10)
+    return result
+
+class PartyData(object):
+    party_counts_2010 = \
+        get_party_counts_2010()
 
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
