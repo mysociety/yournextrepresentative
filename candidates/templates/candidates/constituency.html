@@ -5,6 +5,7 @@
 {% block extra_js %}
   <script>
     $(function() {
+      /* Set up the hide / reveal for the add new candidate form */
       $('.show-new-candidate-form').on('click', function(){
         $('.candidates__new').slideDown(function(){
           $('.candidates__new input:text').eq(0).focus();
