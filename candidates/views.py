@@ -218,10 +218,31 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             for person_id in set(old_candidate_ids + new_candidate_ids)
         }
 
-        context['candidates_2010'] = [
-            (person_id_to_person_data[p_id], p_id in new_candidate_ids)
+        context['candidates_2010_standing_again'] = [
+            person_id_to_person_data[p_id]
             for p_id in old_candidate_ids
+            if p_id in new_candidate_ids
         ]
+
+        other_candidates_2010 = [
+            person_id_to_person_data[p_id]
+            for p_id in old_candidate_ids
+            if p_id not in new_candidate_ids
+        ]
+
+        # Now split those candidates into those that we know aren't
+        # standing again, and those that we just don't know about.
+
+        context['candidates_2010_not_standing_again'] = [
+            p for p in other_candidates_2010
+            if p.not_standing_in_2015
+        ]
+
+        context['candidates_2010_might_stand_again'] = [
+            p for p in other_candidates_2010
+            if not p.not_standing_in_2015
+        ]
+
         context['candidates_2015'] = [
             person_id_to_person_data[p_id] for p_id in new_candidate_ids
         ]

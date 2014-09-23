@@ -195,6 +195,14 @@ class PopItPerson(object):
     def id(self):
         return self.popit_data['id']
 
+    @property
+    def not_standing_in_2015(self):
+        # If there's a standing_in element present, it's '2015' value
+        # is set to None, then we someone has marked that person as
+        # not standing...
+        standing_in = self.popit_data.get('standing_in', {})
+        return ('2015' in standing_in) and standing_in['2015'] == None
+
     def _update_organizations(self):
         for m in self.popit_data.get('memberships', []):
             o = self.api.organizations(m['organization_id']).get(embed='')['result']

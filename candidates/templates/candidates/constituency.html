@@ -90,31 +90,56 @@
 
   </div>
 
-{% if candidates_2010 %}
+{% if candidates_2010_might_stand_again %}
   <div class="candidates__previous">
 
     <h3>Is a candidate from the 2010 election standing again?</h3>
 
     <ul>
-      {% for c, already_standing in candidates_2010 %}
+      {% for c in candidates_2010_might_stand_again %}
         <li>
           {{ c.name }} ({{ c.party.name }})
-          {% if not already_standing %}
-            <form method="post" action="{% url 'candidacy-create' %}">
-              {% csrf_token %}
-              <input type="hidden" name="person_id" value="{{ c.id }}"/>
-              <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
-              <label for="id_source">Source of information that they're standing</label>
-              <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
-              <input type="submit" class="button tiny" value="Standing again" />
-              <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
-            </form>
-          {% endif %}
+          <form method="post" action="{% url 'candidacy-create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="person_id" value="{{ c.id }}"/>
+            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
+            <label for="id_source">Source of information that they're standing</label>
+            <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+            <input type="submit" class="button tiny" value="Standing again" />
+            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+          </form>
         </li>
       {% endfor %}
     </ul>
 
   </div>
 {% endif %}
+
+
+{% if candidates_2010_not_standing_again %}
+  <div class="candidates__previous">
+
+    <h3>These candidates from 2010 are known not to be standing again</h3>
+
+    <ul>
+      {% for c in candidates_2010_not_standing_again %}
+        <li>
+          {{ c.name }} ({{ c.party.name }})
+          <form method="post" action="{% url 'candidacy-create' %}">
+            {% csrf_token %}
+            <input type="hidden" name="person_id" value="{{ c.id }}"/>
+            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
+            <label for="id_source">Source of information that they're actually are standing again</label>
+            <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+            <input type="submit" class="button tiny" value="Actually they are standing again!" />
+            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+{% endif %}
+
 
 {% endblock %}
