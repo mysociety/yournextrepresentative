@@ -205,7 +205,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
-        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
+        context['constituency_name'] = constituency_name = \
+            get_constituency_name_from_mapit_id(mapit_area_id)
 
         old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
         new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
@@ -231,22 +232,14 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         ]
 
         # Now split those candidates into those that we know aren't
-        # standing again, and those that we just don't know about.
+        # standing again, and those that we just don't know about:
+        context['candidates_2010_not_standing_again'] = \
+            [p for p in other_candidates_2010 if p.not_standing_in_2015]
+        context['candidates_2010_might_stand_again'] = \
+            [p for p in other_candidates_2010 if not p.not_standing_in_2015]
 
-        context['candidates_2010_not_standing_again'] = [
-            p for p in other_candidates_2010
-            if p.not_standing_in_2015
-        ]
-
-        context['candidates_2010_might_stand_again'] = [
-            p for p in other_candidates_2010
-            if not p.not_standing_in_2015
-        ]
-
-        context['candidates_2015'] = [
-            person_id_to_person_data[p_id] for p_id in new_candidate_ids
-        ]
-        context['constituency_name'] = constituency_name
+        context['candidates_2015'] = \
+            [person_id_to_person_data[p_id] for p_id in new_candidate_ids]
 
         context['add_candidate_form'] = NewPersonForm()
 
