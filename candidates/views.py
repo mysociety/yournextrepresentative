@@ -197,6 +197,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
+        context['autocomplete_party_url'] = reverse('autocomplete-party')
+
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
 
@@ -463,6 +465,7 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUp
         context['person'] = self.api.persons(
             self.kwargs['person_id']
         ).get()['result']
+        context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         return context
 
