@@ -14,7 +14,10 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, DeleteView, UpdateView, View
 
-from .forms import PostcodeForm, CandidacyForm, NewPersonForm, UpdatePersonForm, ConstituencyForm
+from .forms import (
+    PostcodeForm, NewPersonForm, UpdatePersonForm, ConstituencyForm,
+    CandidacyCreateForm, CandidacyDeleteForm
+)
 from .models import (
     PopItPerson, MapItData, get_candidate_list_popit_id,
     get_constituency_name_from_mapit_id, extract_constituency_name,
@@ -312,7 +315,7 @@ class CandidacyMixin(object):
 
 class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
-    form_class = CandidacyForm
+    form_class = CandidacyCreateForm
 
     def form_valid(self, form):
         person_data, organization_data = self.get_person_and_organization(form)
@@ -340,7 +343,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdat
 
 class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
-    form_class = CandidacyForm
+    form_class = CandidacyDeleteForm
 
     def form_valid(self, form):
         person_data, organization_data = self.get_person_and_organization(form)

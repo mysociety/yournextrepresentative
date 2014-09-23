@@ -21,7 +21,8 @@ class ConstituencyForm(forms.Form):
         )
     )
 
-class CandidacyForm(forms.Form):
+
+class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(
         label='Person ID',
         max_length=256,
@@ -30,6 +31,14 @@ class CandidacyForm(forms.Form):
         label='MapIt Area ID',
         max_length=256,
     )
+
+class CandidacyCreateForm(BaseCandidacyForm):
+    source = forms.CharField(
+        label="Source of information that they're standing",
+        max_length=512,
+    )
+
+class CandidacyDeleteForm(BaseCandidacyForm):
     source = forms.CharField(
         label="Information source for this change",
         max_length=512,
