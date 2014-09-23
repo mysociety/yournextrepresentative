@@ -190,9 +190,9 @@ class PopItPerson(object):
             # at random.  However, at the moment there's no date
             # information for party memberships either, so let's deal
             # with that later.
-            if o['classification'] == 'Party':
+            if o.get('classification') == 'Party':
                 self.party = o
-            if o['classification'] == 'Candidate List' and re.search(r' 2015$', o['name']):
+            if o.get('classification') == 'Candidate List' and re.search(r' 2015$', o['name']):
                 self.constituency_2015 = o
 
     def get_candidate_list_memberships(self, year):
@@ -211,7 +211,7 @@ class PopItPerson(object):
         result = []
         for m in self.popit_data.get('memberships', []):
             o = self.api.organizations(m['organization_id']).get(embed='')['result']
-            if o['classification'] == 'Party':
+            if o.get('classification') == 'Party':
                 result.append(m)
         return result
 
@@ -219,7 +219,7 @@ class PopItPerson(object):
         print "when iterating over {0} the length of membership was {1}".format(self.id, len(self.popit_data.get('memberships', [])))
         for m in self.popit_data.get('memberships', []):
             o = self.api.organizations(m['organization_id']).get(embed='')['result']
-            if o['classification'] in ('Party', 'Candidate List'):
+            if o.get('classification') in ('Party', 'Candidate List'):
                 yield m, o
 
 def update_values_in_sub_array(data, location, new_value):
