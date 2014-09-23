@@ -6,7 +6,14 @@
   <script>
     $(document).ready(function() {
       var standingCheckbox = $('#person-details input#id_standing'),
+        partyInput = $('#id_party'),
+        autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}",
         constituencySelect = $('#id_constituency');
+      /* Enable autocompletion for the party input box */
+      partyInput.autocomplete({
+        source: autocompletePartyURL,
+        minLength: 2
+      });
       /* Enable Select2 for any constituency selector */
       constituencySelect.select2({
         placeholder: 'Constituency',

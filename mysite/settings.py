@@ -113,6 +113,9 @@ PIPELINE_CSS = {
         'source_filenames': (
             'candidates/style.scss',
             'select2/select2.css',
+            'jquery/jquery-ui.css',
+            'jquery/jquery-ui.structure.css',
+            'jquery/jquery-ui.theme.css',
         ),
         'output_filename': 'css/all.css',
     }
@@ -122,6 +125,7 @@ PIPELINE_JS = {
     'all': {
         'source_filenames': (
             'jquery/jquery-1.11.1.js',
+            'jquery/jquery-ui.js',
             'foundation/js/foundation/foundation.js',
             'foundation/js/foundation/foundation.equalizer.js',
             'foundation/js/foundation/foundation.dropdown.js',
