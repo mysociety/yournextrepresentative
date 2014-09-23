@@ -35,7 +35,7 @@ POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 SECRET_KEY = conf['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(conf.get('STAGING')))
 
 TEMPLATE_DEBUG = True
 
