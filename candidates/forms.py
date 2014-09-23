@@ -88,6 +88,15 @@ class NewPersonForm(BasePersonForm):
     source = forms.CharField(
         label="Source of information",
         max_length=512,
+        error_messages={
+            'required': 'You must indicate how you know about this candidate'
+        },
+        widget=forms.TextInput(
+            attrs={
+                'required': 'required',
+                'placeholder': 'How you know about this candidate'
+            }
+        )
     )
 
 class UpdatePersonForm(BasePersonForm):
@@ -110,4 +119,13 @@ class UpdatePersonForm(BasePersonForm):
     source = forms.CharField(
         label="Source of information for this change",
         max_length=512,
+        error_messages={
+            'required': 'You must indicate how you know about this candidate'
+        },
+        widget=forms.TextInput(
+            attrs={
+                'required': 'required',
+                'placeholder': 'How you know about this candidate'
+            }
+        )
     )
