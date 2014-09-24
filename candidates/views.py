@@ -16,6 +16,8 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, DeleteView, UpdateView, View
 
+from braces.views import LoginRequiredMixin
+
 from .forms import (
     PostcodeForm, NewPersonForm, UpdatePersonForm, ConstituencyForm,
     CandidacyCreateForm, CandidacyDeleteForm
@@ -275,7 +277,7 @@ class CandidacyMixin(object):
 
     def get_change_metadata(self, request, information_source):
         return {
-            'username': None,
+            'username': request.user.username,
             'ip': self.get_client_ip(request),
             'information_source': information_source,
             'version_id': "{0:016x}".format(randint(0, sys.maxint)),
@@ -330,7 +332,7 @@ class CandidacyMixin(object):
         self.create_party_membership(person_id, party['id'])
 
 
-class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyCreateForm
 
@@ -358,7 +360,7 @@ class CandidacyView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdat
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
 
-class CandidacyDeleteView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyDeleteForm
 
@@ -460,7 +462,7 @@ def copy_person_form_data(cleaned_data):
         result['date_of_birth'] = str(date_of_birth_date)
     return result
 
-class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = UpdatePersonForm
 
@@ -551,7 +553,7 @@ class UpdatePersonView(PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUp
                 return HttpResponseRedirect(reverse('finder'))
 
 
-class NewPersonView(PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
+class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = NewPersonForm
 

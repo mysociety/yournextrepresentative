@@ -171,6 +171,16 @@ body.finder .content__inner {
   }
 }
 
+.encourage-login {
+  background: #FDF2D5; // lighter version of $color-gold
+  border: 1px solid lighten($color-gold, 30%);
+  border-radius: 3px;
+
+  padding: 0.8em;
+
+  margin-bottom: 1.6em;
+}
+
 .candidates__previous {
   @media #{$medium-up} {
     background-image: url(img/icon-question.gif);
