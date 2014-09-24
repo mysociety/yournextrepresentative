@@ -202,14 +202,28 @@ Now source your `.bashrc` for those changes to take effect:
 
     source ~/.bashrc
 
-Run the development server:
+Create the database tables:
 
     cd yournextmp-popit
+    ./manage.py syncdb
+
+Add a superuser account:
+
+    ./manage.py createsuperuser
+
+Run the development server:
+
     ./manage.py runserver 0.0.0.0:8000
 
 Now you should be able to see the site at:
 
     http://localhost:8080/
+
+Go to the admin interface:
+
+    http://localhost:8080/admin/
+
+... and login with the superuser account.
 
 ### Restarting the development server after logging out
 

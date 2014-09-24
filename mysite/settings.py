@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 import os
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -45,6 +46,14 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'mysite', 'templates'),
 )
 
+TEMPLATE_CONTEXT_PROCESSORS += (
+    # Required by allauth template tags
+    "django.core.context_processors.request",
+    # allauth specific context processors
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
+)
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -54,11 +63,20 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'django_nose',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
     'pipeline',
     'candidates',
     'debug_toolbar',
 )
+
+SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,6 +86,22 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
+               'AUTH_PARAMS': {'access_type': 'online'}},
+}
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_AUTO_SIGNUP = False
 
 ROOT_URLCONF = 'mysite.urls'
 

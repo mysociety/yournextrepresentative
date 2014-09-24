@@ -26,7 +26,14 @@
     <div class="container">
       <div class="header__nav">
         <a href="/" class="header__nav__logo">YourNextMP</a>
-        <a href="#" class="header__nav__login">Log in</a>
+        {% if user.is_authenticated %}
+          <span class="header__nav__logout">
+            <a href="{% url 'account_logout' %}">Log out</a>
+            (signed in as {{ user.username }})
+          </span>
+        {% else %}
+          <a href="{% url 'account_login' %}" class="header__nav__login">Log in</a>
+        {% endif %}
       </div>
       <div class="header__hero">
         {% block hero %}
