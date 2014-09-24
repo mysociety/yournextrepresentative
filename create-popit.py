@@ -42,7 +42,7 @@ try:
         main_data = json.load(f)
 
     r = requests.get('http://mapit.mysociety.org/areas/WMC')
-    wmc_data = r.json
+    wmc_data = r.json()
 
     # We want a mapping between Westminster constituency name and seat ID:
     wmc_name_to_seat = {}
@@ -72,7 +72,7 @@ try:
     # Get all Westminster constituencies from MapIt
 
     r = requests.get('http://mapit.mysociety.org/areas/WMC')
-    wmc_data = r.json
+    wmc_data = r.json()
 
     cons_to_organization_2010 = {}
     cons_to_organization_2015 = {}

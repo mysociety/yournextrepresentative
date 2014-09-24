@@ -146,7 +146,7 @@ class ConstituencyPostcodeFinderView(FormView):
         url = 'http://mapit.mysociety.org/postcode/' + postcode
         r = requests.get(url)
         if r.status_code == 200:
-            mapit_result = r.json
+            mapit_result = r.json()
             return get_redirect_from_mapit_id(mapit_result['shortcuts']['WMC'])
         else:
             error_url = reverse('finder')
@@ -301,7 +301,7 @@ class CandidacyMixin(object):
         )
         r = requests.get(search_url)
         wanted_party_name = normalize_party_name(party_name)
-        for party in r.json['result']:
+        for party in r.json()['result']:
             if wanted_party_name == normalize_party_name(party['name']):
                 return party
         return None
@@ -617,7 +617,7 @@ class AutocompletePartyView(PopItApiMixin, View):
                 'classification:Party AND {0}'.format(' AND '.join(all_words))
             )
             r = requests.get(search_url)
-            for organization in r.json['result']:
+            for organization in r.json()['result']:
                 search_results.append(organization['name'])
             search_results.sort(reverse=True, key=party_results_key)
             results += search_results

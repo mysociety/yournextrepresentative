@@ -29,7 +29,7 @@ try:
 
     while url:
         r = requests.get(url)
-        data = r.json
+        data = r.json()
         for o in data['result']:
             if o.get('classification', '') != 'Party':
                 continue
