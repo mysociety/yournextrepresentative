@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from random import randint
 import re
@@ -281,6 +282,7 @@ class CandidacyMixin(object):
             'ip': self.get_client_ip(request),
             'information_source': information_source,
             'version_id': "{0:016x}".format(randint(0, sys.maxint)),
+            'timestamp': datetime.utcnow().isoformat(),
         }
 
     def redirect_to_constituency_name(self, constituency_name):
