@@ -29,7 +29,6 @@ install:
 
 before_script:
   - ./manage.py syncdb --noinput
-  - ./manage.py collectstatic --noinput
 
 script:
   - ./manage.py test

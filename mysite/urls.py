@@ -1,3 +1,5 @@
+import sys
+
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 
@@ -15,6 +17,6 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allauth.urls')),
 )
 
-if settings.DEBUG:
+if settings.DEBUG or ('test' in sys.argv):
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 import os
+import sys
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -140,7 +141,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+if 'test' not in sys.argv:
+    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 PIPELINE_CSS = {
     'all': {
