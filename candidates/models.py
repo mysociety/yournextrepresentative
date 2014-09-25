@@ -218,16 +218,6 @@ class PopItPerson(object):
             if o.get('classification') == 'Candidate List' and re.search(r' 2015$', o['name']):
                 self.constituency_2015 = o
 
-    def get_party_memberships(self):
-        # Similarly to the previous method, this should be rewritten
-        # when that change is deployed:
-        result = []
-        for m in self.popit_data.get('memberships', []):
-            o = self.api.organizations(m['organization_id']).get(embed='')['result']
-            if o.get('classification') == 'Party':
-                result.append(m)
-        return result
-
     def party_and_candidate_lists_iter(self):
         print "when iterating over {0} the length of membership was {1}".format(self.id, len(self.popit_data.get('memberships', [])))
         for m in self.popit_data.get('memberships', []):
