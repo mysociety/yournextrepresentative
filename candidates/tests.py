@@ -110,6 +110,21 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertEqual(split_location.query, 'bad_postcode=foo%20bar')
 
 
+class TestConstituencyNameFinderView(WebTest):
+
+    def test_pick_constituency_name(self):
+        response = self.app.get('/')
+        form = response.forms['form-name']
+        form['constituency'] = '66044'
+        response = form.submit()
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual(
+            split_location.path,
+            '/constituency/66044/epping-forest'
+        )
+
+
 class FakeCollection(object):
 
     example_popit_data_directory = join(
