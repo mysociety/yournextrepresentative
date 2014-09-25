@@ -110,12 +110,6 @@ class PopItApiMixin(object):
             properties['area'] = area
         self.api.memberships.post(properties)
 
-    def create_membership_if_not_exists(self, person_id, organization_id):
-        organization, members = self.get_organization_and_members(organization_id)
-        if person_id not in members:
-            # Try to create the new membership
-            self.create_membership(person_id, organization_id)
-
 
 def get_redirect_from_mapit_id(mapit_id):
     constituency_name = get_constituency_name_from_mapit_id(mapit_id)
