@@ -347,68 +347,6 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Per
         self.update_person(our_person, change_metadata, previous_versions)
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
-def get_value_from_person_data(field_name, person_data):
-    """Extract a value from a Popolo person data object for a form field name
-
-    For example:
-
-    >>> person_data = {
-    ...     'id': "john-doe",
-    ...     'name': "John Doe",
-    ...     'email': "john-doe@example.org",
-    ...     'links': [
-    ...         {
-    ...             'note': "wikipedia",
-    ...             'url': "http://en.wikipedia.org/wiki/John_Doe"
-    ...         },
-    ...         {
-    ...             'note': "homepage",
-    ...             'url': "http://www.geocities.com"
-    ...         },
-    ...         {
-    ...             'note': "homepage",
-    ...             'url': "http://oops.duplicate.example.org"
-    ...         }
-    ...     ],
-    ... }
-    >>> get_value_from_person_data('email', person_data)
-    'john-doe@example.org'
-    >>> get_value_from_person_data('wikipedia_url', person_data)
-    'http://en.wikipedia.org/wiki/John_Doe'
-    >>> get_value_from_person_data('foo', person_data)
-    Traceback (most recent call last):
-      ...
-    Exception: Unknown field name foo
-    >>> get_value_from_person_data('homepage_url', person_data)
-    Traceback (most recent call last):
-      ...
-    Exception: Found multiple 'note: homepage' elements in 'links' of person with ID 'john-doe'
-    """
-
-    if field_name in simple_fields:
-        return person_data.get(field_name, '')
-    if field_name in complex_fields_locations:
-        location = complex_fields_locations[field_name]
-        sub_array = person_data.get(location['sub_array'], [])
-        matching_info = [
-            e for e in sub_array
-            if e[location['info_type_key']] == location['info_type']
-        ]
-        if matching_info:
-            if len(matching_info) == 1:
-                return matching_info[0][location['info_value_key']]
-            else:
-                message = "Found multiple '{0}: {1}' elements in '{2}' of person with ID '{3}'"
-                raise Exception, message.format(
-                    location['info_type_key'],
-                    location['info_type'],
-                    location['sub_array'],
-                    person_data['id'],
-                )
-            pass
-        else:
-            return ''
-    raise Exception, "Unknown field name {0}".format(field_name)
 
 def get_previous_constituency_name(standing_in):
     for year in reversed(standing_in.keys()):
