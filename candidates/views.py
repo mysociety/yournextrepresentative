@@ -116,12 +116,6 @@ class PopItApiMixin(object):
             # Try to create the new membership
             self.create_membership(person_id, organization_id)
 
-    def delete_membership(self, person_id, organization_id):
-        candidate_data = self.api.organizations(organization_id).get()['result']
-        for m in candidate_data.get('memberships', []):
-            if m['person_id'] == person_id:
-                self.api.memberships(m['id']).delete()
-
 
 def get_redirect_from_mapit_id(mapit_id):
     constituency_name = get_constituency_name_from_mapit_id(mapit_id)
