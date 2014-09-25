@@ -1,0 +1,35 @@
+notifications:
+  email: false
+  irc:
+    channels:
+      - "irc.mysociety.org#pmo"
+    use_notice: true
+
+language: python
+
+env:
+  - MODULES="Django>=1.6,<1.7"
+
+install:
+  - sudo apt-get update -qq
+  - sudo apt-get install python-virtualenv curl yui-compressor
+  - gem install --no-ri --no-rdoc compass -v 0.12.7
+  - gem install --no-ri --no-rdoc sass -v 3.2.19
+  # Install the environment-specific Python packages:
+  - pip install $MODULES --use-mirrors
+  # Now install the rest of the required Python packages:
+  - pip install -r requirements.txt --use-mirrors
+  # Create a basic general.yml file:
+  - sed -r
+    -e "s,(POPIT_INSTANCE:) 'yournextmp',\\1 'not-a-real-instance',"
+    -e "s,(POPIT_HOSTNAME:) 'popit.mysociety.org',\\1 'popit.example.org',"
+    -e "s,(POPIT_API_KEY:) .*,\\1 'notarealapikey',"
+    -e "s,(SECRET_KEY:) '',\\1 'notatallsecret',"
+    conf/general.yml-example > conf/general.yml
+
+before_script:
+  - ./manage.py syncdb --noinput
+  - ./manage.py collectstatic --noinput
+
+script:
+  - ./manage.py test
