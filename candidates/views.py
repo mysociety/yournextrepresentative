@@ -75,10 +75,6 @@ class PopItApiMixin(object):
             [ m['person_id'] for m in organization.get('memberships', []) ]
         )
 
-    def membership_exists(self, person_id, organization_id):
-        _, members = self.get_organization_and_members(organization_id)
-        return person_id in members
-
     def get_area_from_organization(self, organization, mapit_url_key='id'):
         print "got organization:", json.dumps(organization, indent=4)
         if organization['classification'] != "Candidate List":
