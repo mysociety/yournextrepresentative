@@ -74,7 +74,6 @@ class PopItApiMixin(object):
         )
 
     def get_area_from_organization(self, organization, mapit_url_key='id'):
-        print "got organization:", json.dumps(organization, indent=4)
         if organization['classification'] != "Candidate List":
             return None
         m = candidate_list_name_re.search(organization['name'])
