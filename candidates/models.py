@@ -5,8 +5,6 @@ from os.path import dirname, join, abspath
 import re
 from slugify import slugify
 
-from django.db import models
-
 from slumber.exceptions import HttpServerError
 
 data_directory = abspath(join(dirname(__file__), '..', 'data'))

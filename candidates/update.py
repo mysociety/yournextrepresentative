@@ -103,12 +103,10 @@ import time
 
 from slugify import slugify
 
-from slumber.exceptions import HttpClientError, HttpServerError
-
 from .models import PopItPerson
 from .models import MapItData
-from .models import get_person_data_from_dict, update_id
-from .models import simple_fields, complex_fields_locations, all_fields
+from .models import get_person_data_from_dict
+from .models import simple_fields, complex_fields_locations
 
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
@@ -130,7 +128,6 @@ def election_year_to_party_dates(election_year):
         raise Exception('Unknown election year: {0}'.format(election_year))
 
 def get_value_from_location(location, person_data):
-    found = False
     for info in person_data[location['sub_array']]:
         if info[location['info_type_key']] == location['info_type']:
             return info.get(location['info_value_key'], '')
@@ -388,7 +385,6 @@ class PersonUpdateMixin(object):
                 # i.e. we know that this isn't an indication that the
                 # person isn't standing...
                 name = constituency['name']
-                mapit_url = constituency['mapit_url']
                 # Create the candidate list membership:
                 membership = election_year_to_party_dates(election_year)
                 membership['person_id'] = person_id
@@ -417,7 +413,7 @@ class PersonUpdateMixin(object):
         new_version['data'] = data
         basic_person_data['versions'] = [new_version] + previous_versions
         print "putting basic_person_data:", json.dumps(basic_person_data, indent=4)
-        person_result = self.api.persons(person_id).put(basic_person_data)
+        self.api.persons(person_id).put(basic_person_data)
 
         # XXX FIXME: Horrible hack until
         # https://github.com/mysociety/popit/issues/631 is understood

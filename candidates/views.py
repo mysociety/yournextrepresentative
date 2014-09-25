@@ -13,9 +13,8 @@ from urlparse import urlunsplit
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from django.shortcuts import render
 from django.utils.http import urlquote
-from django.views.generic import FormView, TemplateView, DeleteView, UpdateView, View
+from django.views.generic import FormView, TemplateView, View
 
 from braces.views import LoginRequiredMixin
 
@@ -26,8 +25,7 @@ from .forms import (
 from .models import (
     PopItPerson, MapItData, get_candidate_list_popit_id,
     get_constituency_name_from_mapit_id, extract_constituency_name,
-    simple_fields, complex_fields_locations, all_fields,
-    get_person_data_from_dict, get_next_id, update_id,
+    all_fields,
     candidate_list_name_re, get_mapit_id_from_mapit_url,
     PartyData
 )
@@ -300,7 +298,7 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonPar
     form_class = CandidacyCreateForm
 
     def form_valid(self, form):
-        person_data, organization_data = self.get_person_and_organization(form)
+        _, organization_data = self.get_person_and_organization(form)
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
         )
@@ -328,7 +326,8 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Per
     form_class = CandidacyDeleteForm
 
     def form_valid(self, form):
-        person_data, organization_data = self.get_person_and_organization(form)
+        # Just call this to check that the person and organization exist:
+        self.get_person_and_organization(form)
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
         )
