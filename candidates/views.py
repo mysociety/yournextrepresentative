@@ -310,29 +310,6 @@ class CandidacyMixin(object):
                 return party
         return None
 
-    def set_party_membership(self, original_party_name, person_id):
-        # Remove any existing party memberships:
-        person = PopItPerson.create_from_popit(self.api, person_id)
-        existing_party_memberships = person.get_party_memberships()
-        for m in existing_party_memberships:
-            self.api.memberships(m).delete()
-        # FIXME: if any of those parties now have zero memberships as
-        # a result, we should just completely delete the party.
-
-        # Try to get an existing party with that name, if not, create
-        # a new one.
-        party = self.get_party(original_party_name)
-        if not party:
-            # Then create a new party:
-            party = {
-                'id': slugify(party_name),
-                'name': party_name,
-                'classification': 'Party',
-            }
-            self.api.organizations.post(party)
-        # Create the party membership:
-        self.create_party_membership(person_id, party['id'])
-
 
 class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
