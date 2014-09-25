@@ -84,9 +84,9 @@ class FakeOrganizationCollection(FakeCollection):
 class TestConstituencyDetailView(WebTest):
 
     @patch('candidates.views.PopIt')
-    def test_any_constituency_page(self, MockPopIt):
-        MockPopIt.return_value.organizations = FakeOrganizationCollection
-        MockPopIt.return_value.persons = FakePersonCollection
+    def test_any_constituency_page(self, mock_popit):
+        mock_popit.return_value.organizations = FakeOrganizationCollection
+        mock_popit.return_value.persons = FakePersonCollection
         # Just a smoke test for the moment:
         response = self.app.get('/constituency/65808/dulwich-and-west-norwood')
         response.mustcontain('Tessa Jowell (Labour Party)')
