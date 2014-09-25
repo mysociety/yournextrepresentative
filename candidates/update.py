@@ -374,7 +374,8 @@ class PersonUpdateMixin(object):
                 # Then create a new party:
                 popit_party = party.copy()
                 popit_party['classification'] = 'Party'
-                self.api.organizations.post(party_for_popit)
+                result = self.api.organizations.post(popit_party)
+                popit_party = result['result']
             # Create the party membership:
             membership = election_year_to_party_dates(election_year)
             membership['person_id'] = person_id
