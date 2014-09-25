@@ -74,6 +74,8 @@ class PopItApiMixin(object):
         )
 
     def get_area_from_organization(self, organization, mapit_url_key='id'):
+        "Get a MapIt area ID from a candidate list organization's PopIt data"
+
         if organization['classification'] != "Candidate List":
             return None
         m = candidate_list_name_re.search(organization['name'])

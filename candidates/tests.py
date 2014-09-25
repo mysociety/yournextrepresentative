@@ -2,9 +2,67 @@ import json
 from os.path import dirname, join
 from urlparse import urlsplit
 
+from django.test import TestCase
 from django_webtest import WebTest
 
 from mock import patch, MagicMock
+
+from .views import PopItApiMixin
+
+class TestOrganizationToArea(TestCase):
+
+    @patch('candidates.views.PopIt')
+    def test_get_area_from_organization(self, mock_popit):
+        api = PopItApiMixin()
+        area = api.get_area_from_organization({
+            'classification': 'Candidate List',
+            'name': 'Candidates for Aberdeen South in 2010',
+        })
+        self.assertEqual(
+            area,
+            {'id': 'http://mapit.mysociety.org/area/14399',
+             'name': 'Aberdeen South'}
+        )
+
+    @patch('candidates.views.PopIt')
+    def test_get_area_from_organization_custom_id(self, mock_popit):
+        api = PopItApiMixin()
+        area = api.get_area_from_organization({
+            'classification': 'Candidate List',
+            'name': 'Candidates for Aberdeen South in 2010',
+        }, mapit_url_key='mapit_url')
+        self.assertEqual(
+            area,
+            {'mapit_url': 'http://mapit.mysociety.org/area/14399',
+             'name': 'Aberdeen South'}
+        )
+
+    @patch('candidates.views.PopIt')
+    def test_get_area_from_organization_malformed(self, mock_popit):
+        api = PopItApiMixin()
+        with self.assertRaises(Exception):
+            area = api.get_area_from_organization({
+                'classification': 'Candidate List',
+                'name': 'Candidates for Aberdeen South',
+            })
+
+    @patch('candidates.views.PopIt')
+    def test_get_area_from_organization_wrong_classication(self, mock_popit):
+        api = PopItApiMixin()
+        area = api.get_area_from_organization({
+            'classification': 'List of People',
+            'name': 'Candidates for Aberdeen South in 2010',
+        })
+        self.assertIsNone(area)
+
+    @patch('candidates.views.PopIt')
+    def test_get_area_from_organization_unknown_constituency(self, mock_popit):
+        api = PopItApiMixin()
+        with self.assertRaises(Exception):
+            area = api.get_area_from_organization({
+                'classification': 'Candidate List',
+                'name': 'Candidates for Ambridge in 2010',
+            })
 
 class TestConstituencyPostcodeFinderView(WebTest):
 
