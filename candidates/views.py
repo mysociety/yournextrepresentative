@@ -464,6 +464,38 @@ def copy_person_form_data(cleaned_data):
         result['date_of_birth'] = str(date_of_birth_date)
     return result
 
+
+class RevertPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
+
+    http_method_names = [u'post']
+
+    def post(self, request, *args, **kwargs):
+        version_id = self.request.POST['version_id']
+        person_id = self.kwargs['person_id']
+        source = self.request.POST['source']
+
+        our_person = self.get_person(self.kwargs['person_id'])
+        previous_versions = our_person.pop('versions')
+
+        data_to_revert_to = None
+        for version in previous_versions:
+            if version['version_id'] == version_id:
+                data_to_revert_to = version['data']
+
+        if not data_to_revert_to:
+            message = "Couldn't find the version {0} of person {1}"
+            raise Exception(message.format(version_id, person_id))
+
+        change_metadata = self.get_change_metadata(self.request, source)
+        self.update_person(data_to_revert_to, change_metadata, previous_versions)
+
+        return HttpResponseRedirect(
+            reverse(
+                'person-update',
+                kwargs={'person_id': person_id}
+            )
+        )
+
 class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = UpdatePersonForm
@@ -490,6 +522,10 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             self.kwargs['person_id']
         ).get()['result']
         context['autocomplete_party_url'] = reverse('autocomplete-party')
+
+        # Render the JSON in 'versions' nicely:
+        for v in context['person'].get('versions', []):
+            v['data'] = json.dumps(v['data'], indent=4, sort_keys=True)
 
         return context
 

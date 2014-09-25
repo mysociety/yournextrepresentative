@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
-    CandidacyDeleteView, NewPersonView, UpdatePersonView,
+    CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
     AutocompletePartyView)
 
 urlpatterns = patterns('',
@@ -27,5 +27,8 @@ urlpatterns = patterns('',
     url(r'^person/(?P<person_id>.*)/update$',
         UpdatePersonView.as_view(),
         name='person-update'),
+    url(r'^person/(?P<person_id>.*)/revert$',
+        RevertPersonView.as_view(),
+        name='person-revert'),
     url(r'^admin/', include(admin.site.urls)),
 )

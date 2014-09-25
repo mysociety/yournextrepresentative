@@ -50,4 +50,39 @@
     {{ form.as_p }}
     <input type="submit" class="button" value="Save changes">
   </form>
+
+<div class="versions">
+<h2>Previous Versions</h2>
+  {% for version in person.versions %}
+    <div class="version">
+      <div class="version-metadata">
+        <div>
+          <span class="version-metadata-key">Username:</span>
+          <span class="version-metadata-value">{{ version.username }}</span>
+        </div>
+        <div>
+          <span class="version-metadata-key">IP address:</span>
+          <span class="version-metadata-value">{{ version.ip }}</span>
+        </div>
+        <div>
+          <span class="version-metadata-key">Timestamp:</span>
+          <span class="version-metadata-value">{{ version.timestamp }}</span>
+        </div>
+        <div>
+          <span class="version-metadata-key">Source of information:</span>
+          <span class="version-metadata-value">{{ version.information_source }}</span>
+        </div>
+      </div>
+      <form action="{% url 'person-revert' person_id=person.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="version_id" value="{{ version.version_id }}"/>
+        <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because ..."/>
+        <input type="submit" class="button tiny" value="Revert to this version" />
+      </form>
+      <pre class="version-json">{{ version.data }}
+      </pre>
+    </div>
+  {% endfor %}
+</div>
+
 {% endblock %}

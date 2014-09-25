@@ -199,3 +199,22 @@ body.finder .content__inner {
     }
   }
 }
+
+.version {
+  background-color: #eee;
+  padding: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.version-json {
+  font-size: 75%;
+  line-height: 150%;
+}
+
+.version-metadata {
+  margin-bottom: 0.4em;
+}
+
+.version-metadata-key {
+  font-weight: bold
+}
