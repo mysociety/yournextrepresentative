@@ -218,16 +218,6 @@ class PopItPerson(object):
             if o.get('classification') == 'Candidate List' and re.search(r' 2015$', o['name']):
                 self.constituency_2015 = o
 
-    def get_candidate_list_memberships(self, year):
-        # FIXME: this is hacky, but we can replace this easily after
-        # https://github.com/mysociety/popit-api/pull/72 is merged and
-        # there is full organization information in the memberships
-        # array:
-        return [
-            m for m in self.popit_data.get('memberships', [])
-            if re.search(r'^candidates-{}-'.format(year), m['id'])
-        ]
-
     def get_party_memberships(self):
         # Similarly to the previous method, this should be rewritten
         # when that change is deployed:
