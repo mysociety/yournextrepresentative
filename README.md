@@ -85,36 +85,37 @@ it over for the next couple of weeks.
   * A form to add a new candidate with their basic contact
     details, Twitter username, etc.
 
-  * Similarly, allow the contact details (or 2015 constituency)
+  * Mark someone from 2010 as known not to be standing
+
+* A page for each candidate that:
+
+  * Allows the contact details, 2015 party or 2015 constituency
     of any candidate to be edited.
 
-So this is enough for basic entry of candidate data, but there's
-a lot more that should be done to make this a useful and usable
-tool.
+  * See all previous versions of a person's information, with
+    the username, IP and source attribution from the person who
+    made the change.
+
+  * Allows you to revert to a previous version of that person.
+
+So this is hopefully enough for basic entry of candidate data.
 
 ## Things Still To Do:
 
-* Auto-complete parties
-
 * Make "Party in 2015" optional if "standing" isn't ticked
 
-* Add an attribute of a person to indicate that they're not
-  standing, so that can be recorded with a source and username.
+* Allow search for a candidate based on their name
 
-* It's really weird that constituencies are sometimes referred
-  to in parameters by either (a) the full name (b) the MapIt ID
-  or (c) the Candidate List organization ID. This should really
-  be consistent.
+* Improve test coverage
 
-* Allow search for a candidate based on their name.
+* Work out why you're asked permission every time you use a
+  social login, not just the first time
 
 * Stub out the PopIt API in tests (or this could be provided in
   the PopIt-Python module so that it's reusable).
 
 * Add documentation for you to make common API queries to the
   PopIt instance to get candidate data back.
-
-* Add basic versioning of the kind suggested above.
 
 * Consider changing the data model in PopIt. At the moment the
   script that sets up the PopIt instance (create-popit.py) and
@@ -133,8 +134,7 @@ tool.
   https://github.com/mysociety/popit/issues/214 are resolved.
 
 * Reduce the number of requests made to PopIt once
-  https://github.com/mysociety/popit/issues/593 (or something
-  similar) is done.
+  https://github.com/mysociety/popit/issues/634 is done.
 
 ## Getting a development version running:
 
