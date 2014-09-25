@@ -1,0 +1,46 @@
+{
+    "result": {
+        "contact_details": [],
+        "email": "shane@gn.apc.org",
+        "gender": "male",
+        "html_url": "http://yournextmp.popit.mysociety.org/persons/shane-collins",
+        "id": "shane-collins",
+        "identifiers": [
+            {
+                "id": "53de915a8b5ed1d13c5ca2ae",
+                "identifier": "2961",
+                "scheme": "yournextmp-candidate"
+            }
+        ],
+        "links": [],
+        "memberships": [
+            {
+                "contact_details": [],
+                "html_url": "http://yournextmp.popit.mysociety.org/memberships/53de915b8b5ed1d13c5ca2af",
+                "id": "53de915b8b5ed1d13c5ca2af",
+                "links": [],
+                "organization_id": "green-party",
+                "person_id": "shane-collins",
+                "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/53de915b8b5ed1d13c5ca2af"
+            },
+            {
+                "area": {
+                    "id": "mapit:65808",
+                    "identifier": "http://mapit.mysociety.org/area/65808",
+                    "name": "Dulwich and West Norwood"
+                },
+                "contact_details": [],
+                "html_url": "http://yournextmp.popit.mysociety.org/memberships/53de95dd8b5ed1d13c5cb57e",
+                "id": "53de95dd8b5ed1d13c5cb57e",
+                "links": [],
+                "organization_id": "candidates-2010-dulwich-and-west-norwood",
+                "person_id": "shane-collins",
+                "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/53de95dd8b5ed1d13c5cb57e"
+            }
+        ],
+        "name": "Shane Collins",
+        "other_names": [],
+        "phone": "07939 196612",
+        "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/shane-collins"
+    }
+}
