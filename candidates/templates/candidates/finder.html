@@ -5,6 +5,9 @@
 {% block extra_js %}
   <script>
     $(function() {
+      /* Since Javascript's enabled, hide the constituency select box and show
+         the buttons to switch between postcode and name form. */
+      $('#form-name').hide();
       /* Turn the constituency <select> into a nice Select2 box */
       $('#id_constituency').select2({
         placeholder: 'Constituency',
