@@ -6,6 +6,11 @@
   <script>
     $(function() {
 
+      /* If Javascript's enabled, hide the source-confirmation
+         boxes and the add new candidate form. */
+      $('.source-confirmation').hide();
+      $('.candidates__new').hide();
+
       /* Enable autocompletion for the party input box */
       var partyInput = $('#id_party'),
           autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}";

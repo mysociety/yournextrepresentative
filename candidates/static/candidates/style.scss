@@ -143,8 +143,6 @@ body.finder .content__inner {
 }
 
 .candidates__new {
-  display: none;
-
   @media #{$medium-up} {
     background-image: url(img/icon-add-candidate.gif);
   }
@@ -224,7 +222,6 @@ body.finder .content__inner {
 }
 
 .source-confirmation {
-  display: none;
   position: relative;
   border-radius: 3px;
   background: $color-yellow;
