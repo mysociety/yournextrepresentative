@@ -118,7 +118,8 @@ body.finder .content__inner {
 
 .candidates__known,
 .candidates__new,
-.candidates__previous {
+.candidates__previous,
+.candidates__not-standing {
   margin-bottom: 3em;
 
   @media #{$medium-up} {
@@ -196,6 +197,21 @@ body.finder .content__inner {
 
     &:hover, &:focus {
       background-color: scale-color($color-orange, $lightness: $button-function-factor);
+    }
+  }
+}
+
+.candidates__not-standing {
+  @media #{$medium-up} {
+    background-image: url(img/icon-cross.gif);
+  }
+
+  input.button {
+    background-color: $color-red;
+    margin-right: 0.8em;
+
+    &:hover, &:focus {
+      background-color: scale-color($color-red, $lightness: $button-function-factor);
     }
   }
 }
