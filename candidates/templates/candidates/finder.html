@@ -5,11 +5,14 @@
 {% block extra_js %}
   <script>
     $(function() {
+      /* Turn the constituency <select> into a nice Select2 box */
       $('#id_constituency').select2({
         placeholder: 'Constituency',
         allowClear: true,
         width: '100%'
       });
+      /* Swap between the postcode and name select form when clicking on the
+         .show-other-form button */
       $('.show-other-form').on('click', function(){
         $(this).parents('form').hide().siblings('form').show();
       })
