@@ -5,6 +5,7 @@
 {% block extra_js %}
   <script>
     $(function() {
+
       /* Enable autocompletion for the party input box */
       var partyInput = $('#id_party'),
           autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}";
@@ -12,6 +13,7 @@
         source: autocompletePartyURL,
         minLength: 2
       });
+
       /* Set up the hide / reveal for the add new candidate form */
       $('.show-new-candidate-form').on('click', function(){
         $('.candidates__new').slideDown(function(){
@@ -21,6 +23,16 @@
       $('.hide-new-candidate-form').on('click', function(){
         $('.candidates__new').slideUp();
       });
+
+      /* Handle showing/hiding the source confirmation box */
+      $('.js-toggle-source-confirmation').on('click', function(){
+        var $confirmation = $(this).parents('li').children('.source-confirmation');
+        if($confirmation.is(':visible')){
+          $confirmation.hide();
+        } else {
+          $confirmation.show().find('input:text').focus();
+        }
+      })
     });
   </script>
 {% endblock %}
@@ -43,21 +55,32 @@
 
     {% for c in candidates_2015 %}
       {% if forloop.first %}
-        <ul>
+        <ul class="candidate-list">
       {% endif %}
 
         <li>
           {{ c.name }} ({{c.party.name }})
           {% if user.is_authenticated %}
-          <form method="post" action="{% url 'candidacy-delete' %}">
-            {% csrf_token %}
-            <input type="hidden" name="person_id" value="{{ c.id }}"/>
-            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
-            <label for="id_source">Source of information that they're <em>not</em> actually standing</label>
-            <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
-            <input type="submit" class="button tiny" value="Not actually standing?" />
+          <p>
+            <a class="button tiny js-toggle-source-confirmation">Not actually standing?</a>
             <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
-          </form>
+          </p>
+          <div class="source-confirmation">
+            <form method="post" action="{% url 'candidacy-delete' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person_id" value="{{ c.id }}"/>
+              <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
+              <label for="id_source">Before we save that, can you show us <em>where</em> you heard it?</label>
+              <div class="row">
+                <div class="small-12 medium-8 large-9 columns">
+                  <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+                </div>
+                <div class="small-6 medium-4 large-3 columns">
+                  <input type="submit" class="button expand" value="Save changes" />
+                </div>
+              </div>
+            </form>
+          </div>
           {% endif %}
         </li>
 
@@ -110,20 +133,31 @@
     <h3>We don't know if these candidates from the 2010 election are standing again</h3>
     {% endif %}
 
-    <ul>
+    <ul class="candidate-list">
       {% for c in candidates_2010_might_stand_again %}
         <li>
           {{ c.name }} ({{ c.party.name }})
           {% if user.is_authenticated %}
-          <form method="post" action="{% url 'candidacy-create' %}">
-            {% csrf_token %}
-            <input type="hidden" name="person_id" value="{{ c.id }}"/>
-            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
-            <label for="id_source">Source of information that they're standing</label>
-            <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
-            <input type="submit" class="button tiny" value="Standing again" />
+          <p>
+            <a class="button tiny js-toggle-source-confirmation">Standing again</a>
             <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
-          </form>
+          </p>
+          <div class="source-confirmation">
+            <form method="post" action="{% url 'candidacy-create' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person_id" value="{{ c.id }}"/>
+              <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
+              <label for="id_source">Before we save that, can you show us <em>where</em> you heard it?</label>
+              <div class="row">
+                <div class="small-12 medium-8 large-9 columns">
+                  <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+                </div>
+                <div class="small-6 medium-4 large-3 columns">
+                  <input type="submit" class="button expand" value="Save changes" />
+                </div>
+              </div>
+            </form>
+          </div>
           {% endif %}
         </li>
       {% endfor %}
@@ -138,20 +172,31 @@
 
     <h3>These candidates from 2010 are known not to be standing again</h3>
 
-    <ul>
+    <ul class="candidate-list">
       {% for c in candidates_2010_not_standing_again %}
         <li>
           {{ c.name }} ({{ c.party.name }})
           {% if user.is_authenticated %}
-          <form method="post" action="{% url 'candidacy-create' %}">
-            {% csrf_token %}
-            <input type="hidden" name="person_id" value="{{ c.id }}"/>
-            <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
-            <label for="id_source">Source of information that they're actually are standing again</label>
-            <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
-            <input type="submit" class="button tiny" value="Actually they are standing again!" />
+          <p>
+            <a class="button tiny js-toggle-source-confirmation">Actually, they are standing!</a>
             <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
-          </form>
+          </p>
+          <div class="source-confirmation">
+            <form method="post" action="{% url 'candidacy-create' %}">
+              {% csrf_token %}
+              <input type="hidden" name="person_id" value="{{ c.id }}"/>
+              <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>
+              <label for="id_source">Before we save that, can you show us <em>where</em> you heard it?</label>
+              <div class="row">
+                <div class="small-12 medium-8 large-9 columns">
+                  <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+                </div>
+                <div class="small-6 medium-4 large-3 columns">
+                  <input type="submit" class="button expand" value="Save changes" />
+                </div>
+              </div>
+            </form>
+          </div>
           {% endif %}
         </li>
       {% endfor %}

@@ -8,6 +8,7 @@ $color-cyan: #029db9;
 $color-teal: #09a691;
 $color-offwhite: #ece7e1;
 $color-cream: #e4dfdb;
+$color-yellow: #fdf2d5;
 
 // Override Foundation variables here
 $primary-color: $color-cyan;
@@ -135,6 +136,10 @@ body.finder .content__inner {
     margin-top: 0;
     margin-bottom: 0.5em;
   }
+
+  li > p > .button:first-child {
+    margin-right: 0.8em;
+  }
 }
 
 .candidates__new {
@@ -142,10 +147,6 @@ body.finder .content__inner {
 
   @media #{$medium-up} {
     background-image: url(img/icon-add-candidate.gif);
-  }
-
-  .button + .button {
-    margin-left: 1em;
   }
 }
 
@@ -191,13 +192,9 @@ body.finder .content__inner {
     background-image: url(img/icon-question.gif);
   }
 
-  form {
-    margin-top: 0.5em;
-  }
-
-  input.button {
+  li > p > .button:first-child,
+  .source-confirmation .button {
     background-color: $color-orange;
-    margin-right: 0.8em;
 
     &:hover, &:focus {
       background-color: scale-color($color-orange, $lightness: $button-function-factor);
@@ -210,13 +207,52 @@ body.finder .content__inner {
     background-image: url(img/icon-cross.gif);
   }
 
-  input.button {
+  li > p > .button:first-child,
+  .source-confirmation .button {
     background-color: $color-red;
-    margin-right: 0.8em;
 
     &:hover, &:focus {
       background-color: scale-color($color-red, $lightness: $button-function-factor);
     }
+  }
+}
+
+.candidate-list {
+  li p {
+    margin: 5px 0 0 0;
+  }
+}
+
+.source-confirmation {
+  display: none;
+  position: relative;
+  border-radius: 3px;
+  background: $color-yellow;
+  padding: 20px;
+  margin-bottom: rem-calc(16);
+
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 15px;
+    @include css-triangle(20px, $color-yellow, bottom);
+  }
+
+  label {
+    margin-bottom: 10px;
+    font-size: remCalc(16);
+  }
+
+  input {
+    margin-bottom: 0;
+  }
+
+  .row {
+    margin-left: rem-calc(-15);
+    margin-right: rem-calc(-15);
+    width: auto;
   }
 }
 
