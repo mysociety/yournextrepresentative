@@ -7,7 +7,7 @@ from django_webtest import WebTest
 
 from mock import patch, MagicMock
 
-from .views import PopItApiMixin
+from ..views import PopItApiMixin
 
 class TestOrganizationToArea(TestCase):
 
@@ -128,7 +128,7 @@ class TestConstituencyNameFinderView(WebTest):
 class FakeCollection(object):
 
     example_popit_data_directory = join(
-        dirname(__file__), 'example-popit-data'
+        dirname(__file__), '..', 'example-popit-data'
     )
 
     def __init__(self, *args):
