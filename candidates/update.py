@@ -412,7 +412,6 @@ class PersonUpdateMixin(object):
         new_version = change_metadata.copy()
         new_version['data'] = data
         basic_person_data['versions'] = [new_version] + previous_versions
-        print "putting basic_person_data:", json.dumps(basic_person_data, indent=4)
         self.api.persons(person_id).put(basic_person_data)
 
         # XXX FIXME: Horrible hack until
