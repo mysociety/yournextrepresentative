@@ -1,0 +1,86 @@
+{
+    "has_more": false,
+    "page": 1,
+    "per_page": 30,
+    "result": [
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/labour-party",
+            "id": "labour-party",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "Labour Party",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/labour-party"
+        },
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/the-labour-party",
+            "id": "the-labour-party",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "The Labour Party",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/the-labour-party"
+        },
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/socialist-labour-party",
+            "id": "socialist-labour-party",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "Socialist Labour Party",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/socialist-labour-party"
+        },
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/democratic-labour-party",
+            "id": "democratic-labour-party",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "Democratic Labour Party",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/democratic-labour-party"
+        },
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/labour-party-of-northern-ireland",
+            "id": "labour-party-of-northern-ireland",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "Labour Party of Northern Ireland",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/labour-party-of-northern-ireland"
+        },
+        {
+            "classification": "Party",
+            "contact_details": [],
+            "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/sdlp-social-democratic-labour-party",
+            "id": "sdlp-social-democratic-labour-party",
+            "identifiers": [],
+            "links": [],
+            "memberships": [],
+            "name": "SDLP (Social Democratic & Labour Party)",
+            "other_names": [],
+            "posts": [],
+            "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/sdlp-social-democratic-labour-party"
+        }
+    ],
+    "total": 6
+}
