@@ -259,13 +259,20 @@ class CandidacyMixin(object):
             ip = request.META.get('REMOTE_ADDR')
         return ip
 
+    def create_version_id(self):
+        """Generate a random ID to use to identify a person version"""
+        return "{0:016x}".format(randint(0, sys.maxint))
+
+    def get_current_timestamp(self):
+        return datetime.utcnow().isoformat()
+
     def get_change_metadata(self, request, information_source):
         return {
             'username': request.user.username,
             'ip': self.get_client_ip(request),
             'information_source': information_source,
-            'version_id': "{0:016x}".format(randint(0, sys.maxint)),
-            'timestamp': datetime.utcnow().isoformat(),
+            'version_id': self.create_version_id(),
+            'timestamp': self.get_current_timestamp()
         }
 
     def redirect_to_constituency_name(self, constituency_name):
