@@ -3,3 +3,5 @@
 /static
 /candidates/static/candidates/style.css
 .sass-cache
+/htmlcov
+/.coverage
