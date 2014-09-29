@@ -69,7 +69,7 @@ class TestUpdatePerson(TestCase):
             },
             [] # No previous versions, say...
         )
-        # Then we expect sometime simimlar to be put:
+        # Then we expect this to be put:
         mocked_put.assert_called_once_with(
             {
                 'email': u'foo@example.org',
