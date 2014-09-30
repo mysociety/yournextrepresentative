@@ -113,7 +113,7 @@
 
     <h4>Add a new candidate</h4>
 
-    <form method="post" action="{% url 'person-create' %}">
+    <form method="post" id="new-candidate-form" action="{% url 'person-create' %}">
       {% csrf_token %}
         {% for field in add_candidate_form.visible_fields %}
           <p>
