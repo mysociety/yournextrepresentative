@@ -2,9 +2,9 @@ from urlparse import urlsplit
 
 from mock import patch
 
-from django.contrib.auth.models import User
 from django_webtest import WebTest
 
+from .auth import TestUserMixin
 from .helpers import equal_call_args
 from .fake_popit import get_example_popit_json
 
@@ -12,15 +12,7 @@ example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
 
 @patch('candidates.views.PopIt')
-class TestUpdatePersonView(WebTest):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.user = User.objects.create_user(
-            'john',
-            'john@example.com',
-            'notagoodpassword',
-        )
+class TestUpdatePersonView(TestUserMixin, WebTest):
 
     def test_update_person_view_get_without_login(self, mock_popit):
         response = self.app.get('/person/tessa-jowell/update')
@@ -115,7 +107,3 @@ class TestUpdatePersonView(WebTest):
             '/constituency/65808/dulwich-and-west-norwood',
             split_location.path
         )
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.user.delete()
