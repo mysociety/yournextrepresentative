@@ -1,0 +1,14 @@
+{
+    "result": {
+        "classification": "Party",
+        "contact_details": [],
+        "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/new-invented-party",
+        "id": "new-invented-party",
+        "identifiers": [],
+        "links": [],
+        "name": "New Invented Party",
+        "other_names": [],
+        "posts": [],
+        "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/new-invented-party"
+    }
+}

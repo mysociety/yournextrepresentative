@@ -82,6 +82,8 @@ def fake_get_result(url):
             json_result = get_example_popit_json('search_organization_labour_party.json')
         elif split.query == 'q=classification%3AParty%20AND%20name%3A%22Labour%22':
             json_result = get_example_popit_json('search_organization_labour.json')
+        elif split.query == 'q=classification%3AParty%20AND%20name%3A%22New%20Invented%20Party%22':
+            json_result = get_example_popit_json('search_organization_new_invented_party.json')
         else:
             message = "Unexpected organization search query to fake_get_result {0}"
             raise Exception, message.format(split.query)
