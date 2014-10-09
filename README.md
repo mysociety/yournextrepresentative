@@ -106,13 +106,9 @@ So this is hopefully enough for basic entry of candidate data.
 
 * Allow search for a candidate based on their name
 
-* Improve test coverage
-
-* Work out why you're asked permission every time you use a
-  social login, not just the first time
-
-* Stub out the PopIt API in tests (or this could be provided in
-  the PopIt-Python module so that it's reusable).
+* Improve test coverage. (At least there are some tests which
+  properly stub out responses from the PopIt API now, but there
+  are tests missing for some important codepaths still.)
 
 * Add documentation for you to make common API queries to the
   PopIt instance to get candidate data back.
