@@ -3,13 +3,10 @@
 from collections import defaultdict
 from datetime import date, timedelta
 import json
-import optparse
 import os
-from os.path import join, dirname, realpath
+from os.path import join, realpath
 import re
 import requests
-import slumber
-import sys
 
 from popit_api import PopIt
 from slugify import slugify
@@ -27,10 +24,8 @@ try:
         hostname=conf['POPIT_HOSTNAME'],
         port=conf.get('POPIT_PORT', 80),
         api_version='v0.1',
-        user=conf['POPIT_USER'],
-        password=conf['POPIT_PASSWORD'],
+        api_key=conf['POPIT_API_KEY']
        )
-
 
     main_json = os.path.join(
         directory,
@@ -74,33 +69,24 @@ try:
     r = requests.get('http://mapit.mysociety.org/areas/WMC')
     wmc_data = r.json()
 
-    cons_to_organization_2010 = {}
-    cons_to_organization_2015 = {}
+    cons_to_post = {}
 
     for wmc in wmc_data.values():
         wmc_name = wmc['name']
         wmc_slug = slugify(wmc_name)
-        # Say that the candidate lists start on the day after an election,
-        # and end on the day of the election.  (Queries that test whether
-        # an organisation currently exists should test for a date <= the
-        # dissolution date.)
-        slug_2010 = 'candidates-2010-' + wmc_slug
-        slug_2015 = 'candidates-2015-' + wmc_slug
-        api.organizations.post({
-            'id': slug_2010,
-            'name': 'Candidates for ' + wmc['name'] + ' in 2010',
-            'classification': 'Candidate List',
-            'founding_date': str(election_date_2005 + timedelta(days=1)),
-            'dissolution_date': str(election_date_2010),
+        api.posts.post({
+            'id': str(wmc['id']),
+            'label': 'Member of Parliament for ' + wmc_name,
+            'role': 'Member of Parliament',
+            'organization_id': commons_id,
+            'start_date': str(election_date_2005 + timedelta(days=1)),
+            'area': {
+                'id': 'mapit:' + str(wmc['id']),
+                'name': wmc['name'],
+                'identifier': 'http://mapit.mysociety.org/area/' + str(wmc['id'])
+            }
         })
-        cons_to_organization_2010[wmc_name] = slug_2010
-        api.organizations.post({
-            'id': slug_2015,
-            'name': 'Candidates for ' + wmc['name'] + ' in 2015',
-            'classification': 'Candidate List',
-            'founding_date': str(election_date_2010 + timedelta(days=1)),
-        })
-        cons_to_organization_2015[wmc_name] = slug_2015
+        cons_to_post[wmc_name] = str(wmc['id'])
 
     # Create all the parties:
     party_id_to_organisation = {}
@@ -146,11 +132,14 @@ try:
     # Go through all the candidacies and create memberships from them:
     for candidacy_id, candidacy in main_data['Candidacy'].items():
         wmc = seat_id_to_wmc[candidacy['seat_id']]
-        candidate_list = cons_to_organization_2010[wmc['name']]
+        post = cons_to_post[wmc['name']]
         if main_data['Candidate'][candidacy['candidate_id']]['status'] == 'standing':
             properties = {
                 'person_id': candidate_id_to_person[candidacy['candidate_id']],
-                'organization_id': candidate_list,
+                'post_id': post,
+                'role': 'Candidate',
+                'start_date': str(election_date_2005 + timedelta(days=1)),
+                'end_date': str(election_date_2010),
                 'area': {
                     'id': 'mapit:' + str(wmc['id']),
                     'name': wmc['name'],
@@ -159,6 +148,7 @@ try:
             }
             print "creating candidacy with properties:", json.dumps(properties)
             api.memberships.post(properties)
+
 except Exception as e:
     print "got exception:", e
     if hasattr(e, 'content'):
