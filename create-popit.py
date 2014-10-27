@@ -93,20 +93,24 @@ try:
     for party_id, party in main_data['Party'].items():
         slug = slugify(party['name'])
         # FIXME: add identifiers
-        api.organizations.post({
-            'id': slug,
+        org = api.organizations.post({
+            # TODO: Get IDs from electoralcommission.org.uk
+            'slug': slug,
             'classification': 'Party',
             'name': party['name']
         })
-        party_id_to_organisation[party_id] = slug
+        party_id_to_organisation[party_id] = org['result']['id']
 
     # Create all the people, and their party memberships:
     candidate_id_to_person = {}
+    max_id = 0
     for candidate_id, candidate in main_data['Candidate'].items():
+        max_id = max(max_id, candidate_id)
         slug = candidate['code'].replace('_', '-')
-        candidate_id_to_person[candidate_id] = slug
+        candidate_id_to_person[candidate_id] = candidate_id
         properties = {
-            'id': slug,
+            'id': candidate_id,
+            'slug': slug,
             'name': candidate['name'],
             'identifiers': [
                 {
@@ -125,7 +129,7 @@ try:
             properties[k] = candidate[k]
         api.persons.post(properties)
         api.memberships.post({
-            'person_id': slug,
+            'person_id': candidate_id,
             'organization_id': party_id_to_organisation[candidate['party_id']],
         })
 
@@ -143,6 +147,8 @@ try:
             }
             print "creating candidacy with properties:", json.dumps(properties)
             api.memberships.post(properties)
+
+    print "Max ID is %s" % max_id
 
 except Exception as e:
     print "got exception:", e
