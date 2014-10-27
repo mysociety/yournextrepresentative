@@ -207,7 +207,7 @@ class PopItPerson(object):
 
     @property
     def not_standing_in_2015(self):
-        # If there's a standing_in element present, it's '2015' value
+        # If there's a standing_in element present, its '2015' value
         # is set to None, then we someone has marked that person as
         # not standing...
         standing_in = self.popit_data.get('standing_in', {})
