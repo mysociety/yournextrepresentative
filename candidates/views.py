@@ -27,7 +27,7 @@ from .models import (
     get_constituency_name_from_mapit_id, extract_constituency_name,
     all_fields,
     candidate_list_name_re, get_mapit_id_from_mapit_url,
-    PartyData
+    PartyData, membership_covers_date, election_date_2010, election_date_2015
 )
 
 from .update import PersonParseMixin, PersonUpdateMixin
@@ -199,8 +199,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         current_candidates = set()
         past_candidates = set()
-        from .update import membership_covers_date
-        from .models import election_date_2010, election_date_2015
+
         for membership in mp_post['result']['memberships']:
             if not membership['role'] == "Candidate":
                 continue
