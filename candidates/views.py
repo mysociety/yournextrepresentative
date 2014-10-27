@@ -472,7 +472,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             )
             if not constituency_name:
                 message = "Failed to find a constituency with MapIt ID {}"
-                raise Exception(message.format(cleaned['constituency']))
+                raise Exception(message.format(constituency_2015_mapit_id))
             our_person['standing_in']['2015'] = {
                 'name': constituency_name,
                 'mapit_url': 'http://mapit.mysociety.org/area/{0}'.format(constituency_2015_mapit_id)
