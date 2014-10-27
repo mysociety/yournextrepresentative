@@ -353,13 +353,6 @@ class PopItPerson(object):
         standing_in = self.popit_data.get('standing_in', {})
         return ('2015' in standing_in) and standing_in['2015'] == None
 
-    def party_and_candidate_lists_iter(self):
-        print "when iterating over {0} the length of membership was {1}".format(self.id, len(self.popit_data.get('memberships', [])))
-        for m in self.popit_data.get('memberships', []):
-            o = self.api.organizations(m['organization_id']).get(embed='')['result']
-            if o.get('classification') in ('Party', 'Candidate List'):
-                yield m, o
-
     def delete_memberships(self):
         for membership in self.popit_data.get('memberships', []):
             self.api.memberships(membership['id']).delete()
