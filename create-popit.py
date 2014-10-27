@@ -140,11 +140,6 @@ try:
                 'role': 'Candidate',
                 'start_date': str(election_date_2005 + timedelta(days=1)),
                 'end_date': str(election_date_2010),
-                'area': {
-                    'id': 'mapit:' + str(wmc['id']),
-                    'name': wmc['name'],
-                    'identifier': 'http://mapit.mysociety.org/area/' + str(wmc['id'])
-                }
             }
             print "creating candidacy with properties:", json.dumps(properties)
             api.memberships.post(properties)
