@@ -311,11 +311,6 @@ class PersonUpdateMixin(object):
         basic_person_data['versions'] = [new_version] + previous_versions
         self.api.persons(person_id).put(basic_person_data)
 
-        # XXX FIXME: Horrible hack until
-        # https://github.com/mysociety/popit/issues/631 is understood
-        # and fixed.
-        time.sleep(0.5)
-
         person = PopItPerson.create_from_popit(self.api, data['id'])
 
         # Now remove any party or candidate list memberships; this
