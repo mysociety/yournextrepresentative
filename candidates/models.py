@@ -178,6 +178,12 @@ class PopItPerson(object):
         self.party = None
         self.constituency_2015 = None
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
         popit_data = api.persons(popit_person_id).get()['result']
