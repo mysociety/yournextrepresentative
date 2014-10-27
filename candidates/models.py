@@ -329,6 +329,10 @@ class PopItPerson(object):
             if o.get('classification') in ('Party', 'Candidate List'):
                 yield m, o
 
+    def delete_memberships(self):
+        for membership in self.popit_data.get('memberships', []):
+            self.api.memberships(membership['id']).delete()
+
 def update_values_in_sub_array(data, location, new_value):
     """Ensure that only a particular value is present in a sub-dict
 

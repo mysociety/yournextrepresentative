@@ -312,13 +312,7 @@ class PersonUpdateMixin(object):
         self.api.persons(person_id).put(basic_person_data)
 
         person = PopItPerson.create_from_popit(self.api, data['id'])
-
-        # Now remove any party or candidate list memberships; this
-        # leaves any other memberships someone might have added.
-        print "### considering deletions:"
-        for membership, o in person.party_and_candidate_lists_iter():
-            print "### deleting membership of:", o['name']
-            self.api.memberships(membership['id']).delete()
+        person.delete_memberships()
 
         # And then create any that should be there:
         self.create_party_memberships(person_id, data)
