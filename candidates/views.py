@@ -221,23 +221,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
 class CandidacyMixin(object):
 
-    def get_person_and_organization(self, form):
-        mapit_area_id = form.cleaned_data['mapit_area_id']
-        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
-        # If either of these don't exist, an HttpClientError will be
-        # thrown, which is fine for error checking at the moment
-        person_id = form.cleaned_data['person_id']
-        organization_id = get_candidate_list_popit_id(constituency_name, 2015)
-        try:
-            organization_data = self.api.organizations(organization_id).get()['result']
-            person_data = self.api.persons(person_id).get()['result']
-        except HttpClientError as e:
-            if e.response.status_code == 404:
-                return HttpResponseBadRequest('Unknown organization_id or person_id')
-            else:
-                raise
-        return (person_data, organization_data)
-
     def get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
@@ -293,7 +276,6 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonPar
     form_class = CandidacyCreateForm
 
     def form_valid(self, form):
-        _, organization_data = self.get_person_and_organization(form)
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
         )
@@ -321,8 +303,6 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Per
     form_class = CandidacyDeleteForm
 
     def form_valid(self, form):
-        # Just call this to check that the person and organization exist:
-        self.get_person_and_organization(form)
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
         )
