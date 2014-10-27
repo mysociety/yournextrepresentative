@@ -482,7 +482,8 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             # If the person is not standing in 2015, record that
             # they're not and remove the party membership for 2015:
             our_person['standing_in']['2015'] = None
-            del our_person['party_memberships']['2015']
+            if '2015' in our_person['party_memberships']:
+                del our_person['party_memberships']['2015']
 
         print "Going to update that person with this data:"
         print json.dumps(our_person, indent=4)
