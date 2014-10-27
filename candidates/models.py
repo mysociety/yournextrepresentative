@@ -34,6 +34,7 @@ complex_fields_locations = {
 
 election_date_2005 = date(2005, 5, 5)
 election_date_2010 = date(2010, 5, 6)
+election_date_2015 = date(2015, 5, 7)
 
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
