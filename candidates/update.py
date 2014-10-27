@@ -171,31 +171,6 @@ def get_standing_in_from_candidate_lists(candidate_list_organizations):
         result[year] = cons_data
     return result
 
-def get_year_party_map(party_memberships):
-    year_to_memberships = defaultdict(list)
-    for membership, organization in party_memberships:
-        election_identified = False
-        for election_date in (election_date_2005, election_date_2010):
-            date_info = membership.get('start_date') or membership.get('end_date')
-            if date_info and membership_covers_date(membership, election_date):
-                year_to_memberships[str(election_date.year)].append(organization)
-                election_identified = True
-        if not election_identified:
-            year_to_memberships[None].append(organization)
-    ambiguous_years = dict(
-        (year, parties) for year, parties in year_to_memberships.items()
-        if len(parties) > 1
-    )
-    # Various checks that the data in PopIt hasn't been made
-    # inconsistent (presumably by editing in the PopIt web UI):
-    if ambiguous_years:
-        raise Exception("Ambigous party data found: {0}".format(ambiguous_years))
-    result = dict(
-        (year, reduced_organization_data(parties[0]))
-        for year, parties in year_to_memberships.items()
-    )
-    return result
-
 
 class PersonParseMixin(object):
 
@@ -252,18 +227,18 @@ class PersonParseMixin(object):
                 standing_in[year] = None
 
         # Now consider the party memberships:
-        year_to_party = get_year_party_map(popit_party_memberships)
+        year_to_party = person.parties
         party_memberships = {}
         for year, standing in standing_in.items():
             party = year_to_party.get(year)
             party_2010 = year_to_party.get('2010')
             fallback_party = year_to_party.get(None)
             if party:
-                party_memberships[year] = party
+                party_memberships[year] = reduced_organization_data(party)
             elif fallback_party:
-                party_memberships[year] = fallback_party
+                party_memberships[year] = reduced_organization_data(fallback_party)
             elif year == '2015' and party_2010:
-                party_memberships[year] = party_2010
+                party_memberships[year] = reduced_organization_data(party_2010)
             else:
                 message = "There was no party data for {0} in {1}"
                 raise Exception, message.format(person_id, year)

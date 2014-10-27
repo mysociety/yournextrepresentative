@@ -255,7 +255,6 @@ class PopItPerson(object):
     def __init__(self, api=None, popit_data=None):
         self.popit_data = popit_data
         self.api = api
-        self.party = None
         self.constituency_2015 = None
 
     def __eq__(self, other):
@@ -284,6 +283,21 @@ class PopItPerson(object):
     @property
     def id(self):
         return self.popit_data['id']
+
+    @property
+    def parties(self):
+        results = {}
+        for membership in self.popit_data['memberships']:
+            organization = membership.get('organization_id')
+            if not organization:
+                continue
+            if organization['classification'] != "Party":
+                continue
+            if membership_covers_date(membership, election_date_2010):
+                results['2010'] = organization
+            if membership_covers_date(membership, election_date_2015):
+                results['2015'] = organization
+        return results
 
     @property
     def not_standing_in_2015(self):

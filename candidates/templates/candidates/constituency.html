@@ -64,7 +64,7 @@
       {% endif %}
 
         <li>
-          {{ c.name }} ({{c.party.name }})
+          {{ c.name }} ({{c.parties.2015.name }})
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation">Not actually standing?</a>
@@ -141,7 +141,7 @@
     <ul class="candidate-list">
       {% for c in candidates_2010_might_stand_again %}
         <li>
-          {{ c.name }} ({{ c.party.name }})
+          {{ c.name }} ({{ c.parties.2010.name }})
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation">Standing again</a>
@@ -180,7 +180,7 @@
     <ul class="candidate-list">
       {% for c in candidates_2010_not_standing_again %}
         <li>
-          {{ c.name }} ({{ c.party.name }})
+          {{ c.name }} ({{ c.parties.2010.name }})
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation">Actually, they are standing!</a>
