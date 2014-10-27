@@ -412,6 +412,8 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             initial_data[field_name] = our_person.get(field_name)
         initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
         if initial_data['standing']:
+            # TODO: If we don't know someone to be standing, assume they are
+            # still in the same party as they were in 2010
             party_data_2015 = our_person['party_memberships'].get('2015', {})
             initial_data['party'] = party_data_2015.get('name', '')
             cons_data_2015 = our_person['standing_in'].get('2015', {})
