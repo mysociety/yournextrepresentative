@@ -191,41 +191,41 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
-        context['constituency_name'] = constituency_name = \
+        context['constituency_name'] = \
             get_constituency_name_from_mapit_id(mapit_area_id)
 
-        old_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2010)
-        new_candidate_list_id = get_candidate_list_popit_id(constituency_name, 2015)
+        mp_post = self.api.posts(mapit_area_id).get(
+            embed='membership.person.membership.organization')
 
-        _, old_candidate_ids = self.get_organization_and_members(old_candidate_list_id)
-        _, new_candidate_ids = self.get_organization_and_members(new_candidate_list_id)
+        current_candidates = set()
+        past_candidates = set()
+        from .update import membership_covers_date
+        from .models import election_date_2010, election_date_2015
+        for membership in mp_post['result']['memberships']:
+            if not membership['role'] == "Candidate":
+                continue
+            person = PopItPerson.create_from_dict(membership['person_id'])
+            if membership_covers_date(membership, election_date_2010):
+                past_candidates.add(person)
+            elif membership_covers_date(membership, election_date_2015):
+                current_candidates.add(person)
+            else:
+                raise ValueError("Candidate membership doesn't cover any \
+                                  known election date")
 
-        person_id_to_person_data = {
-            person_id: PopItPerson.create_from_popit(self.api, person_id)
-            for person_id in set(old_candidate_ids + new_candidate_ids)
-        }
+        context['candidates_2010_standing_again'] = \
+            past_candidates.intersection(current_candidates)
 
-        context['candidates_2010_standing_again'] = [
-            person_id_to_person_data[p_id]
-            for p_id in old_candidate_ids
-            if p_id in new_candidate_ids
-        ]
-
-        other_candidates_2010 = [
-            person_id_to_person_data[p_id]
-            for p_id in old_candidate_ids
-            if p_id not in new_candidate_ids
-        ]
+        other_candidates_2010 = past_candidates - current_candidates
 
         # Now split those candidates into those that we know aren't
         # standing again, and those that we just don't know about:
         context['candidates_2010_not_standing_again'] = \
-            [p for p in other_candidates_2010 if p.not_standing_in_2015]
+            set(p for p in other_candidates_2010 if p.not_standing_in_2015)
         context['candidates_2010_might_stand_again'] = \
-            [p for p in other_candidates_2010 if not p.not_standing_in_2015]
+            set(p for p in other_candidates_2010 if not p.not_standing_in_2015)
 
-        context['candidates_2015'] = \
-            [person_id_to_person_data[p_id] for p_id in new_candidate_ids]
+        context['candidates_2015'] = current_candidates
 
         context['add_candidate_form'] = NewPersonForm()
 
