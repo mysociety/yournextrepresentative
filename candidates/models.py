@@ -192,6 +192,11 @@ class PopItPerson(object):
         new_person._update_organizations()
         return new_person
 
+    @classmethod
+    def create_from_dict(cls, person_dict):
+        new_person = cls(popit_data=person_dict)
+        return new_person
+
     @property
     def name(self):
         return self.popit_data['name']
