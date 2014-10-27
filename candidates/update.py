@@ -193,41 +193,8 @@ class PersonParseMixin(object):
             result[field] = get_value_from_location(location, person.popit_data)
         result['versions'] = person.popit_data.get('versions', [])
 
-        # We'll need details of party memberships and candidate lists
-        # from PopIt:
-        popit_party_memberships = []
-        popit_candidate_list_organizations = []
-        for membership, organization in person.party_and_candidate_lists_iter():
-            if organization['classification'] == 'Party':
-                popit_party_memberships.append((membership, organization))
-            elif organization['classification'] == 'Candidate List':
-                popit_candidate_list_organizations.append(organization)
-            else:
-                raise Exception("An unexpected organization classification {} was returned by party_and_candidate_lists_iter")
-
-        # First, get all the information we can from the candidate
-        # list memberships:
-        standing_in = get_standing_in_from_candidate_lists(
-            popit_candidate_list_organizations
-        )
-
-        # However, we can't infer from the candidate lists that
-        # someone's a member of that we know that they're known not to
-        # be standing in a particular election. So, if that
-        # information is present in the PopIt data, set it in the
-        # standing_in dictionary.
-        for year, standing in person.popit_data.get('standing_in', {}).items():
-            if standing:
-                # Then there must already be a corresponding candidate
-                # list membership, but check that:
-                if year not in standing_in:
-                    message = "Missing Candidate List membership according to PopIt data for {} in {}"
-                    # raise Exception(message.format(person_id, year))
-            else:
-                standing_in[year] = None
-
-        # Now consider the party memberships:
         year_to_party = person.parties
+        standing_in = person.standing_in
         party_memberships = {}
         for year, standing in standing_in.items():
             party = year_to_party.get(year)

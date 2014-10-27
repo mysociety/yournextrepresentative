@@ -255,7 +255,6 @@ class PopItPerson(object):
     def __init__(self, api=None, popit_data=None):
         self.popit_data = popit_data
         self.api = api
-        self.constituency_2015 = None
 
     def __eq__(self, other):
         return self.id == other.id
@@ -297,6 +296,54 @@ class PopItPerson(object):
                 results['2010'] = organization
             if membership_covers_date(membership, election_date_2015):
                 results['2015'] = organization
+        return results
+
+    @property
+    def standing_in(self):
+        """
+        #   {
+        #     '2010': {
+        #       'name': 'South Cambridgeshire',
+        #       'mapit_url': 'http://mapit.mysociety.org/area/65922',
+        #       'post_id': 65922,
+        #     }
+        #   }
+        """
+
+        def post_id_to_cons_data(post_id):
+            return {
+                'name': get_constituency_name_from_mapit_id(post_id),
+                'mapit_url': 'http://mapit.mysociety.org/area/{0}'.format(
+                    post_id),
+                'post_id': post_id,
+            }
+
+        results = {}
+        for membership in self.popit_data['memberships']:
+            if membership.get('role') != "Candidate":
+                continue
+            if 'post_id' not in membership:
+                continue
+            if membership_covers_date(membership, election_date_2010):
+                results['2010'] = post_id_to_cons_data(membership['post_id'])
+            if membership_covers_date(membership, election_date_2015):
+                results['2015'] = post_id_to_cons_data(membership['post_id'])
+
+        # However, we can't infer from the candidate lists that
+        # someone's a member of that we know that they're known not to
+        # be standing in a particular election. So, if that
+        # information is present in the PopIt data, set it in the
+        # standing_in dictionary.
+        for year, standing in self.popit_data.get('standing_in', {}).items():
+            if standing:
+                # Then there must already be a corresponding candidate
+                # list membership, but check that:
+                if year not in results:
+                    message = "Missing Candidate List membership according to PopIt data for {} in {}"
+                    raise Exception(message.format(self.id, year))
+            else:
+                results[year] = None
+
         return results
 
     @property
