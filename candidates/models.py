@@ -266,7 +266,6 @@ class PopItPerson(object):
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
         popit_data = api.persons(popit_person_id).get()['result']
-        print "when getting {0} the length of membership was {1}".format(popit_person_id, len(popit_data.get('memberships', [])))
         new_person = cls(api=api, popit_data=popit_data)
         new_person._update_organizations()
         return new_person
