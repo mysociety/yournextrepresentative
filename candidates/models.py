@@ -267,7 +267,6 @@ class PopItPerson(object):
         popit_data = api.persons(popit_person_id).get(
             embed='membership.organization')['result']
         new_person = cls(api=api, popit_data=popit_data)
-        new_person._update_organizations()
         return new_person
 
     @classmethod
@@ -353,21 +352,6 @@ class PopItPerson(object):
         # not standing...
         standing_in = self.popit_data.get('standing_in', {})
         return ('2015' in standing_in) and standing_in['2015'] == None
-
-    def _update_organizations(self):
-        for m in self.popit_data.get('memberships', []):
-            o = self.api.organizations(m['organization_id']).get(embed='')['result']
-            # FIXME: this is just quick and broken implementation -
-            # it's obviously not correct, because if someone changes
-            # parties between the 2010 and 2015 elections, they'll
-            # have multiple party memberships, and this will pick one
-            # at random.  However, at the moment there's no date
-            # information for party memberships either, so let's deal
-            # with that later.
-            if o.get('classification') == 'Party':
-                self.party = o
-            if o.get('classification') == 'Candidate List' and re.search(r' 2015$', o['name']):
-                self.constituency_2015 = o
 
     def party_and_candidate_lists_iter(self):
         print "when iterating over {0} the length of membership was {1}".format(self.id, len(self.popit_data.get('memberships', [])))
