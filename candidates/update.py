@@ -252,8 +252,8 @@ class PersonUpdateMixin(object):
                 # Create the candidate list membership:
                 membership = election_year_to_party_dates(election_year)
                 membership['person_id'] = person_id
-                membership['organization_id'] = \
-                    get_candidate_list_popit_id(name, election_year)
+                membership['post_id'] = constituency['post_id']
+                membership['role'] = "Candidate"
                 self.create_membership(**membership)
 
     def create_person(self, data, change_metadata):

@@ -93,20 +93,14 @@ class PopItApiMixin(object):
             mapit_url_key: url_format.format(mapit_data['id'])
         }
 
-    def create_membership(self, person_id, organization_id,
-                          start_date=None, end_date=None):
+    def create_membership(self, person_id, **kwargs):
+        '''Create a membership of a post or an organization'''
         properties = {
-            'organization_id': organization_id,
             'person_id': person_id,
         }
-        if start_date is not None:
-            properties['start_date'] = start_date
-        if end_date is not None:
-            properties['end_date'] = end_date
-        organization = self.api.organizations(organization_id).get(embed='')['result']
-        area = self.get_area_from_organization(organization)
-        if area is not None:
-            properties['area'] = area
+        for key, value in kwargs.items():
+            if value is not None:
+                properties[key] = value
         self.api.memberships.post(properties)
 
 
