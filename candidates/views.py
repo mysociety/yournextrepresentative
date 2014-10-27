@@ -73,24 +73,18 @@ class PopItApiMixin(object):
             [ m['person_id'] for m in organization.get('memberships', []) ]
         )
 
-    def get_area_from_organization(self, organization, mapit_url_key='id'):
+    def get_area_from_post_id(self, post_id, mapit_url_key='id'):
         "Get a MapIt area ID from a candidate list organization's PopIt data"
 
-        if organization['classification'] != "Candidate List":
-            return None
-        m = candidate_list_name_re.search(organization['name'])
-        if not m:
-            message = "Found a Candidate List with an unparseable name: '{0}'"
-            raise Exception(message.format(organization['name']))
-        constituency_name = m.group(1)
-        mapit_data = MapItData.constituencies_2010_name_map.get(constituency_name)
+        mapit_data = MapItData.constituencies_2010.get(post_id)
         if mapit_data is None:
-            message = "Couldn't find the constituency: '{0}'"
-            raise Exception(message.format(constituency_name))
+            message = "Couldn't find the constituency with Post and MapIt Area ID: '{0}'"
+            raise Exception(message.format(post_id))
         url_format = 'http://mapit.mysociety.org/area/{0}'
         return {
-            'name': constituency_name,
-            mapit_url_key: url_format.format(mapit_data['id'])
+            'name': mapit_data['name'],
+            'post_id': post_id,
+            mapit_url_key: url_format.format(post_id),
         }
 
     def create_membership(self, person_id, **kwargs):
@@ -309,8 +303,8 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonPar
         print "Going to mark this person as *standing*:"
         print json.dumps(our_person, indent=4)
 
-        our_person['standing_in']['2015'] = self.get_area_from_organization(
-            organization_data,
+        our_person['standing_in']['2015'] = self.get_area_from_post_id(
+            form.cleaned_data['mapit_area_id'],
             mapit_url_key='mapit_url'
         )
         our_person['party_memberships']['2015'] = our_person['party_memberships']['2010']
