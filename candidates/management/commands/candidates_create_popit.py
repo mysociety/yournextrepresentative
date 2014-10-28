@@ -15,6 +15,8 @@ import yaml
 from django.conf import settings
 from django.core.management.base import NoArgsCommand, CommandError
 
+from candidates.models import MaxPopItIds
+
 class Command(NoArgsCommand):
     help = "Import data in to PopIt"
     def handle_noargs(self, **options):
@@ -158,5 +160,6 @@ class Command(NoArgsCommand):
                 api.memberships.post(properties)
 
         print "Max ID is %s" % max_id
+        MaxPopItIds.update_max_persons_id(max_id)
 
 
