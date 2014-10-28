@@ -459,7 +459,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
         self.update_person(our_person, change_metadata, previous_versions)
 
         if standing:
-            return self.redirect_to_constituency_name(constituency_name)
+            return get_redirect_from_mapit_id(constituency_2015_mapit_id)
         else:
             if previous_constituency_name:
                 return self.redirect_to_constituency_name(previous_constituency_name)
@@ -481,8 +481,6 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
         # standing_in and party_memberships fields.
         party = data_for_creation.pop('party')
         mapit_area_id = data_for_creation.pop('constituency')
-        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
-        organization_id = get_candidate_list_popit_id(constituency_name, 2015)
 
         data_for_creation['party_memberships'] = {
             '2015': {
@@ -490,23 +488,15 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
             }
         }
 
-        # Check that the candidate list organization exists:
-        organization_data = self.api.organizations(
-            organization_id
-        ).get()['result']
-
         data_for_creation['standing_in'] = {
-            '2015': self.get_area_from_organization(
-                organization_data,
-                mapit_url_key='mapit_url',
-            )
+            '2015': self.get_area_from_post_id(mapit_area_id)
         }
 
         print "Going to create a new person from this data:"
         print json.dumps(data_for_creation, indent=4)
 
         self.create_person(data_for_creation, change_metadata)
-        return self.redirect_to_constituency(organization_data)
+        return get_redirect_from_mapit_id(mapit_area_id)
 
 def party_results_key(party_name):
     party_count = PartyData.party_counts_2010.get(party_name, 0)
