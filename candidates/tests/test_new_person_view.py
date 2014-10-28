@@ -72,7 +72,8 @@ class TestNewPersonView(TestUserMixin, WebTest):
                 'standing_in': {
                     '2015': {
                         'name': u'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808'
                     }
                 },
                 'twitter_username': u'',
