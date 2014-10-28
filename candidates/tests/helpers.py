@@ -1,13 +1,34 @@
 from __future__ import print_function
 
 import difflib
-import pprint
+import json
 
 import sys
 
 def p(*args):
     """A helper for printing to stderr"""
     print(file=sys.stderr, *args)
+
+def deep_cast_to_unicode(obj):
+    """
+    >>> deep_cast_to_unicode("Foo")
+    u'Foo'
+    >>> deep_cast_to_unicode({'x': 'y'})
+    {u'x': u'y'}
+    >>> deep_cast_to_unicode(['a', 'b', u'c', {'x': 'y'}])
+    [u'a', u'b', u'c', {u'x': u'y'}]
+
+    """
+    if isinstance(obj, (str, unicode)):
+        return unicode(obj)
+    if isinstance(obj, dict):
+        return {
+            deep_cast_to_unicode(k): deep_cast_to_unicode(v)
+                for k,v in obj.items()
+        }
+    if isinstance(obj, list):
+        return [deep_cast_to_unicode(k) for k in obj]
+    return repr(obj)
 
 def equal_arg(arg1, arg2):
     """Return True if the args are equal, False otherwise
@@ -21,8 +42,10 @@ def equal_arg(arg1, arg2):
 
     # This is more or less taken from assertDictEqual in
     # django/utils/unittest/case.py:
-    args1_lines = pprint.pformat(arg1).splitlines()
-    args2_lines = pprint.pformat(arg2).splitlines()
+    args1_lines = json.dumps(deep_cast_to_unicode(arg1), indent=4,
+                             sort_keys=True).splitlines()
+    args2_lines = json.dumps(deep_cast_to_unicode(arg2), indent=4,
+                             sort_keys=True).splitlines()
     diff = difflib.ndiff(args1_lines, args2_lines)
 
     p("Found the following differences: ====================================")
