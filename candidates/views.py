@@ -245,18 +245,6 @@ class CandidacyMixin(object):
             'timestamp': self.get_current_timestamp()
         }
 
-    def redirect_to_constituency_name(self, constituency_name):
-        mapit_data = MapItData.constituencies_2010_name_map.get(constituency_name)
-        return get_redirect_from_mapit_id(mapit_data['id'])
-
-    def redirect_to_constituency(self, candidate_list_data):
-        constituency_name = extract_constituency_name(candidate_list_data)
-        if constituency_name:
-            return self.redirect_to_constituency_name(constituency_name)
-        else:
-            message = "Failed to parse the candidate_list_name '{0}'"
-            raise Exception(message.format(candidate_list_name))
-
     def get_party(self, party_name):
         party_name = re.sub(r'\s+', ' ', party_name).strip()
         search_url = self.get_search_url(
@@ -414,9 +402,8 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
         print "Going to update this person:"
         print json.dumps(our_person, indent=4)
 
-        previous_constituency_name = get_previous_constituency_name(
-            our_person['standing_in']
-        )
+        constituency_2010_mapit_id = our_person['standing_in'].get('2010',
+            {}).get('post_id')
 
         # Now we need to make any changes to that data structure based
         # on information given in the form.
@@ -461,8 +448,8 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
         if standing:
             return get_redirect_from_mapit_id(constituency_2015_mapit_id)
         else:
-            if previous_constituency_name:
-                return self.redirect_to_constituency_name(previous_constituency_name)
+            if constituency_2010_mapit_id:
+                return get_redirect_from_mapit_id(constituency_2010_mapit_id)
             else:
                 return HttpResponseRedirect(reverse('finder'))
 
