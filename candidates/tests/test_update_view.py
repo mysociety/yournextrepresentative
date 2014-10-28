@@ -64,11 +64,13 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     },
                     '2010': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        "post_id": "65808"
                     }
                 },
                 'party_memberships': {
