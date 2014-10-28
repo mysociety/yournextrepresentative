@@ -1,0 +1,361 @@
+
+{
+  "result": {
+    "id": "65808",
+    "area": {
+      "identifier": "http://mapit.mysociety.org/area/65808",
+      "id": "mapit:65808",
+      "name": "Dulwich and West Norwood"
+    },
+    "organization_id": "commons",
+    "role": "Member of Parliament",
+    "label": "Member of Parliament for Dulwich and West Norwood",
+    "start_date": "2005-05-06",
+    "memberships": [
+      {
+        "id": "544e3f9981b7fa64bfcd0042",
+        "person_id": {
+          "id": "2960",
+          "slug": "jonathan-mitchell",
+          "name": "Jonathan Mitchell",
+          "gender": "male",
+          "phone": "020 7733 1864",
+          "email": "mitchbrief@hotmail.com",
+          "memberships": [
+            {
+              "id": "544e3f9981b7fa64bfcd0042",
+              "organization_id": null,
+              "person_id": "2960",
+              "post_id": "65808",
+              "role": "Candidate",
+              "start_date": "2005-05-06",
+              "end_date": "2010-05-06",
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f9981b7fa64bfcd0042",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f9981b7fa64bfcd0042"
+            },
+            {
+              "id": "544e3e7f81b7fa64bfcce627",
+              "person_id": "2960",
+              "organization_id": {
+                "id": "544e3d5b81b7fa64bfccccd4",
+                "slug": "liberal-democrats",
+                "classification": "Party",
+                "name": "Liberal Democrats",
+                "posts": [],
+                "memberships": [],
+                "links": [],
+                "contact_details": [],
+                "identifiers": [],
+                "other_names": [],
+                "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/organizations/544e3d5b81b7fa64bfccccd4",
+                "html_url": "http://candidates.127.0.0.1.xip.io:3000/organizations/544e3d5b81b7fa64bfccccd4"
+              },
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3e7f81b7fa64bfcce627",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3e7f81b7fa64bfcce627"
+            }
+          ],
+          "links": [],
+          "contact_details": [],
+          "identifiers": [
+            {
+              "id": "544e3e7f81b7fa64bfcce626",
+              "scheme": "yournextmp-candidate",
+              "identifier": "2960"
+            }
+          ],
+          "other_names": [],
+          "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/2960",
+          "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/2960"
+        },
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f9981b7fa64bfcd0042",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f9981b7fa64bfcd0042"
+      },
+      {
+        "id": "544e3f4e81b7fa64bfccf8f2",
+        "person_id": {
+          "id": "2961",
+          "slug": "shane-collins",
+          "name": "Shane Collins",
+          "gender": "male",
+          "phone": "07939 196612",
+          "email": "shane@gn.apc.org",
+          "memberships": [
+            {
+              "id": "544e3f4e81b7fa64bfccf8f2",
+              "organization_id": null,
+              "person_id": "2961",
+              "post_id": "65808",
+              "role": "Candidate",
+              "start_date": "2005-05-06",
+              "end_date": "2010-05-06",
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f4e81b7fa64bfccf8f2",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f4e81b7fa64bfccf8f2"
+            },
+            {
+              "id": "544e3e7f81b7fa64bfcce625",
+              "person_id": "2961",
+              "organization_id": {
+                "id": "544e3d6481b7fa64bfcccda6",
+                "slug": "green-party",
+                "classification": "Party",
+                "name": "Green Party",
+                "posts": [],
+                "memberships": [],
+                "links": [],
+                "contact_details": [],
+                "identifiers": [],
+                "other_names": [],
+                "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/organizations/544e3d6481b7fa64bfcccda6",
+                "html_url": "http://candidates.127.0.0.1.xip.io:3000/organizations/544e3d6481b7fa64bfcccda6"
+              },
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3e7f81b7fa64bfcce625",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3e7f81b7fa64bfcce625"
+            }
+          ],
+          "links": [],
+          "contact_details": [],
+          "identifiers": [
+            {
+              "id": "544e3e7f81b7fa64bfcce624",
+              "scheme": "yournextmp-candidate",
+              "identifier": "2961"
+            }
+          ],
+          "other_names": [],
+          "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/2961",
+          "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/2961"
+        },
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f4e81b7fa64bfccf8f2",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f4e81b7fa64bfccf8f2"
+      },
+      {
+        "id": "544e3f4e81b7fa64bfccf8f4",
+        "person_id": {
+          "id": "2959",
+          "slug": "tessa-jowell",
+          "name": "Tessa Jowell",
+          "gender": "female",
+          "phone": "02086931826",
+          "email": "tessajowell@london.com",
+          "memberships": [
+            {
+              "id": "544e3f4e81b7fa64bfccf8f4",
+              "organization_id": null,
+              "person_id": "2959",
+              "post_id": "65808",
+              "role": "Candidate",
+              "start_date": "2005-05-06",
+              "end_date": "2010-05-06",
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f4e81b7fa64bfccf8f4",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f4e81b7fa64bfccf8f4"
+            },
+            {
+              "id": "544e3dfa81b7fa64bfccdaad",
+              "person_id": "2959",
+              "organization_id": {
+                "id": "544e3d6981b7fa64bfccce1f",
+                "slug": "labour-party",
+                "classification": "Party",
+                "name": "Labour Party",
+                "posts": [],
+                "memberships": [],
+                "links": [],
+                "contact_details": [],
+                "identifiers": [],
+                "other_names": [],
+                "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/organizations/544e3d6981b7fa64bfccce1f",
+                "html_url": "http://candidates.127.0.0.1.xip.io:3000/organizations/544e3d6981b7fa64bfccce1f"
+              },
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3dfa81b7fa64bfccdaad",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3dfa81b7fa64bfccdaad"
+            }
+          ],
+          "links": [],
+          "contact_details": [],
+          "identifiers": [
+            {
+              "id": "544e3df981b7fa64bfccdaac",
+              "scheme": "yournextmp-candidate",
+              "identifier": "2959"
+            }
+          ],
+          "other_names": [],
+          "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/2959",
+          "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/2959"
+        },
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f4e81b7fa64bfccf8f4",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f4e81b7fa64bfccf8f4"
+      },
+      {
+        "id": "544e3f8081b7fa64bfccfdde",
+        "person_id": {
+          "id": "2958",
+          "slug": "kemi-adegoke",
+          "name": "Kemi Adegoke",
+          "gender": "female",
+          "phone": "020 8670 0677",
+          "email": "dulwichwnorwood@tory.org",
+          "memberships": [
+            {
+              "id": "544e3f8081b7fa64bfccfdde",
+              "organization_id": null,
+              "person_id": "2958",
+              "post_id": "65808",
+              "role": "Candidate",
+              "start_date": "2005-05-06",
+              "end_date": "2010-05-06",
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f8081b7fa64bfccfdde",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f8081b7fa64bfccfdde"
+            },
+            {
+              "id": "544e3eca81b7fa64bfccecad",
+              "person_id": "2958",
+              "organization_id": {
+                "id": "544e3d6181b7fa64bfcccd5e",
+                "slug": "conservative-party",
+                "classification": "Party",
+                "name": "Conservative Party",
+                "posts": [],
+                "memberships": [],
+                "links": [],
+                "contact_details": [],
+                "identifiers": [],
+                "other_names": [],
+                "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/organizations/544e3d6181b7fa64bfcccd5e",
+                "html_url": "http://candidates.127.0.0.1.xip.io:3000/organizations/544e3d6181b7fa64bfcccd5e"
+              },
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3eca81b7fa64bfccecad",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3eca81b7fa64bfccecad"
+            }
+          ],
+          "links": [],
+          "contact_details": [],
+          "identifiers": [
+            {
+              "id": "544e3eca81b7fa64bfccecac",
+              "scheme": "yournextmp-candidate",
+              "identifier": "2958"
+            }
+          ],
+          "other_names": [],
+          "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/2958",
+          "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/2958"
+        },
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3f8081b7fa64bfccfdde",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3f8081b7fa64bfccfdde"
+      },
+      {
+        "id": "544e3eff81b7fa64bfccf14f",
+        "person_id": {
+          "id": "21216",
+          "slug": "elizabeth-jones",
+          "name": "Elizabeth Jones",
+          "gender": "female",
+          "phone": "",
+          "email": "",
+          "memberships": [
+            {
+              "id": "544e3e2181b7fa64bfccde19",
+              "person_id": "21216",
+              "organization_id": {
+                "id": "544e3d5b81b7fa64bfcccccb",
+                "slug": "uk-independence-party-ukip",
+                "classification": "Party",
+                "name": "UK Independence Party - UKIP",
+                "posts": [],
+                "memberships": [],
+                "links": [],
+                "contact_details": [],
+                "identifiers": [],
+                "other_names": [],
+                "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/organizations/544e3d5b81b7fa64bfcccccb",
+                "html_url": "http://candidates.127.0.0.1.xip.io:3000/organizations/544e3d5b81b7fa64bfcccccb"
+              },
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3e2181b7fa64bfccde19",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3e2181b7fa64bfccde19"
+            },
+            {
+              "id": "544e3eff81b7fa64bfccf14f",
+              "organization_id": null,
+              "person_id": "21216",
+              "post_id": "65808",
+              "role": "Candidate",
+              "start_date": "2005-05-06",
+              "end_date": "2010-05-06",
+              "links": [],
+              "contact_details": [],
+              "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3eff81b7fa64bfccf14f",
+              "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3eff81b7fa64bfccf14f"
+            }
+          ],
+          "links": [],
+          "contact_details": [],
+          "identifiers": [
+            {
+              "id": "544e3e2181b7fa64bfccde18",
+              "scheme": "yournextmp-candidate",
+              "identifier": "21216"
+            }
+          ],
+          "other_names": [],
+          "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/21216",
+          "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/21216"
+        },
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544e3eff81b7fa64bfccf14f",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544e3eff81b7fa64bfccf14f"
+      }
+    ],
+    "links": [],
+    "contact_details": [],
+    "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/posts/65808",
+    "html_url": "http://candidates.127.0.0.1.xip.io:3000/posts/65808"
+  }
+}

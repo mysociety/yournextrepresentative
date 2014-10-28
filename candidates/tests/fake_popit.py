@@ -69,6 +69,9 @@ class FakePersonCollection(FakeCollection):
 class FakeOrganizationCollection(FakeCollection):
     collection = 'organizations'
 
+class FakePostCollection(FakeCollection):
+    collection = 'posts'
+
 # This is used to fake results make via requests.get to the PopIt API.
 
 def fake_get_result(url):
