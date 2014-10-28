@@ -156,22 +156,6 @@ def decompose_candidate_list_name(candidate_list_name):
         'mapit_url': url_format.format(mapit_data['id'])
     }
 
-def get_standing_in_from_candidate_lists(candidate_list_organizations):
-    result = {}
-    for organization in candidate_list_organizations:
-        cons_data = decompose_candidate_list_name(organization['name'])
-        year = cons_data.pop('year')
-        if year in result:
-            message = "Someone found standing in multiple {0} constituencies: {1} and {2}"
-            raise Exception(message.format(
-                year,
-                result[year]['name'],
-                cons_data['name'],
-            ))
-        result[year] = cons_data
-    return result
-
-
 class PersonParseMixin(object):
 
     """A mixin for turning PopIt data into our representation
