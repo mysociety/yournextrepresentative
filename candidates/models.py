@@ -5,6 +5,8 @@ from os.path import dirname, join, abspath
 import re
 from slugify import slugify
 
+from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
 data_directory = abspath(join(dirname(__file__), '..', 'data'))
@@ -438,3 +440,28 @@ def get_person_data_from_dict(data, generate_id, existing_data=None):
         if new_value:
             update_values_in_sub_array(result, location, new_value)
     return result
+
+
+class MaxPopItIds(models.Model):
+    popit_collection_name = models.CharField(max_length=255)
+    max_id = models.IntegerField(default=0)
+
+    @classmethod
+    def get_max_persons_id(cls):
+        try:
+            return cls.objects.get(popit_collection_name="persons").max_id
+        except ObjectDoesNotExist:
+            persons_max = cls(popit_collection_name="persons")
+            persons_max.save()
+            return persons_max.max_id
+
+    @classmethod
+    def update_max_persons_id(cls, max_id):
+        max_persons, created = cls.objects.get_or_create(
+            popit_collection_name="persons")
+        if max_id > max_persons.max_id:
+            max_persons.max_id = max_id
+            max_persons.save()
+        else:
+            raise ValueError('given max_id is lower than the previous one ({'
+                             '0} vs {1})'.format(max_id, max_persons.max_id))
