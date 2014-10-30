@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import csv
 import urllib2
@@ -20,6 +21,10 @@ import dateutil.parser
 # use this URL:
 #
 #   https://raw.githubusercontent.com/mhl/UK-Political-Parties/gh-pages/data/parties.csv
+
+party_name_re = re.compile(
+    r'^(.*?)(?:\s+\[De-registered\s+(\d{2}/\d{2}/\d{2})\])?\s*$'
+)
 
 class Command(LabelCommand):
     help = "Update parties from a CSV of party data"
@@ -48,14 +53,15 @@ class Command(LabelCommand):
             if line['Entity type'] != 'Political Party':
                 continue
             party_id = self.clean_id(line['EC Reference Number'])
-            party_name = self.clean_name(line['Entity name'], line['Register'])
             register = line['Register']
+            party_name, party_dissolved = self.clean_name(line['Entity name'], register)
             party_founded = self.clean_date(line['Date of registration / notification'])
             party_data = {
                 'id': party_id,
                 'name': party_name,
                 'classification': 'Party',
                 'founding_date': party_founded,
+                'dissolution_date': party_dissolved,
                 'register': register,
             }
             try:
@@ -70,9 +76,20 @@ class Command(LabelCommand):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d")
 
     def clean_name(self, name, register):
+        m = party_name_re.search(name)
+        name, party_dissolved = m.groups()
         if register == "Northern Ireland":
             name = "{0} (Northern Ireland)".format(name)
-        return name.strip()
+        if party_dissolved:
+            party_dissolved = datetime.strptime(party_dissolved, '%d/%m/%y')
+            party_dissolved = str(party_dissolved.date())
+        else:
+            # Currently missing out the dissolution date completely to
+            # indicate 'future' makes using PopIt's search endpoint
+            # difficult, so use a far-future value if the party is
+            # still active.
+            party_dissolved = '9999-12-31'
+        return name.strip(), party_dissolved
 
     def clean_id(self, party_id):
         party_id = re.sub(r'^PPm? ', '', party_id).strip()
