@@ -84,7 +84,6 @@ class Command(NoArgsCommand):
 
         for wmc in wmc_data.values():
             wmc_name = wmc['name']
-            wmc_slug = slugify(wmc_name)
             api.posts.post({
                 'id': str(wmc['id']),
                 'label': 'Member of Parliament for ' + wmc_name,
