@@ -38,6 +38,8 @@ class Command(LabelCommand):
 
         reader = csv.DictReader(csv_content)
         for line in reader:
+            if line['Entity type'] != 'Political Party':
+                continue
             party_id = self.clean_id(line['EC Reference Number'])
             party_name = self.clean_name(line['Entity name'], line['Register'])
             party_founded = self.clean_date(line['Date of registration / notification'])
