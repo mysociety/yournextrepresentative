@@ -4,6 +4,7 @@ import csv
 import urllib2
 import re
 import json
+from slugify import slugify
 
 from django.core.management.base import LabelCommand, CommandError
 from django.conf import settings
@@ -59,6 +60,7 @@ class Command(LabelCommand):
             party_data = {
                 'id': party_id,
                 'name': party_name,
+                'slug': slugify(party_name),
                 'classification': 'Party',
                 'founding_date': party_founded,
                 'dissolution_date': party_dissolved,
