@@ -49,12 +49,14 @@ class Command(LabelCommand):
                 continue
             party_id = self.clean_id(line['EC Reference Number'])
             party_name = self.clean_name(line['Entity name'], line['Register'])
+            register = line['Register']
             party_founded = self.clean_date(line['Date of registration / notification'])
             party_data = {
                 'id': party_id,
                 'name': party_name,
                 'classification': 'Party',
                 'founding_date': party_founded,
+                'register': register,
             }
             try:
                 self.api.organizations.post(party_data)
