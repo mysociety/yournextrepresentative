@@ -63,6 +63,12 @@ class Command(LabelCommand):
                 'founding_date': party_founded,
                 'dissolution_date': party_dissolved,
                 'register': register,
+                'identifiers': [
+                    {
+                        'identifier': line['EC Reference Number'].strip(),
+                        'scheme': 'electoral-commission',
+                    }
+                ]
             }
             try:
                 self.api.organizations.post(party_data)
