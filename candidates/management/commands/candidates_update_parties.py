@@ -11,11 +11,18 @@ from popit_api import PopIt
 from slumber.exceptions import HttpServerError
 import dateutil.parser
 
-#https://raw.githubusercontent.com/DemocracyClub/UK-Political-Parties/gh-pages/data/parties.csv
+# For a version with only current parties, you can use this URL as an
+# argument to the command:
+#
+#   https://raw.githubusercontent.com/DemocracyClub/UK-Political-Parties/gh-pages/data/parties.csv
+#
+# ... or for one which also includes de-registered parties, you can
+# use this URL:
+#
+#   https://raw.githubusercontent.com/mhl/UK-Political-Parties/gh-pages/data/parties.csv
 
 class Command(LabelCommand):
     help = "Update parties from a CSV of party data"
-
 
     def handle_label(self, label, **options):
         self.api = PopIt(
