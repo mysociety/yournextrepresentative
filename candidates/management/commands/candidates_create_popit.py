@@ -15,7 +15,9 @@ import yaml
 from django.conf import settings
 from django.core.management.base import NoArgsCommand, CommandError
 
-from candidates.models import MaxPopItIds
+from candidates.models import (
+    MaxPopItIds, election_date_2005, election_date_2010
+)
 
 class Command(NoArgsCommand):
     help = "Import data in to PopIt"
@@ -72,8 +74,6 @@ class Command(NoArgsCommand):
             'classification': 'UK House of Parliament',
            })
 
-        election_date_2005 = date(2005, 5, 5)
-        election_date_2010 = date(2010, 5, 6)
 
         # Get all Westminster constituencies from MapIt
 
