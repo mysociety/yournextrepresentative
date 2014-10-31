@@ -294,5 +294,3 @@ class Command(NoArgsCommand):
 
         print "The maximum person ID is %s" % max_id
         MaxPopItIds.update_max_persons_id(max_id)
-
-
