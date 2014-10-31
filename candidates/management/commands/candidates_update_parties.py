@@ -86,8 +86,6 @@ class Command(LabelCommand):
     def clean_name(self, name, register):
         m = party_name_re.search(name)
         name, party_dissolved = m.groups()
-        if register == "Northern Ireland":
-            name = "{0} (Northern Ireland)".format(name)
         if party_dissolved:
             party_dissolved = datetime.strptime(party_dissolved, '%d/%m/%y')
             party_dissolved = str(party_dissolved.date())
