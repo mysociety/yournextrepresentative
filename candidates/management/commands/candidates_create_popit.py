@@ -292,7 +292,7 @@ class Command(NoArgsCommand):
             for name, count in party_names_and_counts:
                 print count, name
 
-        print "Max ID is %s" % max_id
+        print "The maximum person ID is %s" % max_id
         MaxPopItIds.update_max_persons_id(max_id)
 
 
