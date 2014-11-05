@@ -163,8 +163,7 @@ class Command(NoArgsCommand):
             'id': commons_id,
             'name': 'House of Commons',
             'classification': 'UK House of Parliament',
-           })
-
+        })
 
         # Get all Westminster constituencies from MapIt
 
