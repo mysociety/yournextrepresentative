@@ -1,0 +1,1 @@
+isNorthernIreland = {"66139": true, "66138": true, "66128": true, "66129": true, "66127": true, "66126": true, "66131": true, "66130": true, "66133": true, "66132": true, "66135": true, "66134": true, "66137": true, "66136": true, "66140": true, "66124": true, "66141": true, "66125": true};
