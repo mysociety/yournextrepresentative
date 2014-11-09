@@ -4,43 +4,10 @@
 
 {% block extra_js %}
   <script>
-    $(function() {
-
-      /* If Javascript's enabled, hide the source-confirmation
-         boxes and the add new candidate form. */
-      $('.source-confirmation').hide();
-      $('.candidates__new').hide();
-
-      /* Enable autocompletion for the party input box */
-      var partyInput = $('#id_party'),
-          autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}";
-      partyInput.autocomplete({
-        source: autocompletePartyURL,
-        minLength: 2
-      });
-
-      /* Set up the hide / reveal for the add new candidate form */
-      $('.show-new-candidate-form').on('click', function(){
-        $('.candidates__new').slideDown(function(){
-          $('.candidates__new input:text').eq(0).focus();
-        });
-      });
-      $('.hide-new-candidate-form').on('click', function(){
-        $('.candidates__new').slideUp();
-      });
-
-      /* Handle showing/hiding the source confirmation box */
-      $('.js-toggle-source-confirmation').on('click', function(){
-        var $confirmation = $(this).parents('li').children('.source-confirmation');
-        if($confirmation.is(':visible')){
-          $confirmation.hide();
-        } else {
-          $confirmation.show().find('input:text').focus();
-        }
-      })
-    });
+    var autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}";
   </script>
 {% endblock %}
+
 {% block hero %}
   <h1>Candidates for {{ constituency_name }}</h1>
 {% endblock %}

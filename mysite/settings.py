@@ -180,6 +180,8 @@ PIPELINE_JS = {
             'foundation/js/foundation/foundation.abide.js',
             'foundation/js/foundation/foundation.tab.js',
             'select2/select2.js',
+            'js/constituency.js',
+            'js/person_form.js',
         ),
         'output_filename': 'js/all.js'
     }
