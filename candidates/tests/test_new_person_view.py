@@ -98,7 +98,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
                 expected_call_args,
                 mock_create_person.call_args[0]
             ),
-            "create_person was called with unpexected values"
+            "create_person was called with unexpected values"
         )
 
         split_location = urlsplit(submission_response.location)

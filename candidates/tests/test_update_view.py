@@ -102,7 +102,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 expected_call_args,
                 mock_update_person.call_args[0]
             ),
-            "update_person was called with unpexected values"
+            "update_person was called with unexpected values"
         )
 
         # It should redirect back to the consituency page:
