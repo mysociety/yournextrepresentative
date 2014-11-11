@@ -11,7 +11,7 @@ from .fake_popit import get_example_popit_json
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
 
-@patch('candidates.models.PopIt')
+@patch('candidates.popit.PopIt')
 class TestUpdatePersonView(TestUserMixin, WebTest):
 
     def test_update_person_view_get_without_login(self, mock_popit):

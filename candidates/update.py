@@ -104,7 +104,7 @@ import time
 from slugify import slugify
 
 from .models import PopItPerson
-from .models import MapItData, PartyData
+from .static_data import MapItData, PartyData
 from .models import get_person_data_from_dict
 from .models import simple_fields, complex_fields_locations
 

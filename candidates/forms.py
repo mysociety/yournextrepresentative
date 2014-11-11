@@ -1,4 +1,4 @@
-from .models import MapItData, PartyData
+from .static_data import MapItData, PartyData
 
 from django import forms
 

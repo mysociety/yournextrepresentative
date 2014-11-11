@@ -1,19 +1,13 @@
-from collections import defaultdict
-import csv
 from datetime import date
 import json
-from os.path import dirname, join, abspath
 import re
 from slugify import slugify
 
 from django.db import models
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
-from popit_api import PopIt
-
-data_directory = abspath(join(dirname(__file__), '..', 'data'))
+from .static_data import MapItData
 
 simple_fields = ('name', 'email', 'date_of_birth')
 
@@ -45,21 +39,6 @@ election_date_2015 = date(2015, 5, 7)
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
 candidate_list_name_re = re.compile(r'^Candidates for (.*) in (\d+)$')
-
-def create_popit_api_object():
-    api_properties = {
-        'instance': settings.POPIT_INSTANCE,
-        'hostname': settings.POPIT_HOSTNAME,
-        'port': settings.POPIT_PORT,
-        'api_version': 'v0.1',
-        'append_slash': False,
-    }
-    if settings.POPIT_API_KEY:
-        api_properties['api_key'] = settings.POPIT_API_KEY
-    else:
-        api_properties['user'] = settings.POPIT_USER
-        api_properties['password'] = settings.POPIT_PASSWORD
-    return PopIt(**api_properties)
 
 def complete_partial_date(iso_8601_date_partial, start=True):
     """If we have a partial date string, complete it for range comparisons
@@ -139,54 +118,6 @@ def membership_covers_date(membership, date):
     start_date = complete_partial_date(start_date)
     end_date = complete_partial_date(end_date)
     return start_date <= str(date) and end_date >= str(date)
-
-def get_mapit_constituencies(basename):
-    with open(join(data_directory, basename)) as f:
-        return json.load(f)
-
-def get_constituency_name_map(basename):
-    result = {}
-    for constituency in get_mapit_constituencies(basename).values():
-        result[constituency['name']] = constituency
-    return result
-
-class MapItData(object):
-    constituencies_2010 = \
-        get_mapit_constituencies('mapit-WMC-generation-13.json')
-    constituencies_2010_name_map = \
-        get_constituency_name_map('mapit-WMC-generation-13.json')
-
-def popit_unwrap_pagination(api_collection, **kwargs):
-    page = 1
-    keep_fetching = True
-    while keep_fetching:
-        get_kwargs = {
-            'per_page': 50,
-            'page': page,
-        }
-        get_kwargs.update(kwargs)
-        response = api_collection.get(**get_kwargs)
-        keep_fetching = response.get('has_more', False)
-        page += 1
-        for api_object in response['result']:
-            yield api_object
-
-def get_all_parties():
-    result_list, result_dict = defaultdict(list), {}
-    api = create_popit_api_object()
-    for party in popit_unwrap_pagination(api.organizations, embed=''):
-        if party['classification'] != 'Party':
-            continue
-        key = party.get('register', '')
-        result_list[key].append((party['id'], party['name']))
-        result_dict[party['id']] = party['name']
-    for parties in result_list.values():
-        parties.sort(key=lambda p: p[1].lower())
-        parties.insert(0, ('party:none', ''))
-    return result_list, result_dict
-
-class PartyData(object):
-    party_choices, party_id_to_name = get_all_parties()
 
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)

@@ -21,13 +21,14 @@ from .forms import (
     CandidacyCreateForm, CandidacyDeleteForm
 )
 from .models import (
-    PopItPerson, MapItData,
+    PopItPerson,
     get_constituency_name_from_mapit_id,
     all_fields,
     get_mapit_id_from_mapit_url,
-    PartyData, membership_covers_date, election_date_2010, election_date_2015,
-    create_popit_api_object
+    membership_covers_date, election_date_2010, election_date_2015
 )
+from .popit import create_popit_api_object
+from .static_data import MapItData, PartyData
 
 from .update import PersonParseMixin, PersonUpdateMixin
 

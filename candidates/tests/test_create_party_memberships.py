@@ -21,7 +21,7 @@ class TestCreatePerson(TestCase):
 
     @patch.object(FakeOrganizationCollection, 'post')
     @patch('candidates.views.requests')
-    @patch('candidates.models.PopIt')
+    @patch('candidates.popit.PopIt')
     def test_create_party_memberships(self, mock_popit, mock_requests, mock_org_post):
 
         mock_requests.get = fake_get_result
