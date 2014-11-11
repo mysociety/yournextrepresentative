@@ -226,7 +226,6 @@ class PersonUpdateMixin(object):
             if constituency:
                 # i.e. we know that this isn't an indication that the
                 # person isn't standing...
-                name = constituency['name']
                 # Create the candidate list membership:
                 membership = election_year_to_party_dates(election_year)
                 membership['person_id'] = person_id
