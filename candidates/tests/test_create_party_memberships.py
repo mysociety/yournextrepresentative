@@ -15,24 +15,7 @@ class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
 # create_with_id_retries? Probably not...
 
 def fake_org_post(data):
-    if data['id'] == 'new-invented-party':
-        return {
-            "result": {
-                "id": "new-invented-party",
-                "classification": "Party",
-                "name": "New Invented Party",
-                "posts": [],
-                "memberships": [],
-                "links": [],
-                "contact_details": [],
-                "identifiers": [],
-                "other_names": [],
-                "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/new-invented-party",
-                "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/new-invented-party"
-            }
-        }
-    else:
-        raise Exception("Unknown organization POST: " + data)
+    raise Exception("Unknown organization POST: " + data)
 
 class TestCreatePerson(TestCase):
 
