@@ -214,19 +214,6 @@ def create_person_with_id_retries(api, data, original_version):
                 raise
     return result
 
-def get_candidate_list_popit_id(constituency_name, year):
-    """Return the PopIt organization ID for a constituency's candidate list
-
-    >>> get_candidate_list_popit_id('Leeds North East', 2010)
-    'candidates-2010-leeds-north-east'
-    >>> get_candidate_list_popit_id('Ayr, Carrick and Cumnock', 2015)
-    'candidates-2015-ayr-carrick-and-cumnock'
-    """
-    return 'candidates-{year}-{slugified_name}'.format(
-        year=year,
-        slugified_name=slugify(constituency_name),
-    )
-
 def extract_constituency_name(candidate_list_organization):
     """Return the constituency name from a candidate list organization
 

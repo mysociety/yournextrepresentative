@@ -110,7 +110,6 @@ from .models import simple_fields, complex_fields_locations
 
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
-from .models import get_candidate_list_popit_id
 from .models import create_person_with_id_retries
 
 def election_year_to_party_dates(election_year):
