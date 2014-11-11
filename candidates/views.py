@@ -234,19 +234,6 @@ class CandidacyMixin(object):
             'timestamp': self.get_current_timestamp()
         }
 
-    def get_party(self, party_name):
-        party_name = re.sub(r'\s+', ' ', party_name).strip()
-        search_url = self.get_search_url(
-            'organizations',
-            'classification:Party AND name:"{0}"'.format(party_name),
-        )
-        r = requests.get(search_url)
-        wanted_party_name = normalize_party_name(party_name)
-        for party in r.json()['result']:
-            if wanted_party_name == normalize_party_name(party['name']):
-                return party
-        return None
-
 
 class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 

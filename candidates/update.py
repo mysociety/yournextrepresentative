@@ -104,7 +104,7 @@ import time
 from slugify import slugify
 
 from .models import PopItPerson
-from .models import MapItData
+from .models import MapItData, PartyData
 from .models import get_person_data_from_dict
 from .models import simple_fields, complex_fields_locations
 
@@ -205,7 +205,6 @@ class PersonUpdateMixin(object):
     This mixin depends on the following being usable:
         self.api (from PopItApiMixin)
         self.create_membership (from PopItApiMixin)
-        self.get_party (from CandidacyMixin)
 
     FIXME: it'd be good to have tests for this, but it's non-obvious
     how to write them without creating a fresh PopIt instance to run
@@ -214,17 +213,13 @@ class PersonUpdateMixin(object):
 
     def create_party_memberships(self, person_id, data):
         for election_year, party in data.get('party_memberships', {}).items():
-            popit_party = self.get_party(party['name'])
-            if not popit_party:
-                # Then create a new party:
-                popit_party = party.copy()
-                popit_party['classification'] = 'Party'
-                result = self.api.organizations.post(popit_party)
-                popit_party = result['result']
+            if party['id'] not in PartyData.party_id_to_name:
+                msg = "Couldn't create party memberships for unknown ID {0}"
+                raise Exception, msg.format(party['id'])
             # Create the party membership:
             membership = election_year_to_party_dates(election_year)
             membership['person_id'] = person_id
-            membership['organization_id'] = popit_party['id']
+            membership['organization_id'] = party['id']
             self.create_membership(**membership)
 
     def create_candidate_list_memberships(self, person_id, data):
