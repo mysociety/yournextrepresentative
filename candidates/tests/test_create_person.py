@@ -124,7 +124,6 @@ class TestCreatePerson(TestCase):
             "update_person was called with unexpected values"
         )
 
-
         view.create_candidate_list_memberships.assert_called_once_with(
             'jane-doe',
             new_person_data,
