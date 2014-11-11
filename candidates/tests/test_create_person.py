@@ -6,6 +6,7 @@ from .fake_popit import (
     fake_get_result,
     FakePersonCollection, FakeOrganizationCollection
 )
+from .helpers import equal_call_args
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
 
 class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
@@ -38,7 +39,6 @@ class TestCreatePerson(TestCase):
             "date_of_birth": None,
             "email": "jane@example.org",
             "homepage_url": "http://janedoe.example.org",
-            "id": "jane-doe",
             "name": "Jane Doe",
             "party_memberships": {
                 "2015": {
@@ -69,7 +69,7 @@ class TestCreatePerson(TestCase):
 
         expected_args = {
             'email': u'jane@example.org',
-            'id': 'jane-doe',
+            'id': '1',
             'links': [
                 {
                     'note': 'homepage',
@@ -108,14 +108,23 @@ class TestCreatePerson(TestCase):
                             }
                         },
                         'email': 'jane@example.org',
-                        'id': 'jane-doe'
+                        'id': '1'
                     }
                 }
             ],
         }
 
-        # Then we expect this to be posted:
-        mocked_post.assert_called_once_with(expected_args)
+        # Then we expect one post, with the right data:
+        self.assertEqual(1, len(mocked_post.call_args_list))
+        self.assertTrue(
+            equal_call_args(
+                [expected_args],
+                mocked_post.call_args[0]
+            ),
+            "update_person was called with unexpected values"
+        )
+
+
         view.create_candidate_list_memberships.assert_called_once_with(
             'jane-doe',
             new_person_data,

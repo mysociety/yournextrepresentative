@@ -111,7 +111,7 @@ from .models import simple_fields, complex_fields_locations
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
 from .models import get_candidate_list_popit_id
-from .models import create_with_id_retries
+from .models import create_person_with_id_retries
 
 def election_year_to_party_dates(election_year):
     if str(election_year) == '2010':
@@ -239,11 +239,13 @@ class PersonUpdateMixin(object):
         # Create the person:
         basic_person_data = get_person_data_from_dict(data, generate_id=True)
         basic_person_data['standing_in'] = data['standing_in']
-        basic_person_data['id'] = slugify(basic_person_data['name'])
-        version = change_metadata.copy()
-        version['data'] = data
-        basic_person_data['versions'] = [version]
-        person_result = create_with_id_retries(self.api.persons, basic_person_data)
+        original_version = change_metadata.copy()
+        original_version['data'] = data
+        person_result = create_person_with_id_retries(
+            self.api,
+            basic_person_data,
+            original_version
+        )
         person_id = person_result['result']['id']
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
