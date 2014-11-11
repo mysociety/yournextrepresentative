@@ -15,7 +15,7 @@ class TestUpdatePerson(TestCase):
 
     @patch.object(FakePersonCollection, 'put')
     @patch('candidates.views.requests')
-    @patch('candidates.views.PopIt')
+    @patch('candidates.popit.PopIt')
     def test_update_tessa_jowell(self, mock_popit, mock_requests, mocked_put):
 
         mock_requests.get = fake_get_result
@@ -36,11 +36,11 @@ class TestUpdatePerson(TestCase):
             "name": "Tessa Jowell",
             "party_memberships": {
                 "2010": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 },
                 "2015": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 }
             },

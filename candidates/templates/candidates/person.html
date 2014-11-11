@@ -2,44 +2,6 @@
 
 {% block body_class %}person{% endblock %}
 
-{% block extra_js %}
-  <script>
-    $(document).ready(function() {
-      var standingCheckbox = $('#person-details input#id_standing'),
-        partyInput = $('#id_party'),
-        autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}",
-        constituencySelect = $('#id_constituency');
-      /* Enable autocompletion for the party input box */
-      partyInput.autocomplete({
-        source: autocompletePartyURL,
-        minLength: 2
-      });
-      /* Enable Select2 for any constituency selector */
-      constituencySelect.select2({
-        placeholder: 'Constituency',
-        allowClear: true,
-        width: '100%'
-      });
-      /* Disable the constituencySelect box based on whether the
-         'standing' checkbox is selected or not. */
-      if (standingCheckbox.length) {
-        constituencySelect.prop(
-          'disabled',
-          !standingCheckbox.prop('checked')
-        );
-      }
-      /* And if the state of the statnding checkbox is changed, disable
-         or enable the constituency select box. */
-      standingCheckbox.on('change', function() {
-        constituencySelect.prop(
-          'disabled',
-          !$(this).prop('checked')
-        );
-      });
-    });
-  </script>
-{% endblock %}
-
 {% block hero %}
   <h1>Edit the details of {{ person.name }}</h1>
 {% endblock %}

@@ -11,7 +11,7 @@ from .fake_popit import get_example_popit_json
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
 
-@patch('candidates.views.PopIt')
+@patch('candidates.popit.PopIt')
 class TestUpdatePersonView(TestUserMixin, WebTest):
 
     def test_update_person_view_get_without_login(self, mock_popit):
@@ -49,7 +49,8 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/tessa-jowell/update', user=self.user)
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party'] = 'Liberal Democrats'
+        form['party_gb'] = 'party:90'
+        form['party_ni'] = 'party:none'
         form['source'] = "Some source of this information"
         submission_response = form.submit()
         self.assertTrue(mock_update_person.called)
@@ -75,10 +76,11 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 },
                 'party_memberships': {
                     '2015': {
+                        'id': 'party:90',
                         'name': 'Liberal Democrats'
                     },
                     '2010': {
-                        'id': 'labour-party',
+                        'id': 'party:53',
                         'name': 'Labour Party'
                     }
                 },
@@ -100,7 +102,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 expected_call_args,
                 mock_update_person.call_args[0]
             ),
-            "update_person was called with unpexected values"
+            "update_person was called with unexpected values"
         )
 
         # It should redirect back to the consituency page:

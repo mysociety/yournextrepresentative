@@ -1,7 +1,5 @@
-import csv
 from datetime import date
 import json
-from os.path import dirname, join, abspath
 import re
 from slugify import slugify
 
@@ -9,7 +7,7 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
-data_directory = abspath(join(dirname(__file__), '..', 'data'))
+from .static_data import MapItData
 
 simple_fields = ('name', 'email', 'date_of_birth')
 
@@ -41,7 +39,6 @@ election_date_2015 = date(2015, 5, 7)
 all_fields = list(simple_fields) + complex_fields_locations.keys()
 
 candidate_list_name_re = re.compile(r'^Candidates for (.*) in (\d+)$')
-
 
 def complete_partial_date(iso_8601_date_partial, start=True):
     """If we have a partial date string, complete it for range comparisons
@@ -122,109 +119,31 @@ def membership_covers_date(membership, date):
     end_date = complete_partial_date(end_date)
     return start_date <= str(date) and end_date >= str(date)
 
-def get_mapit_constituencies(basename):
-    with open(join(data_directory, basename)) as f:
-        return json.load(f)
-
-def get_constituency_name_map(basename):
-    result = {}
-    for constituency in get_mapit_constituencies(basename).values():
-        result[constituency['name']] = constituency
-    return result
-
-class MapItData(object):
-    constituencies_2010 = \
-        get_mapit_constituencies('mapit-WMC-generation-13.json')
-    constituencies_2010_name_map = \
-        get_constituency_name_map('mapit-WMC-generation-13.json')
-
-def get_party_counts_2010():
-    result = {}
-    with open(join(
-            data_directory,
-            'parties-2010-rough-candidate-counts.csv')) as f:
-        reader = csv.reader(f)
-        for row in reader:
-            result[row[1]] = int(row[2], 10)
-    return result
-
-class PartyData(object):
-    party_counts_2010 = \
-        get_party_counts_2010()
-
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
     if not m:
         raise Exception("Failed to parse the MapIt URL: {0}".format(mapit_url))
     return m.group(1)
 
-def get_next_id(current_id):
-    """Increment the trailing digit in an ID
-
-    For example:
-
-    >>> get_next_id('foo-10')
-    u'foo-11'
-    >>> get_next_id('bar-')
-    u'bar-1'
-    >>> get_next_id('quux-13-20')
-    u'quux-13-21'
-    >>> get_next_id('john-smith')
-    u'john-smith-1'
-    """
-    current_id = re.sub(r'-$', '', current_id)
-    # If it ends in '-1', '-2', etc. then just increment that number,
-    # otherwise assume it's the first numbered slug and add '-1'
-    m = re.search(r'^(.*)-(\d+)$', current_id)
-    if m:
-        last_id = int(m.group(2), 10)
-        return u'{0}-{1}'.format(m.group(1), last_id + 1)
-    else:
-        return u'{0}-1'.format(current_id)
-
-def update_id(person_data):
-    """Update the ID in person_data
-
-    For example:
-
-    >>> pd = {'id': 'john-smith', 'name': 'John Smith'}
-    >>> update_id(pd)
-    >>> json.dumps(pd, sort_keys=True)
-    '{"id": "john-smith-1", "name": "John Smith"}'
-    >>> update_id(pd)
-    >>> json.dumps(pd, sort_keys=True)
-    '{"id": "john-smith-2", "name": "John Smith"}'
-    """
-    person_data['id'] = get_next_id(person_data['id'])
-
-def create_with_id_retries(api_collection, data):
+def create_person_with_id_retries(api, data, original_version):
+    id_to_try = MaxPopItIds.get_max_persons_id() + 1
     while True:
         try:
-            result = api_collection.post(data)
+            original_version['data']['id'] = data['id'] = str(id_to_try)
+            data['versions'] = [original_version]
+            result = api.persons.post(data)
+            MaxPopItIds.update_max_persons_id(id_to_try)
             break
         except HttpServerError as hse:
             # Sometimes the ID that we try will be taken already, so
             # detect that case, otherwise just reraise the exception.
             error = json.loads(hse.content)
             if error.get('error', {}).get('code') == 11000:
-                update_id(data)
+                id_to_try += 1
                 continue
             else:
                 raise
     return result
-
-def get_candidate_list_popit_id(constituency_name, year):
-    """Return the PopIt organization ID for a constituency's candidate list
-
-    >>> get_candidate_list_popit_id('Leeds North East', 2010)
-    'candidates-2010-leeds-north-east'
-    >>> get_candidate_list_popit_id('Ayr, Carrick and Cumnock', 2015)
-    'candidates-2015-ayr-carrick-and-cumnock'
-    """
-    return 'candidates-{year}-{slugified_name}'.format(
-        year=year,
-        slugified_name=slugify(constituency_name),
-    )
 
 def extract_constituency_name(candidate_list_organization):
     """Return the constituency name from a candidate list organization

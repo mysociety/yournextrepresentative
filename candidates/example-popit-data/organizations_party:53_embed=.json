@@ -1,0 +1,25 @@
+{
+  "result": {
+    "id": "party:53",
+    "dissolution_date": "9999-12-31",
+    "founding_date": "1999-01-14",
+    "name": "Labour Party",
+    "classification": "Party",
+    "register": "Great Britain",
+    "slug": "labour-party",
+    "posts": [],
+    "memberships": [],
+    "links": [],
+    "contact_details": [],
+    "identifiers": [
+      {
+        "id": "545e2b1caa34dd707c37d210",
+        "scheme": "electoral-commission",
+        "identifier": "PP 53"
+      }
+    ],
+    "other_names": [],
+    "url": "http://yournextmp.popit.mysociety.org/api/v0.1/organizations/party:53",
+    "html_url": "http://yournextmp.popit.mysociety.org/organizations/party:53"
+  }
+}

@@ -4,15 +4,13 @@ from random import randint
 import re
 import sys
 
-from slumber.exceptions import HttpClientError
-from popit_api import PopIt
 from slugify import slugify
 import requests
 from urlparse import urlunsplit
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
@@ -23,12 +21,14 @@ from .forms import (
     CandidacyCreateForm, CandidacyDeleteForm
 )
 from .models import (
-    PopItPerson, MapItData, get_candidate_list_popit_id,
-    get_constituency_name_from_mapit_id, extract_constituency_name,
+    PopItPerson,
+    get_constituency_name_from_mapit_id,
     all_fields,
-    candidate_list_name_re, get_mapit_id_from_mapit_url,
-    PartyData, membership_covers_date, election_date_2010, election_date_2015
+    get_mapit_id_from_mapit_url,
+    membership_covers_date, election_date_2010, election_date_2015
 )
+from .popit import create_popit_api_object
+from .static_data import MapItData, PartyData
 
 from .update import PersonParseMixin, PersonUpdateMixin
 
@@ -38,19 +38,7 @@ class PopItApiMixin(object):
 
     def __init__(self, *args, **kwargs):
         super(PopItApiMixin, self).__init__(*args, **kwargs)
-        api_properties = {
-            'instance': settings.POPIT_INSTANCE,
-            'hostname': settings.POPIT_HOSTNAME,
-            'port': settings.POPIT_PORT,
-            'api_version': 'v0.1',
-            'append_slash': False,
-        }
-        if settings.POPIT_API_KEY:
-            api_properties['api_key'] = settings.POPIT_API_KEY
-        else:
-            api_properties['user'] = settings.POPIT_USER
-            api_properties['password'] = settings.POPIT_PASSWORD
-        self.api = PopIt(**api_properties)
+        self.api = create_popit_api_object()
 
     def get_search_url(self, collection, query):
         port = settings.POPIT_PORT
@@ -176,8 +164,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
-        context['autocomplete_party_url'] = reverse('autocomplete-party')
-
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         context['constituency_name'] = \
             get_constituency_name_from_mapit_id(mapit_area_id)
@@ -214,7 +200,9 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         context['candidates_2015'] = current_candidates
 
-        context['add_candidate_form'] = NewPersonForm()
+        context['add_candidate_form'] = NewPersonForm(
+            initial={'constituency': mapit_area_id}
+        )
 
         return context
 
@@ -244,19 +232,6 @@ class CandidacyMixin(object):
             'version_id': self.create_version_id(),
             'timestamp': self.get_current_timestamp()
         }
-
-    def get_party(self, party_name):
-        party_name = re.sub(r'\s+', ' ', party_name).strip()
-        search_url = self.get_search_url(
-            'organizations',
-            'classification:Party AND name:"{0}"'.format(party_name),
-        )
-        r = requests.get(search_url)
-        wanted_party_name = normalize_party_name(party_name)
-        for party in r.json()['result']:
-            if wanted_party_name == normalize_party_name(party['name']):
-                return party
-        return None
 
 
 class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
@@ -323,6 +298,12 @@ def copy_person_form_data(cleaned_data):
     date_of_birth_date = result['date_of_birth']
     if date_of_birth_date:
         result['date_of_birth'] = str(date_of_birth_date)
+    area_id = result.get('constituency')
+    country_name =  MapItData.constituencies_2010.get(area_id)['country_name']
+    key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
+    result['party'] = result[key]
+    del result['party_gb']
+    del result['party_ni']
     return result
 
 
@@ -368,14 +349,23 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             initial_data[field_name] = our_person.get(field_name)
         initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
         if initial_data['standing']:
-            # TODO: If we don't know someone to be standing, assume they are
-            # still in the same party as they were in 2010
-            party_data_2015 = our_person['party_memberships'].get('2015', {})
-            initial_data['party'] = party_data_2015.get('name', '')
+            # First make sure the constituency select box has the right value:
             cons_data_2015 = our_person['standing_in'].get('2015', {})
             mapit_url = cons_data_2015.get('mapit_url')
             if mapit_url:
-                initial_data['constituency'] = get_mapit_id_from_mapit_url(mapit_url)
+                area_id = get_mapit_id_from_mapit_url(mapit_url)
+                initial_data['constituency'] = area_id
+                # Get the 2015 party ID:
+                party_data_2015 = our_person['party_memberships'].get('2015', {})
+                party_id = party_data_2015.get('id', '')
+                # Get the right country based on that constituency:
+                country = MapItData.constituencies_2010.get(area_id)['country_name']
+                if country == 'Northern Ireland':
+                    initial_data['party_ni'] = party_id
+                else:
+                    initial_data['party_gb'] = party_id
+            # TODO: If we don't know someone to be standing, assume they are
+            # still in the same party as they were in 2010
         return initial_data
 
     def get_context_data(self, **kwargs):
@@ -384,7 +374,6 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
         context['person'] = self.api.persons(
             self.kwargs['person_id']
         ).get()['result']
-        context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         # Render the JSON in 'versions' nicely:
         for v in context['person'].get('versions', []):
@@ -430,7 +419,10 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
                 raise Exception(message.format(constituency_2015_mapit_id))
             our_person['standing_in']['2015'] = \
                 self.get_area_from_post_id(constituency_2015_mapit_id, mapit_url_key='mapit_url')
-            our_person['party_memberships']['2015'] = {'name': party_2015}
+            our_person['party_memberships']['2015'] = {
+                'name': PartyData.party_id_to_name[party_2015],
+                'id': party_2015,
+            }
         else:
             # If the person is not standing in 2015, record that
             # they're not and remove the party membership for 2015:
@@ -469,7 +461,8 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
 
         data_for_creation['party_memberships'] = {
             '2015': {
-                'name': party
+                'name': PartyData.party_id_to_name[party],
+                'id': party,
             }
         }
 
@@ -483,38 +476,3 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
 
         self.create_person(data_for_creation, change_metadata)
         return get_redirect_from_mapit_id(mapit_area_id)
-
-def party_results_key(party_name):
-    party_count = PartyData.party_counts_2010.get(party_name, 0)
-    return party_count
-
-class AutocompletePartyView(PopItApiMixin, View):
-
-    http_method_names = [u'get']
-
-    def get(self, request, *args, **kwargs):
-        query = re.sub(r'\s+', ' ', request.GET.get("term").strip())
-        results = []
-        results.append(query)
-        query_words = query.split()
-        if query_words:
-            # Assume all words but the final one are complete:
-            search_results = []
-            complete_words = query_words[:-1]
-            final_word = query_words[-1] + '*'
-            all_words = complete_words + [final_word]
-            # Get search results:
-            search_url = self.get_search_url(
-                'organizations',
-                'classification:Party AND {0}'.format(' AND '.join(all_words))
-            )
-            r = requests.get(search_url)
-            for organization in r.json()['result']:
-                search_results.append(organization['name'])
-            search_results.sort(reverse=True, key=party_results_key)
-            results += search_results
-
-        return HttpResponse(
-            json.dumps(results),
-            content_type='application/json'
-        )

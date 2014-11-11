@@ -15,30 +15,13 @@ class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
 # create_with_id_retries? Probably not...
 
 def fake_org_post(data):
-    if data['id'] == 'new-invented-party':
-        return {
-            "result": {
-                "id": "new-invented-party",
-                "classification": "Party",
-                "name": "New Invented Party",
-                "posts": [],
-                "memberships": [],
-                "links": [],
-                "contact_details": [],
-                "identifiers": [],
-                "other_names": [],
-                "url": "http://candidates.www.127.0.0.1.xip.io:3000/api/v0.1/organizations/new-invented-party",
-                "html_url": "http://candidates.www.127.0.0.1.xip.io:3000/organizations/new-invented-party"
-            }
-        }
-    else:
-        raise Exception("Unknown organization POST: " + data)
+    raise Exception("Unknown organization POST: " + data)
 
 class TestCreatePerson(TestCase):
 
     @patch.object(FakeOrganizationCollection, 'post')
     @patch('candidates.views.requests')
-    @patch('candidates.views.PopIt')
+    @patch('candidates.popit.PopIt')
     def test_create_party_memberships(self, mock_popit, mock_requests, mock_org_post):
 
         mock_requests.get = fake_get_result
@@ -58,12 +41,12 @@ class TestCreatePerson(TestCase):
             "name": "Jane Doe",
             "party_memberships": {
                 "2010": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 },
                 "2015": {
-                    "id": "new-invented-party",
-                    "name": "New Invented Party"
+                    "id": "party:52",
+                    "name": "Conservative Party"
                 }
             },
             "standing_in": {
@@ -87,13 +70,13 @@ class TestCreatePerson(TestCase):
 
         expected_calls = [
             call().memberships.post({
-                'organization_id': 'labour-party',
+                'organization_id': 'party:53',
                 'person_id': 'jane-doe',
                 'start_date': '2005-05-06',
                 'end_date': '2010-05-06'
             }),
             call().memberships.post({
-                'organization_id': 'new-invented-party',
+                'organization_id': 'party:52',
                 'person_id': 'jane-doe',
                 'start_date': '2010-05-07',
                 'end_date': '9999-12-31'
@@ -104,8 +87,5 @@ class TestCreatePerson(TestCase):
 
         self.assertFalse(mock_requests.called)
 
-        mock_org_post.assert_called_once_with({
-            'id': 'new-invented-party',
-            'classification': 'Party',
-            'name': 'New Invented Party'
-        })
+        # There should be no attempt to create a new organization:
+        self.assertEqual(0, len(mock_org_post.call_args_list))

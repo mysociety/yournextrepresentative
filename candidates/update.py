@@ -27,10 +27,10 @@
 #   'party_memberships': {
 #     '2010': {
 #       'name': 'Conservative Party',
-#       'id': 'conservative-party',
+#       'id': 'party:52',
 #     '2015': {
 #       'name': 'UK Independence Party - UKIP',
-#       'id': 'uk-independence-party-ukip',
+#       'id': 'party:85',
 #     }
 #   }
 #
@@ -40,7 +40,7 @@
 #   'party_memberships': {
 #     '2015': {
 #       'name': 'Labour Party',
-#       'id': 'labour-party',
+#       'id': 'party:52',
 #   }
 #
 # The 'id' field for a party is optional, since if you're using this
@@ -104,14 +104,13 @@ import time
 from slugify import slugify
 
 from .models import PopItPerson
-from .models import MapItData
+from .static_data import MapItData, PartyData
 from .models import get_person_data_from_dict
 from .models import simple_fields, complex_fields_locations
 
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
-from .models import get_candidate_list_popit_id
-from .models import create_with_id_retries
+from .models import create_person_with_id_retries
 
 def election_year_to_party_dates(election_year):
     if str(election_year) == '2010':
@@ -205,7 +204,6 @@ class PersonUpdateMixin(object):
     This mixin depends on the following being usable:
         self.api (from PopItApiMixin)
         self.create_membership (from PopItApiMixin)
-        self.get_party (from CandidacyMixin)
 
     FIXME: it'd be good to have tests for this, but it's non-obvious
     how to write them without creating a fresh PopIt instance to run
@@ -214,17 +212,13 @@ class PersonUpdateMixin(object):
 
     def create_party_memberships(self, person_id, data):
         for election_year, party in data.get('party_memberships', {}).items():
-            popit_party = self.get_party(party['name'])
-            if not popit_party:
-                # Then create a new party:
-                popit_party = party.copy()
-                popit_party['classification'] = 'Party'
-                result = self.api.organizations.post(popit_party)
-                popit_party = result['result']
+            if party['id'] not in PartyData.party_id_to_name:
+                msg = "Couldn't create party memberships for unknown ID {0}"
+                raise Exception, msg.format(party['id'])
             # Create the party membership:
             membership = election_year_to_party_dates(election_year)
             membership['person_id'] = person_id
-            membership['organization_id'] = popit_party['id']
+            membership['organization_id'] = party['id']
             self.create_membership(**membership)
 
     def create_candidate_list_memberships(self, person_id, data):
@@ -232,7 +226,6 @@ class PersonUpdateMixin(object):
             if constituency:
                 # i.e. we know that this isn't an indication that the
                 # person isn't standing...
-                name = constituency['name']
                 # Create the candidate list membership:
                 membership = election_year_to_party_dates(election_year)
                 membership['person_id'] = person_id
@@ -244,11 +237,13 @@ class PersonUpdateMixin(object):
         # Create the person:
         basic_person_data = get_person_data_from_dict(data, generate_id=True)
         basic_person_data['standing_in'] = data['standing_in']
-        basic_person_data['id'] = slugify(basic_person_data['name'])
-        version = change_metadata.copy()
-        version['data'] = data
-        basic_person_data['versions'] = [version]
-        person_result = create_with_id_retries(self.api.persons, basic_person_data)
+        original_version = change_metadata.copy()
+        original_version['data'] = data
+        person_result = create_person_with_id_retries(
+            self.api,
+            basic_person_data,
+            original_version
+        )
         person_id = person_result['result']['id']
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
