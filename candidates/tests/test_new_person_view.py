@@ -44,7 +44,11 @@ class TestNewPersonView(TestUserMixin, WebTest):
         form = response.forms['new-candidate-form']
         form_dict = {
             'name': 'Jane Doe',
-            'party': 'Invented Party',
+            # Make Jane Doe be standing for the Monster Raving Loony
+            # Party in Dulwich and West Norwood:
+            'party_gb': 'party:66',
+            'party_ni': 'party:none',
+            'constituency': '65808',
             'email': 'jane@example.com',
             'wikipedia_url': 'http://en.wikipedia.org/wiki/Jane_Doe',
         }
@@ -66,7 +70,8 @@ class TestNewPersonView(TestUserMixin, WebTest):
                 'name': u'Jane Doe',
                 'party_memberships': {
                     '2015': {
-                        'name': u'Invented Party'
+                        'name': u'Official Monster Raving Loony Party',
+                        'id': 'party:66'
                     }
                 },
                 'standing_in': {

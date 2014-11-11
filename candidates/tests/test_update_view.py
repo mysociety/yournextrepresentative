@@ -49,7 +49,8 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/tessa-jowell/update', user=self.user)
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party'] = 'Liberal Democrats'
+        form['party_gb'] = 'party:90'
+        form['party_ni'] = 'party:none'
         form['source'] = "Some source of this information"
         submission_response = form.submit()
         self.assertTrue(mock_update_person.called)
@@ -75,10 +76,11 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 },
                 'party_memberships': {
                     '2015': {
+                        'id': 'party:90',
                         'name': 'Liberal Democrats'
                     },
                     '2010': {
-                        'id': 'labour-party',
+                        'id': 'party:53',
                         'name': 'Labour Party'
                     }
                 },

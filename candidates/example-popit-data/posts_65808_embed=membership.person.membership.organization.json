@@ -108,7 +108,7 @@
               "person_id": "2961",
               "organization_id": {
                 "id": "544e3d6481b7fa64bfcccda6",
-                "slug": "green-party",
+                "slug": "party:63",
                 "classification": "Party",
                 "name": "Green Party",
                 "posts": [],
@@ -176,7 +176,7 @@
               "person_id": "2959",
               "organization_id": {
                 "id": "544e3d6981b7fa64bfccce1f",
-                "slug": "labour-party",
+                "slug": "party:53",
                 "classification": "Party",
                 "name": "Labour Party",
                 "posts": [],
@@ -244,7 +244,7 @@
               "person_id": "2958",
               "organization_id": {
                 "id": "544e3d6181b7fa64bfcccd5e",
-                "slug": "conservative-party",
+                "slug": "party:52",
                 "classification": "Party",
                 "name": "Conservative Party",
                 "posts": [],
@@ -299,7 +299,7 @@
               "person_id": "21216",
               "organization_id": {
                 "id": "544e3d5b81b7fa64bfcccccb",
-                "slug": "uk-independence-party-ukip",
+                "slug": "party:85",
                 "classification": "Party",
                 "name": "UK Independence Party - UKIP",
                 "posts": [],

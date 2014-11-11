@@ -27,10 +27,10 @@
 #   'party_memberships': {
 #     '2010': {
 #       'name': 'Conservative Party',
-#       'id': 'conservative-party',
+#       'id': 'party:52',
 #     '2015': {
 #       'name': 'UK Independence Party - UKIP',
-#       'id': 'uk-independence-party-ukip',
+#       'id': 'party:85',
 #     }
 #   }
 #
@@ -40,7 +40,7 @@
 #   'party_memberships': {
 #     '2015': {
 #       'name': 'Labour Party',
-#       'id': 'labour-party',
+#       'id': 'party:52',
 #   }
 #
 # The 'id' field for a party is optional, since if you're using this

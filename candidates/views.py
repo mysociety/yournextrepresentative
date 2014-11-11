@@ -202,7 +202,9 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         context['candidates_2015'] = current_candidates
 
-        context['add_candidate_form'] = NewPersonForm()
+        context['add_candidate_form'] = NewPersonForm(
+            initial={'constituency': mapit_area_id}
+        )
 
         return context
 
@@ -311,6 +313,12 @@ def copy_person_form_data(cleaned_data):
     date_of_birth_date = result['date_of_birth']
     if date_of_birth_date:
         result['date_of_birth'] = str(date_of_birth_date)
+    area_id = result.get('constituency')
+    country_name =  MapItData.constituencies_2010.get(area_id)['country_name']
+    key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
+    result['party'] = result[key]
+    del result['party_gb']
+    del result['party_ni']
     return result
 
 
@@ -356,14 +364,23 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             initial_data[field_name] = our_person.get(field_name)
         initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
         if initial_data['standing']:
-            # TODO: If we don't know someone to be standing, assume they are
-            # still in the same party as they were in 2010
-            party_data_2015 = our_person['party_memberships'].get('2015', {})
-            initial_data['party'] = party_data_2015.get('name', '')
+            # First make sure the constituency select box has the right value:
             cons_data_2015 = our_person['standing_in'].get('2015', {})
             mapit_url = cons_data_2015.get('mapit_url')
             if mapit_url:
-                initial_data['constituency'] = get_mapit_id_from_mapit_url(mapit_url)
+                area_id = get_mapit_id_from_mapit_url(mapit_url)
+                initial_data['constituency'] = area_id
+                # Get the 2015 party ID:
+                party_data_2015 = our_person['party_memberships'].get('2015', {})
+                party_id = party_data_2015.get('id', '')
+                # Get the right country based on that constituency:
+                country = MapItData.constituencies_2010.get(area_id)['country_name']
+                if country == 'Northern Ireland':
+                    initial_data['party_ni'] = party_id
+                else:
+                    initial_data['party_gb'] = party_id
+            # TODO: If we don't know someone to be standing, assume they are
+            # still in the same party as they were in 2010
         return initial_data
 
     def get_context_data(self, **kwargs):
@@ -418,7 +435,10 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
                 raise Exception(message.format(constituency_2015_mapit_id))
             our_person['standing_in']['2015'] = \
                 self.get_area_from_post_id(constituency_2015_mapit_id, mapit_url_key='mapit_url')
-            our_person['party_memberships']['2015'] = {'name': party_2015}
+            our_person['party_memberships']['2015'] = {
+                'name': PartyData.party_id_to_name[party_2015],
+                'id': party_2015,
+            }
         else:
             # If the person is not standing in 2015, record that
             # they're not and remove the party membership for 2015:
@@ -457,7 +477,8 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
 
         data_for_creation['party_memberships'] = {
             '2015': {
-                'name': party
+                'name': PartyData.party_id_to_name[party],
+                'id': party,
             }
         }
 

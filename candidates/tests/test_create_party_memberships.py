@@ -58,12 +58,12 @@ class TestCreatePerson(TestCase):
             "name": "Jane Doe",
             "party_memberships": {
                 "2010": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 },
                 "2015": {
-                    "id": "new-invented-party",
-                    "name": "New Invented Party"
+                    "id": "party:52",
+                    "name": "Conservative Party"
                 }
             },
             "standing_in": {
@@ -87,13 +87,13 @@ class TestCreatePerson(TestCase):
 
         expected_calls = [
             call().memberships.post({
-                'organization_id': 'labour-party',
+                'organization_id': 'party:53',
                 'person_id': 'jane-doe',
                 'start_date': '2005-05-06',
                 'end_date': '2010-05-06'
             }),
             call().memberships.post({
-                'organization_id': 'new-invented-party',
+                'organization_id': 'party:52',
                 'person_id': 'jane-doe',
                 'start_date': '2010-05-07',
                 'end_date': '9999-12-31'
@@ -104,8 +104,5 @@ class TestCreatePerson(TestCase):
 
         self.assertFalse(mock_requests.called)
 
-        mock_org_post.assert_called_once_with({
-            'id': 'new-invented-party',
-            'classification': 'Party',
-            'name': 'New Invented Party'
-        })
+        # There should be no attempt to create a new organization:
+        self.assertEqual(0, len(mock_org_post.call_args_list))

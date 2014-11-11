@@ -42,7 +42,7 @@ class TestCreatePerson(TestCase):
             "name": "Jane Doe",
             "party_memberships": {
                 "2015": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 }
             },
@@ -103,7 +103,7 @@ class TestCreatePerson(TestCase):
                         'wikipedia_url': '',
                         'party_memberships': {
                             '2015': {
-                                'id': 'labour-party',
+                                'id': 'party:53',
                                 'name': 'Labour Party'
                             }
                         },

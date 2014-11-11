@@ -36,11 +36,11 @@ class TestUpdatePerson(TestCase):
             "name": "Tessa Jowell",
             "party_memberships": {
                 "2010": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 },
                 "2015": {
-                    "id": "labour-party",
+                    "id": "party:53",
                     "name": "Labour Party"
                 }
             },

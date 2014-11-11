@@ -1,4 +1,4 @@
-from .models import MapItData
+from .models import MapItData, PartyData
 
 from django import forms
 
@@ -11,7 +11,7 @@ class PostcodeForm(forms.Form):
 class ConstituencyForm(forms.Form):
     constituency = forms.ChoiceField(
         label='Select a constituency',
-        choices=[('', '')] + sorted(
+        choices=[('none', '')] + sorted(
             [
                 (mapit_id, constituency['name'])
                 for mapit_id, constituency
@@ -49,10 +49,6 @@ class BasePersonForm(forms.Form):
         label="Full name",
         max_length=256,
     )
-    party = forms.CharField(
-        label="Party in 2015",
-        max_length=256,
-    )
     email = forms.CharField(
         label="Email",
         max_length=256,
@@ -85,6 +81,16 @@ class NewPersonForm(BasePersonForm):
         max_length=256,
         widget=forms.HiddenInput(),
     )
+    party_gb = forms.ChoiceField(
+        label="Party in 2015 (Great Britain)",
+        choices=PartyData.party_choices['Great Britain'],
+        required=False,
+    )
+    party_ni = forms.ChoiceField(
+        label="Party in 2015 (Northern Ireland)",
+        choices=PartyData.party_choices['Northern Ireland'],
+        required=False,
+    )
     source = forms.CharField(
         label="Source of information",
         max_length=512,
@@ -115,6 +121,16 @@ class UpdatePersonForm(BasePersonForm):
             ],
             key=lambda t: t[1]
         )
+    )
+    party_gb = forms.ChoiceField(
+        label="Party in 2015 (Great Britain)",
+        choices=PartyData.party_choices['Great Britain'],
+        required=False,
+    )
+    party_ni = forms.ChoiceField(
+        label="Party in 2015 (Northern Ireland)",
+        choices=PartyData.party_choices['Northern Ireland'],
+        required=False,
     )
     source = forms.CharField(
         label="Source of information for this change",
