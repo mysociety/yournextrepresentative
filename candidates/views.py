@@ -4,14 +4,13 @@ from random import randint
 import re
 import sys
 
-from slumber.exceptions import HttpClientError
 from slugify import slugify
 import requests
 from urlparse import urlunsplit
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
@@ -22,10 +21,10 @@ from .forms import (
     CandidacyCreateForm, CandidacyDeleteForm
 )
 from .models import (
-    PopItPerson, MapItData, get_candidate_list_popit_id,
-    get_constituency_name_from_mapit_id, extract_constituency_name,
+    PopItPerson, MapItData,
+    get_constituency_name_from_mapit_id,
     all_fields,
-    candidate_list_name_re, get_mapit_id_from_mapit_url,
+    get_mapit_id_from_mapit_url,
     PartyData, membership_covers_date, election_date_2010, election_date_2015,
     create_popit_api_object
 )
