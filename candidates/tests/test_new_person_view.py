@@ -18,7 +18,7 @@ def fill_form(form, form_dict):
     for key, value in form_dict.items():
         form[key] = value
 
-@patch('candidates.views.PopIt')
+@patch('candidates.models.PopIt')
 class TestNewPersonView(TestUserMixin, WebTest):
 
     @patch('candidates.views.NewPersonView.get_current_timestamp')

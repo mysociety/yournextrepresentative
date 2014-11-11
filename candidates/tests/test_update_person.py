@@ -15,7 +15,7 @@ class TestUpdatePerson(TestCase):
 
     @patch.object(FakePersonCollection, 'put')
     @patch('candidates.views.requests')
-    @patch('candidates.views.PopIt')
+    @patch('candidates.models.PopIt')
     def test_update_tessa_jowell(self, mock_popit, mock_requests, mocked_put):
 
         mock_requests.get = fake_get_result

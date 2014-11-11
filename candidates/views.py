@@ -5,7 +5,6 @@ import re
 import sys
 
 from slumber.exceptions import HttpClientError
-from popit_api import PopIt
 from slugify import slugify
 import requests
 from urlparse import urlunsplit
@@ -27,7 +26,8 @@ from .models import (
     get_constituency_name_from_mapit_id, extract_constituency_name,
     all_fields,
     candidate_list_name_re, get_mapit_id_from_mapit_url,
-    PartyData, membership_covers_date, election_date_2010, election_date_2015
+    PartyData, membership_covers_date, election_date_2010, election_date_2015,
+    create_popit_api_object
 )
 
 from .update import PersonParseMixin, PersonUpdateMixin
@@ -38,19 +38,7 @@ class PopItApiMixin(object):
 
     def __init__(self, *args, **kwargs):
         super(PopItApiMixin, self).__init__(*args, **kwargs)
-        api_properties = {
-            'instance': settings.POPIT_INSTANCE,
-            'hostname': settings.POPIT_HOSTNAME,
-            'port': settings.POPIT_PORT,
-            'api_version': 'v0.1',
-            'append_slash': False,
-        }
-        if settings.POPIT_API_KEY:
-            api_properties['api_key'] = settings.POPIT_API_KEY
-        else:
-            api_properties['user'] = settings.POPIT_USER
-            api_properties['password'] = settings.POPIT_PASSWORD
-        self.api = PopIt(**api_properties)
+        self.api = create_popit_api_object()
 
     def get_search_url(self, collection, query):
         port = settings.POPIT_PORT

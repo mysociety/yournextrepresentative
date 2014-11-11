@@ -6,7 +6,7 @@ from .auth import TestUserMixin
 from .fake_popit import (FakePersonCollection, FakeOrganizationCollection,
                          FakePostCollection)
 
-@patch('candidates.views.PopIt')
+@patch('candidates.models.PopIt')
 class TestConstituencyDetailView(TestUserMixin, WebTest):
 
     def test_any_constituency_page_without_login(self, mock_popit):

@@ -2,7 +2,7 @@ from mock import patch, Mock
 
 from django_webtest import WebTest
 
-@patch('candidates.views.PopIt')
+@patch('candidates.models.PopIt')
 @patch('candidates.views.requests')
 class TestAutocompletePartyView(WebTest):
 

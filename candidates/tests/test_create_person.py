@@ -15,7 +15,7 @@ class TestCreatePerson(TestCase):
 
     @patch.object(FakePersonCollection, 'post')
     @patch('candidates.views.requests')
-    @patch('candidates.views.PopIt')
+    @patch('candidates.models.PopIt')
     def test_create_jane_doe(self, mock_popit, mock_requests, mocked_post):
 
         mocked_post.return_value = {

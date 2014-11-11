@@ -6,8 +6,11 @@ import re
 from slugify import slugify
 
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
+
+from popit_api import PopIt
 
 data_directory = abspath(join(dirname(__file__), '..', 'data'))
 
@@ -42,6 +45,20 @@ all_fields = list(simple_fields) + complex_fields_locations.keys()
 
 candidate_list_name_re = re.compile(r'^Candidates for (.*) in (\d+)$')
 
+def create_popit_api_object():
+    api_properties = {
+        'instance': settings.POPIT_INSTANCE,
+        'hostname': settings.POPIT_HOSTNAME,
+        'port': settings.POPIT_PORT,
+        'api_version': 'v0.1',
+        'append_slash': False,
+    }
+    if settings.POPIT_API_KEY:
+        api_properties['api_key'] = settings.POPIT_API_KEY
+    else:
+        api_properties['user'] = settings.POPIT_USER
+        api_properties['password'] = settings.POPIT_PASSWORD
+    return PopIt(**api_properties)
 
 def complete_partial_date(iso_8601_date_partial, start=True):
     """If we have a partial date string, complete it for range comparisons
