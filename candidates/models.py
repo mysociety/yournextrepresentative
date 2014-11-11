@@ -156,16 +156,6 @@ class MapItData(object):
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
 
-def get_party_counts_2010():
-    result = {}
-    with open(join(
-            data_directory,
-            'parties-2010-rough-candidate-counts.csv')) as f:
-        reader = csv.reader(f)
-        for row in reader:
-            result[row[1]] = int(row[2], 10)
-    return result
-
 def popit_unwrap_pagination(api_collection, **kwargs):
     page = 1
     keep_fetching = True
@@ -196,8 +186,6 @@ def get_all_parties():
     return result_list, result_dict
 
 class PartyData(object):
-    party_counts_2010 = \
-        get_party_counts_2010()
     party_choices, party_id_to_name = get_all_parties()
 
 def get_mapit_id_from_mapit_url(mapit_url):

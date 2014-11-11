@@ -2,12 +2,6 @@
 
 {% block body_class %}constituency{% endblock %}
 
-{% block extra_js %}
-  <script>
-    var autocompletePartyURL = "{{ autocomplete_party_url|escapejs }}";
-  </script>
-{% endblock %}
-
 {% block hero %}
   <h1>Candidates for {{ constituency_name }}</h1>
 {% endblock %}

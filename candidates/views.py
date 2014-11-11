@@ -10,7 +10,7 @@ from urlparse import urlunsplit
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
@@ -162,8 +162,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
-
-        context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         context['constituency_name'] = \
@@ -375,7 +373,6 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
         context['person'] = self.api.persons(
             self.kwargs['person_id']
         ).get()['result']
-        context['autocomplete_party_url'] = reverse('autocomplete-party')
 
         # Render the JSON in 'versions' nicely:
         for v in context['person'].get('versions', []):
@@ -478,38 +475,3 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpd
 
         self.create_person(data_for_creation, change_metadata)
         return get_redirect_from_mapit_id(mapit_area_id)
-
-def party_results_key(party_name):
-    party_count = PartyData.party_counts_2010.get(party_name, 0)
-    return party_count
-
-class AutocompletePartyView(PopItApiMixin, View):
-
-    http_method_names = [u'get']
-
-    def get(self, request, *args, **kwargs):
-        query = re.sub(r'\s+', ' ', request.GET.get("term").strip())
-        results = []
-        results.append(query)
-        query_words = query.split()
-        if query_words:
-            # Assume all words but the final one are complete:
-            search_results = []
-            complete_words = query_words[:-1]
-            final_word = query_words[-1] + '*'
-            all_words = complete_words + [final_word]
-            # Get search results:
-            search_url = self.get_search_url(
-                'organizations',
-                'classification:Party AND {0}'.format(' AND '.join(all_words))
-            )
-            r = requests.get(search_url)
-            for organization in r.json()['result']:
-                search_results.append(organization['name'])
-            search_results.sort(reverse=True, key=party_results_key)
-            results += search_results
-
-        return HttpResponse(
-            json.dumps(results),
-            content_type='application/json'
-        )
