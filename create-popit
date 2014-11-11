@@ -3,7 +3,7 @@
 set -e
 
 echo "Creating parties..."
-./manage.py candidates_update_parties \
-    https://raw.githubusercontent.com/mhl/UK-Political-Parties/gh-pages/data/parties.csv
+./manage.py candidates_update_parties
+
 echo "Creating everything else..."
 ./manage.py candidates_create_popit

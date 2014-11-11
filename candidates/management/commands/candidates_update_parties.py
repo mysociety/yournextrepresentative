@@ -1,17 +1,16 @@
 from datetime import datetime
-import os
-import csv
-import urllib2
+from os.path import join
 import re
 import json
 from slugify import slugify
 
-from django.core.management.base import LabelCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from popit_api import PopIt
 from slumber.exceptions import HttpServerError
 import dateutil.parser
+
+from candidates.popit import create_popit_api_object
 
 # For a version with only current parties, you can use this URL as an
 # argument to the command:
@@ -27,58 +26,57 @@ party_name_re = re.compile(
     r'^(.*?)(?:\s+\[De-registered\s+(\d{2}/\d{2}/\d{2})\])?\s*$'
 )
 
-class Command(LabelCommand):
+class Command(BaseCommand):
     help = "Update parties from a CSV of party data"
 
-    def handle_label(self, label, **options):
-        self.api = PopIt(
-            instance=settings.POPIT_INSTANCE,
-            hostname=settings.POPIT_HOSTNAME,
-            port=getattr(settings, 'POPIT_PORT', 80),
-            api_version='v0.1',
-            api_key=settings.POPIT_API_KEY
-           )
+    def handle(self, **options):
+        self.api = create_popit_api_object()
+        scraper_directory = join(
+            settings.BASE_DIR, 'data', 'UK-Political-Parties', 'scraper'
+        )
+        self.parse_data(
+            join(scraper_directory, 'all_data.json'),
+            join(scraper_directory, 'raw_data'),
+        )
 
-
-        if os.path.exists(label):
-            with open(label) as csv_content:
-                self.parse_csv(csv_content)
-        else:
-            csv_content = urllib2.urlopen(label)
-            self.parse_csv(csv_content)
-
-    def parse_csv(self, csv_content):
-
-        reader = csv.DictReader(csv_content)
-        for line in reader:
-            if line['Entity type'] != 'Political Party':
-                continue
-            party_id = self.clean_id(line['EC Reference Number'])
-            register = line['Register']
-            party_name, party_dissolved = self.clean_name(line['Entity name'], register)
-            party_founded = self.clean_date(line['Date of registration / notification'])
-            party_data = {
-                'id': party_id,
-                'name': party_name,
-                'slug': slugify(party_name),
-                'classification': 'Party',
-                'founding_date': party_founded,
-                'dissolution_date': party_dissolved,
-                'register': register,
-                'identifiers': [
-                    {
-                        'identifier': line['EC Reference Number'].strip(),
-                        'scheme': 'electoral-commission',
-                    }
-                ]
-            }
-            try:
-                self.api.organizations.post(party_data)
-            except HttpServerError as e:
-                error = json.loads(e.content)
-                if error.get('error', {}).get('code') == 11000:
-                    # Duplicate Party Found
-                    self.api.organizations(party_id).put(party_data)
+    def parse_data(self, json_file, raw_data_directory):
+        with open(json_file) as f:
+            for ec_party in json.load(f):
+                ec_party_id = ec_party['party_id'].strip()
+                # We're only interested in political parties:
+                if not ec_party_id.startswith('PP'):
+                    continue
+                party_id = self.clean_id(ec_party_id)
+                register = ec_party.get('register')
+                if not register:
+                    continue
+                register = re.sub(r' \(minor party\)', '', register)
+                party_name, party_dissolved = self.clean_name(
+                    ec_party['party_name'], register
+                )
+                party_founded = self.clean_date(ec_party['registered_date'])
+                party_data = {
+                    'id': party_id,
+                    'name': party_name,
+                    'slug': slugify(party_name),
+                    'classification': 'Party',
+                    'founding_date': party_founded,
+                    'dissolution_date': party_dissolved,
+                    'register': register,
+                    'identifiers': [
+                        {
+                            'identifier': party_id,
+                            'scheme': 'electoral-commission',
+                        }
+                    ]
+                }
+                try:
+                    self.api.organizations.post(party_data)
+                except HttpServerError as e:
+                    error = json.loads(e.content)
+                    if error.get('error', {}).get('code') == 11000:
+                        # Duplicate Party Found
+                        self.api.organizations(party_id).put(party_data)
 
     def clean_date(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d")
@@ -98,5 +96,5 @@ class Command(LabelCommand):
         return name.strip(), party_dissolved
 
     def clean_id(self, party_id):
-        party_id = re.sub(r'^PPm? ', '', party_id).strip()
+        party_id = re.sub(r'^PPm?\s*', '', party_id).strip()
         return "party:{0}".format(party_id)
