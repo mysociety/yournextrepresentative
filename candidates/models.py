@@ -1,3 +1,4 @@
+from collections import defaultdict
 import csv
 from datetime import date
 import json
@@ -165,9 +166,39 @@ def get_party_counts_2010():
             result[row[1]] = int(row[2], 10)
     return result
 
+def popit_unwrap_pagination(api_collection, **kwargs):
+    page = 1
+    keep_fetching = True
+    while keep_fetching:
+        get_kwargs = {
+            'per_page': 50,
+            'page': page,
+        }
+        get_kwargs.update(kwargs)
+        response = api_collection.get(**get_kwargs)
+        keep_fetching = response.get('has_more', False)
+        page += 1
+        for api_object in response['result']:
+            yield api_object
+
+def get_all_parties():
+    result_list, result_dict = defaultdict(list), {}
+    api = create_popit_api_object()
+    for party in popit_unwrap_pagination(api.organizations, embed=''):
+        if party['classification'] != 'Party':
+            continue
+        key = party.get('register', '')
+        result_list[key].append((party['id'], party['name']))
+        result_dict[party['id']] = party['name']
+    for parties in result_list.values():
+        parties.sort(key=lambda p: p[1].lower())
+        parties.insert(0, ('party:none', ''))
+    return result_list, result_dict
+
 class PartyData(object):
     party_counts_2010 = \
         get_party_counts_2010()
+    party_choices, party_id_to_name = get_all_parties()
 
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
