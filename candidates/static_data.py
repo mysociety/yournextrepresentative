@@ -3,7 +3,7 @@ import json
 from os.path import abspath, dirname, join
 import sys
 
-from .popit import create_popit_api_object
+from .popit import create_popit_api_object, popit_unwrap_pagination
 
 data_directory = abspath(join(dirname(__file__), '..', 'data'))
 
@@ -26,21 +26,6 @@ class MapItData(object):
         get_constituency_name_map('mapit-WMC-generation-13.json')
 
 print >> sys.stderr, "Loading party data from PopIt..."
-
-def popit_unwrap_pagination(api_collection, **kwargs):
-    page = 1
-    keep_fetching = True
-    while keep_fetching:
-        get_kwargs = {
-            'per_page': 50,
-            'page': page,
-        }
-        get_kwargs.update(kwargs)
-        response = api_collection.get(**get_kwargs)
-        keep_fetching = response.get('has_more', False)
-        page += 1
-        for api_object in response['result']:
-            yield api_object
 
 def get_all_parties():
     result_list, result_dict = defaultdict(list), {}
