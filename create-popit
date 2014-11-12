@@ -2,8 +2,11 @@
 
 set -e
 
-echo "Creating parties..."
+echo "Creating parties in PopIt from EC data..."
 ./manage.py candidates_update_parties
+
+echo "Dumping PopIt parties to JSON..."
+./manage.py candidates_update_party_data data/all-parties-from-popit.json
 
 echo "Creating everything else..."
 ./manage.py candidates_create_popit
