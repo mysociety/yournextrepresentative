@@ -7,6 +7,7 @@ from slugify import slugify
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
+import requests
 from slumber.exceptions import HttpServerError
 import dateutil.parser
 
@@ -31,15 +32,12 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         self.api = create_popit_api_object()
-        scraper_directory = join(
+        self.scraper_directory = join(
             settings.BASE_DIR, 'data', 'UK-Political-Parties', 'scraper'
         )
-        self.parse_data(
-            join(scraper_directory, 'all_data.json'),
-            join(scraper_directory, 'raw_data'),
-        )
+        self.parse_data(join(self.scraper_directory, 'all_data.json'))
 
-    def parse_data(self, json_file, raw_data_directory):
+    def parse_data(self, json_file):
         with open(json_file) as f:
             for ec_party in json.load(f):
                 ec_party_id = ec_party['party_id'].strip()
@@ -72,11 +70,13 @@ class Command(BaseCommand):
                 }
                 try:
                     self.api.organizations.post(party_data)
+                    self.upload_images(ec_party['emblems'], party_id)
                 except HttpServerError as e:
                     error = json.loads(e.content)
                     if error.get('error', {}).get('code') == 11000:
                         # Duplicate Party Found
                         self.api.organizations(party_id).put(party_data)
+                        self.upload_images(ec_party['emblems'], party_id)
 
     def clean_date(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d")
@@ -94,6 +94,29 @@ class Command(BaseCommand):
             # still active.
             party_dissolved = '9999-12-31'
         return name.strip(), party_dissolved
+
+    def upload_images(self, emblems, party_id):
+        image_upload_url = "{0}/{1}/organizations/{2}/image".format(
+            self.api.get_url(), self.api.get_api_version(), party_id
+        )
+        for emblem in emblems:
+            fname = join(self.scraper_directory, emblem['image'])
+            with open(fname, 'rb') as f:
+                requests.post(
+                    image_upload_url,
+                    headers={
+                        'Apikey': self.api.api_key
+                    },
+                    files={
+                        'image': f
+                    },
+                    data={
+                        'notes': emblem['description'],
+                        'source': 'The Electoral Commission',
+                        'id': emblem['id'],
+                        'mime_type': 'image/gif',
+                    }
+                )
 
     def clean_id(self, party_id):
         party_id = re.sub(r'^PPm?\s*', '', party_id).strip()
