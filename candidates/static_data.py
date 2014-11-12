@@ -1,11 +1,8 @@
 from collections import defaultdict
 import json
 from os.path import abspath, dirname, join
-import sys
 
 data_directory = abspath(join(dirname(__file__), '..', 'data'))
-
-print >> sys.stderr, "Loading MapIt data..."
 
 def get_mapit_constituencies(basename):
     with open(join(data_directory, basename)) as f:
@@ -22,8 +19,6 @@ class MapItData(object):
         get_mapit_constituencies('mapit-WMC-generation-13.json')
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
-
-print >> sys.stderr, "Loading party data..."
 
 def get_all_parties():
     result_list = defaultdict(list)
