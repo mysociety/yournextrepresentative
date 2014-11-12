@@ -4,3 +4,6 @@
 [submodule "candidates/static/select2"]
 	path = candidates/static/select2
 	url = https://github.com/ivaynberg/select2.git
+[submodule "UK-Political-Parties"]
+	path = data/UK-Political-Parties
+	url = git@github.com:DemocracyClub/UK-Political-Parties.git
