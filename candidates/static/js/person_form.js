@@ -7,6 +7,8 @@ function setUpConstituencySelect2() {
   var constituencySelect = $('#id_constituency'),
       hidden = constituencySelect.prop('tagName') == 'INPUT' &&
         constituencySelect.attr('type') == 'hidden';
+  /* If it's a real select box (not a hidden input) make it into a
+   * Select2 box */
   if (!hidden) {
     constituencySelect.select2({
       placeholder: 'Constituency',
@@ -15,9 +17,9 @@ function setUpConstituencySelect2() {
     });
   }
   $('#id_constituency').on('change', function (e) {
-    update2015Selects(e['val']);
+    update2015Selects(showSelects(), e['val']);
   });
-  update2015Selects(constituencySelect.val());
+  update2015Selects(showSelects(), constituencySelect.val());
 }
 
 function getSelect2Enclosure(select2ID) {
@@ -29,6 +31,15 @@ function getSelect2Enclosure(select2ID) {
 
 function getStandingCheckbox() {
   return $('#person-details input#id_standing');
+}
+
+function showSelects() {
+  var standingCheckbox = getStandingCheckbox();
+  if (standingCheckbox.length == 0) {
+    return true;
+  } else {
+    return standingCheckbox.prop('checked');
+  }
 }
 
 function setSelect2Visibility(select2ID, visibility) {
@@ -48,37 +59,36 @@ function setSelect2Visibility(select2ID, visibility) {
   }
 }
 
-function update2015Selects(constituencyID) {
-  /* If constituencyID is falsy, hide all 2015-related data entry
-   * fields; otherwise enable them all, making sure that the correct
-   * party select is installed */
-  if (constituencyID) {
-    var ni = isNorthernIreland[constituencyID],
-    idToHide = ni ? '#id_party_gb' : '#id_party_ni',
-    idToShow = ni ? '#id_party_ni' : '#id_party_gb';
+function update2015Selects(show, constituencyID) {
+  /* Whether we should show the party and constituency selects is
+     determined by the boolean 'show'.  If 'constituencyID' is also
+     specified then the right party selection is shown; if not just
+     default to showing parties registered in Great Britain. */
+  var ni, idToHide, idToShow,
+      idNI = '#id_party_ni',
+      idGB = '#id_party_gb';
+  if (show) {
+    if (constituencyID) {
+      ni = isNorthernIreland[constituencyID],
+      idToHide = ni ? idGB : idNI,
+      idToShow = ni ? idNI : idGB;
+    } else {
+      idToHide = idNI
+      idToShow = idGB
+    }
     setSelect2Visibility(idToHide, false);
     setSelect2Visibility(idToShow, true);
-    setSelect2Visibility('#id_constituency', true);
   } else {
-    setSelect2Visibility('#id_party_gb', false);
-    setSelect2Visibility('#id_party_ni', false);
-    setSelect2Visibility('#id_constituency', false);
+    setSelect2Visibility(idGB, false);
+    setSelect2Visibility(idNI, false);
   }
+  setSelect2Visibility('#id_constituency', show);
 }
 
 function updateFields() {
-  var standingCheckbox = getStandingCheckbox(),
-      constituencySelect = $('#id_constituency'),
-      makeFieldsVisible = standingCheckbox.prop('checked'),
+  var constituencySelect = $('#id_constituency'),
       constituencyValue = constituencySelect.val();
-  if (standingCheckbox.length == 0) {
-    /* If there is no such checkbox on the page, just return */
-    return;
-  }
-  update2015Selects(constituencyValue);
-  if (!makeFieldsVisible) {
-    update2015Selects('');
-  }
+  update2015Selects(showSelects(), constituencyValue);
 }
 
 function setUpStandingCheckbox() {
