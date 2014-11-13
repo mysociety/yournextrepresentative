@@ -193,9 +193,6 @@ class PersonUpdateMixin(PopItApiMixin):
 
     def create_party_memberships(self, person_id, data):
         for election_year, party in data.get('party_memberships', {}).items():
-            if party['id'] not in PartyData.party_id_to_name:
-                msg = "Couldn't create party memberships for unknown ID {0}"
-                raise Exception, msg.format(party['id'])
             # Create the party membership:
             membership = election_year_to_party_dates(election_year)
             membership['person_id'] = person_id
