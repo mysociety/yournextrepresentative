@@ -13,7 +13,7 @@ from slugify import slugify
 from slumber.exceptions import HttpServerError
 
 from django.conf import settings
-from django.core.management.base import NoArgsCommand, CommandError
+from django.core.management.base import NoArgsCommand
 
 from candidates.models import (
     MaxPopItIds, election_date_2005, election_date_2010
@@ -112,7 +112,7 @@ class Command(NoArgsCommand):
             print "got exception:", e
             if hasattr(e, 'content'):
                 print "the exception body was:", e.content
-            raise CommandError(e.message)
+            raise
 
     def import_data(self):
 
