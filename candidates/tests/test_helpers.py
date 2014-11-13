@@ -1,11 +1,11 @@
 from django.test import TestCase
 
-from ..views import PopItApiMixin
+from ..views import CandidacyMixin
 
 class TestOrganizationToArea(TestCase):
 
     def test_get_area_from_post_id(self):
-        api = PopItApiMixin()
+        api = CandidacyMixin()
         area = api.get_area_from_post_id('14399')
         self.assertEqual(
             area,
@@ -15,7 +15,7 @@ class TestOrganizationToArea(TestCase):
         )
 
     def test_get_area_from_post_id_custom_id(self):
-        api = PopItApiMixin()
+        api = CandidacyMixin()
         area = api.get_area_from_post_id('14399', mapit_url_key='mapit_url')
         self.assertEqual(
             area,
@@ -25,6 +25,6 @@ class TestOrganizationToArea(TestCase):
         )
 
     def test_get_area_from_post_id_unknown_constituency(self):
-        api = PopItApiMixin()
+        api = CandidacyMixin()
         with self.assertRaises(Exception):
             api.get_area_from_post_id('123456789')

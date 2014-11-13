@@ -95,13 +95,7 @@
 #     },
 #   }
 
-from collections import defaultdict
-from datetime import timedelta, date
-import json
-import re
-import time
-
-from slugify import slugify
+from datetime import timedelta
 
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
@@ -111,6 +105,8 @@ from .models import simple_fields, complex_fields_locations
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
 from .models import create_person_with_id_retries
+
+from .popit import PopItApiMixin
 
 def election_year_to_party_dates(election_year):
     if str(election_year) == '2010':
@@ -155,15 +151,9 @@ def decompose_candidate_list_name(candidate_list_name):
         'mapit_url': url_format.format(mapit_data['id'])
     }
 
-class PersonParseMixin(object):
+class PersonParseMixin(PopItApiMixin):
 
-    """A mixin for turning PopIt data into our representation
-
-    This mixin depends on self.api being usable (it's provided in
-    PopItApiMixin).
-
-    FIXME: one could (and should) write tests for these methods
-    """
+    """A mixin for turning PopIt data into our representation"""
 
     def get_person(self, person_id):
         """Get our representation of the candidate's data from a PopIt person ID"""
@@ -198,17 +188,8 @@ class PersonParseMixin(object):
         return result
 
 
-class PersonUpdateMixin(object):
-    """A mixin for updating PopIt from our representation
-
-    This mixin depends on the following being usable:
-        self.api (from PopItApiMixin)
-        self.create_membership (from PopItApiMixin)
-
-    FIXME: it'd be good to have tests for this, but it's non-obvious
-    how to write them without creating a fresh PopIt instance to run
-    them against.
-    """
+class PersonUpdateMixin(PopItApiMixin):
+    """A mixin for updating PopIt from our representation"""
 
     def create_party_memberships(self, person_id, data):
         for election_year, party in data.get('party_memberships', {}).items():
