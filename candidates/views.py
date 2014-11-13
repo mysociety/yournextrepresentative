@@ -169,13 +169,15 @@ class CandidacyMixin(object):
         return datetime.utcnow().isoformat()
 
     def get_change_metadata(self, request, information_source):
-        return {
-            'username': request.user.username,
-            'ip': self.get_client_ip(request),
+        result = {
             'information_source': information_source,
             'version_id': self.create_version_id(),
             'timestamp': self.get_current_timestamp()
         }
+        if request is not None:
+            result['username'] = request.user.username,
+            result['ip'] = self.get_client_ip(request)
+        return result
 
     def get_area_from_post_id(self, post_id, mapit_url_key='id'):
         "Get a MapIt area ID from a candidate list organization's PopIt data"
