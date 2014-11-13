@@ -18,6 +18,7 @@ from django.core.management.base import NoArgsCommand, CommandError
 from candidates.models import (
     MaxPopItIds, election_date_2005, election_date_2010
 )
+from candidates.popit import popit_unwrap_pagination
 
 ec_registers = ('Great Britain', 'Northern Ireland')
 
@@ -41,28 +42,20 @@ def get_all_parties(api, when_date):
             'active': {},
             'inactive': {},
         }
-    # FIXME: More code (unpacking pagination) that should really be in
-    # the language bindings for the API
-    page = 1
-    keep_fetching = True
-    while keep_fetching:
-        response = api.organizations.get(per_page=50, page=page)
-        keep_fetching = response.get('has_more', False)
-        page += 1
-        for org in response['result']:
-            if org['classification'] != 'Party':
-                continue
-            org_register = org.get('register')
-            if org_register not in ec_registers:
-                message = u"Unknown register {0} in organization: {1}"
-                # raise Exception, message.format(org_register, org)
-                print (u"Warning:" + message.format(org_register, org)).encode('utf-8')
-                continue
-            register_dict = result[org_register]
-            party_dict = register_dict[
-                'active' if organization_active(org, when_date) else 'inactive'
-            ]
-            party_dict[normalize_party_name(org['name'])] = org
+    for org in popit_unwrap_pagination(api.organizations, embed=''):
+        if org['classification'] != 'Party':
+            continue
+        org_register = org.get('register')
+        if org_register not in ec_registers:
+            message = u"Unknown register {0} in organization: {1}"
+            # raise Exception, message.format(org_register, org)
+            print (u"Warning:" + message.format(org_register, org)).encode('utf-8')
+            continue
+        register_dict = result[org_register]
+        party_dict = register_dict[
+            'active' if organization_active(org, when_date) else 'inactive'
+        ]
+        party_dict[normalize_party_name(org['name'])] = org
     return result
 
 party_name_corrections = {
