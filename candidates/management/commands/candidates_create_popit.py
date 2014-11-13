@@ -16,9 +16,12 @@ from django.conf import settings
 from django.core.management.base import NoArgsCommand
 
 from candidates.models import (
-    MaxPopItIds, election_date_2005, election_date_2010
+    MaxPopItIds, election_date_2005, election_date_2010,
+    simple_fields, complex_fields_locations
 )
 from candidates.popit import popit_unwrap_pagination
+from candidates.update import PersonUpdateMixin
+from candidates.views import CandidacyMixin
 
 ec_registers = ('Great Britain', 'Northern Ireland')
 
@@ -103,7 +106,7 @@ def update_or_create(api_collection, object_id, properties):
         else:
             raise
 
-class Command(NoArgsCommand):
+class Command(CandidacyMixin, PersonUpdateMixin, NoArgsCommand):
     help = "Import data in to PopIt"
     def handle_noargs(self, **options):
         try:
@@ -163,8 +166,6 @@ class Command(NoArgsCommand):
         r = requests.get('http://mapit.mysociety.org/areas/WMC')
         wmc_data = r.json()
 
-        cons_to_post = {}
-
         for wmc in wmc_data.values():
             wmc_name = wmc['name']
             post_id = str(wmc['id'])
@@ -177,10 +178,9 @@ class Command(NoArgsCommand):
                 'area': {
                     'id': 'mapit:' + str(wmc['id']),
                     'name': wmc['name'],
-                    'identifier': 'http://mapit.mysociety.org/area/' + str(wmc['id'])
+                    'identifier': 'http://mapit.mysociety.org/area/' + post_id
                 }
             })
-            cons_to_post[wmc_name] = post_id
 
         # We need the party name rather than the YNMP party_id in
         # order to look up the parties in the electoral commission
@@ -190,13 +190,19 @@ class Command(NoArgsCommand):
         for party_id, party in main_data['Party'].items():
             party_id_to_ynmp_name[party_id] = party['name']
 
-        # Create all the people, and their party memberships:
+        # Find all the person data:
         candidate_id_to_party_id = {}
+        candidate_id_to_person_data = {}
         max_id = 0
         for candidate_id, candidate in main_data['Candidate'].items():
             max_id = max(max_id, candidate_id)
             slug = candidate['code'].replace('_', '-')
-            properties = {
+            # Make sure all the default fields that create_person
+            # expects are present.
+            fields = list(simple_fields) + complex_fields_locations.keys()
+            properties = {k: None for k in fields}
+            # Then update the proprerties from the Candidate data
+            properties.update({
                 'id': candidate_id,
                 'slug': slug,
                 'name': candidate['name'],
@@ -206,16 +212,16 @@ class Command(NoArgsCommand):
                         'identifier': candidate_id,
                     }
                 ],
-            }
+            })
             dob = candidate['dob']
             if dob:
                 m = re.search(r'(\d+)/(\d+)/(\d+)', dob)
                 if m:
                     d = date(*reversed([int(x, 10) for x in m.groups()]))
-                    properties['birth_date'] = str(d)
+                    properties['date_of_birth'] = str(d)
             for k in ('gender', 'email', 'phone'):
                 properties[k] = candidate[k]
-            api.persons.post(properties)
+            candidate_id_to_person_data[candidate_id] = properties
             candidate_id_to_party_id[candidate_id] = candidate['party_id']
 
         unknown_party_counts = {
@@ -225,25 +231,21 @@ class Command(NoArgsCommand):
 
         ec_party_data = get_all_parties(api, str(election_date_2010))
 
-        # Go through all the candidacies and create memberships from them:
+        # Go through all the candidacies and create the person with
+        # the right party and constituencies associated with them.
         for candidacy_id, candidacy in main_data['Candidacy'].items():
+            # If this candidacy doesn't represent that someone's
+            # actually standing, ignore it.
+            if main_data['Candidate'][candidacy['candidate_id']]['status'] != 'standing':
+                continue
             candidate_id = candidacy['candidate_id']
             wmc = seat_id_to_wmc[candidacy['seat_id']]
+            post_id = str(wmc['id'])
             if wmc['country_name'] == 'Northern Ireland':
                 register = 'Northern Ireland'
             else:
                 register = 'Great Britain'
-            post = cons_to_post[wmc['name']]
-            if main_data['Candidate'][candidacy['candidate_id']]['status'] == 'standing':
-                properties = {
-                    'person_id': candidate_id,
-                    'post_id': post,
-                    'role': 'Candidate',
-                    'start_date': str(election_date_2005 + timedelta(days=1)),
-                    'end_date': str(election_date_2010),
-                }
-                print "creating candidacy with properties:", json.dumps(properties)
-                api.memberships.post(properties)
+
             # Find the right party given the country that this constituency is in:
             party_id = candidate_id_to_party_id[candidate_id]
             party_name = party_id_to_ynmp_name[party_id]
@@ -270,14 +272,34 @@ class Command(NoArgsCommand):
                     })
                 party_org = result['result']
 
-            # FIXME: remove any other party membership for 2010, in
-            # case the party resolution has been corrected prior to
-            # this run.
-            api.memberships.post({
-                'person_id': candidate_id,
-                'organization_id': party_org['id'],
-            })
+            # Now add the party and constituency details to the person
+            # data.
+            person_data = candidate_id_to_person_data[candidate_id]
+            person_data['party_memberships'] = {
+                '2010': {
+                    'name': party_org['name'],
+                    'id': party_org['id'],
+                }
+            }
+            person_data['standing_in'] = {
+                '2010': {
+                    'name': wmc['name'],
+                    'post_id': post_id,
+                    'mapit_url': 'http://mapit.mysociety.org/area/' + post_id,
+                }
+            }
 
+            # And create the person and their memberships based on that
+            person_id = self.create_person(
+                person_data,
+                self.get_change_metadata(
+                    None,
+                    "Imported from YourNextMP data from 2010"
+                )
+            )
+            max_id = max(str(person_id), max_id)
+
+        # Report any unknown parties that were encountered
         for register in ec_registers:
             print "=== Unknown parties in the", register, "register:"
             party_names_and_counts = unknown_party_counts[register].items()
