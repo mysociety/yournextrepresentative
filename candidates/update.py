@@ -225,6 +225,7 @@ class PersonUpdateMixin(PopItApiMixin):
         person_id = person_result['result']['id']
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
+        return person_id
 
     def update_person(self, data, change_metadata, previous_versions):
         person_id = data['id']
@@ -241,3 +242,4 @@ class PersonUpdateMixin(PopItApiMixin):
         # And then create any that should be there:
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
+        return person.id
