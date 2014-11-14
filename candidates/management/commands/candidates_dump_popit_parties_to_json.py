@@ -20,6 +20,8 @@ class Command(LabelCommand):
         for party in popit_unwrap_pagination(api.organizations, embed=''):
             if party['classification'] != 'Party':
                 continue
+            party.pop('image', None)
+            party.pop('images', None)
             all_parties.append(party)
         json.dump(all_parties, ntf, sort_keys=True, indent=4)
         rename(ntf.name, output_filename)
