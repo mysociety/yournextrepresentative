@@ -17,7 +17,11 @@ class Command(LabelCommand):
             dir=dirname(output_filename)
         )
         all_parties = []
-        for party in popit_unwrap_pagination(api.organizations, embed=''):
+        for party in popit_unwrap_pagination(
+                api.organizations,
+                embed='',
+                per_page=200
+        ):
             if party['classification'] != 'Party':
                 continue
             party.pop('image', None)
