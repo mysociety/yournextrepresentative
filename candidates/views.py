@@ -175,7 +175,7 @@ class CandidacyMixin(object):
             'timestamp': self.get_current_timestamp()
         }
         if request is not None:
-            result['username'] = request.user.username,
+            result['username'] = request.user.username
             result['ip'] = self.get_client_ip(request)
         return result
 
