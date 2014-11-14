@@ -6,9 +6,7 @@ import sys
 
 from slugify import slugify
 import requests
-from urlparse import urlunsplit
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.http import urlquote
@@ -27,64 +25,10 @@ from .models import (
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015
 )
-from .popit import create_popit_api_object
+from .popit import PopItApiMixin
 from .static_data import MapItData, PartyData
 
 from .update import PersonParseMixin, PersonUpdateMixin
-
-class PopItApiMixin(object):
-
-    """This provides helper methods for manipulating data in a PopIt instance"""
-
-    def __init__(self, *args, **kwargs):
-        super(PopItApiMixin, self).__init__(*args, **kwargs)
-        self.api = create_popit_api_object()
-
-    def get_search_url(self, collection, query):
-        port = settings.POPIT_PORT
-        instance_hostname = settings.POPIT_INSTANCE + \
-            '.' + settings.POPIT_HOSTNAME
-        if port != 80:
-            instance_hostname += ':' + str(port)
-        base_search_url = urlunsplit(
-            ('http', instance_hostname, '/api/v0.1/search/', '', '')
-        )
-        return base_search_url + collection + '?q=' + urlquote(query)
-
-    def get_organization(self, organization_id):
-        return self.api.organizations(organization_id).get()['result']
-
-    def get_organization_and_members(self, organization_id):
-        organization = self.get_organization(organization_id)
-        return (
-            organization,
-            [ m['person_id'] for m in organization.get('memberships', []) ]
-        )
-
-    def get_area_from_post_id(self, post_id, mapit_url_key='id'):
-        "Get a MapIt area ID from a candidate list organization's PopIt data"
-
-        mapit_data = MapItData.constituencies_2010.get(post_id)
-        if mapit_data is None:
-            message = "Couldn't find the constituency with Post and MapIt Area ID: '{0}'"
-            raise Exception(message.format(post_id))
-        url_format = 'http://mapit.mysociety.org/area/{0}'
-        return {
-            'name': mapit_data['name'],
-            'post_id': post_id,
-            mapit_url_key: url_format.format(post_id),
-        }
-
-    def create_membership(self, person_id, **kwargs):
-        '''Create a membership of a post or an organization'''
-        properties = {
-            'person_id': person_id,
-        }
-        for key, value in kwargs.items():
-            if value is not None:
-                properties[key] = value
-        self.api.memberships.post(properties)
-
 
 def get_redirect_from_mapit_id(mapit_id):
     constituency_name = get_constituency_name_from_mapit_id(mapit_id)
@@ -225,16 +169,32 @@ class CandidacyMixin(object):
         return datetime.utcnow().isoformat()
 
     def get_change_metadata(self, request, information_source):
-        return {
-            'username': request.user.username,
-            'ip': self.get_client_ip(request),
+        result = {
             'information_source': information_source,
             'version_id': self.create_version_id(),
             'timestamp': self.get_current_timestamp()
         }
+        if request is not None:
+            result['username'] = request.user.username,
+            result['ip'] = self.get_client_ip(request)
+        return result
+
+    def get_area_from_post_id(self, post_id, mapit_url_key='id'):
+        "Get a MapIt area ID from a candidate list organization's PopIt data"
+
+        mapit_data = MapItData.constituencies_2010.get(post_id)
+        if mapit_data is None:
+            message = "Couldn't find the constituency with Post and MapIt Area ID: '{0}'"
+            raise Exception(message.format(post_id))
+        url_format = 'http://mapit.mysociety.org/area/{0}'
+        return {
+            'name': mapit_data['name'],
+            'post_id': post_id,
+            mapit_url_key: url_format.format(post_id),
+        }
 
 
-class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyCreateForm
 
@@ -261,7 +221,7 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonPar
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
 
-class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyDeleteForm
 
@@ -307,7 +267,7 @@ def copy_person_form_data(cleaned_data):
     return result
 
 
-class RevertPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
+class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
 
@@ -338,7 +298,8 @@ class RevertPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
             )
         )
 
-class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
+
+class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = UpdatePersonForm
 
@@ -444,7 +405,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, Person
                 return HttpResponseRedirect(reverse('finder'))
 
 
-class NewPersonView(LoginRequiredMixin, PopItApiMixin, CandidacyMixin, PersonUpdateMixin, FormView):
+class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person.html'
     form_class = NewPersonForm
 

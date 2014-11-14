@@ -11,3 +11,6 @@ echo "Dumping PopIt parties to JSON..."
 
 echo "Creating everything else..."
 ./manage.py candidates_create_popit
+
+echo "Creating parties in PopIt from EC data..."
+./manage.py candidates_update_popit_parties_from_ec_data
