@@ -63,7 +63,7 @@ class Command(BaseCommand):
                     'register': register,
                     'identifiers': [
                         {
-                            'identifier': party_id,
+                            'identifier': ec_party_id,
                             'scheme': 'electoral-commission',
                         }
                     ]
