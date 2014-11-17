@@ -25,6 +25,10 @@ class Command(LabelCommand):
         ):
             if party['classification'] != 'Party':
                 continue
+            # These URLs are specific to the server this data is
+            # extracted from:
+            del party['url']
+            del party['html_url']
             party.pop('image', None)
             party.pop('images', None)
             # The generated id in each identifier will be different
