@@ -29,6 +29,7 @@ class Command(LabelCommand):
             # extracted from:
             del party['url']
             del party['html_url']
+            # Similarly the URLs of images:
             party.pop('image', None)
             party.pop('images', None)
             # The generated id in each identifier will be different
