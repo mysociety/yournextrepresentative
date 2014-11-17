@@ -59,6 +59,8 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
             {
                 'date_of_birth': None,
                 'email': 'jowell@example.com',
+                'facebook_page_url': '',
+                'facebook_personal_url': '',
                 'homepage_url': '',
                 'id': 'tessa-jowell',
                 'name': 'Tessa Jowell',

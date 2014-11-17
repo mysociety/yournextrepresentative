@@ -73,6 +73,16 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+    facebook_personal_url = forms.CharField(
+        label="Facebook profile URL",
+        max_length=256,
+        required=False,
+    )
+    facebook_page_url = forms.CharField(
+        label="Facebook page (e.g. for their campaign)",
+        max_length=256,
+        required=False,
+    )
 
 
 class NewPersonForm(BasePersonForm):

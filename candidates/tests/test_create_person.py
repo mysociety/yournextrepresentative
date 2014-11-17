@@ -54,6 +54,8 @@ class TestCreatePerson(TestCase):
             },
             "twitter_username": "",
             "wikipedia_url": "",
+            "facebook_personal_url": "http://notreallyfacebook/tessajowell",
+            "facebook_page_url": "http://notreallyfacebook/tessajowellcampaign",
         }
 
         view.create_person(
@@ -72,9 +74,17 @@ class TestCreatePerson(TestCase):
             'id': '1',
             'links': [
                 {
+                    'note': 'facebook page',
+                    'url': 'http://notreallyfacebook/tessajowellcampaign',
+                },
+                {
                     'note': 'homepage',
                     'url': 'http://janedoe.example.org'
-                }
+                },
+                {
+                    'note': 'facebook personal',
+                    'url': 'http://notreallyfacebook/tessajowell',
+                },
             ],
             'name': u'Jane Doe',
             'standing_in': {
@@ -98,6 +108,8 @@ class TestCreatePerson(TestCase):
                             }
                         },
                         'homepage_url': 'http://janedoe.example.org',
+                        'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
+                        'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
                         'date_of_birth': None,
                         'name': 'Jane Doe',
                         'wikipedia_url': '',

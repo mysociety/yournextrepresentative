@@ -30,6 +30,18 @@ complex_fields_locations = {
         'info_value_key': 'value',
         'info_type': 'twitter',
     },
+    'facebook_personal_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'facebook personal',
+    },
+    'facebook_page_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'facebook page',
+    }
 }
 
 election_date_2005 = date(2005, 5, 5)

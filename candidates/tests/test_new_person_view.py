@@ -66,6 +66,8 @@ class TestNewPersonView(TestUserMixin, WebTest):
             {
                 'date_of_birth': None,
                 'email': u'jane@example.com',
+                'facebook_page_url': '',
+                'facebook_personal_url': '',
                 'homepage_url': u'',
                 'name': u'Jane Doe',
                 'party_memberships': {
