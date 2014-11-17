@@ -28,6 +28,7 @@ class Command(LabelCommand):
             party.pop('image', None)
             party.pop('images', None)
             all_parties.append(party)
+        all_parties.sort(key=lambda p: p['id'])
         # Output to a string so that we can strip any trainling whitespace.
         output = json.dumps(all_parties, sort_keys=True, indent=4)
         output = re.sub(r'(?ms)\s*$', '', output)
