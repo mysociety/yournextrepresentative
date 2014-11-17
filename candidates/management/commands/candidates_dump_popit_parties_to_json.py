@@ -27,6 +27,11 @@ class Command(LabelCommand):
                 continue
             party.pop('image', None)
             party.pop('images', None)
+            # The generated id in each identifier will be different
+            # between systems (or between runs on the same system) so
+            # just produces noisy diffs if we include it.
+            for identifier in party.get('identifiers', []):
+                identifier.pop('id', None)
             all_parties.append(party)
         all_parties.sort(key=lambda p: p['id'])
         # Output to a string so that we can strip any trainling whitespace.
