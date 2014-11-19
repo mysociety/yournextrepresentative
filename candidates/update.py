@@ -234,6 +234,13 @@ class PersonUpdateMixin(PopItApiMixin):
         new_version = change_metadata.copy()
         new_version['data'] = data
         basic_person_data['versions'] = [new_version] + previous_versions
+        # FIXME: this is a rather horrid workaround for:
+        # https://github.com/mysociety/popit-api/issues/95
+        basic_person_data_for_purging = basic_person_data.copy()
+        basic_person_data_for_purging['standing_in'] = None
+        basic_person_data_for_purging['party_memberships'] = None
+        self.api.persons(person_id).put(basic_person_data_for_purging)
+        # end of FIXME <-- remove when #95 is fixed
         self.api.persons(person_id).put(basic_person_data)
 
         person = PopItPerson.create_from_popit(self.api, data['id'])
