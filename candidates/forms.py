@@ -84,6 +84,29 @@ class BasePersonForm(forms.Form):
         required=False,
     )
 
+    def check_party_and_constituency_are_selected(self, cleaned_data):
+        '''This is called by the clean method of subclasses'''
+
+        # Make sure that there is a party selected; we need to do this
+        # from the clean method rather than single field validation
+        # since the party field that should be checked depends on the
+        # selected constituency.
+        constituency = cleaned_data['constituency']
+        try:
+            mapit_area = MapItData.constituencies_2010[constituency]
+        except KeyError:
+            message = "If you mark the candidate as standing in 2015, you must select a constituency"
+            raise forms.ValidationError(message)
+        if mapit_area['country_name'] == 'Northern Ireland':
+            party_field = 'party_ni'
+        else:
+            party_field = 'party_gb'
+        party_id = cleaned_data[party_field]
+        if party_id not in PartyData.party_id_to_name:
+            message = "You must specify a party for the 2015 election"
+            raise forms.ValidationError(message)
+        return cleaned_data
+
 
 class NewPersonForm(BasePersonForm):
     constituency = forms.CharField(
@@ -114,6 +137,10 @@ class NewPersonForm(BasePersonForm):
             }
         )
     )
+
+    def clean(self):
+        cleaned_data = super(NewPersonForm, self).clean()
+        return self.check_party_and_constituency_are_selected(cleaned_data)
 
 class UpdatePersonForm(BasePersonForm):
     standing = forms.BooleanField(
@@ -155,3 +182,9 @@ class UpdatePersonForm(BasePersonForm):
             }
         )
     )
+
+    def clean(self):
+        cleaned_data = super(UpdatePersonForm, self).clean()
+        if cleaned_data['standing']:
+            return self.check_party_and_constituency_are_selected(cleaned_data)
+        return cleaned_data

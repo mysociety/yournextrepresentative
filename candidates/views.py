@@ -259,9 +259,12 @@ def copy_person_form_data(cleaned_data):
     if date_of_birth_date:
         result['date_of_birth'] = str(date_of_birth_date)
     area_id = result.get('constituency')
-    country_name =  MapItData.constituencies_2010.get(area_id)['country_name']
-    key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
-    result['party'] = result[key]
+    if area_id:
+        country_name =  MapItData.constituencies_2010.get(area_id)['country_name']
+        key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
+        result['party'] = result[key]
+    else:
+        result['party'] = None
     del result['party_gb']
     del result['party_ni']
     return result
