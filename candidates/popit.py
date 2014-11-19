@@ -43,15 +43,19 @@ class PopItApiMixin(object):
         super(PopItApiMixin, self).__init__(*args, **kwargs)
         self.api = create_popit_api_object()
 
-    def get_search_url(self, collection, query):
+    def get_base_url(self):
         port = settings.POPIT_PORT
         instance_hostname = settings.POPIT_INSTANCE + \
             '.' + settings.POPIT_HOSTNAME
         if port != 80:
             instance_hostname += ':' + str(port)
-        base_search_url = urlunsplit(
-            ('http', instance_hostname, '/api/v0.1/search/', '', '')
+        base_url = urlunsplit(
+            ('http', instance_hostname, '/api/v0.1/', '', '')
         )
+        return base_url
+
+    def get_search_url(self, collection, query):
+        base_search_url = self.get_base_url() + 'search/'
         return base_search_url + collection + '?q=' + urlquote(query)
 
     def create_membership(self, person_id, **kwargs):
