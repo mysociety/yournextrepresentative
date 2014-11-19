@@ -67,6 +67,7 @@ $button-radius: 3px;
 .header__nav__logo {
   float: left;
   font-weight: bold;
+  margin-right: 1em;
 }
 
 .header__nav__login, .header__nav__logout {
@@ -266,4 +267,12 @@ body.finder .content__inner {
 
 .version-metadata-key {
   font-weight: bold
+}
+
+.code-sample {
+  margin: 1em;
+}
+
+.help-api p {
+  margin-top: 0.6em
 }

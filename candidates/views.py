@@ -440,3 +440,11 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
 
         self.create_person(data_for_creation, change_metadata)
         return get_redirect_from_mapit_id(mapit_area_id)
+
+class HelpApiView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/api.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HelpApiView, self).get_context_data(**kwargs)
+        context['popit_url'] = self.get_base_url()
+        return context

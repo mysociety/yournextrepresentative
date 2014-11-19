@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block body_class %}{% endblock %}
+
+{% block hero %}
+  <h1>Using this data via the API</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="help-api">
+
+<p>
+The data that's submitted to this site is available
+programmatically via a RESTful web service called PopIt, which
+stores information about people and their positions in
+organizations. (You can <a href="http://popit.poplus.org/">find
+out more about PopIt here</a>.)
+</p>
+
+<p>
+The base API URL for the data is:
+</p>
+
+<pre class="code-sample"><a href="{{ popit_url }}">{{ popit_url }}</a></pre>
+
+<p>
+You can read <a href="http://popit.poplus.org/docs/api/">more
+generic documentation for the PopIt API</a> or just follow the
+simple examples that follow.
+</p>
+
+<h2>Find a Constituency ID</h2>
+
+<p>In order to look up candidates for a constituency, you have
+to find the ID of that constituency. The IDs that we use for
+constituencies are the IDs for Westminster constituencies areas
+in another web
+service, <a href="http://mapit.mysociety.org">MapIt</a>.</p>
+
+<h3>... from a postcode</h3>
+
+<p>Suppose you want to find the constituency for the postcode
+SW1A&nbsp;1AA, then you would make a GET request to the
+following URL:</p>
+
+<pre class="code-sample">
+<a href="http://mapit.mysociety.org/postcode/SW1A1AA">http://mapit.mysociety.org/postcode/SW1A1AA</a>
+</pre>
+
+<p>This <a href="http://mapit.mysociety.org/postcode/SW1A1AA">returns
+a JSON object</a>, wherein the constituency ID can be found
+at <tt>.shortcuts.WMC</tt>.</p>
+
+<p>There's more documentation available
+on <a href="http://mapit.mysociety.org/#api-by_postcode">postcode
+lookups on the MapIt front-page</a>.</p>
+
+<h3>... from a latitude / longitude or other coordinate</h3>
+
+<p>You can look up constituencies in MapIt using a variety of
+coordinate systems. To give the most common example, you might
+have a WGS84 coordinate from a GPS or location API, in which can
+you should put the SRID 4326 in your lookup. For example,
+latitude
+52.205083 and longitude 0.115194 could be looked up with:</p>
+
+<pre class="code-sample">
+<a href="http://mapit.mysociety.org/point/4326/0.115194,52.205083?type=WMC">http://mapit.mysociety.org/point/4326/0.115194,52.205083?type=WMC</a>
+</pre>
+
+(Note that the longitude comes before the latitude, which might
+not be what you expect.) The only key in that object is the
+constituency ID.
+
+<p>There's more documentation available
+on <a href="http://mapit.mysociety.org/#api-by_point">point
+lookups on the MapIt front-page</a>.</p>
+
+<h3>... by selecting it from its name</h3>
+
+If you need to produce a list of all constituencies (e.g. for a
+select box) and allow the user to pick one, you can get a list
+of all Westminster constituencies in the UK from this request:
+
+<pre class="code-sample">
+<a href="http://mapit.mysociety.org/areas/WMC">http://mapit.mysociety.org/areas/WMC</a>
+</pre>
+
+<p>The <a href="http://mapit.mysociety.org/areas/WMC">returned
+data from that request</a> has the constituency ID as its keys;
+the values are objects that include (among other things)
+a <tt>name</tt> element that gives you the official name of the
+constituency.</p>
+
+<h2>Find Candidates for a Constituency</h2>
+
+<p>
+All the candidates we know about for a constituency can be
+returned by making a GET request to a URL of this form, where
+you should substitute in the constituency ID for
+CONSTITUENCY_ID:
+
+<pre class="code-sample">
+{{ popit_url }}posts/CONSTITUENCY_ID?embed=membership.person.membership.organization
+</pre>
+
+<p>For example, for Dulwich and West Norwood,
+<a href="{{ popit_url }}posts/65808?embed=membership.person.membership.organization">these
+would be the results</a>. To explain further, that's showing information about the the <em>post</em>
+"MP for Dulwich and West Norwood". Under the <tt>memberships</tt> key of the
+<tt>result</tt> dictionary you can find all memberships of this
+post - those that have the <tt>role</tt> "Candidate" were
+candidates at one point.</p>
+
+<p>You should then look at the start and end dates of that
+membership, which will tell you whether they're a candidate for
+the 2015 election or were a past candidate for the 2010
+election:</p>
+
+<table>
+<tr><td>Election</td><td>start_date</td><td>end_date</td></tr>
+<tr><td>2015</td><td>2010-05-07</td><td>9999-12-31</td></tr>
+<tr><td>2010</td><td>2005-05-06</td><td>2010-05-06</td></tr>
+</table>
+
+Under <tt>person_id</tt> attribute of each of those membership
+you can find information about that candidate, like their name,
+contact details and (in another nested <tt>memberships</tt>
+object) their memberships of political parties. The party
+memberships use the same date values as above to indicate
+whether it's their party membership at the 2010 or 2015 election.
+</p>
+
+</div>
+
+{% endblock %}
