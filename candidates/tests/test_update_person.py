@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 
 from mock import patch, MagicMock
@@ -6,6 +8,7 @@ from .fake_popit import (
     fake_get_result,
     FakePersonCollection, FakeOrganizationCollection
 )
+from .helpers import equal_call_args
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
 
 class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
@@ -69,9 +72,34 @@ class TestUpdatePerson(TestCase):
             },
             [] # No previous versions, say...
         )
-        # Then we expect this to be put:
-        mocked_put.assert_called_once_with(
-            {
+        # FIXME: really we should only need the second call here, but
+        # see the FIXME in candidates/update.py:
+
+        self.assertEqual(2, len(mocked_put.call_args_list))
+
+        first_put_call_args = {
+                'email': u'foo@example.org',
+                'name': u'Tessa Jowell',
+                'links': [
+                    {
+                        'note': 'homepage',
+                        'url': 'http://foo.example.org'
+                    }
+                ],
+                'party_memberships': None,
+                'standing_in': None,
+                'versions': [
+                    {
+                        'username': 'tester',
+                        'ip': '127.0.0.1',
+                        'information_source': 'A change made for testing purposes',
+                        'version_id': '6054aa38b30b4418',
+                        'timestamp': '2014-09-28T14:02:44.567413',
+                        'data': new_person_data
+                    }],
+            }
+
+        second_put_call_args = {
                 'email': u'foo@example.org',
                 'name': u'Tessa Jowell',
                 'links': [
@@ -100,7 +128,24 @@ class TestUpdatePerson(TestCase):
                         'data': new_person_data
                     }],
             }
+
+
+        self.assertTrue(
+            equal_call_args(
+                [first_put_call_args],
+                mocked_put.call_args_list[0][0],
+            ),
+            "Unexpected first PUT (the one blanking out standing_in and party_memberships",
         )
+
+        self.assertTrue(
+            equal_call_args(
+                [second_put_call_args],
+                mocked_put.call_args_list[1][0],
+            ),
+            "Unexpected second PUT (the one with real standing_in and party_memberships",
+        )
+
         view.create_candidate_list_memberships.assert_called_once_with(
             'tessa-jowell',
             new_person_data,
