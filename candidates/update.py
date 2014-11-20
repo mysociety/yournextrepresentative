@@ -215,6 +215,7 @@ class PersonUpdateMixin(PopItApiMixin):
         # Create the person:
         basic_person_data = get_person_data_from_dict(data, generate_id=True)
         basic_person_data['standing_in'] = data['standing_in']
+        basic_person_data['party_memberships'] = data['party_memberships']
         original_version = change_metadata.copy()
         original_version['data'] = data
         person_result = create_person_with_id_retries(
@@ -231,6 +232,7 @@ class PersonUpdateMixin(PopItApiMixin):
         person_id = data['id']
         basic_person_data = get_person_data_from_dict(data, generate_id=False)
         basic_person_data['standing_in'] = data['standing_in']
+        basic_person_data['party_memberships'] = data['party_memberships']
         new_version = change_metadata.copy()
         new_version['data'] = data
         basic_person_data['versions'] = [new_version] + previous_versions

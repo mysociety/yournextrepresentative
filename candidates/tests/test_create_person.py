@@ -87,6 +87,12 @@ class TestCreatePerson(TestCase):
                 },
             ],
             'name': u'Jane Doe',
+            'party_memberships': {
+                '2015': {
+                    'id': 'party:53',
+                    'name': 'Labour Party'
+                }
+            },
             'standing_in': {
                 '2015': {
                     'name': 'Dulwich and West Norwood',

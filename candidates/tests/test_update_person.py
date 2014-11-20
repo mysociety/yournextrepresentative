@@ -108,6 +108,16 @@ class TestUpdatePerson(TestCase):
                         'url': 'http://foo.example.org'
                     }
                 ],
+                'party_memberships': {
+                    '2010': {
+                        'id': 'party:53',
+                        'name': 'Labour Party'
+                    },
+                    '2015': {
+                        'id': 'party:53',
+                        'name': 'Labour Party'
+                    }
+                },
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
