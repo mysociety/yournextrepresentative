@@ -360,14 +360,14 @@ def get_person_data_from_dict(data, generate_id, existing_data=None):
     # First deal with fields that simply map to top level fields in
     # Popolo.
     for field_name in simple_fields:
-        if data[field_name]:
-            result[field_name] = unicode(data[field_name])
+        if data.get(field_name):
+            result[field_name] = unicode(data.get(field_name, ''))
     if generate_id:
         result['id'] = slugify(result['name'])
     # These are fields which are represented by values in a sub-object
     # in Popolo's JSON serialization:
     for field_name, location in complex_fields_locations.items():
-        new_value = data[field_name]
+        new_value = data.get(field_name, '')
         if new_value:
             update_values_in_sub_array(result, location, new_value)
     return result
