@@ -9,7 +9,7 @@ from slumber.exceptions import HttpServerError
 
 from .static_data import MapItData
 
-simple_fields = ('name', 'email', 'date_of_birth')
+simple_fields = ('name', 'email', 'date_of_birth', 'gender')
 
 complex_fields_locations = {
     'wikipedia_url': {

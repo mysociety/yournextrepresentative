@@ -114,6 +114,11 @@ class NewPersonForm(BasePersonForm):
         max_length=256,
         widget=forms.HiddenInput(),
     )
+    gender = forms.CharField(
+        label="Gender (e.g. 'male', 'female')",
+        max_length=256,
+        required=False,
+    )
     party_gb = forms.ChoiceField(
         label="Party in 2015 (Great Britain)",
         choices=PartyData.party_choices['Great Britain'],

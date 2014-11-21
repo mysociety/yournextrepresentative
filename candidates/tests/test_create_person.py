@@ -38,6 +38,7 @@ class TestCreatePerson(TestCase):
         new_person_data = {
             "date_of_birth": None,
             "email": "jane@example.org",
+            "gender": "female",
             "homepage_url": "http://janedoe.example.org",
             "name": "Jane Doe",
             "party_memberships": {
@@ -71,6 +72,7 @@ class TestCreatePerson(TestCase):
 
         expected_args = {
             'email': u'jane@example.org',
+            'gender': 'female',
             'id': '1',
             'links': [
                 {
@@ -117,6 +119,7 @@ class TestCreatePerson(TestCase):
                         'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
                         'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
                         'date_of_birth': None,
+                        'gender': 'female',
                         'name': 'Jane Doe',
                         'wikipedia_url': '',
                         'party_memberships': {
