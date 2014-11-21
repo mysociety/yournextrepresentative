@@ -10,6 +10,7 @@ from slumber.exceptions import HttpServerError
 from .static_data import MapItData
 
 form_simple_fields = ('name', 'email', 'date_of_birth', 'gender')
+preserve_fields = ('identifiers',)
 
 form_complex_fields_locations = {
     'wikipedia_url': {
@@ -362,6 +363,9 @@ def get_person_data_from_dict(data, generate_id, existing_data=None):
     for field_name in form_simple_fields:
         if data.get(field_name):
             result[field_name] = unicode(data.get(field_name, ''))
+    for field_name in preserve_fields:
+        if field_name in data:
+            result[field_name] = data[field_name]
     if generate_id:
         result['id'] = slugify(result['name'])
     # These are fields which are represented by values in a sub-object

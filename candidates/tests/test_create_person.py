@@ -40,6 +40,12 @@ class TestCreatePerson(TestCase):
             "email": "jane@example.org",
             "gender": "female",
             "homepage_url": "http://janedoe.example.org",
+            "identifiers": [
+                {
+                    "scheme": "yournextmp-candidate",
+                    "identifier": "1234567"
+                }
+            ],
             "name": "Jane Doe",
             "party_memberships": {
                 "2015": {
@@ -74,6 +80,12 @@ class TestCreatePerson(TestCase):
             'email': u'jane@example.org',
             'gender': 'female',
             'id': '1',
+            'identifiers': [
+                {
+                    'scheme': 'yournextmp-candidate',
+                    'identifier': '1234567'
+                }
+            ],
             'links': [
                 {
                     'note': 'facebook page',
@@ -116,6 +128,12 @@ class TestCreatePerson(TestCase):
                             }
                         },
                         'homepage_url': 'http://janedoe.example.org',
+                        'identifiers': [
+                            {
+                                'scheme': 'yournextmp-candidate',
+                                'identifier': '1234567'
+                            }
+                        ],
                         'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
                         'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
                         'date_of_birth': None,
