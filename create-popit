@@ -11,3 +11,6 @@ echo "Creating everything else..."
 echo "Dumping PopIt parties to JSON..."
 ./manage.py candidates_dump_popit_parties_to_json \
     data/all-parties-from-popit.json
+
+echo "Now load in known PPCs"
+./manage.py candidates_import_ppcs
