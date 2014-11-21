@@ -40,7 +40,7 @@
 #   'party_memberships': {
 #     '2015': {
 #       'name': 'Labour Party',
-#       'id': 'party:52',
+#       'id': 'party:53',
 #   }
 #
 # The 'id' field for a party is optional, since if you're using this
