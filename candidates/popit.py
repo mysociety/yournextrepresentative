@@ -54,9 +54,16 @@ class PopItApiMixin(object):
         )
         return base_url
 
-    def get_search_url(self, collection, query):
+    def get_search_url(self, collection, query, **kwargs):
         base_search_url = self.get_base_url() + 'search/'
-        return base_search_url + collection + '?q=' + urlquote(query)
+        parameters = {
+            'q': query,
+        }
+        parameters.update(kwargs)
+        query_string = '&'.join(
+            k + '=' + urlquote(v) for k, v in parameters.items()
+        )
+        return base_search_url + collection + '?' + query_string
 
     def create_membership(self, person_id, **kwargs):
         '''Create a membership of a post or an organization'''
