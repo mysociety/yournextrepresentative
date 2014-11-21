@@ -33,3 +33,8 @@ POPIT_PASSWORD: popitinstancepassword
 
 # SECRET_KEY should be a random string of characters
 SECRET_KEY: '098nadkafy123asidftqaer0aoejfoasdfa'
+
+# For a public server, you should restrict this to the hostnames
+# that the site will actually be hosted at.
+ALLOWED_HOSTS:
+  - '*'

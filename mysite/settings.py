@@ -21,6 +21,8 @@ configuration_file = os.path.join(
 with open(configuration_file) as f:
     conf = yaml.load(f)
 
+ALLOWED_HOSTS = conf.get('ALLOWED_HOSTS')
+
 # Load the credentials for the PopIt instance
 
 POPIT_INSTANCE = conf['POPIT_INSTANCE']
@@ -40,8 +42,6 @@ SECRET_KEY = conf['SECRET_KEY']
 DEBUG = bool(int(conf.get('STAGING')))
 
 TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'mysite', 'templates'),
