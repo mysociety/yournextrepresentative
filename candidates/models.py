@@ -9,9 +9,9 @@ from slumber.exceptions import HttpServerError
 
 from .static_data import MapItData
 
-simple_fields = ('name', 'email', 'date_of_birth', 'gender')
+form_simple_fields = ('name', 'email', 'date_of_birth', 'gender')
 
-complex_fields_locations = {
+form_complex_fields_locations = {
     'wikipedia_url': {
         'sub_array': 'links',
         'info_type_key': 'note',
@@ -48,7 +48,7 @@ election_date_2005 = date(2005, 5, 5)
 election_date_2010 = date(2010, 5, 6)
 election_date_2015 = date(2015, 5, 7)
 
-all_fields = list(simple_fields) + complex_fields_locations.keys()
+all_form_fields = list(form_simple_fields) + form_complex_fields_locations.keys()
 
 candidate_list_name_re = re.compile(r'^Candidates for (.*) in (\d+)$')
 
@@ -359,14 +359,14 @@ def get_person_data_from_dict(data, generate_id, existing_data=None):
         result = existing_data
     # First deal with fields that simply map to top level fields in
     # Popolo.
-    for field_name in simple_fields:
+    for field_name in form_simple_fields:
         if data.get(field_name):
             result[field_name] = unicode(data.get(field_name, ''))
     if generate_id:
         result['id'] = slugify(result['name'])
     # These are fields which are represented by values in a sub-object
     # in Popolo's JSON serialization:
-    for field_name, location in complex_fields_locations.items():
+    for field_name, location in form_complex_fields_locations.items():
         new_value = data.get(field_name, '')
         if new_value:
             update_values_in_sub_array(result, location, new_value)

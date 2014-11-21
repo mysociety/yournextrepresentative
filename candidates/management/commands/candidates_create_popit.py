@@ -17,7 +17,7 @@ from django.core.management.base import NoArgsCommand
 
 from candidates.models import (
     MaxPopItIds, election_date_2005, election_date_2010,
-    simple_fields, complex_fields_locations
+    form_simple_fields, form_complex_fields_locations
 )
 from candidates.popit import popit_unwrap_pagination
 from candidates.update import PersonUpdateMixin
@@ -199,7 +199,7 @@ class Command(CandidacyMixin, PersonUpdateMixin, NoArgsCommand):
             slug = candidate['code'].replace('_', '-')
             # Make sure all the default fields that create_person
             # expects are present.
-            fields = list(simple_fields) + complex_fields_locations.keys()
+            fields = list(form_simple_fields) + form_complex_fields_locations.keys()
             properties = {k: None for k in fields}
             # Then update the proprerties from the Candidate data
             properties.update({

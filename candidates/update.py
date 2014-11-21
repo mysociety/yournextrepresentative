@@ -105,7 +105,7 @@ from datetime import timedelta
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
 from .models import get_person_data_from_dict
-from .models import simple_fields, complex_fields_locations
+from .models import form_simple_fields, form_complex_fields_locations
 
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
@@ -148,9 +148,9 @@ class PersonParseMixin(PopItApiMixin):
 
         result = {'id': person_id}
         person = PopItPerson.create_from_popit(self.api, person_id)
-        for field in simple_fields:
+        for field in form_simple_fields:
             result[field] = person.popit_data.get(field, '')
-        for field, location in complex_fields_locations.items():
+        for field, location in form_complex_fields_locations.items():
             result[field] = get_value_from_location(location, person.popit_data)
         result['versions'] = person.popit_data.get('versions', [])
 

@@ -21,7 +21,7 @@ from .forms import (
 from .models import (
     PopItPerson,
     get_constituency_name_from_mapit_id,
-    all_fields,
+    all_form_fields,
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015
 )
@@ -309,7 +309,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
     def get_initial(self):
         initial_data = super(UpdatePersonView, self).get_initial()
         our_person = self.get_person(self.kwargs['person_id'])
-        for field_name in all_fields:
+        for field_name in all_form_fields:
             initial_data[field_name] = our_person.get(field_name)
         initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
         if initial_data['standing']:
