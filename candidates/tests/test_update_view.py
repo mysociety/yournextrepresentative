@@ -86,6 +86,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                         'name': 'Labour Party'
                     }
                 },
+                'party_ppc_page_url': '',
                 'twitter_username': '',
                 'wikipedia_url': 'http://en.wikipedia.org/wiki/Tessa_Jowell',
             },

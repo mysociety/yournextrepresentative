@@ -83,6 +83,11 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+    party_ppc_page_url = forms.CharField(
+        label="The party's PPC page for this person",
+        max_length=256,
+        required=False,
+    )
 
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''

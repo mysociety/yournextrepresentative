@@ -42,6 +42,12 @@ form_complex_fields_locations = {
         'info_type_key': 'note',
         'info_value_key': 'url',
         'info_type': 'facebook page',
+    },
+    'party_ppc_page_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'party PPC page',
     }
 }
 

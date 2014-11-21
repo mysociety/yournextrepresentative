@@ -63,6 +63,7 @@ class TestCreatePerson(TestCase):
             "wikipedia_url": "",
             "facebook_personal_url": "http://notreallyfacebook/tessajowell",
             "facebook_page_url": "http://notreallyfacebook/tessajowellcampaign",
+            "party_ppc_page_url": "http://labour.example.org/tessajowell",
         }
 
         view.create_person(
@@ -92,12 +93,16 @@ class TestCreatePerson(TestCase):
                     'url': 'http://notreallyfacebook/tessajowellcampaign',
                 },
                 {
-                    'note': 'homepage',
-                    'url': 'http://janedoe.example.org'
+                    'note': 'party PPC page',
+                    'url': 'http://labour.example.org/tessajowell',
                 },
                 {
                     'note': 'facebook personal',
                     'url': 'http://notreallyfacebook/tessajowell',
+                },
+                {
+                    'note': 'homepage',
+                    'url': 'http://janedoe.example.org'
                 },
             ],
             'name': u'Jane Doe',
@@ -136,6 +141,7 @@ class TestCreatePerson(TestCase):
                         ],
                         'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
                         'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
+                        'party_ppc_page_url': 'http://labour.example.org/tessajowell',
                         'date_of_birth': None,
                         'gender': 'female',
                         'name': 'Jane Doe',

@@ -77,6 +77,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
                         'id': 'party:66'
                     }
                 },
+                'party_ppc_page_url': '',
                 'standing_in': {
                     '2015': {
                         'name': u'Dulwich and West Norwood',
