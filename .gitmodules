@@ -6,4 +6,4 @@
 	url = https://github.com/ivaynberg/select2.git
 [submodule "UK-Political-Parties"]
 	path = data/UK-Political-Parties
-	url = https://github.com/DemocracyClub/UK-Political-Parties.git
+	url = https://github.com/mhl/UK-Political-Parties.git
