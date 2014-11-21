@@ -55,6 +55,7 @@
 #   'standing_in': {
 #     '2010': {
 #       'name': 'South Cambridgeshire',
+#       'post_id': '65922',
 #       'mapit_url': 'http://mapit.mysociety.org/area/65922',
 #     }
 #   }
@@ -65,6 +66,7 @@
 #   'standing_in': {
 #     '2010': {
 #        'name': 'Aberdeen South',
+#        'post_id': '14399',
 #        'mapit_url': 'http://mapit.mysociety.org/area/14399',
 #     }
 #     '2015': None,
@@ -76,6 +78,7 @@
 #   'standing_in': {
 #     '2010': {
 #        'name': 'Aberdeen South',
+#        'post_id': '14399',
 #        'mapit_url': 'http://mapit.mysociety.org/area/14399',
 #     },
 #   }
@@ -87,10 +90,12 @@
 #   'standing_in': {
 #     '2010': {
 #        'name': 'Edinburgh East',
+#        'post_id': '14419',
 #        'mapit_url': 'http://mapit.mysociety.org/area/14419',
 #     },
 #     '2015': {
 #        'name': 'Edinburgh North and Leith',
+#        'post_id': '14420',
 #        'mapit_url': 'http://mapit.mysociety.org/area/14420',
 #     },
 #   }
