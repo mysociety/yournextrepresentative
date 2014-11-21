@@ -78,6 +78,7 @@ class TestUpdatePerson(TestCase):
         self.assertEqual(2, len(mocked_put.call_args_list))
 
         first_put_call_args = {
+                'birth_date': None,
                 'email': u'foo@example.org',
                 'name': u'Tessa Jowell',
                 'links': [
@@ -100,6 +101,7 @@ class TestUpdatePerson(TestCase):
             }
 
         second_put_call_args = {
+                'birth_date': None,
                 'email': u'foo@example.org',
                 'name': u'Tessa Jowell',
                 'links': [

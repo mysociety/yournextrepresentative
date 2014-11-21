@@ -78,6 +78,7 @@ class TestCreatePerson(TestCase):
         )
 
         expected_args = {
+            'birth_date': None,
             'email': u'jane@example.org',
             'gender': 'female',
             'id': '1',
