@@ -15,7 +15,7 @@
 #   'id'
 #   'full_name'
 #   'email'
-#   'date_of_birth'
+#   'birth_date'
 #   'wikipedia_url'
 #   'homepage_url'
 #   'twitter_username'

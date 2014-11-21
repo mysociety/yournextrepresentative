@@ -151,7 +151,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
         return {
             'name': ppc_data.get('name', ''),
             'email': ppc_data.get('email', ''),
-            'date_of_birth': None,
+            'birth_date': None,
             'twitter_username': ppc_data.get('twitter_username', ''),
             'facebook_personal_url': ppc_data.get('facebook_url', ''),
             'homepage_url': ppc_data.get('homepage_url', ''),

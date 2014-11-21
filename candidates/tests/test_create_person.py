@@ -36,7 +36,7 @@ class TestCreatePerson(TestCase):
         view.create_party_memberships = MagicMock()
 
         new_person_data = {
-            "date_of_birth": None,
+            "birth_date": None,
             "email": "jane@example.org",
             "gender": "female",
             "homepage_url": "http://janedoe.example.org",
@@ -142,7 +142,7 @@ class TestCreatePerson(TestCase):
                         'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
                         'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
                         'party_ppc_page_url': 'http://labour.example.org/tessajowell',
-                        'date_of_birth': None,
+                        'birth_date': None,
                         'gender': 'female',
                         'name': 'Jane Doe',
                         'wikipedia_url': '',

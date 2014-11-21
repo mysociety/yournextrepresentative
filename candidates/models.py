@@ -9,7 +9,7 @@ from slumber.exceptions import HttpServerError
 
 from .static_data import MapItData
 
-form_simple_fields = ('name', 'email', 'date_of_birth', 'gender')
+form_simple_fields = ('name', 'email', 'birth_date', 'gender')
 preserve_fields = ('identifiers',)
 
 form_complex_fields_locations = {

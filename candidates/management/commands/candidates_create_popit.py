@@ -218,7 +218,7 @@ class Command(CandidacyMixin, PersonUpdateMixin, NoArgsCommand):
                 m = re.search(r'(\d+)/(\d+)/(\d+)', dob)
                 if m:
                     d = date(*reversed([int(x, 10) for x in m.groups()]))
-                    properties['date_of_birth'] = str(d)
+                    properties['birth_date'] = str(d)
             for k in ('gender', 'email', 'phone'):
                 properties[k] = candidate[k]
             candidate_id_to_person_data[candidate_id] = properties

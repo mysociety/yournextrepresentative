@@ -32,7 +32,7 @@ class TestUpdatePerson(TestCase):
         view.create_party_memberships = MagicMock()
 
         new_person_data = {
-            "date_of_birth": None,
+            "birth_date": None,
             "email": "foo@example.org",
             "homepage_url": "http://foo.example.org",
             "id": "tessa-jowell",

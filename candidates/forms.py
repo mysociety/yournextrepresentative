@@ -54,7 +54,7 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
-    date_of_birth = forms.DateField(
+    birth_date = forms.DateField(
         label="Date of birth",
         required=False,
     )

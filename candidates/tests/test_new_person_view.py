@@ -64,7 +64,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
         expected_call_args = (
             {
-                'date_of_birth': None,
+                'birth_date': None,
                 'email': u'jane@example.com',
                 'facebook_page_url': '',
                 'facebook_personal_url': '',

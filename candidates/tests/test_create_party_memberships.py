@@ -34,7 +34,7 @@ class TestCreatePerson(TestCase):
         view = MinimalUpdateClass()
 
         person_data = {
-            "date_of_birth": None,
+            "birth_date": None,
             "email": "jane@example.org",
             "homepage_url": "http://janedoe.example.org",
             "id": "jane-doe",

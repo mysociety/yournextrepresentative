@@ -255,9 +255,9 @@ def copy_person_form_data(cleaned_data):
     result = cleaned_data.copy()
     # The date is returned as a datetime.date, so if that's set, turn
     # it into a string:
-    date_of_birth_date = result['date_of_birth']
-    if date_of_birth_date:
-        result['date_of_birth'] = str(date_of_birth_date)
+    birth_date_date = result['birth_date']
+    if birth_date_date:
+        result['birth_date'] = str(birth_date_date)
     area_id = result.get('constituency')
     if area_id:
         country_name =  MapItData.constituencies_2010.get(area_id)['country_name']

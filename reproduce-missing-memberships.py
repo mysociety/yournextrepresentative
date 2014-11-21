@@ -90,11 +90,11 @@ try:
     print "The number of memberships is:", len(person_data['result'].get('memberships', []))
 
     print "Now updating the person with PUT:"
-    date_of_birth = "1970-04-" + str(randint(1, 30))
+    birth_date = "1970-04-" + str(randint(1, 30))
     put_result = api.persons(person_id).put({
         'id': person_id,
         'name': 'Joe Example Bloggs',
-        'date_of_birth': date_of_birth
+        'birth_date': birth_date
     })
     print "The number of memberships is:", len(put_result['result'].get('memberships', []))
 
