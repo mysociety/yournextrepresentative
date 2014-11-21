@@ -139,23 +139,6 @@ def reduced_organization_data(organization):
         'name': organization['name'],
     }
 
-def decompose_candidate_list_name(candidate_list_name):
-    m = candidate_list_name_re.search(candidate_list_name)
-    if not m:
-        message = "Malformed candidate list name found: {0}"
-        raise Exception(message.format(candidate_list_name))
-    constituency_name, year = m.groups()
-    mapit_data = MapItData.constituencies_2010_name_map.get(constituency_name)
-    if mapit_data is None:
-        message = "Couldn't find the constituency: '{0}'"
-        raise Exception(message.format(constituency_name))
-    url_format = 'http://mapit.mysociety.org/area/{0}'
-    return {
-        'year': year,
-        'name': constituency_name,
-        'mapit_url': url_format.format(mapit_data['id'])
-    }
-
 class PersonParseMixin(PopItApiMixin):
 
     """A mixin for turning PopIt data into our representation"""
