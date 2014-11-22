@@ -16,7 +16,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
 
         # Just a smoke test for the moment:
         response = self.app.get('/constituency/65808/dulwich-and-west-norwood')
-        response.mustcontain('Tessa Jowell (Labour Party)')
+        response.mustcontain('<a href="/person/2959">Tessa Jowell</a> (Labour Party)')
         # There should be no forms on the page if you're not logged in:
 
         self.assertEqual(0, len(response.forms))
@@ -31,6 +31,6 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             '/constituency/65808/dulwich-and-west-norwood',
             user=self.user
         )
-        response.mustcontain('Tessa Jowell (Labour Party)')
+        response.mustcontain('<a href="/person/2959">Tessa Jowell</a> (Labour Party)')
         form = response.forms['new-candidate-form']
         self.assertTrue(form)

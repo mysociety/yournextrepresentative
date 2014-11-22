@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block body_class %}person{% endblock %}
+
+{% block content %}
+
+<h2>{{ person.name }}</h2>
+
+<h3>Candidate data:</h3>
+
+<table>
+  <tr>
+    <td>Name:</td><td>{{ person.name }}</a></td>
+  </tr>
+  <tr>
+    <td>Email:</td><td>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</td>
+  </tr>
+  <tr>
+    <td>Gender:</td><td>{% if person.gender %}{{ person.gender }}{% endif %}</td>
+  </tr>
+  <tr>
+    <td>Twitter:</td><td>{% if person.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.twitter_username }}">@{{ person.twitter_username }}</a>{% endif %}</td>
+  </tr>
+  <tr>
+    <td>Homepage:</td><td>{% if person.homepage_url %}<a rel="nofollow" href="{{ person.homepage_url }}">{{ person.homepage_url }}{% endif %}</a></td>
+  </tr>
+  <tr>
+    <td>Wikipedia page:</td><td>{% if person.wikipedia_url %}<a rel="nofollow" href="{{ person.wikipedia_url }}">{{ person.wikipedia_url }}{% endif %}</a></td>
+  </tr>
+  <tr>
+    <td>Facebook profile page:</td><td>{% if person.facebook_personal_url %}<a rel="nofollow" href="{{ person.facebook_personal_url }}">{{ person.facebook_personal_url }}{% endif %}</a></td>
+  </tr>
+  <tr>
+    <td>Facebook campaign page:</td><td>{% if person.facebook_page_url %}<a rel="nofollow" href="{{ person.facebook_page_url }}">{{ person.facebook_page_url }}{% endif %}</a></td>
+  </tr>
+  <tr>
+    <td>Official party PPC page:</td><td>{% if person.party_ppc_page_url %}<a rel="nofollow" href="{{ person.party_ppc_page_url }}">{{ person.party_ppc_page_url }}{% endif %}</a></td>
+  </tr>
+  <tr>
+    <td>Contested constituency (in 2015):</td>
+    <td>{% if person.standing_in.2015 %}
+      <a href="{% url 'constituency' person.standing_in.2015.post_id person.standing_in.2015.name|slugify  %}">{{ person.standing_in.2015.name }}</a>
+    {% endif %}</td>
+  </tr>
+  <tr>
+    <td>Party (in 2015):</td>
+    <td>{% if person.party_memberships.2015 %}
+      {{ person.party_memberships.2015.name }}
+    {% endif %}</td>
+  </tr>
+  <tr>
+    <td>Contested constituency (in 2010):</td>
+    <td>{% if person.standing_in.2010 %}
+      <a href="{% url 'constituency' person.standing_in.2010.post_id person.standing_in.2010.name|slugify  %}">{{ person.standing_in.2010.name }}</a>
+    {% endif %}</td>
+  </tr>
+  <tr>
+    <td>Party (in 2010):</td>
+    <td>{% if person.party_memberships.2010 %}
+      {{ person.party_memberships.2010.name }}
+    {% endif %}</td>
+  </tr>
+</table>
+
+{% if user.is_authenticated %}
+  <p><a href="{% url 'person-update' person_id=person.id %}" class="button tiny secondary">Edit</a></p>
+{% else %}
+  <div class="encourage-login">
+    If you want to help by editing this information, please
+    <a href="{% url 'account_login' %}">log in</a>.
+  </div>
+{% endif %}
+
+{% include 'candidates/person-versions.html' %}
+
+{% endblock %}

@@ -270,6 +270,15 @@ def copy_person_form_data(cleaned_data):
     return result
 
 
+class PersonView(PersonParseMixin, TemplateView):
+    template_name = 'candidates/person-view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonView, self).get_context_data(**kwargs)
+        person_data = self.get_person(self.kwargs['person_id'])
+        context['person'] = person_data
+        return context
+
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
