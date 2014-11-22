@@ -306,6 +306,3 @@ class Command(CandidacyMixin, PersonUpdateMixin, NoArgsCommand):
             party_names_and_counts.sort(key=lambda t: t[1], reverse=True)
             for name, count in party_names_and_counts:
                 print count, name
-
-        print "The maximum person ID is %s" % max_id
-        MaxPopItIds.update_max_persons_id(max_id)
