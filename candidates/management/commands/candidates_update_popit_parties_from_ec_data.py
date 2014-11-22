@@ -1,5 +1,5 @@
 from datetime import datetime
-from os.path import join
+from os.path import join, splitext
 import re
 import json
 from slugify import slugify
@@ -101,6 +101,12 @@ class Command(BaseCommand):
         )
         for emblem in emblems:
             fname = join(self.scraper_directory, emblem['image'])
+            mime_type = {
+                '.gif': 'image/gif',
+                '.bmp': 'image/x-ms-bmp',
+                '.jpg': 'image/jpeg',
+                '.png': 'image/png',
+            }[splitext(fname)[1]]
             with open(fname, 'rb') as f:
                 requests.post(
                     image_upload_url,
@@ -114,7 +120,7 @@ class Command(BaseCommand):
                         'notes': emblem['description'],
                         'source': 'The Electoral Commission',
                         'id': emblem['id'],
-                        'mime_type': 'image/gif',
+                        'mime_type': mime_type,
                     }
                 )
 
