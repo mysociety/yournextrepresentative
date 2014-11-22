@@ -303,7 +303,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
 
 
 class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
-    template_name = 'candidates/person.html'
+    template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
     def get_initial(self):
@@ -409,7 +409,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
 
 
 class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormView):
-    template_name = 'candidates/person.html'
+    template_name = 'candidates/person-edit.html'
     form_class = NewPersonForm
 
     def form_valid(self, form):
