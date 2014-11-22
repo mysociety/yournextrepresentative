@@ -448,3 +448,6 @@ class HelpApiView(PopItApiMixin, TemplateView):
         context = super(HelpApiView, self).get_context_data(**kwargs)
         context['popit_url'] = self.get_base_url()
         return context
+
+class HelpAboutView(TemplateView):
+    template_name = 'candidates/about.html'

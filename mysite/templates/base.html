@@ -27,6 +27,7 @@
       <div class="header__nav">
         <a href="/" class="header__nav__logo">YourNextMP</a>
         <a href="{% url 'help-api' %}" class="header__nav__logo">API</a>
+        <a href="{% url 'help-about' %}" class="header__nav__logo">About</a>
         {% if user.is_authenticated %}
           <span class="header__nav__logout">
             Signed in as <strong>{{ user.username }}</strong>

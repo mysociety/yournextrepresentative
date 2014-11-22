@@ -5,7 +5,7 @@ from django.contrib import admin
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
-    HelpApiView)
+    HelpApiView, HelpAboutView)
 
 urlpatterns = patterns('',
     url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
@@ -30,5 +30,6 @@ urlpatterns = patterns('',
         RevertPersonView.as_view(),
         name='person-revert'),
     url(r'^help/api', HelpApiView.as_view(), name='help-api'),
+    url(r'^help/about', HelpAboutView.as_view(), name='help-about'),
     url(r'^admin/', include(admin.site.urls)),
 )
