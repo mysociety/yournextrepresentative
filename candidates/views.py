@@ -339,10 +339,6 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             self.kwargs['person_id']
         ).get()['result']
 
-        # Render the JSON in 'versions' nicely:
-        for v in context['person'].get('versions', []):
-            v['data'] = json.dumps(v['data'], indent=4, sort_keys=True)
-
         return context
 
     def form_valid(self, form):

@@ -1,3 +1,5 @@
+{% load prettyjson %}
+
 <div class="versions">
 <h3>All versions</h3>
   {% for version in person.versions %}
@@ -26,7 +28,7 @@
         <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because ..."/>
         <input type="submit" class="button tiny" value="Revert to this version" />
       </form>
-      <pre class="version-json">{{ version.data }}
+      <pre class="version-json">{{ version.data|prettyjson }}
       </pre>
     </div>
   {% endfor %}
