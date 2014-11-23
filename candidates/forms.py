@@ -1,6 +1,9 @@
+import re
+
 from .static_data import MapItData, PartyData
 
 from django import forms
+from django.core.exceptions import ValidationError
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
@@ -88,6 +91,17 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+
+    def clean_twitter_username(self):
+        # Remove any URL bits around it:
+        username = self.cleaned_data['twitter_username']
+        m = re.search('^.*twitter.com/(\w+)', username)
+        if m:
+            username = m.group(1)
+        if not re.search(r'^\w*$', username):
+            message = "The Twitter username must only consist of alphanumeric characters or underscore"
+            raise ValidationError(message)
+        return username
 
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
