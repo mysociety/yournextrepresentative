@@ -28,6 +28,8 @@ def deep_cast_to_unicode(obj):
         }
     if isinstance(obj, list):
         return [deep_cast_to_unicode(k) for k in obj]
+    if obj is None:
+        return None
     return repr(obj)
 
 def equal_arg(arg1, arg2):
