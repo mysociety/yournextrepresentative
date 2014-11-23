@@ -277,6 +277,7 @@ class PersonView(PersonParseMixin, TemplateView):
         context = super(PersonView, self).get_context_data(**kwargs)
         person_data = self.get_person(self.kwargs['person_id'])
         context['person'] = person_data
+        context['popit_api_url'] = self.get_base_url()
         return context
 
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):

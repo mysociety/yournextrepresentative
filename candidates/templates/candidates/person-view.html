@@ -60,6 +60,10 @@
       {{ person.party_memberships.2010.name }}
     {% endif %}</td>
   </tr>
+  <tr>
+    <td>PopIt JSON person data:</td>
+    <td><a href="{{ popit_api_url }}persons/{{ person.id }}">{{ popit_api_url }}persons/{{ person.id }}</a></td>
+  </tr>
 </table>
 
 {% if user.is_authenticated %}
