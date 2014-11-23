@@ -8728,5 +8728,61 @@
             "twitter_username": ""
         },
         "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "gender": "male",
+            "html_url": "http://yournextmp.popit.mysociety.org/persons/3409",
+            "id": "3409",
+            "identifiers": [
+                {
+                    "id": "546f833ad484cf5c5850b816",
+                    "identifier": "25146",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Roger Williams",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "ynmp-party:2",
+                    "name": "Independent"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65655",
+                    "name": "Feltham and Heston",
+                    "post_id": "65655"
+                }
+            },
+            "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/3409"
+        },
+        "ppc": {
+            "address": "4 Watergate, Brecon, LD3 9AN",
+            "constituency": "Brecon and Radnorshire",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/66088",
+                "name": "Brecon and Radnorshire",
+                "post_id": "66088"
+            },
+            "current_mp": true,
+            "email": "Roger.williams.mp@parliament.uk",
+            "full_url": "http://www.libdems.org.uk/roger_williams",
+            "homepage": "www.rogerwilliams.org.uk",
+            "name": "Roger Williams",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "phone": "01874625739",
+            "region": "Wales",
+            "twitter_username": "RogerWilliamsMP"
+        },
+        "same_person": false
     }
 ]
