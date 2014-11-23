@@ -49,7 +49,7 @@ class BasePersonForm(forms.Form):
         label="Full name",
         max_length=256,
     )
-    email = forms.CharField(
+    email = forms.EmailField(
         label="Email",
         max_length=256,
         required=False,
@@ -58,12 +58,12 @@ class BasePersonForm(forms.Form):
         label="Date of birth",
         required=False,
     )
-    wikipedia_url = forms.CharField(
+    wikipedia_url = forms.URLField(
         label="Wikipedia URL",
         max_length=256,
         required=False,
     )
-    homepage_url = forms.CharField(
+    homepage_url = forms.URLField(
         label="Homepage URL",
         max_length=256,
         required=False,
@@ -73,17 +73,17 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
-    facebook_personal_url = forms.CharField(
+    facebook_personal_url = forms.URLField(
         label="Facebook profile URL",
         max_length=256,
         required=False,
     )
-    facebook_page_url = forms.CharField(
+    facebook_page_url = forms.URLField(
         label="Facebook page (e.g. for their campaign)",
         max_length=256,
         required=False,
     )
-    party_ppc_page_url = forms.CharField(
+    party_ppc_page_url = forms.URLField(
         label="The party's PPC page for this person",
         max_length=256,
         required=False,
