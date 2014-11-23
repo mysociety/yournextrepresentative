@@ -374,10 +374,12 @@ def get_person_data_from_dict(data):
     for field_name in form_simple_fields:
         if data.get(field_name):
             result[field_name] = unicode(data.get(field_name, ''))
-        # Setting birth_date to '' fails validation; it needs to be a
-        # null. FIXME: it would be best if PopIt dealt with empty
-        # string as well as null as a null value.
-        if field_name == 'birth_date' and not result.get(field_name):
+        else:
+            # Otherwise, set the field to null. (Empty string would
+            # also do for any field except birth_date, which needs to
+            # be null.) However, it's important that we *do* set all
+            # fields to null or empty string, or they'll be left with
+            # their old value.
             result[field_name] = None
     for field_name in preserve_fields:
         if field_name in data:

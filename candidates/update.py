@@ -239,6 +239,8 @@ class PersonUpdateMixin(PopItApiMixin):
         basic_person_data_for_purging = basic_person_data.copy()
         basic_person_data_for_purging['standing_in'] = None
         basic_person_data_for_purging['party_memberships'] = None
+        basic_person_data_for_purging['links'] = []
+        basic_person_data_for_purging['contact_details'] = []
         self.api.persons(person_id).put(basic_person_data_for_purging)
         # end of FIXME <-- remove when #95 is fixed
         self.api.persons(person_id).put(basic_person_data)

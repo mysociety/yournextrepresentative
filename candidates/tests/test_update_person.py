@@ -57,7 +57,7 @@ class TestUpdatePerson(TestCase):
                     "name": "Dulwich and West Norwood"
                 }
             },
-            "twitter_username": "",
+            "twitter_username": "jowellt",
             "wikipedia_url": "",
         }
 
@@ -79,14 +79,11 @@ class TestUpdatePerson(TestCase):
 
         first_put_call_args = {
                 'birth_date': None,
+                'contact_details': [],
                 'email': u'foo@example.org',
+                'gender': None,
                 'name': u'Tessa Jowell',
-                'links': [
-                    {
-                        'note': 'homepage',
-                        'url': 'http://foo.example.org'
-                    }
-                ],
+                'links': [],
                 'party_memberships': None,
                 'standing_in': None,
                 'versions': [
@@ -102,7 +99,14 @@ class TestUpdatePerson(TestCase):
 
         second_put_call_args = {
                 'birth_date': None,
+                'contact_details': [
+                    {
+                        'type': 'twitter',
+                        'value': 'jowellt'
+                    }
+                ],
                 'email': u'foo@example.org',
+                'gender': None,
                 'name': u'Tessa Jowell',
                 'links': [
                     {

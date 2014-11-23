@@ -27,6 +27,7 @@ class TestGetDataForPopIt(TestCase):
                 }
             ],
             'email': u'john@example.org',
+            'gender': None,
             'links': [
                 {
                     'note': 'wikipedia', 'url': 'http://en.wikipedia.org/wiki/John_Doe'
@@ -59,6 +60,8 @@ class TestGetDataForPopIt(TestCase):
                     'value': 'foobar'
                 }
             ],
+            'email': None,
+            'gender': None,
             'links': [
                 {
                     'note': 'wikipedia', 'url': 'http://en.wikipedia.org/wiki/John_Doe'
