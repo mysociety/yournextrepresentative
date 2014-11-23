@@ -38,3 +38,15 @@ SECRET_KEY: '098nadkafy123asidftqaer0aoejfoasdfa'
 # that the site will actually be hosted at.
 ALLOWED_HOSTS:
   - '*'
+
+# The email addresses that error emails will be sent to, e.g.:
+# ADMINS:
+#   - ['Example User A', 'alice@example.org']
+#   - ['Example User B', 'bob@example.org']
+ADMINS: []
+
+# The From: address for error emails
+SERVER_EMAIL: root@localhost
+
+# The From: address for all emails except error emails
+DEFAULT_FROM_EMAIL: webmaster@localhost

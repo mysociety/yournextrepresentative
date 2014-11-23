@@ -32,6 +32,15 @@ POPIT_USER = conf.get('POPIT_USER', '')
 POPIT_PASSWORD = conf.get('POPIT_PASSWORD', '')
 POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 
+# Email addresses that error emails are sent to when DEBUG = False
+ADMINS = conf['ADMINS']
+
+# The From: address for all emails except error emails
+DEFAULT_FROM_EMAIL = conf['DEFAULT_FROM_EMAIL']
+
+# The From: address for error emails
+SERVER_EMAIL = conf['SERVER_EMAIL']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
