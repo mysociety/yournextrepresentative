@@ -359,7 +359,7 @@ def update_values_in_sub_array(data, location, new_value):
     })
     data[location['sub_array']] = new_info
 
-def get_person_data_from_dict(data, generate_id, existing_data=None):
+def get_person_data_from_dict(data, generate_id):
     '''Convert our representation to person data can that be sent to PopIt
 
     Our representation is a flatter one, which corresponds in part to
@@ -368,10 +368,7 @@ def get_person_data_from_dict(data, generate_id, existing_data=None):
     for creating memberships (i.e. not "person_data" in the sense of
     this method. There are also some fields that we should just
     preserve in this transformation, like 'identifiers'.'''
-    if existing_data is None:
-        result = {}
-    else:
-        result = existing_data
+    result = {}
     # First deal with fields that simply map to top level fields in
     # Popolo.
     for field_name in form_simple_fields:
