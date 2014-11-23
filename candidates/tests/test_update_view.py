@@ -108,9 +108,9 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
             "update_person was called with unexpected values"
         )
 
-        # It should redirect back to the consituency page:
+        # It should redirect back to the same person's page:
         split_location = urlsplit(submission_response.location)
         self.assertEqual(
-            '/constituency/65808/dulwich-and-west-norwood',
+            '/person/tessa-jowell',
             split_location.path
         )

@@ -58,6 +58,8 @@ class TestNewPersonView(TestUserMixin, WebTest):
         # update_person, and redirect back to the constituency page:
         self.assertEqual(0, mock_create_person.call_count)
 
+        mock_create_person.return_value = '12345'
+
         # Try again with the source field filled in:
         form['source'] = 'A test new person, source: http://example.org'
         submission_response = form.submit()
@@ -107,6 +109,6 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
         split_location = urlsplit(submission_response.location)
         self.assertEqual(
-            '/constituency/65808/dulwich-and-west-norwood',
+            '/person/12345',
             split_location.path
         )

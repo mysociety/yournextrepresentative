@@ -404,13 +404,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
 
         self.update_person(our_person, change_metadata, previous_versions)
 
-        if standing:
-            return get_redirect_from_mapit_id(constituency_2015_mapit_id)
-        else:
-            if constituency_2010_mapit_id:
-                return get_redirect_from_mapit_id(constituency_2010_mapit_id)
-            else:
-                return HttpResponseRedirect(reverse('finder'))
+        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': our_person['id']}))
 
 
 class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormView):
@@ -443,8 +437,8 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         print "Going to create a new person from this data:"
         print json.dumps(data_for_creation, indent=4)
 
-        self.create_person(data_for_creation, change_metadata)
-        return get_redirect_from_mapit_id(mapit_area_id)
+        person_id = self.create_person(data_for_creation, change_metadata)
+        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
 
 class HelpApiView(PopItApiMixin, TemplateView):
     template_name = 'candidates/api.html'
