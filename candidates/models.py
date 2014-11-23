@@ -359,7 +359,7 @@ def update_values_in_sub_array(data, location, new_value):
     })
     data[location['sub_array']] = new_info
 
-def get_person_data_from_dict(data, generate_id):
+def get_person_data_from_dict(data):
     '''Convert our representation to person data can that be sent to PopIt
 
     Our representation is a flatter one, which corresponds in part to
@@ -382,8 +382,6 @@ def get_person_data_from_dict(data, generate_id):
     for field_name in preserve_fields:
         if field_name in data:
             result[field_name] = data[field_name]
-    if generate_id:
-        result['id'] = slugify(result['name'])
     # These are fields which are represented by values in a sub-object
     # in Popolo's JSON serialization:
     for field_name, location in form_complex_fields_locations.items():

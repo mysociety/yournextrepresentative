@@ -210,7 +210,7 @@ class PersonUpdateMixin(PopItApiMixin):
     def create_person(self, data, change_metadata):
         fix_birth_date(data)
         # Create the person:
-        basic_person_data = get_person_data_from_dict(data, generate_id=True)
+        basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
         basic_person_data['party_memberships'] = data['party_memberships']
         original_version = change_metadata.copy()
@@ -228,7 +228,7 @@ class PersonUpdateMixin(PopItApiMixin):
     def update_person(self, data, change_metadata, previous_versions):
         fix_birth_date(data)
         person_id = data['id']
-        basic_person_data = get_person_data_from_dict(data, generate_id=False)
+        basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
         basic_person_data['party_memberships'] = data['party_memberships']
         new_version = change_metadata.copy()
