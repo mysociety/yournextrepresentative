@@ -107,11 +107,13 @@ AUTHENTICATION_BACKENDS = (
 SOCIALACCOUNT_PROVIDERS = {
     'google': {'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
                'AUTH_PARAMS': {'access_type': 'online'}},
+    'facebook': {'SCOPE': ['email',]},
 }
 
 LOGIN_REDIRECT_URL = '/'
 
-SOCIALACCOUNT_AUTO_SIGNUP = False
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_USERNAME_REQUIRED = False
 
 ROOT_URLCONF = 'mysite.urls'
 
