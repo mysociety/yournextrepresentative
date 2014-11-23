@@ -408,7 +408,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
 
 
 class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormView):
-    template_name = 'candidates/person-edit.html'
+    template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
 
     def form_valid(self, form):

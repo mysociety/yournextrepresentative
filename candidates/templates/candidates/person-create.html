@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body_class %}person{% endblock %}
+
+{% block hero %}
+  <h1>Add a new candidate</h1>
+{% endblock %}
+
+{% block content %}
+  <form id="person-details" action="{% url 'person-create' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" class="button" value="Save changes">
+  </form>
+
+{% include 'candidates/person-versions.html' %}
+
+{% endblock %}
