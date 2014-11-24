@@ -134,7 +134,7 @@ body.finder .content__inner {
     margin-bottom: 0.5em;
   }
 
-  li > p > .button:first-child {
+  li > p > .button {
     margin-right: 0.8em;
   }
 }
@@ -188,6 +188,7 @@ body.finder .content__inner {
   }
 
   li > p > .button:first-child,
+  li > p > .button:nth-child(2),
   .source-confirmation .button {
     background-color: $color-orange;
 
@@ -218,13 +219,7 @@ body.finder .content__inner {
   }
 }
 
-.source-confirmation {
-  position: relative;
-  border-radius: 3px;
-  background: $color-yellow;
-  padding: 20px;
-  margin-bottom: rem-calc(16);
-
+.source-confirmation:first-of-type {
   &:before {
     display: block;
     content: "";
@@ -233,6 +228,25 @@ body.finder .content__inner {
     left: 15px;
     @include css-triangle(20px, $color-yellow, bottom);
   }
+}
+
+.source-confirmation:not(:first-of-type) {
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 120px;
+    @include css-triangle(20px, $color-yellow, bottom);
+  }
+}
+
+.source-confirmation {
+  position: relative;
+  border-radius: 3px;
+  background: $color-yellow;
+  padding: 20px;
+  margin-bottom: rem-calc(16);
 
   label {
     margin-bottom: 10px;

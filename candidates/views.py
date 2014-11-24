@@ -236,7 +236,7 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
         print json.dumps(our_person, indent=4)
 
         our_person['standing_in']['2015'] = None
-        del our_person['party_memberships']['2015']
+        our_person['party_memberships'].pop('2015', None)
 
         print "... by updating with this data:"
         print json.dumps(our_person, indent=4)
