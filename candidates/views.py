@@ -273,11 +273,20 @@ def copy_person_form_data(cleaned_data):
 class PersonView(PersonParseMixin, TemplateView):
     template_name = 'candidates/person-view.html'
 
+    def get_last_constituency(self, person_data):
+        result = None
+        for year in ('2010', '2015'):
+            cons = person_data['standing_in'].get(year)
+            if cons:
+                result = cons
+        return result
+
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
         person_data = self.get_person(self.kwargs['person_id'])
         context['person'] = person_data
         context['popit_api_url'] = self.get_base_url()
+        context['last_cons'] = self.get_last_constituency(person_data)
         return context
 
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):

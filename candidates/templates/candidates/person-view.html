@@ -4,6 +4,15 @@
 
 {% block content %}
 
+{% if last_cons %}
+<div class="breadcrumb">
+  &#187;
+  <a href="{% url 'constituency' last_cons.post_id last_cons.name|slugify %}">
+   {{ last_cons.name }}
+  </a>
+</div>
+{% endif %}
+
 <h2>{{ person.name }}</h2>
 
 <h3>Candidate data:</h3>
