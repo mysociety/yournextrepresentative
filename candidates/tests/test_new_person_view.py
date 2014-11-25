@@ -10,6 +10,7 @@ from .fake_popit import (
     get_example_popit_json,
     FakeOrganizationCollection, FakePersonCollection
 )
+from ..models import LoggedAction
 
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
@@ -111,4 +112,20 @@ class TestNewPersonView(TestUserMixin, WebTest):
         self.assertEqual(
             '/person/12345',
             split_location.path
+        )
+
+        # Find the most recent action in the actions table, and check
+        # that it corresponds to this creation:
+        last_logged_action = LoggedAction.objects.all().order_by('-created')[0]
+        self.assertEqual(
+            last_logged_action.popit_person_id,
+            '12345',
+        )
+        self.assertEqual(
+            last_logged_action.popit_person_new_version,
+            example_version_id,
+        )
+        self.assertEqual(
+            last_logged_action.action_type,
+            'person-create'
         )

@@ -23,7 +23,8 @@ from .models import (
     get_constituency_name_from_mapit_id,
     all_form_fields,
     get_mapit_id_from_mapit_url,
-    membership_covers_date, election_date_2010, election_date_2015
+    membership_covers_date, election_date_2010, election_date_2015,
+    LoggedAction,
 )
 from .popit import PopItApiMixin
 from .static_data import MapItData, PartyData
@@ -202,6 +203,13 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
         )
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='candidacy-create',
+            popit_person_new_version=change_metadata['version_id'],
+            popit_person_id=form.cleaned_data['person_id'],
+            source=change_metadata['information_source'],
+        )
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
@@ -228,6 +236,13 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
     def form_valid(self, form):
         change_metadata = self.get_change_metadata(
             self.request, form.cleaned_data['source']
+        )
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='candidacy-delete',
+            popit_person_new_version=change_metadata['version_id'],
+            popit_person_id=form.cleaned_data['person_id'],
+            source=change_metadata['information_source'],
         )
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
@@ -389,6 +404,14 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         # Update our representation with data from the form:
         our_person.update(data_for_update)
 
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='person-update',
+            popit_person_new_version=change_metadata['version_id'],
+            popit_person_id=our_person['id'],
+            source=change_metadata['information_source'],
+        )
+
         if standing:
             constituency_name = get_constituency_name_from_mapit_id(
                 constituency_2015_mapit_id
@@ -427,6 +450,12 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         change_metadata = self.get_change_metadata(
             self.request, data_for_creation.pop('source')
         )
+        action = LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='person-create',
+            popit_person_new_version=change_metadata['version_id'],
+            source=change_metadata['information_source'],
+        )
         # Extract these fields, since we'll present them in the
         # standing_in and party_memberships fields.
         party = data_for_creation.pop('party')
@@ -448,6 +477,8 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         print json.dumps(data_for_creation, indent=4)
 
         person_id = self.create_person(data_for_creation, change_metadata)
+        action.popit_person_id = person_id
+        action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
 
 class HelpApiView(PopItApiMixin, TemplateView):

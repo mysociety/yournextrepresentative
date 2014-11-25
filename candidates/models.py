@@ -3,6 +3,7 @@ import json
 import re
 from slugify import slugify
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
@@ -416,3 +417,21 @@ class MaxPopItIds(models.Model):
         else:
             raise ValueError('given max_id is lower than the previous one ({'
                              '0} vs {1})'.format(max_id, max_persons.max_id))
+
+class LoggedAction(models.Model):
+    '''A model for logging the actions of users on the site
+
+    We record the changes that have been made to a person in PopIt in
+    that person's 'versions' field, but is not much help for queries
+    like "what has John Q User been doing on the site?". The
+    LoggedAction model makes that kind of query easy, however, and
+    should be helpful in tracking down both bugs and the actions of
+    malicious users.'''
+
+    user = models.ForeignKey(User, blank=True, null=True)
+    action_type = models.CharField(max_length=64)
+    popit_person_new_version = models.CharField(max_length=32)
+    popit_person_id = models.CharField(max_length=256)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    source = models.TextField()
