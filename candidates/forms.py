@@ -63,7 +63,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     birth_date = forms.DateField(
-        label="Date of birth",
+        label="Date of birth (as YYYY-MM-DD)",
         required=False,
     )
     wikipedia_url = forms.URLField(
