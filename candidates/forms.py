@@ -57,6 +57,11 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+    gender = forms.CharField(
+        label="Gender (e.g. 'male', 'female')",
+        max_length=256,
+        required=False,
+    )
     birth_date = forms.DateField(
         label="Date of birth",
         required=False,
@@ -132,11 +137,6 @@ class NewPersonForm(BasePersonForm):
         label="Constituency in 2015",
         max_length=256,
         widget=forms.HiddenInput(),
-    )
-    gender = forms.CharField(
-        label="Gender (e.g. 'male', 'female')",
-        max_length=256,
-        required=False,
     )
     party_gb = forms.ChoiceField(
         label="Party in 2015 (Great Britain)",

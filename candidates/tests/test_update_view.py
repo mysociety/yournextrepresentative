@@ -61,6 +61,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 'email': 'jowell@example.com',
                 'facebook_page_url': '',
                 'facebook_personal_url': '',
+                'gender': '',
                 'homepage_url': '',
                 'id': 'tessa-jowell',
                 'name': 'Tessa Jowell',
