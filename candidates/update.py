@@ -167,7 +167,7 @@ class PersonParseMixin(PopItApiMixin):
                 party_memberships[year] = reduced_organization_data(fallback_party)
             elif year == '2015' and party_2010:
                 party_memberships[year] = reduced_organization_data(party_2010)
-            else:
+            elif standing:
                 message = "There was no party data for {0} in {1}"
                 raise Exception, message.format(person_id, year)
 
