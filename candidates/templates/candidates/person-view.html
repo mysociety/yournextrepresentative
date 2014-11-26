@@ -2,13 +2,15 @@
 
 {% block body_class %}person{% endblock %}
 
+{% block title %}{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}{% endblock %}
+
 {% block content %}
 
 {% if last_cons %}
 <div class="breadcrumb">
   &#187;
-  <a href="{% url 'constituency' last_cons.post_id last_cons.name|slugify %}">
-   {{ last_cons.name }}
+  <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">
+   {{ last_cons.1.name }}
   </a>
 </div>
 {% endif %}

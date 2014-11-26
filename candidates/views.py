@@ -310,7 +310,7 @@ class PersonView(PersonParseMixin, TemplateView):
         for year in ('2010', '2015'):
             cons = person_data['standing_in'].get(year)
             if cons:
-                result = cons
+                result = (year, cons)
         return result
 
     def get_context_data(self, **kwargs):
