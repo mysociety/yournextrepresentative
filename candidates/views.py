@@ -198,6 +198,7 @@ class CandidacyMixin(object):
 class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyCreateForm
+    template_name = 'candidates/candidacy-create.html'
 
     def form_valid(self, form):
         change_metadata = self.get_change_metadata(
@@ -228,10 +229,19 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
         self.update_person(our_person, change_metadata, previous_versions)
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
+    def get_context_data(self, **kwargs):
+        context = super(CandidacyView, self).get_context_data(**kwargs)
+        context['person'] = self.get_person(self.request.POST.get('person_id'))
+        context['constituency'] = MapItData.constituencies_2010.get(
+            self.request.POST.get('mapit_area_id')
+        )
+        return context
+
 
 class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
 
     form_class = CandidacyDeleteForm
+    template_name = 'candidates/candidacy-delete.html'
 
     def form_valid(self, form):
         change_metadata = self.get_change_metadata(
@@ -259,6 +269,13 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
         self.update_person(our_person, change_metadata, previous_versions)
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
 
+    def get_context_data(self, **kwargs):
+        context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
+        context['person'] = self.get_person(self.request.POST.get('person_id'))
+        context['constituency'] = MapItData.constituencies_2010.get(
+            self.request.POST.get('mapit_area_id')
+        )
+        return context
 
 def get_previous_constituency_name(standing_in):
     for year in reversed(standing_in.keys()):

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body_class %}candidacy-create-demand-source{% endblock %}
+
+{% block hero %}
+  <h1>How do you know that {{ person.name }} is standing?</h1>
+{% endblock %}
+
+{% block content %}
+
+<p>Before updating our records we need to know the source for
+your information that {{ person.name }} is standing for election
+in the 2015 general election in {{ constituency.name }}.</p>
+
+{% include 'candidates/_source-plain.html' with action='candidacy-create' %}
+
+{% endblock %}
