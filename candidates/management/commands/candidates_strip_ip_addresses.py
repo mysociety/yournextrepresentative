@@ -9,9 +9,9 @@ class Command(PopItApiMixin, BaseCommand):
                 self.api.persons,
                 per_page=100
         ):
-            print "Stripping IP addresses from {name} ({id})".format(
+            print u"Stripping IP addresses from {name} ({id})".format(
                 **person
-            )
+            ).encode('utf-8')
             for version in person.get('versions', []):
                 version.pop('ip', None)
             self.api.persons(person['id']).put(person)
