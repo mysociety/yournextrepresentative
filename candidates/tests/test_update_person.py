@@ -65,7 +65,6 @@ class TestUpdatePerson(TestCase):
             new_person_data,
             {
                 'information_source': 'A change made for testing purposes',
-                'ip': '127.0.0.1',
                 'username': 'tester',
                 'version_id': '6054aa38b30b4418',
                 'timestamp': '2014-09-28T14:02:44.567413',
@@ -89,7 +88,6 @@ class TestUpdatePerson(TestCase):
                 'versions': [
                     {
                         'username': 'tester',
-                        'ip': '127.0.0.1',
                         'information_source': 'A change made for testing purposes',
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',
@@ -137,7 +135,6 @@ class TestUpdatePerson(TestCase):
                 'versions': [
                     {
                         'username': 'tester',
-                        'ip': '127.0.0.1',
                         'information_source': 'A change made for testing purposes',
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',

@@ -11,8 +11,9 @@ class LoggedActionAdminForm(ModelForm):
 
 class LoggedActionAdmin(admin.ModelAdmin):
     form = LoggedActionAdminForm
-    list_display = ['user', 'action_type', 'popit_person_new_version',
-                    'popit_person_link', 'created', 'updated', 'source']
+    list_display = ['user', 'ip_address', 'action_type',
+                    'popit_person_new_version', 'popit_person_link',
+                    'created', 'updated', 'source']
     ordering = ('-created',)
 
     def popit_person_link(self, o):

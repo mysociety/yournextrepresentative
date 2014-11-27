@@ -183,7 +183,6 @@ class CandidacyMixin(object):
         }
         if request is not None:
             result['username'] = request.user.username
-            result['ip'] = self.get_client_ip(request)
         return result
 
     def get_area_from_post_id(self, post_id, mapit_url_key='id'):
@@ -213,6 +212,7 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='candidacy-create',
+            ip_address=self.get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
@@ -256,6 +256,7 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='candidacy-delete',
+            ip_address=self.get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
@@ -433,6 +434,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-update',
+            ip_address=self.get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=our_person['id'],
             source=change_metadata['information_source'],
@@ -479,6 +481,7 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         action = LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-create',
+            ip_address=self.get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             source=change_metadata['information_source'],
         )

@@ -93,7 +93,6 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
             },
             {
                 'information_source': 'Some source of this information',
-                'ip': '127.0.0.1',
                 'username': 'john',
                 'version_id': example_version_id,
                 'timestamp': example_timestamp,

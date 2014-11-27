@@ -70,7 +70,6 @@ class TestCreatePerson(TestCase):
             new_person_data,
             {
                 'information_source': 'A change made for testing purposes',
-                'ip': '127.0.0.1',
                 'username': 'tester',
                 'version_id': '6054aa38b30b4418',
                 'timestamp': '2014-09-28T14:02:44.567413',
@@ -122,7 +121,6 @@ class TestCreatePerson(TestCase):
                 {
                     'information_source': 'A change made for testing purposes',
                     'username': 'tester',
-                    'ip': '127.0.0.1',
                     'version_id': '6054aa38b30b4418',
                     'timestamp': '2014-09-28T14:02:44.567413',
                     'data': {

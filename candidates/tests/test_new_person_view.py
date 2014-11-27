@@ -93,7 +93,6 @@ class TestNewPersonView(TestUserMixin, WebTest):
             },
             {
                 'information_source': u'A test new person, source: http://example.org',
-                'ip': '127.0.0.1',
                 'timestamp': example_timestamp,
                 'username': u'john',
                 'version_id': example_version_id,

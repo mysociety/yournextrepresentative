@@ -434,4 +434,5 @@ class LoggedAction(models.Model):
     popit_person_id = models.CharField(max_length=256)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    ip_address = models.CharField(max_length=15, blank=True, null=True)
     source = models.TextField()
