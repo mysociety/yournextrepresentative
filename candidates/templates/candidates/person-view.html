@@ -82,7 +82,7 @@
 {% else %}
   <div class="encourage-login">
     If you want to help by editing this information, please
-    <a href="{% url 'account_login' %}">log in</a>.
+    <a href="{% url 'account_login' %}?next={{ redirect_after_login }}">log in</a>.
   </div>
 {% endif %}
 

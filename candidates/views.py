@@ -113,6 +113,12 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['constituency_name'] = \
             get_constituency_name_from_mapit_id(mapit_area_id)
 
+        context['redirect_after_login'] = \
+            urlquote(reverse('constituency', kwargs={
+                'mapit_area_id': mapit_area_id,
+                'ignored_slug': slugify(context['constituency_name'])
+            }))
+
         mp_post = self.api.posts(mapit_area_id).get(
             embed='membership.person.membership.organization')
 
@@ -319,6 +325,9 @@ class PersonView(PersonParseMixin, TemplateView):
         context['person'] = person_data
         context['popit_api_url'] = self.get_base_url()
         context['last_cons'] = self.get_last_constituency(person_data)
+        context['redirect_after_login'] = urlquote(
+            reverse('person-view', kwargs={'person_id': person_data['id']})
+        )
         return context
 
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
