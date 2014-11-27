@@ -1,6 +1,7 @@
 Django==1.6.5
 PopIt-Python==0.1.10
 PyYAML==3.11
+South==1.0.1
 Unidecode==0.04.16
 WebOb==1.4
 WebTest==2.0.15
