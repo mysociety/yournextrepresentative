@@ -158,6 +158,16 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         return context
 
 
+class ConstituencyListView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/constituencies.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituencyListView, self).get_context_data(**kwargs)
+        context['all_constituencies'] = \
+            MapItData.constituencies_2010_name_sorted
+        return context
+
+
 class CandidacyMixin(object):
 
     def get_client_ip(self, request):

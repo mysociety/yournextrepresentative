@@ -19,6 +19,11 @@ class MapItData(object):
         get_mapit_constituencies('mapit-WMC-generation-13.json')
     constituencies_2010_name_map = \
         get_constituency_name_map('mapit-WMC-generation-13.json')
+    constituencies_2010_name_sorted = \
+        sorted(
+            constituencies_2010.items(),
+            key=lambda t: t[1]['name']
+        )
 
 def get_all_parties():
     result_list = defaultdict(list)

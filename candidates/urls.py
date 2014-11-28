@@ -5,12 +5,13 @@ from django.contrib import admin
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
-    PersonView, HelpApiView, HelpAboutView)
+    PersonView, HelpApiView, HelpAboutView, ConstituencyListView)
 
 urlpatterns = patterns('',
     url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
     url(r'^lookup/name$', ConstituencyNameFinderView.as_view(), name='lookup-name'),
     url(r'^lookup/postcode$', ConstituencyPostcodeFinderView.as_view(), name='lookup-postcode'),
+    url(r'^constituencies$', ConstituencyListView.as_view(), name='constituencies'),
     url(r'^constituency/(?P<mapit_area_id>\d+)/(?P<ignored_slug>.*)$',
         ConstituencyDetailView.as_view(),
         name='constituency'),
