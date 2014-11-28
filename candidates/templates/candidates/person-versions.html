@@ -19,12 +19,14 @@
         </div>
       </div>
       {% if user.is_authenticated %}
-        <form action="{% url 'person-revert' person_id=person.id %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="version_id" value="{{ version.version_id }}"/>
-          <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because ..."/>
-          <input type="submit" class="button tiny" value="Revert to this version" />
-        </form>
+        {% if not forloop.first %}
+          <form action="{% url 'person-revert' person_id=person.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="version_id" value="{{ version.version_id }}"/>
+            <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because ..."/>
+            <input type="submit" class="button tiny" value="Revert to this version" />
+          </form>
+        {% endif %}
       {% endif %}
       <pre class="version-json">{{ version.data|prettyjson }}
       </pre>
