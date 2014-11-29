@@ -385,6 +385,16 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         # FIXME: this whole method could really do with some
         # refactoring, it's way too long and involved:
         standing_in = our_person['standing_in']
+        # If there's data from 2010, set that in initial data to
+        # provide useful defaults ...
+        if '2010' in standing_in:
+            area_id_2010 = standing_in['2010']['post_id']
+            initial_data['constituency'] = area_id_2010
+            country_name =  MapItData.constituencies_2010.get(area_id_2010)['country_name']
+            key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
+            initial_data[key] = our_person['party_memberships']['2010']['id']
+        # ... but if there's data for 2015, it'll overwrite any
+        # defaults from 2010:
         if '2015' in standing_in:
             standing_in_2015 = standing_in.get('2015')
             if standing_in_2015 is None:
