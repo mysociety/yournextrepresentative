@@ -279,8 +279,13 @@ class PopItPerson(object):
                 # Then there must already be a corresponding candidate
                 # list membership, but check that:
                 if year not in results:
-                    message = "Missing Candidate List membership according to PopIt data for {} in {}"
-                    raise Exception(message.format(self.id, year))
+                    message = "Missing Candidate List membership according to PopIt data for {0} in {1}. standing_in was {2}, memberships were {3}"
+                    raise Exception(message.format(
+                        self.id,
+                        year,
+                        self.popit_data.get('standing_in', 'MISSING'),
+                        self.popit_data.get('memberships', 'MISSING'),
+                    ))
             else:
                 results[year] = None
 
