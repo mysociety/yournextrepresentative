@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..forms import BasePersonForm
+from ..forms import BasePersonForm, UpdatePersonForm
 
 class TestValidators(TestCase):
 
@@ -71,3 +71,98 @@ class TestValidators(TestCase):
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {'email': ['Enter a valid email address.']})
+
+    def test_update_person_form_standing_no_party_no_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'standing',
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            '__all__':
+            [u'If you mark the candidate as standing in 2015, you must select a constituency']
+        })
+
+    def test_update_person_form_standing_no_party_but_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'standing',
+            'constituency': '65808',
+        })
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            '__all__':
+            [u'You must specify a party for the 2015 election']
+        })
+
+    def test_update_person_form_standing_party_and_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'standing',
+            'constituency': '65808',
+            'party_gb': 'party:52',
+        })
+        self.assertTrue(form.is_valid())
+
+    # When 'not-standing' is selected, it shouldn't matter whether you
+    # specify party of constituency:
+
+    def test_update_person_form_not_standing_no_party_no_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'not-standing',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_update_person_form_not_standing_no_party_but_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'not-standing',
+            'constituency': '65808',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_update_person_form_not_standing_party_and_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'standing',
+            'constituency': '65808',
+            'party_gb': 'party:52',
+        })
+        self.assertTrue(form.is_valid())
+
+    # Similarly, when 'not-sure' is selected, it shouldn't matter
+    # whether you specify party of constituency:
+
+    def test_update_person_form_not_sure_no_party_no_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'not-sure',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_update_person_form_not_sure_no_party_but_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'not-sure',
+            'constituency': '65808',
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_update_person_form_not_sure_party_and_gb_constituency(self):
+        form = UpdatePersonForm({
+            'name': 'John Doe',
+            'source': 'Just testing...',
+            'standing': 'not-sure',
+            'constituency': '65808',
+            'party_gb': 'party:52',
+        })
+        self.assertTrue(form.is_valid())
