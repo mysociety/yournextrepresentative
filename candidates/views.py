@@ -7,6 +7,7 @@ import sys
 from slugify import slugify
 import requests
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.http import urlquote
@@ -527,3 +528,19 @@ class HelpApiView(PopItApiMixin, TemplateView):
 
 class HelpAboutView(TemplateView):
     template_name = 'candidates/about.html'
+
+class RecentChangesView(TemplateView):
+    template_name = 'candidates/recent-changes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RecentChangesView, self).get_context_data(**kwargs)
+        actions = LoggedAction.objects.all().order_by('-created')
+        paginator = Paginator(actions, 50)
+        page = self.request.GET.get('page')
+        try:
+            context['actions'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['actions'] = paginator.page(1)
+        except EmptyPage:
+            context['actions'] = paginator.page(paginator.num_pages)
+        return context
