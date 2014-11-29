@@ -382,6 +382,8 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         our_person = self.get_person(self.kwargs['person_id'])
         for field_name in all_form_fields:
             initial_data[field_name] = our_person.get(field_name)
+        # FIXME: this whole method could really do with some
+        # refactoring, it's way too long and involved:
         standing_in = our_person['standing_in']
         if '2015' in standing_in:
             standing_in_2015 = standing_in.get('2015')
