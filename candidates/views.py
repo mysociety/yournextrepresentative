@@ -422,9 +422,6 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         print "Going to update this person:"
         print json.dumps(our_person, indent=4)
 
-        constituency_2010_mapit_id = our_person['standing_in'].get('2010',
-            {}).get('post_id')
-
         # Now we need to make any changes to that data structure based
         # on information given in the form.
 
