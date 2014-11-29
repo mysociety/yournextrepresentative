@@ -33,6 +33,15 @@ def get_all_parties():
             key = party.get('register', '')
             result_list[key].append((party['id'], party['name']))
             result_dict[party['id']] = party['name']
+        # The parties without a register (e.g. the pseudo parties
+        # "Independent" and "Speaker seeking re-election") don't have
+        # a register, but should be added to both the Great Britain
+        # and Northern Ireland lists:
+        for register in ('Great Britain', 'Northern Ireland'):
+            result_list[register] += result_list['']
+        # Then remove those parties without a register:
+        result_list.pop('', None)
+        # Now sort the parties, and an an empty default at the start:
         for parties in result_list.values():
             parties.sort(key=lambda p: p[1].lower())
             parties.insert(0, ('party:none', ''))
