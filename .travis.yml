@@ -19,6 +19,7 @@ install:
   - pip install $MODULES --use-mirrors
   # Now install the rest of the required Python packages:
   - CFLAGS="-O0" pip install -r requirements.txt --use-mirrors
+  - pip install python-coveralls
   # Create a basic general.yml file:
   - sed -r
     -e "s,(POPIT_INSTANCE:) 'yournextmp',\\1 'not-a-real-instance',"
@@ -32,3 +33,6 @@ before_script:
 
 script:
   - ./manage.py test
+
+after_success:
+  - coveralls
