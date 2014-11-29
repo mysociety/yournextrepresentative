@@ -43,9 +43,6 @@
 #       'id': 'party:53',
 #   }
 #
-# The 'id' field for a party is optional, since if you're using this
-# representation to create a new party, you won't know it anyway.
-#
 # Finally, there is a 'standing_in' member which indicates if a person if
 # known to be standing in 2010 or 2015:
 #
