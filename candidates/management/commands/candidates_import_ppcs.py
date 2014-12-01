@@ -172,9 +172,25 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
         # Remove any empty keys, we don't want to overwrite exiting
         # data with nothing:
         keys = new_person_data.keys()
+        warnings = []
         for key in keys:
             if not new_person_data[key]:
                 del new_person_data[key]
+            # Also make sure that we don't overwrite any existing
+            # fields that are filled in with different values:
+            if key not in ('standing_in', 'party_memberships'):
+                new_person_data_value = new_person_data.get(key)
+                person_data_value = person_data.get(key)
+                if person_data_value and new_person_data_value and new_person_data_value != person_data_value:
+                    warnings.append(u"not overwriting {0}".format(person_data_value))
+                    warnings.append(u"with the new value {0}".format(new_person_data_value))
+                    del new_person_data[key]
+        if warnings:
+            print "Warnings for person/{0} {1}".format(
+                popit_person_id, person_data['name']
+            )
+            for warning in warnings:
+                print "  ...", warning
         merged_person_data = merge_person_data(person_data, new_person_data)
         change_metadata = self.get_change_metadata(
             None,
