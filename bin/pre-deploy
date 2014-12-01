@@ -34,6 +34,13 @@ curl -L -s https://raw.github.com/mysociety/commonlib/master/bin/get_pip.bash | 
 
 pip install -r requirements.txt
 
+# Make sure that symlinks to the system python-opencv is present:
+for FILE in cv.py cv2.so
+do
+    ln -sf /usr/lib/python2.7/dist-packages/$FILE \
+        "$VIRTUALENV_DIR/lib/python2.7/site-packages/$FILE"
+done
+
 # make sure that there is no old code (the .py files may have been git deleted)
 find . -name '*.pyc' -delete
 

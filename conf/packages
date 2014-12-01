@@ -2,3 +2,5 @@ curl
 yui-compressor
 libpq-dev
 python-dev
+opencv-data
+python-opencv
