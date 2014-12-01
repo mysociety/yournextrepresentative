@@ -274,7 +274,8 @@ class PopItPerson(object):
         # be standing in a particular election. So, if that
         # information is present in the PopIt data, set it in the
         # standing_in dictionary.
-        for year, standing in self.popit_data.get('standing_in', {}).items():
+        standing_in = self.popit_data.get('standing_in') or {}
+        for year, standing in standing_in.items():
             if standing:
                 # Then there must already be a corresponding candidate
                 # list membership, but check that:

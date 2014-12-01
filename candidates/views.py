@@ -385,23 +385,45 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         our_person = self.get_person(self.kwargs['person_id'])
         for field_name in all_form_fields:
             initial_data[field_name] = our_person.get(field_name)
-        initial_data['standing'] = bool(our_person['standing_in'].get('2015'))
-        if initial_data['standing']:
-            # First make sure the constituency select box has the right value:
-            cons_data_2015 = our_person['standing_in'].get('2015', {})
-            mapit_url = cons_data_2015.get('mapit_url')
-            if mapit_url:
-                area_id = get_mapit_id_from_mapit_url(mapit_url)
-                initial_data['constituency'] = area_id
-                # Get the 2015 party ID:
-                party_data_2015 = our_person['party_memberships'].get('2015', {})
-                party_id = party_data_2015.get('id', '')
-                # Get the right country based on that constituency:
-                country = MapItData.constituencies_2010.get(area_id)['country_name']
-                if country == 'Northern Ireland':
-                    initial_data['party_ni'] = party_id
-                else:
-                    initial_data['party_gb'] = party_id
+        # FIXME: this whole method could really do with some
+        # refactoring, it's way too long and involved:
+        standing_in = our_person['standing_in']
+        # If there's data from 2010, set that in initial data to
+        # provide useful defaults ...
+        if '2010' in standing_in:
+            area_id_2010 = standing_in['2010']['post_id']
+            initial_data['constituency'] = area_id_2010
+            country_name =  MapItData.constituencies_2010.get(area_id_2010)['country_name']
+            key = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
+            initial_data[key] = our_person['party_memberships']['2010']['id']
+        # ... but if there's data for 2015, it'll overwrite any
+        # defaults from 2010:
+        if '2015' in standing_in:
+            standing_in_2015 = standing_in.get('2015')
+            if standing_in_2015 is None:
+                initial_data['standing'] = 'not-standing'
+            elif standing_in_2015:
+                initial_data['standing'] = 'standing'
+                # First make sure the constituency select box has the right value:
+                cons_data_2015 = our_person['standing_in'].get('2015', {})
+                mapit_url = cons_data_2015.get('mapit_url')
+                if mapit_url:
+                    area_id = get_mapit_id_from_mapit_url(mapit_url)
+                    initial_data['constituency'] = area_id
+                    # Get the 2015 party ID:
+                    party_data_2015 = our_person['party_memberships'].get('2015', {})
+                    party_id = party_data_2015.get('id', '')
+                    # Get the right country based on that constituency:
+                    country = MapItData.constituencies_2010.get(area_id)['country_name']
+                    if country == 'Northern Ireland':
+                        initial_data['party_ni'] = party_id
+                    else:
+                        initial_data['party_gb'] = party_id
+            else:
+                message = "Unexpected 'standing_in' value {0}"
+                raise Exception(message.format(standing_in_2015))
+        else:
+            initial_data['standing'] = 'not-sure'
             # TODO: If we don't know someone to be standing, assume they are
             # still in the same party as they were in 2010
         return initial_data
@@ -450,7 +472,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             source=change_metadata['information_source'],
         )
 
-        if standing:
+        if standing == 'standing':
             constituency_name = get_constituency_name_from_mapit_id(
                 constituency_2015_mapit_id
             )
@@ -463,12 +485,18 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
                 'name': PartyData.party_id_to_name[party_2015],
                 'id': party_2015,
             }
-        else:
+        elif standing == 'not-standing':
             # If the person is not standing in 2015, record that
             # they're not and remove the party membership for 2015:
             our_person['standing_in']['2015'] = None
             if '2015' in our_person['party_memberships']:
                 del our_person['party_memberships']['2015']
+        elif standing == 'not-sure':
+            # If the update specifies that we're not sure if they're
+            # standing in 2015, then remove the standing_in and
+            # party_memberships entries for that year:
+            our_person['standing_in'].pop('2015', None)
+            our_person['party_memberships'].pop('2015', None)
 
         print "Going to update that person with this data:"
         print json.dumps(our_person, indent=4)

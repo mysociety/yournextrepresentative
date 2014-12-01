@@ -30,7 +30,7 @@ function getSelect2Enclosure(select2ID) {
 }
 
 function getStandingCheckbox() {
-  return $('#person-details input#id_standing');
+  return $('#person-details select#id_standing');
 }
 
 function showSelects() {
@@ -38,7 +38,7 @@ function showSelects() {
   if (standingCheckbox.length == 0) {
     return true;
   } else {
-    return standingCheckbox.prop('checked');
+    return standingCheckbox.val() == 'standing';
   }
 }
 

@@ -173,9 +173,14 @@ class NewPersonForm(BasePersonForm):
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
 class UpdatePersonForm(BasePersonForm):
-    standing = forms.BooleanField(
+    STANDING_CHOICES = (
+        ('not-sure', "Don't Know"),
+        ('standing', "Yes"),
+        ('not-standing', "No"),
+    )
+    standing = forms.ChoiceField(
         label='Standing in 2015',
-        required=False,
+        choices=STANDING_CHOICES,
     )
     constituency = forms.ChoiceField(
         label='Constituency in 2015',
@@ -215,6 +220,6 @@ class UpdatePersonForm(BasePersonForm):
 
     def clean(self):
         cleaned_data = super(UpdatePersonForm, self).clean()
-        if cleaned_data['standing']:
+        if cleaned_data['standing'] == 'standing':
             return self.check_party_and_constituency_are_selected(cleaned_data)
         return cleaned_data
