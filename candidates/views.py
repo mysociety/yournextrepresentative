@@ -149,8 +149,9 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         # standing again, and those that we just don't know about:
         context['candidates_2010_not_standing_again'] = \
             set(p for p in other_candidates_2010 if p.not_standing_in_2015)
+
         context['candidates_2010_might_stand_again'] = \
-            set(p for p in other_candidates_2010 if not p.not_standing_in_2015)
+            set(p for p in other_candidates_2010 if not p.known_status_in_2015)
 
         context['candidates_2015'] = current_candidates
 
