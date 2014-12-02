@@ -42,13 +42,19 @@ party_slug_to_popit_party = {
 constituency_corrections = {
     'Berwick': 'Berwick-upon-Tweed',
     'Chester': 'City of Chester',
+    'Cotswolds': 'The Cotswolds',
     'Dover and Deal': 'Dover',
+    'Harborough, Oadby and Wigston': 'Harborough',
     'Hull North': 'Kingston upon Hull North',
     'Hull West and Hessle': 'Kingston upon Hull West and Hessle',
     'Isle of Wright': 'Isle of Wight',
+    'Mid-Norfolk': 'Mid Norfolk',
     'Richmond': 'Richmond (Yorks)',
+    'Sittingbourne and Sheppy': 'Sittingbourne and Sheppey',
     'Stratford-upon-Avon': 'Stratford-on-Avon',
     'West Cornwall and Scilly': 'St Ives',
+    'Weston Super Mare': 'Weston-Super-Mare',
+    'Canterbury and Whitstable': 'Canterbury',
 }
 
 def cons_key(s):
