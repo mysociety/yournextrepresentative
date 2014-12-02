@@ -8784,5 +8784,1484 @@
             "twitter_username": "RogerWilliamsMP"
         },
         "same_person": false
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "54773723fbfd725645115724",
+                    "type": "twitter",
+                    "value": "Callaghan2015"
+                }
+            ],
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4259",
+            "id": "4259",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54773723fbfd725645115723",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/basildon--billericay-gavin-callaghan"
+                }
+            ],
+            "name": "Gavin Callagham",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65898",
+                    "name": "Basildon and Billericay",
+                    "post_id": "65898"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4259"
+        },
+        "ppc": {
+            "constituency": "Basildon and Billericay",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65898",
+                "name": "Basildon and Billericay",
+                "post_id": "65898"
+            },
+            "email": "gavin.callaghan@members.basildon.gov.uk",
+            "full_url": "http://www.labour.org.uk/people/detail/gavin-callaghan",
+            "homepage": "http://www.gavincallaghan.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/gavincallaghan.jpg/@zx_180@zy_180/",
+            "name": "Gavin Callaghan",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07908698743",
+            "twitter_username": "Callaghan2015"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "54773745fbfd72564511582f",
+                    "type": "twitter",
+                    "value": "Ollie_Middleton"
+                }
+            ],
+            "email": "olymiddleton@hotmail.co.uk",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4261",
+            "id": "4261",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54773745fbfd72564511582e",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/bath-oliver-middleton"
+                }
+            ],
+            "name": "Ollie Middleton",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65798",
+                    "name": "Bath",
+                    "post_id": "65798"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4261"
+        },
+        "ppc": {
+            "constituency": "Bath",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65798",
+                "name": "Bath",
+                "post_id": "65798"
+            },
+            "email": "olymiddleton@hotmail.co.uk",
+            "full_url": "http://www.labour.org.uk/people/detail/oliver-middleton",
+            "homepage": "http://www.bathlabour.org.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_ppc_middleton_ollie-10.jpg/@zx_180@zy_180/",
+            "name": "Oliver Middleton",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "01225314131",
+            "twitter_username": "Ollie_Middleton"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "darren.price@swansea.gov.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/2218",
+            "id": "2218",
+            "identifiers": [
+                {
+                    "id": "546f81cbd484cf5c5850a900",
+                    "identifier": "13524",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Darren Price",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:77",
+                    "name": "Plaid Cymru - The Party of Wales"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/66083",
+                    "name": "Gower",
+                    "post_id": "66083"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/2218"
+        },
+        "ppc": {
+            "constituency": "Congleton",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65771",
+                "name": "Congleton",
+                "post_id": "65771"
+            },
+            "email": "dpricelabour@gmail.com",
+            "facebook_url": "https://facebook.com/darrenpricelabour",
+            "full_url": "http://www.labour.org.uk/people/detail/darren-price",
+            "homepage": "http://darrenpricelabour.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/PPC_Darren_Price.jpg/@zx_180@zy_180/",
+            "name": "Darren Price",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07766 302 528",
+            "twitter_username": "DPriceLabour"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "emilybenn@ewaslabour.org.uk",
+            "gender": "female",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/711",
+            "id": "711",
+            "identifiers": [
+                {
+                    "id": "54773656fbfd725645115151",
+                    "identifier": "4524",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Emily Benn",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65780",
+                    "name": "East Worthing and Shoreham",
+                    "post_id": "65780"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/711"
+        },
+        "ppc": {
+            "constituency": "Croydon South",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65923",
+                "name": "Croydon South",
+                "post_id": "65923"
+            },
+            "full_url": "http://www.labour.org.uk/people/detail/emily-benn",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_ppc_benn_emily-12.jpg/@zx_180@zy_180/",
+            "name": "Emily Benn",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5477374cfbfd7256451158b2",
+                    "type": "twitter",
+                    "value": "peterkyle"
+                }
+            ],
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4358",
+            "id": "4358",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5477374cfbfd7256451158b1",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/hove-peter-kyle"
+                },
+                {
+                    "id": "5477374cfbfd7256451158b0",
+                    "note": "facebook personal",
+                    "url": "https://en-gb.facebook.com/hoveandportslade"
+                }
+            ],
+            "name": "Dr Peter Kyle",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65691",
+                    "name": "Hove",
+                    "post_id": "65691"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4358"
+        },
+        "ppc": {
+            "constituency": "Hove",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65691",
+                "name": "Hove",
+                "post_id": "65691"
+            },
+            "facebook_url": "https://facebook.com/hoveandportslade",
+            "full_url": "http://www.labour.org.uk/people/detail/peter-kyle",
+            "homepage": "http://brightonhovelabour.com",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Peter%20Kyle.jpg/@zx_180@zy_180/",
+            "name": "Peter Kyle",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "twitter_username": "peterkyle"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "info@chrisyork.co.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/2457",
+            "id": "2457",
+            "identifiers": [
+                {
+                    "id": "546f8213d484cf5c5850ac0b",
+                    "identifier": "25595",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Chris York",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65565",
+                    "name": "North West Cambridgeshire",
+                    "post_id": "65565"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/2457"
+        },
+        "ppc": {
+            "constituency": "North East Hertfordshire",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65840",
+                "name": "North East Hertfordshire",
+                "post_id": "65840"
+            },
+            "email": "info@chrisyork.co.uk  ",
+            "facebook_url": "https://facebook.com/ChrisYorkUK",
+            "full_url": "http://www.labour.org.uk/people/detail/chris-york",
+            "homepage": "http://www.chrisyork.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_chrisyork10.jpg/@zx_180@zy_180/",
+            "name": "Chris York",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07834 286236",
+            "twitter_username": "ChrisYorkUK"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "54707159d484cf5c5851095e",
+                    "type": "twitter",
+                    "value": "Victoria_Fowler"
+                }
+            ],
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4397",
+            "id": "4397",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54707159d484cf5c5851095d",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/nuneaton-victoria-fowler"
+                },
+                {
+                    "id": "54707159d484cf5c5851095c",
+                    "note": "facebook personal",
+                    "url": "http://www.facebook.com/victoriafowlerfornuneatonMP"
+                }
+            ],
+            "name": "Vicky Fowler",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65663",
+                    "name": "Nuneaton",
+                    "post_id": "65663"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4397"
+        },
+        "ppc": {
+            "constituency": "Nuneaton",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65663",
+                "name": "Nuneaton",
+                "post_id": "65663"
+            },
+            "email": "ppc@victoriafowler.co.uk",
+            "facebook_url": "https://facebook.com/victoriafowlerfornuneatonMP",
+            "full_url": "http://www.labour.org.uk/people/detail/victoria-fowler",
+            "homepage": "http:// www.victoriafowler.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Victoria%20Fowler.jpg/@zx_180@zy_180/",
+            "name": "Victoria Fowler",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "2476370078",
+            "twitter_username": "Victoria_Fowler"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5470715ed484cf5c5851099a",
+                    "type": "twitter",
+                    "value": "RebeccaBlake31"
+                }
+            ],
+            "email": "rebecca.blake@redditchlabour.org.uk",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4409",
+            "id": "4409",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5470715ed484cf5c58510999",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/redditch-rebecca-blake"
+                },
+                {
+                    "id": "5470715ed484cf5c58510998",
+                    "note": "facebook personal",
+                    "url": "https://www.facebook.com/WorkingForABetterRedditch"
+                }
+            ],
+            "name": "Rebbeca Blake",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65700",
+                    "name": "Redditch",
+                    "post_id": "65700"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4409"
+        },
+        "ppc": {
+            "constituency": "Redditch",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65700",
+                "name": "Redditch",
+                "post_id": "65700"
+            },
+            "email": "rebecca.blake@redditchlabour.org.uk",
+            "facebook_url": "https://facebook.com/WorkingForABetterRedditch",
+            "full_url": "http://www.labour.org.uk/people/detail/rebecca-blake",
+            "homepage": "http://www.rebecca-blake.org.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Rebecca%20Blake.jpg/@zx_180@zy_180/",
+            "name": "Rebecca Blake",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07833771086",
+            "twitter_username": "rebeccablake31"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "54707167d484cf5c58510a13",
+                    "type": "twitter",
+                    "value": "willscobie"
+                }
+            ],
+            "email": "willscobie@will4souththanet.co.uk",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4432",
+            "id": "4432",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54707167d484cf5c58510a12",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/south-thanet-will-scobie"
+                },
+                {
+                    "id": "54707167d484cf5c58510a11",
+                    "note": "facebook personal",
+                    "url": "https://www.facebook.com/will4souththanet"
+                }
+            ],
+            "name": "Wil Scobie",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65829",
+                    "name": "South Thanet",
+                    "post_id": "65829"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4432"
+        },
+        "ppc": {
+            "constituency": "South Thanet",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65829",
+                "name": "South Thanet",
+                "post_id": "65829"
+            },
+            "email": "willscobie@will4souththanet.co.uk",
+            "facebook_url": "https://facebook.com/will4souththanet",
+            "full_url": "http://www.labour.org.uk/people/detail/will-scobie",
+            "homepage": "http://www.will4souththanet.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Will%20Scobie.jpg/@zx_180@zy_180/",
+            "name": "Will Scobie",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07730342471",
+            "twitter_username": "willscobie"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": "1959-11-12",
+            "contact_details": [],
+            "email": "cplabour@googlemail.com",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/3251",
+            "id": "3251",
+            "identifiers": [
+                {
+                    "id": "546f82ffd484cf5c5850b605",
+                    "identifier": "2781",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Julian Ware-Lane",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65914",
+                    "name": "Castle Point",
+                    "post_id": "65914"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/3251"
+        },
+        "ppc": {
+            "constituency": "Southend West",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65876",
+                "name": "Southend West",
+                "post_id": "65876"
+            },
+            "facebook_url": "https://facebook.com/Julianwarelane",
+            "full_url": "http://www.labour.org.uk/people/detail/julian-ware-lane",
+            "homepage": "http://www.warelane.wordpress.com",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_julian_portrait_01.jpg/@zx_180@zy_180/",
+            "name": "Julian Ware-Lane",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07989 564743",
+            "twitter_username": "warelane"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "michaelsparling@hotmail.com",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/2445",
+            "id": "2445",
+            "identifiers": [
+                {
+                    "id": "546f8210d484cf5c5850abe7",
+                    "identifier": "13577",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Michael Sparling",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65684",
+                    "name": "South East Cornwall",
+                    "post_id": "65684"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/2445"
+        },
+        "ppc": {
+            "constituency": "Torridge & West Devon",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65904",
+                "name": "Torridge and West Devon",
+                "post_id": "65904"
+            },
+            "facebook_url": "https://facebook.com/mikesparlinglabour",
+            "full_url": "http://www.labour.org.uk/people/detail/michael-sparling",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_1ppc_michael_sparling.jpg/@zx_180@zy_180/",
+            "name": "Michael Sparling",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07887057405",
+            "twitter_username": "michaelsparling"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "lynnette.kelly@yardley-labour.org.uk",
+            "gender": "female",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/379",
+            "id": "379",
+            "identifiers": [
+                {
+                    "id": "546f7fcfd484cf5c58509288",
+                    "identifier": "12981",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Lynnette Kelly",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65707",
+                    "name": "Birmingham, Yardley",
+                    "post_id": "65707"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/379"
+        },
+        "ppc": {
+            "constituency": "Warwick and Leamington",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65608",
+                "name": "Warwick and Leamington",
+                "post_id": "65608"
+            },
+            "email": "LK4WandL@gmail.com",
+            "full_url": "http://www.labour.org.uk/people/detail/lynnette-kelly",
+            "homepage": "http://www.lynnettekelly.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Lynnette%20Kelly.jpg/@zx_180@zy_180/",
+            "name": "Lynnette Kelly",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07929660320",
+            "twitter_username": "lynnettekelly"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "matthew.turmaine@gmail.com",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4459",
+            "id": "4459",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54707172d484cf5c58510a95",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/watford-matt-turmaine"
+                }
+            ],
+            "name": "Matthew Turmaine",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65626",
+                    "name": "Watford",
+                    "post_id": "65626"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4459"
+        },
+        "ppc": {
+            "constituency": "Watford",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65626",
+                "name": "Watford",
+                "post_id": "65626"
+            },
+            "email": "matthew.turmaine@gmail.com",
+            "full_url": "http://www.labour.org.uk/people/detail/matt-turmaine",
+            "homepage": "http://www.watfordlabour.org.uk/matt-for-watford.html",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/mattturmaine.jpg/@zx_180@zy_180/",
+            "name": "Matt Turmaine",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "01923 227 350",
+            "twitter_username": "Turmaine"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "stephen@11-2.co.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/305",
+            "id": "305",
+            "identifiers": [
+                {
+                    "id": "54773640fbfd725645115092",
+                    "identifier": "2834",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Stephen Fenn",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:90",
+                    "name": "Liberal Democrats"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65792",
+                    "name": "Chorley",
+                    "post_id": "65792"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/305"
+        },
+        "ppc": {
+            "constituency": "Chorley",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65792",
+                "name": "Chorley",
+                "post_id": "65792"
+            },
+            "email": "libdems@11-2.co.uk",
+            "full_url": "http://www.libdems.org.uk/stephen_fenn",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/7010/attachments/original/1417451525/key_stephen_fenn.JPG?1417451525",
+            "name": "Stephen Fenn",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "North West"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "peter@hirst51836.fsnet.co.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/546",
+            "id": "546",
+            "identifiers": [
+                {
+                    "id": "546f7ff9d484cf5c58509487",
+                    "identifier": "2879",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Peter Hirst",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:90",
+                    "name": "Liberal Democrats"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65771",
+                    "name": "Congleton",
+                    "post_id": "65771"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/546"
+        },
+        "ppc": {
+            "constituency": "Congleton",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65771",
+                "name": "Congleton",
+                "post_id": "65771"
+            },
+            "email": "peter@hirst51836.fsnet.co.uk",
+            "facebook_url": "facebook.com/congletonlibdems",
+            "full_url": "http://www.libdems.org.uk/peter_hirst",
+            "homepage": "congletonlibdems.co.uk",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/7004/attachments/original/1417446439/key_genericprofile.png?1417446439",
+            "name": "Peter Hirst",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "North West",
+            "twitter_username": "peterhirst9"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "nextmp4gloucester@jeremyhilton.co.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/1202",
+            "id": "1202",
+            "identifiers": [
+                {
+                    "id": "546f80afd484cf5c58509c91",
+                    "identifier": "4829",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Jeremy Hilton",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:90",
+                    "name": "Liberal Democrats"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65996",
+                    "name": "Gloucester",
+                    "post_id": "65996"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/1202"
+        },
+        "ppc": {
+            "address": "Gloucester Liberal Democrats\nThe Bisley Room\nSpread Eagle Court\nNorthgate Street\nGloucester\nGL1 1SL",
+            "constituency": "Gloucester",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65996",
+                "name": "Gloucester",
+                "post_id": "65996"
+            },
+            "email": "jeremy4glos@hotmail.com",
+            "facebook_url": "facebook.com/jeremy4glos",
+            "full_url": "http://www.libdems.org.uk/jeremy_hilton",
+            "homepage": "www.jeremyhilton.co.uk",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/7007/attachments/original/1417449046/key_Jeremy_Hilton.jpg?1417449046",
+            "name": "Jeremy Hilton",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "South West",
+            "twitter_username": "jeremy4glos"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "keithnevols@hotmail.com",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/3241",
+            "id": "3241",
+            "identifiers": [
+                {
+                    "id": "546f82fcd484cf5c5850b5e7",
+                    "identifier": "3889",
+                    "scheme": "yournextmp-candidate"
+                }
+            ],
+            "links": [],
+            "name": "Keith Nevols",
+            "other_names": [],
+            "party_memberships": {
+                "2010": {
+                    "id": "party:90",
+                    "name": "Liberal Democrats"
+                }
+            },
+            "standing_in": {
+                "2010": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65610",
+                    "name": "Sittingbourne and Sheppey",
+                    "post_id": "65610"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/3241"
+        },
+        "ppc": {
+            "constituency": "Sittingbourne and Sheppy",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65610",
+                "name": "Sittingbourne and Sheppey",
+                "post_id": "65610"
+            },
+            "email": "keithnevols@hotmail.com",
+            "facebook_url": "facebook.com/keithnevols",
+            "full_url": "http://www.libdems.org.uk/keith_nevols",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/7008/attachments/original/1417450119/key_Keith_Nevols.jpg?1417450119",
+            "name": "Keith Nevols",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "South East",
+            "twitter_username": "keith_nevols"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5477973b737edc5252ce624b",
+                    "type": "twitter",
+                    "value": "blairsmillie"
+                }
+            ],
+            "email": null,
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4580",
+            "id": "4580",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5477973b737edc5252ce624a",
+                    "note": "homepage",
+                    "url": "http://www.ukipalyndeeside.org.uk/"
+                }
+            ],
+            "name": "Blair Smillie",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:85",
+                    "name": "UK Independence Party (UKIP)"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/66103",
+                    "name": "Alyn and Deeside",
+                    "post_id": "66103"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4580"
+        },
+        "ppc": {
+            "constituency": "Holborn and St Pancras",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65824",
+                "name": "Holborn and St Pancras",
+                "post_id": "65824"
+            },
+            "email": "will@willblair.co.uk",
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Blair_Will.aspx",
+            "homepage": "www.willblair.co.uk",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/Will-Blair.ashx",
+            "name": "Will Blair",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Blair_Will.aspx",
+            "phone": "020 7794 5679",
+            "slug": "Blair_Will"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "547beae36e0839e923cf272c",
+                    "type": "twitter",
+                    "value": "Ollie_Middleton"
+                }
+            ],
+            "email": "olymiddleton@hotmail.co.uk",
+            "gender": "male",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4261",
+            "id": "4261",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "547beae36e0839e923cf272b",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/bath-oliver-middleton"
+                }
+            ],
+            "name": "Ollie Middleton",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65798",
+                    "name": "Bath",
+                    "post_id": "65798"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4261"
+        },
+        "ppc": {
+            "constituency": "Bath",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65798",
+                "name": "Bath",
+                "post_id": "65798"
+            },
+            "email": "olymiddleton@hotmail.co.uk",
+            "full_url": "http://www.labour.org.uk/people/detail/oliver-middleton",
+            "homepage": "http://www.bathlabour.org.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_ppc_middleton_ollie-10.jpg/@zx_180@zy_180/",
+            "name": "Oliver Middleton",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "01225314131",
+            "twitter_username": "Ollie_Middleton"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5477862a737edc5252ce5715",
+                    "type": "twitter",
+                    "value": "peterkyle"
+                }
+            ],
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4358",
+            "id": "4358",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5477862a737edc5252ce5714",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/hove-peter-kyle"
+                },
+                {
+                    "id": "5477862a737edc5252ce5713",
+                    "note": "facebook personal",
+                    "url": "https://en-gb.facebook.com/hoveandportslade"
+                }
+            ],
+            "name": "Dr Peter Kyle",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65691",
+                    "name": "Hove",
+                    "post_id": "65691"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4358"
+        },
+        "ppc": {
+            "constituency": "Hove",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65691",
+                "name": "Hove",
+                "post_id": "65691"
+            },
+            "facebook_url": "https://facebook.com/hoveandportslade",
+            "full_url": "http://www.labour.org.uk/people/detail/peter-kyle",
+            "homepage": "http://brightonhovelabour.com",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Peter%20Kyle.jpg/@zx_180@zy_180/",
+            "name": "Peter Kyle",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "twitter_username": "peterkyle"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5477862e737edc5252ce573e",
+                    "type": "twitter",
+                    "value": "Victoria_Fowler"
+                }
+            ],
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4397",
+            "id": "4397",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5477862e737edc5252ce573d",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/nuneaton-victoria-fowler"
+                },
+                {
+                    "id": "5477862e737edc5252ce573c",
+                    "note": "facebook personal",
+                    "url": "http://www.facebook.com/victoriafowlerfornuneatonMP"
+                }
+            ],
+            "name": "Vicky Fowler",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65663",
+                    "name": "Nuneaton",
+                    "post_id": "65663"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4397"
+        },
+        "ppc": {
+            "constituency": "Nuneaton",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65663",
+                "name": "Nuneaton",
+                "post_id": "65663"
+            },
+            "email": "ppc@victoriafowler.co.uk",
+            "facebook_url": "https://facebook.com/victoriafowlerfornuneatonMP",
+            "full_url": "http://www.labour.org.uk/people/detail/victoria-fowler",
+            "homepage": "http:// www.victoriafowler.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Victoria%20Fowler.jpg/@zx_180@zy_180/",
+            "name": "Victoria Fowler",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "2476370078",
+            "twitter_username": "Victoria_Fowler"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "5477862f737edc5252ce574d",
+                    "type": "twitter",
+                    "value": "RebeccaBlake31"
+                }
+            ],
+            "email": "rebecca.blake@redditchlabour.org.uk",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4409",
+            "id": "4409",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5477862f737edc5252ce574c",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/redditch-rebecca-blake"
+                },
+                {
+                    "id": "5477862f737edc5252ce574b",
+                    "note": "facebook personal",
+                    "url": "https://www.facebook.com/WorkingForABetterRedditch"
+                }
+            ],
+            "name": "Rebbeca Blake",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65700",
+                    "name": "Redditch",
+                    "post_id": "65700"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4409"
+        },
+        "ppc": {
+            "constituency": "Redditch",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65700",
+                "name": "Redditch",
+                "post_id": "65700"
+            },
+            "email": "rebecca.blake@redditchlabour.org.uk",
+            "facebook_url": "https://facebook.com/WorkingForABetterRedditch",
+            "full_url": "http://www.labour.org.uk/people/detail/rebecca-blake",
+            "homepage": "http://www.rebecca-blake.org.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Rebecca%20Blake.jpg/@zx_180@zy_180/",
+            "name": "Rebecca Blake",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07833771086",
+            "twitter_username": "rebeccablake31"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "54778631737edc5252ce576f",
+                    "type": "twitter",
+                    "value": "willscobie"
+                }
+            ],
+            "email": "willscobie@will4souththanet.co.uk",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4432",
+            "id": "4432",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "54778631737edc5252ce576e",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/south-thanet-will-scobie"
+                },
+                {
+                    "id": "54778631737edc5252ce576d",
+                    "note": "facebook personal",
+                    "url": "https://www.facebook.com/will4souththanet"
+                }
+            ],
+            "name": "Wil Scobie",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65829",
+                    "name": "South Thanet",
+                    "post_id": "65829"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4432"
+        },
+        "ppc": {
+            "constituency": "South Thanet",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65829",
+                "name": "South Thanet",
+                "post_id": "65829"
+            },
+            "email": "willscobie@will4souththanet.co.uk",
+            "facebook_url": "https://facebook.com/will4souththanet",
+            "full_url": "http://www.labour.org.uk/people/detail/will-scobie",
+            "homepage": "http://www.will4souththanet.co.uk",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/Will%20Scobie.jpg/@zx_180@zy_180/",
+            "name": "Will Scobie",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "07730342471",
+            "twitter_username": "willscobie"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [],
+            "email": "matthew.turmaine@gmail.com",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4459",
+            "id": "4459",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "5471ae043ffd8aff1e09de62",
+                    "note": "party PPC page",
+                    "url": "http://www2.labour.org.uk/watford-matt-turmaine"
+                }
+            ],
+            "name": "Matthew Turmaine",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:53",
+                    "name": "Labour Party"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65626",
+                    "name": "Watford",
+                    "post_id": "65626"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4459"
+        },
+        "ppc": {
+            "constituency": "Watford",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65626",
+                "name": "Watford",
+                "post_id": "65626"
+            },
+            "email": "matthew.turmaine@gmail.com",
+            "full_url": "http://www.labour.org.uk/people/detail/matt-turmaine",
+            "homepage": "http://www.watfordlabour.org.uk/matt-for-watford.html",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/mattturmaine.jpg/@zx_180@zy_180/",
+            "name": "Matt Turmaine",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "01923 227 350",
+            "twitter_username": "Turmaine"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person": {
+            "birth_date": null,
+            "contact_details": [
+                {
+                    "id": "547bf0506e0839e923cf278b",
+                    "type": "twitter",
+                    "value": "RachSadlerTW"
+                }
+            ],
+            "email": "LibDemChair@outlook.com",
+            "gender": "female",
+            "html_url": "http://candidates-posts.127.0.0.1.xip.io:3000/persons/4480",
+            "id": "4480",
+            "identifiers": [],
+            "links": [
+                {
+                    "id": "547bf0506e0839e923cf278a",
+                    "note": "party PPC page",
+                    "url": "http://www.libdems.org.uk/rachel_sadler"
+                }
+            ],
+            "name": "Rachel Sadler",
+            "other_names": [],
+            "party_memberships": {
+                "2015": {
+                    "id": "party:90",
+                    "name": "Liberal Democrats"
+                }
+            },
+            "standing_in": {
+                "2015": {
+                    "mapit_url": "http://mapit.mysociety.org/area/65845",
+                    "name": "Bexhill and Battle",
+                    "post_id": "65845"
+                }
+            },
+            "url": "http://candidates-posts.127.0.0.1.xip.io:3000/api/v0.1/persons/4480"
+        },
+        "ppc": {
+            "constituency": "Bexhill & Battle",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65845",
+                "name": "Bexhill and Battle",
+                "post_id": "65845"
+            },
+            "email": "LibDemChair@outlook.com",
+            "full_url": "http://www.libdems.org.uk/rachel_sadler",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/6766/attachments/original/1415034679/key_rachel_sadler.jpg?1415034679",
+            "name": "Sadler, Rachel",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "phone": "07832 147 557",
+            "region": "South East",
+            "twitter_username": "RachSadlerTW"
+        },
+        "same_person": true
     }
 ]
