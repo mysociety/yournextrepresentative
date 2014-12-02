@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block body_class %}constituency{% endblock %}
 
 {% block title %}Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election{% endblock %}
@@ -25,9 +27,8 @@
       {% if forloop.first %}
         <ul class="candidate-list">
       {% endif %}
-
-        <li>
-          <a href="{% url 'person-view' c.id %}">{{ c.name }}</a> ({{c.parties.2015.name }})
+        <li class="person-list">
+          {% include 'candidates/_person_in_list.html' with year='2015' %}
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
@@ -88,8 +89,8 @@
 
     <ul class="candidate-list">
       {% for c in candidates_2010_might_stand_again %}
-        <li>
-          <a href="{% url 'person-view' c.id %}">{{ c.name }}</a> ({{ c.parties.2010.name }})
+        <li class="person-list">
+          {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation standing">Standing again</a>
@@ -114,8 +115,8 @@
 
     <ul class="candidate-list">
       {% for c in candidates_2010_not_standing_again %}
-        <li>
-          <a href="{% url 'person-view' c.id %}">{{ c.name }}</a> ({{ c.parties.2010.name }})
+        <li class="person-list">
+          {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>
             <a class="button tiny js-toggle-source-confirmation standing">Actually, they are standing!</a>

@@ -306,3 +306,23 @@ body.finder .content__inner {
 .version-op-replace {
   color: #27248e
 }
+
+li.person-list {
+  list-style-type: none
+}
+
+.person-in-list {
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+.person-in-list img {
+  width: 12%;
+  float: left;
+}
+
+.person-in-list-name-and-party {
+  margin-left: 15%;
+  padding: 0.4em;
+  font-size: 1.2em;
+}

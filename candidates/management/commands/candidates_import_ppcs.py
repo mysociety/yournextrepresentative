@@ -10,8 +10,9 @@
 # this job from cron - if you get an email from cron, you'll need to
 # run the script manually to make those decisions.
 
+import hashlib
 import os
-from os.path import join
+from os.path import join, exists
 import re
 import json
 
@@ -137,6 +138,11 @@ def get_ppc_url_from_popit_result(popit_result):
             return link.get['url']
     return None
 
+def get_file_md5sum(filename):
+    with open(filename, 'rb') as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+
 class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Import scraped PPC data"
 
@@ -152,6 +158,14 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     #     "blog_url",
     #     "campaign_url",
     #     "biography_url",
+
+    def image_uploaded_already(self, person_id, image_filename):
+        person_data = self.api.persons(person_id).get()['result']
+        md5sum = get_file_md5sum(image_filename)
+        for image in person_data.get('images', []):
+            if image.get('notes') == 'md5sum:' + md5sum:
+                return True
+        return False
 
     def get_person_data_from_ppc(self, ppc_data):
         return {
@@ -170,7 +184,30 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             }
         }
 
-    def update_popit_person(self, popit_person_id, ppc_data):
+    def upload_person_image(self, person_id, image_filename, original_url):
+        # Find the md5sum of the image filename, to use as an ID:
+        md5sum = get_file_md5sum(image_filename)
+        image_upload_url = "{0}/{1}/persons/{2}/image".format(
+            self.api.get_url(), self.api.get_api_version(), person_id
+        )
+        source = 'Via the official party PPC page, based on {0}'.format(original_url)
+        with open(image_filename, 'rb') as f:
+            requests.post(
+                image_upload_url,
+                headers={
+                    'Apikey': self.api.api_key
+                },
+                files={
+                    'image': f
+                },
+                data={
+                    'notes': 'md5sum:' + md5sum,
+                    'source': source,
+                    'mime_type': 'image/png',
+                }
+            )
+
+    def update_popit_person(self, popit_person_id, ppc_data, image_filename):
         # Get the existing data first:
         person_data = self.get_person(popit_person_id)
         previous_versions = person_data.pop('versions')
@@ -202,22 +239,42 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             None,
             'Updated candidate from official PPC data ({0})'.format(ppc_data['party_slug']),
         )
-        return self.update_person(
+        person_id = self.update_person(
             merged_person_data,
             change_metadata,
             previous_versions,
         )
+        if image_filename:
+            if self.image_uploaded_already(person_id, image_filename):
+                print "That image has already been uploaded!"
+            else:
+                print "Uploading image..."
+                self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
+        return person_id
 
-    def add_popit_person(self, ppc_data):
+    def add_popit_person(self, ppc_data, image_filename):
         change_metadata = self.get_change_metadata(
             None,
             'Created new candidate from official PPC data ({0})'.format(ppc_data['party_slug']),
         )
         person_data = self.get_person_data_from_ppc(ppc_data)
-        return self.create_person(person_data, change_metadata)
+        person_id = self.create_person(person_data, change_metadata)
+        if image_filename:
+            self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
 
     def already_added_for_2015(self, ppc_data, popit_result):
-        popit_constituency_name_2015 = popit_result['standing_in'].get('2015', {}).get('name')
+        standing_in = popit_result.get('standing_in')
+        # This is someone whom an update an update failed for part way
+        # through, having 'standing_in' set, but set to null:
+        if standing_in is None:
+            return None
+        standing_in_2015 = standing_in.get('2015', {})
+        # If standing_in_2015 is None, then they were added but
+        # someone has since marked them as not standing; return None
+        # and deal with that case specially:
+        if standing_in_2015 is None:
+            return None
+        popit_constituency_name_2015 = standing_in_2015.get('name')
         popit_party_id_2015 = popit_result['party_memberships'].get('2015', {}).get('id')
         return (ppc_data['name'] == popit_result['name'] and
                 ppc_data['party_object']['id'] == popit_party_id_2015 and
@@ -280,7 +337,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             elif response == 'n':
                 return False
 
-    def handle_person(self, ppc_data):
+    def handle_person(self, ppc_data, image_filename):
         print u"PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8')
         # Search PopIt for anyone with the same name. (FIXME: we
         # should make this a bit fuzzier when the PopIt API
@@ -302,29 +359,32 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             # with decisions.
             del result['versions']
             del result['memberships']
-            if self.already_added_for_2015(ppc_data, result):
+            added_for_2015 = self.already_added_for_2015(ppc_data, result)
+            if added_for_2015 is None:
+                return
+            elif added_for_2015:
                 # Then just update that person with the possibly
                 # updated scraped data:
-                self.update_popit_person(result['id'], ppc_data)
+                self.update_popit_person(result['id'], ppc_data, image_filename)
                 return
             # Do we already have a decision about whether this PPC is
             # the same as another from 2010?
             decision = self.already_matched_to_2010_person(ppc_data, result)
             if decision is not None:
                 if decision:
-                    self.update_popit_person(result['id'], ppc_data)
+                    self.update_popit_person(result['id'], ppc_data, image_filename)
                     return
             else:
                 # We have to ask the user for a decision:
                 if self.decision_from_user(ppc_data, result):
-                    self.update_popit_person(result['id'], ppc_data)
+                    self.update_popit_person(result['id'], ppc_data, image_filename)
                     record_human_decision(ppc_data, result, True)
                     return
                 else:
                     record_human_decision(ppc_data, result, False)
         # If we haven't returned from the function by this stage, we
         # need to create a new candidate in PopIt:
-        self.add_popit_person(ppc_data)
+        self.add_popit_person(ppc_data, image_filename)
 
     def handle(self, **options):
 
@@ -334,7 +394,13 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 party_slug
             )
             for leafname in sorted(os.listdir(json_directory)):
+                if not leafname.endswith('.json'):
+                    continue
                 filename = join(json_directory, leafname)
+                image = re.sub(r'\.json$', '-cropped.png', filename)
+                if not exists(image):
+                    image = None
+                print "filename:", filename
                 with open(filename) as f:
                     ppc_data = json.load(f)
                     ppc_data['party_slug'] = party_slug
@@ -342,4 +408,4 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                     ppc_data['constituency_object'] = get_constituency_from_name(
                         ppc_data['constituency']
                     )
-                    self.handle_person(ppc_data)
+                    self.handle_person(ppc_data, image)

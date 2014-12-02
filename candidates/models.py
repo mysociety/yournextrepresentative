@@ -226,6 +226,10 @@ class PopItPerson(object):
         return self.popit_data['id']
 
     @property
+    def image(self):
+        return self.popit_data.get('image')
+
+    @property
     def parties(self):
         results = {}
         for membership in self.popit_data['memberships']:
