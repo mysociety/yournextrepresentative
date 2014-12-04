@@ -48,12 +48,12 @@ class TestVersionDiffs(TestCase):
                 'diff': [
                     {
                         'op': u'remove',
-                        'path': '/d',
+                        'path': 'd',
                         'previous_value': 'delta',
                     },
                     {
                         'op': u'replace',
-                        'path': '/b',
+                        'path': 'b',
                         'previous_value': 'LATIN SMALL LETTER B',
                         'value': 'beta',
                     }
@@ -71,12 +71,12 @@ class TestVersionDiffs(TestCase):
                 'diff': [
                     {
                         'op': 'add',
-                        'path': '/d',
+                        'path': 'd',
                         'value': 'delta',
                     },
                     {
                         'op': 'replace',
-                        'path': '/b',
+                        'path': 'b',
                         'previous_value': 'beta',
                         'value': 'LATIN SMALL LETTER B',
                     }
@@ -91,12 +91,12 @@ class TestVersionDiffs(TestCase):
                 'diff': [
                     {
                         'op': 'add',
-                        'path': '/a',
+                        'path': 'a',
                         'value': 'alpha',
                     },
                     {
                         'op': 'add',
-                        'path': '/b',
+                        'path': 'b',
                         'value': 'beta',
                     },
                 ]
