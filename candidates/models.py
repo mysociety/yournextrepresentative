@@ -410,13 +410,14 @@ def get_version_diff(from_data, to_data):
     basic_patch = jsonpatch.make_patch(from_data, to_data)
     result = []
     for operation in basic_patch:
-        if operation['op'] in ('replace', 'remove'):
+        op = operation['op']
+        if op in ('replace', 'remove'):
             operation['previous_value'] = \
                 jsonpointer.resolve_pointer(
                     from_data,
                     operation['path']
                 )
-        elif operation['op'] == 'add':
+        elif op == 'add':
             if not operation['value']:
                 continue
         result.append(operation)
