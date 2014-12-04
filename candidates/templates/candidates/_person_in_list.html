@@ -11,7 +11,7 @@
     <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
   {% endif %}
 {% endif %}
-<div class="person-in-list-name-and-party">
+<div class="person-name-and-party">
   <a href="{% url 'person-view' c.id %}">{{ c.name }}</a>
   {% if year == '2015' %}
     ({{c.parties.2015.name }})

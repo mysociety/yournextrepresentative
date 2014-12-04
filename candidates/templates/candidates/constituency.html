@@ -28,7 +28,7 @@
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="person-list">
+        <li class="candidates-list__person">
           {% include 'candidates/_person_in_list.html' with year='2015' %}
           {% if user.is_authenticated %}
           <p>
@@ -88,7 +88,7 @@
 
     <ul class="candidate-list">
       {% for c in candidates_2010_might_stand_again %}
-        <li class="person-list">
+        <li class="candidates-list__person">
           {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>
@@ -114,7 +114,7 @@
 
     <ul class="candidate-list">
       {% for c in candidates_2010_not_standing_again %}
-        <li class="person-list">
+        <li class="candidates-list__person">
           {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>

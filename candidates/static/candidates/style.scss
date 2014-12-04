@@ -221,6 +221,24 @@ body.finder .content__inner {
   }
 }
 
+.candidates-list__person {
+  list-style-type: none;
+  margin-bottom: 1em;
+  @include clearfix;
+
+  .person-avatar {
+    float: left;
+    width: auto;
+    height: 4em;
+    margin-right: 1.5em;
+    background-color: #ddd;
+  }
+
+  .person-name-and-party {
+    font-size: 1.2em;
+  }
+}
+
 .source-confirmation:first-of-type {
   &:before {
     display: block;
@@ -307,22 +325,4 @@ body.finder .content__inner {
 
 .version-op-replace {
   color: #27248e
-}
-
-li.person-list {
-  list-style-type: none;
-  margin-bottom: 1em;
-  @include clearfix;
-}
-
-.person-list .person-avatar {
-  float: left;
-  width: auto;
-  height: 4em;
-  margin-right: 1.5em;
-  background-color: #ddd;
-}
-
-.person-in-list-name-and-party {
-  font-size: 1.2em;
 }
