@@ -209,6 +209,7 @@ PIPELINE_JS = {
             'js/mapit-areas-ni.js',
             'js/constituency.js',
             'js/person_form.js',
+            'js/versions.js',
         ),
         'output_filename': 'js/all.js'
     }

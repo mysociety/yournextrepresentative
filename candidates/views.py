@@ -28,6 +28,7 @@ from .models import (
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015,
     LoggedAction,
+    get_version_diffs,
 )
 from .popit import PopItApiMixin
 from .static_data import MapItData, PartyData
@@ -343,6 +344,7 @@ class PersonView(PersonParseMixin, TemplateView):
         context['redirect_after_login'] = urlquote(
             reverse('person-view', kwargs={'person_id': person_data['id']})
         )
+        context['versions'] = get_version_diffs(person_data['versions'])
         return context
 
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
@@ -435,6 +437,8 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         context['person'] = self.api.persons(
             self.kwargs['person_id']
         ).get()['result']
+
+        context['versions'] = get_version_diffs(context['person']['versions'])
 
         return context
 

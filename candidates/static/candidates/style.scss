@@ -270,7 +270,7 @@ body.finder .content__inner {
   margin-bottom: 0.5em;
 }
 
-.version-json {
+.full-version-json {
   font-size: 75%;
   line-height: 150%;
 }
@@ -293,4 +293,16 @@ body.finder .content__inner {
 
 .breadcrumb {
   margin-bottom: 1em
+}
+
+.version-op-add {
+  color: #0a6b0c
+}
+
+.version-op-remove {
+  color: #8e2424
+}
+
+.version-op-replace {
+  color: #27248e
 }
