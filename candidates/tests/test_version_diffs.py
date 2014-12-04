@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..models import get_version_diffs
+from ..diffs import get_version_diffs
 
 class TestVersionDiffs(TestCase):
 
@@ -111,6 +111,164 @@ class TestVersionDiffs(TestCase):
                         'path': 'b',
                         'value': 'beta',
                     },
+                ]
+            },
+        ]
+
+        versions_with_diffs = get_version_diffs(versions)
+
+        self.assertEqual(expected_result, versions_with_diffs)
+
+    def test_versions_2010_then_adding_2015(self):
+        versions = [
+            {
+                'information_source': 'After clicking "Standing again"',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                        '2015': {
+                            'name': 'Edinburgh North and Leith',
+                            'post_id': '14420',
+                            'mapit_url': 'http://mapit.mysociety.org/area/14420',
+                        },
+                    }
+                }
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                    }
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'information_source': 'After clicking "Standing again"',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                        '2015': {
+                            'name': 'Edinburgh North and Leith',
+                            'post_id': '14420',
+                            'mapit_url': 'http://mapit.mysociety.org/area/14420',
+                        },
+                    }
+                },
+                'diff': [
+                    {
+                        'op': 'add',
+                        'path': 'standing_in/2015',
+                        'value': 'is known to be standing in Edinburgh North and Leith in 2015',
+                    }
+                ]
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                    }
+                },
+                'diff':[
+                    {
+                        'op': 'add',
+                        'path': 'standing_in',
+                        'value': 'was known to be standing in South Cambridgeshire in 2010',
+                    }
+                ]
+            },
+        ]
+
+        versions_with_diffs = get_version_diffs(versions)
+
+        self.assertEqual(expected_result, versions_with_diffs)
+
+    def test_versions_2010_then_definitely_not_2015(self):
+        versions = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                        '2015': None,
+                    }
+                }
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                    }
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                        '2015': None,
+                    }
+                },
+                'diff': [
+                    {
+                        'op': 'add',
+                        'path': 'standing_in/2015',
+                        'value': 'is known not to be standing in 2015',
+                    }
+                ]
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'standing_in': {
+                        '2010': {
+                            'name': 'South Cambridgeshire',
+                            'post_id': '65922',
+                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
+                        },
+                    }
+                },
+                'diff':[
+                    {
+                        'op': 'add',
+                        'path': 'standing_in',
+                        'value': 'was known to be standing in South Cambridgeshire in 2010',
+                    }
                 ]
             },
         ]

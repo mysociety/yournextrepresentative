@@ -17,6 +17,7 @@ from django.views.generic import FormView, TemplateView, View
 
 from braces.views import LoginRequiredMixin
 
+from .diffs import get_version_diffs
 from .forms import (
     PostcodeForm, NewPersonForm, UpdatePersonForm, ConstituencyForm,
     CandidacyCreateForm, CandidacyDeleteForm
@@ -27,8 +28,7 @@ from .models import (
     all_form_fields,
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015,
-    LoggedAction,
-    get_version_diffs,
+    LoggedAction
 )
 from .popit import PopItApiMixin
 from .static_data import MapItData, PartyData
