@@ -24,7 +24,7 @@
             {% if operation.op == 'add' %}
                <p class="version-op-add">Added {{ operation.path }} => {{ operation.value|prettyjson }}
             {% elif operation.op == 'remove' %}
-               <p class="version-op-remove">Removed {{ operation.path }} (previously it was {{ operation.previous_value|prettyjson }}</p>
+               <p class="version-op-remove">Removed {{ operation.path }} (previously it was {{ operation.previous_value|prettyjson }})</p>
             {% elif operation.op == 'replace' %}
                <p class="version-op-replace">At {{ operation.path }} replaced {{ operation.previous_value|prettyjson }} with {{ operation.value|prettyjson }}</p>
             {% else %}
