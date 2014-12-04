@@ -27,6 +27,7 @@
       {% if forloop.first %}
         <ul class="candidate-list">
       {% endif %}
+
         <li class="person-list">
           {% include 'candidates/_person_in_list.html' with year='2015' %}
           {% if user.is_authenticated %}
@@ -50,9 +51,7 @@
     {% endfor %}
 
     {% if candidates_2015 and user.is_authenticated %}
-      <div class="row">
-        <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
-      </div>
+        <p><a class="show-new-candidate-form button">Add a new candidate</a></p>
     {% endif %}
 
   </div>

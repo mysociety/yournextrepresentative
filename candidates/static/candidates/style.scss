@@ -214,6 +214,8 @@ body.finder .content__inner {
 }
 
 .candidate-list {
+  margin: 1.5em 0;
+
   li p {
     margin: 5px 0 0 0;
   }
@@ -308,21 +310,19 @@ body.finder .content__inner {
 }
 
 li.person-list {
-  list-style-type: none
-}
-
-.person-in-list {
+  list-style-type: none;
   margin-bottom: 1em;
-  margin-top: 1em;
+  @include clearfix;
 }
 
-.person-in-list img {
-  width: 12%;
+.person-list .person-avatar {
   float: left;
+  width: auto;
+  height: 4em;
+  margin-right: 1.5em;
+  background-color: #ddd;
 }
 
 .person-in-list-name-and-party {
-  margin-left: 15%;
-  padding: 0.4em;
   font-size: 1.2em;
 }
