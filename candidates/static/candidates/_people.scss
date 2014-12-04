@@ -1,0 +1,124 @@
+.candidate-list {
+  margin: 1.5em 0;
+
+  li p {
+    margin: 5px 0 0 0;
+  }
+}
+
+.candidates-list__person {
+  list-style-type: none;
+  margin-bottom: 1em;
+  @include clearfix;
+
+  .person-avatar {
+    float: left;
+    width: auto;
+    height: 4em;
+    margin-right: 1.5em;
+    background-color: #ddd;
+  }
+
+  .person-name-and-party {
+    font-size: 1.2em;
+  }
+}
+
+.candidates__known,
+.candidates__new,
+.candidates__previous,
+.candidates__not-standing {
+  margin-bottom: 3em;
+
+  @media #{$medium-up} {
+    padding-left: 100px;
+    background: transparent url(img/icon-candidates.gif) 0 0 no-repeat;
+  }
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+  }
+
+  li > p > .button {
+    margin-right: 0.8em;
+  }
+}
+
+.candidates__new {
+  @media #{$medium-up} {
+    background-image: url(img/icon-add-candidate.gif);
+  }
+}
+
+.candidates__previous {
+  @media #{$medium-up} {
+    background-image: url(img/icon-question.gif);
+  }
+
+  li > p > .button:first-child,
+  li > p > .button:nth-child(2),
+  .source-confirmation .button {
+    background-color: $color-orange;
+
+    &:hover, &:focus {
+      background-color: scale-color($color-orange, $lightness: $button-function-factor);
+    }
+  }
+}
+
+.candidates__not-standing {
+  @media #{$medium-up} {
+    background-image: url(img/icon-cross.gif);
+  }
+
+  li > p > .button:first-child,
+  .source-confirmation .button {
+    background-color: $color-red;
+
+    &:hover, &:focus {
+      background-color: scale-color($color-red, $lightness: $button-function-factor);
+    }
+  }
+}
+
+.no-candidates {
+  background: #FDF2D5; // lighter version of $color-gold
+  border: 1px solid lighten($color-gold, 30%);
+  border-radius: 3px;
+
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+
+  p + p {
+    margin-bottom: 0;
+  }
+
+  @media #{$medium-up} {
+    p {
+      margin-bottom: 0;
+    }
+
+    p + p {
+      text-align: right;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
+  }
+}
+
+.encourage-login {
+  background: #FDF2D5; // lighter version of $color-gold
+  border: 1px solid lighten($color-gold, 30%);
+  border-radius: 3px;
+
+  padding: 0.8em;
+
+  margin-bottom: 1.6em;
+}
+
+.breadcrumb {
+  margin-bottom: 1em
+}

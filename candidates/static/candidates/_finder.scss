@@ -1,0 +1,26 @@
+.finder__activity {
+  @include grid-column(12);
+}
+
+body.finder .content__inner {
+  text-align: center;
+
+  label {
+    font-size: 1.4em;
+    margin-bottom: 0.4em;
+  }
+
+  form {
+    margin: 3em auto;
+    max-width: 320px;
+  }
+
+  .select2-container {
+    text-align: left;
+  }
+
+  .show-other-form {
+    display: block;
+    margin-top: 1em;
+  }
+}

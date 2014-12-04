@@ -1,0 +1,44 @@
+.source-confirmation:first-of-type {
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 15px;
+    @include css-triangle(20px, $color-yellow, bottom);
+  }
+}
+
+.source-confirmation:not(:first-of-type) {
+  &:before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 120px;
+    @include css-triangle(20px, $color-yellow, bottom);
+  }
+}
+
+.source-confirmation {
+  position: relative;
+  border-radius: 3px;
+  background: $color-yellow;
+  padding: 20px;
+  margin-bottom: rem-calc(16);
+
+  label {
+    margin-bottom: 10px;
+    font-size: remCalc(16);
+  }
+
+  input {
+    margin-bottom: 0;
+  }
+
+  .row {
+    margin-left: rem-calc(-15);
+    margin-right: rem-calc(-15);
+    width: auto;
+  }
+}
