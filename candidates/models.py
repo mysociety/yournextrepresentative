@@ -416,6 +416,9 @@ def get_version_diff(from_data, to_data):
                     from_data,
                     operation['path']
                 )
+        elif operation['op'] == 'add':
+            if not operation['value']:
+                continue
         result.append(operation)
     result.sort(key=lambda o: (o['op'], o['path']))
     return result

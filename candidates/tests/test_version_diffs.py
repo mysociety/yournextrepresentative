@@ -12,6 +12,8 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
+                    'g': None,
+                    'h': '',
                 }
             },
             {
@@ -20,6 +22,8 @@ class TestVersionDiffs(TestCase):
                     'a': 'alpha',
                     'b': 'LATIN SMALL LETTER B',
                     'd': 'delta',
+                    'g': None,
+                    'h': '',
                 }
             },
             {
@@ -38,6 +42,8 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
+                    'g': None,
+                    'h': '',
                 },
                 'diff': [
                     {
@@ -59,6 +65,8 @@ class TestVersionDiffs(TestCase):
                     'a': 'alpha',
                     'b': 'LATIN SMALL LETTER B',
                     'd': 'delta',
+                    'g': None,
+                    'h': '',
                 },
                 'diff': [
                     {
