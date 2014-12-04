@@ -417,6 +417,11 @@ def get_version_diff(from_data, to_data):
                     from_data,
                     operation['path']
                 )
+            # Ignore replacing no data with no data:
+            if op == 'replace' and \
+               not operation['previous_value'] and \
+               not operation['value']:
+                continue
         elif op == 'add':
             if not operation['value']:
                 continue

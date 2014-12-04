@@ -12,8 +12,8 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
-                    'g': None,
-                    'h': '',
+                    'g': '',
+                    'h': None,
                 }
             },
             {
@@ -42,8 +42,8 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
-                    'g': None,
-                    'h': '',
+                    'g': '',
+                    'h': None,
                 },
                 'diff': [
                     {
