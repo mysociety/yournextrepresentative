@@ -422,6 +422,8 @@ def get_version_diff(from_data, to_data):
                not operation['previous_value'] and \
                not operation['value']:
                 continue
+            if op == 'replace' and not operation['previous_value']:
+                operation['op'] = 'add'
         elif op == 'add':
             if not operation['value']:
                 continue

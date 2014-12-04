@@ -14,6 +14,7 @@ class TestVersionDiffs(TestCase):
                     'b': 'beta',
                     'g': '',
                     'h': None,
+                    'l': 'lambda',
                 }
             },
             {
@@ -24,6 +25,7 @@ class TestVersionDiffs(TestCase):
                     'd': 'delta',
                     'g': None,
                     'h': '',
+                    'l': 'lambda',
                 }
             },
             {
@@ -31,6 +33,7 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
+                    'l': None,
                 }
             },
         ]
@@ -44,6 +47,7 @@ class TestVersionDiffs(TestCase):
                     'b': 'beta',
                     'g': '',
                     'h': None,
+                    'l': 'lambda',
                 },
                 'diff': [
                     {
@@ -67,6 +71,7 @@ class TestVersionDiffs(TestCase):
                     'd': 'delta',
                     'g': None,
                     'h': '',
+                    'l': 'lambda',
                 },
                 'diff': [
                     {
@@ -75,11 +80,17 @@ class TestVersionDiffs(TestCase):
                         'value': 'delta',
                     },
                     {
+                        'op': 'add',
+                        'path': 'l',
+                        'previous_value': None,
+                        'value': 'lambda',
+                    },
+                    {
                         'op': 'replace',
                         'path': 'b',
                         'previous_value': 'beta',
                         'value': 'LATIN SMALL LETTER B',
-                    }
+                    },
                 ]
             },
             {
@@ -87,6 +98,7 @@ class TestVersionDiffs(TestCase):
                 'data': {
                     'a': 'alpha',
                     'b': 'beta',
+                    'l': None,
                 },
                 'diff': [
                     {
