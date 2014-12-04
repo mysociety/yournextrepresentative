@@ -1,5 +1,7 @@
 from datetime import date
 import json
+import jsonpatch
+import jsonpointer
 import re
 from slugify import slugify
 
@@ -402,6 +404,41 @@ def get_person_data_from_dict(data):
         new_value = data.get(field_name, '')
         if new_value:
             update_values_in_sub_array(result, location, new_value)
+    return result
+
+def get_version_diff(from_data, to_data):
+    basic_patch = jsonpatch.make_patch(from_data, to_data)
+    result = []
+    for operation in basic_patch:
+        if operation['op'] in ('replace', 'remove'):
+            operation['previous_value'] = \
+                jsonpointer.resolve_pointer(
+                    from_data,
+                    operation['path']
+                )
+        result.append(operation)
+    result.sort(key=lambda o: (o['op'], o['path']))
+    return result
+
+def get_version_diffs(versions):
+    result = []
+    n = len(versions)
+    for i, v in enumerate(versions):
+        # to_version_data = replace_empty_with_none(
+        #     versions[i]['data']
+        # )
+        to_version_data = versions[i]['data']
+        if i == (n - 1):
+            from_version_data = {}
+        else:
+            # from_version_data = replace_empty_with_none(
+            #     versions[i + 1]['data']
+            # )
+            from_version_data = versions[i + 1]['data']
+        version_with_diff = versions[i].copy()
+        version_with_diff['diff'] = \
+            get_version_diff(from_version_data, to_version_data)
+        result.append(version_with_diff)
     return result
 
 
