@@ -225,15 +225,15 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 new_person_data_value = new_person_data.get(key)
                 person_data_value = person_data.get(key)
                 if person_data_value and new_person_data_value and new_person_data_value != person_data_value:
-                    warnings.append(u"not overwriting {0}".format(person_data_value))
-                    warnings.append(u"with the new value {0}".format(new_person_data_value))
+                    warnings.append(u"[{0}] not replacing  {1}".format(key, person_data_value))
+                    warnings.append(u"[{0}] with new value {1}".format(key, new_person_data_value))
                     del new_person_data[key]
         if warnings:
-            print "Warnings for person/{0} {1}".format(
+            print u"Warnings for person/{0} {1}".format(
                 popit_person_id, person_data['name']
-            )
+            ).encode('utf-8')
             for warning in warnings:
-                print "  ...", warning
+                print "  ...", warning.encode('utf-8')
         merged_person_data = merge_person_data(person_data, new_person_data)
         change_metadata = self.get_change_metadata(
             None,
