@@ -100,8 +100,8 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         bad_constituency_id = self.request.GET.get('bad_constituency_id')
         if bad_constituency_id:
             context['bad_constituency_id'] = bad_constituency_id
-        context['leaderboards'] = self.get_leaderboards()
-        context['recent_actions'] = self.get_recent_changes_queryset()[:10]
+        context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
+        context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         return context
 
 
@@ -117,6 +117,8 @@ class ConstituencyNameFinderView(FormView):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
         context['form'] = PostcodeForm()
         context['constituency_form'] = ConstituencyForm()
+        context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
+        context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         return context
 
 
