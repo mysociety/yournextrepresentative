@@ -119,6 +119,25 @@
   margin-bottom: 1.6em;
 }
 
-.breadcrumb {
-  margin-bottom: 1em
+.person__hero {
+  .person-avatar {
+    float: left;
+    width: auto;
+    height: 4em;
+    margin-right: 1em;
+    background-color: #ddd;
+
+    @media #{$medium-up} {
+      height: 5em;
+      margin-right: 1.5em;
+    }
+  }
+
+  h1 {
+    margin-bottom: 0;
+  }
+
+  h1 + p {
+    color: mix(#fff, $color-teal, 70%);
+  }
 }

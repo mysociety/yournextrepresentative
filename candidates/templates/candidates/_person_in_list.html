@@ -4,12 +4,10 @@
   <a href="{% url 'person-view' c.id %}">
     <img class="person-avatar" src="{{ c.image }}"/>
   </a>
+{% elif c.popit_data.gender == 'female' %}
+  <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
 {% else %}
-  {% if c.popit_data.gender == 'female' %}
-    <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
-  {% else %}
-    <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
-  {% endif %}
+  <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
 {% endif %}
 <div class="person-name-and-party">
   <a href="{% url 'person-view' c.id %}">{{ c.name }}</a>
