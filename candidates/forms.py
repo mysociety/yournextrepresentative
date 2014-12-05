@@ -108,12 +108,6 @@ class BasePersonForm(forms.Form):
             raise ValidationError(message)
         return username
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if re.search(r'@.*parliament.uk$', email):
-            raise ValidationError(u"parliament.uk email addresses aren't useful once parliament dissolves; please try to find an alternative")
-        return email
-
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
