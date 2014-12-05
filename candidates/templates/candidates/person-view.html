@@ -10,7 +10,7 @@
 <div class="person__hero">
   {% if person.image %}
     <img class="person-avatar" src="{{ person.image }}"/>
-  {% elif person.popit_data.gender == 'female' %}
+  {% elif person.gender == 'female' %}
     <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
   {% else %}
     <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
