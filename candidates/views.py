@@ -48,7 +48,34 @@ def get_redirect_from_mapit_id(mapit_id):
     )
 
 
-class ConstituencyPostcodeFinderView(FormView):
+class ContributorsMixin(object):
+
+    def get_leaderboards(self):
+        result = []
+        for title, since in [
+            ('All Time', None),
+            ('In the last week', datetime.now() - timedelta(days=7))
+        ]:
+            if since:
+                qs = LoggedAction.objects.filter(created__gt=since)
+            else:
+                qs = LoggedAction.objects.all()
+            rows = qs.values('user'). \
+                annotate(edit_count=Count('user')).order_by('-edit_count')[:10]
+            for row in rows:
+                row['username'] = User.objects.get(pk=row['user'])
+            leaderboard = {
+                'title': title,
+                'rows': rows,
+            }
+            result.append(leaderboard)
+        return result
+
+    def get_recent_changes_queryset(self):
+        return LoggedAction.objects.all().order_by('-created')
+
+
+class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
 
@@ -73,6 +100,8 @@ class ConstituencyPostcodeFinderView(FormView):
         bad_constituency_id = self.request.GET.get('bad_constituency_id')
         if bad_constituency_id:
             context['bad_constituency_id'] = bad_constituency_id
+        context['leaderboards'] = self.get_leaderboards()
+        context['recent_actions'] = self.get_recent_changes_queryset()[:10]
         return context
 
 
@@ -564,12 +593,12 @@ class HelpApiView(PopItApiMixin, TemplateView):
 class HelpAboutView(TemplateView):
     template_name = 'candidates/about.html'
 
-class RecentChangesView(TemplateView):
+class RecentChangesView(ContributorsMixin, TemplateView):
     template_name = 'candidates/recent-changes.html'
 
     def get_context_data(self, **kwargs):
         context = super(RecentChangesView, self).get_context_data(**kwargs)
-        actions = LoggedAction.objects.all().order_by('-created')
+        actions = self.get_recent_changes_queryset()
         paginator = Paginator(actions, 50)
         page = self.request.GET.get('page')
         try:
@@ -580,27 +609,10 @@ class RecentChangesView(TemplateView):
             context['actions'] = paginator.page(paginator.num_pages)
         return context
 
-class LeaderboardView(TemplateView):
+class LeaderboardView(ContributorsMixin, TemplateView):
     template_name = 'candidates/leaderboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(LeaderboardView, self).get_context_data(**kwargs)
-        context['leaderboards'] = []
-        for title, since in [
-            ('All Time', None),
-            ('In the last week', datetime.now() - timedelta(days=7))
-        ]:
-            if since:
-                qs = LoggedAction.objects.filter(created__gt=since)
-            else:
-                qs = LoggedAction.objects.all()
-            rows = qs.values('user'). \
-                annotate(edit_count=Count('user')).order_by('-edit_count')[:10]
-            for row in rows:
-                row['username'] = User.objects.get(pk=row['user'])
-            leaderboard = {
-                'title': title,
-                'rows': rows,
-            }
-            context['leaderboards'].append(leaderboard)
+        context['leaderboards'] = self.get_leaderboards()
         return context
