@@ -1,0 +1,54 @@
+.header {
+  background: $color-teal;
+  color: #fff;
+
+  a, h1, h2, h3 {
+    color: inherit;
+  }
+
+  a:hover, a:focus {
+    display: inline-block;
+    border-bottom: 1px solid mix($color-teal, #fff, 50%);
+    margin-bottom: -1px;
+  }
+
+  h1 {
+    line-height: 1.2em;
+  }
+
+  .lead {
+    color: mix($color-teal, #fff, 30%);
+  }
+}
+
+.header__nav {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  @include clearfix;
+}
+
+.header__nav__logo {
+  float: left;
+  font-weight: bold;
+  margin-right: 1em;
+}
+
+.header__nav__login, .header__nav__logout {
+  float: right;
+}
+
+.header__nav__logout strong {
+  margin-right: 1em;
+}
+
+.header__hero {
+  padding-bottom: 1.5em;
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}

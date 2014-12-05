@@ -1,26 +1,28 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% block body_class %}person{% endblock %}
 
 {% block title %}{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}{% endblock %}
 
-{% block content %}
-
-{% if last_cons %}
-<div class="breadcrumb">
-  &#187;
-  <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">
-   {{ last_cons.1.name }}
-  </a>
+{% block hero %}
+<div class="person__hero">
+  {% if person.image %}
+    <img class="person-avatar" src="{{ person.image }}"/>
+  {% elif person.popit_data.gender == 'female' %}
+    <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+  {% else %}
+    <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+  {% endif %}
+  <h1>{{ person.name }}</h1>
+  {% if last_cons %}
+    <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
+  {% endif %}
 </div>
-{% endif %}
+{% endblock %}
 
-<h2>{{ person.name }}</h2>
-
-<img src="{{ person.image }}"/>
-
-<h3>Candidate data:</h3>
-
+{% block content %}
 <table>
   <tr>
     <td>Name:</td><td>{{ person.name }}</a></td>

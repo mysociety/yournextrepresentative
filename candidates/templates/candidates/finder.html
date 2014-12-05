@@ -33,6 +33,8 @@
 
 {% block content %}
 
+<div class="finder__forms">
+
   {% if bad_postcode %}
   <div class="postcode-form-error">'{{ bad_postcode }}' was not a valid postcode</div>
   {% endif %}
@@ -54,5 +56,38 @@
     <input type="submit" class="button" value="Show candidates" />
     <a class="show-other-form">Or search by postcode</a>
   </form>
+
+</div>
+
+<div class="finder__activity">
+  <div class="finder__activity__changes">
+    <h2><a href="{% url 'recent-changes' %}">Recent changes</a></h2>
+    <ol>
+      {% for action in recent_actions %}
+        <li>User <strong>{{ action.user.username }}</strong>
+          {% if action.action_type == 'person-create' %}
+            created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+          {% elif action.action_type == 'candidacy-create' %}
+            confirmed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+          {% elif action.action_type == 'candidacy-delete' %}
+            removed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+          {% else %}
+            updated <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+          {% endif %}
+        <span class="when">{{ action.created|timesince }} ago</span></li>
+      {% endfor %}
+    </ol>
+    <p class="more"><a href="{% url 'recent-changes' %}">Show more changes…</a></p>
+  </div>
+  <div class="finder__activity__leaderboard">
+    <h2><a href="{% url 'leaderboard' %}">Top users this week</a></h2>
+    <ol>
+      {% for row in top_users %}
+        <li><strong>{{ row.username }}</strong> <span class="edits">{{ row.edit_count }} edit{{ row.edit_count|pluralize }}</span></li>
+      {% endfor %}
+    </ol>
+    <p class="more"><a href="{% url 'leaderboard' %}">Show full leaderboard…</a></p>
+  </div>
+</div>
 
 {% endblock %}

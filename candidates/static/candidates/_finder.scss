@@ -1,0 +1,171 @@
+.finder__forms {
+  text-align: center;
+  max-width: 30em;
+  margin: 0 auto;
+
+  label {
+    font-size: 1.4em;
+    margin-bottom: 0.4em;
+  }
+
+  .select2-container {
+    text-align: left;
+  }
+
+  .show-other-form {
+    display: block;
+    margin-top: 1em;
+  }
+}
+
+.finder__activity {
+  margin-top: 3em;
+}
+
+.finder__activity__changes,
+.finder__activity__leaderboard {
+  h2 a {
+    display: block;
+    background: transparent url(img/icon-changes.png) left center no-repeat;
+    padding-left: 40px;
+  }
+
+  .edits, .when {
+    color: #999;
+  }
+
+  .when {
+    display: block;
+  }
+
+  .edits {
+    margin-left: 0.5em;
+  }
+
+  li {
+    line-height: 1.3em;
+    padding: 0.5em 0;
+    border-top: 1px solid #eee;
+  }
+
+  ol {
+    list-style: none;
+    margin-left: 0;
+    margin-bottom: 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  p.more {
+    line-height: 1.3em;
+    padding: 0.5em 0;
+  }
+}
+
+.finder__activity__changes {
+  a {
+    color: $color-cyan;
+
+    &:hover, &:focus {
+      color: darken($color-cyan, 10%);
+    }
+  }
+}
+
+.finder__activity__leaderboard {
+  h2 a {
+    background-image: url(img/icon-leaderboard.png);
+  }
+
+  a {
+    color: $color-gold;
+
+    &:hover, &:focus {
+      color: darken($color-gold, 10%);
+    }
+  }
+}
+
+@media #{$medium-up} {
+  // On wide screens, we make the finder form stand out
+  // by making it "pop" up over the header.
+
+  body.finder .content__inner {
+    padding-top: 0;
+  }
+
+  body.finder .header {
+    padding-bottom: 4em;
+  }
+
+  .finder__forms {
+    position: relative;
+    background-color: #fff;
+    margin: -3em auto 0 auto;
+    padding: 2em 4em 0 4em;
+
+    &:before,
+    &:after {
+      content: " ";
+      display: block;
+      width: 4px;
+      height: 170px;
+      position: absolute;
+      top: 3em;
+      left: -4px;
+      background: #fff url(img/finder-shadow-left.gif) 0 0 no-repeat;
+    }
+
+    &:after {
+      left: auto;
+      right: -4px;
+      background-image: url(img/finder-shadow-right.gif);
+    }
+  }
+
+  .finder__activity {
+    margin-top: 5em;
+    @include clearfix;
+  }
+
+  .finder__activity__changes,
+  .finder__activity__leaderboard {
+    float: left;
+    width: 45%;
+
+    h2 {
+      font-size: rem-calc(28);
+      line-height: 1.3em;
+      text-align: center;
+
+      a {
+        display: inline-block;
+      }
+    }
+
+    ol {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    p.more {
+      text-align: center;
+    }
+  }
+
+  .finder__activity__leaderboard {
+    float: right;
+    margin-left: 0;
+  }
+}
+
+@media #{$large-up} {
+  .finder__activity__changes {
+    width: 40%;
+    margin-left: 5%;
+  }
+
+  .finder__activity__leaderboard {
+    width: 40%;
+    margin-right: 5%;
+  }
+}

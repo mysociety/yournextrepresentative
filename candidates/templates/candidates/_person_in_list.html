@@ -1,18 +1,21 @@
 {% load staticfiles %}
-<div class="person-in-list clearfix">
-  {% if c.image %}
-    <img src="{{ c.image }}"/>
+
+{% if c.image %}
+  <a href="{% url 'person-view' c.id %}">
+    <img class="person-avatar" src="{{ c.image }}"/>
+  </a>
+{% elif c.popit_data.gender == 'female' %}
+  <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+{% else %}
+  <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+{% endif %}
+<div class="person-name-and-party">
+  <a href="{% url 'person-view' c.id %}">{{ c.name }}</a>
+  {% if year == '2015' %}
+    ({{c.parties.2015.name }})
+  {% elif year == '2010' %}
+    ({{c.parties.2010.name }})
   {% else %}
-    <img src="{% static 'candidates/img/unknown-person-large.png' %}"/>
+    (BUG: UNKNOWN YEAR)
   {% endif %}
-  <div class="person-in-list-name-and-party">
-    <a href="{% url 'person-view' c.id %}">{{ c.name }}</a>
-    {% if year == '2015' %}
-      ({{c.parties.2015.name }})
-    {% elif year == '2010' %}
-      ({{c.parties.2010.name }})
-    {% else %}
-      (BUG: UNKNOWN YEAR)
-    {% endif %}
-  </div>
 </div>
