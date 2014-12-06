@@ -38,8 +38,24 @@ def get_descriptive_value(year, attribute, value, leaf):
             message = u'{0} known not to be standing in {1}'
             return message.format(prefix, year)
         else:
-            message = u'{0} known to be standing in {1} in {2}'
-            return message.format(prefix, value['name'], year)
+            if leaf:
+                if leaf == 'post_id':
+                    message = "{0} known to be standing for the post with ID {1} in {2}"
+                    return message.format(prefix, value, year)
+                elif leaf == 'mapit_url':
+                    message = "{0} known to be standing in the constituency with MapIt URL {1} in {2}"
+                    return message.format(prefix, value, year)
+                elif leaf == 'name':
+                    message = "{0} known to be standing in {1} in {2}"
+                    return message.format(prefix, value, year)
+                else:
+                    message = u"Unexpected leaf {0} (attribute: {1}, year: {2}"
+                    raise Exception, message.format(
+                        leaf, attribute, year
+                    )
+            else:
+                message = u'{0} known to be standing in {1} in {2}'
+                return message.format(prefix, value['name'], year)
 
 def explain_standing_in_and_party_memberships(operation, attribute, year, leaf):
     """Set 'value' and 'previous_value' in operation to a readable explanation
@@ -78,7 +94,7 @@ def get_version_diff(from_data, to_data):
         # differently so they can be presented in human-readable form,
         # so match those cases first:
         m = re.search(
-            r'(standing_in|party_memberships)(?:/(201[05]))?(?:/([a-z]+))?',
+            r'(standing_in|party_memberships)(?:/(201[05]))?(?:/(\w+))?',
             operation['path'],
         )
         if op in ('replace', 'remove'):

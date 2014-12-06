@@ -369,3 +369,85 @@ class TestVersionDiffs(TestCase):
         versions_with_diffs = get_version_diffs(versions)
 
         self.assertEqual(expected_result, versions_with_diffs)
+
+    def test_versions_just_constituency_changed(self):
+        versions = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'standing_in': {
+                        '2015': {'mapit_url': 'http://mapit.mysociety.org/area/65659',
+                                 'name': 'Truro and Falmouth',
+                                 'post_id': '65659'}
+                    },
+                }
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    "standing_in": {
+                        "2015": {
+                            "post_id": "65808",
+                            "name": "Dulwich and West Norwood",
+                            "mapit_url": "http://mapit.mysociety.org/area/65808"
+                        },
+                    },
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'standing_in': {
+                        '2015': {'mapit_url': 'http://mapit.mysociety.org/area/65659',
+                                 'name': 'Truro and Falmouth',
+                                 'post_id': '65659'}
+                    },
+                },
+                'diff': [
+                    {
+                        'op': 'replace',
+                        'path': 'standing_in/2015/mapit_url',
+                        'previous_value': 'is known to be standing in the constituency with MapIt URL http://mapit.mysociety.org/area/65808 in 2015',
+                        'value': 'is known to be standing in the constituency with MapIt URL http://mapit.mysociety.org/area/65659 in 2015',
+                    },
+                    {
+                        'op': 'replace',
+                        'path': 'standing_in/2015/name',
+                        'previous_value': 'is known to be standing in Dulwich and West Norwood in 2015',
+                        'value': 'is known to be standing in Truro and Falmouth in 2015',
+                    },
+                    {
+                        'op': 'replace',
+                        'path': 'standing_in/2015/post_id',
+                        'previous_value': 'is known to be standing for the post with ID 65808 in 2015',
+                        'value': 'is known to be standing for the post with ID 65659 in 2015',
+                    },
+                ]
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    "standing_in": {
+                        "2015": {
+                            "post_id": "65808",
+                            "name": "Dulwich and West Norwood",
+                            "mapit_url": "http://mapit.mysociety.org/area/65808"
+                        },
+                    },
+                },
+                'diff':[
+                    {
+                        'op': 'add',
+                        'path': 'standing_in',
+                        'value': 'is known to be standing in Dulwich and West Norwood in 2015',
+                    }
+                ]
+            },
+        ]
+
+        versions_with_diffs = get_version_diffs(versions)
+
+        self.assertEqual(expected_result, versions_with_diffs)
