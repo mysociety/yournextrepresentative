@@ -20,7 +20,7 @@ def get_descriptive_value(year, attribute, value, leaf):
             # In that case, there's only a particular value in the
             # dictionary that's changed:
             if leaf == 'name':
-                message = u'{0} known to be standing for the party "{1}" in {2}'
+                message = u"{0} known to be standing for the party '{1}' in {2}"
                 return message.format(prefix, value, year)
             elif leaf == 'id':
                 message = u'{0} known to be standing for the party with ID {1} in {2}'

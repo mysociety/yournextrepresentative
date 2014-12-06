@@ -336,8 +336,8 @@ class TestVersionDiffs(TestCase):
                     {
                         'op': 'replace',
                         'path': 'party_memberships/2015/name',
-                        'previous_value': 'is known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in 2015',
-                        'value': 'is known to be standing for the party "Independent" in 2015',
+                        'previous_value': 'is known to be standing for the party \'Mebyon Kernow - The Party for Cornwall\' in 2015',
+                        'value': 'is known to be standing for the party \'Independent\' in 2015',
                     },
                 ]
             },
