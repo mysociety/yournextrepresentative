@@ -277,7 +277,6 @@ class TestVersionDiffs(TestCase):
 
         self.assertEqual(expected_result, versions_with_diffs)
 
-
     def test_versions_just_party_changed(self):
         versions = [
             {
