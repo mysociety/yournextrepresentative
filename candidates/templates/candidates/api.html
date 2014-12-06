@@ -97,6 +97,87 @@ constituency.</p>
 
 <h2>Find Candidates for a Constituency</h2>
 
+<p>There are broadly two ways you can approach getting candidate
+data for a constituency; one is slightly simpler, and just gives
+you the basic candidate and party information, while the second
+gives you the full data in Popolo format, which is more complex
+but useful if you're using tools that generically process Popolo
+data.</p>
+
+<h3>Simpler (Basic candidate information)</h3>
+
+<p>You can get all the candidates for a constituency, both in
+2010 and 2015 by a query like:
+
+<pre class="code-sample">
+{{ popit_url }}posts/CONSTITUENCY_ID?embed=membership.person
+</pre>
+
+<p>
+For example, for Dulwich and West Norwood,
+<a href="{{ popit_url }}posts/65808?embed=membership.person">these
+would be the results</a>.
+</p>
+
+<p>
+If you iterate over the <tt>memberships</tt> in that result,
+each person will look something like:
+</p>
+
+<pre>
+"person_id": {
+  "id": "2009",
+  "birth_date": null,
+  "email": "....@example.org",
+  "gender": "female",
+  "name": "Tessa Jowell",
+  "party_memberships": {
+    "2010": {
+      "id": "party:53",
+      "name": "Labour Party"
+    }
+  },
+  "standing_in": {
+    "2010": {
+      "mapit_url": "http://mapit.mysociety.org/area/65808",
+      "name": "Dulwich and West Norwood",
+      "post_id": "65808"
+    },
+    "2015": null
+  },
+</pre>
+
+<p>(I've removed some fields there to keep the example simpler.)
+The two fields of particular interest are
+probably <tt>standing_in</tt> and <tt>party_memberships</tt>.
+</p>
+
+<h4>standing_in</h4>
+
+<p>This object will only have keys '2010' or '2015'. If one of
+these keys is present then we have known information about the
+candidate for the UK general election in that year.  If the
+value is <tt>null</tt> then we know that they're <em>not</em>
+standing. If they are (or were) standing in the general election
+in that year then there will be a dictionary giving you details
+of the constituency they were standing in. So, in the example
+above we can see that Tessa Jowell stood in 2010 in Dulwich and
+West Norwood, but we know isn't standing in any consituency
+in 2015.</p>
+
+<h4>party_memberships</h4>
+
+<p>This object will similarly only have keys '2010' or '2015'
+and tells you what party the candidate is / was standing for in
+the general election of that year.  So in the example above, you
+can see that Tessa Jowell stood for the Labour Party in 2010,
+but has no entry for 2015 (because, as the <tt>standing_in</tt>
+tells us) she's not standing in 2015.</p>
+
+<p></p>
+
+<h3>More complex (Full Popolo information)</h3>
+
 <p>
 All the candidates we know about for a constituency can be
 returned by making a GET request to a URL of this form, where
@@ -135,5 +216,21 @@ whether it's their party membership at the 2010 or 2015 election.
 </p>
 
 </div>
+
+<h2>Find a candidate by name</h2>
+
+You can use the <tt>search/persons</tt> endpoint with a query
+paramter like <tt>q=name:"John Doe"</tt>.
+
+<pre class="code-sample">
+{{ popit_url }}search/persons?q=name:%22FULL%20NAME%22
+</pre>
+
+<p>For example, you can find every David Jones in the database
+with <a href="{{ popit_url }}search/persons?q=name:%22david%20jones%22">this
+query</a>. As above, the <tt>standing_in</tt>
+and <tt>party_memberships</tt> elements will give you details
+about which constituencies they are / were standing in, and for which
+parties.
 
 {% endblock %}
