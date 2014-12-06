@@ -276,3 +276,96 @@ class TestVersionDiffs(TestCase):
         versions_with_diffs = get_version_diffs(versions)
 
         self.assertEqual(expected_result, versions_with_diffs)
+
+
+    def test_versions_just_party_changed(self):
+        versions = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'party_memberships': {
+                        '2010': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        },
+                        '2015': {
+                            'id': 'ynmp-party:2',
+                            'name': 'Independent'
+                        }
+                    },
+                }
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'party_memberships': {
+                        '2010': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        },
+                        '2015': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        }
+                    },
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'information_source': 'After clicking "Not standing again"',
+                'data': {
+                    'party_memberships': {
+                        '2010': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        },
+                        '2015': {
+                            'id': 'ynmp-party:2',
+                            'name': 'Independent'
+                        }
+                    },
+                },
+                'diff': [
+                    {
+                        'op': 'replace',
+                        'path': 'party_memberships/2015/id',
+                        'previous_value': 'is known to be standing for the party with ID party:58 in 2015',
+                        'value': 'is known to be standing for the party with ID ynmp-party:2 in 2015',
+                    },
+                    {
+                        'op': 'replace',
+                        'path': 'party_memberships/2015/name',
+                        'previous_value': 'is known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in 2015',
+                        'value': 'is known to be standing for the party "Independent" in 2015',
+                    },
+                ]
+            },
+            {
+                'information_source': 'Original imported data',
+                'data': {
+                    'party_memberships': {
+                        '2010': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        },
+                        '2015': {
+                            'id': 'party:58',
+                            'name': 'Mebyon Kernow - The Party for Cornwall'
+                        }
+                    },
+                },
+                'diff':[
+                    {
+                        'op': 'add',
+                        'path': 'party_memberships',
+                        'value': 'is known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in 2015 and was known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in 2010',
+                    }
+                ]
+            },
+        ]
+
+        versions_with_diffs = get_version_diffs(versions)
+
+        self.assertEqual(expected_result, versions_with_diffs)

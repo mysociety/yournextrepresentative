@@ -6,7 +6,7 @@ import re
 import jsonpatch
 import jsonpointer
 
-def get_descriptive_value(year, attribute, value):
+def get_descriptive_value(year, attribute, value, leaf):
     """Get a sentence fragmetn describing someone's status in a particular year
 
     'attribute' is either "standing_in" or "party_membership", 'year'
@@ -16,8 +16,23 @@ def get_descriptive_value(year, attribute, value):
 
     prefix = {'2010': u'was', '2015': u'is'}[year]
     if attribute == 'party_memberships':
-        message = u'{0} known to be standing for {1} in {2}'
-        return message.format(prefix, value['name'], year)
+        if leaf:
+            # In that case, there's only a particular value in the
+            # dictionary that's changed:
+            if leaf == 'name':
+                message = u'{0} known to be standing for the party "{1}" in {2}'
+                return message.format(prefix, value, year)
+            elif leaf == 'id':
+                message = u'{0} known to be standing for the party with ID {1} in {2}'
+                return message.format(prefix, value, year)
+            else:
+                message = u"Unexpected leaf {0} (attribute: {1}, year: {2}"
+                raise Exception, message.format(
+                    leaf, attribute, year
+                )
+        else:
+            message = u'{0} known to be standing for the party "{1}" in {2}'
+            return message.format(prefix, value['name'], year)
     elif attribute == 'standing_in':
         if value is None:
             message = u'{0} known not to be standing in {1}'
@@ -26,7 +41,7 @@ def get_descriptive_value(year, attribute, value):
             message = u'{0} known to be standing in {1} in {2}'
             return message.format(prefix, value['name'], year)
 
-def explain_standing_in_and_party_memberships(operation, attribute, year):
+def explain_standing_in_and_party_memberships(operation, attribute, year, leaf):
     """Set 'value' and 'previous_value' in operation to a readable explanation
 
     'attribute' is one of 'standing_in' or 'party_memberships'."""
@@ -38,7 +53,8 @@ def explain_standing_in_and_party_memberships(operation, attribute, year):
             operation[key] = get_descriptive_value(
                 year,
                 attribute,
-                operation[key]
+                operation[key],
+                leaf,
             )
         else:
             clauses = []
@@ -46,7 +62,8 @@ def explain_standing_in_and_party_memberships(operation, attribute, year):
                 clauses.append(get_descriptive_value(
                     year,
                     attribute,
-                    value
+                    value,
+                    leaf,
                 ))
             operation[key] = ' and '.join(clauses)
 
@@ -61,18 +78,19 @@ def get_version_diff(from_data, to_data):
         # differently so they can be presented in human-readable form,
         # so match those cases first:
         m = re.search(
-            r'(standing_in|party_memberships)(?:/(201[05]))?',
+            r'(standing_in|party_memberships)(?:/(201[05]))?(?:/([a-z]+))?',
             operation['path'],
         )
-        attribute, year = m.groups() if m else (None, None)
-        if attribute:
-            explain_standing_in_and_party_memberships(operation, attribute, year)
         if op in ('replace', 'remove'):
             operation['previous_value'] = \
                 jsonpointer.resolve_pointer(
                     from_data,
                     operation['path']
                 )
+        attribute, year, leaf = m.groups() if m else (None, None, None)
+        if attribute:
+            explain_standing_in_and_party_memberships(operation, attribute, year, leaf)
+        if op in ('replace', 'remove'):
             # Ignore replacing no data with no data:
             if op == 'replace' and \
                not operation['previous_value'] and \
