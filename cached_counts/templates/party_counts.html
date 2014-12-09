@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Number of known 2015 candidates per party</h2>
+    <table class="counts_table">
+        <thead>
+            <th>Constituency Name</th>
+            <th>Known 2015 Candidates</th>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr {% if object.count == 0 %}class="no_known"{% endif%}>
+                <td>{{ object.name}}</td>
+                <td>{{ object.count}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
