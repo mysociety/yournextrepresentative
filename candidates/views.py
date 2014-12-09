@@ -8,6 +8,7 @@ from slugify import slugify
 import requests
 
 from django.db.models import Count
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
@@ -190,6 +191,8 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['add_candidate_form'] = NewPersonForm(
             initial={'constituency': mapit_area_id}
         )
+
+        context['source_hints'] = settings.SOURCE_HINTS
 
         return context
 

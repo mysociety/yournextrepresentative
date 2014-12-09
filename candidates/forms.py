@@ -3,6 +3,7 @@ import re
 from .static_data import MapItData, PartyData
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 class PostcodeForm(forms.Form):
@@ -37,13 +38,17 @@ class BaseCandidacyForm(forms.Form):
 
 class CandidacyCreateForm(BaseCandidacyForm):
     source = forms.CharField(
-        label="Source of information that they're standing",
+        label=u"Source of information that they're standing ({0})".format(
+            settings.SOURCE_HINTS
+        ),
         max_length=512,
     )
 
 class CandidacyDeleteForm(BaseCandidacyForm):
     source = forms.CharField(
-        label="Information source for this change",
+        label=u"Information source for this change ({0})".format(
+            settings.SOURCE_HINTS
+        ),
         max_length=512,
     )
 
@@ -149,7 +154,9 @@ class NewPersonForm(BasePersonForm):
         required=False,
     )
     source = forms.CharField(
-        label="Source of information",
+        label=u"Source of information ({0})".format(
+            settings.SOURCE_HINTS
+        ),
         max_length=512,
         error_messages={
             'required': 'You must indicate how you know about this candidate'
@@ -199,7 +206,9 @@ class UpdatePersonForm(BasePersonForm):
         required=False,
     )
     source = forms.CharField(
-        label="Source of information for this change",
+        label=u"Source of information for this change ({0})".format(
+            settings.SOURCE_HINTS
+        ),
         max_length=512,
         error_messages={
             'required': 'You must indicate how you know about this candidate'

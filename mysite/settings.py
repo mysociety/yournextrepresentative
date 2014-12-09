@@ -234,3 +234,6 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=candidates'
 ]
+
+SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
+we prefer URLs of news stories or official candidate pages.'''
