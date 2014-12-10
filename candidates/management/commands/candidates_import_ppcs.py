@@ -225,9 +225,8 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 new_person_data_value = new_person_data.get(key)
                 person_data_value = person_data.get(key)
                 if person_data_value and new_person_data_value and new_person_data_value != person_data_value:
-                    warnings.append(u"[{0}] not replacing  {1}".format(key, person_data_value))
+                    warnings.append(u"[{0}] replacing      {1}".format(key, person_data_value))
                     warnings.append(u"[{0}] with new value {1}".format(key, new_person_data_value))
-                    del new_person_data[key]
         if warnings:
             print u"Warnings for person/{0} {1}".format(
                 popit_person_id, person_data['name']
