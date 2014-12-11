@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
@@ -55,7 +56,7 @@ class ContributorsMixin(object):
         result = []
         for title, since in [
             ('All Time', None),
-            ('In the last week', datetime.now() - timedelta(days=7))
+            ('In the last week', timezone.now() - timedelta(days=7))
         ]:
             if since:
                 qs = LoggedAction.objects.filter(created__gt=since)
