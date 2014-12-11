@@ -107,7 +107,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         return context
 
 
-class ConstituencyNameFinderView(FormView):
+class ConstituencyNameFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = ConstituencyForm
 
