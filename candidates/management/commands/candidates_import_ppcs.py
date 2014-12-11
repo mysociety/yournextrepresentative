@@ -406,9 +406,9 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 print "filename:", filename
                 with open(filename) as f:
                     ppc_data = json.load(f)
-                    ppc_data['party_slug'] = party_slug
-                    ppc_data['party_object'] = party_slug_to_popit_party[party_slug]
-                    ppc_data['constituency_object'] = get_constituency_from_name(
-                        ppc_data['constituency']
-                    )
-                    self.handle_person(ppc_data, image)
+                ppc_data['party_slug'] = party_slug
+                ppc_data['party_object'] = party_slug_to_popit_party[party_slug]
+                ppc_data['constituency_object'] = get_constituency_from_name(
+                    ppc_data['constituency']
+                )
+                self.handle_person(ppc_data, image)
