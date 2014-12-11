@@ -11,6 +11,7 @@
 # run the script manually to make those decisions.
 
 import hashlib
+from optparse import make_option
 import os
 from os.path import join, exists
 import re
@@ -66,12 +67,21 @@ constituency_lookup = {
     MapItData.constituencies_2010_name_map.items()
 }
 
+class UnknownConstituencyException(Exception):
+    pass
+
 def get_constituency_from_name(constituency_name):
     name = re.sub(r'\xA0', ' ', constituency_name)
     name = re.sub(r' & ', ' and ', name)
     name = re.sub(r'(?i)candidate for ', '', name)
     name = constituency_corrections.get(name, name)
-    mapit_data = constituency_lookup[cons_key(name)]
+    try:
+        mapit_data = constituency_lookup[cons_key(name)]
+    except KeyError:
+        message = "Unknown constituency; {0} - consider adding a correction for {1}"
+        raise UnknownConstituencyException(message.format(
+            cons_key(name), name
+        ))
     post_id = str(mapit_data['id'])
     return {
         'post_id': post_id,
@@ -145,6 +155,10 @@ def get_file_md5sum(filename):
 
 class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Import scraped PPC data"
+
+    option_list = BaseCommand.option_list + (
+        make_option('--check', action='store_true', dest='check', help='Check constituency names'),
+    )
 
     # Currently unused:
     #
@@ -411,4 +425,6 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 ppc_data['constituency_object'] = get_constituency_from_name(
                     ppc_data['constituency']
                 )
+                if options['check']:
+                    continue
                 self.handle_person(ppc_data, image)
