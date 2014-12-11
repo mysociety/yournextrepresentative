@@ -69,8 +69,8 @@ constituency_lookup = {
 def get_constituency_from_name(constituency_name):
     name = re.sub(r'\xA0', ' ', constituency_name)
     name = re.sub(r' & ', ' and ', name)
-    name = constituency_corrections.get(name, name)
     name = re.sub(r'(?i)candidate for ', '', name)
+    name = constituency_corrections.get(name, name)
     mapit_data = constituency_lookup[cons_key(name)]
     post_id = str(mapit_data['id'])
     return {
