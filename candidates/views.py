@@ -270,17 +270,11 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
-        print "Going to mark this person as *standing*:"
-        print json.dumps(our_person, indent=4)
-
         our_person['standing_in']['2015'] = self.get_area_from_post_id(
             form.cleaned_data['mapit_area_id'],
             mapit_url_key='mapit_url'
         )
         our_person['party_memberships']['2015'] = our_person['party_memberships']['2010']
-
-        print "... by updating with this data:"
-        print json.dumps(our_person, indent=4)
 
         self.update_person(our_person, change_metadata, previous_versions)
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
@@ -314,14 +308,8 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
         our_person = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
-        print "Going to mark this person as *not* standing:"
-        print json.dumps(our_person, indent=4)
-
         our_person['standing_in']['2015'] = None
         our_person['party_memberships'].pop('2015', None)
-
-        print "... by updating with this data:"
-        print json.dumps(our_person, indent=4)
 
         self.update_person(our_person, change_metadata, previous_versions)
         return get_redirect_from_mapit_id(form.cleaned_data['mapit_area_id'])
@@ -484,9 +472,6 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         our_person = self.get_person(self.kwargs['person_id'])
         previous_versions = our_person.pop('versions')
 
-        print "Going to update this person:"
-        print json.dumps(our_person, indent=4)
-
         # Now we need to make any changes to that data structure based
         # on information given in the form.
 
@@ -538,9 +523,6 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             our_person['standing_in'].pop('2015', None)
             our_person['party_memberships'].pop('2015', None)
 
-        print "Going to update that person with this data:"
-        print json.dumps(our_person, indent=4)
-
         self.update_person(our_person, change_metadata, previous_versions)
 
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': our_person['id']}))
@@ -579,9 +561,6 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
             '2015': self.get_area_from_post_id(mapit_area_id,
                                                mapit_url_key='mapit_url')
         }
-
-        print "Going to create a new person from this data:"
-        print json.dumps(data_for_creation, indent=4)
 
         person_id = self.create_person(data_for_creation, change_metadata)
         action.popit_person_id = person_id
