@@ -35,7 +35,7 @@ class TestUpdatePerson(TestCase):
             "birth_date": None,
             "email": "foo@example.org",
             "homepage_url": "http://foo.example.org",
-            "id": "tessa-jowell",
+            "id": "2009",
             "name": "Tessa Jowell",
             "party_memberships": {
                 "2010": {
@@ -160,10 +160,10 @@ class TestUpdatePerson(TestCase):
         )
 
         view.create_candidate_list_memberships.assert_called_once_with(
-            'tessa-jowell',
+            '2009',
             new_person_data,
         )
         view.create_party_memberships.assert_called_once_with(
-            'tessa-jowell',
+            '2009',
             new_person_data
         )

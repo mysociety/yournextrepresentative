@@ -1,0 +1,124 @@
+
+{
+  "result": {
+    "id": "2959",
+    "slug": "tessa-jowell",
+    "name": "Tessa Jowell",
+    "gender": "female",
+    "phone": "02086931826",
+    "email": "jowell@example.com",
+    "standing_in": {
+      "2010": {
+        "mapit_url": "http://mapit.mysociety.org/area/65808",
+        "name": "Dulwich and West Norwood",
+        "post_id": "65808"
+      },
+      "2015": {
+        "mapit_url": "http://mapit.mysociety.org/area/65808",
+        "name": "Dulwich and West Norwood",
+        "post_id": "65808"
+      }
+    },
+    "versions": [
+      {
+        "username": "symroe",
+        "information_source": "Just adding example data",
+        "ip": "127.0.0.1",
+        "version_id": "35ec2d5821176ccc",
+        "timestamp": "2014-10-28T14:32:36.835429",
+        "data": {
+          "name": "Tessa Jowell",
+          "id": "2959",
+          "twitter_username": "",
+          "standing_in": {
+            "2010": {
+              "post_id": "65808",
+              "name": "Dulwich and West Norwood",
+              "mapit_url": "http://mapit.mysociety.org/area/65808"
+            },
+            "2015": {
+              "post_id": "65808",
+              "name": "Dulwich and West Norwood",
+              "mapit_url": "http://mapit.mysociety.org/area/65808"
+            }
+          },
+          "homepage_url": "",
+          "birth_date": null,
+          "wikipedia_url": "",
+          "party_memberships": {
+            "2010": {
+              "id": "544e3d6981b7fa64bfccce1f",
+              "name": "Labour Party"
+            },
+            "2015": {
+              "name": "Labour Party"
+            }
+          },
+          "email": "jowell@example.com"
+        }
+      }
+    ],
+    "memberships": [
+      {
+        "id": "544fa90544e64207e0caed18",
+        "organization_id": null,
+        "person_id": "2959",
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544fa90544e64207e0caed18",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544fa90544e64207e0caed18"
+      },
+      {
+        "id": "544fa90544e64207e0caed16",
+        "person_id": "2959",
+        "organization_id": "544e3d6981b7fa64bfccce1f",
+        "start_date": "2005-05-06",
+        "end_date": "2010-05-06",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544fa90544e64207e0caed16",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544fa90544e64207e0caed16"
+      },
+      {
+        "id": "544fa90544e64207e0caed15",
+        "person_id": "2959",
+        "organization_id": "544e3d6981b7fa64bfccce1f",
+        "start_date": "2010-05-07",
+        "end_date": "9999-12-31",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544fa90544e64207e0caed15",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544fa90544e64207e0caed15"
+      },
+      {
+        "id": "544fa90544e64207e0caed17",
+        "organization_id": null,
+        "person_id": "2959",
+        "post_id": "65808",
+        "role": "Candidate",
+        "start_date": "2010-05-07",
+        "end_date": "9999-12-31",
+        "links": [],
+        "contact_details": [],
+        "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/memberships/544fa90544e64207e0caed17",
+        "html_url": "http://candidates.127.0.0.1.xip.io:3000/memberships/544fa90544e64207e0caed17"
+      }
+    ],
+    "links": [],
+    "contact_details": [],
+    "identifiers": [
+      {
+        "id": "544e3df981b7fa64bfccdaac",
+        "scheme": "yournextmp-candidate",
+        "identifier": "2959"
+      }
+    ],
+    "other_names": [],
+    "url": "http://candidates.127.0.0.1.xip.io:3000/api/v0.1/persons/2959",
+    "html_url": "http://candidates.127.0.0.1.xip.io:3000/persons/2959"
+  }
+}
