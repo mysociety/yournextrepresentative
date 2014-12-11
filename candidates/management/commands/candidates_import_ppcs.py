@@ -50,6 +50,8 @@ constituency_corrections = {
     'Hull North': 'Kingston upon Hull North',
     'Hull West and Hessle': 'Kingston upon Hull West and Hessle',
     'Isle of Wright': 'Isle of Wight',
+    'Liverpool, Wavetree': 'Liverpool, Wavertree',
+    'Liverpool Wavetree': 'Liverpool, Wavertree',
     'Mid-Norfolk': 'Mid Norfolk',
     'Richmond': 'Richmond (Yorks)',
     'Sittingbourne and Sheppy': 'Sittingbourne and Sheppey',
