@@ -193,8 +193,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             initial={'constituency': mapit_area_id}
         )
 
-        context['source_hints'] = settings.SOURCE_HINTS
-
         return context
 
 

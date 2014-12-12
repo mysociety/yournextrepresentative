@@ -62,6 +62,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     # allauth specific context processors
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
+    "mysite.context_processors.add_settings",
 )
 
 # Application definition
