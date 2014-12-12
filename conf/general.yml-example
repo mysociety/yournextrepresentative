@@ -50,3 +50,7 @@ SERVER_EMAIL: root@localhost
 
 # The From: address for all emails except error emails
 DEFAULT_FROM_EMAIL: webmaster@localhost
+
+# You can use Google analytics by changing this to your Google
+# analytics tracking ID:
+GOOGLE_ANALYTICS_ACCOUNT: ''

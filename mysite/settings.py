@@ -32,6 +32,8 @@ POPIT_USER = conf.get('POPIT_USER', '')
 POPIT_PASSWORD = conf.get('POPIT_PASSWORD', '')
 POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 
+GOOGLE_ANALYTICS_ACCOUNT = conf.get('GOOGLE_ANALYTICS_ACCOUNT')
+
 # Email addresses that error emails are sent to when DEBUG = False
 ADMINS = conf['ADMINS']
 
