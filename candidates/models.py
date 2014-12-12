@@ -212,6 +212,14 @@ class PopItPerson(object):
         new_person = cls(api=api, popit_data=popit_data)
         return new_person
 
+    def update_from_popit(self, retry=None):
+        kwargs = {
+            'embed': 'membership.organization'
+        }
+        if retry is not None:
+            kwargs['retry'] = str(retry)
+        self.popit_data = api.persons(self.id).get(**kwargs)['result']
+
     @classmethod
     def create_from_dict(cls, person_dict):
         new_person = cls(popit_data=person_dict)
