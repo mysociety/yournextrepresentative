@@ -3,6 +3,7 @@ import json
 import jsonpatch
 import jsonpointer
 import re
+import sys
 from slugify import slugify
 
 from django.contrib.auth.models import User
@@ -193,6 +194,11 @@ def get_constituency_name_from_mapit_id(mapit_id):
         return constituency_data['name']
     return None
 
+
+class StalePopItData(Exception):
+    pass
+
+
 class PopItPerson(object):
 
     def __init__(self, api=None, popit_data=None):
@@ -211,6 +217,14 @@ class PopItPerson(object):
             embed='membership.organization')['result']
         new_person = cls(api=api, popit_data=popit_data)
         return new_person
+
+    def update_from_popit(self, retry=None):
+        kwargs = {
+            'embed': 'membership.organization'
+        }
+        if retry is not None:
+            kwargs['retry'] = str(retry)
+        self.popit_data = api.persons(self.id).get(**kwargs)['result']
 
     @classmethod
     def create_from_dict(cls, person_dict):
@@ -264,37 +278,58 @@ class PopItPerson(object):
                 'post_id': post_id,
             }
 
-        results = {}
-        for membership in self.popit_data['memberships']:
-            if membership.get('role') != "Candidate":
-                continue
-            if 'post_id' not in membership:
-                continue
-            if membership_covers_date(membership, election_date_2010):
-                results['2010'] = post_id_to_cons_data(membership['post_id'])
-            if membership_covers_date(membership, election_date_2015):
-                results['2015'] = post_id_to_cons_data(membership['post_id'])
+        # There's a tricky bug (in PopIt, I think) where we sometimes
+        # get old data (that's missing memberships) back from PopIt,
+        # but reloading again is fine. This is detectable because
+        # standing_in has a non-None entry for 2015 that isn't
+        # expressed by membership as well.  As a workaround, retry
+        # getting the data from PopIt up to 5 times before giving up
+        # and throwing an exception
+        retry = 0
+        while True:
 
-        # However, we can't infer from the candidate lists that
-        # someone's a member of that we know that they're known not to
-        # be standing in a particular election. So, if that
-        # information is present in the PopIt data, set it in the
-        # standing_in dictionary.
-        standing_in = self.popit_data.get('standing_in') or {}
-        for year, standing in standing_in.items():
-            if standing:
-                # Then there must already be a corresponding candidate
-                # list membership, but check that:
-                if year not in results:
-                    message = "Missing Candidate List membership according to PopIt data for {0} in {1}. standing_in was {2}, memberships were {3}"
-                    raise Exception(message.format(
-                        self.id,
-                        year,
-                        self.popit_data.get('standing_in', 'MISSING'),
-                        self.popit_data.get('memberships', 'MISSING'),
-                    ))
-            else:
-                results[year] = None
+            results = {}
+
+            for membership in self.popit_data['memberships']:
+                if membership.get('role') != "Candidate":
+                    continue
+                if 'post_id' not in membership:
+                    continue
+                if membership_covers_date(membership, election_date_2010):
+                    results['2010'] = post_id_to_cons_data(membership['post_id'])
+                if membership_covers_date(membership, election_date_2015):
+                    results['2015'] = post_id_to_cons_data(membership['post_id'])
+
+            # However, we can't infer from the candidate lists that
+            # someone's a member of that we know that they're known not to
+            # be standing in a particular election. So, if that
+            # information is present in the PopIt data, set it in the
+            # standing_in dictionary.
+            standing_in = self.popit_data.get('standing_in') or {}
+            for year, standing in standing_in.items():
+                if standing:
+                    # Then there must already be a corresponding candidate
+                    # list membership, but check that:
+                    if year not in results:
+                        message = u"Missing post membership according to PopIt "
+                        message += u"data for {0} in {1}. standing_in was {2}, "
+                        message += u"memberships were {3}".format(
+                            self.id,
+                            year,
+                            self.popit_data.get('standing_in', 'MISSING'),
+                            self.popit_data.get('memberships', 'MISSING'),
+                        )
+                        if retry <= 5:
+                            print >> sys.stderr, message
+                            retry += 1
+                            self.update_from_popit(retry)
+                            continue
+                        else:
+                            raise StalePopItData(message)
+                else:
+                    results[year] = None
+
+            break
 
         return results
 
