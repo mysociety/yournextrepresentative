@@ -15,7 +15,7 @@ class CachedCount(models.Model):
     object_id = models.CharField(blank=True, max_length=100)
 
     class Meta:
-        ordering = ['-count']
+        ordering = ['-count', 'name']
 
     @classmethod
     def total_2015(cls):
