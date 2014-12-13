@@ -224,7 +224,7 @@ class PopItPerson(object):
         }
         if retry is not None:
             kwargs['retry'] = str(retry)
-        self.popit_data = api.persons(self.id).get(**kwargs)['result']
+        self.popit_data = self.api.persons(self.id).get(**kwargs)['result']
 
     @classmethod
     def create_from_dict(cls, person_dict):
