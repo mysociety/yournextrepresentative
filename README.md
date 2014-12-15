@@ -88,7 +88,7 @@ Now source your `.bashrc` for those changes to take effect:
 Create the database tables:
 
     cd yournextmp-popit
-    ./manage.py syncdb
+    ./manage.py migrate
 
 Add a superuser account:
 

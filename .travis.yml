@@ -29,7 +29,7 @@ install:
     conf/general.yml-example > conf/general.yml
 
 before_script:
-  - ./manage.py syncdb --noinput
+  - ./manage.py migrate --noinput
 
 script:
   - ./manage.py test
