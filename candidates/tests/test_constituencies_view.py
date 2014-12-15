@@ -1,10 +1,13 @@
 import re
 
+from mock import patch
+
 from django_webtest import WebTest
 
 class TestConstituencyDetailView(WebTest):
 
-    def test_constituencies_page(self):
+    @patch('candidates.popit.PopIt')
+    def test_constituencies_page(self, mock_popit):
         # Just a smoke test to check that the page loads:
         response = self.app.get('/constituencies')
         aberdeen_north = response.html.find(
