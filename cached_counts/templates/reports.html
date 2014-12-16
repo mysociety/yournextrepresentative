@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<section class="total_percent">
+<ul class="total_percent">
     <li>Percent done compared to 2010: {{percent_of_2010|floatformat}}%</li>
     <li>2010 candidates known: 4,152</li>
     <li>2015 candidates known: {{candidates_2015|intcomma}}</li>
@@ -17,6 +17,6 @@
     <li>Candidates standing again: {{standing_again|intcomma}}</li>
     <li><a href="{% url "constituencies_counts" %}">Candidates per constituency</a></li>
     <li><a href="{% url "party_counts" %}">Candidates per party</a></li>
-</section>
+</ul>
 
 {% endblock content %}
