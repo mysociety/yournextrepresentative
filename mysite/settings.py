@@ -173,6 +173,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 if 'test' not in sys.argv:
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'mysite/static'),
+)
+
 PIPELINE_CSS = {
     'all': {
         'source_filenames': (

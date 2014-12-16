@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+    {% load staticfiles %}
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}"/>
+
     {% load compressed %}
     {% compressed_css 'all' %}
 
