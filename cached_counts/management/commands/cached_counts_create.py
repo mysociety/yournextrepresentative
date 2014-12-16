@@ -1,6 +1,3 @@
-from collections import defaultdict
-import json
-
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 from candidates.static_data import MapItData, PartyData
 
