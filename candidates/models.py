@@ -470,6 +470,7 @@ class MaxPopItIds(models.Model):
             raise ValueError('given max_id is lower than the previous one ({'
                              '0} vs {1})'.format(max_id, max_persons.max_id))
 
+
 class LoggedAction(models.Model):
     '''A model for logging the actions of users on the site
 
