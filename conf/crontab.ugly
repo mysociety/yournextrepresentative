@@ -1,0 +1,7 @@
+# Periodically executed tasks for YourNextMP.
+
+MAILTO=yournextmp@mysociety.org
+
+# Create the cached counts every 15 minutes:
+
+*/15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
