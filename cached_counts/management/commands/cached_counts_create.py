@@ -52,9 +52,6 @@ class Command(PopItApiMixin, BaseCommand):
             else:
                 new_candidates += 1
 
-            if not person.get('standing_in'):
-                print person
-
         # Add or create objects in the database
         # Parties
         for party_name, data in counts['parties'].items():
