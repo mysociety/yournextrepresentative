@@ -47,6 +47,7 @@
         <a href="{% url 'help-api' %}" class="header__nav__logo">API</a>
         <a href="{% url 'help-about' %}" class="header__nav__logo">About</a>
         <a href="{% url 'constituencies' %}" class="header__nav__logo">Constituencies</a>
+        <a href="{% url 'reports_home' %}" class="header__nav__logo">Numbers</a>
         {% if user.is_authenticated %}
           <span class="header__nav__logout">
             Signed in as <strong>{{ user.username }}</strong>

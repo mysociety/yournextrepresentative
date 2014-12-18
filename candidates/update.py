@@ -110,6 +110,10 @@ from .models import create_person_with_id_retries
 
 from .popit import PopItApiMixin
 
+import django.dispatch
+person_added = django.dispatch.Signal(providing_args=["data"])
+
+
 def election_year_to_party_dates(election_year):
     if str(election_year) == '2010':
         return {
@@ -221,6 +225,7 @@ class PersonUpdateMixin(PopItApiMixin):
         person_id = person_result['result']['id']
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
+        person_added.send(sender=PopItPerson, data=data)
         return person_id
 
     def update_person(self, data, change_metadata, previous_versions):

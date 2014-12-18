@@ -73,6 +73,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -86,6 +87,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     'pipeline',
     'candidates',
+    'cached_counts',
     'debug_toolbar',
     'south',
 )
@@ -181,6 +183,7 @@ PIPELINE_CSS = {
     'all': {
         'source_filenames': (
             'candidates/style.scss',
+            'cached_counts/style.scss',
             'select2/select2.css',
             'jquery/jquery-ui.css',
             'jquery/jquery-ui.structure.css',
