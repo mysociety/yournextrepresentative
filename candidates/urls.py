@@ -7,6 +7,7 @@ from candidates.views import (ConstituencyPostcodeFinderView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
     PersonView, HelpApiView, HelpAboutView, ConstituencyListView,
     RecentChangesView, LeaderboardView)
+from .feeds import RecentChangesFeed
 
 urlpatterns = patterns('',
     url(r'^$', ConstituencyPostcodeFinderView.as_view(), name='finder'),
@@ -41,6 +42,7 @@ urlpatterns = patterns('',
         LeaderboardView.as_view(),
         name='leaderboard'),
     url(r'^numbers/', include('cached_counts.urls')),
+    url(r'^feeds/changes.xml', RecentChangesFeed(), name='changes_feed'),
     url(r'^help/api', HelpApiView.as_view(), name='help-api'),
     url(r'^help/about', HelpAboutView.as_view(), name='help-about'),
     url(r'^admin/', include(admin.site.urls)),
