@@ -1,7 +1,7 @@
 {% load staticfiles %}
 
 {% if c.image %}
-  <a href="{% url 'person-view' c.id %}">
+  <a href="{% url 'person-view' c.id c.name|slugify %}">
     <img class="person-avatar" src="{{ c.image }}"/>
   </a>
 {% elif c.popit_data.gender == 'female' %}
@@ -10,7 +10,7 @@
   <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
 {% endif %}
 <div class="person-name-and-party">
-  <a href="{% url 'person-view' c.id %}">{{ c.name }}</a>
+  <a href="{% url 'person-view' c.id c.name|slugify %}">{{ c.name }}</a>
   {% if year == '2015' %}
     ({{c.parties.2015.name }})
   {% elif year == '2010' %}
