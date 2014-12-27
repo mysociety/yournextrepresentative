@@ -246,3 +246,9 @@ NOSE_ARGS = [
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
 we prefer URLs of news stories or official candidate pages.'''
+
+# Django Debug Toolbar will try to load jQuery from Google's CDN
+# unless you tell it explicitly that jQuery will already be loaded:
+DEBUG_TOOLBAR_CONFIG = {
+    'JQUERY_URL': '',
+}
