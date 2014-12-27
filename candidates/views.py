@@ -124,22 +124,6 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
         return context
 
 
-def normalize_party_name(original_party_name):
-    """Mangle the party name into a normalized form
-
-    >>> normalize_party_name('The Labour Party')
-    'labour'
-    >>> normalize_party_name('Labour Party')
-    'labour'
-    >>> normalize_party_name('Labour')
-    'labour'
-    """
-    result = original_party_name.lower()
-    result = re.sub(r'^\s*the\s+', '', result)
-    result = re.sub(r'\s+party\s*$', '', result)
-    return result.strip()
-
-
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
