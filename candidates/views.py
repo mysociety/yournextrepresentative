@@ -99,9 +99,6 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         bad_postcode = self.request.GET.get('bad_postcode')
         if bad_postcode:
             context['bad_postcode'] = bad_postcode
-        bad_constituency_id = self.request.GET.get('bad_constituency_id')
-        if bad_constituency_id:
-            context['bad_constituency_id'] = bad_constituency_id
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         return context
