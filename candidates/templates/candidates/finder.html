@@ -39,7 +39,7 @@
 
   <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ postcode_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
     <a class="show-other-form" href="{% url 'lookup-name' %}">Or select a constituency</a>
   </form>

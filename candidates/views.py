@@ -92,6 +92,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
+        context['postcode_form'] = kwargs.get('form') or PostcodeForm()
         context['show_postcode_form'] = True
         context['show_name_form'] = False
         context['constituency_form'] = ConstituencyForm()
@@ -116,7 +117,7 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
-        context['form'] = PostcodeForm()
+        context['postcode_form'] = PostcodeForm()
         context['constituency_form'] = kwargs.get('form') or ConstituencyForm()
         context['show_postcode_form'] = False
         context['show_name_form'] = True
