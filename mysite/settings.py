@@ -127,7 +127,6 @@ ROOT_URLCONF = 'mysite.urls'
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
