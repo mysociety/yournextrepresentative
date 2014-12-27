@@ -117,7 +117,7 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
         context['form'] = PostcodeForm()
-        context['constituency_form'] = ConstituencyForm()
+        context['constituency_form'] = kwargs.get('form') or ConstituencyForm()
         context['show_postcode_form'] = False
         context['show_name_form'] = True
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]

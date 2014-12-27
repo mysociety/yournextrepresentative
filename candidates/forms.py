@@ -25,6 +25,11 @@ class ConstituencyForm(forms.Form):
         )
     )
 
+    def clean_constituency(self):
+        constituency = self.cleaned_data['constituency']
+        if constituency == 'none':
+            raise ValidationError("You must select a constituency")
+        return constituency
 
 class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(

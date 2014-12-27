@@ -95,3 +95,11 @@ class TestConstituencyNameFinderView(WebTest):
             split_location.path,
             '/constituency/66044/epping-forest'
         )
+
+    def test_post_no_constituency_selected(self):
+        response = self.app.get('/')
+        form = response.forms['form-name']
+        form['constituency'] = 'none'
+        response = form.submit()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('You must select a constituency', response)
