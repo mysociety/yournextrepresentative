@@ -1,14 +1,11 @@
 from datetime import datetime, timedelta
-import json
 from random import randint
-import re
 import sys
 
 from slugify import slugify
 import requests
 
 from django.db.models import Count
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
