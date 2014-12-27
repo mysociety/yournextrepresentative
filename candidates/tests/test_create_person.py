@@ -126,16 +126,13 @@ NEW_PERSON_DATA = {
 }
 
 @patch.object(FakePersonCollection, 'post')
-@patch('candidates.views.requests')
 @patch('candidates.popit.PopIt')
-def mock_create_person(mock_popit, mock_requests, mocked_post):
+def mock_create_person(mock_popit, mocked_post):
     mocked_post.return_value = {
         'result': {
             'id': 'jane-doe'
         }
     }
-
-    mock_requests.get = fake_get_result
 
     mock_popit.return_value.organizations = FakeOrganizationCollection
     mock_popit.return_value.persons = FakePersonCollection

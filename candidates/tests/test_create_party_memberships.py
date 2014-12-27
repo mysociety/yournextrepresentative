@@ -20,11 +20,8 @@ def fake_org_post(data):
 class TestCreatePerson(TestCase):
 
     @patch.object(FakeOrganizationCollection, 'post')
-    @patch('candidates.views.requests')
     @patch('candidates.popit.PopIt')
-    def test_create_party_memberships(self, mock_popit, mock_requests, mock_org_post):
-
-        mock_requests.get = fake_get_result
+    def test_create_party_memberships(self, mock_popit, mock_org_post):
 
         mock_popit.return_value.organizations = FakeOrganizationCollection
         mock_popit.return_value.persons = FakePersonCollection
@@ -84,8 +81,6 @@ class TestCreatePerson(TestCase):
         ]
 
         mock_popit.assert_has_calls(expected_calls, any_order=True)
-
-        self.assertFalse(mock_requests.called)
 
         # There should be no attempt to create a new organization:
         self.assertEqual(0, len(mock_org_post.call_args_list))

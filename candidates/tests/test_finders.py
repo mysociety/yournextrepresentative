@@ -6,20 +6,20 @@ from django_webtest import WebTest
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == 'http://mapit.mysociety.org/postcode/SW1A 1AA':
+    if url == 'http://mapit.mysociety.org/postcode/sw1a1aa':
         status_code = 200
         json_result = {
             "shortcuts": {
                 "WMC": 65759,
             },
         }
-    elif url == 'http://mapit.mysociety.org/postcode/CB2 8RQ':
+    elif url == 'http://mapit.mysociety.org/postcode/cb28rq':
         status_code = 404
         json_result = {
             "code": 404,
             "error": "No Postcode matches the given query."
         }
-    elif url == 'http://mapit.mysociety.org/postcode/foo bar':
+    elif url == 'http://mapit.mysociety.org/postcode/foobar':
         status_code = 400
         json_result = {
             "code": 400,
@@ -32,7 +32,7 @@ def fake_requests_for_mapit(url):
         'status_code': status_code
     })
 
-@patch('candidates.views.requests')
+@patch('candidates.mapit.requests')
 class TestConstituencyPostcodeFinderView(WebTest):
 
     def test_front_page(self, mock_requests):
@@ -62,11 +62,8 @@ class TestConstituencyPostcodeFinderView(WebTest):
         # regular expressions, but doesn't actually exist
         form['postcode'] = 'CB2 8RQ'
         response = form.submit()
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'bad_postcode=CB2%208RQ')
-
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('The postcode &quot;CB2 8RQ&quot; couldn&#39;t be found', response)
 
     def test_nonsense_postcode_returns_to_finder_with_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
@@ -76,11 +73,8 @@ class TestConstituencyPostcodeFinderView(WebTest):
         # regular expressions, but doesn't actually exist
         form['postcode'] = 'foo bar'
         response = form.submit()
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'bad_postcode=foo%20bar')
-
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Postcode &#39;FOOBAR&#39; is not valid.', response)
 
 class TestConstituencyNameFinderView(WebTest):
 
