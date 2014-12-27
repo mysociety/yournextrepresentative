@@ -5,9 +5,6 @@
 {% block extra_js %}
   <script>
     $(function() {
-      /* Since Javascript's enabled, hide the constituency select box and show
-         the buttons to switch between postcode and name form. */
-      $('#form-name').hide();
       /* Turn the constituency <select> into a nice Select2 box */
       $('#id_constituency').select2({
         placeholder: 'Constituency',
@@ -16,8 +13,9 @@
       });
       /* Swap between the postcode and name select form when clicking on the
          .show-other-form button */
-      $('.show-other-form').on('click', function(){
+      $('.show-other-form').on('click', function(e){
         $(this).parents('form').hide().siblings('form').show();
+        e.preventDefault();
       })
     });
   </script>
@@ -39,22 +37,22 @@
   <div class="postcode-form-error">'{{ bad_postcode }}' was not a valid postcode</div>
   {% endif %}
 
-  <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if bad_constituency_id %}style="display: none"{% endif %}>
+  <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
-    <a class="show-other-form">Or select a constituency</a>
+    <a class="show-other-form" href="{% url 'lookup-name' %}">Or select a constituency</a>
   </form>
 
   {% if bad_constituency_id %}
   <div class="name-form-error">'{{ bad_constituency_id }}' was not a valid constituency ID</div>
   {% endif %}
 
-  <form id="form-name" action="{% url 'lookup-name' %}" method="post" {% if bad_constituency_id %}style="display: block"{% endif %}>
+  <form id="form-name" action="{% url 'lookup-name' %}" method="post" {% if show_postcode_form %}style="display: none"{% endif %}>
     {% csrf_token %}
     {{ constituency_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
-    <a class="show-other-form">Or search by postcode</a>
+    <a class="show-other-form" href="{% url 'lookup-postcode' %}">Or search by postcode</a>
   </form>
 
 </div>
