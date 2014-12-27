@@ -97,3 +97,19 @@ class TestConstituencyNameFinderView(WebTest):
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn('You must select a constituency', response)
+
+    def test_post_invalid_constituency_id(self):
+        response = self.app.get('/')
+        form = response.forms['form-name']
+        csrftoken = form['csrfmiddlewaretoken'].value
+        response = self.app.post(
+            '/lookup/name',
+            {
+                'constituency': 'made-up-555',
+                'csrfmiddlewaretoken': csrftoken,
+            }
+        )
+        self.assertIn(
+            'Select a valid choice. made-up-555 is not one of the available choices.',
+            response
+        )
