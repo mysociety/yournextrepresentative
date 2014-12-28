@@ -23,10 +23,9 @@ class RecentChangesFeed(Feed):
         description =  """
         {0}
 
-        Updated by {1} at {2}
+        Updated at {1}
         """.format(
             item.source,
-            item.ip_address,
             str(item.updated),
         )
 
