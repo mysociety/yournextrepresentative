@@ -1,14 +1,10 @@
 from datetime import datetime, timedelta
-import json
 from random import randint
-import re
 import sys
 
 from slugify import slugify
-import requests
 
 from django.db.models import Count
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
@@ -24,6 +20,7 @@ from .forms import (
     PostcodeForm, NewPersonForm, UpdatePersonForm, ConstituencyForm,
     CandidacyCreateForm, CandidacyDeleteForm
 )
+from .mapit import get_wmc_from_postcode
 from .models import (
     PopItPerson,
     get_constituency_name_from_mapit_id,
@@ -82,26 +79,15 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     form_class = PostcodeForm
 
     def form_valid(self, form):
-        postcode = form.cleaned_data['postcode']
-        url = 'http://mapit.mysociety.org/postcode/' + postcode
-        r = requests.get(url)
-        if r.status_code == 200:
-            mapit_result = r.json()
-            return get_redirect_from_mapit_id(mapit_result['shortcuts']['WMC'])
-        else:
-            error_url = reverse('finder')
-            error_url += '?bad_postcode=' + urlquote(postcode)
-            return HttpResponseRedirect(error_url)
+        wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
+        return get_redirect_from_mapit_id(wmc)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
+        context['postcode_form'] = kwargs.get('form') or PostcodeForm()
         context['constituency_form'] = ConstituencyForm()
-        bad_postcode = self.request.GET.get('bad_postcode')
-        if bad_postcode:
-            context['bad_postcode'] = bad_postcode
-        bad_constituency_id = self.request.GET.get('bad_constituency_id')
-        if bad_constituency_id:
-            context['bad_constituency_id'] = bad_constituency_id
+        context['show_postcode_form'] = True
+        context['show_name_form'] = False
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         return context
@@ -117,27 +103,13 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
-        context['form'] = PostcodeForm()
-        context['constituency_form'] = ConstituencyForm()
+        context['postcode_form'] = PostcodeForm()
+        context['constituency_form'] = kwargs.get('form') or ConstituencyForm()
+        context['show_postcode_form'] = False
+        context['show_name_form'] = True
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         return context
-
-
-def normalize_party_name(original_party_name):
-    """Mangle the party name into a normalized form
-
-    >>> normalize_party_name('The Labour Party')
-    'labour'
-    >>> normalize_party_name('Labour Party')
-    'labour'
-    >>> normalize_party_name('Labour')
-    'labour'
-    """
-    result = original_party_name.lower()
-    result = re.sub(r'^\s*the\s+', '', result)
-    result = re.sub(r'\s+party\s*$', '', result)
-    return result.strip()
 
 
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
