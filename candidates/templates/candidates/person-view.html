@@ -2,6 +2,12 @@
 
 {% load staticfiles %}
 
+
+{% block extra_head %}
+    <link rel="canonical" href="{% url 'person-view' person.id person.name|slugify %}" />
+{% endblock %}
+
+
 {% block body_class %}person{% endblock %}
 
 {% block title %}{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}{% endblock %}
