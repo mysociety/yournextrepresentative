@@ -14,13 +14,13 @@ class RecentChangesFeed(Feed):
         return LoggedAction.objects.order_by('-updated')[:50]
 
     def item_title(self, item):
-        return "{0} - {1}".format(
+        return u"{0} - {1}".format(
             item.popit_person_id,
             item.action_type
             )
 
     def item_description(self, item):
-        description =  """
+        description =  u"""
         {0}
 
         Updated at {1}
