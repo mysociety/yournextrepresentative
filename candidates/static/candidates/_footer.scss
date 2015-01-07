@@ -1,0 +1,39 @@
+body,
+.footer {
+  background-color: $color-offwhite;
+}
+
+.content {
+  background-color: #fff;
+}
+
+.footer {
+  color: mix($color-offwhite, #000, 60%);
+  padding-top: 2em;
+  padding-bottom: 2em;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  p + p {
+    margin-top: 0.5em;
+  }
+}
+
+.footer__links {
+  margin-bottom: 0.5em;
+}
+
+@media #{$medium-up} {
+  .footer__bylines {
+    width: 45%;
+  }
+
+  .footer__links {
+    float: right;
+    width: 45%;
+    text-align: right;
+    margin-bottom: 0;
+  }
+}
