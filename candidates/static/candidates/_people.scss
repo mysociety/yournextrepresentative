@@ -21,6 +21,18 @@
 
   .person-name-and-party {
     font-size: 1.2em;
+
+    .party {
+      color: darken($color-cream, 20%);
+      margin-left: 0.2em;
+
+      &:before {
+        display: inline;
+        content: "–";
+        color: darken($color-cream, 5%);
+        margin-right: 0.4em;
+      }
+    }
   }
 }
 
