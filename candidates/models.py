@@ -489,3 +489,12 @@ class LoggedAction(models.Model):
     updated = models.DateTimeField(auto_now=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)
     source = models.TextField()
+
+
+class PersonRedirect(models.Model):
+    '''This represents a redirection from one person ID to another
+
+    This is typically used to redirect from the person that is deleted
+    after two people are merged'''
+    old_person_id = models.IntegerField()
+    new_person_id = models.IntegerField()
