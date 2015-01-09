@@ -54,3 +54,9 @@ DEFAULT_FROM_EMAIL: webmaster@localhost
 # You can use Google analytics by changing this to your Google
 # analytics tracking ID:
 GOOGLE_ANALYTICS_ACCOUNT: ''
+
+# Set this to true if you're running the site behind nginx for SSL
+# termination; this will cause the SECURE_PROXY_SSL_HEADER Django
+# setting to be set to ('HTTP_X_FORWARDED_PROTO', 'https') and tell
+# django-allauth to generate https URLs.
+NGINX_SSL: false
