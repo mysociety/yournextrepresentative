@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% load staticfiles %}
-
+{% load imagefixes %}
 
 {% block extra_head %}
     <link rel="canonical" href="{% url 'person-view' person.id person.name|slugify %}" />
@@ -15,7 +15,7 @@
 {% block hero %}
 <div class="person__hero">
   {% if person.image %}
-    <img class="person-avatar" src="{{ person.proxy_image }}/0/80"/>
+    <img class="person-avatar" src="{{ person.proxy_image|fixproxyurl }}/0/80"/>
   {% elif person.gender == 'female' %}
     <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
   {% else %}
