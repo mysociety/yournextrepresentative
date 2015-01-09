@@ -19,6 +19,21 @@
     </div>
   </div>
 
+  {% if user.is_superuser %}
+    <div class="row">
+      <div class="columns">
+        <form id="person-merge" action="{% url 'person-merge' person_id=person.id %}" method="post">
+          {% csrf_token %}
+          <p>
+            <label for="other">Other person to merge into this one:</label>
+            <input id="other" name="other" placeholder="Other person ID" type="text"></input>
+          </p>
+          <input type="submit" class="button" value="Merge people">
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
 {% include 'candidates/person-versions.html' %}
 
 {% endblock %}

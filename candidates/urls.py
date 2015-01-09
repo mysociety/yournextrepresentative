@@ -5,8 +5,8 @@ from django.contrib import admin
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
-    PersonView, HelpApiView, HelpAboutView, ConstituencyListView,
-    RecentChangesView, LeaderboardView)
+    MergePeopleView, PersonView, HelpApiView, HelpAboutView,
+    ConstituencyListView, RecentChangesView, LeaderboardView)
 from .feeds import RecentChangesFeed
 
 urlpatterns = patterns('',
@@ -32,6 +32,9 @@ urlpatterns = patterns('',
     url(r'^person/(?P<person_id>\d+)/revert$',
         RevertPersonView.as_view(),
         name='person-revert'),
+    url(r'^person/(?P<person_id>\d+)/merge$',
+        MergePeopleView.as_view(),
+        name='person-merge'),
     url(r'^person/(?P<person_id>\d+)(?:/(?P<ignored_slug>.*))?$',
         PersonView.as_view(),
         name='person-view'),
