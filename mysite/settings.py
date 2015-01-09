@@ -251,3 +251,7 @@ we prefer URLs of news stories or official candidate pages.'''
 MAPIT_CACHE_SECONDS = 86400
 
 FORCE_HTTPS_IMAGES = conf.get('FORCE_HTTPS_IMAGES')
+
+if conf.get('NGINX_SSL'):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
