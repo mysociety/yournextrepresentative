@@ -14,7 +14,7 @@ from slumber.exceptions import HttpServerError
 from .static_data import MapItData
 
 form_simple_fields = ('name', 'email', 'birth_date', 'gender')
-preserve_fields = ('identifiers',)
+preserve_fields = ('identifiers', 'other_names', 'phone')
 
 form_complex_fields_locations = {
     'wikipedia_url': {
