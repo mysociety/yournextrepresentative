@@ -12,10 +12,10 @@
 <div class="person-name-and-party">
   <a href="{% url 'person-view' c.id c.name|slugify %}">{{ c.name }}</a>
   {% if year == '2015' %}
-    ({{c.parties.2015.name }})
+    <span class="party">{{c.parties.2015.name }}</span>
   {% elif year == '2010' %}
-    ({{c.parties.2010.name }})
+    <span class="party">{{c.parties.2010.name }}</span>
   {% else %}
-    (BUG: UNKNOWN YEAR)
+    <span class="party">BUG: UNKNOWN YEAR</span>
   {% endif %}
 </div>

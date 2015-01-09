@@ -115,3 +115,10 @@ the development server again are:
 
     cd yournextmp-popit
     ./manage.py runserver 0.0.0.0:8000
+
+### Running the tests
+
+SSH into the vagrant machine, then run:
+
+    cd yournextmp-popit
+    ./manage.py test
