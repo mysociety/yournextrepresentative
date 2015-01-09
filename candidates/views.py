@@ -27,7 +27,7 @@ from .models import (
     all_form_fields,
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015,
-    LoggedAction
+    LoggedAction, PersonRedirect
 )
 from .popit import PopItApiMixin
 from .static_data import MapItData, PartyData
@@ -339,6 +339,26 @@ class PersonView(PersonParseMixin, TemplateView):
         )
         context['versions'] = get_version_diffs(person_data['versions'])
         return context
+
+    def get(self, request, *args, **kwargs):
+        # If there's a PersonRedirect for this person ID, do the
+        # redirect, otherwise process the GET request as usual.
+        try:
+            new_person_id = PersonRedirect.objects.get(
+                old_person_id=self.kwargs['person_id']
+            ).new_person_id
+            # Get the person data so that we can redirect with a
+            # useful slug:
+            person_data = self.get_person(new_person_id)
+            return HttpResponseRedirect(
+                reverse('person-view', kwargs={
+                    'person_id': new_person_id,
+                    'ignored_slug': slugify(person_data['name']),
+                })
+            )
+        except PersonRedirect.DoesNotExist:
+            return super(PersonView, self).get(request, *args, **kwargs)
+
 
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
