@@ -48,7 +48,6 @@
     <div class="container">
       <div class="header__nav">
         <a href="/" class="header__nav__logo">YourNextMP</a>
-        <a href="{% url 'help-api' %}" class="header__nav__logo">API</a>
         <a href="{% url 'help-about' %}" class="header__nav__logo">About</a>
         <a href="{% url 'constituencies' %}" class="header__nav__logo">Constituencies</a>
         <a href="{% url 'reports_home' %}" class="header__nav__logo">Numbers</a>
@@ -73,6 +72,17 @@
       <div class="content__inner">
         {% block content %}
         {% endblock %}
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="footer__links">
+        <p><a href="{% url 'help-api' %}">Open data API</a> &middot; <a href="{% url 'help-about' %}">About</a> &middot; <a href="https://github.com/mysociety/yournextmp-popit/issues">Issue tracker</a></p>
+      </div>
+      <div class="footer__bylines">
+        <p>Supported by <a href="https://fullfact.org">Full Fact</a>, <a href="http://unlockdemocracy.org.uk">Unlock Democracy</a>, and <a href="https://mysociety.org">mySociety</a>.</p>
+        <p>Built by <a href="https://democracyclub.org.uk/">Democracy Club</a>.</p>
       </div>
     </div>
   </div>
