@@ -54,3 +54,7 @@ DEFAULT_FROM_EMAIL: webmaster@localhost
 # You can use Google analytics by changing this to your Google
 # analytics tracking ID:
 GOOGLE_ANALYTICS_ACCOUNT: ''
+
+# If you set this to true then the protocol of image URLs will be set
+# rewritten from http to https.
+FORCE_HTTPS_IMAGES: false
