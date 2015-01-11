@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from random import randint
+import re
 import sys
 
 from slugify import slugify
@@ -13,7 +14,7 @@ from django.utils import timezone
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
 
 from .diffs import get_version_diffs
 from .forms import (
@@ -27,9 +28,9 @@ from .models import (
     all_form_fields,
     get_mapit_id_from_mapit_url,
     membership_covers_date, election_date_2010, election_date_2015,
-    LoggedAction
+    LoggedAction, PersonRedirect
 )
-from .popit import PopItApiMixin
+from .popit import PopItApiMixin, merge_popit_people
 from .static_data import MapItData, PartyData
 
 from .update import PersonParseMixin, PersonUpdateMixin
@@ -340,6 +341,26 @@ class PersonView(PersonParseMixin, TemplateView):
         context['versions'] = get_version_diffs(person_data['versions'])
         return context
 
+    def get(self, request, *args, **kwargs):
+        # If there's a PersonRedirect for this person ID, do the
+        # redirect, otherwise process the GET request as usual.
+        try:
+            new_person_id = PersonRedirect.objects.get(
+                old_person_id=self.kwargs['person_id']
+            ).new_person_id
+            # Get the person data so that we can redirect with a
+            # useful slug:
+            person_data = self.get_person(new_person_id)
+            return HttpResponseRedirect(
+                reverse('person-view', kwargs={
+                    'person_id': new_person_id,
+                    'ignored_slug': slugify(person_data['name']),
+                })
+            )
+        except PersonRedirect.DoesNotExist:
+            return super(PersonView, self).get(request, *args, **kwargs)
+
+
 class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
@@ -371,6 +392,47 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             )
         )
 
+class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
+
+    http_method_names = [u'post']
+
+    def post(self, request, *args, **kwargs):
+        # Check that the person IDs are well-formed:
+        primary_person_id = self.kwargs['person_id']
+        secondary_person_id = self.request.POST['other']
+        if not re.search('^\d+$', secondary_person_id):
+            message = "Malformed person ID '{0}'"
+            raise ValueError(message.format(secondary_person_id))
+        if primary_person_id == secondary_person_id:
+            message = "You can't merge a person ({0}) with themself ({1})"
+            raise ValueError(message.format(
+                primary_person_id, secondary_person_id
+            ))
+        # Get our JSON representation of each person:
+        primary_person = self.get_person(primary_person_id)
+        secondary_person = self.get_person(secondary_person_id)
+        # Merge them (which will include a merged versions array):
+        merged_person = merge_popit_people(primary_person, secondary_person)
+        # Update the primary person in PopIt:
+        previous_versions = merged_person.pop('versions')
+        change_metadata = self.get_change_metadata(
+            self.request, 'After merging person {0}'.format(secondary_person_id)
+        )
+        self.update_person(merged_person, change_metadata, previous_versions)
+        # Now we delete the old person:
+        self.api.persons(secondary_person_id).delete()
+        # Create a redirect from the old person to the new person:
+        PersonRedirect.objects.create(
+            old_person_id=secondary_person_id,
+            new_person_id=primary_person_id,
+        )
+        # And redirect to the primary person with the merged data:
+        return HttpResponseRedirect(
+            reverse('person-view', kwargs={
+                'person_id': primary_person_id,
+                'ignored_slug': slugify(primary_person['name']),
+            })
+        )
 
 class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, FormView):
     template_name = 'candidates/person-edit.html'
