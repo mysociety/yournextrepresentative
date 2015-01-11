@@ -23,9 +23,6 @@ install:
     -e "s,(SECRET_KEY:) '',\\1 'notatallsecret',"
     conf/general.yml-example > conf/general.yml
 
-before_script:
-  - ./manage.py syncdb --noinput
-
 script:
   - ./manage.py test
 
