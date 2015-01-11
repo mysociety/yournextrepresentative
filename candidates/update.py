@@ -176,6 +176,7 @@ class PersonParseMixin(PopItApiMixin):
         result['party_memberships'] = party_memberships
         result['image'] = person.popit_data.get('image')
         result['proxy_image'] = person.popit_data.get('proxy_image')
+        result['other_names'] = person.popit_data.get('other_names', [])
         return result
 
 

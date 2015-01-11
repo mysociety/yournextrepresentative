@@ -33,6 +33,16 @@
   <tr>
     <td>Name:</td><td>{{ person.name }}</a></td>
   </tr>
+  {% for other_name in person.other_names %}
+    <tr>
+      <td>Also known as:
+        {% if other_name.note %}
+          <br><span class="aka-note">({{ other_name.note }})</span>
+        {% endif %}
+      </td>
+      <td>{{ other_name.name }}</a></td>
+    </tr>
+  {% endfor %}
   <tr>
     <td>Email:</td><td>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</td>
   </tr>
