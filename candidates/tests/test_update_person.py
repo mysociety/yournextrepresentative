@@ -80,6 +80,7 @@ class TestUpdatePerson(TestCase):
                 'gender': None,
                 'name': u'Tessa Jowell',
                 'links': [],
+                'other_names': [],
                 'party_memberships': None,
                 'standing_in': None,
                 'versions': [
