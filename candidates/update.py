@@ -181,12 +181,16 @@ class PersonParseMixin(PopItApiMixin):
 
 
 # FIXME: a hacky workaround to make sure that we don't set
-# birth_date to an empty string, which will stop the PopIt record
+# dates to an empty string, which will stop the PopIt record
 # being indexed by Elasticsearch.
-def fix_birth_date(data):
+def fix_dates(data):
     if not data['birth_date']:
         data['birth_date'] = None
-
+    for other_name in data.get('other_names', []):
+        print "other_name is:", other_name
+        for key in ('start_date', 'end_date'):
+            if key in other_name and not other_name[key]:
+                other_name[key] = None
 
 class PersonUpdateMixin(PopItApiMixin):
     """A mixin for updating PopIt from our representation"""
@@ -212,7 +216,7 @@ class PersonUpdateMixin(PopItApiMixin):
                 self.create_membership(**membership)
 
     def create_person(self, data, change_metadata):
-        fix_birth_date(data)
+        fix_dates(data)
         # Create the person:
         basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
@@ -231,7 +235,7 @@ class PersonUpdateMixin(PopItApiMixin):
         return person_id
 
     def update_person(self, data, change_metadata, previous_versions):
-        fix_birth_date(data)
+        fix_dates(data)
         person_id = data['id']
         basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
