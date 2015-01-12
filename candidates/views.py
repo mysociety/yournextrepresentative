@@ -426,6 +426,16 @@ class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, 
             old_person_id=secondary_person_id,
             new_person_id=primary_person_id,
         )
+        # Log that that action has taken place, and will be shown in
+        # the recent changes, leaderboards, etc.
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='person-merge',
+            ip_address=self.get_client_ip(self.request),
+            popit_person_new_version=change_metadata['version_id'],
+            popit_person_id=primary_person_id,
+            source=change_metadata['information_source'],
+        )
         # And redirect to the primary person with the merged data:
         return HttpResponseRedirect(
             reverse('person-view', kwargs={
