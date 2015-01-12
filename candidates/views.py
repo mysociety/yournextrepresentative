@@ -9,7 +9,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.utils import timezone
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
@@ -351,7 +351,7 @@ class PersonView(PersonParseMixin, TemplateView):
             # Get the person data so that we can redirect with a
             # useful slug:
             person_data = self.get_person(new_person_id)
-            return HttpResponseRedirect(
+            return HttpResponsePermanentRedirect(
                 reverse('person-view', kwargs={
                     'person_id': new_person_id,
                     'ignored_slug': slugify(person_data['name']),
