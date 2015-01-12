@@ -237,6 +237,56 @@ class TestMergePeople(TestCase):
             }
         )
 
+    def test_fuller_merge_example(self):
+        primary = {
+            "name": "Julian Huppert",
+            "other_names": [
+                {
+                    "end_date": None,
+                    "id": "54b3fadc1f10dde30b97b3c4",
+                    "name": "Julian Leon Huppert",
+                    "note": "His full name, including the middle name ",
+                    "start_date": None
+                }
+            ],
+            "party_ppc_page_url": "http://www.libdems.org.uk/julian_huppert",
+            "proxy_image": "http://candidates-posts.127.0.0.1.xip.io:3000/image-proxy//http%3A%2F%2Fyournextmp.popit.mysociety.org%2Fpersons%2F47%2Fimage%2F5481e8e0b150e238702c060d",
+            "twitter_username": "JulianHuppert",
+            "wikipedia_url": "https://en.wikipedia.org/wiki/Julian_Huppert"
+        }
+        secondary = {
+            "name": "Julian Huppert As Well",
+            "other_names": [],
+            "party_ppc_page_url": "",
+            "proxy_image": None,
+            "twitter_username": "",
+            "wikipedia_url": ""
+        }
+        expected_result = {
+            "name": "Julian Huppert",
+            "other_names": [
+                {
+                    "end_date": None,
+                    "id": "54b3fadc1f10dde30b97b3c4",
+                    "name": "Julian Leon Huppert",
+                    "note": "His full name, including the middle name ",
+                    "start_date": None
+                },
+                {
+                    'name': 'Julian Huppert As Well',
+                },
+            ],
+            "party_ppc_page_url": "http://www.libdems.org.uk/julian_huppert",
+            "proxy_image": "http://candidates-posts.127.0.0.1.xip.io:3000/image-proxy//http%3A%2F%2Fyournextmp.popit.mysociety.org%2Fpersons%2F47%2Fimage%2F5481e8e0b150e238702c060d",
+            "twitter_username": "JulianHuppert",
+            "wikipedia_url": "https://en.wikipedia.org/wiki/Julian_Huppert"
+        }
+        merged = merge_popit_people(primary, secondary)
+        self.assertEqual(
+            merged,
+            expected_result
+        )
+
     def test_merge_conflicting_names_previous_other_names(self):
         primary = {
             'name': 'Dave Cameron',

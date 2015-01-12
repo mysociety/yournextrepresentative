@@ -63,7 +63,7 @@ def merge_popit_people(primary, secondary):
         # whatever's in the secondary:
         if not primary_value:
             continue
-        secondary_value = secondary.get(primary_key)
+        secondary_value = result.get(primary_key)
         if primary_key == 'name' and secondary_value:
             if primary_value != secondary_value:
                 # Then the names conflict; add the secondary name to
