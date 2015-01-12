@@ -251,7 +251,6 @@ class TestMergePeople(TestCase):
             ]
         }
         merged = merge_popit_people(primary, secondary)
-        import json
         self.assertEqual(
             set(merged.keys()),
             set(['name', 'other_names'])
@@ -261,7 +260,6 @@ class TestMergePeople(TestCase):
             merged['other_names'],
             key=lambda e: e['name']
         )
-        print json.dumps(sorted_other_names, indent=4)
         self.assertEqual(
             sorted_other_names,
             [
