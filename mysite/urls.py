@@ -8,8 +8,6 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-admin.autodiscover()
-
 urlpatterns = patterns('',
     url(r'^', include('candidates.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

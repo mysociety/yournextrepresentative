@@ -45,7 +45,6 @@ done
 find . -name '*.pyc' -delete
 
 # get the database up to speed
-./manage.py syncdb --noinput
 ./manage.py migrate --noinput
 
 # Install gems in order to compile the CSS
