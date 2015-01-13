@@ -8,13 +8,9 @@ from cached_counts.models import CachedCount
 class Command(PopItApiMixin, BaseCommand):
 
     def add_or_update(self, obj):
-        c, created = CachedCount.objects.get_or_create(
+        CachedCount.objects.update_or_create(
             object_id=obj['object_id'], count_type=obj['count_type'],
             defaults={'count': obj['count'], 'name': obj['name']})
-        if not created:
-            c.count = obj['count']
-            c.name = obj['name']
-            c.save()
 
     def handle(self, **options):
         all_constituencies = MapItData.constituencies_2010_name_sorted
