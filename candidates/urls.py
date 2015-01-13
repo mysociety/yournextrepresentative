@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
@@ -48,5 +49,8 @@ urlpatterns = patterns('',
     url(r'^feeds/changes.xml', RecentChangesFeed(), name='changes_feed'),
     url(r'^help/api', HelpApiView.as_view(), name='help-api'),
     url(r'^help/about', HelpAboutView.as_view(), name='help-about'),
+    url(r'^help/privacy',
+        TemplateView.as_view(template_name="candidates/privacy.html"),
+        name='help-privacy'),
     url(r'^admin/', include(admin.site.urls)),
 )
