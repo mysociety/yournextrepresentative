@@ -2,9 +2,7 @@
 
 # This shell script is for uploading a photograph of a candidate to
 # YourNextMP.  You'll need to crop the photo yourself before using
-# this script. (Until https://github.com/mysociety/popit/issues/683 is
-# resolved, this is preferred to uploading photos via the web
-# interface, since that will cause some brief PopIt downtime.)
+# this script.
 
 set -e
 
