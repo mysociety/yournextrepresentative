@@ -4,3 +4,5 @@ libpq-dev
 python-dev
 opencv-data
 python-opencv
+libxml2-dev
+libxslt-dev
