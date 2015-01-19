@@ -1,5 +1,3 @@
-import json
-
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
 from django.core.management.base import BaseCommand
