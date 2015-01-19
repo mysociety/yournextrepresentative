@@ -13,15 +13,6 @@ import dateutil.parser
 
 from candidates.popit import create_popit_api_object
 
-# For a version with only current parties, you can use this URL as an
-# argument to the command:
-#
-#   https://raw.githubusercontent.com/DemocracyClub/UK-Political-Parties/gh-pages/data/parties.csv
-#
-# ... or for one which also includes de-registered parties, you can
-# use this URL:
-#
-#   https://raw.githubusercontent.com/mhl/UK-Political-Parties/gh-pages/data/parties.csv
 
 party_name_re = re.compile(
     r'^(.*?)(?:\s+\[De-registered\s+(\d{2}/\d{2}/\d{2})\])?\s*$'
