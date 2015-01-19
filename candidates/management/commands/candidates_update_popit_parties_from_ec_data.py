@@ -1,8 +1,11 @@
 from datetime import datetime
-from os.path import join, splitext
+import os
+from os.path import join, splitext, exists
 import re
 import json
 from slugify import slugify
+from tempfile import NamedTemporaryFile
+from urlparse import urljoin
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -13,20 +16,22 @@ import dateutil.parser
 
 from candidates.popit import create_popit_api_object
 
-
-party_name_re = re.compile(
-    r'^(.*?)(?:\s+\[De-registered\s+(\d{2}/\d{2}/\d{2})\])?\s*$'
-)
+emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
+base_emblem_url = 'http://openelectoralcommission.org.uk/party_images/'
 
 class Command(BaseCommand):
     help = "Update parties from a CSV of party data"
 
     def handle(self, **options):
         self.api = create_popit_api_object()
-        self.scraper_directory = join(
-            settings.BASE_DIR, 'data', 'UK-Political-Parties', 'scraper'
-        )
-        self.parse_data(join(self.scraper_directory, 'all_data.json'))
+        ntf = NamedTemporaryFile(delete=False)
+        try:
+            r = requests.get('http://openelectoralcommission.org.uk/parties/index.json')
+            with open(ntf.name, 'w') as f:
+                json.dump(r.json(), f)
+            self.parse_data(ntf.name)
+        finally:
+            os.remove(ntf.name)
 
     def parse_data(self, json_file):
         with open(json_file) as f:
@@ -40,10 +45,12 @@ class Command(BaseCommand):
                 if not register:
                     continue
                 register = re.sub(r' \(minor party\)', '', register)
-                party_name, party_dissolved = self.clean_name(
-                    ec_party['party_name'], register
-                )
+                party_name = self.clean_name(ec_party['party_name'])
                 party_founded = self.clean_date(ec_party['registered_date'])
+                if 'deregistered_date' in ec_party:
+                    party_dissolved = self.clean_date(ec_party['deregistered_date'])
+                else:
+                    party_dissolved = '9999-12-31'
                 party_data = {
                     'id': party_id,
                     'name': party_name,
@@ -63,35 +70,30 @@ class Command(BaseCommand):
                     self.api.organizations.post(party_data)
                     self.upload_images(ec_party['emblems'], party_id)
                 except HttpServerError as e:
-                    error = json.loads(e.content)
-                    if error.get('error', {}).get('code') == 11000:
+                    if 'E11000' in e.content:
                         # Duplicate Party Found
                         self.api.organizations(party_id).put(party_data)
                         self.upload_images(ec_party['emblems'], party_id)
+                    else:
+                        raise
 
     def clean_date(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d")
 
-    def clean_name(self, name, register):
-        m = party_name_re.search(name)
-        name, party_dissolved = m.groups()
-        if party_dissolved:
-            party_dissolved = datetime.strptime(party_dissolved, '%d/%m/%y')
-            party_dissolved = str(party_dissolved.date())
-        else:
-            # Currently missing out the dissolution date completely to
-            # indicate 'future' makes using PopIt's search endpoint
-            # difficult, so use a far-future value if the party is
-            # still active.
-            party_dissolved = '9999-12-31'
-        return name.strip(), party_dissolved
+    def clean_name(self, name):
+        return name.strip()
 
     def upload_images(self, emblems, party_id):
         image_upload_url = "{0}/{1}/organizations/{2}/image".format(
             self.api.get_url(), self.api.get_api_version(), party_id
         )
         for emblem in emblems:
-            fname = join(self.scraper_directory, emblem['image'])
+            fname = join(emblem_directory, emblem['image'])
+            if not exists(fname):
+                image_url = urljoin(base_emblem_url, emblem['image'])
+                r = requests.get(image_url)
+                with open(fname, 'w') as f:
+                    f.write(r.content)
             mime_type = {
                 '.gif': 'image/gif',
                 '.bmp': 'image/x-ms-bmp',
