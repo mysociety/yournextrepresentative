@@ -10,4 +10,6 @@ def image_uploaded_already(api_collection, object_id, image_filename):
     for image in person_data.get('images', []):
         if image.get('notes') == 'md5sum:' + md5sum:
             return True
+        elif image.get('md5sum') == md5sum:
+            return True
     return False

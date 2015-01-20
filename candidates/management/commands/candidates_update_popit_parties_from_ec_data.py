@@ -16,6 +16,8 @@ import dateutil.parser
 
 from candidates.popit import create_popit_api_object
 
+from .images import get_file_md5sum, image_uploaded_already
+
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
 base_emblem_url = 'http://openelectoralcommission.org.uk/party_images/'
 
@@ -94,28 +96,35 @@ class Command(BaseCommand):
                 r = requests.get(image_url)
                 with open(fname, 'w') as f:
                     f.write(r.content)
-            mime_type = {
-                '.gif': 'image/gif',
-                '.bmp': 'image/x-ms-bmp',
-                '.jpg': 'image/jpeg',
-                '.png': 'image/png',
-            }[splitext(fname)[1]]
-            with open(fname, 'rb') as f:
-                requests.post(
-                    image_upload_url,
-                    headers={
-                        'Apikey': self.api.api_key
-                    },
-                    files={
-                        'image': f
-                    },
-                    data={
-                        'notes': emblem['description'],
-                        'source': 'The Electoral Commission',
-                        'id': emblem['id'],
-                        'mime_type': mime_type,
-                    }
-                )
+            if not image_uploaded_already(
+                self.api.organizations,
+                party_id,
+                fname
+            ):
+                mime_type = {
+                    '.gif': 'image/gif',
+                    '.bmp': 'image/x-ms-bmp',
+                    '.jpg': 'image/jpeg',
+                    '.png': 'image/png',
+                }[splitext(fname)[1]]
+                md5sum = get_file_md5sum(fname)
+                with open(fname, 'rb') as f:
+                    requests.post(
+                        image_upload_url,
+                        headers={
+                            'Apikey': self.api.api_key
+                        },
+                        files={
+                            'image': f
+                        },
+                        data={
+                            'notes': emblem['description'],
+                            'source': 'The Electoral Commission',
+                            'id': emblem['id'],
+                            'md5sum': md5sum,
+                            'mime_type': mime_type,
+                        }
+                    )
 
     def clean_id(self, party_id):
         party_id = re.sub(r'^PPm?\s*', '', party_id).strip()
