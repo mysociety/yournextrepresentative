@@ -7,3 +7,6 @@
 [submodule "UK-Political-Parties"]
 	path = data/UK-Political-Parties
 	url = https://github.com/mhl/UK-Political-Parties.git
+[submodule "data/parlparse"]
+	path = data/parlparse
+	url = https://github.com/mysociety/parlparse.git
