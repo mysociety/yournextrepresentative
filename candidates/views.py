@@ -4,6 +4,7 @@ import re
 import sys
 
 from slugify import slugify
+import unicodedata
 
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -46,6 +47,30 @@ def get_redirect_from_mapit_id(mapit_id):
             }
         )
     )
+
+# From http://stackoverflow.com/a/517974/223092
+def strip_accents(s):
+    return u"".join(
+        c for c in unicodedata.normalize('NFKD', s)
+        if not unicodedata.combining(c)
+    )
+
+def get_electionleaflets_url(constituency_name):
+    """Generate an electionleaflets.org URL from a constituency name
+
+    >>> get_electionleaflets_url(u"Ynys M\u00F4n")
+    u'http://electionleaflets.org/constituencies/ynys_mon/'
+    >>> get_electionleaflets_url(u"Ashton-under-Lyne")
+    u'http://electionleaflets.org/constituencies/ashton_under_lyne/'
+    >>> get_electionleaflets_url(u"Ayr, Carrick and Cumnock")
+    u'http://electionleaflets.org/constituencies/ayr_carrick_and_cumnock/'
+    """
+    result = strip_accents(constituency_name)
+    result = result.lower()
+    result = re.sub(r'[^a-z]+', ' ', result)
+    result = re.sub(r'\s+', ' ', result).strip()
+    slug = result.replace(' ', '_')
+    return u'http://electionleaflets.org/constituencies/{}/'.format(slug)
 
 
 class ContributorsMixin(object):
@@ -122,6 +147,9 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         context['constituency_name'] = \
             get_constituency_name_from_mapit_id(mapit_area_id)
+
+        context['electionleaflets_url'] = \
+            get_electionleaflets_url(context['constituency_name'])
 
         context['redirect_after_login'] = \
             urlquote(reverse('constituency', kwargs={
