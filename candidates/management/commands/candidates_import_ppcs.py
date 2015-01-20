@@ -10,7 +10,6 @@
 # this job from cron - if you get an email from cron, you'll need to
 # run the script manually to make those decisions.
 
-import hashlib
 from optparse import make_option
 import os
 from os.path import join, exists
@@ -25,6 +24,8 @@ import requests
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.static_data import MapItData
 from candidates.views import CandidacyMixin
+
+from .images import image_uploaded_already
 
 party_slug_to_popit_party = {
     'labour': {
@@ -150,10 +151,6 @@ def get_ppc_url_from_popit_result(popit_result):
             return link.get['url']
     return None
 
-def get_file_md5sum(filename):
-    with open(filename, 'rb') as f:
-        return hashlib.md5(f.read()).hexdigest()
-
 
 class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Import scraped PPC data"
@@ -174,14 +171,6 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     #     "blog_url",
     #     "campaign_url",
     #     "biography_url",
-
-    def image_uploaded_already(self, person_id, image_filename):
-        person_data = self.api.persons(person_id).get()['result']
-        md5sum = get_file_md5sum(image_filename)
-        for image in person_data.get('images', []):
-            if image.get('notes') == 'md5sum:' + md5sum:
-                return True
-        return False
 
     def get_person_data_from_ppc(self, ppc_data):
         return {
@@ -260,7 +249,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             previous_versions,
         )
         if image_filename:
-            if self.image_uploaded_already(person_id, image_filename):
+            if image_uploaded_already(self.api.persons, person_id, image_filename):
                 print "That image has already been uploaded!"
             else:
                 print "Uploading image..."
