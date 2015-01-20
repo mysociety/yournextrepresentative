@@ -3,7 +3,7 @@ Pillow==2.6.1
 PopIt-Python==0.1.10
 PyYAML==3.11
 South==1.0.1
-Unidecode==0.04.16
+Unidecode==0.04.17
 WebOb==1.4
 WebTest==2.0.15
 argparse==1.2.1
