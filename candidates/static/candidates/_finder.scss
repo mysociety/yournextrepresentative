@@ -194,5 +194,6 @@
 }
 
 #form-name .errorlist, #form-postcode .errorlist {
-    list-style: none;
+  list-style: none;
+  color: $color-red;
 }
