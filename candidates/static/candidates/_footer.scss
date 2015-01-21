@@ -1,6 +1,6 @@
 body,
 .footer {
-  background-color: $color-offwhite;
+  background-color: mix($color-offwhite, #fff, 60%);
 }
 
 .content {
