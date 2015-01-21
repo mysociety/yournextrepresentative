@@ -1,7 +1,7 @@
 .finder__forms {
   text-align: center;
   max-width: 30em;
-  margin: 0 auto;
+  margin: 0 auto 2em auto;
 
   label {
     font-size: 1.4em;
@@ -15,6 +15,16 @@
   .show-other-form {
     display: block;
     margin-top: 1em;
+  }
+}
+
+.finder__description {
+  background-color: mix($color-offwhite, #fff, 60%);
+  color: #887; // dark desaturated browny-grey
+  padding: 2.5em 0;
+
+  p:last-child {
+    margin-bottom: 0;
   }
 }
 
@@ -86,39 +96,51 @@
 }
 
 @media #{$medium-up} {
-  // On wide screens, we make the finder form stand out
-  // by making it "pop" up over the header.
 
-  body.finder .content__inner {
-    padding-top: 0;
-  }
+  body.finder {
+    .content {
+      padding-top: 0;
 
-  body.finder .header {
-    padding-bottom: 4em;
+      .container {
+        position: relative; // so we can absolutely position .finder__forms
+      }
+    }
+
+    // More impactful homepage header on wide screens
+    .header__hero {
+      padding-top: 2em;
+      padding-bottom: 4em;
+
+      .lead {
+        width: 50%;
+        font-size: 1.5em;
+        line-height: 1.4em;
+        margin-top: 0.7em;
+      }
+    }
   }
 
   .finder__forms {
-    position: relative;
+    position: absolute;
+    top: -5em; // overlap into header above
+    right: 0.9375em; // default bootstrap column gutter
+    margin: 0; // override auto margins from smaller screens
+    padding: 2em 3em;
+    width: 40%;
     background-color: #fff;
-    margin: -3em auto 0 auto;
-    padding: 2em 4em 0 4em;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+  }
 
-    &:before,
-    &:after {
-      content: " ";
-      display: block;
-      width: 4px;
-      height: 170px;
-      position: absolute;
-      top: 3em;
-      left: -4px;
-      background: #fff url(img/finder-shadow-left.gif) 0 0 no-repeat;
+  .finder__description {
+    @include clearfix();
+
+    p {
+      float: left;
+      width: 25%;
     }
 
-    &:after {
-      left: auto;
-      right: -4px;
-      background-image: url(img/finder-shadow-right.gif);
+    p + p {
+      margin-left: 4%;
     }
   }
 
