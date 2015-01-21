@@ -122,6 +122,7 @@
 
   .finder__forms {
     position: absolute;
+    z-index: 1; // sit on top of following elements
     top: -5em; // overlap into header above
     right: 0.9375em; // default bootstrap column gutter
     margin: 0; // override auto margins from smaller screens
