@@ -185,6 +185,11 @@
     @extend %candidate-party;
   }
 
+  a[href^="http"] {
+    // break ultra-long facebook etc links onto two lines
+    word-wrap: break-word;
+  }
+
   @media #{$large-up} {
     dl {
       @include clearfix();
