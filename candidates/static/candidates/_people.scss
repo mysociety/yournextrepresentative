@@ -184,7 +184,7 @@
     @extend %candidate-party;
   }
 
-  @media #{$medium-up} {
+  @media #{$large-up} {
     dl {
       @include clearfix();
     }
@@ -205,4 +205,59 @@
       min-height: 1.4em; // to match dt line-height
     }
   }
+}
+
+@media #{$medium-up} {
+  .person__details {
+    @include grid-column($columns: 7, $collapse: true);
+    margin-top: 2em;
+  }
+
+  .person__actions {
+    @include grid-column($columns: 4, $offset: 1, $collapse: true);
+    margin-top: 2em;
+
+    & + * {
+      clear: both;
+    }
+  }
+}
+
+.person__actions__action {
+  display: block;
+  border-radius: 3px;
+  background-color: mix($color-offwhite, #fff, 60%);
+  padding: 1.5em;
+  margin-bottom: 2em;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1.3em;
+    line-height: 1.2em;
+    margin-bottom: 0.7em;
+  }
+
+  p {
+    line-height: 1.4em;
+    margin-bottom: 0.7em;
+  }
+
+  p + .button {
+    margin-top: 0.3em; // compensate for extra bit of line-height between paragraphs but not buttons
+  }
+}
+
+.person__actions__edit {
+  background-color: $color-yellow;
+}
+
+.person__actions__data {
+  background-color: mix($color-cyan, #fff, 15%);
 }

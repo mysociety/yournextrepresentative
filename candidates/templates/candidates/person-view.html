@@ -89,7 +89,7 @@
 
 <div class="person__actions">
 
-  <div class="person__actions__edit">
+  <div class="person__actions__action person__actions__edit">
     <h2>Improve this data!</h2>
     <p>Our database is built by people like you.</p>
     <p>Please do add extra details about this candidate – it only takes a moment.</p>
@@ -100,11 +100,11 @@
     {% endif %}
   </div>
 
-  <div class="person__actions__data">
+  <div class="person__actions__action person__actions__data">
     <h2>Use this data!</h2>
     <p>Open data JSON API:</p>
-    <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}"></p>
-    <p>Want a CSV download? <a href="https://github.com/mysociety/yournextmp-popit/issues/96">Vote for it!</a></p>
+    <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}" onclick="this.select();"></p>
+    <p>Want a CSV download? <a href="https://github.com/mysociety/yournextmp-popit/issues/96">Tell us!</a></p>
   </div>
 
 </div>
