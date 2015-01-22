@@ -10,6 +10,42 @@
   }
 }
 
+%person-section-heading {
+  line-height: 1.2em;
+  font-size: 1.3em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #ccc;
+}
+
+%responsive-definition-list {
+  // use this to @extend a dl element
+  line-height: 1.4em;
+
+  @media #{$large-up} {
+    dl {
+      @include clearfix();
+    }
+
+    dt {
+      float: left;
+      width: 10em;
+      overflow: hidden;
+      clear: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 0.75em;
+    }
+
+    dd {
+      margin-left: 12em;
+      margin-bottom: 0.75em;
+      min-height: 1.4em; // to match dt line-height
+    }
+  }
+}
+
 .candidate-list {
   margin: 1.5em 0;
 
@@ -159,19 +195,12 @@
 }
 
 .person__details {
-  margin-top: 2em;
-
   h2 {
-    line-height: 1.2em;
-    font-size: 1.3em;
-    margin-top: 0;
-    margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid #ccc;
+    @extend %person-section-heading;
   }
 
   dl {
-    line-height: 1.4em;
+    @extend %responsive-definition-list;
     margin-bottom: 2em;
   }
 
@@ -189,39 +218,15 @@
     // break ultra-long facebook etc links onto two lines
     word-wrap: break-word;
   }
-
-  @media #{$large-up} {
-    dl {
-      @include clearfix();
-    }
-
-    dt {
-      float: left;
-      width: 10em;
-      overflow: hidden;
-      clear: left;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      margin-bottom: 0.75em;
-    }
-
-    dd {
-      margin-left: 12em;
-      margin-bottom: 0.75em;
-      min-height: 1.4em; // to match dt line-height
-    }
-  }
 }
 
 @media #{$medium-up} {
   .person__details {
     @include grid-column($columns: 7, $collapse: true);
-    margin-top: 2em;
   }
 
   .person__actions {
     @include grid-column($columns: 4, $offset: 1, $collapse: true);
-    margin-top: 2em;
 
     & + * {
       clear: both;
@@ -266,4 +271,17 @@
 
 .person__actions__data {
   background-color: mix($color-cyan, #fff, 15%);
+}
+
+.person__versions {
+  padding-top: 6em;
+
+  h2 {
+    @extend %person-section-heading;
+  }
+
+  dl {
+    @extend %responsive-definition-list;
+    margin-bottom: 0;
+  }
 }

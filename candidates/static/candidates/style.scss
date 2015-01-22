@@ -18,6 +18,7 @@ $button-sml: rem-calc(8);
 $button-med: rem-calc(10);
 $button-lrg: rem-calc(14);
 $button-radius: 3px;
+$code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 
 @import "../foundation/scss/normalize";
 @import "../foundation/scss/foundation";
@@ -42,6 +43,10 @@ $button-radius: 3px;
 
 .aka-note {
   font-size: 80%
+}
+
+pre {
+  font-family: $code-font-family;
 }
 
 @import "header";
