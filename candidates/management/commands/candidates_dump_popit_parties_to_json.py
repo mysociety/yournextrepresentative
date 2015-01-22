@@ -31,6 +31,7 @@ class Command(LabelCommand):
             del party['html_url']
             # Similarly the URLs of images:
             party.pop('image', None)
+            party.pop('proxy_image', None)
             party.pop('images', None)
             # The generated id in each identifier will be different
             # between systems (or between runs on the same system) so
