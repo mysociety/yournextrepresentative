@@ -1,23 +1,19 @@
-.source-confirmation:first-of-type {
-  &:before {
-    display: block;
-    content: "";
-    position: absolute;
-    top: -30px;
-    left: 15px;
-    @include css-triangle(20px, $color-yellow, bottom);
-  }
+.source-confirmation:before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 115px;
+  @include css-triangle(20px, $color-yellow, bottom);
 }
 
-.source-confirmation:not(:first-of-type) {
-  &:before {
-    display: block;
-    content: "";
-    position: absolute;
-    top: -30px;
-    left: 120px;
-    @include css-triangle(20px, $color-yellow, bottom);
-  }
+.source-confirmation + .source-confirmation:before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 234px;
+  @include css-triangle(20px, $color-yellow, bottom);
 }
 
 .source-confirmation {
