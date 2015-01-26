@@ -125,6 +125,13 @@ def get_version_diff(from_data, to_data):
     result.sort(key=lambda o: (o['op'], o['path']))
     return result
 
+def clean_version_data(data):
+    # We're not interested in changes of these IDs:
+    for i in data.get('identifiers', []):
+        i.pop('id', None)
+    for on in data.get('other_names', []):
+        on.pop('id', None)
+
 def get_version_diffs(versions):
     """Add a diff to each of an array of version dicts
 
@@ -145,6 +152,8 @@ def get_version_diffs(versions):
             #     versions[i + 1]['data']
             # )
             from_version_data = versions[i + 1]['data']
+        clean_version_data(to_version_data)
+        clean_version_data(from_version_data)
         version_with_diff = versions[i].copy()
         version_with_diff['diff'] = \
             get_version_diff(from_version_data, to_version_data)
