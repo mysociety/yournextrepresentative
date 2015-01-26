@@ -122,3 +122,23 @@ SSH into the vagrant machine, then run:
 
     cd yournextmp-popit
     ./manage.py test
+
+### Mirror the live database into your development copy
+
+Download the live database, and save the location in an
+environment variable:
+
+    ./manage.py candidates_get_live_database
+    export DUMP_DIRECTORY="$(pwd)"
+
+Assuming you have a local development instance of PopIt, change
+into the root of the PopIt repository, and run:
+
+     NODE_ENV=development bin/replace-database \
+         "$DUMP_DIRECTORY"/yournextmp-popit- \
+         candidates \
+         popitdev__master
+
+... replacing `candidates` with the slug of your YourNextMP
+PopIt instance, and `popitdev__master` with the name of your PopIt
+master database in MongoDB.
