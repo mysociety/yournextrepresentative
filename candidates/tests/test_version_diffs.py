@@ -450,3 +450,138 @@ class TestVersionDiffs(TestCase):
         versions_with_diffs = get_version_diffs(versions)
 
         self.assertEqual(expected_result, versions_with_diffs)
+
+    def test_remove_ids_for_version_diffs(self):
+        versions = [
+            {
+                'user': 'john',
+                'information_source': 'Manual correction by a user',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2959',
+                            'id': '123456',
+                        },
+                    ],
+                    'other_names': [
+                        {
+                            'note': 'Full name',
+                            'start_date': None,
+                            'id': '567890',
+                            'end_date': None,
+                            'name': 'Tessa Jane Jowell'
+                        }
+                    ]
+                }
+            },
+            {
+                'information_source': 'Updated by a script',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2959',
+                            'id': '123457',
+                        }
+                    ],
+                    'other_names': [
+                        {
+                            'note': 'Full name',
+                            'start_date': None,
+                            'id': '567891',
+                            'end_date': None,
+                            'name': 'Tessa J Jowell'
+                        }
+                    ]
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'user': 'john',
+                'information_source': 'Manual correction by a user',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2959',
+                        },
+                    ],
+                    'other_names': [
+                        {
+                            'note': 'Full name',
+                            'start_date': None,
+                            'end_date': None,
+                            'name': 'Tessa Jane Jowell'
+                        }
+                    ],
+                },
+                'diff': [
+                    {
+                        "op": "replace",
+                        "path": "other_names/0",
+                        "previous_value": {
+                            "end_date": None,
+                            "name": "Tessa J Jowell",
+                            "note": "Full name",
+                            "start_date": None
+                        },
+                        "value": {
+                            "end_date": None,
+                            "name": "Tessa Jane Jowell",
+                            "note": "Full name",
+                            "start_date": None
+                        }
+                    }
+                ],
+            },
+            {
+                'information_source': 'Updated by a script',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2959',
+                        },
+                    ],
+                    'other_names': [
+                        {
+                            'note': 'Full name',
+                            'start_date': None,
+                            'end_date': None,
+                            'name': 'Tessa J Jowell'
+                        }
+                    ]
+                },
+                'diff': [
+                    {
+                        "op": "add",
+                        "path": "identifiers",
+                        "value": [
+                            {
+                                "identifier": "2959",
+                                "scheme": "yournextmp-candidate"
+                            }
+                        ]
+                    },
+                    {
+                        "op": "add",
+                        "path": "other_names",
+                        "value": [
+                            {
+                                "end_date": None,
+                                "name": "Tessa J Jowell",
+                                "note": "Full name",
+                                "start_date": None
+                            }
+                        ]
+                    }
+                ],
+            },
+        ]
+
+        versions_with_diffs = get_version_diffs(versions)
+
+        self.assertEqual(expected_result, versions_with_diffs)

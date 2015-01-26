@@ -67,7 +67,7 @@ more instructions for this.)
 Install some required packages:
 
     sudo apt-get install python-virtualenv curl yui-compressor \
-        python-dev libpq-dev
+        python-dev libpq-dev libxml2-dev libxslt-dev
 
 Create a virtualenv with all the Python packages you'll need:
 
