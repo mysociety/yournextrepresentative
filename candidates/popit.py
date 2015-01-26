@@ -30,6 +30,9 @@ def popit_unwrap_pagination(api_collection, **kwargs):
             'page': page,
         }
         get_kwargs.update(kwargs)
+        print "Now getting with kwargs:",
+        import json
+        print json.dumps(get_kwargs, indent=4, sort_keys=True)
         response = api_collection.get(**get_kwargs)
         keep_fetching = response.get('has_more', False)
         page += 1
