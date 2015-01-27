@@ -100,7 +100,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     twitter_username = forms.CharField(
-        label="Twitter username",
+        label="Twitter username (e.g. 'democlub')",
         max_length=256,
         required=False,
     )
