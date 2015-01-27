@@ -313,7 +313,8 @@ class PopItPerson(object):
                     if year not in results:
                         message = u"Missing post membership according to PopIt "
                         message += u"data for {0} in {1}. standing_in was {2}, "
-                        message += u"memberships were {3}".format(
+                        message += u"memberships were {3}"
+                        message = message.format(
                             self.id,
                             year,
                             self.popit_data.get('standing_in', 'MISSING'),
