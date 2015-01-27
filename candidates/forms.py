@@ -122,10 +122,12 @@ class BasePersonForm(forms.Form):
 
     def clean_twitter_username(self):
         # Remove any URL bits around it:
-        username = self.cleaned_data['twitter_username']
+        username = self.cleaned_data['twitter_username'].strip()
         m = re.search('^.*twitter.com/(\w+)', username)
         if m:
             username = m.group(1)
+        # If there's a leading '@', strip that off:
+        username = re.sub(r'^@', '', username)
         if not re.search(r'^\w*$', username):
             message = "The Twitter username must only consist of alphanumeric characters or underscore"
             raise ValidationError(message)
