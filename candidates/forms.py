@@ -81,7 +81,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     gender = forms.CharField(
-        label="Gender (e.g. 'male', 'female')",
+        label="Gender (e.g. \"male\", \"female\")",
         max_length=256,
         required=False,
     )
@@ -100,7 +100,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     twitter_username = forms.CharField(
-        label="Twitter username (e.g. 'democlub')",
+        label="Twitter username (e.g. \"democlub\")",
         max_length=256,
         required=False,
     )
