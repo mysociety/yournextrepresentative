@@ -188,7 +188,6 @@ def fix_dates(data):
     if not data['birth_date']:
         data['birth_date'] = None
     for other_name in data.get('other_names', []):
-        print "other_name is:", other_name
         for key in ('start_date', 'end_date'):
             if key in other_name and not other_name[key]:
                 other_name[key] = None
