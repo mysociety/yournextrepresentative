@@ -10,7 +10,9 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponsePermanentRedirect
+from django.http import (
+    Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
+)
 from django.utils import timezone
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
@@ -147,6 +149,9 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
         context['constituency_name'] = \
             get_constituency_name_from_mapit_id(mapit_area_id)
+
+        if not context['constituency_name']:
+            raise Http404("Constituency not found")
 
         context['electionleaflets_url'] = \
             get_electionleaflets_url(context['constituency_name'])
