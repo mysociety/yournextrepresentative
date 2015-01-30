@@ -67,8 +67,8 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
             # marked as standing in that consituency.
 
             if self.existing_candidate_same_party(cons_id, party_id):
-                msg = "There was already a candidate for {0} in {1} - skipping"
-                print msg.format(party_name, cons_url)
+                msg = u"There was already a candidate for {0} in {1} - skipping"
+                print msg.format(party_name, cons_url).format('utf-8')
                 continue
 
             # Now it should be safe to update the candidate and set
