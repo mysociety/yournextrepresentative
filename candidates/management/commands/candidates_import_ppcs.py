@@ -365,7 +365,6 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 return False
 
     def handle_person(self, ppc_data, image_filename):
-        print '---------------------------------------------------------------'
         print u"PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8')
         # Search PopIt for anyone with the same name. (FIXME: we
         # should make this a bit fuzzier when the PopIt API
@@ -449,6 +448,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 image = re.sub(r'\.json$', '-cropped.png', filename)
                 if not exists(image):
                     image = None
+                print '==============================================================='
                 print "filename:", filename
                 with open(filename) as f:
                     ppc_data = json.load(f)
