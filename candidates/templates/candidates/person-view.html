@@ -43,8 +43,10 @@
     {% for other_name in person.other_names %}
       <dd>{{ other_name.name }}{% if other_name.note %} ({{ other_name.note }}){% endif %}</dd>
     {% endfor %}
-    <dt>Gender</dt>
-    <dd>{% if person.gender %}{{ person.gender|title }}{% else %}Unknown{% endif %}</dd>
+    <dt>Date of birth</dt>
+    {% with dob=person.date_of_birth %}
+      <dd>{% if dob %}{{ dob|date:"jS F Y" }}{% else %}Unknown{% endif %}</dd>
+    {% endwith %}
   </dl>
 
   <h2>Contact details:</h2>
@@ -85,6 +87,15 @@
       <a href="{% url 'constituency' person.standing_in.2010.post_id person.standing_in.2010.name|slugify  %}">{{ person.standing_in.2010.name }}</a>
       <span class="party">as {{ person.party_memberships.2010.name }} candidate</span>
     {% endif %}</dd>
+  </dl>
+
+  <h2>Demographics:</h2>
+
+  <dl>
+    <dt>Age</dt>
+    <dd>{{ person.age|default:"Unknown" }}</dd>
+    <dt>Gender</dt>
+    <dd>{% if person.gender %}{{ person.gender|title }}{% else %}Unknown{% endif %}</dd>
   </dl>
 
 </div>

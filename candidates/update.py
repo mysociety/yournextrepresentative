@@ -97,7 +97,8 @@
 #     },
 #   }
 
-from datetime import timedelta, date
+from datetime import timedelta, datetime, date
+import math
 
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
@@ -202,6 +203,14 @@ class PersonParseMixin(PopItApiMixin):
         result['proxy_image'] = person.popit_data.get('proxy_image')
         result['other_names'] = person.popit_data.get('other_names', [])
         result['identifiers'] = person.popit_data.get('identifiers', [])
+        # Set the date of birth (as a datetime.date), and the
+        # candidate's age in years:
+        dob_str = person.popit_data.get('birth_date')
+        if dob_str:
+            result['date_of_birth'] = datetime.strptime(dob_str, '%Y-%M-%d').date()
+            result['age'] = years_ago(result['date_of_birth'], date.today())
+        else:
+            result['date_of_birth'] = result['age'] = ''
         return result
 
 
