@@ -4663,5 +4663,464 @@
             "twitter_username": "sotconservative"
         },
         "same_person": true
+    },
+    {
+        "popit_person_id": "1832",
+        "ppc": {
+            "address": "City of Liverpool Conservatives\nSuite 14\nGoodlass House\nGoodlass Road\nSpeke\nLIVERPOOL  L24 9HJ",
+            "constituency": "Garston and Halewood",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65900",
+                "name": "Garston and Halewood",
+                "post_id": "65900"
+            },
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Williams_Martin.aspx",
+            "homepage": "http://www.liverpoolconservatives.org/garston-and-halewood",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/26012015/Martin Williams.ashx",
+            "name": "Martin Williams",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Williams_Martin.aspx",
+            "slug": "Williams_Martin"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "4137",
+        "ppc": {
+            "constituency": "Holborn and St Pancras",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65824",
+                "name": "Holborn and St Pancras",
+                "post_id": "65824"
+            },
+            "email": "will@willblair.co.uk",
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Blair_Will.aspx",
+            "homepage": "http://www.willblair.co.uk",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/Will-Blair.ashx",
+            "name": "Will Blair",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Blair_Will.aspx",
+            "phone": "020 7794 5679",
+            "slug": "Blair_Will"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "3444",
+        "ppc": {
+            "constituency": "Nottingham East",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65559",
+                "name": "Nottingham East",
+                "post_id": "65559"
+            },
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Hickton_Garry.aspx",
+            "homepage": "http://www.garryhickton.org.uk",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/2212/Garry Hickton.ashx",
+            "name": "Garry Hickton",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Hickton_Garry.aspx",
+            "slug": "Hickton_Garry"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "5371",
+        "ppc": {
+            "address": "Unit 1\r\nOmega Business Village\r\nNorthallerton\r\nNorth Yorkshire\r\nDL8 2NJ",
+            "constituency": "Richmond (Yorks)",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65722",
+                "name": "Richmond (Yorks)",
+                "post_id": "65722"
+            },
+            "email": "rishi@rishisunak.com",
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Sunak_Rishi.aspx",
+            "homepage": "http://www.rishisunak.com",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/0912/Rishi Sunak.ashx",
+            "name": "Rishi Sunak",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Sunak_Rishi.aspx",
+            "phone": "01609 772060",
+            "slug": "Sunak_Rishi"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "5595",
+        "ppc": {
+            "constituency": "Sheffield South East",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65793",
+                "name": "Sheffield South East",
+                "post_id": "65793"
+            },
+            "email": "mattsleatforsheffieldsoutheast@yahoo.com",
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Sleat_Matt.aspx",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/26012015/Matt Sleat.ashx",
+            "name": "Matt Sleat",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Sleat_Matt.aspx",
+            "slug": "Sleat_Matt"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "1480",
+        "ppc": {
+            "address": "Stockton Conservatives\nSuite 6a\nDTV Business Centre\nOrde Wingate Way\nStockton-on-Tees\nTS19 0GD.",
+            "constituency": "Stockton North",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65641",
+                "name": "Stockton North",
+                "post_id": "65641"
+            },
+            "email": "chris@chrisdaniels.org",
+            "facebook_url": "https://www.facebook.com/chris4stockton",
+            "full_url": "https://www.conservatives.com/OurTeam/Prospective_Parliamentary_Candidates/Daniels_Chris.aspx",
+            "image_url": "https://www.conservatives.com/~/media/Images/Site Redesign/Profile Pictures/Non target candidates/0311/Chris Daniels.ashx",
+            "name": "Chris Daniels",
+            "party_object": {
+                "id": "party:52",
+                "name": "Conservative Party"
+            },
+            "party_slug": "conservatives",
+            "path": "/OurTeam/Prospective_Parliamentary_Candidates/Daniels_Chris.aspx",
+            "phone": "01642 636236",
+            "slug": "Daniels_Chris"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "3940",
+        "ppc": {
+            "constituency": "Aldridge-Brownhills",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65773",
+                "name": "Aldridge-Brownhills",
+                "post_id": "65773"
+            },
+            "full_url": "http://www.labour.org.uk/people/detail/john-fisher",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/ppc_John_Fisher_1.jpg/@zx_180@zy_180/",
+            "name": "John Fisher",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "2795",
+        "ppc": {
+            "address": "14 Commercial Square, Camborne, TR11 8EA",
+            "constituency": "Camborne and Redruth",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65826",
+                "name": "Camborne and Redruth",
+                "post_id": "65826"
+            },
+            "email": "michael.foster@workingforcamborneandredruth.com",
+            "facebook_url": "https://facebook.com/MichaelFosterCRH",
+            "full_url": "http://www.labour.org.uk/people/detail/michael-foster",
+            "homepage": "http://www.workingforcamborneandredruth.com",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_michael_foster.jpg/@zx_180@zy_180/",
+            "name": "Michael Foster",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "phone": "01209 612031",
+            "twitter_username": "MichaelFosterCR"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "1126",
+        "ppc": {
+            "constituency": "Clwyd West",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/66100",
+                "name": "Clwyd West",
+                "post_id": "66100"
+            },
+            "name": "Gareth Thomas",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "region": "Wales"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "4331",
+        "ppc": {
+            "constituency": "Enfield, Southgate",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65567",
+                "name": "Enfield, Southgate",
+                "post_id": "65567"
+            },
+            "name": "Bambos Charlambous",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "region": "London"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "4351",
+        "ppc": {
+            "constituency": "Hazel Grove",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65557",
+                "name": "Hazel Grove",
+                "post_id": "65557"
+            },
+            "name": "Laura Booth",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "region": "North West"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "5251",
+        "ppc": {
+            "constituency": "Maldon",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65661",
+                "name": "Maldon",
+                "post_id": "65661"
+            },
+            "full_url": "http://www.labour.org.uk/people/detail/peter-edwards",
+            "image_url": "http://action.labour.org.uk/page/-/site/img/people/headshots/rsz_pe.jpg/@zx_180@zy_180/",
+            "name": "Peter Edwards",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "4398",
+        "ppc": {
+            "constituency": "Old Bexley and Sidcup",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65653",
+                "name": "Old Bexley and Sidcup",
+                "post_id": "65653"
+            },
+            "name": "Ibrahim (Ibby) Mehmet",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "region": "London"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "3965",
+        "ppc": {
+            "constituency": "Wycombe",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/66010",
+                "name": "Wycombe",
+                "post_id": "66010"
+            },
+            "name": "David Williams",
+            "party_object": {
+                "id": "party:53",
+                "name": "Labour Party"
+            },
+            "party_slug": "labour",
+            "region": "South East"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "2559",
+        "ppc": {
+            "constituency": "Bristol East",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65839",
+                "name": "Bristol East",
+                "post_id": "65839"
+            },
+            "email": "abdul@pakbutchers.co.uk",
+            "facebook_url": "http://facebook.com/#!/Abdulraoofmalik",
+            "full_url": "http://www.libdems.org.uk/abdul_malik",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/5347/attachments/original/1403109910/key_abdulmalik.jpg?1403109910",
+            "name": "Abdul Malik",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "South West",
+            "twitter_username": "abdulstweets"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "2192",
+        "ppc": {
+            "constituency": "Candidate for Chichester",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65558",
+                "name": "Chichester",
+                "post_id": "65558"
+            },
+            "email": "arhsmith@uk2.net",
+            "full_url": "http://www.libdems.org.uk/andrew_smith",
+            "homepage": "http://andrewsmith.mycouncillor.org.uk",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/3968/attachments/original/1403105507/key_genericprofile.png?1403105507",
+            "name": "Andrew Smith",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "phone": "01243 774569",
+            "region": "South East",
+            "twitter_username": "Andrew_RH_Smith"
+        },
+        "same_person": false
+    },
+    {
+        "popit_person_id": "4507",
+        "ppc": {
+            "address": "21 Berrylands Road,\nSurbiton,\nSurrey,\nKT5 8QX",
+            "constituency": "Kingston and Surbiton",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65778",
+                "name": "Kingston and Surbiton",
+                "post_id": "65778"
+            },
+            "current_mp": true,
+            "email": "edward@edwarddavey.co.uk",
+            "full_url": "http://www.libdems.org.uk/ed_davey",
+            "homepage": "http://www.edwarddavey.co.uk",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/1897/attachments/original/1390925783/key_Ed_Davey.JPG?1390925783",
+            "name": "Ed Davey",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "phone": "0208 288 0161",
+            "region": "London",
+            "twitter_username": "EdwardDaveyMP"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "4528",
+        "ppc": {
+            "address": "70 Camm Street\n\nWalkley\n\nSHEFFIELD\n\nS6 3TR",
+            "constituency": "Sheffield Brightside & Hillsborough",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65601",
+                "name": "Sheffield, Brightside and Hillsborough",
+                "post_id": "65601"
+            },
+            "email": "brightside@mdfs.net",
+            "full_url": "http://www.libdems.org.uk/jonathon_harston",
+            "homepage": "http://mdfs.net/brightside",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/5878/attachments/original/1407748832/key_genericprofile.png?1407748832",
+            "name": "Jonathon Harston",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "Yorks & Humber"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "3652",
+        "ppc": {
+            "address": "2a Lion Road,\nTwickenham,\nTW1 4JQ",
+            "constituency": "Twickenham",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65782",
+                "name": "Twickenham",
+                "post_id": "65782"
+            },
+            "current_mp": true,
+            "email": "cablev@parliament.uk",
+            "full_url": "http://www.libdems.org.uk/vince_cable",
+            "homepage": "http://www.vincentcable.org.uk",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/1642/attachments/original/1390923550/key_Vince_Cable.JPG?1390923550",
+            "name": "Vince Cable",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "phone": "020 8892 0215",
+            "region": "London",
+            "twitter_username": "vincecable"
+        },
+        "same_person": true
+    },
+    {
+        "popit_person_id": "2417",
+        "ppc": {
+            "constituency": "Witney",
+            "constituency_object": {
+                "mapit_url": "http://mapit.mysociety.org/area/65622",
+                "name": "Witney",
+                "post_id": "65622"
+            },
+            "email": "Andyg2439@gmail.com",
+            "facebook_url": "http://facebook.com/andyg2439",
+            "full_url": "http://www.libdems.org.uk/andrew_graham",
+            "image_url": "https://d3n8a8pro7vhmx.cloudfront.net/libdems/pages/7143/attachments/original/1419353292/key_andrew_graham.JPG?1419353292",
+            "name": "Andrew Graham",
+            "party_object": {
+                "id": "party:90",
+                "name": "Liberal Democrats"
+            },
+            "party_slug": "libdem",
+            "region": "South East",
+            "twitter_username": "andyg2439"
+        },
+        "same_person": false
     }
 ]
