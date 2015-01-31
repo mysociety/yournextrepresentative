@@ -60,6 +60,11 @@ constituency_corrections = {
     'West Cornwall and Scilly': 'St Ives',
     'Weston Super Mare': 'Weston-Super-Mare',
     'Canterbury and Whitstable': 'Canterbury',
+    'Brent Central - Liberal Democrat Race Equality Champion': 'Brent Central',
+    'Coatbridge, Chryston, Bellshill': 'Coatbridge, Chryston and Bellshill',
+    'East Kilbride': 'East Kilbride, Strathaven and Lesmahagow',
+    'Newcastle under Lyme': 'Newcastle-under-Lyme',
+    'North Northamptonshire': 'Northampton South',
 }
 
 def cons_key(s):
