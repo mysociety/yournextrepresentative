@@ -117,7 +117,11 @@
     <h2>Use this data!</h2>
     <p>Open data JSON API:</p>
     <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}" onclick="this.select();"></p>
-    <p>Want a CSV download? <a href="https://github.com/mysociety/yournextmp-popit/issues/96">Tell us!</a></p>
+    {% comment %}
+      <p>Want a CSV download? <a href="https://github.com/mysociety/yournextmp-popit/issues/96">Tell us!</a></p>
+    {% endcomment %}
+    <p>More details about getting <a href="{% url 'help-api' ">the data</a>
+      and <a href="{% url 'help-about' %}">its license.</a></p>
   </div>
 
 </div>
