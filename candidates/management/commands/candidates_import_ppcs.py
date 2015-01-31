@@ -121,12 +121,12 @@ def write_human_decisions(human_decisions):
     with open(human_decisions_filename, 'w') as f:
         f.write(output)
 
-def record_human_decision(ppc_dict, popit_person, same):
+def record_human_decision(ppc_dict, popit_person_id, same):
     human_decisions = get_human_decisions()
     human_decisions.append({
         'same_person': same,
         'ppc': ppc_dict,
-        'popit_person': popit_person,
+        'popit_person_id': popit_person_id,
     })
     write_human_decisions(human_decisions)
 
@@ -403,10 +403,10 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 # We have to ask the user for a decision:
                 if self.decision_from_user(ppc_data, result):
                     self.update_popit_person(popit_person_id, ppc_data, image_filename)
-                    record_human_decision(ppc_data, result, True)
+                    record_human_decision(ppc_data, popit_person_id, True)
                     return
                 else:
-                    record_human_decision(ppc_data, result, False)
+                    record_human_decision(ppc_data, popit_person_id, False)
         # If we haven't returned from the function by this stage, we
         # need to create a new candidate in PopIt:
         self.add_popit_person(ppc_data, image_filename)
