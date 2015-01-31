@@ -16,7 +16,7 @@ import dateutil.parser
 
 from candidates.popit import create_popit_api_object
 
-from .images import get_file_md5sum, image_uploaded_already
+from ..images import get_file_md5sum, image_uploaded_already
 
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
 base_emblem_url = 'http://openelectoralcommission.org.uk/party_images/'

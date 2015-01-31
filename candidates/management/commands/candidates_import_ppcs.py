@@ -25,7 +25,7 @@ from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.static_data import MapItData
 from candidates.views import CandidacyMixin
 
-from .images import image_uploaded_already, get_file_md5sum
+from ..images import image_uploaded_already, get_file_md5sum
 
 party_slug_to_popit_party = {
     'labour': {
