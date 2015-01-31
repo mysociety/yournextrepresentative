@@ -156,6 +156,14 @@ def get_ppc_url_from_popit_result(popit_result):
             return link.get['url']
     return None
 
+def key_value_appeared_in_previous_version(key, value, versions):
+    for version in versions:
+        value_from_old_version = version['data'].get(key)
+        if value_from_old_version == value:
+            return True
+    else:
+        return False
+
 
 class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Import scraped PPC data"
@@ -235,8 +243,23 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 new_person_data_value = new_person_data.get(key)
                 person_data_value = person_data.get(key)
                 if person_data_value and new_person_data_value and new_person_data_value != person_data_value:
-                    warnings.append(u"[{0}] replacing      {1}".format(key, person_data_value))
-                    warnings.append(u"[{0}] with new value {1}".format(key, new_person_data_value))
+                    if key_value_appeared_in_previous_version(
+                        key,
+                        new_person_data_value,
+                        previous_versions
+                    ):
+                        warning_message = u"[{0}] it looks as if a previous "
+                        warning_message += u"version had {1}, so not "
+                        warning_message += u"overwriting the current value {2}"
+                        warnings.append(warning_message.format(
+                            key,
+                            new_person_data_value,
+                            person_data_value
+                        ))
+                        del new_person_data[key]
+                    else:
+                        warnings.append(u"[{0}] replacing      {1}".format(key, person_data_value))
+                        warnings.append(u"[{0}] with new value {1}".format(key, new_person_data_value))
         if warnings:
             print u"Warnings for person/{0} {1}".format(
                 popit_person_id, person_data['name']
