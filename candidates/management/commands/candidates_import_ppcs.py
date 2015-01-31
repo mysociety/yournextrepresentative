@@ -382,25 +382,27 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             # with decisions.
             del result['versions']
             del result['memberships']
+            popit_person_id = result['id']
+
             added_for_2015 = self.already_added_for_2015(ppc_data, result)
             if added_for_2015 is None:
                 return
             elif added_for_2015:
                 # Then just update that person with the possibly
                 # updated scraped data:
-                self.update_popit_person(result['id'], ppc_data, image_filename)
+                self.update_popit_person(popit_person_id, ppc_data, image_filename)
                 return
             # Do we already have a decision about whether this PPC is
             # the same as another from 2010?
             decision = self.already_matched_to_a_person(ppc_data, result)
             if decision is not None:
                 if decision:
-                    self.update_popit_person(result['id'], ppc_data, image_filename)
+                    self.update_popit_person(popit_person_id, ppc_data, image_filename)
                     return
             else:
                 # We have to ask the user for a decision:
                 if self.decision_from_user(ppc_data, result):
-                    self.update_popit_person(result['id'], ppc_data, image_filename)
+                    self.update_popit_person(popit_person_id, ppc_data, image_filename)
                     record_human_decision(ppc_data, result, True)
                     return
                 else:
