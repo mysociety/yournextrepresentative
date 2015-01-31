@@ -270,6 +270,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
         person_id = self.create_person(person_data, change_metadata)
         if image_filename:
             self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
+        return person_id
 
     def already_added_for_2015(self, ppc_data, popit_result):
         '''True if ppc_data matches popit_result, and is already marked as standing
@@ -361,6 +362,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 return False
 
     def handle_person(self, ppc_data, image_filename):
+        print '---------------------------------------------------------------'
         print u"PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8')
         # Search PopIt for anyone with the same name. (FIXME: we
         # should make this a bit fuzzier when the PopIt API
@@ -371,6 +373,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
         r = requests.get(
             person_search_url
         )
+        add_new_person = True
         for result in r.json()['result']:
             # FIXME: With the current code, updating Elasticsearch
             # fails because it rejects the empty string as a null date
@@ -384,32 +387,47 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             del result['memberships']
             popit_person_id = result['id']
 
+            message = "  Considering PopIt person search result {0}"
+            print message.format(popit_person_id)
+
             added_for_2015 = self.already_added_for_2015(ppc_data, result)
             if added_for_2015 is None:
-                return
+                print "    already_added_for_2015 returned None, so ignoring"
             elif added_for_2015:
                 # Then just update that person with the possibly
                 # updated scraped data:
+                add_new_person = False
+                print "    matched a 2015 candidate, so updating that"
                 self.update_popit_person(popit_person_id, ppc_data, image_filename)
-                return
-            # Do we already have a decision about whether this PPC is
-            # the same as another from 2010?
-            decision = self.already_matched_to_a_person(ppc_data, result)
-            if decision is not None:
-                if decision:
-                    self.update_popit_person(popit_person_id, ppc_data, image_filename)
-                    return
+                break
             else:
-                # We have to ask the user for a decision:
-                if self.decision_from_user(ppc_data, result):
-                    self.update_popit_person(popit_person_id, ppc_data, image_filename)
-                    record_human_decision(ppc_data, popit_person_id, True)
-                    return
+                # Do we already have a decision about whether this PPC is
+                # the same as another from 2010?
+                decision = self.already_matched_to_a_person(ppc_data, result)
+                if decision is None:
+                    print "    no previous decision found, so asking"
+                    # We have to ask the user for a decision:
+                    if self.decision_from_user(ppc_data, result):
+                        print "      updating, and recording the decision that they're a match"
+                        add_new_person = False
+                        self.update_popit_person(popit_person_id, ppc_data, image_filename)
+                        record_human_decision(ppc_data, popit_person_id, True)
+                        break
+                    else:
+                        print "      recording the decision that they're not a match"
+                        record_human_decision(ppc_data, popit_person_id, False)
                 else:
-                    record_human_decision(ppc_data, popit_person_id, False)
-        # If we haven't returned from the function by this stage, we
-        # need to create a new candidate in PopIt:
-        self.add_popit_person(ppc_data, image_filename)
+                    # Otherwise we'd previously decided that they're
+                    # the same person, so just update that person.
+                    print "    there was a previous decision found"
+                    if decision:
+                        print "      the previous decision was that they're a match, so updating"
+                        add_new_person = False
+                        self.update_popit_person(popit_person_id, ppc_data, image_filename)
+                        break
+        if add_new_person:
+            new_person_id = self.add_popit_person(ppc_data, image_filename)
+            print "  Added them as a new person ({0})".format(new_person_id)
 
     def handle(self, **options):
 
