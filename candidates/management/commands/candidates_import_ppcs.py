@@ -395,7 +395,10 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
 
             added_for_2015 = self.already_added_for_2015(ppc_data, result)
             if added_for_2015 is None:
+                add_new_person = False
                 print "    already_added_for_2015 returned None, so ignoring"
+                print "    !!! CHECK THIS MANUALLY !!!"
+                break
             elif added_for_2015:
                 # Then just update that person with the possibly
                 # updated scraped data:
