@@ -97,7 +97,7 @@
 #     },
 #   }
 
-from datetime import timedelta
+from datetime import timedelta, date
 
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
@@ -139,6 +139,30 @@ def reduced_organization_data(organization):
         'id': organization['id'],
         'name': organization['name'],
     }
+
+def years_ago(earlier_date, later_date):
+    """Calculate the number of years between two dates
+
+    >>> years_ago(date(1976, 9, 13), date(2015, 1, 31))
+    38
+    >>> years_ago(date(1976, 1, 6), date(2015, 1, 31))
+    39
+    >>> years_ago(date(1982, 1, 1), date(2016, 2, 29))
+    34
+    """
+
+    try:
+        later_date_in_earlier_year = date(
+            earlier_date.year, later_date.month, later_date.day
+        )
+    except ValueError:
+        # It must have been February the 29th:
+        later_date_in_earlier_year = date(earlier_date.year, 3, 1)
+    if later_date_in_earlier_year > earlier_date:
+        return later_date.year - earlier_date.year
+    else:
+        return (later_date.year - earlier_date.year) - 1
+
 
 class PersonParseMixin(PopItApiMixin):
 
