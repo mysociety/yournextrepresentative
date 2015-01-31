@@ -272,9 +272,17 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
 
     def already_added_for_2015(self, ppc_data, popit_result):
+        '''True if ppc_data matches popit_result, and is already marked as standing
+
+        This method returns True if popit_result seems to be the same
+        person referred to as ppc_data and that person's already
+        marked as standing in 2015 (in the right constituency). It
+        returns None if popit_result is malformed or they've been
+        since marked as "known not to be standing in 2015". Otherwise,
+        this returns False.'''
         standing_in = popit_result.get('standing_in')
-        # This is someone whom an update an update failed for part way
-        # through, having 'standing_in' set, but set to null:
+        # Due to this PopIt bug https://github.com/mysociety/popit/issues/710
+        # we sometimes end up with this malformed standing_in:
         if standing_in is None:
             return None
         standing_in_2015 = standing_in.get('2015', {})
@@ -283,6 +291,8 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
         # and deal with that case specially:
         if standing_in_2015 is None:
             return None
+        # Now just check if their name, party and constituency in 2015
+        # match:
         popit_constituency_name_2015 = standing_in_2015.get('name')
         popit_party_id_2015 = popit_result['party_memberships'].get('2015', {}).get('id')
         return (ppc_data['name'] == popit_result['name'] and
