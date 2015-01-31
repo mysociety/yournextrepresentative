@@ -300,30 +300,10 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
                 ppc_data['party_object']['id'] == popit_party_id_2015 and
                 ppc_data['constituency_object']['name'] == popit_constituency_name_2015)
 
-    def constituency_and_party_same_at_either_election(self, decision_popit, popit_result):
-        # We assume that the name is already a match (or a close
-        # match) because this came from a search result...
-        dsi = decision_popit['standing_in']
-        psi = popit_result['standing_in']
-        dpm = decision_popit['party_memberships']
-        ppm = popit_result['party_memberships']
-        for year in ('2010', '2015'):
-            all_have_data_for_year = True
-            for d in (dsi, psi, dpm, ppm):
-                if year not in d:
-                    all_have_data_for_year = False
-                    break
-            if not all_have_data_for_year:
-                continue
-            if dsi[year]['name'] == psi[year]['name'] and dpm[year]['name'] == ppm[year]['name']:
-                return True
-        return False
-
-    def already_matched_to_a_person(self, ppc_data, popit_result):
+    def already_matched_to_a_person(self, ppc_data, popit_person_id):
         decisions = get_human_decision(ppc_data)
         for decision in decisions:
-            popit_person = decision['popit_person']
-            if self.constituency_and_party_same_at_either_election(popit_person, popit_result):
+            if popit_person_id == decision['popit_person_id']:
                 return decision['same_person']
         return None
 
@@ -403,7 +383,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
             else:
                 # Do we already have a decision about whether this PPC is
                 # the same as another from 2010?
-                decision = self.already_matched_to_a_person(ppc_data, result)
+                decision = self.already_matched_to_a_person(ppc_data, popit_person_id)
                 if decision is None:
                     print "    no previous decision found, so asking"
                     # We have to ask the user for a decision:
