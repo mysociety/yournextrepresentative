@@ -214,6 +214,10 @@
     @extend %candidate-party;
   }
 
+  .dob {
+    margin-left: 0.6em;
+  }
+
   a[href^="http"] {
     // break ultra-long facebook etc links onto two lines
     word-wrap: break-word;

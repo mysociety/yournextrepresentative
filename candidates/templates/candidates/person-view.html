@@ -44,10 +44,6 @@
     {% for other_name in person.other_names %}
       <dd>{{ other_name.name }}{% if other_name.note %} ({{ other_name.note }}){% endif %}</dd>
     {% endfor %}
-    <dt>Date of birth</dt>
-    {% with dob=person.date_of_birth %}
-      <dd>{% if dob %}{{ dob|date:"jS F Y" }}{% else %}Unknown{% endif %}</dd>
-    {% endwith %}
   </dl>
 
   <h2>Contact details:</h2>
@@ -87,10 +83,16 @@
   <h2>Demographics:</h2>
 
   <dl>
-    <dt>Age</dt>
-    <dd>{{ person.age|default:"Unknown" }}</dd>
     <dt>Gender</dt>
     <dd>{% if person.gender %}{{ person.gender|title }}{% else %}Unknown{% endif %}</dd>
+    <dt>Age</dt>
+    {% with dob=person.date_of_birth %}
+      {% if dob %}
+        <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
+      {% else %}
+        <dd>Unknown</dd>
+      {% endif %}</dd>
+    {% endwith %}
   </dl>
 
 </div>
