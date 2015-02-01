@@ -7,7 +7,7 @@ from candidates.views import (ConstituencyPostcodeFinderView,
     ConstituencyNameFinderView, ConstituencyDetailView,
     ConstituencyDetailCSVView, CandidacyView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
-    MergePeopleView, PersonView, HelpApiView, HelpAboutView,
+    MergePeopleView, PersonView, PartyDetailView, HelpApiView, HelpAboutView,
     ConstituencyListView, RecentChangesView, LeaderboardView)
 from .feeds import RecentChangesFeed
 
@@ -43,6 +43,9 @@ urlpatterns = patterns('',
     url(r'^person/(?P<person_id>\d+)(?:/(?P<ignored_slug>.*))?$',
         PersonView.as_view(),
         name='person-view'),
+    url(r'^party/(?P<organization_id>[a-z-]+:\d+)/(?P<ignored_slug>.*)$',
+        PartyDetailView.as_view(),
+        name='party'),
     url(r'^recent-changes$',
         RecentChangesView.as_view(),
         name='recent-changes'),

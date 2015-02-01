@@ -14,6 +14,14 @@ def get_constituency_name_map(basename):
         result[constituency['name']] = constituency
     return result
 
+def get_constituencies_by_country(basename):
+    result = defaultdict(list)
+    for cons in get_mapit_constituencies(basename).values():
+        result[cons['country_name']].append((str(cons['id']), cons['name']))
+    for cons_list in result.values():
+        cons_list.sort(key=lambda c: c[1])
+    return result
+
 class MapItData(object):
     constituencies_2010 = \
         get_mapit_constituencies('mapit-WMC-generation-13.json')
@@ -24,6 +32,8 @@ class MapItData(object):
             constituencies_2010.items(),
             key=lambda t: t[1]['name']
         )
+    constituencies_2010_by_country = \
+        get_constituencies_by_country('mapit-WMC-generation-13.json')
 
 def get_all_parties():
     result_list = defaultdict(list)
