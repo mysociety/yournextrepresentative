@@ -50,6 +50,15 @@
     <dd>{{ person.last_party.name }}</dd>
   </dl>
 
+  <h2>Constituencies:</h2>
+
+  <dl>
+    <dt>Contested in 2015</dt>
+    <dd>{{ person|constituency_in_year:"2015" }}</dd>
+    <dt>Contested in 2010</dt>
+    <dd>{{ person|constituency_in_year:"2010" }}</dd>
+  </dl>
+
   <h2>Links and social media:</h2>
 
   <dl>
@@ -71,15 +80,6 @@
     <dd>{% if person.wikipedia_url %}<a rel="nofollow" href="{{ person.wikipedia_url }}">{{ person.wikipedia_url }}</a>{% endif %}</dd>
     <dt>Official party page</dt>
     <dd>{% if person.party_ppc_page_url %}<a rel="nofollow" href="{{ person.party_ppc_page_url }}">{{ person.party_ppc_page_url }}</a>{% endif %}</dd>
-  </dl>
-
-  <h2>Constituencies:</h2>
-
-  <dl>
-    <dt>Contested in 2015</dt>
-    <dd>{{ person|constituency_in_year:"2015" }}</dd>
-    <dt>Contested in 2010</dt>
-    <dd>{{ person|constituency_in_year:"2010" }}</dd>
   </dl>
 
   <h2>Demographics:</h2>
