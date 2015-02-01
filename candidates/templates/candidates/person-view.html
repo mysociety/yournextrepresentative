@@ -46,6 +46,8 @@
     {% endfor %}
     <dt>Email</dt>
     <dd>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</dd>
+    <dt>Party</dt>
+    <dd>{{ person.last_party.name }}</dd>
   </dl>
 
   <h2>Links and social media:</h2>
