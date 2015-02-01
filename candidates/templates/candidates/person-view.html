@@ -101,6 +101,12 @@
 
 <div class="person__actions">
 
+  {% if person.last_party.image %}
+    <div class="person__party_emblem">
+      <img src="{{ person.last_party.image|fixproxyurl }}"/>
+    </div>
+  {% endif %}
+
   <div class="person__actions__action person__actions__edit">
     <h2>Improve this data!</h2>
     <p>Our database is built by people like you.</p>
