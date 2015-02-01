@@ -44,13 +44,13 @@
     {% for other_name in person.other_names %}
       <dd>{{ other_name.name }}{% if other_name.note %} ({{ other_name.note }}){% endif %}</dd>
     {% endfor %}
-  </dl>
-
-  <h2>Contact details:</h2>
-
-  <dl>
     <dt>Email</dt>
     <dd>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</dd>
+  </dl>
+
+  <h2>Links and social media:</h2>
+
+  <dl>
     <dt>Twitter</dt>
     <dd>{% if person.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.twitter_username }}">@{{ person.twitter_username }}</a>{% endif %}</dd>
     <dt>Facebook</dt>
