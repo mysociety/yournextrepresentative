@@ -21,6 +21,34 @@ from ..images import get_file_md5sum, image_uploaded_already
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
 base_emblem_url = 'http://openelectoralcommission.org.uk/party_images/'
 
+def find_index(l, predicate):
+    for i, e in enumerate(l):
+        if predicate(e):
+            return i
+    return -1
+
+IMAGES_TO_USE = {
+    # Labour Party
+    'party:53': 'Rose with the word Labour underneath',
+    # Green Party
+    'party:63': 'World with Petals and Green Party name English',
+    # Another Green Party
+    'party:305': 'Emblem 3',
+    # Plaid Cymru
+    'party:77': 'Emblem 3',
+}
+
+def sort_emblems(emblems, party_id):
+    if party_id in IMAGES_TO_USE:
+        generic_image_index = find_index(
+            emblems,
+            lambda e: e['description'] == IMAGES_TO_USE[party_id]
+        )
+        if generic_image_index < 0:
+            raise Exception("Couldn't find the generic logo for " + party_id)
+        emblems.insert(0, emblems.pop(generic_image_index))
+
+
 class Command(BaseCommand):
     help = "Update parties from a CSV of party data"
 
@@ -89,6 +117,7 @@ class Command(BaseCommand):
         image_upload_url = "{0}/{1}/organizations/{2}/image".format(
             self.api.get_url(), self.api.get_api_version(), party_id
         )
+        sort_emblems(emblems, party_id)
         for emblem in emblems:
             fname = join(emblem_directory, emblem['image'])
             if not exists(fname):
