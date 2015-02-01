@@ -169,6 +169,20 @@ class PersonParseMixin(PopItApiMixin):
 
     """A mixin for turning PopIt data into our representation"""
 
+    def get_last_party(self, popit_data):
+        party = None
+        sorted_memberships = sorted(
+            popit_data['memberships'],
+            key=lambda m: m.get('end_date', '')
+        )
+        for m in sorted_memberships:
+            if m.get('role') == 'Candidate':
+                continue
+            if m['organization_id']['classification'] != 'Party':
+                continue
+            party = m['organization_id']
+        return party
+
     def get_person(self, person_id):
         """Get our representation of the candidate's data from a PopIt person ID"""
 
@@ -211,6 +225,7 @@ class PersonParseMixin(PopItApiMixin):
             result['age'] = years_ago(result['date_of_birth'], date.today())
         else:
             result['date_of_birth'] = result['age'] = ''
+        result['last_party'] = self.get_last_party(person.popit_data)
         return result
 
 
