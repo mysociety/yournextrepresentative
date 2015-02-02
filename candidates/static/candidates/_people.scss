@@ -292,5 +292,12 @@
 
 .person__party_emblem {
   text-align: center;
-  padding-bottom: 1.5em;
+  padding-bottom: 2em;
+
+  img {
+    width: auto;
+    max-height: 10em;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
