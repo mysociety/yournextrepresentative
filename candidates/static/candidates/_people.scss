@@ -1,3 +1,51 @@
+%candidate-party {
+  color: darken($color-cream, 20%);
+  margin-left: 0.2em;
+
+  &:before {
+    display: inline;
+    content: "–";
+    color: darken($color-cream, 5%);
+    margin-right: 0.4em;
+  }
+}
+
+%person-section-heading {
+  line-height: 1.2em;
+  font-size: 1.3em;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #ccc;
+}
+
+%responsive-definition-list {
+  // use this to @extend a dl element
+  line-height: 1.4em;
+
+  @media #{$large-up} {
+    dl {
+      @include clearfix();
+    }
+
+    dt {
+      float: left;
+      width: 10em;
+      overflow: hidden;
+      clear: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 0.75em;
+    }
+
+    dd {
+      margin-left: 12em;
+      margin-bottom: 0.75em;
+      min-height: 1.4em; // to match dt line-height
+    }
+  }
+}
+
 .candidate-list {
   margin: 1.5em 0;
 
@@ -23,15 +71,7 @@
     font-size: 1.2em;
 
     .party {
-      color: darken($color-cream, 20%);
-      margin-left: 0.2em;
-
-      &:before {
-        display: inline;
-        content: "–";
-        color: darken($color-cream, 5%);
-        margin-right: 0.4em;
-      }
+      @extend %candidate-party;
     }
   }
 }
@@ -151,5 +191,113 @@
 
   h1 + p {
     color: mix(#fff, $color-teal, 70%);
+  }
+}
+
+.person__details {
+  h2 {
+    @extend %person-section-heading;
+  }
+
+  dl {
+    @extend %responsive-definition-list;
+    margin-bottom: 2em;
+  }
+
+  dd small {
+    font-size: inherit;
+    color: darken($color-cream, 20%);
+    margin-left: 0.2em;
+  }
+
+  .party {
+    @extend %candidate-party;
+  }
+
+  .dob {
+    margin-left: 0.6em;
+  }
+
+  a[href^="http"] {
+    // break ultra-long facebook etc links onto two lines
+    word-wrap: break-word;
+  }
+}
+
+@media #{$medium-up} {
+  .person__details {
+    @include grid-column($columns: 7, $collapse: true);
+  }
+
+  .person__actions {
+    @include grid-column($columns: 4, $offset: 1, $collapse: true);
+
+    & + * {
+      clear: both;
+    }
+  }
+}
+
+.person__actions__action {
+  display: block;
+  border-radius: 3px;
+  background-color: mix($color-offwhite, #fff, 60%);
+  padding: 1.5em;
+  margin-bottom: 2em;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1.3em;
+    line-height: 1.2em;
+    margin-bottom: 0.7em;
+  }
+
+  p {
+    line-height: 1.4em;
+    margin-bottom: 0.7em;
+  }
+
+  p + .button {
+    margin-top: 0.3em; // compensate for extra bit of line-height between paragraphs but not buttons
+  }
+}
+
+.person__actions__edit {
+  background-color: $color-yellow;
+}
+
+.person__actions__data {
+  background-color: mix($color-cyan, #fff, 15%);
+}
+
+.person__versions {
+  padding-top: 6em;
+
+  h2 {
+    @extend %person-section-heading;
+  }
+
+  dl {
+    @extend %responsive-definition-list;
+    margin-bottom: 0;
+  }
+}
+
+.person__party_emblem {
+  text-align: center;
+  padding-bottom: 2em;
+
+  img {
+    width: auto;
+    max-height: 10em;
+    margin-left: auto;
+    margin-right: auto;
   }
 }

@@ -2,6 +2,7 @@
 
 {% load staticfiles %}
 {% load imagefixes %}
+{% load standing %}
 
 {% block extra_head %}
     <link rel="canonical" href="{% url 'person-view' person.id person.name|slugify %}" />
@@ -29,82 +30,106 @@
 {% endblock %}
 
 {% block content %}
-<table>
-  <tr>
-    <td>Name:</td><td>{{ person.name }}</a></td>
-  </tr>
-  {% for other_name in person.other_names %}
-    <tr>
-      <td>Also known as:
-        {% if other_name.note %}
-          <br><span class="aka-note">({{ other_name.note }})</span>
-        {% endif %}
-      </td>
-      <td>{{ other_name.name }}</a></td>
-    </tr>
-  {% endfor %}
-  <tr>
-    <td>Email:</td><td>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</td>
-  </tr>
-  <tr>
-    <td>Gender:</td><td>{% if person.gender %}{{ person.gender }}{% endif %}</td>
-  </tr>
-  <tr>
-    <td>Twitter:</td><td>{% if person.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.twitter_username }}">@{{ person.twitter_username }}</a>{% endif %}</td>
-  </tr>
-  <tr>
-    <td>Homepage:</td><td>{% if person.homepage_url %}<a rel="nofollow" href="{{ person.homepage_url }}">{{ person.homepage_url }}{% endif %}</a></td>
-  </tr>
-  <tr>
-    <td>Wikipedia page:</td><td>{% if person.wikipedia_url %}<a rel="nofollow" href="{{ person.wikipedia_url }}">{{ person.wikipedia_url }}{% endif %}</a></td>
-  </tr>
-  <tr>
-    <td>Facebook profile page:</td><td>{% if person.facebook_personal_url %}<a rel="nofollow" href="{{ person.facebook_personal_url }}">{{ person.facebook_personal_url }}{% endif %}</a></td>
-  </tr>
-  <tr>
-    <td>Facebook campaign page:</td><td>{% if person.facebook_page_url %}<a rel="nofollow" href="{{ person.facebook_page_url }}">{{ person.facebook_page_url }}{% endif %}</a></td>
-  </tr>
-  <tr>
-    <td>Official party PPC page:</td><td>{% if person.party_ppc_page_url %}<a rel="nofollow" href="{{ person.party_ppc_page_url }}">{{ person.party_ppc_page_url }}{% endif %}</a></td>
-  </tr>
-  <tr>
-    <td>Contested constituency (in 2015):</td>
-    <td>{% if person.standing_in.2015 %}
-      <a href="{% url 'constituency' person.standing_in.2015.post_id person.standing_in.2015.name|slugify  %}">{{ person.standing_in.2015.name }}</a>
-    {% endif %}</td>
-  </tr>
-  <tr>
-    <td>Party (in 2015):</td>
-    <td>{% if person.standing_in.2015 %}
-      {{ person.party_memberships.2015.name }}
-    {% endif %}</td>
-  </tr>
-  <tr>
-    <td>Contested constituency (in 2010):</td>
-    <td>{% if person.standing_in.2010 %}
-      <a href="{% url 'constituency' person.standing_in.2010.post_id person.standing_in.2010.name|slugify  %}">{{ person.standing_in.2010.name }}</a>
-    {% endif %}</td>
-  </tr>
-  <tr>
-    <td>Party (in 2010):</td>
-    <td>{% if person.party_memberships.2010 %}
-      {{ person.party_memberships.2010.name }}
-    {% endif %}</td>
-  </tr>
-  <tr>
-    <td>PopIt JSON person data:</td>
-    <td><a href="{{ popit_api_url }}persons/{{ person.id }}">{{ popit_api_url }}persons/{{ person.id }}</a></td>
-  </tr>
-</table>
 
-{% if user.is_authenticated %}
-  <p><a href="{% url 'person-update' person_id=person.id %}" class="button tiny secondary">Edit</a></p>
-{% else %}
-  <div class="encourage-login">
-    If you want to help by editing this information, please
-    <a href="{% url 'account_login' %}?next={{ redirect_after_login }}">log in</a>.
+<div class="person__details">
+
+  <h2>Personal details:</h2>
+
+  <dl>
+    <dt>Name</dt>
+    <dd>{{ person.name }}</dd>
+    {% if person.other_names %}
+      <dt>Also known as</dt>
+    {% endif %}
+    {% for other_name in person.other_names %}
+      <dd>{{ other_name.name }}{% if other_name.note %} ({{ other_name.note }}){% endif %}</dd>
+    {% endfor %}
+    <dt>Email</dt>
+    <dd>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% endif %}</dd>
+    <dt>Party</dt>
+    <dd>{{ person.last_party.name }}</dd>
+  </dl>
+
+  <h2>Constituencies:</h2>
+
+  <dl>
+    <dt>Contested in 2015</dt>
+    <dd>{{ person|constituency_in_year:"2015" }}</dd>
+    <dt>Contested in 2010</dt>
+    <dd>{{ person|constituency_in_year:"2010" }}</dd>
+  </dl>
+
+  <h2>Links and social media:</h2>
+
+  <dl>
+    <dt>Twitter</dt>
+    <dd>{% if person.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.twitter_username }}">@{{ person.twitter_username }}</a>{% endif %}</dd>
+    <dt>Facebook</dt>
+    {% if person.facebook_personal_url %}
+      <dd><a rel="nofollow" href="{{ person.facebook_personal_url }}">{{ person.facebook_personal_url }}</a> <small>(personal profile)</small></dd>
+    {% endif %}
+    {% if person.facebook_page_url %}
+      <dd><a rel="nofollow" href="{{ person.facebook_page_url }}">{{ person.facebook_page_url }}</a> <small>(campaign page)</small></dd>
+    {% endif %}
+    {% if not person.facebook_personal_url and not person.facebook_page_url %}
+      <dd></dd>
+    {% endif %}
+    <dt>Homepage</dt>
+    <dd>{% if person.homepage_url %}<a rel="nofollow" href="{{ person.homepage_url }}">{{ person.homepage_url }}</a>{% endif %}</dd>
+    <dt>Wikipedia page</dt>
+    <dd>{% if person.wikipedia_url %}<a rel="nofollow" href="{{ person.wikipedia_url }}">{{ person.wikipedia_url }}</a>{% endif %}</dd>
+    <dt>Official party page</dt>
+    <dd>{% if person.party_ppc_page_url %}<a rel="nofollow" href="{{ person.party_ppc_page_url }}">{{ person.party_ppc_page_url }}</a>{% endif %}</dd>
+  </dl>
+
+  <h2>Demographics:</h2>
+
+  <dl>
+    <dt>Gender</dt>
+    <dd>{% if person.gender %}{{ person.gender|title }}{% else %}Unknown{% endif %}</dd>
+    <dt>Age</dt>
+    {% with dob=person.date_of_birth %}
+      {% if dob %}
+        <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
+      {% else %}
+        <dd>Unknown</dd>
+      {% endif %}</dd>
+    {% endwith %}
+  </dl>
+
+</div>
+
+<div class="person__actions">
+
+  {% if person.last_party.image %}
+    <div class="person__party_emblem">
+      <img src="{{ person.last_party.image|fixproxyurl }}"/>
+    </div>
+  {% endif %}
+
+  <div class="person__actions__action person__actions__edit">
+    <h2>Improve this data!</h2>
+    <p>Our database is built by people like you.</p>
+    <p>Please do add extra details about this candidate – it only takes a moment.</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'person-update' person_id=person.id %}" class="button">Edit candidate</a>
+    {% else %}
+      <a href="{% url 'account_login' %}?next={{ redirect_after_login }}" class="button">Log in to edit</a>
+    {% endif %}
   </div>
-{% endif %}
+
+  <div class="person__actions__action person__actions__data">
+    <h2>Use this data!</h2>
+    <p>Open data JSON API:</p>
+    <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}" onclick="this.select();"></p>
+    {% comment %}
+      <p>Want a CSV download? <a href="https://github.com/mysociety/yournextmp-popit/issues/96">Tell us!</a></p>
+    {% endcomment %}
+    <p>More details about getting <a href="{% url 'help-api' ">the data</a>
+      and <a href="{% url 'help-about' %}">its license.</a></p>
+  </div>
+
+</div>
 
 {% include 'candidates/person-versions.html' %}
 

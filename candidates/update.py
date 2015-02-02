@@ -97,7 +97,8 @@
 #     },
 #   }
 
-from datetime import timedelta
+from datetime import timedelta, datetime, date
+import math
 
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
@@ -140,9 +141,47 @@ def reduced_organization_data(organization):
         'name': organization['name'],
     }
 
+def years_ago(earlier_date, later_date):
+    """Calculate the number of years between two dates
+
+    >>> years_ago(date(1976, 9, 13), date(2015, 1, 31))
+    38
+    >>> years_ago(date(1976, 1, 6), date(2015, 1, 31))
+    39
+    >>> years_ago(date(1982, 1, 1), date(2016, 2, 29))
+    34
+    """
+
+    try:
+        later_date_in_earlier_year = date(
+            earlier_date.year, later_date.month, later_date.day
+        )
+    except ValueError:
+        # It must have been February the 29th:
+        later_date_in_earlier_year = date(earlier_date.year, 3, 1)
+    if later_date_in_earlier_year > earlier_date:
+        return later_date.year - earlier_date.year
+    else:
+        return (later_date.year - earlier_date.year) - 1
+
+
 class PersonParseMixin(PopItApiMixin):
 
     """A mixin for turning PopIt data into our representation"""
+
+    def get_last_party(self, popit_data):
+        party = None
+        sorted_memberships = sorted(
+            popit_data['memberships'],
+            key=lambda m: m.get('end_date', '')
+        )
+        for m in sorted_memberships:
+            if m.get('role') == 'Candidate':
+                continue
+            if m['organization_id']['classification'] != 'Party':
+                continue
+            party = m['organization_id']
+        return party
 
     def get_person(self, person_id):
         """Get our representation of the candidate's data from a PopIt person ID"""
@@ -178,6 +217,15 @@ class PersonParseMixin(PopItApiMixin):
         result['proxy_image'] = person.popit_data.get('proxy_image')
         result['other_names'] = person.popit_data.get('other_names', [])
         result['identifiers'] = person.popit_data.get('identifiers', [])
+        # Set the date of birth (as a datetime.date), and the
+        # candidate's age in years:
+        dob_str = person.popit_data.get('birth_date')
+        if dob_str:
+            result['date_of_birth'] = datetime.strptime(dob_str, '%Y-%M-%d').date()
+            result['age'] = years_ago(result['date_of_birth'], date.today())
+        else:
+            result['date_of_birth'] = result['age'] = ''
+        result['last_party'] = self.get_last_party(person.popit_data)
         return result
 
 

@@ -1,15 +1,15 @@
 $(function() {
-  $('.full-version-json').hide();
-  $('.js-toggle-full-version-json').text('Show');
-  $('.js-toggle-full-version-json').on('click', function(event){
-    var target = $(event.target),
-      fullVersion = target.parent().next();
-    if (target.text() == 'Show') {
-      target.text('Hide');
-      fullVersion.show()
+  var toggleFullVersion = function toggleFullVersion($fullVersion){
+    if($fullVersion.is(':visible')){
+      $fullVersion.hide().siblings('.js-toggle-full-version-json').text('Show full version');
     } else {
-      target.text('Show');
-      fullVersion.hide()
+      $fullVersion.show().siblings('.js-toggle-full-version-json').text('Hide full version');
     }
+  }
+
+  toggleFullVersion($('.full-version-json'));
+
+  $('.js-toggle-full-version-json').on('click', function(){
+    toggleFullVersion($(this).siblings('.full-version-json'));
   });
 });

@@ -1,58 +1,49 @@
 {% load prettyjson %}
 
-<div class="versions row">
-  <div class="columns">
-    <h3>All versions</h3>
+<div class="person__versions">
+    <h2>All versions</h2>
     {% for version in versions %}
       <div class="version">
-        <div class="version-metadata">
-          <div>
-            <span class="version-metadata-key">Username:</span>
-            <span class="version-metadata-value">{{ version.username }}</span>
-          </div>
-          <div>
-            <span class="version-metadata-key">Timestamp:</span>
-            <span class="version-metadata-value">{{ version.timestamp }}</span>
-          </div>
-          <div>
-            <span class="version-metadata-key">Source of information:</span>
-            <span class="version-metadata-value">{{ version.information_source }}</span>
-          </div>
-          <div>
-            <span class="version-metadata-key">Changes made:</span>
-            <p>
-            {% for operation in version.diff %}
-              {% if operation.op == 'add' %}
-                 <span class="version-op-add">Added {{ operation.path }} => {{ operation.value|prettyjson }}</span>
-              {% elif operation.op == 'remove' %}
-                 <span class="version-op-remove">Removed {{ operation.path }} (previously it was {{ operation.previous_value|prettyjson }})</span>
-              {% elif operation.op == 'replace' %}
-                 <span class="version-op-replace">At {{ operation.path }} replaced {{ operation.previous_value|prettyjson }} with {{ operation.value|prettyjson }}</span>
-              {% else %}
-                 <span class="version-op-unknown">UNEXPECTED OPERATION: {{ operation|prettyjson }}</span>
-              {% endif %}<br/>
-            {% endfor %}
-            </p>
-          </div>
-          <div>
-            <span class="version-metadata-key">Full version ({{ version.version_id }}):
-              <a class="button tiny js-toggle-full-version-json">Hide</a>
-            </span>
+        <dl>
+          <dt>Version</dt>
+          <dd>
+            {{ version.version_id }} <a class="button tiny js-toggle-full-version-json">Hide full version</a>
             <pre class="full-version-json">{{ version.data|prettyjson }}</pre>
-          </div>
-        </div>
-        {% if user.is_authenticated %}
-          {% if not forloop.first %}
-            <form action="{% url 'person-revert' person_id=person.id %}" method="post">
+          </dd>
+          <dt>Username</dt>
+          <dd>{{ version.username }}</dd>
+          <dt>Timestamp</dt>
+          <dd>{{ version.timestamp }}</dd>
+          <dt>Source</dt>
+          <dd>{{ version.information_source }}</dd>
+          <dt>Changes made</dt>
+          <dd>
+            <p class="version-diff">
+              {% for operation in version.diff %}
+                {% if operation.op == 'add' %}
+                   <span class="version-op-add">Added {{ operation.path }} => {{ operation.value|prettyjson }}</span>
+                {% elif operation.op == 'remove' %}
+                   <span class="version-op-remove">Removed {{ operation.path }} (previously it was {{ operation.previous_value|prettyjson }})</span>
+                {% elif operation.op == 'replace' %}
+                   <span class="version-op-replace">At {{ operation.path }} replaced {{ operation.previous_value|prettyjson }} with {{ operation.value|prettyjson }}</span>
+                {% else %}
+                   <span class="version-op-unknown">UNEXPECTED OPERATION: {{ operation|prettyjson }}</span>
+                {% endif %}<br/>
+              {% endfor %}
+            </p>
+          </dd>
+          {% if user.is_authenticated and not forloop.first %}
+          <dt>Revert to this</dt>
+          <dd>
+            <form action="{% url 'person-revert' person_id=person.id %}" method="post" class="version-revert">
               {% csrf_token %}
               <input type="hidden" name="version_id" value="{{ version.version_id }}"/>
-              <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because ..."/>
-              <input type="submit" class="button tiny" value="Revert to this version" />
+              <input type="text" name="source" id="id_source" maxlength="512" required="required" value="Reverting to version {{ version.version_id }} because…"/>
+              <input type="submit" class="button tiny alert" value="Revert" />
             </form>
+          </dd>
           {% endif %}
-        {% endif %}
+        </dl>
       </div>
-
     {% endfor %}
-  </div>
 </div>
