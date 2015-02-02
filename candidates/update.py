@@ -221,7 +221,7 @@ class PersonParseMixin(PopItApiMixin):
         # candidate's age in years:
         dob_str = person.popit_data.get('birth_date')
         if dob_str:
-            result['date_of_birth'] = datetime.strptime(dob_str, '%Y-%M-%d').date()
+            result['date_of_birth'] = datetime.strptime(dob_str, '%Y-%m-%d').date()
             result['age'] = years_ago(result['date_of_birth'], date.today())
         else:
             result['date_of_birth'] = result['age'] = ''
