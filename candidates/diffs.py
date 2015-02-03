@@ -131,6 +131,9 @@ def clean_version_data(data):
         i.pop('id', None)
     for on in data.get('other_names', []):
         on.pop('id', None)
+    data.pop('last_party', None)
+    data.pop('proxy_image', None)
+    data.pop('date_of_birth', None)
 
 def get_version_diffs(versions):
     """Add a diff to each of an array of version dicts
