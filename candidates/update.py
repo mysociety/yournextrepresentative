@@ -187,6 +187,7 @@ class PersonParseMixin(PopItApiMixin):
         """Get our representation of the candidate's data from a PopIt person ID"""
 
         result = {'id': person_id}
+        extra_for_template = {}
         person = PopItPerson.create_from_popit(self.api, person_id)
         for field in form_simple_fields:
             result[field] = person.popit_data.get(field, '')
@@ -221,12 +222,12 @@ class PersonParseMixin(PopItApiMixin):
         # candidate's age in years:
         dob_str = person.popit_data.get('birth_date')
         if dob_str:
-            result['date_of_birth'] = datetime.strptime(dob_str, '%Y-%m-%d').date()
-            result['age'] = years_ago(result['date_of_birth'], date.today())
+            extra_for_template['date_of_birth'] = datetime.strptime(dob_str, '%Y-%m-%d').date()
+            extra_for_template['age'] = years_ago(extra_for_template['date_of_birth'], date.today())
         else:
-            result['date_of_birth'] = result['age'] = ''
-        result['last_party'] = self.get_last_party(person.popit_data)
-        return result
+            extra_for_template['date_of_birth'] = extra_for_template['age'] = ''
+        extra_for_template['last_party'] = self.get_last_party(person.popit_data)
+        return result, extra_for_template
 
 
 # FIXME: a hacky workaround to make sure that we don't set

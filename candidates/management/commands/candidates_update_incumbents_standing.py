@@ -54,7 +54,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
 
             print "Considering person:", person_popit_data['name']
 
-            person_data = self.get_person(person_popit_data['id'])
+            person_data, _ = self.get_person(person_popit_data['id'])
 
             cons_id = person_data['standing_in']['2010']['post_id']
             party_id = person_data['party_memberships']['2010']['id']

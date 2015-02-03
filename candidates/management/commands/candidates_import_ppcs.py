@@ -227,7 +227,7 @@ class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
 
     def update_popit_person(self, popit_person_id, ppc_data, image_filename):
         # Get the existing data first:
-        person_data = self.get_person(popit_person_id)
+        person_data, _ = self.get_person(popit_person_id)
         previous_versions = person_data.pop('versions')
         new_person_data = self.get_person_data_from_ppc(ppc_data)
         # Remove any empty keys, we don't want to overwrite exiting

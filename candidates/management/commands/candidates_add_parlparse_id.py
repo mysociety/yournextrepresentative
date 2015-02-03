@@ -77,7 +77,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
                 self.stderr.write(msg.format(len(result), name))
             return
         parlparse_id = self.id_mapping[name]
-        person_data = self.get_person(person['id'])
+        person_data, _ = self.get_person(person['id'])
         previous_versions = person_data.pop('versions')
         identifiers = person_data.get('identifiers', [])
         existing_identifiers = [i['identifier'] for i in identifiers]

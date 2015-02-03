@@ -24,6 +24,10 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
     @patch('candidates.views.UpdatePersonView.get_person')
     def test_update_person_view_get(self, mock_get_person, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
+        mock_get_person.return_value = (
+            get_example_popit_json('persons_2009_ynmp.json'),
+            {}
+        )
         # For the moment just check that the form's actually there:
         response = self.app.get('/person/2009/update', user=self.user)
         response.forms['person-details']
@@ -42,8 +46,9 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         mock_popit.return_value.persons = FakePersonCollection
         mock_get_current_timestamp.return_value = example_timestamp
         mock_create_version_id.return_value = example_version_id
-        mock_get_person.return_value = get_example_popit_json(
-            'persons_2009_ynmp.json'
+        mock_get_person.return_value = (
+            get_example_popit_json('persons_2009_ynmp.json'),
+            {}
         )
         response = self.app.get('/person/2009/update', user=self.user)
         form = response.forms['person-details']

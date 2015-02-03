@@ -271,7 +271,7 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
         )
-        our_person = self.get_person(form.cleaned_data['person_id'])
+        our_person, _ = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
         our_person['standing_in']['2015'] = self.get_area_from_post_id(
@@ -285,7 +285,7 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
-        context['person'] = self.get_person(self.request.POST.get('person_id'))
+        context['person'], _ = self.get_person(self.request.POST.get('person_id'))
         context['constituency'] = MapItData.constituencies_2010.get(
             self.request.POST.get('mapit_area_id')
         )
@@ -309,7 +309,7 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
         )
-        our_person = self.get_person(form.cleaned_data['person_id'])
+        our_person, _ = self.get_person(form.cleaned_data['person_id'])
         previous_versions = our_person.pop('versions')
 
         our_person['standing_in']['2015'] = None
@@ -320,7 +320,7 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
-        context['person'] = self.get_person(self.request.POST.get('person_id'))
+        context['person'], _ = self.get_person(self.request.POST.get('person_id'))
         context['constituency'] = MapItData.constituencies_2010.get(
             self.request.POST.get('mapit_area_id')
         )
@@ -364,7 +364,8 @@ class PersonView(PersonParseMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
-        person_data = self.get_person(self.kwargs['person_id'])
+        person_data, extra_for_template = self.get_person(self.kwargs['person_id'])
+        person_data.update(extra_for_template)
         context['person'] = person_data
         context['popit_api_url'] = self.get_base_url()
         context['last_cons'] = self.get_last_constituency(person_data)
@@ -383,7 +384,7 @@ class PersonView(PersonParseMixin, TemplateView):
             ).new_person_id
             # Get the person data so that we can redirect with a
             # useful slug:
-            person_data = self.get_person(new_person_id)
+            person_data, _ = self.get_person(new_person_id)
             return HttpResponsePermanentRedirect(
                 reverse('person-view', kwargs={
                     'person_id': new_person_id,
@@ -403,7 +404,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         person_id = self.kwargs['person_id']
         source = self.request.POST['source']
 
-        our_person = self.get_person(self.kwargs['person_id'])
+        our_person, _ = self.get_person(self.kwargs['person_id'])
         previous_versions = our_person.pop('versions')
 
         data_to_revert_to = None
@@ -442,8 +443,8 @@ class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, 
                 primary_person_id, secondary_person_id
             ))
         # Get our JSON representation of each person:
-        primary_person = self.get_person(primary_person_id)
-        secondary_person = self.get_person(secondary_person_id)
+        primary_person, _ = self.get_person(primary_person_id)
+        secondary_person, _ = self.get_person(secondary_person_id)
         # Merge them (which will include a merged versions array):
         merged_person = merge_popit_people(primary_person, secondary_person)
         # Update the primary person in PopIt:
@@ -483,7 +484,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
 
     def get_initial(self):
         initial_data = super(UpdatePersonView, self).get_initial()
-        our_person = self.get_person(self.kwargs['person_id'])
+        our_person, _ = self.get_person(self.kwargs['person_id'])
         for field_name in all_form_fields:
             initial_data[field_name] = our_person.get(field_name)
         # FIXME: this whole method could really do with some
@@ -544,7 +545,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         # First parse that person's data from PopIt into our more
         # usable data structure:
 
-        our_person = self.get_person(self.kwargs['person_id'])
+        our_person, _ = self.get_person(self.kwargs['person_id'])
         previous_versions = our_person.pop('versions')
 
         # Now we need to make any changes to that data structure based
