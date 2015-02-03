@@ -114,6 +114,11 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
+    linkedin_url = forms.URLField(
+        label="LinkedIn URL",
+        max_length=256,
+        required=False,
+    )
     party_ppc_page_url = forms.URLField(
         label="The party's PPC page for this person",
         max_length=256,

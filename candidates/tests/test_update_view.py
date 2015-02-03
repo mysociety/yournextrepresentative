@@ -68,6 +68,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 'gender': '',
                 'homepage_url': '',
                 'id': '2009',
+                'linkedin_url': '',
                 'name': 'Tessa Jowell',
                 'standing_in': {
                     '2015': {

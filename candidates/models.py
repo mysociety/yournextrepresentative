@@ -23,6 +23,12 @@ form_complex_fields_locations = {
         'info_value_key': 'url',
         'info_type': 'wikipedia',
     },
+    'linkedin_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'linkedin',
+    },
     'homepage_url': {
         'sub_array': 'links',
         'info_type_key': 'note',

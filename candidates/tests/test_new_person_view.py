@@ -73,6 +73,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
                 'facebook_personal_url': '',
                 'gender': '',
                 'homepage_url': u'',
+                'linkedin_url': u'',
                 'name': u'Jane Doe',
                 'party_memberships': {
                     '2015': {

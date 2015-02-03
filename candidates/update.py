@@ -17,6 +17,7 @@
 #   'email'
 #   'birth_date'
 #   'wikipedia_url'
+#   'linkedin_url'
 #   'homepage_url'
 #   'twitter_username'
 #
