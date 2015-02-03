@@ -23,7 +23,9 @@ CSV_ROW_FIELDS = [
     'id',
     'party',
     'constituency',
+    'mapit_id',
     'mapit_url',
+    'gss_code',
     'twitter_username',
     'facebook_page_url',
     'party_ppc_page_url',
@@ -380,12 +382,16 @@ class PopItPerson(object):
 
         person_data = defaultdict(str)
         person_data.update(self.popit_data['versions'][0]['data'])
+
         row = {
             'name': self.name,
             'id': self.id,
             'party': person_data['party_memberships']['2015']['name'],
             'constituency': self.standing_in['2015']['name'],
             'mapit_url': self.standing_in['2015']['mapit_url'],
+            'mapit_id': self.standing_in['2015']['post_id'],
+            'gss_code': MapItData.constituencies_2010[
+                self.standing_in['2015']['post_id']]['codes']['gss'],
             'twitter_username': person_data['twitter_username'],
             'facebook_page_url': person_data['facebook_page_url'],
             'party_ppc_page_url': person_data['party_ppc_page_url'],
@@ -396,8 +402,8 @@ class PopItPerson(object):
             'wikipedia_url': person_data['wikipedia_url'],
             'birth_date': person_data['birth_date'],
         }
-        return row
 
+        return row
 
 
 def update_values_in_sub_array(data, location, new_value):
