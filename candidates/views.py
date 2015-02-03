@@ -419,6 +419,17 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         change_metadata = self.get_change_metadata(self.request, source)
         self.update_person(data_to_revert_to, change_metadata, previous_versions)
 
+        # Log that that action has taken place, and will be shown in
+        # the recent changes, leaderboards, etc.
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='person-revert',
+            ip_address=self.get_client_ip(self.request),
+            popit_person_new_version=change_metadata['version_id'],
+            popit_person_id=person_id,
+            source=change_metadata['information_source'],
+        )
+
         return HttpResponseRedirect(
             reverse(
                 'person-update',
