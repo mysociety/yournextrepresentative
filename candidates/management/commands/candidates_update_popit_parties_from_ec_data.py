@@ -36,6 +36,8 @@ IMAGES_TO_USE = {
     'party:305': 'Emblem 3',
     # Plaid Cymru
     'party:77': 'Emblem 3',
+    # Ulster Unionist Party
+    'party:83': 'Emblem 2',
 }
 
 def sort_emblems(emblems, party_id):
