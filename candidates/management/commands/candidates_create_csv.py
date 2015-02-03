@@ -20,7 +20,7 @@ class Command(PopItApiMixin, BaseCommand):
             if person_dict.get('standing_in') \
                 and person_dict['standing_in'].get('2015'):
                 person = PopItPerson.create_from_dict(person_dict)
-                all_people.append(person.as_list)
+                all_people.append(person.as_dict)
         # Output final file
         with sys.stdout as f:
             f.write(list_to_csv(all_people))
