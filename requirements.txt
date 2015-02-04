@@ -1,4 +1,4 @@
-Django==1.7.2
+Django==1.7.4
 Pillow==2.7.0
 PopIt-Python==0.1.10
 PyYAML==3.11
