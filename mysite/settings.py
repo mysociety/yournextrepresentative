@@ -15,6 +15,8 @@ import sys
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+from .helpers import mkdir_p
+
 configuration_file = os.path.join(
     BASE_DIR, 'conf', 'general.yml'
 )
@@ -166,6 +168,8 @@ USE_TZ = True
 MEDIA_ROOT = conf.get('MEDIA_ROOT')
 if not MEDIA_ROOT:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Make sure that the MEDIA_ROOT exists:
+mkdir_p(MEDIA_ROOT)
 
 MEDIA_URL = '/media/'
 
