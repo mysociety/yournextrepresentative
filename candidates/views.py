@@ -205,7 +205,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 class ConstituencyDetailCSVView(ConstituencyDetailView):
     def render_to_response(self, context, **response_kwargs):
         all_people = []
-        for person in context['candidates_2010_standing_again']:
+        for person in context['candidates_2015']:
             all_people.append(person.as_dict)
         filename = "%s.csv" % slugify(context['constituency_name'])
         response = HttpResponse(content_type='text/csv')
