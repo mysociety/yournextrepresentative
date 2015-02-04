@@ -58,7 +58,7 @@
           {% if action.action_type == 'person-create' %}
             created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
           {% elif action.action_type == 'person-merge' %}
-            merged other another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'person-revert' %}
             reverted to an earlier version of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'candidacy-create' %}
