@@ -6,11 +6,9 @@ from tempfile import NamedTemporaryFile
 
 from django.core.management.base import BaseCommand
 
-from candidates.popit import PopItApiMixin, popit_unwrap_pagination
-from candidates.models import PopItPerson
-
-
 from candidates.csv_helpers import list_to_csv
+from candidates.models import PopItPerson
+from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
 
 class Command(PopItApiMixin, BaseCommand):
