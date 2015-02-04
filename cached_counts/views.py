@@ -9,23 +9,22 @@ class ReportsHomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportsHomeView, self).get_context_data(**kwargs)
-        try:
-            context['candidates_2015'] = CachedCount.objects.get(
-                object_id='candidates_2015').count
-            context['percent_of_2010'] = 100 * float(
-                context['candidates_2015'])/float(4152)
-        except CachedCount.DoesNotExist:
-            pass
-        try:
-            context['new_candidates'] = CachedCount.objects.get(
-                object_id='new_candidates').count
-        except CachedCount.DoesNotExist:
-            pass
-        try:
-            context['standing_again'] = CachedCount.objects.get(
-                object_id='standing_again').count
-        except CachedCount.DoesNotExist:
-            pass
+        for object_id in (
+                'candidates_2015',
+                'candidates_2010',
+                'new_candidates',
+                'standing_again',
+                'standing_again_same_party',
+                'standing_again_different_party',
+        ):
+            try:
+                context[object_id] = CachedCount.objects.get(
+                    object_id=object_id).count
+            except CachedCount.DoesNotExist:
+                pass
+        context['percent_of_2010'] = \
+            (100 * float(context['candidates_2015'])) / \
+            context['candidates_2010']
         return context
 
 class PartyCountsView(ListView):
