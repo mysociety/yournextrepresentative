@@ -9,6 +9,9 @@ def encode_row_values(d):
         for k, v in d.items()
     }
 
+def candidate_sort_key(row):
+    return (row['constituency'], row['name'].split()[-1])
+
 def list_to_csv(candidates_list):
     output = StringIO.StringIO()
     writer = csv.DictWriter(
@@ -16,6 +19,6 @@ def list_to_csv(candidates_list):
         fieldnames=CSV_ROW_FIELDS,
         dialect=csv.excel)
     writer.writeheader()
-    for row in candidates_list:
+    for row in sorted(candidates_list, key=candidate_sort_key):
         writer.writerow(encode_row_values(row))
     return output.getvalue()
