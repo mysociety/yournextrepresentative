@@ -64,3 +64,9 @@ FORCE_HTTPS_IMAGES: false
 # setting to be set to ('HTTP_X_FORWARDED_PROTO', 'https') and tell
 # django-allauth to generate https URLs.
 NGINX_SSL: false
+
+# If you need to customize where the generated CSV files are output
+# then set this to the path of a directory. If it is set to null, then
+# a default location is used (a 'media' directory in the top level of
+# the repository).
+MEDIA_ROOT: null

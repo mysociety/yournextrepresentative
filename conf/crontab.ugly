@@ -3,5 +3,11 @@
 MAILTO=yournextmp@mysociety.org
 
 # Create the cached counts every 15 minutes:
-
 */15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
+
+# Update the live CSV file every 15 minutes, but offset from cached
+# counts so that we reduce the load on PopIt and CPU:
+7,22,37,52 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
+
+# Also create a daily archive at about 2 am:
+3 2 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/csv-archives/candidates-`date +\%Y\%m\%d`.csv

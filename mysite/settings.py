@@ -15,6 +15,8 @@ import sys
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+from .helpers import mkdir_p
+
 configuration_file = os.path.join(
     BASE_DIR, 'conf', 'general.yml'
 )
@@ -163,6 +165,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_ROOT = conf.get('MEDIA_ROOT')
+if not MEDIA_ROOT:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Make sure that the MEDIA_ROOT and subdirectory for archived CSV
+# files exist:
+mkdir_p(os.path.join(MEDIA_ROOT, 'csv-archives'))
+
+MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

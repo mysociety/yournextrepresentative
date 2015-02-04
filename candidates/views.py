@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.http import (
-    Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
+    Http404, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponse
 )
 from django.utils import timezone
 from django.utils.http import urlquote
@@ -35,6 +35,7 @@ from .models import (
 )
 from .popit import PopItApiMixin, merge_popit_people
 from .static_data import MapItData, PartyData
+from .csv_helpers import list_to_csv
 
 from .update import PersonParseMixin, PersonUpdateMixin
 
@@ -200,6 +201,18 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         )
 
         return context
+
+class ConstituencyDetailCSVView(ConstituencyDetailView):
+    def render_to_response(self, context, **response_kwargs):
+        all_people = []
+        for person in context['candidates_2010_standing_again']:
+            all_people.append(person.as_dict)
+        filename = "%s.csv" % slugify(context['constituency_name'])
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        response.write(list_to_csv(all_people))
+        return response
+
 
 
 class ConstituencyListView(PopItApiMixin, TemplateView):

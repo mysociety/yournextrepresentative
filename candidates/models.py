@@ -4,6 +4,8 @@ import jsonpatch
 import jsonpointer
 import re
 import sys
+from collections import defaultdict
+
 from slugify import slugify
 
 from django.contrib.auth.models import User
@@ -15,6 +17,26 @@ from .static_data import MapItData
 
 form_simple_fields = ('name', 'email', 'birth_date', 'gender')
 preserve_fields = ('identifiers', 'other_names', 'phone')
+
+CSV_ROW_FIELDS = [
+    'name',
+    'id',
+    'party',
+    'constituency',
+    'mapit_id',
+    'mapit_url',
+    'gss_code',
+    'twitter_username',
+    'facebook_page_url',
+    'party_ppc_page_url',
+    'gender',
+    'facebook_personal_url',
+    'email',
+    'homepage_url',
+    'wikipedia_url',
+    'birth_date',
+]
+
 
 form_complex_fields_locations = {
     'wikipedia_url': {
@@ -356,6 +378,39 @@ class PopItPerson(object):
     def delete_memberships(self):
         for membership in self.popit_data.get('memberships', []):
             self.api.memberships(membership['id']).delete()
+
+    @property
+    def as_dict(self):
+        """
+        Returns a list in the order of CSV_ROW_FIELDS, for ease of
+        converting PopItPerson objects in to CSV representations.
+        """
+
+        person_data = defaultdict(str)
+        person_data.update(self.popit_data['versions'][0]['data'])
+
+        row = {
+            'name': self.name,
+            'id': self.id,
+            'party': person_data['party_memberships']['2015']['name'],
+            'constituency': self.standing_in['2015']['name'],
+            'mapit_url': self.standing_in['2015']['mapit_url'],
+            'mapit_id': self.standing_in['2015']['post_id'],
+            'gss_code': MapItData.constituencies_2010[
+                self.standing_in['2015']['post_id']]['codes']['gss'],
+            'twitter_username': person_data['twitter_username'],
+            'facebook_page_url': person_data['facebook_page_url'],
+            'party_ppc_page_url': person_data['party_ppc_page_url'],
+            'gender': person_data['gender'],
+            'facebook_personal_url': person_data['facebook_personal_url'],
+            'email': person_data['email'],
+            'homepage_url': person_data['homepage_url'],
+            'wikipedia_url': person_data['wikipedia_url'],
+            'birth_date': person_data['birth_date'],
+        }
+
+        return row
+
 
 def update_values_in_sub_array(data, location, new_value):
     """Ensure that only a particular value is present in a sub-dict

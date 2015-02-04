@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from candidates.views import (ConstituencyPostcodeFinderView,
-    ConstituencyNameFinderView, ConstituencyDetailView, CandidacyView,
+    ConstituencyNameFinderView, ConstituencyDetailView,
+    ConstituencyDetailCSVView, CandidacyView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
     MergePeopleView, PersonView, HelpApiView, HelpAboutView,
     ConstituencyListView, RecentChangesView, LeaderboardView)
@@ -15,6 +16,9 @@ urlpatterns = patterns('',
     url(r'^lookup/name$', ConstituencyNameFinderView.as_view(), name='lookup-name'),
     url(r'^lookup/postcode$', ConstituencyPostcodeFinderView.as_view(), name='lookup-postcode'),
     url(r'^constituencies$', ConstituencyListView.as_view(), name='constituencies'),
+    url(r'^constituency/(?P<mapit_area_id>\d+)/(?P<ignored_slug>.*).csv$',
+        ConstituencyDetailCSVView.as_view(),
+        name='constituency_csv'),
     url(r'^constituency/(?P<mapit_area_id>\d+)/(?P<ignored_slug>.*)$',
         ConstituencyDetailView.as_view(),
         name='constituency'),
