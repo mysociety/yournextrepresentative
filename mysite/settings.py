@@ -168,8 +168,9 @@ USE_TZ = True
 MEDIA_ROOT = conf.get('MEDIA_ROOT')
 if not MEDIA_ROOT:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# Make sure that the MEDIA_ROOT exists:
-mkdir_p(MEDIA_ROOT)
+# Make sure that the MEDIA_ROOT and subdirectory for archived CSV
+# files exist:
+mkdir_p(os.path.join(MEDIA_ROOT, 'csv-archives'))
 
 MEDIA_URL = '/media/'
 
