@@ -3,6 +3,7 @@ from django.conf import settings
 SETTINGS_TO_ADD = (
     'GOOGLE_ANALYTICS_ACCOUNT',
     'SOURCE_HINTS',
+    'MEDIA_URL',
 )
 
 def add_settings(request):
