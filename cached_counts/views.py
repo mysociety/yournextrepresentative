@@ -22,9 +22,10 @@ class ReportsHomeView(TemplateView):
                     object_id=object_id).count
             except CachedCount.DoesNotExist:
                 pass
-        context['percent_of_2010'] = \
-            (100 * float(context['candidates_2015'])) / \
-            context['candidates_2010']
+        if context.get('candidates_2010') and 'candidates_2015' in context:
+            context['percent_of_2010'] = \
+                (100 * float(context['candidates_2015'])) / \
+                context['candidates_2010']
         return context
 
 class PartyCountsView(ListView):
