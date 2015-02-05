@@ -678,6 +678,24 @@ def get_ec_identifier(party):
     return result
 
 
+class PartyListView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/party-list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PartyListView, self).get_context_data(**kwargs)
+        parties = []
+        for party in popit_unwrap_pagination(
+            self.api.organizations,
+            embed='',
+            per_page=100
+        ):
+            if party.get('classification') == 'Party':
+                parties.append((party['name'], party['id']))
+        parties.sort()
+        context['parties'] = parties
+        return context
+
+
 class PartyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/party.html'
 
