@@ -56,7 +56,11 @@
       {% for action in recent_actions %}
         <li>User <strong>{{ action.user.username }}</strong>
           {% if action.action_type == 'person-create' %}
-            created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+            {% if action.popit_person_id %}
+              created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+            {% else %}
+              is creating a new candidate
+            {% endif %}
           {% elif action.action_type == 'person-merge' %}
             merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'person-revert' %}
