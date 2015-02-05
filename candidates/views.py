@@ -668,6 +668,16 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
 
+
+def get_ec_identifier(party):
+    result = None
+    for identifier in party.get('identifiers', []):
+        if identifier['scheme'] == 'electoral-commission':
+            result = identifier['identifier']
+            break
+    return result
+
+
 class PartyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/party.html'
 
@@ -678,6 +688,13 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         if not party_name:
             raise Http404("Party not found")
         party = self.api.organizations(party_id).get(embed='')['result']
+        party_ec_id = get_ec_identifier(party)
+        context['oec_url'] = None
+        if party_ec_id:
+            context['oec_url'] = \
+                'http://openelectoralcommission.org.uk/parties/{0}/{1}/'.format(
+                    party_ec_id, slugify(party_name)
+                )
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
             (i['notes'], i['url'])

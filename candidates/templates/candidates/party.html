@@ -18,6 +18,10 @@
 <p>The {{ party_name }} is on the Electoral Commission's
 register for {{ register }}.</p>
 
+<p>You can find more data from the party's Electoral Commission registration at the
+  <a href="{{ oec_url }}">OpenElectoralCommission page for the
+  {{ party_name }}</a>.</p>
+
 {% for country, constituencies in candidates_by_country %}
   <h3>{{ country }}</h3>
   {% if constituencies %}
