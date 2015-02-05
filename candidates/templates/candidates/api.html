@@ -239,4 +239,20 @@ and <tt>party_memberships</tt> elements will give you details
 about which constituencies they are / were standing in, and for which
 parties.
 
+<h2>Get all known 2015 candidates</h2>
+
+<p>You can also use the <tt>search/persons</tt> endpoint to find
+all the candidates that we think are standing in 2015,
+with <a href="{{ popit_url }}search/persons?q=_exists_:standing_in.2015.post_id ">this
+query</a>:</p>
+
+<pre class="code-sample">
+{{ popit_url }}search/persons?q=_exists_:standing_in.2015.post_id
+</pre>
+
+<p>(This question was raised on the
+<a href="https://groups.google.com/d/msg/democracy-club/D0A3ZG4x9pw/8IVlFDzNFPYJ">Democracy
+Club Google Group</a>, which may be of interest if you're developing
+software that uses the YourNextMP data.)</p>
+
 {% endblock %}
