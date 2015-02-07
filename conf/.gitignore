@@ -1,1 +1,2 @@
-/general.yml
+/general.yml*
+!/general.yml-example
