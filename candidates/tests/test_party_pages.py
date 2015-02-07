@@ -1,14 +1,27 @@
 from mock import patch, MagicMock
+import re
 
 from django_webtest import WebTest
 
-from .fake_popit import get_example_popit_json
+from .fake_popit import get_example_popit_json, FakeOrganizationCollection
 
 def fake_api_party_list(*args, **kwargs):
     page = kwargs.get('page')
     return get_example_popit_json(
         'organizations_embed=&page={0}&per_page=2.json'.format(page)
     )
+
+def fake_party_person_search_results(url, **kwargs):
+    mock_requests_response = MagicMock()
+    page = "1"
+    m = re.search(r'[^_]page=(\d+)', url)
+    if m:
+        page = m.group(1)
+    mock_requests_response.json.return_value = get_example_popit_json(
+        'search_labour_page={0}.json'.format(page)
+    )
+    return mock_requests_response
+
 
 class TestPartyPages(WebTest):
 
@@ -31,3 +44,36 @@ class TestPartyPages(WebTest):
             self.assertEqual(lis[i].find('a')['href'], expected_url)
             self.assertEqual(lis[i].find('a').text, expected_text)
 
+    @patch('candidates.views.requests')
+    @patch('candidates.popit.PopIt')
+    def test_single_party_page(self, mock_popit, mock_requests):
+        mock_popit.return_value.organizations = FakeOrganizationCollection
+        mock_requests.get.side_effect = fake_party_person_search_results
+        response = self.app.get('/party/party%3A53/labour-party')
+        # There are no candidates in Scotland or Wales in our test data:
+        self.assertIn(
+            u"We don't know of any Labour Party candidates in Scotland so far.",
+            unicode(response)
+        )
+        self.assertIn(
+            u"We don't know of any Labour Party candidates in Wales so far.",
+            unicode(response)
+        )
+        # But this should only be showing results from the Great
+        # Britain register, so there shouldn't be a similar message
+        # for Northern Ireland:
+        self.assertNotIn(
+            u"We don't know of any Labour Party candidates in Northern Ireland so far.",
+            unicode(response)
+        )
+        # Check there's no David Miliband (since he's not standing in 2015):
+        self.assertIn(
+            u'<li>No candidate in <a href="/constituency/65719/south-shields">South Shields</a>',
+            unicode(response)
+        )
+        # But there is an Ed Miliband:
+        self.assertTrue(re.search(
+            r'(?ms)<a href="/person/3056">Ed Miliband</a>.*is standing in.*' +
+            r'<a href="/constituency/65672/doncaster-north">Doncaster North</a></li>',
+            unicode(response)
+        ))
