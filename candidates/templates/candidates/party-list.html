@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<ul>
+<ul class="party-list">
   {% for p in parties %}
     <li><a href="{% url 'party' organization_id=p.1 ignored_slug=p.0|slugify %}">{{ p.0 }}</a></li>
   {% endfor %}
