@@ -96,6 +96,7 @@ INSTALLED_APPS = (
 SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
+    'candidates.middleware.PopItDownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
