@@ -71,25 +71,3 @@ class FakeOrganizationCollection(FakeCollection):
 
 class FakePostCollection(FakeCollection):
     collection = 'posts'
-
-# This is used to fake results make via requests.get to the PopIt API.
-
-def fake_get_result(url):
-    split = urlsplit(url)
-    m = re.search('/api/v0.1/(.*)', split.path)
-    if not m:
-        raise Exception, "Unexpected URL to fake_get_result: {0}".format(url)
-    api_query = m.group(1)
-    if api_query == 'search/organizations':
-        if split.query == 'q=classification%3AParty%20AND%20name%3A%22Labour%20Party%22':
-            json_result = get_example_popit_json('search_organization_labour_party.json')
-        elif split.query == 'q=classification%3AParty%20AND%20name%3A%22Labour%22':
-            json_result = get_example_popit_json('search_organization_labour.json')
-        elif split.query == 'q=classification%3AParty%20AND%20name%3A%22New%20Invented%20Party%22':
-            json_result = get_example_popit_json('search_organization_new_invented_party.json')
-        else:
-            message = "Unexpected organization search query to fake_get_result {0}"
-            raise Exception, message.format(split.query)
-    else:
-        raise Exception, "Unexpected API query to fake_get_result: {0}".format(api_query)
-    return Mock(**{'json.return_value': json_result})

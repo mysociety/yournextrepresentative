@@ -3,7 +3,6 @@ from django.test import TestCase
 from mock import call, patch, MagicMock
 
 from .fake_popit import (
-    fake_get_result,
     FakePersonCollection, FakeOrganizationCollection
 )
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin

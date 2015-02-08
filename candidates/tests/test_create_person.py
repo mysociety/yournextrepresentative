@@ -3,7 +3,6 @@ from django.test import TestCase
 from mock import patch, MagicMock
 
 from .fake_popit import (
-    fake_get_result,
     FakePersonCollection, FakeOrganizationCollection
 )
 from .helpers import equal_call_args
