@@ -44,7 +44,7 @@ class TestPartyPages(WebTest):
             self.assertEqual(lis[i].find('a')['href'], expected_url)
             self.assertEqual(lis[i].find('a').text, expected_text)
 
-    @patch('candidates.views.requests')
+    @patch('candidates.views.parties.requests')
     @patch('candidates.popit.PopIt')
     def test_single_party_page(self, mock_popit, mock_requests):
         mock_popit.return_value.organizations = FakeOrganizationCollection

@@ -21,7 +21,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         self.assertEqual('/accounts/login/', split_location.path)
         self.assertEqual('next=/person/2009/update', split_location.query)
 
-    @patch('candidates.views.UpdatePersonView.get_person')
+    @patch('candidates.views.people.UpdatePersonView.get_person')
     def test_update_person_view_get(self, mock_get_person, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
         mock_get_person.return_value = (
@@ -32,10 +32,10 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/2009/update', user=self.user)
         response.forms['person-details']
 
-    @patch('candidates.views.UpdatePersonView.get_current_timestamp')
-    @patch('candidates.views.UpdatePersonView.create_version_id')
-    @patch('candidates.views.UpdatePersonView.update_person')
-    @patch('candidates.views.UpdatePersonView.get_person')
+    @patch('candidates.views.people.UpdatePersonView.get_current_timestamp')
+    @patch('candidates.views.people.UpdatePersonView.create_version_id')
+    @patch('candidates.views.people.UpdatePersonView.update_person')
+    @patch('candidates.views.people.UpdatePersonView.get_person')
     def test_update_person_submission(
             self,
             mock_get_person,

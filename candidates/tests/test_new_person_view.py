@@ -22,9 +22,9 @@ def fill_form(form, form_dict):
 @patch('candidates.popit.PopIt')
 class TestNewPersonView(TestUserMixin, WebTest):
 
-    @patch('candidates.views.NewPersonView.get_current_timestamp')
-    @patch('candidates.views.NewPersonView.create_version_id')
-    @patch('candidates.views.NewPersonView.create_person')
+    @patch('candidates.views.people.NewPersonView.get_current_timestamp')
+    @patch('candidates.views.people.NewPersonView.create_version_id')
+    @patch('candidates.views.people.NewPersonView.create_person')
     def test_new_person_submission(
             self,
             mock_create_person,
