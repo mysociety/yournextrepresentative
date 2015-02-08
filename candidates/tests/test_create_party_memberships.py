@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from mock import call, patch, MagicMock
+from mock import call, patch
 
 from .fake_popit import (
     FakePersonCollection, FakeOrganizationCollection
