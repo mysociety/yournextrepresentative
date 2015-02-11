@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body_class %}party-list{% endblock %}
+
+{% block title %}All parties eligible for the UK 2015 General Election{% endblock %}
+
+{% block hero %}
+  <h1>All Parties</h1>
+{% endblock %}
+
+{% block content %}
+
+<ul class="party-list">
+  {% for p in parties %}
+    <li><a href="{% url 'party' organization_id=p.1 ignored_slug=p.0|slugify %}">{{ p.0 }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

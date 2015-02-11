@@ -1,0 +1,327 @@
+{
+  "total": 2,
+  "page": 1,
+  "per_page": 1,
+  "has_more": true,
+  "next_url": "http://yournextmp.popit.mysociety.org/api/v0.1/search/persons?q=party_memberships.2015.name%3A%22Labour%20Party%22&per_page=1&page=2",
+  "result": [
+    {
+      "html_url": "http://yournextmp.popit.mysociety.org/persons/3056",
+      "url": "http://yournextmp.popit.mysociety.org/api/v0.1/persons/3056",
+      "id": "3056",
+      "name": "Ed Miliband",
+      "versions": [
+        {
+          "version_id": "33e1e18299a13dd9",
+          "data": {
+            "email": "",
+            "birth_date": null,
+            "party_memberships": {
+              "2010": {
+                "name": "Labour Party",
+                "id": "party:53"
+              },
+              "2015": {
+                "id": "party:53",
+                "name": "Labour Party"
+              }
+            },
+            "wikipedia_url": "",
+            "homepage_url": "",
+            "standing_in": {
+              "2010": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              },
+              "2015": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              }
+            },
+            "proxy_image": null,
+            "other_names": [
+              {
+                "name": "Edward Miliband",
+                "id": "54c67120c71694775bfd35dd",
+                "note": "Official, e.g. Parliament"
+              }
+            ],
+            "identifiers": [
+              {
+                "identifier": "2951",
+                "id": "54c67120c71694775bfd35df",
+                "scheme": "yournextmp-candidate"
+              },
+              {
+                "identifier": "uk.org.publicwhip/person/11545",
+                "id": "54c67120c71694775bfd35de",
+                "scheme": "uk.org.publicwhip"
+              }
+            ],
+            "gender": "male",
+            "name": "Ed Miliband",
+            "id": "3056",
+            "twitter_username": "Ed_Miliband",
+            "facebook_personal_url": "",
+            "image": null,
+            "party_ppc_page_url": "",
+            "facebook_page_url": ""
+          },
+          "username": "andylolz",
+          "timestamp": "2015-01-27T23:30:22.003041",
+          "information_source": "http://tweetminster.co.uk/mps"
+        },
+        {
+          "version_id": "51c81d35956f6da9",
+          "data": {
+            "id": "3056",
+            "birth_date": null,
+            "party_memberships": {
+              "2010": {
+                "name": "Labour Party",
+                "id": "party:53"
+              },
+              "2015": {
+                "name": "Labour Party",
+                "id": "party:53"
+              }
+            },
+            "wikipedia_url": "",
+            "email": null,
+            "homepage_url": "",
+            "standing_in": {
+              "2010": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              },
+              "2015": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              }
+            },
+            "twitter_username": "",
+            "other_names": [
+              {
+                "name": "Edward Miliband",
+                "id": "54bc089081cff4ca7198ca41",
+                "note": "Official, e.g. Parliament"
+              }
+            ],
+            "proxy_image": null,
+            "facebook_personal_url": "",
+            "identifiers": [
+              {
+                "identifier": "2951",
+                "id": "54983117161dbc6b46cb08b2",
+                "scheme": "yournextmp-candidate"
+              },
+              {
+                "identifier": "uk.org.publicwhip/person/11545",
+                "scheme": "uk.org.publicwhip"
+              }
+            ],
+            "image": null,
+            "gender": "male",
+            "party_ppc_page_url": "",
+            "name": "Ed Miliband",
+            "facebook_page_url": ""
+          },
+          "timestamp": "2015-01-26T16:53:52.398505",
+          "information_source": "Updated candidate with parlparse person id"
+        },
+        {
+          "version_id": "440a3358b3de2811",
+          "data": {
+            "email": "",
+            "birth_date": null,
+            "party_memberships": {
+              "2010": {
+                "name": "Labour Party",
+                "id": "party:53"
+              },
+              "2015": {
+                "name": "Labour Party",
+                "id": "party:53"
+              }
+            },
+            "wikipedia_url": "",
+            "id": "3056",
+            "homepage_url": "",
+            "standing_in": {
+              "2010": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              },
+              "2015": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              }
+            },
+            "twitter_username": "",
+            "other_names": [
+              {
+                "name": "Edward Miliband",
+                "id": "54983117161dbc6b46cb08b3",
+                "note": "Official, e.g. Parliament"
+              }
+            ],
+            "proxy_image": null,
+            "facebook_personal_url": "",
+            "image": null,
+            "gender": "male",
+            "party_ppc_page_url": "",
+            "name": "Ed Miliband",
+            "facebook_page_url": ""
+          },
+          "username": "andylolz",
+          "timestamp": "2015-01-18T19:25:04.586000",
+          "information_source": "Email from Labour: https://gist.github.com/symroe/2d4a5b112428adc64d32"
+        },
+        {
+          "version_id": "67f6a18742e4caa8",
+          "data": {
+            "slug": "ed-miliband",
+            "birth_date": null,
+            "party_memberships": {
+              "2010": {
+                "id": "party:53",
+                "name": "Labour Party"
+              }
+            },
+            "wikipedia_url": null,
+            "homepage_url": null,
+            "standing_in": {
+              "2010": {
+                "mapit_url": "http://mapit.mysociety.org/area/65672",
+                "name": "Doncaster North",
+                "post_id": "65672"
+              }
+            },
+            "twitter_username": null,
+            "email": null,
+            "facebook_personal_url": null,
+            "identifiers": [
+              {
+                "identifier": "2951",
+                "scheme": "yournextmp-candidate"
+              }
+            ],
+            "id": "3056",
+            "gender": "male",
+            "party_ppc_page_url": null,
+            "phone": "01302 875462",
+            "name": "Ed Miliband",
+            "facebook_page_url": null
+          },
+          "timestamp": "2014-11-21T18:21:57.261547",
+          "information_source": "Imported from YourNextMP data from 2010"
+        }
+      ],
+      "gender": "male",
+      "standing_in": {
+        "2010": {
+          "post_id": "65672",
+          "name": "Doncaster North",
+          "mapit_url": "http://mapit.mysociety.org/area/65672"
+        },
+        "2015": {
+          "post_id": "65672",
+          "name": "Doncaster North",
+          "mapit_url": "http://mapit.mysociety.org/area/65672"
+        }
+      },
+      "party_memberships": {
+        "2010": {
+          "id": "party:53",
+          "name": "Labour Party"
+        },
+        "2015": {
+          "name": "Labour Party",
+          "id": "party:53"
+        }
+      },
+      "email": null,
+      "memberships": [
+        {
+          "id": "54c81f90ae4d75fe5d0b0fe8",
+          "html_url": "http://yournextmp.popit.mysociety.org/memberships/54c81f90ae4d75fe5d0b0fe8",
+          "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/54c81f90ae4d75fe5d0b0fe8",
+          "person_id": "3056",
+          "organization_id": "party:53",
+          "start_date": "2010-05-07",
+          "end_date": "9999-12-31",
+          "links": [],
+          "contact_details": []
+        },
+        {
+          "id": "54c81f90ae4d75fe5d0b0fe9",
+          "html_url": "http://yournextmp.popit.mysociety.org/memberships/54c81f90ae4d75fe5d0b0fe9",
+          "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/54c81f90ae4d75fe5d0b0fe9",
+          "person_id": "3056",
+          "organization_id": "party:53",
+          "start_date": "2005-05-06",
+          "end_date": "2010-05-06",
+          "links": [],
+          "contact_details": []
+        },
+        {
+          "id": "54c81f91ae4d75fe5d0b0fea",
+          "html_url": "http://yournextmp.popit.mysociety.org/memberships/54c81f91ae4d75fe5d0b0fea",
+          "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/54c81f91ae4d75fe5d0b0fea",
+          "person_id": "3056",
+          "post_id": "65672",
+          "role": "Candidate",
+          "start_date": "2010-05-07",
+          "end_date": "9999-12-31",
+          "links": [],
+          "contact_details": []
+        },
+        {
+          "id": "54c81f91ae4d75fe5d0b0feb",
+          "html_url": "http://yournextmp.popit.mysociety.org/memberships/54c81f91ae4d75fe5d0b0feb",
+          "url": "http://yournextmp.popit.mysociety.org/api/v0.1/memberships/54c81f91ae4d75fe5d0b0feb",
+          "person_id": "3056",
+          "post_id": "65672",
+          "role": "Candidate",
+          "start_date": "2005-05-06",
+          "end_date": "2010-05-06",
+          "links": [],
+          "contact_details": []
+        }
+      ],
+      "links": [],
+      "contact_details": [
+        {
+          "id": "54d636ad545e72c70ba00be4",
+          "type": "twitter",
+          "value": "Ed_Miliband"
+        }
+      ],
+      "identifiers": [
+        {
+          "id": "54d636ad545e72c70ba00be3",
+          "scheme": "yournextmp-candidate",
+          "identifier": "2951"
+        },
+        {
+          "id": "54d636ad545e72c70ba00be2",
+          "scheme": "uk.org.publicwhip",
+          "identifier": "uk.org.publicwhip/person/11545"
+        }
+      ],
+      "other_names": [
+        {
+          "id": "54d636ad545e72c70ba00be1",
+          "note": "Official, e.g. Parliament",
+          "name": "Edward Miliband"
+        }
+      ]
+    }
+  ]
+}

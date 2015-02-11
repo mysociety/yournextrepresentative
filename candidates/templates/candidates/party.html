@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body_class %}party{% endblock %}
+
+{% block title %}{{ party_name }} &#8212; Candidates (PPCs) by constituency for the UK 2015 General Election{% endblock %}
+
+{% block hero %}
+  <h1>{{ party_name }}</h1>
+{% endblock %}
+
+{% block content %}
+
+{% for image_notes, image_url in emblems %}
+  <img class="party-detail__image" src="{{ image_url }}"
+    alt="{{ image_notes }}" title="{{ image_notes }}">
+{% endfor %}
+
+<p>The {{ party_name }} is on the Electoral Commission's
+register for {{ register }}.</p>
+
+<p>You can find more data from the party's Electoral Commission registration at the
+  <a href="{{ oec_url }}">OpenElectoralCommission page for the
+  {{ party_name }}</a>.</p>
+
+{% for country, constituencies in candidates_by_country %}
+  <h3>{{ country }}</h3>
+  {% if constituencies %}
+    <ul>
+      {% for post_id, constituency_name, candidate in constituencies %}
+        {% if candidate %}
+          <li><a href="{% url 'person-view' person_id=candidate.person_id %}">{{ candidate.person_name }}</a>
+            is standing in
+            <a href="{% url 'constituency' mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ candidate.constituency_name }}</a></li>
+        {% else %}
+          <li>No candidate in <a href="{% url 'constituency' mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ constituency_name }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>We don't know of any {{ party_name }} candidates in {{ country }} so far.</p>
+  {% endif %}
+
+{% endfor %}
+
+{% endblock %}
