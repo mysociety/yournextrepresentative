@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'candidates',
     'tasks',
     'cached_counts',
+    'moderation_queue',
     'debug_toolbar',
 )
 
