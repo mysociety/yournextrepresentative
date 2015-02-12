@@ -4,16 +4,9 @@ from django.views.generic import TemplateView
 import requests
 from slugify import slugify
 
+from ..models import get_identifier
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData, PartyData
-
-def get_ec_identifier(party):
-    result = None
-    for identifier in party.get('identifiers', []):
-        if identifier['scheme'] == 'electoral-commission':
-            result = identifier['identifier']
-            break
-    return result
 
 
 class PartyListView(PopItApiMixin, TemplateView):
@@ -44,7 +37,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         if not party_name:
             raise Http404("Party not found")
         party = self.api.organizations(party_id).get(embed='')['result']
-        party_ec_id = get_ec_identifier(party)
+        party_ec_id = get_identifier('electoral-commission', party)
         context['oec_url'] = None
         if party_ec_id:
             context['oec_url'] = \

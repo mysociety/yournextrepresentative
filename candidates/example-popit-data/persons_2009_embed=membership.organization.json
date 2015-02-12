@@ -141,6 +141,11 @@
         "id": "544e3df981b7fa64bfccdaac",
         "scheme": "yournextmp-candidate",
         "identifier": "2959"
+      },
+      {
+        "id": "54d2d3725b6aac303dfcd68b",
+        "scheme": "uk.org.publicwhip",
+        "identifier": "uk.org.publicwhip/person/10326"
       }
     ],
     "other_names": [],
