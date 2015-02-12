@@ -170,6 +170,14 @@ def membership_covers_date(membership, date):
     end_date = complete_partial_date(end_date)
     return start_date <= str(date) and end_date >= str(date)
 
+def get_identifier(scheme, popit_object):
+    result = None
+    for identifier in popit_object.get('identifiers', []):
+        if identifier['scheme'] == scheme:
+            result = identifier['identifier']
+            break
+    return result
+
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
     if not m:
