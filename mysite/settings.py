@@ -96,6 +96,7 @@ INSTALLED_APPS = (
 SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'candidates.middleware.PopItDownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -130,6 +131,8 @@ ROOT_URLCONF = 'mysite.urls'
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+INTERNAL_IPS = ['127.0.0.1']
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
