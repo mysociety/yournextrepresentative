@@ -35,6 +35,8 @@ CSV_ROW_FIELDS = [
     'homepage_url',
     'wikipedia_url',
     'birth_date',
+    'parlparse_id',
+    'theyworkforyou_url',
 ]
 
 
@@ -397,6 +399,18 @@ class PopItPerson(object):
         person_data = defaultdict(str)
         person_data.update(self.popit_data['versions'][0]['data'])
 
+        theyworkforyou_url = None
+        parlparse_id = get_identifier('uk.org.publicwhip', self.popit_data)
+        if parlparse_id:
+            m = re.search(r'^uk.org.publicwhip/person/(\d+)$', parlparse_id)
+            if not m:
+                message = "Malformed parlparse ID found {0}"
+                raise Exception, message.format(parlparse_id)
+            parlparse_person_id = m.group(1)
+            theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
+                parlparse_person_id
+            )
+
         row = {
             'name': self.name,
             'id': self.id,
@@ -415,6 +429,8 @@ class PopItPerson(object):
             'homepage_url': person_data['homepage_url'],
             'wikipedia_url': person_data['wikipedia_url'],
             'birth_date': person_data['birth_date'],
+            'parlparse_id': parlparse_id,
+            'theyworkforyou_url': theyworkforyou_url,
         }
 
         return row
