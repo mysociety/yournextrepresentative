@@ -195,6 +195,12 @@ STATICFILES_DIRS = (
 )
 
 PIPELINE_CSS = {
+    'image-review': {
+        'source_filenames': (
+            'moderation_queue/css/jquery.Jcrop.css',
+        ),
+        'output_filename': 'css/image-review.css',
+    },
     'all': {
         'source_filenames': (
             'candidates/style.scss',
@@ -209,6 +215,13 @@ PIPELINE_CSS = {
 }
 
 PIPELINE_JS = {
+    'image-review': {
+        'source_filenames': (
+            'moderation_queue/js/jquery.color.js',
+            'moderation_queue/js/jquery.Jcrop.js',
+        ),
+        'output_filename': 'js/image-review.js',
+    },
     'all': {
         'source_filenames': (
             'jquery/jquery-1.11.1.js',
