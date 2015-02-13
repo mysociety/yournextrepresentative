@@ -61,7 +61,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         by_country = {c: {} for c in countries}
         url = self.get_search_url(
             'persons',
-            'party_memberships.2015.name:"{0}"'.format(party_name),
+            u'party_memberships.2015.name:"{0}"'.format(party_name),
             per_page=100
         )
         while url:
