@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load imagefixes %}
+
 {% block body_class %}party{% endblock %}
 
 {% block title %}{{ party_name }} &#8212; Candidates (PPCs) by constituency for the UK 2015 General Election{% endblock %}
@@ -11,7 +13,7 @@
 {% block content %}
 
 {% for image_notes, image_url in emblems %}
-  <img class="party-detail__image" src="{{ image_url }}"
+  <img class="party-detail__image" src="{{ image_url|fixproxyurl }}"
     alt="{{ image_notes }}" title="{{ image_notes }}">
 {% endfor %}
 
