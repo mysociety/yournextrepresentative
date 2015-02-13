@@ -85,7 +85,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         context['party_name'] = party_name
         context['register'] = party.get('register')
         if context['register'] == 'Northern Ireland':
-            relevant_countries = ('Northern Ireland')
+            relevant_countries = ('Northern Ireland',)
         elif context['register'] == 'Great Britain':
             relevant_countries = ('England', 'Scotland', 'Wales')
         else:
