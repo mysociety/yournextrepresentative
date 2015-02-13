@@ -10,6 +10,8 @@
 
 {% block content %}
 
+<h2>All parties with any candidates standing in 2015</h2>
+
 <ul class="party-list">
   {% for p in parties %}
     <li><a href="{% url 'party' organization_id=p.1 ignored_slug=p.0|slugify %}">{{ p.0 }}</a></li>

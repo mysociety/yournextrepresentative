@@ -4,6 +4,8 @@ from django.views.generic import TemplateView
 import requests
 from slugify import slugify
 
+from cached_counts.models import CachedCount
+
 from ..models import get_identifier
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData, PartyData
@@ -14,13 +16,19 @@ class PartyListView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PartyListView, self).get_context_data(**kwargs)
+        party_ids_with_any_candidates = set(
+            CachedCount.objects.filter(count_type='party', count__gt=0). \
+                values_list('object_id', flat=True)
+        )
         parties = []
         for party in popit_unwrap_pagination(
             self.api.organizations,
             embed='',
             per_page=100
         ):
-            if party.get('classification') == 'Party':
+            if party.get('classification') != 'Party':
+                continue
+            if party['id'] in party_ids_with_any_candidates:
                 parties.append((party['name'], party['id']))
         parties.sort()
         context['parties'] = parties
