@@ -83,11 +83,13 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                     'constituency_name': mapit_data['name']
                 }
         context['party_name'] = party_name
-        context['register'] = party['register']
+        context['register'] = party.get('register')
         if context['register'] == 'Northern Ireland':
             relevant_countries = ('Northern Ireland')
-        else:
+        elif context['register'] == 'Great Britain':
             relevant_countries = ('England', 'Scotland', 'Wales')
+        else:
+            relevant_countries = ('England', 'Northern Ireland', 'Scotland', 'Wales')
         candidates_by_country = {}
         for country in relevant_countries:
             candidates_by_country[country] = None

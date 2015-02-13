@@ -15,12 +15,29 @@
     alt="{{ image_notes }}" title="{{ image_notes }}">
 {% endfor %}
 
-<p>The {{ party_name }} is on the Electoral Commission's
-register for {{ register }}.</p>
+{% if party_name == 'Independent' %}
 
-<p>You can find more data from the party's Electoral Commission registration at the
-  <a href="{{ oec_url }}">OpenElectoralCommission page for the
-  {{ party_name }}</a>.</p>
+  <p>This shows all the constituencies that have independent
+    candidates standing in them at the 2015 general election</p>
+
+{% elif party_name == 'Speaker seeking re-election' %}
+
+  <p>The Speaker of the House of Commons stands as a "The
+    Speaker seeking re-election" rather than a particular party
+    at a general election; for more information, please
+    see <a href="http://www.parliament.uk/about/faqs/house-of-commons-faqs/speakers-election/">Parliament's
+    website</a>.</p>
+
+{% elif register %}
+
+  <p>The {{ party_name }} is on the Electoral Commission's register for {{ register }}.</p>
+
+  <p>You can find more data from the party's Electoral Commission registration at the
+    <a href="{{ oec_url }}">OpenElectoralCommission page for the
+    {{ party_name }}</a>.</p>
+  <p></p>
+
+{% endif %}
 
 {% for country, constituencies in candidates_by_country %}
   <h3>{{ country }}</h3>
