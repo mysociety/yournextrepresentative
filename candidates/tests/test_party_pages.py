@@ -5,6 +5,8 @@ from django_webtest import WebTest
 
 from .fake_popit import get_example_popit_json, FakeOrganizationCollection
 
+from cached_counts.models import CachedCount
+
 def fake_api_party_list(*args, **kwargs):
     page = kwargs.get('page')
     return get_example_popit_json(
@@ -25,6 +27,26 @@ def fake_party_person_search_results(url, **kwargs):
 
 class TestPartyPages(WebTest):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.cached_counts = [
+            CachedCount.objects.create(
+                count_type='party',
+                name='',
+                count=count,
+                object_id=object_id
+            ) for object_id, count in (
+                ('party:52', 4),
+                ('party:63', 0),
+                ('party:53', 5),
+            )
+        ]
+
+    @classmethod
+    def tearDownClass(cls):
+        for cc in cls.cached_counts:
+            cc.delete()
+
     @patch('candidates.popit.PopIt')
     def test_parties_page(self, mock_popit):
         mock_api = MagicMock()
@@ -33,10 +55,9 @@ class TestPartyPages(WebTest):
         response = self.app.get('/parties')
         ul = response.html.find('ul', {'class': 'party-list'})
         lis = ul.find_all('li')
-        self.assertEqual(len(lis), 3)
+        self.assertEqual(len(lis), 2)
         for i, t in enumerate((
             ('/party/party%3A52/conservative-party', 'Conservative Party'),
-            ('/party/party%3A63/green-party', 'Green Party'),
             ('/party/party%3A53/labour-party', 'Labour Party'),
         )):
             expected_url = t[0]
