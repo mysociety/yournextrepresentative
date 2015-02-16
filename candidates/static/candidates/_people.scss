@@ -52,6 +52,12 @@
   li p {
     margin: 5px 0 0 0;
   }
+  .missing_field {
+      border: 1px solid lighten($color-gold, 30%);
+      border-radius: 3px;
+      padding: 0.8em;
+      margin-bottom: 1.6em;
+  }
 }
 
 .candidates-list__person {
