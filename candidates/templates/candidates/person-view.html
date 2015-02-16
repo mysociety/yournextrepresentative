@@ -32,7 +32,9 @@
 {% block content %}
 
 <div class="person__details">
-
+    <div class="missing_field">
+        <h4>We don't have an email address for {{ person.name }}, <a href="{% url 'person-update' person_id=person.id %}">help out by adding one</a>!</h4>
+    </div>
   <h2>Personal details:</h2>
 
   <dl>
