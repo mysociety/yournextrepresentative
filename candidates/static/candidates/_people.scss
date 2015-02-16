@@ -59,6 +59,9 @@
   border-radius: 3px;
   padding: 0.8em;
   margin-bottom: 1.6em;
+  h4 + li {
+      margin-top: 1.5em;
+  }
 }
 
 .candidates-list__person {
