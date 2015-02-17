@@ -62,10 +62,16 @@ class PersonView(PersonParseMixin, TemplateView):
         context['person'] = person_data
         context['popit_api_url'] = self.get_base_url()
         context['last_cons'] = self.get_last_constituency(person_data)
-        context['redirect_after_login'] = urlquote(
-            reverse('person-view', kwargs={'person_id': person_data['id']})
+        path = reverse(
+            'person-view',
+            kwargs={
+                'person_id': person_data['id'],
+                'ignored_slug': slugify(person_data['name']),
+            }
         )
+        context['redirect_after_login'] = urlquote(path)
         context['versions'] = get_version_diffs(person_data['versions'])
+        context['canonical_url'] = self.request.build_absolute_uri(path)
         return context
 
     def get(self, request, *args, **kwargs):

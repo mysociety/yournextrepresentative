@@ -5,7 +5,7 @@
 {% load standing %}
 
 {% block extra_head %}
-    <link rel="canonical" href="{% url 'person-view' person.id person.name|slugify %}" />
+    <link rel="canonical" href="{{ canonical_url }}" />
 {% endblock %}
 
 
