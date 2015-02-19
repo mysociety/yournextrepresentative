@@ -17,9 +17,11 @@
     <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
   {% endif %}
   <h1>Editing: {{ person.name }}</h1>
-  {% if last_cons %}
-    <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
-  {% endif %}
+  {% with last_cons=person.last_cons %}
+    {% if last_cons %}
+      <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
+    {% endif %}
+  {% endwith %}
 </div>
 {% endblock %}
 

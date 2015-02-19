@@ -61,11 +61,10 @@ class CandidacyMixin(object):
             mapit_url_key: url_format.format(post_id),
         }
 
-    def get_constituency_lock_from_person_data(self, person_data):
+    def get_constituency_lock_from_person(self, person):
         """Return whether the constituency is locked and whether this user can edit"""
 
-        standing_in = person_data.get('standing_in') or {}
-        standing_in_2015 = standing_in.get('2015', {}) or {}
+        standing_in_2015 = person.standing_in.get('2015', {}) or {}
         return self.get_constituency_lock(
             standing_in_2015.get('post_id')
         )

@@ -10,7 +10,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.http import urlquote
 
-from candidates.update import NameChangeDisallowedException
+from candidates.models.auth import NameChangeDisallowedException
 
 
 class PopItDownMiddleware(object):

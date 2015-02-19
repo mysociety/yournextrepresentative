@@ -8,6 +8,7 @@
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
 
+  {% with last_cons=person.last_cons %}
     <!-- Open Graph data -->
     <meta property="og:title" content="{{ person.name }}{% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
     <meta property="og:type" content="article" />
@@ -40,12 +41,16 @@
     <meta property="twitter:image:height" content="160" />
     <meta name="twitter:url" content="{{ canonical_url }}" />
     <meta name="twitter:description" content="{% metadescription person last_cons DATE_TODAY DATE_ELECTION %}" />
+  {% endwith %}
 {% endblock %}
-
 
 {% block body_class %}person{% endblock %}
 
-{% block title %}{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}{% endblock %}
+{% block title %}{{ person.name }}
+  {% if person.last_cons %}
+    - Candidate (PPC) for {{ person.last_cons.1.name }} in {{ person.last_cons.0 }}
+  {% endif %}
+{% endblock %}
 
 {% block hero %}
 <div class="person__hero">
@@ -57,9 +62,12 @@
     <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
   {% endif %}
   <h1>{{ person.name }}</h1>
-  {% if last_cons %}
-    <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
-  {% endif %}
+    {% if person.last_cons %}
+      <p>Candidate for
+        <a href="{% url 'constituency' person.last_cons.1.post_id person.last_cons.1.name|slugify %}">{{ person.last_cons.1.name }}</a>
+        in {{ person.last_cons.0 }}
+      </p>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -75,7 +83,7 @@
 
   <dl>
     <dt>Name</dt>
-    <dd>{{ name_with_honorifics }}</dd>
+    <dd>{{ person.name_with_honorifics }}</dd>
     {% if person.other_names %}
       <dt>Also known as</dt>
     {% endif %}
@@ -128,12 +136,12 @@
     <dt>Gender</dt>
     <dd>{% if person.gender %}{{ person.gender|title }}{% else %}Unknown{% endif %}</dd>
     <dt>Age</dt>
-    {% with dob=person.date_of_birth %}
+    {% with dob=person.birth_date %}
       {% if dob %}
         {% if dob|length_is:"4" %}
           <dd>{{ person.age }}<small class="dob">(Year of birth: {{ dob }})</small>
         {% else %}
-          <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
+          <dd>{{ person.age }}<small class="dob">(Date of birth: {{ person.dob_as_date|date:"jS F Y" }})</small>
         {% endif %}
       {% else %}
         <dd>Unknown
