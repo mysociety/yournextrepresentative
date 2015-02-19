@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block hero %}
+  <h1>Contribute</h1>
+{% endblock %}
+
+
+{% block content %}
+
+<h2>You can help us make YourNextMP.com better!</h2>
+
+<p>YourNextMP.com is a volunteer-sourced database, and that means we constantly
+need help in making it better.</p>
+
+<p>There is a lot of useful information on candidates out there, so if you find
+any please do add it to our site.</p>
+
+<h3>Emails</h3>
+
+<p>At the moment we're trying to get as many email addresses on candidates as
+we can.</p>
+
+<p>This will allow us to email them directly to ask them to add their own
+details.</p>
+
+<h4>How to help</h4>
+
+<p>First off you'll need to <a href={% url "account_login" %}>log in</a> in
+order to start making edits.</p>
+
+<p>We've added clear banners on the candidate and constituently pages
+indicating where we're missing email addresses, so you can start adding email
+addresses by <a href="{% url "finder" %}">looking up your constituency on the
+home page</a></p>
+
+<p>Once you've found a candidate without an email address, you can go searching
+for it!</p>
+
+<p>Please make sure you read our <a
+href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX
+wXspA/edit">guidance on sourcing fields</a>, and specifically the part about
+what sort of email addresses we accept.</p>
+
+<p>In short, we only want email addresses could be considered public and
+related to the candidate's campaign. <code>@parliament.uk</code> email
+addresses will stop working once Parliament is disbanded, so try to find a
+different email address for them if you can. If not, we can always email
+everyone with a <code>@parliament.uk</code> address asking them for a better
+one.</p>
+
+<p>Once your constituency has all the email addresses entered, you can look at
+our <a href="{% url "incomplete_view" 'email' %}">list of all candidates
+without emails listed</a>!</p>
+
+
+{% endblock content %}

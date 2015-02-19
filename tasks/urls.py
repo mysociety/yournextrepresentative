@@ -1,7 +1,12 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
-from .views import IncompleteFieldView
+from .views import IncompleteFieldView, TaskHomeView
 
 urlpatterns = patterns('',
-    url(r'(?P<field>[^/]+)/', IncompleteFieldView.as_view(), name='incomplete_view'),
+    url(r'^$', TaskHomeView.as_view(), name='tasks_home'),
+    url(
+        r'(?P<field>[a-z_\-\.]+)/',
+        IncompleteFieldView.as_view(),
+        name='incomplete_view',
+    ),
 )

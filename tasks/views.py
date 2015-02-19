@@ -6,6 +6,9 @@ from django.views.generic import TemplateView
 from candidates.popit import PopItApiMixin
 from cached_counts.models import CachedCount
 
+class TaskHomeView(TemplateView):
+    template_name = "tasks/tasks_home.html"
+
 class IncompleteFieldView(PopItApiMixin, TemplateView):
     page_kwarg = 'page'
     template_name = 'tasks/field.html'
