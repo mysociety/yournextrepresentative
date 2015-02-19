@@ -1,8 +1,22 @@
-.party-detail__image {
-  float: right;
-  clear: right;
+@media #{$medium-up} {
+  .party__primary {
+    @include grid-column($columns: 9, $collapse: true);
+  }
+
+  .party__secondary {
+    @include grid-column($columns: 2, $offset: 1, $collapse: true);
+
+    & + * {
+      clear: both;
+    }
+  }
+}
+
+img.party-detail__image {
+  margin-bottom: 2em;
+  /* Add some margin on the right too so the images aren't crushed
+     together in the 'small' media size */
+  margin-right: 1.5em;
   width: 7em;
   height: auto;
-  margin-bottom: 2em;
-  margin-left: 1.5em;
 }
