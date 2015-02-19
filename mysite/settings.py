@@ -257,7 +257,7 @@ NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
     '--with-coverage',
-    '--cover-package=candidates'
+    '--cover-package=candidates,cached_counts'
 ]
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
