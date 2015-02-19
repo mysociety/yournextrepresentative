@@ -7,7 +7,10 @@
 {% endblock %}
 
 {% block content %}
-
+  <p>
+      Thanks for helping out!  Please make sure you read our
+      <a href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit">guidance on sourcing fields</a>.
+  </p>
   <div class="row">
     <div class="columns">
       <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">

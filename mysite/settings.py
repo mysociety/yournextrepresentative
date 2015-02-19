@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.twitter',
     'pipeline',
     'candidates',
+    'tasks',
     'cached_counts',
     'debug_toolbar',
 )
@@ -257,7 +258,7 @@ NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
     '--with-coverage',
-    '--cover-package=candidates'
+    '--cover-package=candidates,cached_counts,tasks'
 ]
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
