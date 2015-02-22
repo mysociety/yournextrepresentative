@@ -1,9 +1,12 @@
+import errno
 import json
 from os.path import dirname, join
 import re
+import sys
 from urlparse import urlsplit
 
 from mock import Mock
+from slumber.exceptions import HttpClientError
 
 example_popit_data_directory = join(
     dirname(__file__), '..', 'example-popit-data'
@@ -48,11 +51,17 @@ class FakeCollection(object):
         self.object_id = args[0] if len(args) == 1 else None
 
     def get(self, **kwargs):
-        return get_example_popit_json(
-            '{0}_{1}_embed={2}.json'.format(
-                self.collection,
-                self.object_id,
-                kwargs.get('embed', 'membership')))
+        try:
+            return get_example_popit_json(
+                '{0}_{1}_embed={2}.json'.format(
+                    self.collection,
+                    self.object_id,
+                    kwargs.get('embed', 'membership')))
+        except IOError as e:
+            if e.errno == errno.ENOENT:
+                raise HttpClientError('Client Error 404')
+            else:
+                raise
 
     def put(self, data):
         raise Exception("Not implemented: you should patch this")
