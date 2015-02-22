@@ -24,3 +24,11 @@ class TestPersonView(WebTest):
                 unicode(response)
             )
         )
+
+    def test_get_non_existent(self, mock_popit):
+        mock_popit.return_value.persons = FakePersonCollection
+        response = self.app.get(
+            '/person/987654/imaginary-person',
+            expect_errors=True
+        )
+        self.assertEqual(response.status_code, 404)

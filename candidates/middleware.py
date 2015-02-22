@@ -1,6 +1,7 @@
 from requests.adapters import ConnectionError
-from slumber.exceptions import HttpServerError
+from slumber.exceptions import HttpServerError, HttpClientError
 
+from django.http import Http404
 from django.shortcuts import render
 
 class PopItDownMiddleware(object):
@@ -13,4 +14,7 @@ class PopItDownMiddleware(object):
             popit_down = True
         if popit_down:
             return render(request, 'candidates/popit_down.html', status=503)
+        message_404 = 'Client Error 404' in unicode(exc)
+        if isinstance(exc, HttpClientError) and message_404:
+            raise Http404()
         return None
