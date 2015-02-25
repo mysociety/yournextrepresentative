@@ -29,15 +29,9 @@
 
   <div class="row person-edit-separate-form">
     <div class="columns">
-
-      <p>Please only upload photos that meet one of these criteria:</p>
-      <ul>
-        <li>The photo is free of copyright restrictions (e.g. in the public domain)</li>
-        <li>You have copyright of the photo (in which case you assign it to Democracy Club for use in YourNextMP)</li>
-        <li>Or it is from the candidate or party's official campaign materials</li>
-      </ul>
-
-      {% include 'moderation_queue/_photo-upload-form.html' with form=photo_form popit_person_id=person.id %}
+      <p>
+        You can also <a href="{% url 'photo-upload' person.id %}">upload
+        a photo of this candidate</a>.</p>
     </div>
   </div>
 
