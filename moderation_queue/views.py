@@ -3,9 +3,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from candidates.popit import create_popit_api_object
+from candidates.models import PopItPerson
+
 from .forms import UploadPersonPhotoForm
 
-def upload_photo(request):
+def upload_photo(request, popit_person_id):
     if request.method == 'POST':
         form = UploadPersonPhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -20,11 +23,17 @@ def upload_photo(request):
                 }
             ))
     else:
-        form = UploadPersonPhotoForm()
+        form = UploadPersonPhotoForm(
+            initial={
+                'popit_person_id': popit_person_id
+            }
+        )
+    api = create_popit_api_object()
     return render(
         request,
         'moderation_queue/photo-upload-new.html',
-        {'form': form}
+        {'form': form,
+         'person': PopItPerson.create_from_popit(api, popit_person_id)}
     )
 
 

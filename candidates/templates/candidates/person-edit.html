@@ -37,7 +37,7 @@
         <li>Or it is from the candidate or party's official campaign materials</li>
       </ul>
 
-      {% include 'moderation_queue/_photo-upload-form.html' with form=photo_form %}
+      {% include 'moderation_queue/_photo-upload-form.html' with form=photo_form popit_person_id=person.id %}
     </div>
   </div>
 

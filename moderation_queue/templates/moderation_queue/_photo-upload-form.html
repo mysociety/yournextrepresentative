@@ -1,4 +1,4 @@
-<form id="person-upload-photo" action="{% url 'photo-upload' %}" method="post" enctype="multipart/form-data">
+<form id="person-upload-photo" action="{% url 'photo-upload' popit_person_id %}" method="post" enctype="multipart/form-data">
   {{ form.non_field_errors }}
   {% csrf_token %}
   <p>First, select an image from your computer:</p>

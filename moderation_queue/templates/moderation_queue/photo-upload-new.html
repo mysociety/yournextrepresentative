@@ -5,11 +5,11 @@
 {% block title %}Upload a candidate photo{% endblock %}
 
 {% block hero %}
-  <h1>Upload a candidate photo</h1>
+  <h1>Upload a photo of {{ person.name }}</h1>
 {% endblock %}
 
 {% block content %}
 
-{% include 'moderation_queue/_photo-upload-form.html' %}
+{% include 'moderation_queue/_photo-upload-form.html' with popit_person_id=person.id %}
 
 {% endblock %}
