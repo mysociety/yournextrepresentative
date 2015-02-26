@@ -60,9 +60,10 @@ Copy the example configuration file to `conf/general.yml`:
 Edit `yournextmp-popit/conf/general.yml` to fill in details of
 the PopIt instance you're using.
 
-If that instance hasn't already been set up, then you can create
-basic data in it with the `create-popit.py` script. (FIXME: add
-more instructions for this.)
+If you want to create a PopIt database based on an existing live
+instance, see the "Mirror the live database into your
+development copy" section below, and follow those steps at this
+stage.
 
 Install some required packages:
 
