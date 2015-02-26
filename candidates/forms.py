@@ -71,9 +71,19 @@ class CandidacyDeleteForm(BaseCandidacyForm):
     )
 
 class BasePersonForm(forms.Form):
+    honorific_prefix = forms.CharField(
+        label="Title / pre-nominal honorific (e.g. Dr, Sir, etc.)",
+        max_length=64,
+        required=False,
+    )
     name = forms.CharField(
         label="Full name",
         max_length=256,
+    )
+    honorific_suffix = forms.CharField(
+        label="Post-nominal letters (e.g. CBE, DSO, etc.)",
+        max_length=64,
+        required=False,
     )
     email = forms.EmailField(
         label="Email",

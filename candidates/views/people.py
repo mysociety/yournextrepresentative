@@ -57,6 +57,17 @@ class PersonView(PersonParseMixin, TemplateView):
                 result = (year, cons)
         return result
 
+    def get_name_with_honorifics(self, person_data):
+        name_parts = []
+        pre = person_data.get('honorific_prefix')
+        post = person_data.get('honorific_suffix')
+        if pre:
+            name_parts.append(pre)
+        name_parts.append(person_data.get('name', ''))
+        if post:
+            name_parts.append(post)
+        return ' '.join(name_parts)
+
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
         person_data, extra_for_template = self.get_person(self.kwargs['person_id'])
@@ -74,6 +85,8 @@ class PersonView(PersonParseMixin, TemplateView):
         context['redirect_after_login'] = urlquote(path)
         context['versions'] = get_version_diffs(person_data['versions'])
         context['canonical_url'] = self.request.build_absolute_uri(path)
+        context['name_with_honorifics'] = \
+            self.get_name_with_honorifics(person_data)
         return context
 
     def get(self, request, *args, **kwargs):

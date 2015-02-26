@@ -15,7 +15,10 @@ from slumber.exceptions import HttpServerError
 
 from .static_data import MapItData
 
-form_simple_fields = ('name', 'email', 'birth_date', 'gender')
+form_simple_fields = (
+    'honorific_prefix', 'name', 'honorific_suffix', 'email', 'birth_date',
+    'gender'
+)
 preserve_fields = ('identifiers', 'other_names', 'phone')
 
 CSV_ROW_FIELDS = [
@@ -37,6 +40,8 @@ CSV_ROW_FIELDS = [
     'birth_date',
     'parlparse_id',
     'theyworkforyou_url',
+    'honorific_prefix',
+    'honorific_suffix',
 ]
 
 
@@ -412,7 +417,9 @@ class PopItPerson(object):
             )
 
         row = {
+            'honorific_prefix': self.popit_data.get('honorific_prefix', ''),
             'name': self.name,
+            'honorific_suffix': self.popit_data.get('honorific_prefix', ''),
             'id': self.id,
             'party': person_data['party_memberships']['2015']['name'],
             'constituency': self.standing_in['2015']['name'],

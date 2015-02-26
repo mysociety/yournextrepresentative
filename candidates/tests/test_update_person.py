@@ -77,6 +77,8 @@ class TestUpdatePerson(TestCase):
                 'contact_details': [],
                 'email': u'foo@example.org',
                 'gender': None,
+                'honorific_prefix': None,
+                'honorific_suffix': None,
                 'name': u'Tessa Jowell',
                 'links': [],
                 'other_names': [],
@@ -102,6 +104,8 @@ class TestUpdatePerson(TestCase):
                 ],
                 'email': u'foo@example.org',
                 'gender': None,
+                'honorific_prefix': None,
+                'honorific_suffix': None,
                 'name': u'Tessa Jowell',
                 'links': [
                     {

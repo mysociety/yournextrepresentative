@@ -67,6 +67,8 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 'facebook_personal_url': '',
                 'gender': '',
                 'homepage_url': '',
+                'honorific_prefix': '',
+                'honorific_suffix': '',
                 'id': '2009',
                 'linkedin_url': '',
                 'name': 'Tessa Jowell',

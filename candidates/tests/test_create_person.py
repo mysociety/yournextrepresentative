@@ -15,6 +15,8 @@ EXPECTED_ARGS = {
     'birth_date': None,
     'email': u'jane@example.org',
     'gender': 'female',
+    'honorific_prefix': None,
+    'honorific_suffix': None,
     'id': '1',
     'identifiers': [
         {

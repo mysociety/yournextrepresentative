@@ -28,6 +28,8 @@ class TestGetDataForPopIt(TestCase):
             ],
             'email': u'john@example.org',
             'gender': None,
+            'honorific_prefix': None,
+            'honorific_suffix': None,
             'links': [
                 {
                     'note': 'wikipedia', 'url': 'http://en.wikipedia.org/wiki/John_Doe'
@@ -62,6 +64,8 @@ class TestGetDataForPopIt(TestCase):
             ],
             'email': None,
             'gender': None,
+            'honorific_prefix': None,
+            'honorific_suffix': None,
             'links': [
                 {
                     'note': 'wikipedia', 'url': 'http://en.wikipedia.org/wiki/John_Doe'
