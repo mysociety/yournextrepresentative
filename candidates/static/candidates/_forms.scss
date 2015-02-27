@@ -38,3 +38,25 @@
     width: auto;
   }
 }
+
+form.login {
+  max-width: 30em;
+
+  label[for="id_remember"] {
+    float: left;
+    margin-right: 0.5em;
+
+    & + input {
+      margin-bottom: 0;
+      vertical-align: 0.2em;
+    }
+  }
+
+  .button + .button {
+    margin-left: 1em;
+  }
+}
+
+form.signup {
+  max-width: 30em;
+}
