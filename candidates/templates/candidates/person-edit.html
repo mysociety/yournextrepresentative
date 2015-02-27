@@ -175,12 +175,18 @@
       {{ form.birth_date.errors }}
     </div>
 
-    <div class="form-item {% if form.source.errors %}form-item--errors{% endif %}">
+    <div class="source-confirmation {% if form.source.errors %}source-confirmation--errors{% endif %}">
       <p>
-        {{ form.source.label_tag }}
+        <label for="{{ form.source.id_for_label }}">
+          {% if form.source.errors %}
+            <strong>You forgot to reference a source!</strong> Can you show us <em>where</em> you heard about this information?
+          {% else %}
+            Before we save that, can you show us <em>where</em> you heard it?
+          {% endif %}
+          {{ settings.SOURCE_HINTS }}
+        </label>
         {{ form.source }}
       </p>
-      {{ form.source.errors }}
     </div>
 
     <input type="submit" class="button" value="Save changes">

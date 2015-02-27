@@ -249,6 +249,39 @@
       border-bottom-color: mix($color-red, #fff, 30%);
     }
   }
+
+  .source-confirmation {
+    margin-top: 3em;
+    margin-bottom: 30px;
+
+    label {
+      color: inherit;
+    }
+
+    & > :last-child {
+      margin-bottom: 0;
+    }
+
+    &:before {
+      @include css-triangle(20px, $color-yellow, top);
+      top: auto;
+      bottom: -30px;
+      left: 10px;
+    }
+  }
+
+  .source-confirmation--errors {
+    color: darken($color-red, 10%);
+    background-color: mix($color-red, #fff, 15%);
+
+    &:before {
+      @include css-triangle(20px, mix($color-red, #fff, 15%), top);
+    }
+
+    input {
+      border-color: mix($color-red, #fff, 50%);
+    }
+  }
 }
 
 @media #{$medium-up} {
