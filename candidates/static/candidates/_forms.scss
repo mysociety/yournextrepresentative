@@ -77,7 +77,7 @@ form.signup {
 }
 
 .form-item--errors {
-  color: $color-red;
+  color: darken($color-red, 10%);
 
   input {
     border-color: mix($color-red, #fff, 40%);
@@ -91,5 +91,20 @@ form.signup {
 
   li {
     font-size: $form-label-font-size;
+  }
+}
+
+.form-error-summary {
+  margin-bottom: 3em;
+  color: darken($color-red, 10%);
+
+  h2 {
+    color: inherit;
+    margin-top: 0;
+    line-height: 1.2em;
+  }
+
+  p {
+    margin-bottom: 0.5em;
   }
 }

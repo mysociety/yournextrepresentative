@@ -30,7 +30,17 @@
   <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
     {% csrf_token %}
 
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      <div class="form-error-summary">
+        <h2>Oops!</h2>
+        <p>We could not accept some of the changes you made.</p>
+        {% if form.non_field_errors %}
+          {{ form.non_field_errors.as_ul }}
+        {% else %}
+          <p>Please check your information matches our requirements, below.</p>
+        {% endif %}
+      </div>
+    {% endif %}
 
     <h2>Personal details:</h2>
 

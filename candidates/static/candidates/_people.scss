@@ -242,6 +242,13 @@
       margin-top: 3em;
     }
   }
+
+  .form-error-summary {
+    h2 {
+      margin-bottom: 0.5em;
+      border-bottom-color: mix($color-red, #fff, 30%);
+    }
+  }
 }
 
 @media #{$medium-up} {
