@@ -1,56 +1,57 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+{% load imagefixes %}
+
 {% block body_class %}person{% endblock %}
 
 {% block hero %}
-  <h1>Edit the details of {{ person.name }}</h1>
+<div class="person__hero">
+  {% if person.image %}
+    <img class="person-avatar" src="{{ person.proxy_image|fixproxyurl }}/0/80"/>
+  {% elif person.gender|lower == 'female' %}
+    <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+  {% else %}
+    <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+  {% endif %}
+  <h1>Editing: {{ person.name }}</h1>
+  {% if last_cons %}
+    <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
+  {% endif %}
+</div>
 {% endblock %}
 
 {% block content %}
-  <p>
-      Thanks for helping out!  Please make sure you read our
-      <a href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit">guidance on sourcing fields</a>.
-  </p>
-  <div class="row">
 
-  <h2>Edit basic candidate details</h2>
+<div class="person__details">
 
-  <div class="row person-edit-separate-form">
-    <div class="columns">
-      <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" class="button" value="Save changes">
-      </form>
-    </div>
+  <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p>You can also <a href="{% url 'photo-upload' person.id %}">upload a photo
+    of {{ person.name }}.</p>
+  <input type="submit" class="button" value="Save changes">
+  </form>
+
+</div>
+
+<div class="person__actions">
+  <div class="person__actions__action person__actions__sourcing">
+    <p>Thanks for helping out! Please make sure you read our
+      <a href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit">guidance on sourcing fields</a>.</p>
   </div>
+</div>
 
-  <h2>Upload a photo of {{ person.name }}</h2>
-
-  <div class="row person-edit-separate-form">
-    <div class="columns">
-      <p>
-        You can also <a href="{% url 'photo-upload' person.id %}">upload
-        a photo of this candidate</a>.</p>
-    </div>
-  </div>
-
-  {% if user.is_superuser %}
-    <h2>Merge another candidate's record into this one</h2>
-
-    <div class="row person-edit-separate-form">
-      <div class="columns">
-        <form id="person-merge" action="{% url 'person-merge' person_id=person.id %}" method="post">
-          {% csrf_token %}
-          <p>
-            <label for="other">Other person to merge into this one:</label>
-            <input id="other" name="other" placeholder="Other person ID" type="text"></input>
-          </p>
-          <input type="submit" class="button" value="Merge people">
-        </form>
-      </div>
-    </div>
-  {% endif %}
+{% if user.is_superuser %}
+  <form id="person-merge" action="{% url 'person-merge' person_id=person.id %}" method="post">
+    {% csrf_token %}
+    <p>
+      <label for="other">Other person to merge into this one:</label>
+      <input id="other" name="other" placeholder="Other person ID" type="text"></input>
+    </p>
+    <input type="submit" class="button" value="Merge people">
+  </form>
+{% endif %}
 
 {% include 'candidates/person-versions.html' %}
 

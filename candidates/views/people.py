@@ -208,6 +208,14 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
+    def get_last_constituency(self, person_data):
+        result = None
+        for year in ('2010', '2015'):
+            cons = person_data['standing_in'].get(year)
+            if cons:
+                result = (year, cons)
+        return result
+
     def get_initial(self):
         initial_data = super(UpdatePersonView, self).get_initial()
         our_person, _ = self.get_person(self.kwargs['person_id'])
@@ -262,6 +270,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         context['person'] = self.api.persons(
             self.kwargs['person_id']
         ).get()['result']
+        context['last_cons'] = self.get_last_constituency(context['person'])
 
         context['photo_form'] = UploadPersonPhotoForm(
             initial={
