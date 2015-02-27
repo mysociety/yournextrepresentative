@@ -60,3 +60,36 @@ form.login {
 form.signup {
   max-width: 30em;
 }
+
+.form-item {
+  margin-bottom: 1.5em;
+
+  input,
+  select,
+  p {
+    margin-bottom: 0;
+  }
+
+  label {
+    color: inherit;
+    margin-bottom: 0.5em;
+  }
+}
+
+.form-item--errors {
+  color: $color-red;
+
+  input {
+    border-color: mix($color-red, #fff, 40%);
+  }
+}
+
+.errorlist {
+  margin: 0;
+  padding: 0.5em 1em 0.5em 2em;
+  background-color: mix($color-red, #fff, 15%);
+
+  li {
+    font-size: $form-label-font-size;
+  }
+}

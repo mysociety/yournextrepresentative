@@ -232,6 +232,16 @@
     // break ultra-long facebook etc links onto two lines
     word-wrap: break-word;
   }
+
+  form {
+    h2 {
+      margin-bottom: 1em;
+    }
+
+    .form-item + h2 {
+      margin-top: 3em;
+    }
+  }
 }
 
 @media #{$medium-up} {
@@ -279,12 +289,21 @@
   }
 }
 
-.person__actions__edit {
+.person__actions__edit,
+.person__actions__sourcing {
   background-color: $color-yellow;
 }
 
 .person__actions__data {
   background-color: mix($color-cyan, #fff, 15%);
+}
+
+.person__actions__merge {
+  background-color: mix($color-red, #fff, 15%);
+
+  label {
+    margin-bottom: 0.5em;
+  }
 }
 
 .person__versions {

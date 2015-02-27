@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 
 from .static_data import MapItData, PartyData
@@ -92,7 +94,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     gender = forms.CharField(
-        label="Gender (e.g. \"male\", \"female\")",
+        label="Gender (e.g. “male”, “female”)",
         max_length=256,
         required=False,
     )
@@ -111,7 +113,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     twitter_username = forms.CharField(
-        label="Twitter username (e.g. \"democlub\")",
+        label="Twitter username (e.g. “democlub”)",
         max_length=256,
         required=False,
     )
@@ -131,7 +133,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     party_ppc_page_url = forms.URLField(
-        label="The party's PPC page for this person",
+        label="The party’s PPC page for this person",
         max_length=256,
         required=False,
     )
@@ -211,7 +213,7 @@ class NewPersonForm(BasePersonForm):
 
 class UpdatePersonForm(BasePersonForm):
     STANDING_CHOICES = (
-        ('not-sure', "Don't Know"),
+        ('not-sure', "Don’t Know"),
         ('standing', "Yes"),
         ('not-standing', "No"),
     )
