@@ -143,3 +143,7 @@ into the root of the PopIt repository, and run:
 ... replacing `candidates` with the slug of your YourNextMP
 PopIt instance, and `popitdev__master` with the name of your PopIt
 master database in MongoDB.
+
+Then set the maximum PopIt person ID by running:
+
+    ./manage.py candidates_set_max_person_id
