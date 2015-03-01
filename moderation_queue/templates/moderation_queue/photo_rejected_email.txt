@@ -1,0 +1,10 @@
+Thank-you for uploading a photo for YourNextMP, but
+unfortunately we can't use that image because:
+
+  {{ reason }}
+
+You can just reply to this email if you want to discuss that
+further.
+
+Many thanks,
+The YourNextMP volunteers

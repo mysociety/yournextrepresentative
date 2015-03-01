@@ -38,3 +38,24 @@ class UploadPersonPhotoForm(forms.ModelForm):
                 "then you must provide a justification for why we can use it."
             raise ValidationError(message)
         return cleaned_data
+
+
+class PhotoReviewForm(forms.Form):
+
+    queued_image_id = forms.IntegerField(
+        required=True,
+        widget=forms.HiddenInput(),
+    )
+    x_min = forms.IntegerField(min_value=0)
+    x_max = forms.IntegerField(min_value=1)
+    y_min = forms.IntegerField(min_value=0)
+    y_max = forms.IntegerField(min_value=1)
+    decision = forms.ChoiceField(choices=QueuedImage.DECISION_CHOICES)
+    rejection_reason = forms.CharField(
+        widget=forms.Textarea(),
+        required=False
+    )
+    justification_for_use = forms.CharField(
+        widget=forms.Textarea(),
+        required=False
+    )

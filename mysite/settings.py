@@ -198,6 +198,7 @@ PIPELINE_CSS = {
     'image-review': {
         'source_filenames': (
             'moderation_queue/css/jquery.Jcrop.css',
+            'moderation_queue/css/crop.scss',
         ),
         'output_filename': 'css/image-review.css',
     },
@@ -219,6 +220,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'moderation_queue/js/jquery.color.js',
             'moderation_queue/js/jquery.Jcrop.js',
+            'moderation_queue/js/crop.js',
         ),
         'output_filename': 'js/image-review.js',
     },
@@ -272,7 +274,7 @@ NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
     '--with-coverage',
-    '--cover-package=candidates,cached_counts,tasks'
+    '--cover-package=candidates,cached_counts,tasks,moderation_queue'
 ]
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
