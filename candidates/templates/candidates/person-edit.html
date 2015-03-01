@@ -12,18 +12,33 @@
       <a href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit">guidance on sourcing fields</a>.
   </p>
   <div class="row">
+
+  <h2>Edit basic candidate details</h2>
+
+  <div class="row person-edit-separate-form">
     <div class="columns">
       <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <p>Trying to upload a photo?  Please email <a href="mailto:yournextmp@mysociety.org">yournextmp@mysociety.org</a> and we'll upload it for you.</p>
         <input type="submit" class="button" value="Save changes">
       </form>
     </div>
   </div>
 
+  <h2>Upload a photo of {{ person.name }}</h2>
+
+  <div class="row person-edit-separate-form">
+    <div class="columns">
+      <p>
+        You can also <a href="{% url 'photo-upload' person.id %}">upload
+        a photo of this candidate</a>.</p>
+    </div>
+  </div>
+
   {% if user.is_superuser %}
-    <div class="row">
+    <h2>Merge another candidate's record into this one</h2>
+
+    <div class="row person-edit-separate-form">
       <div class="columns">
         <form id="person-merge" action="{% url 'person-merge' person_id=person.id %}" method="post">
           {% csrf_token %}

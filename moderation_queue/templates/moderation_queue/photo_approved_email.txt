@@ -1,0 +1,7 @@
+Thank-you for submitting a photo to YourNextMP; that's been
+uploaded now for the candidate page here:
+
+  {{ candidate_page_url }}
+
+Many thanks,
+The YourNextMP volunteers

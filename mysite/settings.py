@@ -91,6 +91,7 @@ INSTALLED_APPS = (
     'candidates',
     'tasks',
     'cached_counts',
+    'moderation_queue',
     'debug_toolbar',
 )
 
@@ -194,6 +195,13 @@ STATICFILES_DIRS = (
 )
 
 PIPELINE_CSS = {
+    'image-review': {
+        'source_filenames': (
+            'moderation_queue/css/jquery.Jcrop.css',
+            'moderation_queue/css/crop.scss',
+        ),
+        'output_filename': 'css/image-review.css',
+    },
     'all': {
         'source_filenames': (
             'candidates/style.scss',
@@ -208,6 +216,14 @@ PIPELINE_CSS = {
 }
 
 PIPELINE_JS = {
+    'image-review': {
+        'source_filenames': (
+            'moderation_queue/js/jquery.color.js',
+            'moderation_queue/js/jquery.Jcrop.js',
+            'moderation_queue/js/crop.js',
+        ),
+        'output_filename': 'js/image-review.js',
+    },
     'all': {
         'source_filenames': (
             'jquery/jquery-1.11.1.js',
@@ -258,7 +274,7 @@ NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
     '--with-coverage',
-    '--cover-package=candidates,cached_counts,tasks'
+    '--cover-package=candidates,cached_counts,tasks,moderation_queue'
 ]
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
