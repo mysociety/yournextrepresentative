@@ -44,12 +44,28 @@
 
     <h2>Personal details:</h2>
 
+    <div class="form-item {% if form.honorific_prefix.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.honorific_prefix.label_tag }}
+        {{ form.honorific_prefix }}
+      </p>
+      {{ form.honorific_prefix.errors }}
+    </div>
+
     <div class="form-item {% if form.name.errors %}form-item--errors{% endif %}">
       <p>
         {{ form.name.label_tag }}
         {{ form.name }}
       </p>
       {{ form.name.errors }}
+    </div>
+
+    <div class="form-item {% if form.honorific_suffix.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.honorific_suffix.label_tag }}
+        {{ form.honorific_suffix }}
+      </p>
+      {{ form.honorific_suffix.errors }}
     </div>
 
     <div class="form-item {% if form.email.errors %}form-item--errors{% endif %}">
