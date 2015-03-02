@@ -15,6 +15,7 @@ from moderation_queue.forms import UploadPersonPhotoForm
 
 from .diffs import get_version_diffs
 from .mixins import CandidacyMixin
+from .version_data import get_client_ip
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
     get_constituency_name_from_mapit_id,
@@ -138,7 +139,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-revert',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=person_id,
             source=change_metadata['information_source'],
@@ -190,7 +191,7 @@ class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, 
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-merge',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=primary_person_id,
             source=change_metadata['information_source'],
@@ -298,7 +299,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-update',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=our_person['id'],
             source=change_metadata['information_source'],
@@ -348,7 +349,7 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
         action = LoggedAction.objects.create(
             user=self.request.user,
             action_type='person-create',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             source=change_metadata['information_source'],
         )

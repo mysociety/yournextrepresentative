@@ -4,6 +4,7 @@ from braces.views import LoginRequiredMixin
 
 from .helpers import get_redirect_from_mapit_id
 from .mixins import CandidacyMixin
+from .version_data import get_client_ip
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import LoggedAction
 from ..static_data import MapItData
@@ -22,7 +23,7 @@ class CandidacyView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Person
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='candidacy-create',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
@@ -60,7 +61,7 @@ class CandidacyDeleteView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, 
         LoggedAction.objects.create(
             user=self.request.user,
             action_type='candidacy-delete',
-            ip_address=self.get_client_ip(self.request),
+            ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
             popit_person_id=form.cleaned_data['person_id'],
             source=change_metadata['information_source'],
