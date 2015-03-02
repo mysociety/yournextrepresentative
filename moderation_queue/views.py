@@ -15,14 +15,14 @@ from PIL import Image
 
 from braces.views import StaffuserRequiredMixin
 
-from candidates.update import PersonParseMixin
+from candidates.update import PersonParseMixin, PersonUpdateMixin
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage
 
 from candidates.popit import create_popit_api_object
 from candidates.models import PopItPerson, LoggedAction
-from candidates.views.version_data import get_client_ip
+from candidates.views.version_data import get_client_ip, get_change_metadata
 
 
 PILLOW_FORMAT_MIME_TYPES = {
@@ -86,7 +86,7 @@ class PhotoReviewList(StaffuserRequiredMixin, ListView):
         return QueuedImage.objects.filter(decision='undecided')
 
 
-class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, TemplateView):
+class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
     template_name = 'moderation_queue/photo-review.html'
@@ -179,6 +179,34 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, TemplateView):
             )
             self.queued_image.decision = 'approved'
             self.queued_image.save()
+            # Now create a new version in PopIt:
+            person_data, _ = self.get_person(
+                self.queued_image.popit_person_id
+            )
+            previous_versions = person_data.pop('versions')
+            update_message = (u'Approved a photo upload from ' +
+                u'{uploading_user} who provided the message: ' +
+                u'"{message}"').format(
+                uploading_user=self.queued_image.user.username,
+                message=self.queued_image.justification_for_use,
+            )
+            change_metadata = get_change_metadata(
+                self.request,
+                update_message
+            )
+            self.update_person(
+                person_data,
+                change_metadata,
+                previous_versions,
+            )
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='photo-approve',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                popit_person_id=self.queued_image.popit_person_id,
+                source=update_message,
+            )
             candidate_path = reverse(
                 'person-view',
                 kwargs={'person_id': self.queued_image.popit_person_id}

@@ -85,6 +85,8 @@ it’s a waste of money.</p>
             merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'photo-upload' %}
             uploaded a photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> for moderation
+          {% elif action.action_type == 'photo-approve' %}
+            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'person-revert' %}
             reverted to an earlier version of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'candidacy-create' %}
