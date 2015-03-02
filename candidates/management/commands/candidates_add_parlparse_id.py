@@ -7,7 +7,7 @@ from lxml import objectify
 
 from candidates.popit import create_popit_api_object
 from candidates.update import PersonParseMixin, PersonUpdateMixin
-from candidates.views import CandidacyMixin
+from candidates.views.version_data import get_change_metadata
 
 CONSTITUENCIES_JSON_FILE = 'data/mapit-WMC-generation-22.json'
 ALL_MEMBERS_XML_FILE = 'data/parlparse/members/all-members-2010.xml'
@@ -31,7 +31,7 @@ PARTY_MAPPING = {
 }
 
 
-class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
+class Command(PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Update candidates' parlparse id"
 
     def handle(self, *args, **options):
@@ -93,7 +93,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
         }
         identifiers.append(identifier)
         person_data['identifiers'] = identifiers
-        change_metadata = self.get_change_metadata(
+        change_metadata = get_change_metadata(
             None,
             'Updated candidate with parlparse person id',
         )

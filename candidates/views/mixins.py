@@ -42,16 +42,6 @@ class ContributorsMixin(object):
 
 class CandidacyMixin(object):
 
-    def get_change_metadata(self, request, information_source):
-        result = {
-            'information_source': information_source,
-            'version_id': create_version_id(),
-            'timestamp': get_current_timestamp()
-        }
-        if request is not None:
-            result['username'] = request.user.username
-        return result
-
     def get_area_from_post_id(self, post_id, mapit_url_key='id'):
         "Get a MapIt area ID from a candidate list organization's PopIt data"
 

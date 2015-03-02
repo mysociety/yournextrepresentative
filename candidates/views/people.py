@@ -15,7 +15,7 @@ from moderation_queue.forms import UploadPersonPhotoForm
 
 from .diffs import get_version_diffs
 from .mixins import CandidacyMixin
-from .version_data import get_client_ip
+from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
     get_constituency_name_from_mapit_id,
@@ -110,7 +110,7 @@ class PersonView(PersonParseMixin, TemplateView):
             return super(PersonView, self).get(request, *args, **kwargs)
 
 
-class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
+class RevertPersonView(LoginRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
 
@@ -131,7 +131,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             message = "Couldn't find the version {0} of person {1}"
             raise Exception(message.format(version_id, person_id))
 
-        change_metadata = self.get_change_metadata(self.request, source)
+        change_metadata = get_change_metadata(self.request, source)
         self.update_person(data_to_revert_to, change_metadata, previous_versions)
 
         # Log that that action has taken place, and will be shown in
@@ -152,7 +152,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             )
         )
 
-class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
+class MergePeopleView(SuperuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
 
@@ -175,7 +175,7 @@ class MergePeopleView(SuperuserRequiredMixin, CandidacyMixin, PersonParseMixin, 
         merged_person = merge_popit_people(primary_person, secondary_person)
         # Update the primary person in PopIt:
         previous_versions = merged_person.pop('versions')
-        change_metadata = self.get_change_metadata(
+        change_metadata = get_change_metadata(
             self.request, 'After merging person {0}'.format(secondary_person_id)
         )
         self.update_person(merged_person, change_metadata, previous_versions)
@@ -286,7 +286,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         data_for_update = copy_person_form_data(form.cleaned_data)
 
         # Extract some fields that we will deal with separately:
-        change_metadata = self.get_change_metadata(
+        change_metadata = get_change_metadata(
             self.request, data_for_update.pop('source')
         )
         standing = data_for_update.pop('standing')
@@ -343,7 +343,7 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PersonUpdateMixin, FormV
     def form_valid(self, form):
         data_for_creation = copy_person_form_data(form.cleaned_data)
 
-        change_metadata = self.get_change_metadata(
+        change_metadata = get_change_metadata(
             self.request, data_for_creation.pop('source')
         )
         action = LoggedAction.objects.create(

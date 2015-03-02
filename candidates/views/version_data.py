@@ -16,3 +16,13 @@ def create_version_id():
 
 def get_current_timestamp():
     return datetime.utcnow().isoformat()
+
+def get_change_metadata(request, information_source):
+    result = {
+        'information_source': information_source,
+        'version_id': create_version_id(),
+        'timestamp': get_current_timestamp()
+    }
+    if request is not None:
+        result['username'] = request.user.username
+    return result
