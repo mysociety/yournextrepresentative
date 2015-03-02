@@ -274,6 +274,7 @@ NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
     '--with-coverage',
+    '--with-yanc',
     '--cover-package=candidates,cached_counts,tasks,moderation_queue'
 ]
 
