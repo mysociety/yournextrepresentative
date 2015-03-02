@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 
-from .version_data import create_version_id
+from .version_data import create_version_id, get_current_timestamp
 from ..models import LoggedAction
 from ..static_data import MapItData
 
@@ -42,14 +42,11 @@ class ContributorsMixin(object):
 
 class CandidacyMixin(object):
 
-    def get_current_timestamp(self):
-        return datetime.utcnow().isoformat()
-
     def get_change_metadata(self, request, information_source):
         result = {
             'information_source': information_source,
             'version_id': create_version_id(),
-            'timestamp': self.get_current_timestamp()
+            'timestamp': get_current_timestamp()
         }
         if request is not None:
             result['username'] = request.user.username
