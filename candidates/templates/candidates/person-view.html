@@ -57,7 +57,7 @@
   <h2>Constituencies:</h2>
 
   <dl>
-    <dt>Contested in 2015</dt>
+    <dt>{% if DATE_TODAY > DATE_ELECTION %}Contested{% else %}Contesting{% endif %} in 2015</dt>
     <dd>{{ person|constituency_in_year:"2015" }}</dd>
     <dt>Contested in 2010</dt>
     <dd>{{ person|constituency_in_year:"2010" }}</dd>
@@ -98,7 +98,7 @@
       {% if dob %}
         <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
       {% else %}
-        <dd>Unknown</dd>
+        <dd>Unknown
       {% endif %}</dd>
     {% endwith %}
   </dl>
