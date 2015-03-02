@@ -1,3 +1,4 @@
+from mock import patch
 from os.path import join, realpath, dirname
 from urlparse import urlsplit
 
@@ -9,6 +10,7 @@ from django_webtest import WebTest
 from webtest import Upload
 
 from ..models import QueuedImage
+from candidates.tests.fake_popit import FakePersonCollection
 
 TEST_MEDIA_ROOT=realpath(join(dirname(__file__), 'media'))
 
@@ -23,7 +25,9 @@ class PhotoUploadTests(WebTest):
         )
 
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-    def test_photo_upload(self):
+    @patch('candidates.popit.PopIt')
+    def test_photo_upload(self, mock_popit):
+        mock_popit.return_value.persons = FakePersonCollection
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
         upload_form_url = reverse(
             'photo-upload',

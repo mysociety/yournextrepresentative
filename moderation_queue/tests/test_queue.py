@@ -96,8 +96,10 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(link_url, '/moderation/photo/review/{0}'.format(self.q1.id))
         self.assertTrue(queue_ul)
 
+    @patch('candidates.popit.PopIt')
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-    def test_photo_review_view_unprivileged(self):
+    def test_photo_review_view_unprivileged(self, mock_popit):
+        mock_popit.return_value.persons = FakePersonCollection
         review_url = reverse(
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
@@ -111,8 +113,10 @@ class PhotoReviewTests(WebTest):
             split_location.query
         )
 
+    @patch('candidates.popit.PopIt')
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-    def test_photo_review_view_privileged(self):
+    def test_photo_review_view_privileged(self, mock_popit):
+        mock_popit.return_value.persons = FakePersonCollection
         review_url = reverse(
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
