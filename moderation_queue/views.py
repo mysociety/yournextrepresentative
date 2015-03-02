@@ -222,6 +222,18 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
         elif decision == 'rejected':
             self.queued_image.decision = 'rejected'
             self.queued_image.save()
+            update_message = u'Rejected a photo upload from ' + \
+                u'{uploading_user}'.format(
+                uploading_user=self.queued_image.user.username,
+            )
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='photo-reject',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version='',
+                popit_person_id=self.queued_image.popit_person_id,
+                source=update_message,
+            )
             self.send_mail(
                 'YourNextMP image moderation results',
                 render_to_string(

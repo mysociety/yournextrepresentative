@@ -227,6 +227,14 @@ class PhotoReviewTests(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual('/moderation/photo/review', split_location.path)
 
+        las = LoggedAction.objects.all()
+        self.assertEqual(1, len(las))
+        la = las[0]
+        self.assertEqual(la.user.username, 'jane')
+        self.assertEqual(la.action_type, 'photo-reject')
+        self.assertEqual(la.popit_person_id, '2009')
+        self.assertEqual(la.source, 'Rejected a photo upload from john')
+
         mock_send_mail.assert_called_once_with(
             'YourNextMP image moderation results',
             u"Thank-you for uploading a photo for YourNextMP, but\nunfortunately we can't use that image because:\n\n  No clear source or copyright statement\n\nYou can just reply to this email if you want to discuss that\nfurther.\n\nMany thanks,\nThe YourNextMP volunteers\n",
