@@ -21,7 +21,8 @@ from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage
 
 from candidates.popit import create_popit_api_object
-from candidates.models import PopItPerson
+from candidates.models import PopItPerson, LoggedAction
+from candidates.views.version_data import get_client_ip
 
 
 PILLOW_FORMAT_MIME_TYPES = {
@@ -39,6 +40,15 @@ def upload_photo(request, popit_person_id):
             queued_image = form.save(commit=False)
             queued_image.user = request.user
             queued_image.save()
+            # Record that action:
+            LoggedAction.objects.create(
+                user=request.user,
+                action_type='photo-upload',
+                ip_address=get_client_ip(request),
+                popit_person_new_version='',
+                popit_person_id=popit_person_id,
+                source=form.cleaned_data['justification_for_use'],
+            )
             return HttpResponseRedirect(reverse(
                 'photo-upload-success',
                 kwargs={
