@@ -33,7 +33,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response.forms['person-details']
 
     @patch('candidates.views.people.UpdatePersonView.get_current_timestamp')
-    @patch('candidates.views.people.UpdatePersonView.create_version_id')
+    @patch('candidates.views.mixins.create_version_id')
     @patch('candidates.views.people.UpdatePersonView.update_person')
     @patch('candidates.views.people.UpdatePersonView.get_person')
     def test_update_person_submission(

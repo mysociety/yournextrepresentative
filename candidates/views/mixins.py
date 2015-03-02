@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 
+from .version_data import create_version_id
 from ..models import LoggedAction
 from ..static_data import MapItData
 
@@ -41,17 +42,13 @@ class ContributorsMixin(object):
 
 class CandidacyMixin(object):
 
-    def create_version_id(self):
-        """Generate a random ID to use to identify a person version"""
-        return "{0:016x}".format(randint(0, sys.maxint))
-
     def get_current_timestamp(self):
         return datetime.utcnow().isoformat()
 
     def get_change_metadata(self, request, information_source):
         result = {
             'information_source': information_source,
-            'version_id': self.create_version_id(),
+            'version_id': create_version_id(),
             'timestamp': self.get_current_timestamp()
         }
         if request is not None:

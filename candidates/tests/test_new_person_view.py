@@ -23,7 +23,7 @@ def fill_form(form, form_dict):
 class TestNewPersonView(TestUserMixin, WebTest):
 
     @patch('candidates.views.people.NewPersonView.get_current_timestamp')
-    @patch('candidates.views.people.NewPersonView.create_version_id')
+    @patch('candidates.views.mixins.create_version_id')
     @patch('candidates.views.people.NewPersonView.create_person')
     def test_new_person_submission(
             self,
