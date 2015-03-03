@@ -23,7 +23,7 @@ import requests
 
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.static_data import MapItData
-from candidates.views import CandidacyMixin
+from candidates.views.version_data import get_change_metadata
 
 from ..images import image_uploaded_already, get_file_md5sum
 
@@ -165,7 +165,7 @@ def key_value_appeared_in_previous_version(key, value, versions):
         return False
 
 
-class Command(CandidacyMixin, PersonParseMixin, PersonUpdateMixin, BaseCommand):
+class Command(PersonParseMixin, PersonUpdateMixin, BaseCommand):
     help = "Import scraped PPC data"
 
     option_list = BaseCommand.option_list + (

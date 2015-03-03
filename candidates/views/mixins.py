@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
 
+from .version_data import create_version_id, get_current_timestamp
 from ..models import LoggedAction
 from ..static_data import MapItData
 
@@ -40,31 +41,6 @@ class ContributorsMixin(object):
 
 
 class CandidacyMixin(object):
-
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[-1].strip()
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
-    def create_version_id(self):
-        """Generate a random ID to use to identify a person version"""
-        return "{0:016x}".format(randint(0, sys.maxint))
-
-    def get_current_timestamp(self):
-        return datetime.utcnow().isoformat()
-
-    def get_change_metadata(self, request, information_source):
-        result = {
-            'information_source': information_source,
-            'version_id': self.create_version_id(),
-            'timestamp': self.get_current_timestamp()
-        }
-        if request is not None:
-            result['username'] = request.user.username
-        return result
 
     def get_area_from_post_id(self, post_id, mapit_url_key='id'):
         "Get a MapIt area ID from a candidate list organization's PopIt data"
