@@ -10,12 +10,13 @@ class UploadPersonPhotoForm(forms.ModelForm):
     class Meta:
         model = QueuedImage
         fields = [
-            'image', 'public_domain', 'use_allowed_by_owner',
+            'image', 'why_allowed',
             'justification_for_use', 'popit_person_id', 'decision'
         ]
         widgets = {
             'popit_person_id': forms.HiddenInput(),
             'decision': forms.HiddenInput(),
+            'why_allowed': forms.RadioSelect(),
             'justification_for_use': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
             )
@@ -29,13 +30,13 @@ class UploadPersonPhotoForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(UploadPersonPhotoForm, self).clean()
-        public_domain = cleaned_data.get('public_domain')
-        use_allowed_by_owner = cleaned_data.get('use_allowed_by_owner')
-        definitely_allowed = public_domain or use_allowed_by_owner
-        justification_for_use = cleaned_data.get('justification_for_use', '').strip()
-        if not (justification_for_use or definitely_allowed):
-            message = "If the photo isn't public domain or owned by you, " + \
-                "then you must provide a justification for why we can use it."
+        justification_for_use = cleaned_data.get(
+            'justification_for_use', ''
+        ).strip()
+        why_allowed = cleaned_data.get('why_allowed')
+        if why_allowed == 'other' and not justification_for_use:
+            message = "If you checked 'Other' then you must provide a " + \
+                "justification for why we can use it."
             raise ValidationError(message)
         return cleaned_data
 

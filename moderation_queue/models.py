@@ -16,8 +16,31 @@ class QueuedImage(models.Model):
         (UNDECIDED, 'Undecided'),
     )
 
-    public_domain = models.BooleanField(default=False)
-    use_allowed_by_owner = models.BooleanField(default=False)
+    PUBLIC_DOMAIN = 'public-domain'
+    COPYRIGHT_ASSIGNED = 'copyright-assigned'
+    PROFILE_PHOTO = 'profile-photo'
+    OTHER = 'other'
+
+    WHY_ALLOWED_CHOICES = (
+        (PUBLIC_DOMAIN,
+         "This photograph is free of any copyright restrictions"),
+        (COPYRIGHT_ASSIGNED,
+         "I own copyright of this photo and I assign the copyright " + \
+         "to Democracy Club Limited in return for it being displayed " + \
+         "on YourNextMP"),
+        (PROFILE_PHOTO,
+         "This is the candidate's public profile photo from social " + \
+         "media (e.g. Twitter, Facebook) or their official campaign " + \
+         "page"),
+        (OTHER,
+         "Other"),
+    )
+
+    why_allowed = models.CharField(
+        max_length=64,
+        choices=WHY_ALLOWED_CHOICES,
+        default=OTHER,
+    )
     justification_for_use = models.TextField(blank=True)
     decision = models.CharField(
         max_length=32,

@@ -123,8 +123,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
                 'decision': self.queued_image.decision,
             }
         )
-        context['public_domain'] = self.queued_image.public_domain
-        context['use_allowed_by_owner'] = self.queued_image.use_allowed_by_owner
+        context['why_allowed'] = self.queued_image.why_allowed
         context['justification_for_use'] = self.queued_image.justification_for_use
         context['google_image_search_url'] = self.get_google_image_search_url(
             context['person'], context['person_extra']
@@ -151,13 +150,12 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             person_id=self.queued_image.popit_person_id
         )
         data = {
-            k: unicode(getattr(self.queued_image, k))
-            for k in
-            ('public_domain', 'use_allowed_by_owner', 'justification_for_use')
+            'why_allowed': self.queued_image.why_allowed,
+            'justification_for_use': self.queued_image.justification_for_use,
+            'mime_type': PILLOW_FORMAT_MIME_TYPES[original.format],
+            'notes': 'Approved from photo moderation queue',
+            'uploaded_by_user': self.queued_image.user.username,
         }
-        data['mime_type'] = PILLOW_FORMAT_MIME_TYPES[original.format]
-        data['notes'] = 'Approved from photo moderation queue'
-        data['uploaded_by_user'] = self.queued_image.user.username
         with open(ntf.name) as f:
             requests.post(
                 image_upload_url,

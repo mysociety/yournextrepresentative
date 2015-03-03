@@ -8,21 +8,12 @@
   <p>
     {{ form.image }}
   </p>
-  <p>Now let us know about the copyright of this image by selecting of
+  <p>Now let us know about the copyright of this image by selecting one of
    these options or explaining why we can use it:</p>
-  <p>
-    {{ form.public_domain.errors }}
-    {{ form.public_domain }}
-    <label for="{{ form.public_domain.id_for_label }}">This photograph is free
-      of copyright restrictions (e.g. in the public domain):</label>
-  </p>
-  <p>
-    {{ form.use_allowed_by_owner.errors }}
-    {{ form.use_allowed_by_owner }}
-    <label for="{{ form.use_allowed_by_owner.id_for_label }}">I own copyright
-      of this photo and I assign the copyright to Democracy Club in return for
-      it being displayed on YourNextMP:</label>
-  </p>
+  <div class="photo-why-allowed-radio-buttons">
+    {{ form.why_allowed.errors }}
+    {{ form.why_allowed }}
+  </div>
   <p>
     {{ form.justification_for_use.errors }}
     <label for="{{ form.justification_for_use.id_for_label }}">Here is my

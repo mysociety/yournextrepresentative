@@ -40,7 +40,7 @@ class PhotoUploadTests(WebTest):
         form = form_page_response.forms['person-upload-photo']
         with open(image_filename) as f:
             form['image'] = Upload('pilot.jpg', f.read())
-        form['use_allowed_by_owner'] = True
+        form['why_allowed'] = 'copyright-assigned'
         form['justification_for_use'] = 'I took this photo'
         upload_response = form.submit()
         self.assertEqual(upload_response.status_code, 302)
@@ -50,8 +50,7 @@ class PhotoUploadTests(WebTest):
         self.assertEqual(1, queued_images.count())
         queued_image = list(queued_images)[0]
         self.assertEqual(queued_image.decision, 'undecided')
-        self.assertTrue(queued_image.use_allowed_by_owner)
-        self.assertFalse(queued_image.public_domain)
+        self.assertEqual(queued_image.why_allowed, 'copyright-assigned')
         self.assertEqual(
             queued_image.justification_for_use,
             'I took this photo'

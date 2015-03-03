@@ -31,8 +31,7 @@ class PhotoReviewTests(WebTest):
             'alsonotagoodpassword',
         )
         self.q1 = QueuedImage.objects.create(
-            public_domain=True,
-            use_allowed_by_owner=False,
+            why_allowed='public-domain',
             justification_for_use="Here's why I believe it's public domain",
             decision='undecided',
             image='pilot.jpg',
@@ -40,8 +39,7 @@ class PhotoReviewTests(WebTest):
             user=self.test_upload_user
         )
         self.q2 = QueuedImage.objects.create(
-            public_domain=False,
-            use_allowed_by_owner=True,
+            why_allowed='copyright-assigned',
             justification_for_use="I took this last week",
             decision='approved',
             image='pilot.jpg',
@@ -49,8 +47,7 @@ class PhotoReviewTests(WebTest):
             user=self.test_upload_user
         )
         self.q3 = QueuedImage.objects.create(
-            public_domain=False,
-            use_allowed_by_owner=False,
+            why_allowed='other',
             justification_for_use="I found it somewhere",
             decision='rejected',
             image='pilot.jpg',
@@ -185,10 +182,8 @@ class PhotoReviewTests(WebTest):
             post_call_kwargs['data'],
             {'justification_for_use':
              u"Here's why I believe it's public domain",
-             'use_allowed_by_owner':
-             u'False',
              'notes': 'Approved from photo moderation queue',
-             'public_domain': u'True',
+             'why_allowed': u'public-domain',
              'uploaded_by_user': u'john',
              'mime_type': 'image/jpeg'}
         )

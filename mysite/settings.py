@@ -199,6 +199,7 @@ PIPELINE_CSS = {
         'source_filenames': (
             'moderation_queue/css/jquery.Jcrop.css',
             'moderation_queue/css/crop.scss',
+            'moderation_queue/css/photo-upload.scss',
         ),
         'output_filename': 'css/image-review.css',
     },

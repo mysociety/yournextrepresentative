@@ -68,24 +68,31 @@ Image search</a> may be a good start.</p>
 
   <h3>User-submitted information</h3>
 
-  {% if public_domain %}
-    <p>
-      The photo is free of copyright restriction (e.g. in the public domain)
-    </p>
-  {% endif %}
+  {% with username=queued_image.user.username %}
 
-  {% if use_allowed_by_owner %}
-    <p>
-      The user assigned the copyright to Democracy Club
-    </p>
-  {% endif %}
+    {% if why_allowed == 'public-domain' %}
+      <p>
+        {{ username }} asserted that photo is free of copyright restrictions
+      </p>
+    {% elif why_allowed == 'copyright-assigned' %}
+      <p>
+        {{ username }} assigned the copyright to Democracy Club
+      </p>
+    {% elif why_allowed == 'profile-photo' %}
+      <p>
+        {{ username }} said that this is the candidate's public profile
+        photo from social media or their official campaign page
+      </p>
+    {% endif %}
 
-  {% if justification_for_use %}
-    <p>
-      The user's justification for use of this photo was:
-      &#8220;{{ justification_for_use }}&#8221;
-    </p>
-  {% endif %}
+    {% if justification_for_use %}
+      <p>
+        {{ username }}'s justification for use of this photo was:
+        &#8220;{{ justification_for_use }}&#8221;
+      </p>
+    {% endif %}
+
+  {% endwith %}
 
   <h3>Your decision</h3>
 
