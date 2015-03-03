@@ -10,6 +10,7 @@ from slugify import slugify
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
@@ -596,3 +597,10 @@ class PersonRedirect(models.Model):
 class UserTermsAgreement(models.Model):
     user = models.OneToOneField(User, related_name='terms_agreement')
     assigned_to_dc = models.BooleanField(default=False)
+
+
+def create_user_terms_agreement(sender, instance, created, **kwargs):
+    if created:
+        UserTermsAgreement.objects.create(user=instance)
+
+post_save.connect(create_user_terms_agreement, sender=User)
