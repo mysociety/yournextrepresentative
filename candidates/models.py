@@ -591,3 +591,8 @@ class PersonRedirect(models.Model):
     after two people are merged'''
     old_person_id = models.IntegerField()
     new_person_id = models.IntegerField()
+
+
+class UserTermsAgreement(models.Model):
+    user = models.OneToOneField(User, related_name='terms_agreement')
+    assigned_to_dc = models.BooleanField(default=False)
