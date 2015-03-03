@@ -25,11 +25,15 @@ class PhotoReviewTests(WebTest):
             'john@example.com',
             'notagoodpassword',
         )
+        self.test_upload_user.terms_agreement.assigned_to_dc = True
+        self.test_upload_user.terms_agreement.save()
         self.test_superuser = User.objects.create_superuser(
             'jane',
             'jane@example.com',
             'alsonotagoodpassword',
         )
+        self.test_superuser.terms_agreement.assigned_to_dc = True
+        self.test_superuser.terms_agreement.save()
         self.q1 = QueuedImage.objects.create(
             why_allowed='public-domain',
             justification_for_use="Here's why I believe it's public domain",

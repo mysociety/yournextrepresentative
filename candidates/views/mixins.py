@@ -5,8 +5,11 @@ import sys
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 from django.utils import timezone
+from django.utils.http import urlquote
 
 from .version_data import create_version_id, get_current_timestamp
 from ..models import LoggedAction

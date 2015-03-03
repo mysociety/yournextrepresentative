@@ -25,6 +25,33 @@ class TestNewPersonView(TestUserMixin, WebTest):
     @patch('candidates.views.version_data.get_current_timestamp')
     @patch('candidates.views.version_data.create_version_id')
     @patch('candidates.views.people.NewPersonView.create_person')
+    def test_new_person_submission_refused_copyright(
+            self,
+            mock_create_person,
+            mock_create_version_id,
+            mock_get_current_timestamp,
+            mock_popit):
+        # Get the constituency page:
+        mock_popit.return_value.organizations = FakeOrganizationCollection
+        mock_popit.return_value.persons = FakePersonCollection
+        # Just a smoke test for the moment:
+        response = self.app.get(
+            '/constituency/65808/dulwich-and-west-norwood',
+            user=self.user_refused
+        )
+        split_location = urlsplit(response.location)
+        self.assertEqual(
+            '/copyright-question',
+            split_location.path
+        )
+        self.assertEqual(
+            'next=/constituency/65808/dulwich-and-west-norwood',
+            split_location.query
+        )
+
+    @patch('candidates.views.version_data.get_current_timestamp')
+    @patch('candidates.views.version_data.create_version_id')
+    @patch('candidates.views.people.NewPersonView.create_person')
     def test_new_person_submission(
             self,
             mock_create_person,

@@ -1,3 +1,4 @@
+from .agreement import *
 from .candidacies import *
 from .constituencies import *
 from .frontpage import *

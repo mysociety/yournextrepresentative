@@ -9,7 +9,8 @@ from candidates.views import (ConstituencyPostcodeFinderView,
     CandidacyDeleteView, NewPersonView, UpdatePersonView, RevertPersonView,
     MergePeopleView, PersonView, PartyDetailView, PartyListView,
     HelpApiView, HelpAboutView,
-    ConstituencyListView, RecentChangesView, LeaderboardView)
+    ConstituencyListView, RecentChangesView, LeaderboardView,
+    AskForCopyrightAssigment)
 from .feeds import RecentChangesFeed
 
 urlpatterns = patterns('',
@@ -64,5 +65,8 @@ urlpatterns = patterns('',
     url(r'^help/privacy',
         TemplateView.as_view(template_name="candidates/privacy.html"),
         name='help-privacy'),
+    url(r'^copyright-question',
+        AskForCopyrightAssigment.as_view(),
+        name='ask-for-copyright-assignment'),
     url(r'^admin/', include(admin.site.urls)),
 )
