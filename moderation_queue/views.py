@@ -85,7 +85,9 @@ class PhotoReviewList(StaffuserRequiredMixin, ListView):
     template_name = 'moderation_queue/photo-review-list.html'
 
     def get_queryset(self):
-        return QueuedImage.objects.filter(decision='undecided')
+        return QueuedImage.objects. \
+            filter(decision='undecided'). \
+            order_by('-created')
 
 
 class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
