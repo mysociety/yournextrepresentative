@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from .mapit import get_wmc_from_postcode, BaseMapItException
+from .models import UserTermsAgreement
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
@@ -261,3 +262,21 @@ class UpdatePersonForm(BasePersonForm):
         if cleaned_data['standing'] == 'standing':
             return self.check_party_and_constituency_are_selected(cleaned_data)
         return cleaned_data
+
+class UserTermsAgreementForm(forms.Form):
+
+    assigned_to_dc = forms.BooleanField(required=False)
+    next_path = forms.CharField(
+        max_length=512,
+        widget=forms.HiddenInput(),
+    )
+
+    def clean_assigned_to_dc(self):
+        assigned_to_dc = self.cleaned_data['assigned_to_dc']
+        if not assigned_to_dc:
+            message = (
+                "You can only edit data on YourNextMP if you agree to "
+                "this copyright assignment."
+            )
+            raise ValidationError(message)
+        return assigned_to_dc

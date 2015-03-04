@@ -23,6 +23,8 @@ class PhotoUploadTests(WebTest):
             'john@example.com',
             'notagoodpassword',
         )
+        self.test_upload_user.terms_agreement.assigned_to_dc = True
+        self.test_upload_user.terms_agreement.save()
 
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @patch('candidates.popit.PopIt')

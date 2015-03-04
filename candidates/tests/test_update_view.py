@@ -21,6 +21,13 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         self.assertEqual('/accounts/login/', split_location.path)
         self.assertEqual('next=/person/2009/update', split_location.query)
 
+    def test_update_person_view_get_refused_copyright(self, mock_popit):
+        response = self.app.get('/person/2009/update', user=self.user_refused)
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual('/copyright-question', split_location.path)
+        self.assertEqual('next=/person/2009/update', split_location.query)
+
     @patch('candidates.views.people.UpdatePersonView.get_person')
     def test_update_person_view_get(self, mock_get_person, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
@@ -31,6 +38,36 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         # For the moment just check that the form's actually there:
         response = self.app.get('/person/2009/update', user=self.user)
         response.forms['person-details']
+
+    @patch('candidates.views.version_data.get_current_timestamp')
+    @patch('candidates.views.version_data.create_version_id')
+    @patch('candidates.views.people.UpdatePersonView.update_person')
+    @patch('candidates.views.people.UpdatePersonView.get_person')
+    def test_update_person_submission_copyright_refused(
+            self,
+            mock_get_person,
+            mock_update_person,
+            mock_create_version_id,
+            mock_get_current_timestamp,
+            mock_popit):
+        mock_popit.return_value.persons = FakePersonCollection
+        mock_get_current_timestamp.return_value = example_timestamp
+        mock_create_version_id.return_value = example_version_id
+        mock_get_person.return_value = (
+            get_example_popit_json('persons_2009_ynmp.json'),
+            {}
+        )
+        response = self.app.get('/person/2009/update', user=self.user)
+        form = response.forms['person-details']
+        form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
+        form['party_gb'] = 'party:90'
+        form['party_ni'] = 'party:none'
+        form['source'] = "Some source of this information"
+        submission_response = form.submit(user=self.user_refused)
+        split_location = urlsplit(submission_response.location)
+        self.assertEqual('/copyright-question', split_location.path)
+        self.assertEqual('next=/person/2009/update', split_location.query)
+        self.assertFalse(mock_update_person.called)
 
     @patch('candidates.views.version_data.get_current_timestamp')
     @patch('candidates.views.version_data.create_version_id')

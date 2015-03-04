@@ -9,7 +9,16 @@ class TestUserMixin(object):
             'john@example.com',
             'notagoodpassword',
         )
+        terms = cls.user.terms_agreement
+        terms.assigned_to_dc = True
+        terms.save()
+        cls.user_refused = User.objects.create_user(
+            'johnrefused',
+            'johnrefused@example.com',
+            'notagoodpasswordeither',
+        )
 
     @classmethod
     def tearDownClass(cls):
+        cls.user_refused.delete()
         cls.user.delete()
