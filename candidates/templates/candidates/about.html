@@ -34,26 +34,36 @@ of known bugs</a> there as well.</p>
 Burg's <a href="http://www.yournextmp.com">YourNextMP.com</a>,
 with many thanks.</p>
 
-<p>You can use the data from this site under the terms of the
-Creative Commons license
+<p>You can use the data from this site, via the
+<a href="{% url 'help-api' %}">API or CSV download</a>, under the
+terms of the Creative Commons license
 <a href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike
 (CC-BY-SA)</a> with the exception of:</p>
 
 <ul>
 <li>The party logos, which are taken from the Electoral Commission's website</li>
-<li>and candidate photos. The candidate photos are either
+<li>and candidate photos. The candidate photos are typically either
 submitted by the candidates themselves, or from sources where it
 seems reasonable that we might use them on this site, such as
 the party's official page for that candidate.</li>
 </ul>
 
-<p>By submitting data to this site, you agree that it may be
-distributed from this site
-under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA</a>
-or (in case we decide to offer it under alternative licenses
-after <a href="https://github.com/mysociety/yournextmp-popit/issues/62">further
-discussion</a>) <a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0</a>
-or <a href="http://opendatacommons.org/licenses/odbl/">ODbL</a>.
+<p>If the CC-BY-SA licence is problematic for you, but you feel that
+you have a worthwhile use of the data in mind,
+please <a href="mailto:yournextmp@mysociety.org">contact us</a> to
+discuss your situation further.</p>
+
+<p>For complicated reasons relating to database licensing, we have put
+the data as of the 4th of March 2015 into the public domain by
+declaring it to
+be <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. This
+data is available
+<a href="{{ MEDIA_URL }}csv-archives/cc0-snapshot-out-of-date/">here</a>
+but please be warned that this snapshot will become inaccurate very quickly
+- please use
+<a href="{% url 'help-api' %}">the up-to-date data</a> instead.
+
+<h3>Privacy Policy</h3>
 
 <p>The privacy policy of this site can be found
 <a href="{% url 'help-privacy' %}">here</a>.</p>
