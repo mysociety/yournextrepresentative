@@ -71,6 +71,14 @@ Image search</a> may be a good start.</p>
 
   {% with username=queued_image.user.username %}
 
+    <p>Uploaded by username with confirmed email
+      <tt>{{ queued_image.user.email }}</tt>.
+      {% if person.email %}
+        (The candidate's unconfirmed email address is
+        <tt>{{ person.email }}</tt>.)
+      {% endif %}
+      </p>
+
     {% if why_allowed == 'public-domain' %}
       <p>
         {{ username }} asserted that photo is free of copyright restrictions
