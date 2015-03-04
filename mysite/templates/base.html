@@ -56,11 +56,11 @@
         {% if user.is_authenticated %}
           <span class="header__nav__logout">
             Signed in as <strong>{{ user.username }}</strong>
-            <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}">Log out</a>
+            <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}">Sign out</a>
           </span>
         {% else %}
           <a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}"
-             class="header__nav__login">Log in to edit</a>
+             class="header__nav__login">Sign in to edit</a>
         {% endif %}
       </div>
       <div class="header__hero">
