@@ -10,19 +10,27 @@
 
 {% block content %}
 
-  <ul class="photo-review-queue">
-  {% for queued_image in object_list %}
-    <li>
-      <a href="{% url 'photo-review' queued_image_id=queued_image.id %}">
-        Photo of candidate {{ queued_image.popit_person_id }} uploaded by
-        {{ queued_image.user.username }}.
-      </a>
-    </li>
-  {% empty %}
-    <li>
-      <strong>Congratulations!</strong> There are no more photos to review.
-    </li>
-  {% endfor %}
-  </ul>
+  {% if object_list %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date uploaded</th>
+          <th>Uploading user</th>
+          <th>Candidate ID</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for queued_image in object_list %}
+        <tr>
+          <td>{{ queued_image.created }}</td>
+          <td>{{ queued_image.user.username }}</td>
+          <td>{{ queued_image.popit_person_id }}</td>
+          <td><a href="{% url 'photo-review' queued_image_id=queued_image.id %}">Review</a></td>
+        </tr>
+      {% endfor %}
+      <tbody>
+    </table>
+  {% endif %}
 
 {% endblock %}
