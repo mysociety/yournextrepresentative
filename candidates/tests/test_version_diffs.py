@@ -460,7 +460,7 @@ class TestVersionDiffs(TestCase):
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
-                            'identifier': '2959',
+                            'identifier': '2009',
                             'id': '123456',
                         },
                     ],
@@ -481,7 +481,7 @@ class TestVersionDiffs(TestCase):
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
-                            'identifier': '2959',
+                            'identifier': '2009',
                             'id': '123457',
                         }
                     ],
@@ -506,7 +506,7 @@ class TestVersionDiffs(TestCase):
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
-                            'identifier': '2959',
+                            'identifier': '2009',
                         },
                     ],
                     'other_names': [
@@ -543,7 +543,7 @@ class TestVersionDiffs(TestCase):
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
-                            'identifier': '2959',
+                            'identifier': '2009',
                         },
                     ],
                     'other_names': [
@@ -561,7 +561,7 @@ class TestVersionDiffs(TestCase):
                         "path": "identifiers",
                         "value": [
                             {
-                                "identifier": "2959",
+                                "identifier": "2009",
                                 "scheme": "yournextmp-candidate"
                             }
                         ]
