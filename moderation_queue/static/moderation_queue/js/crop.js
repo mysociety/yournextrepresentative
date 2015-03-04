@@ -5,16 +5,19 @@ jQuery(function($) {
     if (value == 'rejected') {
       $('.rejection_reason').show();
       $('.justification_for_use').hide();
+      $('.moderator-reason').hide();
       $('#decision-submit').val('Reject');
       $('#decision-submit').show();
     } else if (value == 'approved') {
       $('.rejection_reason').hide();
       $('.justification_for_use').show();
+      $('.moderator-reason').show();
       $('#decision-submit').val('Approve');
       $('#decision-submit').show();
     } else if (value == 'undecided') {
       $('.rejection_reason').hide();
       $('.justification_for_use').show();
+      $('.moderator-reason').hide();
       $('#decision-submit').hide();
     }
   }

@@ -60,3 +60,6 @@ class PhotoReviewForm(forms.Form):
         widget=forms.Textarea(),
         required=False
     )
+    moderator_why_allowed = forms.ChoiceField(
+        choices=QueuedImage.WHY_ALLOWED_CHOICES
+    )

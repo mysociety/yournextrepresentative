@@ -126,6 +126,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             }
         )
         context['why_allowed'] = self.queued_image.why_allowed
+        context['moderator_why_allowed'] = self.queued_image.why_allowed
         context['justification_for_use'] = self.queued_image.justification_for_use
         context['google_image_search_url'] = self.get_google_image_search_url(
             context['person'], context['person_extra']
@@ -141,7 +142,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             fail_silently=False,
         )
 
-    def crop_and_upload_image_to_popit(self, image_filename, crop_bounds):
+    def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed):
         original = Image.open(image_filename)
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
@@ -152,8 +153,9 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             person_id=self.queued_image.popit_person_id
         )
         data = {
-            'why_allowed': self.queued_image.why_allowed,
-            'justification_for_use': self.queued_image.justification_for_use,
+            'user_why_allowed': self.queued_image.why_allowed,
+            'user_justification_for_use': self.queued_image.justification_for_use,
+            'moderator_why_allowed': moderator_why_allowed,
             'mime_type': PILLOW_FORMAT_MIME_TYPES[original.format],
             'notes': 'Approved from photo moderation queue',
             'uploaded_by_user': self.queued_image.user.username,
@@ -175,7 +177,8 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             self.crop_and_upload_image_to_popit(
                 self.queued_image.image.path,
                 [form.cleaned_data[e] for e in
-                 ('x_min', 'y_min', 'x_max', 'y_max')]
+                 ('x_min', 'y_min', 'x_max', 'y_max')],
+                form.cleaned_data['moderator_why_allowed']
             )
             self.queued_image.decision = 'approved'
             self.queued_image.save()

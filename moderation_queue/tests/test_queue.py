@@ -36,7 +36,7 @@ class PhotoReviewTests(WebTest):
         self.test_superuser.terms_agreement.save()
         self.q1 = QueuedImage.objects.create(
             why_allowed='public-domain',
-            justification_for_use="Here's why I believe it's public domain",
+            justification_for_use="It's their Twitter avatar",
             decision='undecided',
             image='pilot.jpg',
             popit_person_id='2009',
@@ -158,6 +158,7 @@ class PhotoReviewTests(WebTest):
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'approved'
+        form['moderator_why_allowed'] = 'profile-photo'
         response = form.submit(user=self.test_superuser)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
@@ -184,10 +185,11 @@ class PhotoReviewTests(WebTest):
         self.assertIn('APIKey', post_call_kwargs['headers'])
         self.assertEqual(
             post_call_kwargs['data'],
-            {'justification_for_use':
-             u"Here's why I believe it's public domain",
+            {'user_justification_for_use':
+             u"It's their Twitter avatar",
              'notes': 'Approved from photo moderation queue',
-             'why_allowed': u'public-domain',
+             'user_why_allowed': u'public-domain',
+             'moderator_why_allowed': u'profile-photo',
              'uploaded_by_user': u'john',
              'mime_type': 'image/jpeg'}
         )

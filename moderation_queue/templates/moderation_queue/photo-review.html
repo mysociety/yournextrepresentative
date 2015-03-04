@@ -97,24 +97,33 @@ Image search</a> may be a good start.</p>
 
   <h3>Your decision</h3>
 
-  <p>
-      {{ form.decision.errors }}
-      <label for="{{ form.decision.id_for_label }}">Decision:</label>
-      {{ form.decision }}
-  </p>
+  <div id="moderator-photo-decision">
+    <p>
+        {{ form.decision.errors }}
+        <label for="{{ form.decision.id_for_label }}">Decision:</label>
+        {{ form.decision }}
+    </p>
 
-  <p class="rejection_reason">
-      {{ form.rejection_reason.errors }}
-      <label for="{{ form.rejection_reason.id_for_label }}">Reason
-        for rejection (<strong>Warning:</strong> this will be emailed to
-        the user):
-      </label>
-      {{ form.rejection_reason }}
-  </p>
+    <p class="moderator-reason">
+        {{ form.moderator_why_allowed.errors }}
+        <label for="{{ moderator_why_allowed.id_for_label }}">Why <em>you</em> think it's allowed:</label>
+        {{ form.moderator_why_allowed }}
+    </p>
 
-  <input type="submit" id="decision-submit" class="button" value="Submit">
+    <p class="rejection_reason">
+        {{ form.rejection_reason.errors }}
+        <label for="{{ form.rejection_reason.id_for_label }}">Reason
+          for rejection (<strong>Warning:</strong> this will be emailed to
+          the user):
+        </label>
+        {{ form.rejection_reason }}
+    </p>
 
-  <a href="{% url 'photo-review-list' %}" class="button">Cancel</a>
+    <input type="submit" id="decision-submit" class="button" value="Submit">
+
+    <a href="{% url 'photo-review-list' %}" class="button">Cancel</a>
+  <div>
+
 
 </form>
 
