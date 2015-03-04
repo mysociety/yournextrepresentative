@@ -3,6 +3,7 @@ import requests
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -32,6 +33,7 @@ PILLOW_FORMAT_MIME_TYPES = {
 }
 
 
+@login_required
 def upload_photo(request, popit_person_id):
     if request.method == 'POST':
         form = UploadPersonPhotoForm(request.POST, request.FILES)
