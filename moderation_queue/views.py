@@ -87,7 +87,7 @@ class PhotoReviewList(StaffuserRequiredMixin, ListView):
     def get_queryset(self):
         return QueuedImage.objects. \
             filter(decision='undecided'). \
-            order_by('-created')
+            order_by('created')
 
 
 class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
