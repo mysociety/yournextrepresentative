@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 from tempfile import NamedTemporaryFile
 
@@ -90,6 +91,20 @@ class PhotoReviewList(StaffuserRequiredMixin, ListView):
             order_by('created')
 
 
+def tidy_party_name(name):
+    """If a party name contains an initialism in brackets, use that instead
+
+    >>> tidy_party_name('Hello World Party (HWP)')
+    'HWP'
+    >>> tidy_party_name('Hello World Party')
+    'Hello World Party'
+    """
+    m = re.search(r'\(([A-Z]+)\)', name)
+    if m:
+        return m.group(1)
+    return name
+
+
 class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
@@ -99,7 +114,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
     def get_google_image_search_url(self, person, person_extra):
         image_search_query = '"{name}" "{party}"'.format(
             name=person['name'],
-            party=person_extra['last_party']['name']
+            party=tidy_party_name(person_extra['last_party']['name'])
         )
         cons_2015 = person['standing_in'].get('2015')
         if cons_2015:
