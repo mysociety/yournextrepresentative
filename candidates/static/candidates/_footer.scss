@@ -17,12 +17,17 @@ body,
   }
 
   p + p {
-    margin-top: 0.5em;
+    margin-top: 1em;
   }
 }
 
 .footer__links {
   margin-bottom: 0.5em;
+}
+
+.dc-logo {
+    height: 45px;
+    margin-left: 0.5em;
 }
 
 @media #{$medium-up} {
