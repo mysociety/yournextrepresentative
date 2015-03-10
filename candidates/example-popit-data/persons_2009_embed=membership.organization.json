@@ -5,6 +5,8 @@
     "slug": "tessa-jowell",
     "name": "Tessa Jowell",
     "gender": "female",
+    "honorific_prefix": "Ms",
+    "honorific_suffix": "DBE",
     "phone": "02086931826",
     "email": "jowell@example.com",
     "standing_in": {

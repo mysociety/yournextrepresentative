@@ -420,7 +420,7 @@ class PopItPerson(object):
         row = {
             'honorific_prefix': self.popit_data.get('honorific_prefix', ''),
             'name': self.name,
-            'honorific_suffix': self.popit_data.get('honorific_prefix', ''),
+            'honorific_suffix': self.popit_data.get('honorific_suffix', ''),
             'id': self.id,
             'party': person_data['party_memberships']['2015']['name'],
             'constituency': self.standing_in['2015']['name'],
