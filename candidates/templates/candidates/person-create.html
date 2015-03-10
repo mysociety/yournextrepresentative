@@ -10,7 +10,7 @@
   <form id="person-details" action="{% url 'person-create' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" class="button" value="Save changes">
+    <input type="submit" class="button" value="Save changes" data-value-after-click="Saving changes…">
   </form>
 
 {% include 'candidates/person-versions.html' %}

@@ -98,8 +98,16 @@ function setUpStandingCheckbox() {
   });
 }
 
+function setUpOneClickSubmitButtons() {
+  $('[data-value-after-click]').on('click', function(){
+    var val = $(this).attr('data-value-after-click');
+    $(this).val(val).prop('disabled', true);
+  });
+}
+
 $(document).ready(function() {
   setUpPartySelect2s();
   setUpConstituencySelect2();
   setUpStandingCheckbox();
+  setUpOneClickSubmitButtons();
 });
