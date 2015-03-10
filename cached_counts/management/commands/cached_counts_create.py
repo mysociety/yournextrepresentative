@@ -18,7 +18,7 @@ class Command(PopItApiMixin, BaseCommand):
         counts = {
             'candidates_2010': 0,
             'candidates_2015': 0,
-            'parties': {name: {'count': 0, 'party_id': party_id}
+            'parties': {party_id: {'count': 0, 'party_name': name}
                         for party_id, name in all_parties.items()},
             'constituencies': {n[1]['name']: {'count': 0, 'con_id':n[1]['id']}
                                 for n in all_constituencies},
@@ -40,12 +40,12 @@ class Command(PopItApiMixin, BaseCommand):
                 counts['candidates_2010'] += 1
             if person['standing_in'].get('2015'):
                 counts['candidates_2015'] += 1
-                party_name = person['party_memberships']['2015']['name']
-                counts['parties'][party_name]['count'] += 1
+                party_id = person['party_memberships']['2015']['id']
+                counts['parties'][party_id]['count'] += 1
                 constituency_name = person['standing_in']['2015']['name']
                 counts['constituencies'][constituency_name]['count'] += 1
                 if person['standing_in'].get('2010'):
-                    if party_name == person['party_memberships']['2010']['name']:
+                    if party_id == person['party_memberships']['2010']['id']:
                         standing_again_same_party += 1
                     else:
                         standing_again_different_party += 1
@@ -54,12 +54,12 @@ class Command(PopItApiMixin, BaseCommand):
 
         # Add or create objects in the database
         # Parties
-        for party_name, data in counts['parties'].items():
+        for party_id, data in counts['parties'].items():
             obj = {
                 'count_type': 'party',
-                'name': party_name,
+                'name': data['party_name'],
                 'count': data['count'],
-                'object_id': data['party_id']
+                'object_id': party_id
 
             }
 
