@@ -1,5 +1,24 @@
 [
     {
+        "birth_date": null,
+        "classification": "Party",
+        "contact_details": [],
+        "death_date": null,
+        "dissolution_date": null,
+        "end_date": null,
+        "founding_date": null,
+        "id": "54dfc137093f15d5511f40ad",
+        "identifiers": [],
+        "initials": "",
+        "links": [],
+        "memberships": [],
+        "name": "Rochdale First",
+        "other_names": [],
+        "posts": [],
+        "sources": [],
+        "start_date": null
+    },
+    {
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
@@ -402,7 +421,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2000-08-15",
         "id": "party:117",
         "identifiers": [
@@ -422,7 +441,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2001-02-20",
         "id": "party:118",
         "identifiers": [
@@ -1522,7 +1541,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2011-03-09",
         "id": "party:1695",
         "identifiers": [
@@ -1542,7 +1561,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2014-09-15",
         "founding_date": "2011-03-14",
         "id": "party:1698",
         "identifiers": [
@@ -1653,7 +1672,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "VOX POP",
+        "name": "Vox Pop",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -2682,7 +2701,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2001-05-16",
         "id": "party:185",
         "identifiers": [
@@ -2882,7 +2901,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2012-07-11",
         "id": "party:1873",
         "identifiers": [
@@ -3333,11 +3352,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "An Independence from Europe",
+        "name": "Independence from Europe",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "an-independence-from-europe"
+        "slug": "independence-from-europe"
     },
     {
         "classification": "Party",
@@ -3602,7 +3621,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2012-10-10",
         "id": "party:1952",
         "identifiers": [
@@ -3622,7 +3641,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2014-11-21",
         "founding_date": "2012-10-10",
         "id": "party:1953",
         "identifiers": [
@@ -3662,7 +3681,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2012-10-11",
         "id": "party:1957",
         "identifiers": [
@@ -3722,7 +3741,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2012-10-10",
         "id": "party:1960",
         "identifiers": [
@@ -3762,7 +3781,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2012-10-10",
         "id": "party:1962",
         "identifiers": [
@@ -4013,7 +4032,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "LIFE",
+        "name": "Life",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -4033,7 +4052,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "INDEPENDENT - Putting People First",
+        "name": "Independent - Putting People First",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -4182,7 +4201,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-01-17",
         "id": "party:2009",
         "identifiers": [
@@ -4322,7 +4341,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-02-06",
         "id": "party:2017",
         "identifiers": [
@@ -4762,7 +4781,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-04-23",
         "id": "party:2057",
         "identifiers": [
@@ -4793,7 +4812,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "The Say NO Party",
+        "name": "The Say No Party",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -5002,7 +5021,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-04",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-06-18",
         "id": "party:2091",
         "identifiers": [
@@ -5122,7 +5141,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2014-09-29",
         "founding_date": "2013-07-10",
         "id": "party:2108",
         "identifiers": [
@@ -5182,7 +5201,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-07-30",
         "id": "party:2119",
         "identifiers": [
@@ -5602,7 +5621,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2013-10-16",
         "id": "party:2164",
         "identifiers": [
@@ -5882,7 +5901,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2014-01-10",
         "id": "party:2195",
         "identifiers": [
@@ -6193,7 +6212,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "A BEE C",
+        "name": "A Bee C",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -6253,7 +6272,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "VALOUR",
+        "name": "Valour",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -6273,7 +6292,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "VALOUR",
+        "name": "Valour",
         "other_names": [],
         "posts": [],
         "register": "Northern Ireland",
@@ -6553,11 +6572,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "FRAG",
+        "name": "Formby Residents Action Group",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "frag"
+        "slug": "formby-residents-action-group"
     },
     {
         "classification": "Party",
@@ -6613,11 +6632,31 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "YOURvoice",
+        "name": "Yourvoice",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
         "slug": "yourvoice"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-01-21",
+        "id": "party:2301",
+        "identifiers": [
+            {
+                "identifier": "PP2301",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "North Somerset First Independents",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "north-somerset-first-independents"
     },
     {
         "classification": "Party",
@@ -6722,7 +6761,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2014-04-09",
         "id": "party:2310",
         "identifiers": [
@@ -6862,7 +6901,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2014-04-22",
         "id": "party:2331",
         "identifiers": [
@@ -6922,7 +6961,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-02-11",
         "founding_date": "2014-04-15",
         "id": "party:2338",
         "identifiers": [
@@ -6993,7 +7032,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "The Roman Party.AVE",
+        "name": "The Roman Party. Ave",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -7033,11 +7072,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "TLC",
+        "name": "TLC - The Local Community - Shepton Mallet",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "tlc"
+        "slug": "tlc-the-local-community-shepton-mallet"
     },
     {
         "classification": "Party",
@@ -7218,6 +7257,26 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "norwich-over-the-water"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-27",
+        "id": "party:2396",
+        "identifiers": [
+            {
+                "identifier": "PP2396",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Hong Kong Independence Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "hong-kong-independence-party"
     },
     {
         "classification": "Party",
@@ -7763,6 +7822,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-16",
+        "id": "party:2525",
+        "identifiers": [
+            {
+                "identifier": "PP2525",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Independent Democrats",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "independent-democrats"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2014-10-29",
         "id": "party:2528",
         "identifiers": [
@@ -7818,6 +7897,26 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "2015-constitutionalists-uk"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-16",
+        "id": "party:2534",
+        "identifiers": [
+            {
+                "identifier": "PP2534",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Power To The People",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "power-to-the-people"
     },
     {
         "classification": "Party",
@@ -7902,6 +8001,46 @@
     {
         "classification": "Party",
         "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-18",
+        "id": "party:2550",
+        "identifiers": [
+            {
+                "identifier": "PP2550",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Village Voice",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "village-voice"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-27",
+        "id": "party:2552",
+        "identifiers": [
+            {
+                "identifier": "PP2552",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Cannabis is Safer than Alcohol",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "cannabis-is-safer-than-alcohol"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
         "dissolution_date": "2005-01-13",
         "founding_date": "2002-08-29",
         "id": "party:256",
@@ -7938,6 +8077,46 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "population-party-uk"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-18",
+        "id": "party:2565",
+        "identifiers": [
+            {
+                "identifier": "PP2565",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "British Constitution Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "british-constitution-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-27",
+        "id": "party:2567",
+        "identifiers": [
+            {
+                "identifier": "PP2567",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Children of the Atom",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "children-of-the-atom"
     },
     {
         "classification": "Party",
@@ -8018,6 +8197,26 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "the-english-progressive-and-liberty-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-12",
+        "id": "party:2595",
+        "identifiers": [
+            {
+                "identifier": "PP2595",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "We Are The Reality Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "we-are-the-reality-party"
     },
     {
         "classification": "Party",
@@ -8122,6 +8321,26 @@
     {
         "classification": "Party",
         "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-22",
+        "id": "party:2634",
+        "identifiers": [
+            {
+                "identifier": "PP2634",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "People Social Freedom Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "people-social-freedom-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
         "dissolution_date": "2003-09-02",
         "founding_date": "2002-10-03",
         "id": "party:264",
@@ -8143,6 +8362,66 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-20",
+        "id": "party:2642",
+        "identifiers": [
+            {
+                "identifier": "PP2642",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Our West Lancashire",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "our-west-lancashire"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-23",
+        "id": "party:2645",
+        "identifiers": [
+            {
+                "identifier": "PP2645",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "New Parliament Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "new-parliament-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-23",
+        "id": "party:2649",
+        "identifiers": [
+            {
+                "identifier": "PP2649",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Sensible Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-sensible-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2002-11-18",
         "id": "party:265",
         "identifiers": [
@@ -8158,6 +8437,86 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "richmondshire-independents"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-24",
+        "id": "party:2650",
+        "identifiers": [
+            {
+                "identifier": "PP2650",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Manston Airport Independent Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "manston-airport-independent-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-23",
+        "id": "party:2651",
+        "identifiers": [
+            {
+                "identifier": "PP2651",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Priority Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-priority-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-23",
+        "id": "party:2652",
+        "identifiers": [
+            {
+                "identifier": "PP2652",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Radical Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-radical-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-23",
+        "id": "party:2653",
+        "identifiers": [
+            {
+                "identifier": "PPm2653",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Neston Action",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "neston-action"
     },
     {
         "classification": "Party",
@@ -8198,6 +8557,46 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "real-democracy-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-27",
+        "id": "party:2675",
+        "identifiers": [
+            {
+                "identifier": "PPm2675",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Independents for Frome",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "independents-for-frome"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-02-27",
+        "id": "party:2676",
+        "identifiers": [
+            {
+                "identifier": "PP2676",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "BollingtonFirst",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "bollingtonfirst"
     },
     {
         "classification": "Party",
@@ -8322,7 +8721,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2003-01-30",
         "id": "party:273",
         "identifiers": [
@@ -9602,7 +10001,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-02-27",
         "founding_date": "2003-04-30",
         "id": "party:332",
         "identifiers": [
@@ -9753,11 +10152,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "UK Community Issues Party",
+        "name": "UK Community Issues",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "uk-community-issues-party"
+        "slug": "uk-community-issues"
     },
     {
         "classification": "Party",
@@ -10913,7 +11312,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "City INDEPENDENTS",
+        "name": "City Independents",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -16282,7 +16681,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2007-03-19",
         "id": "party:650",
         "identifiers": [
@@ -17182,7 +17581,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2008-02-12",
         "id": "party:691",
         "identifiers": [
@@ -17202,7 +17601,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2008-02-12",
         "id": "party:692",
         "identifiers": [
@@ -17393,11 +17792,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "1st 4 Kirkby",
+        "name": "First For Kirkby",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "1st-4-kirkby"
+        "slug": "first-for-kirkby"
     },
     {
         "classification": "Party",
@@ -18502,7 +18901,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2009-04-22",
         "id": "party:758",
         "identifiers": [
@@ -18922,7 +19321,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2014-11-11",
         "founding_date": "2009-10-01",
         "id": "party:777",
         "identifiers": [
@@ -19862,7 +20261,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2010-02-22",
         "id": "party:819",
         "identifiers": [
@@ -19933,11 +20332,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "NIC",
+        "name": "New Independent Centralists",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "nic"
+        "slug": "new-independent-centralists"
     },
     {
         "classification": "Party",
@@ -20933,11 +21332,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "NEWCLEAR OUTLINE - The NO Party",
+        "name": "Newclear Outline (NO)",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "newclear-outline-the-no-party"
+        "slug": "newclear-outline-no"
     },
     {
         "classification": "Party",
@@ -21293,7 +21692,7 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "It's OUR County (Herefordshire)",
+        "name": "It's Our County (Herefordshire)",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
@@ -21522,7 +21921,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-12",
         "founding_date": "2010-11-17",
         "id": "party:894",
         "identifiers": [
@@ -21582,7 +21981,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-01-19",
         "founding_date": "2010-12-01",
         "id": "party:897",
         "identifiers": [
@@ -21762,7 +22161,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-03",
+        "dissolution_date": "2014-11-01",
         "founding_date": "2011-02-18",
         "id": "party:904",
         "identifiers": [
