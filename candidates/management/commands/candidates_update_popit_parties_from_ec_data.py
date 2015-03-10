@@ -136,6 +136,7 @@ class Command(BaseCommand):
                     '.gif': 'image/gif',
                     '.bmp': 'image/x-ms-bmp',
                     '.jpg': 'image/jpeg',
+                    '.jpeg': 'image/jpeg',
                     '.png': 'image/png',
                 }[splitext(fname)[1]]
                 md5sum = get_file_md5sum(fname)
