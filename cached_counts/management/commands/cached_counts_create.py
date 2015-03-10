@@ -18,10 +18,14 @@ class Command(PopItApiMixin, BaseCommand):
         counts = {
             'candidates_2010': 0,
             'candidates_2015': 0,
-            'parties': {party_id: {'count': 0, 'party_name': name}
-                        for party_id, name in all_parties.items()},
-            'constituencies': {str(n[1]['id']): {'count': 0, 'con_name': n[1]['name']}
-                                for n in all_constituencies},
+            'parties': {
+                party_id: {'count': 0, 'party_name': name}
+                for party_id, name in all_parties.items()
+            },
+            'constituencies': {
+                str(n[1]['id']): {'count': 0, 'con_name': n[1]['name']}
+                for n in all_constituencies
+            },
         }
         standing_again_same_party = 0
         standing_again_different_party = 0
