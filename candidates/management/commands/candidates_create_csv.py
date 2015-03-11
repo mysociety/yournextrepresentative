@@ -17,6 +17,10 @@ class Command(PopItApiMixin, BaseCommand):
         make_option('-o', '--output',
                     dest='output_filename',
                     help='The filename to write CSV to'),
+        make_option('-y', '--year',
+                    dest='year',
+                    help='The election year',
+                    default='2015'),
     )
 
     def handle(self, **options):
@@ -27,9 +31,9 @@ class Command(PopItApiMixin, BaseCommand):
                 per_page=100,
         ):
             if person_dict.get('standing_in') \
-                and person_dict['standing_in'].get('2015'):
+                and person_dict['standing_in'].get(options['year']):
                 person = PopItPerson.create_from_dict(person_dict)
-                all_people.append(person.as_dict)
+                all_people.append(person.as_dict(year=options['year']))
         csv = list_to_csv(all_people)
         # Write to stdout if no output filename is specified, or if it
         # is '-'
