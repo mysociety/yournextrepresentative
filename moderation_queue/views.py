@@ -140,6 +140,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
                 'y_min': 0,
                 'y_max': self.queued_image.image.height - 1,
                 'decision': self.queued_image.decision,
+                'moderator_why_allowed': self.queued_image.why_allowed,
             }
         )
         context['why_allowed'] = self.queued_image.why_allowed
