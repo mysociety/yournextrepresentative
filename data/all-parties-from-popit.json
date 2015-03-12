@@ -1,24 +1,5 @@
 [
     {
-        "birth_date": null,
-        "classification": "Party",
-        "contact_details": [],
-        "death_date": null,
-        "dissolution_date": null,
-        "end_date": null,
-        "founding_date": null,
-        "id": "54dfc137093f15d5511f40ad",
-        "identifiers": [],
-        "initials": "",
-        "links": [],
-        "memberships": [],
-        "name": "Rochdale First",
-        "other_names": [],
-        "posts": [],
-        "sources": [],
-        "start_date": null
-    },
-    {
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
