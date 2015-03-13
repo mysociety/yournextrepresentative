@@ -395,8 +395,7 @@ class PopItPerson(object):
         for membership in self.popit_data.get('memberships', []):
             self.api.memberships(membership['id']).delete()
 
-    @property
-    def as_dict(self):
+    def as_dict(self, year='2015'):
         """
         Returns a list in the order of CSV_ROW_FIELDS, for ease of
         converting PopItPerson objects in to CSV representations.
@@ -422,12 +421,12 @@ class PopItPerson(object):
             'name': self.name,
             'honorific_suffix': self.popit_data.get('honorific_suffix', ''),
             'id': self.id,
-            'party': person_data['party_memberships']['2015']['name'],
-            'constituency': self.standing_in['2015']['name'],
-            'mapit_url': self.standing_in['2015']['mapit_url'],
-            'mapit_id': self.standing_in['2015']['post_id'],
+            'party': person_data['party_memberships'][year]['name'],
+            'constituency': self.standing_in[year]['name'],
+            'mapit_url': self.standing_in[year]['mapit_url'],
+            'mapit_id': self.standing_in[year]['post_id'],
             'gss_code': MapItData.constituencies_2010[
-                self.standing_in['2015']['post_id']]['codes']['gss'],
+                self.standing_in[year]['post_id']]['codes']['gss'],
             'twitter_username': person_data['twitter_username'],
             'facebook_page_url': person_data['facebook_page_url'],
             'party_ppc_page_url': person_data['party_ppc_page_url'],
