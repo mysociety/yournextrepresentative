@@ -203,6 +203,8 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(la.action_type, 'photo-approve')
         self.assertEqual(la.popit_person_id, '2009')
 
+        self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'approved')
+
     @patch('moderation_queue.views.send_mail')
     @patch('moderation_queue.views.requests.post')
     @patch('candidates.popit.PopIt')
@@ -249,6 +251,8 @@ class PhotoReviewTests(WebTest):
 
         self.assertEqual(mock_requests_post.call_count, 0)
 
+        self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'rejected')
+
     @patch('moderation_queue.views.send_mail')
     @patch('moderation_queue.views.requests.post')
     @patch('candidates.popit.PopIt')
@@ -279,3 +283,5 @@ class PhotoReviewTests(WebTest):
 
         self.assertEqual(mock_send_mail.call_count, 0)
         self.assertEqual(mock_requests_post.call_count, 0)
+
+        self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'undecided')
