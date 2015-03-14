@@ -235,8 +235,9 @@ class PersonParseMixin(PopItApiMixin):
 # dates to an empty string, which will stop the PopIt record
 # being indexed by Elasticsearch.
 def fix_dates(data):
-    if not data['birth_date']:
-        data['birth_date'] = None
+    for key in ('birth_date', 'death_date'):
+        if key in data and not data[key]:
+            data[key] = None
     for other_name in data.get('other_names', []):
         for key in ('start_date', 'end_date'):
             if key in other_name and not other_name[key]:
