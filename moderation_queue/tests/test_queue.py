@@ -285,3 +285,35 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(mock_requests_post.call_count, 0)
 
         self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'undecided')
+
+    @patch('moderation_queue.views.send_mail')
+    @patch('moderation_queue.views.requests.post')
+    @patch('candidates.popit.PopIt')
+    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
+    def test_photo_review_upload_ignore_privileged(
+            self,
+            mock_popit,
+            mock_requests_post,
+            mock_send_mail
+    ):
+        mock_popit.return_value.persons = FakePersonCollection
+        review_url = reverse(
+            'photo-review',
+            kwargs={'queued_image_id': self.q1.id}
+        )
+        review_page_response = self.app.get(
+            review_url,
+            user=self.test_superuser
+        )
+        form = review_page_response.forms['photo-review-form']
+        form['decision'] = 'ignore'
+        response = form.submit(user=self.test_superuser)
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual('/moderation/photo/review', split_location.path)
+
+        self.assertEqual(mock_send_mail.call_count, 0)
+        self.assertEqual(mock_requests_post.call_count, 0)
+
+        self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'ignore')

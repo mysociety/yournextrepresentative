@@ -19,6 +19,12 @@ jQuery(function($) {
       $('.justification_for_use').show();
       $('.moderator-reason').hide();
       $('#decision-submit').hide();
+    } else if (value == 'ignore') {
+      $('.rejection_reason').hide();
+      $('.justification_for_use').hide();
+      $('.moderator-reason').hide();
+      $('#decision-submit').val('Ignore');
+      $('#decision-submit').show();
     }
   }
 
