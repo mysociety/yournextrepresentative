@@ -24,22 +24,23 @@ def strip_accents(s):
         if not unicodedata.combining(c)
     )
 
-def get_electionleaflets_url(constituency_name):
+def get_electionleaflets_url(mapit_area_id, constituency_name):
     """Generate an electionleaflets.org URL from a constituency name
 
-    >>> get_electionleaflets_url(u"Ynys M\u00F4n")
-    u'http://electionleaflets.org/constituencies/ynys_mon/'
-    >>> get_electionleaflets_url(u"Ashton-under-Lyne")
-    u'http://electionleaflets.org/constituencies/ashton_under_lyne/'
-    >>> get_electionleaflets_url(u"Ayr, Carrick and Cumnock")
-    u'http://electionleaflets.org/constituencies/ayr_carrick_and_cumnock/'
+    >>> get_electionleaflets_url(u"66115", u"Ynys M\u00F4n")
+    u'http://electionleaflets.org/constituencies/66115/ynys_mon/'
+    >>> get_electionleaflets_url(u"66056", u"Ashton-under-Lyne")
+    u'http://electionleaflets.org/constituencies/66056/ashton_under_lyne/'
+    >>> get_electionleaflets_url(u"14403", u"Ayr, Carrick and Cumnock")
+    u'http://electionleaflets.org/constituencies/14403/ayr_carrick_and_cumnock/'
     """
     result = strip_accents(constituency_name)
     result = result.lower()
     result = re.sub(r'[^a-z]+', ' ', result)
     result = re.sub(r'\s+', ' ', result).strip()
     slug = result.replace(' ', '_')
-    return u'http://electionleaflets.org/constituencies/{}/'.format(slug)
+    url_format = u'http://electionleaflets.org/constituencies/{area_id}/{slug}/'
+    return url_format.format(area_id=mapit_area_id, slug=slug)
 
 
 
@@ -57,7 +58,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             raise Http404("Constituency not found")
 
         context['electionleaflets_url'] = \
-            get_electionleaflets_url(context['constituency_name'])
+            get_electionleaflets_url(mapit_area_id, context['constituency_name'])
 
         context['meetyournextmp_url'] = \
             u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(mapit_area_id)
