@@ -1653,11 +1653,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "Vox Pop",
+        "name": "Stratford First",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "vox-pop"
+        "slug": "stratford-first"
     },
     {
         "classification": "Party",
@@ -2682,7 +2682,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "2014-11-01",
+        "dissolution_date": "9999-12-31",
         "founding_date": "2001-05-16",
         "id": "party:185",
         "identifiers": [
@@ -4022,7 +4022,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-03-11",
         "founding_date": "2012-12-12",
         "id": "party:1987",
         "identifiers": [
@@ -4362,7 +4362,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-03-06",
         "founding_date": "2013-02-13",
         "id": "party:2027",
         "identifiers": [
@@ -4453,11 +4453,11 @@
         ],
         "links": [],
         "memberships": [],
-        "name": "Liberty Great Britain",
+        "name": "Liberty GB",
         "other_names": [],
         "posts": [],
         "register": "Great Britain",
-        "slug": "liberty-great-britain"
+        "slug": "liberty-gb"
     },
     {
         "classification": "Party",
@@ -7643,6 +7643,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-12",
+        "id": "party:2486",
+        "identifiers": [
+            {
+                "identifier": "PP2486",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Something New",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "something-new"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2014-11-21",
         "id": "party:2487",
         "identifiers": [
@@ -7758,6 +7778,26 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "halstead-residents-association"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-12",
+        "id": "party:2512",
+        "identifiers": [
+            {
+                "identifier": "PP2512",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Rochdale First Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "rochdale-first-party"
     },
     {
         "classification": "Party",
@@ -8123,6 +8163,46 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-11",
+        "id": "party:2576",
+        "identifiers": [
+            {
+                "identifier": "PP2576",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Stapleford Alliance",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "stapleford-alliance"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-12",
+        "id": "party:2577",
+        "identifiers": [
+            {
+                "identifier": "PP2577",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Keep It Real Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "keep-it-real-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2002-09-18",
         "id": "party:258",
         "identifiers": [
@@ -8198,6 +8278,26 @@
         "posts": [],
         "register": "Great Britain",
         "slug": "we-are-the-reality-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-06",
+        "id": "party:2597",
+        "identifiers": [
+            {
+                "identifier": "PP2597",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Free United Kingdom Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "free-united-kingdom-party"
     },
     {
         "classification": "Party",
@@ -8598,6 +8698,46 @@
         "posts": [],
         "register": "Northern Ireland",
         "slug": "real-democracy-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-12",
+        "id": "party:2683",
+        "identifiers": [
+            {
+                "identifier": "PP2683",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The British Voice",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-british-voice"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-12",
+        "id": "party:2684",
+        "identifiers": [
+            {
+                "identifier": "PP2684",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "East Devon Alliance",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "east-devon-alliance"
     },
     {
         "classification": "Party",
@@ -13242,7 +13382,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-03-06",
         "founding_date": "2005-04-12",
         "id": "party:488",
         "identifiers": [
@@ -20122,7 +20262,7 @@
     {
         "classification": "Party",
         "contact_details": [],
-        "dissolution_date": "9999-12-31",
+        "dissolution_date": "2015-03-06",
         "founding_date": "2010-03-29",
         "id": "party:813",
         "identifiers": [
