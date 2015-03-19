@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+PHOTO_REVIEWERS_GROUP_NAME = 'Photo Reviewers'
+
+
 class QueuedImage(models.Model):
 
     APPROVED = 'approved'
