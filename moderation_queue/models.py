@@ -9,11 +9,13 @@ class QueuedImage(models.Model):
     APPROVED = 'approved'
     REJECTED = 'rejected'
     UNDECIDED = 'undecided'
+    IGNORE = 'ignore'
 
     DECISION_CHOICES = (
         (APPROVED, 'Approved'),
         (REJECTED, 'Rejected'),
         (UNDECIDED, 'Undecided'),
+        (IGNORE, 'Ignore'),
     )
 
     PUBLIC_DOMAIN = 'public-domain'

@@ -268,6 +268,9 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             # If it's left as undecided, just redirect back to the
             # photo review queue...
             pass
+        elif decision == 'ignore':
+            self.queued_image.decision = 'ignore'
+            self.queued_image.save()
         else:
             raise Exception("BUG: unexpected decision {0}".format(decision))
         return HttpResponseRedirect(reverse('photo-review-list'))

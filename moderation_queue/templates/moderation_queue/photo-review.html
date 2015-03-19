@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load compressed %}
+{% load imagefixes %}
 
 {% block extra_css %}
 {% compressed_css 'image-review' %}
@@ -20,119 +21,139 @@
 
 {% block content %}
 
-<p>{{ form.errors }}</p>
+<div class="photo-review__primary">
 
-<p>Please check that this is really
-<a href="{% url 'person-view' person.id person.name|slugify %}">{{ person.name }}</a>
-({{ person_extra.last_party.name }}) before
-approving the upload. This
-<a href="{{ google_image_search_url }}">Google
-Image search</a> may be a good start.</p>
+  <p>{{ form.errors }}</p>
 
-<h3>Click and drag in the image to crop</h3>
+  <p>Please check that this is really
+  <a href="{% url 'person-view' person.id person.name|slugify %}">{{ person.name }}</a>
+  ({{ person_extra.last_party.name }}) before
+  approving the upload. This
+  <a href="{{ google_image_search_url }}">Google
+  Image search</a> may be a good start.</p>
 
-<div class="image-for-review-container">
-  <img id="image-for-review" src="{{ queued_image.image.url }}">
-</div>
+  <h3>Click and drag in the image to crop</h3>
 
-<form id="photo-review-form" method="post">
-
-  {% csrf_token %}
-  {{ form.non_field_errors }}
-
-  <p>
-      {{ form.queued_image_id }}
-  </p>
-
-  <div class="crop-coordinates">
-    <p>
-      {{ form.x_min.errors }}
-      <label for="{{ form.x_min.id_for_label }}">Minimum X co-ordinate:</label>
-      {{ form.x_min }}
-    </p>
-    <p>
-      {{ form.x_max.errors }}
-      <label for="{{ form.x_max.id_for_label }}">Maximum X co-ordinate:</label>
-      {{ form.x_max }}
-    </p>
-    <p>
-      {{ form.y_min.errors }}
-      <label for="{{ form.y_min.id_for_label }}">Minimum Y co-ordinate:</label>
-      {{ form.y_min }}
-    </p>
-    <p>
-      {{ form.y_max.errors }}
-      <label for="{{ form.y_max.id_for_label }}">Maximum Y co-ordinate:</label>
-      {{ form.y_max }}
-    </p>
+  <div class="image-for-review-container">
+    <img id="image-for-review" src="{{ queued_image.image.url }}">
   </div>
 
-  <h3>User-submitted information</h3>
+  <form id="photo-review-form" method="post">
 
-  {% with username=queued_image.user.username %}
+    {% csrf_token %}
+    {{ form.non_field_errors }}
 
-    <p>Uploaded by username with confirmed email
-      <tt>{{ queued_image.user.email }}</tt>.
-      {% if person.email %}
-        (The candidate's unconfirmed email address is
-        <tt>{{ person.email }}</tt>.)
+    <p>
+        {{ form.queued_image_id }}
+    </p>
+
+    <div class="crop-coordinates">
+      <p>
+        {{ form.x_min.errors }}
+        <label for="{{ form.x_min.id_for_label }}">Minimum X co-ordinate:</label>
+        {{ form.x_min }}
+      </p>
+      <p>
+        {{ form.x_max.errors }}
+        <label for="{{ form.x_max.id_for_label }}">Maximum X co-ordinate:</label>
+        {{ form.x_max }}
+      </p>
+      <p>
+        {{ form.y_min.errors }}
+        <label for="{{ form.y_min.id_for_label }}">Minimum Y co-ordinate:</label>
+        {{ form.y_min }}
+      </p>
+      <p>
+        {{ form.y_max.errors }}
+        <label for="{{ form.y_max.id_for_label }}">Maximum Y co-ordinate:</label>
+        {{ form.y_max }}
+      </p>
+    </div>
+
+    <h3>User-submitted information</h3>
+
+    {% with username=queued_image.user.username %}
+
+      <p>Uploaded by username with confirmed email
+        <tt>{{ queued_image.user.email }}</tt>.
+        {% if person.email %}
+          (The candidate's unconfirmed email address is
+          <tt>{{ person.email }}</tt>.)
+        {% endif %}
+        </p>
+
+      {% if why_allowed == 'public-domain' %}
+        <p>
+          {{ username }} asserted that photo is free of copyright restrictions
+        </p>
+      {% elif why_allowed == 'copyright-assigned' %}
+        <p>
+          {{ username }} assigned the copyright to Democracy Club
+        </p>
+      {% elif why_allowed == 'profile-photo' %}
+        <p>
+          {{ username }} said that this is the candidate's public profile
+          photo from social media or their official campaign page
+        </p>
       {% endif %}
+
+      {% if justification_for_use %}
+        <p>
+          {{ username }}'s justification for use of this photo was:
+          &#8220;{{ justification_for_use }}&#8221;
+        </p>
+      {% endif %}
+
+    {% endwith %}
+
+    <h3>Your decision</h3>
+
+    <div id="moderator-photo-decision">
+      <p>
+          {{ form.decision.errors }}
+          <label for="{{ form.decision.id_for_label }}">Decision:</label>
+          {{ form.decision }}
       </p>
 
-    {% if why_allowed == 'public-domain' %}
-      <p>
-        {{ username }} asserted that photo is free of copyright restrictions
+      <p class="moderator-reason">
+          {{ form.moderator_why_allowed.errors }}
+          <label for="{{ moderator_why_allowed.id_for_label }}">Why <em>you</em> think it's allowed:</label>
+          {{ form.moderator_why_allowed }}
       </p>
-    {% elif why_allowed == 'copyright-assigned' %}
-      <p>
-        {{ username }} assigned the copyright to Democracy Club
-      </p>
-    {% elif why_allowed == 'profile-photo' %}
-      <p>
-        {{ username }} said that this is the candidate's public profile
-        photo from social media or their official campaign page
-      </p>
-    {% endif %}
 
-    {% if justification_for_use %}
-      <p>
-        {{ username }}'s justification for use of this photo was:
-        &#8220;{{ justification_for_use }}&#8221;
+      <p class="rejection_reason">
+          {{ form.rejection_reason.errors }}
+          <label for="{{ form.rejection_reason.id_for_label }}">Reason
+            for rejection (<strong>Warning:</strong> this will be emailed to
+            the user):
+          </label>
+          {{ form.rejection_reason }}
       </p>
+
+      <input type="submit" id="decision-submit" class="button" value="Submit">
+
+      <a href="{% url 'photo-review-list' %}" class="button">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<div class="photo-review__secondary">
+
+  <h4>Existing candidate images</h4>
+
+  {% with images=person_extra.images %}
+
+    {% if images %}
+      {% for image in images %}
+        <img class="photo-review__existing-image" src="{{ image.proxy_url|fixproxyurl }}/0/200"
+          alt="{{ image.notes }}" title="{{ image.notes }}">
+      {% endfor %}
+    {% else %}
+      <p>There were no existing images for this candidate.</p>
     {% endif %}
 
   {% endwith %}
 
-  <h3>Your decision</h3>
-
-  <div id="moderator-photo-decision">
-    <p>
-        {{ form.decision.errors }}
-        <label for="{{ form.decision.id_for_label }}">Decision:</label>
-        {{ form.decision }}
-    </p>
-
-    <p class="moderator-reason">
-        {{ form.moderator_why_allowed.errors }}
-        <label for="{{ moderator_why_allowed.id_for_label }}">Why <em>you</em> think it's allowed:</label>
-        {{ form.moderator_why_allowed }}
-    </p>
-
-    <p class="rejection_reason">
-        {{ form.rejection_reason.errors }}
-        <label for="{{ form.rejection_reason.id_for_label }}">Reason
-          for rejection (<strong>Warning:</strong> this will be emailed to
-          the user):
-        </label>
-        {{ form.rejection_reason }}
-    </p>
-
-    <input type="submit" id="decision-submit" class="button" value="Submit">
-
-    <a href="{% url 'photo-review-list' %}" class="button">Cancel</a>
-  <div>
-
-
-</form>
+</div>
 
 {% endblock %}

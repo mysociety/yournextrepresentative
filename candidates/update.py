@@ -228,6 +228,7 @@ class PersonParseMixin(PopItApiMixin):
         else:
             extra_for_template['date_of_birth'] = extra_for_template['age'] = ''
         extra_for_template['last_party'] = self.get_last_party(person.popit_data)
+        extra_for_template['images'] = person.popit_data.get('images', [])
         return result, extra_for_template
 
 
