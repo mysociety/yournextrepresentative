@@ -46,7 +46,8 @@ jQuery(function($) {
     onSelect: adjustFormValues,
     onChange: adjustFormValues,
     boxWidth: 600,
-    boxHeight: 600
+    boxHeight: 600,
+    aspectRatio: 1
   });
 
 });
