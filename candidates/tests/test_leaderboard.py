@@ -55,3 +55,13 @@ class TestLeaderboardView(TestUserMixin, WebTest):
         second_row = rows[2]
         cells = second_row.find_all('td')
         self.assertEqual(cells[0].text, self.user.username)
+
+    def test_get_contributions_csv(self):
+        response = self.app.get('/leaderboard/contributions.csv')
+        self.assertEqual(
+            response.body,
+            'rank,username,contributions\r\n' +
+                '0,jane,2\r\n' +
+                '1,john,1\r\n' +
+                '2,johnrefused,0\r\n'
+        )

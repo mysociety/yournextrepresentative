@@ -1,5 +1,10 @@
+import csv
+
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.generic import TemplateView
+from django.db.models import Count
+from django.http import HttpResponse
+from django.views.generic import TemplateView, View
 
 from .mixins import ContributorsMixin
 
@@ -26,3 +31,24 @@ class LeaderboardView(ContributorsMixin, TemplateView):
         context = super(LeaderboardView, self).get_context_data(**kwargs)
         context['leaderboards'] = self.get_leaderboards()
         return context
+
+class UserContributions(View):
+
+    http_method_names = [u'get']
+
+    def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = \
+            'attachment; filename="contributions.csv"'
+        headers = ['rank', 'username', 'contributions']
+        writer = csv.DictWriter(response, fieldnames=headers)
+        writer.writerow({k: k for k in headers})
+        for i, user in enumerate(User.objects.annotate(
+                edit_count=Count('loggedaction')
+        ).order_by('-edit_count')):
+            writer.writerow({
+                'rank': str(i),
+                'username': user.username,
+                'contributions': user.edit_count
+            })
+        return response
