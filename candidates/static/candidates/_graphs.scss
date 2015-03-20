@@ -1,0 +1,21 @@
+body.leaderboard svg {
+
+    width: 800px;
+    height: 600px;
+
+    .axis {
+
+        path, line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+        text {
+            font-family: sans-serif;
+            font-size: 11px;
+            fill: black;
+        }
+
+    }
+
+}

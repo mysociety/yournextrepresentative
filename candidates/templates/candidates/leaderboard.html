@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
-{% block body_class %}{% endblock %}
+{% load compressed %}
+
+{% block body_class %}leaderboard{% endblock %}
+
+{% block extra_js %}
+{% compressed_js 'graphs' %}
+{% endblock %}
 
 {% block title %}Top users on YourNextMP{% endblock %}
 
@@ -9,6 +15,8 @@
 {% endblock %}
 
 {% block content %}
+
+<svg></svg>
 
 {% for leaderboard in leaderboards %}
 

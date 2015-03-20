@@ -227,6 +227,13 @@ PIPELINE_JS = {
         ),
         'output_filename': 'js/image-review.js',
     },
+    'graphs': {
+        'source_filenames': (
+            'js/d3/d3.js',
+            'js/graphs.js',
+        ),
+        'output_filename': 'js/graphs.js',
+    },
     'all': {
         'source_filenames': (
             'jquery/jquery-1.11.1.js',
