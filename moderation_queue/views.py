@@ -28,13 +28,6 @@ from candidates.models import PopItPerson, LoggedAction
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 
-PILLOW_FORMAT_MIME_TYPES = {
-    'JPEG': 'image/jpeg',
-    'PNG': 'image/png',
-    'GIF': 'image/gif',
-}
-
-
 @login_required
 def upload_photo(request, popit_person_id):
     if request.method == 'POST':
@@ -176,7 +169,7 @@ class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, T
             'user_why_allowed': self.queued_image.why_allowed,
             'user_justification_for_use': self.queued_image.justification_for_use,
             'moderator_why_allowed': moderator_why_allowed,
-            'mime_type': PILLOW_FORMAT_MIME_TYPES[original.format],
+            'mime_type': 'image/png',
             'notes': 'Approved from photo moderation queue',
             'uploaded_by_user': self.queued_image.user.username,
         }

@@ -7,11 +7,16 @@ from StringIO import StringIO
 
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 from candidates.update import fix_dates
-from moderation_queue.views import PILLOW_FORMAT_MIME_TYPES
 
 from django.core.management.base import BaseCommand
 
 from slumber.exceptions import HttpClientError
+
+PILLOW_FORMAT_MIME_TYPES = {
+    'JPEG': 'image/jpeg',
+    'PNG': 'image/png',
+    'GIF': 'image/gif',
+}
 
 def fix_image_mime_type(image):
     mime_type = image.get('mime_type')
