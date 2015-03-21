@@ -93,6 +93,7 @@ INSTALLED_APPS = (
     'tasks',
     'cached_counts',
     'moderation_queue',
+    'auth_helpers',
     'debug_toolbar',
 )
 
