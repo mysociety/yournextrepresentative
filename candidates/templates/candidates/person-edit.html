@@ -225,7 +225,7 @@
        {{ person.name }}</a>.</p>
   </div>
 
-  {% if user.is_superuser %}
+  {% if user_can_merge %}
     <form class="person__actions__action person__actions__merge" id="person-merge" action="{% url 'person-merge' person_id=person.id %}" method="post">
       {% csrf_token %}
       <h2>Is this a duplicate person?</h2>
