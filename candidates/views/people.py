@@ -9,8 +9,9 @@ from django.http import (
 from django.utils.http import urlquote
 from django.views.generic import FormView, TemplateView, View
 
-from braces.views import LoginRequiredMixin, SuperuserRequiredMixin
+from braces.views import LoginRequiredMixin
 
+from auth_helpers.views import GroupRequiredMixin, user_in_group
 from moderation_queue.forms import UploadPersonPhotoForm
 
 from .diffs import get_version_diffs
@@ -21,7 +22,8 @@ from ..models import (
     get_constituency_name_from_mapit_id,
     all_form_fields,
     get_mapit_id_from_mapit_url,
-    LoggedAction, PersonRedirect
+    LoggedAction, PersonRedirect,
+    TRUSTED_TO_MERGE_GROUP_NAME
 )
 from ..popit import merge_popit_people
 from ..static_data import MapItData, PartyData
@@ -152,9 +154,10 @@ class RevertPersonView(LoginRequiredMixin, PersonParseMixin, PersonUpdateMixin, 
             )
         )
 
-class MergePeopleView(SuperuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
+class MergePeopleView(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
+    required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
 
     def post(self, request, *args, **kwargs):
         # Check that the person IDs are well-formed:
@@ -279,6 +282,10 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         )
 
         context['versions'] = get_version_diffs(context['person']['versions'])
+        context['user_can_merge'] = user_in_group(
+            self.request.user,
+            TRUSTED_TO_MERGE_GROUP_NAME
+        )
 
         return context
 

@@ -16,6 +16,8 @@ from slumber.exceptions import HttpServerError
 
 from .static_data import MapItData
 
+TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
+
 form_simple_fields = (
     'honorific_prefix', 'name', 'honorific_suffix', 'email', 'birth_date',
     'gender'

@@ -2,14 +2,14 @@ from os.path import join, realpath, dirname
 import re
 from urlparse import urlsplit
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 
 from django_webtest import WebTest
 from mock import patch
 
-from ..models import QueuedImage
+from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from candidates.models import LoggedAction
 from candidates.tests.fake_popit import (
     FakePersonCollection, get_example_popit_json
@@ -27,13 +27,16 @@ class PhotoReviewTests(WebTest):
         )
         self.test_upload_user.terms_agreement.assigned_to_dc = True
         self.test_upload_user.terms_agreement.save()
-        self.test_superuser = User.objects.create_superuser(
+        self.test_reviewer = User.objects.create_superuser(
             'jane',
             'jane@example.com',
             'alsonotagoodpassword',
         )
-        self.test_superuser.terms_agreement.assigned_to_dc = True
-        self.test_superuser.terms_agreement.save()
+        self.test_reviewer.terms_agreement.assigned_to_dc = True
+        self.test_reviewer.terms_agreement.save()
+        self.test_reviewer.groups.add(
+            Group.objects.get(name=PHOTO_REVIEWERS_GROUP_NAME)
+        )
         self.q1 = QueuedImage.objects.create(
             why_allowed='public-domain',
             justification_for_use="It's their Twitter avatar",
@@ -56,7 +59,7 @@ class PhotoReviewTests(WebTest):
             decision='rejected',
             image='pilot.jpg',
             popit_person_id='2007',
-            user=self.test_superuser
+            user=self.test_reviewer
         )
 
     def tearDown(self):
@@ -64,7 +67,7 @@ class PhotoReviewTests(WebTest):
         self.q2.delete()
         self.q3.delete()
         self.test_upload_user.delete()
-        self.test_superuser.delete()
+        self.test_reviewer.delete()
 
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_queue_view_not_logged_in(self):
@@ -78,16 +81,17 @@ class PhotoReviewTests(WebTest):
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_queue_view_logged_in_unprivileged(self):
         queue_url = reverse('photo-review-list')
-        response = self.app.get(queue_url, user=self.test_upload_user)
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual('/accounts/login/', split_location.path)
-        self.assertEqual('next=/moderation/photo/review', split_location.query)
+        response = self.app.get(
+            queue_url,
+            user=self.test_upload_user,
+            expect_errors=True,
+        )
+        self.assertEqual(response.status_code, 403)
 
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_queue_view_logged_in_privileged(self):
         queue_url = reverse('photo-review-list')
-        response = self.app.get(queue_url, user=self.test_superuser)
+        response = self.app.get(queue_url, user=self.test_reviewer)
         self.assertEqual(response.status_code, 200)
         queue_table = response.html.find('table')
         photo_rows = queue_table.find_all('tr')
@@ -109,14 +113,12 @@ class PhotoReviewTests(WebTest):
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
         )
-        response = self.app.get(review_url, user=self.test_upload_user)
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual('/accounts/login/', split_location.path)
-        self.assertEqual(
-            'next=/moderation/photo/review/{0}'.format(self.q1.id),
-            split_location.query
+        response = self.app.get(
+            review_url,
+            user=self.test_upload_user,
+            expect_errors=True
         )
+        self.assertEqual(response.status_code, 403)
 
     @patch('candidates.popit.PopIt')
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
@@ -126,7 +128,7 @@ class PhotoReviewTests(WebTest):
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
         )
-        response = self.app.get(review_url, user=self.test_superuser)
+        response = self.app.get(review_url, user=self.test_reviewer)
         self.assertEqual(response.status_code, 200)
         # For the moment this is just a smoke test...
 
@@ -156,12 +158,12 @@ class PhotoReviewTests(WebTest):
         )
         review_page_response = self.app.get(
             review_url,
-            user=self.test_superuser
+            user=self.test_reviewer
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'approved'
         form['moderator_why_allowed'] = 'profile-photo'
-        response = form.submit(user=self.test_superuser)
+        response = form.submit(user=self.test_reviewer)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual('/moderation/photo/review', split_location.path)
@@ -223,12 +225,12 @@ class PhotoReviewTests(WebTest):
         )
         review_page_response = self.app.get(
             review_url,
-            user=self.test_superuser
+            user=self.test_reviewer
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'rejected'
         form['rejection_reason'] = 'No clear source or copyright statement'
-        response = form.submit(user=self.test_superuser)
+        response = form.submit(user=self.test_reviewer)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual('/moderation/photo/review', split_location.path)
@@ -271,12 +273,12 @@ class PhotoReviewTests(WebTest):
         )
         review_page_response = self.app.get(
             review_url,
-            user=self.test_superuser
+            user=self.test_reviewer
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'undecided'
         form['rejection_reason'] = 'No clear source or copyright statement'
-        response = form.submit(user=self.test_superuser)
+        response = form.submit(user=self.test_reviewer)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual('/moderation/photo/review', split_location.path)
@@ -304,11 +306,11 @@ class PhotoReviewTests(WebTest):
         )
         review_page_response = self.app.get(
             review_url,
-            user=self.test_superuser
+            user=self.test_reviewer
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'ignore'
-        response = form.submit(user=self.test_superuser)
+        response = form.submit(user=self.test_reviewer)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual('/moderation/photo/review', split_location.path)

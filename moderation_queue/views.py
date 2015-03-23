@@ -15,13 +15,12 @@ from django.views.generic import ListView, TemplateView
 
 from PIL import Image
 
-from braces.views import StaffuserRequiredMixin
-
+from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
-from .models import QueuedImage
+from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
 from candidates.popit import create_popit_api_object
 from candidates.models import PopItPerson, LoggedAction
@@ -76,8 +75,9 @@ class PhotoUploadSuccess(PersonParseMixin, TemplateView):
         return context
 
 
-class PhotoReviewList(StaffuserRequiredMixin, ListView):
+class PhotoReviewList(GroupRequiredMixin, ListView):
     template_name = 'moderation_queue/photo-review-list.html'
+    required_group_name = PHOTO_REVIEWERS_GROUP_NAME
 
     def get_queryset(self):
         return QueuedImage.objects. \
@@ -99,11 +99,12 @@ def tidy_party_name(name):
     return name
 
 
-class PhotoReview(StaffuserRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
+class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
     template_name = 'moderation_queue/photo-review.html'
     http_method_names = ['get', 'post']
+    required_group_name = PHOTO_REVIEWERS_GROUP_NAME
 
     def get_google_image_search_url(self, person, person_extra):
         image_search_query = '"{name}" "{party}"'.format(
