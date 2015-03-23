@@ -46,6 +46,7 @@ CSV_ROW_FIELDS = [
     'honorific_prefix',
     'honorific_suffix',
     'party_id',
+    'linkedin_url',
 ]
 
 
@@ -438,6 +439,7 @@ class PopItPerson(object):
                 self.standing_in[year]['post_id']]['codes']['gss'],
             'twitter_username': person_data['twitter_username'],
             'facebook_page_url': person_data['facebook_page_url'],
+            'linkedin_url': person_data['linkedin_url'],
             'party_ppc_page_url': person_data['party_ppc_page_url'],
             'gender': person_data['gender'],
             'facebook_personal_url': person_data['facebook_personal_url'],
