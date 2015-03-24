@@ -45,6 +45,7 @@ CSV_ROW_FIELDS = [
     'theyworkforyou_url',
     'honorific_prefix',
     'honorific_suffix',
+    'party_id',
 ]
 
 
@@ -298,6 +299,12 @@ class PopItPerson(object):
                 continue
             if organization['classification'] != "Party":
                 continue
+
+            for identifier in organization['identifiers']:
+                if identifier['scheme'] == "electoral-commission":
+                    organization['electoral_commission_id'] =\
+                         identifier['identifier']
+
             if membership_covers_date(membership, election_date_2010):
                 results['2010'] = organization
             if membership_covers_date(membership, election_date_2015):
@@ -440,6 +447,7 @@ class PopItPerson(object):
             'birth_date': person_data['birth_date'],
             'parlparse_id': parlparse_id,
             'theyworkforyou_url': theyworkforyou_url,
+            'party_id': self.parties[year].get('electoral_commission_id'),
         }
 
         return row
