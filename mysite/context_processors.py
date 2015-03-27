@@ -1,6 +1,8 @@
 from datetime import date
 from django.conf import settings
-from candidates.models import election_date_2015
+from auth_helpers.views import user_in_group
+from candidates.models import election_date_2015, TRUSTED_TO_MERGE_GROUP_NAME
+from moderation_queue.models import PHOTO_REVIEWERS_GROUP_NAME
 
 SETTINGS_TO_ADD = (
     'GOOGLE_ANALYTICS_ACCOUNT',
@@ -25,4 +27,16 @@ def election_date(request):
     return {
         'DATE_ELECTION': election_date_2015,
         'DATE_TODAY': date.today(),
+    }
+
+
+def add_group_permissions(request):
+    """Add user_can_merge and user_can_review_photos"""
+
+    return {
+        context_variable: user_in_group(request.user, group_name)
+        for context_variable, group_name in (
+            ('user_can_merge', TRUSTED_TO_MERGE_GROUP_NAME),
+            ('user_can_review_photos', PHOTO_REVIEWERS_GROUP_NAME),
+        )
     }
