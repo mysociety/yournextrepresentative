@@ -29,7 +29,7 @@ class ContributorsMixin(object):
             else:
                 qs = LoggedAction.objects.all()
             rows = qs.values('user'). \
-                annotate(edit_count=Count('user')).order_by('-edit_count')[:10]
+                annotate(edit_count=Count('user')).order_by('-edit_count')[:25]
             for row in rows:
                 row['username'] = User.objects.get(pk=row['user'])
             leaderboard = {
