@@ -282,10 +282,6 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
         )
 
         context['versions'] = get_version_diffs(context['person']['versions'])
-        context['user_can_merge'] = user_in_group(
-            self.request.user,
-            TRUSTED_TO_MERGE_GROUP_NAME
-        )
 
         return context
 

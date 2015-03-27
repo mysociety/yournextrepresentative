@@ -68,6 +68,8 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     "allauth.socialaccount.context_processors.socialaccount",
     "mysite.context_processors.add_settings",
     "mysite.context_processors.election_date",
+    "mysite.context_processors.add_group_permissions",
+    "mysite.context_processors.add_notification_data",
 )
 
 # Application definition
