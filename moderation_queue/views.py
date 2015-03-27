@@ -190,6 +190,25 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
 
     def form_valid(self, form):
         decision = form.cleaned_data['decision']
+        candidate_path = reverse(
+            'person-view',
+            kwargs={'person_id': self.queued_image.popit_person_id}
+        )
+        person_data, _ = self.get_person(
+            self.queued_image.popit_person_id
+        )
+        candidate_name = person_data['name']
+        candidate_link = u'<a href="{url}">{name}</a>'.format(
+            url=candidate_path,
+            name=candidate_name,
+        )
+        def flash(level, message):
+            messages.add_message(
+                self.request,
+                level,
+                message,
+                extra_tags='safe photo-review'
+            )
         if decision == 'approved':
             # Crop the image...
             self.crop_and_upload_image_to_popit(
@@ -202,9 +221,6 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
             self.queued_image.decision = 'approved'
             self.queued_image.save()
             # Now create a new version in PopIt:
-            person_data, _ = self.get_person(
-                self.queued_image.popit_person_id
-            )
             previous_versions = person_data.pop('versions')
             update_message = (u'Approved a photo upload from ' +
                 u'{uploading_user} who provided the message: ' +
@@ -229,10 +245,6 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 popit_person_id=self.queued_image.popit_person_id,
                 source=update_message,
             )
-            candidate_path = reverse(
-                'person-view',
-                kwargs={'person_id': self.queued_image.popit_person_id}
-            )
             self.send_mail(
                 'YourNextMP image upload approved',
                 render_to_string(
@@ -240,6 +252,10 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                     {'candidate_page_url':
                      self.request.build_absolute_uri(candidate_path)}
                 ),
+            )
+            flash(
+                messages.SUCCESS,
+                u'You approved a photo upload for ' + candidate_link
             )
         elif decision == 'rejected':
             self.queued_image.decision = 'rejected'
@@ -263,13 +279,28 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                     {'reason': form.cleaned_data['rejection_reason']}
                 ),
             )
+            flash(
+                messages.INFO,
+                u'You rejected a photo upload for ' + candidate_link
+            )
         elif decision == 'undecided':
             # If it's left as undecided, just redirect back to the
             # photo review queue...
-            pass
+            flash(
+                messages.INFO,
+                u'You left a photo upload for {0} in the queue'.format(
+                    candidate_link
+                )
+            )
         elif decision == 'ignore':
             self.queued_image.decision = 'ignore'
             self.queued_image.save()
+            flash(
+                messages.INFO,
+                u'You indicated a photo upload for {0} should be ignored'.format(
+                    candidate_link
+                )
+            )
         else:
             raise Exception("BUG: unexpected decision {0}".format(decision))
         return HttpResponseRedirect(reverse('photo-review-list'))
