@@ -2,7 +2,7 @@ from datetime import date
 from django.conf import settings
 from auth_helpers.views import user_in_group
 from candidates.models import election_date_2015, TRUSTED_TO_MERGE_GROUP_NAME
-from moderation_queue.models import PHOTO_REVIEWERS_GROUP_NAME
+from moderation_queue.models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
 SETTINGS_TO_ADD = (
     'GOOGLE_ANALYTICS_ACCOUNT',
@@ -28,6 +28,16 @@ def election_date(request):
         'DATE_ELECTION': election_date_2015,
         'DATE_TODAY': date.today(),
     }
+
+
+def add_notification_data(request):
+    """Make the number of photos for review available in the template"""
+
+    result = {}
+    if request.user.is_authenticated():
+        result['photos_for_review'] = \
+            QueuedImage.objects.filter(decision='undecided').count()
+    return result
 
 
 def add_group_permissions(request):
