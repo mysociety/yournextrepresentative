@@ -6,23 +6,27 @@ jQuery(function($) {
       $('.rejection_reason').show();
       $('.justification_for_use').hide();
       $('.moderator-reason').hide();
+      $('.make-primary').hide();
       $('#decision-submit').val('Reject');
       $('#decision-submit').show();
     } else if (value == 'approved') {
       $('.rejection_reason').hide();
       $('.justification_for_use').show();
       $('.moderator-reason').show();
+      $('.make-primary').show();
       $('#decision-submit').val('Approve');
       $('#decision-submit').show();
     } else if (value == 'undecided') {
       $('.rejection_reason').hide();
       $('.justification_for_use').show();
       $('.moderator-reason').hide();
+      $('.make-primary').hide();
       $('#decision-submit').hide();
     } else if (value == 'ignore') {
       $('.rejection_reason').hide();
       $('.justification_for_use').hide();
       $('.moderator-reason').hide();
+      $('.make-primary').hide();
       $('#decision-submit').val('Ignore');
       $('#decision-submit').show();
     }

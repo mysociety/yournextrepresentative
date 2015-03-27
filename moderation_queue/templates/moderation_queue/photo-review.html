@@ -115,6 +115,12 @@
           {{ form.decision }}
       </p>
 
+      <p class="make-primary">
+        {{ form.make_primary }}
+        <label for="{{ form.make_primary.id_for_label }}">Make this the
+          primary image of the candidate?</label>
+      </p>
+
       <p class="moderator-reason">
           {{ form.moderator_why_allowed.errors }}
           <label for="{{ moderator_why_allowed.id_for_label }}">Why <em>you</em> think it's allowed:</label>

@@ -136,6 +136,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 'y_max': self.queued_image.image.height - 1,
                 'decision': self.queued_image.decision,
                 'moderator_why_allowed': self.queued_image.why_allowed,
+                'make_primary': True,
             }
         )
         context['why_allowed'] = self.queued_image.why_allowed
@@ -155,7 +156,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
             fail_silently=False,
         )
 
-    def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed):
+    def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed, make_primary):
         original = Image.open(image_filename)
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
@@ -174,8 +175,10 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
             'notes': 'Approved from photo moderation queue',
             'uploaded_by_user': self.queued_image.user.username,
         }
+        if make_primary:
+            data['index'] = 'first'
         with open(ntf.name) as f:
-            requests.post(
+            result = requests.post(
                 image_upload_url,
                 data=data,
                 files={'image': f.read()},
@@ -192,7 +195,8 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 self.queued_image.image.path,
                 [form.cleaned_data[e] for e in
                  ('x_min', 'y_min', 'x_max', 'y_max')],
-                form.cleaned_data['moderator_why_allowed']
+                form.cleaned_data['moderator_why_allowed'],
+                form.cleaned_data['make_primary'],
             )
             self.queued_image.decision = 'approved'
             self.queued_image.save()

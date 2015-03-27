@@ -52,6 +52,7 @@ class PhotoReviewForm(forms.Form):
     y_min = forms.IntegerField(min_value=0)
     y_max = forms.IntegerField(min_value=1)
     decision = forms.ChoiceField(choices=QueuedImage.DECISION_CHOICES)
+    make_primary = forms.BooleanField(required=False)
     rejection_reason = forms.CharField(
         widget=forms.Textarea(),
         required=False
