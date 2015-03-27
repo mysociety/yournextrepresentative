@@ -66,6 +66,7 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     # allauth specific context processors
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
+    "django.contrib.messages.context_processors.messages",
     "mysite.context_processors.add_settings",
     "mysite.context_processors.election_date",
     "mysite.context_processors.add_group_permissions",
