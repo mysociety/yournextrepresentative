@@ -10,23 +10,27 @@
 
 {% block content %}
 
-{% for leaderboard in leaderboards %}
 
-  <h2>{{ leaderboard.title }}</h2>
+<div class="row">
+  {% for leaderboard in leaderboards %}
 
-  <table>
-    <tr>
-      <th>User</th>
-      <th>Number of edits</th>
-    </tr>
-    {% for row in leaderboard.rows %}
-      <tr>
-        <td>{{ row.username }}</td>
-        <td>{{ row.edit_count }}</td>
-      </tr>
-    {% endfor %}
-  </table>
+    <div class="leaderboard" id="{{ leaderboard.title|slugify }}">
+      <h2>{{ leaderboard.title }}</h2>
+      <table>
+        <tr>
+          <th>User</th>
+          <th>Number of edits</th>
+        </tr>
+        {% for row in leaderboard.rows %}
+          <tr>
+            <td>{{ row.username }}</td>
+            <td>{{ row.edit_count }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
 
-{% endfor %}
+  {% endfor %}
+</div>
 
 {% endblock %}

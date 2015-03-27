@@ -1,0 +1,8 @@
+@media #{$medium-up} {
+  .leaderboard#all-time {
+    @include grid-column($columns: 6, $collapse: true);
+  }
+  .leaderboard#in-the-last-week {
+    @include grid-column($columns: 6, $collapse: true);
+  }
+}
