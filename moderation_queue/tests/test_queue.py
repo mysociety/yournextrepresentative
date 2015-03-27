@@ -320,3 +320,10 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(mock_requests_post.call_count, 0)
 
         self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'ignore')
+
+        las = LoggedAction.objects.all()
+        self.assertEqual(1, len(las))
+        la = las[0]
+        self.assertEqual(la.user.username, 'jane')
+        self.assertEqual(la.action_type, 'photo-ignore')
+        self.assertEqual(la.popit_person_id, '2009')

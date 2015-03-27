@@ -295,6 +295,17 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         elif decision == 'ignore':
             self.queued_image.decision = 'ignore'
             self.queued_image.save()
+            update_message = u'Ignored a photo upload from ' + \
+                u'{uploading_user} (This usually means it was a duplicate)' \
+                .format(uploading_user=self.queued_image.user.username)
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='photo-ignore',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version='',
+                popit_person_id=self.queued_image.popit_person_id,
+                source=update_message,
+            )
             flash(
                 messages.INFO,
                 u'You indicated a photo upload for {0} should be ignored'.format(
