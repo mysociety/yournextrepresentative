@@ -36,6 +36,10 @@ POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 
 GOOGLE_ANALYTICS_ACCOUNT = conf.get('GOOGLE_ANALYTICS_ACCOUNT')
 
+# The email address which is made public on the site for sending
+# support email to:
+SUPPORT_EMAIL = conf['SUPPORT_EMAIL']
+
 # Email addresses that error emails are sent to when DEBUG = False
 ADMINS = conf['ADMINS']
 

@@ -39,6 +39,10 @@ SECRET_KEY: '098nadkafy123asidftqaer0aoejfoasdfa'
 ALLOWED_HOSTS:
   - '*'
 
+# The email address that will be displayed on the site as the contact
+# email for all support requests, and so on:
+SUPPORT_EMAIL: yournextmp-support@example.org
+
 # The email addresses that error emails will be sent to, e.g.:
 # ADMINS:
 #   - ['Example User A', 'alice@example.org']

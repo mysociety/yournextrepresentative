@@ -37,7 +37,7 @@
 
 <p>Otherwise you can
   <a href="{% url 'account_logout' %}?next={{ next_path_escaped }}">log
-  out</a>. Please do <a href="mailto:yournextmp@mysociety.org">email us</a>
+  out</a>. Please do <a href="mailto:{{ settings.SUPPORT_EMAIL }}">email us</a>
   if you have any questions about this agreement.</p>
 
 <div class="further-copyright-explanation">
