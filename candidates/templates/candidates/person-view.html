@@ -103,6 +103,13 @@
     {% endwith %}
   </dl>
 
+  {% if person.image %}
+  <h2>Photo Credit:</h2>
+  <p class="person__photo-credit">
+    {% include 'candidates/_photo-credit.html' with image=person.images.0 %}
+  </p>
+  {% endif %}
+
 </div>
 
 <div class="person__actions">
