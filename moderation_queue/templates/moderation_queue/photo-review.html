@@ -161,6 +161,7 @@
       {% for image in images %}
         <img class="photo-review__existing-image" src="{{ image.proxy_url|fixproxyurl }}/0/200"
           alt="{{ image.notes }}" title="{{ image.notes }}">
+        <p class="photo-credit">{% include 'candidates/_photo-credit.html' %}</p>
       {% endfor %}
     {% else %}
       <p>There were no existing images for this candidate.</p>
