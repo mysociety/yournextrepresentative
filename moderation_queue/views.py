@@ -119,6 +119,11 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
             urlquote(image_search_query)
         )
 
+    def get_google_reverse_image_search_url(self, image_url):
+        url = 'https://www.google.com/searchbyimage?&image_url='
+        absolute_image_url = self.request.build_absolute_uri(image_url)
+        return url + urlquote(absolute_image_url)
+
     def get_context_data(self, **kwargs):
         context = super(PhotoReview, self).get_context_data(**kwargs)
         self.queued_image = get_object_or_404(
@@ -145,6 +150,10 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         context['justification_for_use'] = self.queued_image.justification_for_use
         context['google_image_search_url'] = self.get_google_image_search_url(
             context['person'], context['person_extra']
+        )
+        context['google_reverse_image_search_url'] = \
+            self.get_google_reverse_image_search_url(
+                self.queued_image.image.url
         )
         return context
 
