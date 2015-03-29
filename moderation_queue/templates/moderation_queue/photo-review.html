@@ -82,7 +82,7 @@
 
     {% with username=queued_image.user.username %}
 
-      <p>Uploaded by username with confirmed email
+      <p>Uploaded by user {{ username }} with confirmed email
         <tt>{{ queued_image.user.email }}</tt>.
         {% if person.email %}
           (The candidate's unconfirmed email address is
