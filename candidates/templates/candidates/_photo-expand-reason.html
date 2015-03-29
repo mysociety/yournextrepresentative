@@ -1,0 +1,12 @@
+{% if reason == 'public-domain' %}
+  the photo is free of copyright restrictions (i.e. has explictly
+  been placed in the public domain)
+{% elif reason == 'copyright-assigned' %}
+  they have assigned the copyright of the image to Democracy Club
+  so that we may use it on the site
+{% elif reason == 'profile-photo' %}
+  this photo is the candidate's profile on social media, or is used
+  to promote their candidacy on an official candidate or party website
+{% elif reason == 'other' %}
+  here is some reasonable justification for its use
+{% endif %}
