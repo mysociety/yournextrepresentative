@@ -108,13 +108,13 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
     required_group_name = PHOTO_REVIEWERS_GROUP_NAME
 
     def get_google_image_search_url(self, person, person_extra):
-        image_search_query = '"{name}" "{party}"'.format(
+        image_search_query = u'"{name}" "{party}"'.format(
             name=person['name'],
             party=tidy_party_name(person_extra['last_party']['name'])
         )
         cons_2015 = person['standing_in'].get('2015')
         if cons_2015:
-            image_search_query += ' "{0}"'.format(cons_2015['name'])
+            image_search_query += u' "{0}"'.format(cons_2015['name'])
         return u'https://www.google.co.uk/search?tbm=isch&q={0}'.format(
             urlquote(image_search_query)
         )
