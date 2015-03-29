@@ -1,10 +1,13 @@
-Thank-you for uploading a photo for YourNextMP, but
-unfortunately we can't use that image because:
+Thank-you for uploading a photo of {{ candidate_name }}
+to YourNextMP, but unfortunately we can't use that image because:
 
   {{ reason }}
 
 You can just reply to this email if you want to discuss that
-further.
+further, or you can try uploading a photo with a different reason
+or justification for its use using this link:
+
+  {{ retry_upload_link }}
 
 Many thanks,
 The YourNextMP volunteers

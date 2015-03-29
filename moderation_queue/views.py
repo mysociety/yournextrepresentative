@@ -284,11 +284,19 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 popit_person_id=self.queued_image.popit_person_id,
                 source=update_message,
             )
+            retry_upload_link = self.request.build_absolute_uri(
+                reverse(
+                    'photo-upload',
+                    kwargs={'popit_person_id': self.queued_image.popit_person_id}
+                )
+            )
             self.send_mail(
                 'YourNextMP image moderation results',
                 render_to_string(
                     'moderation_queue/photo_rejected_email.txt',
-                    {'reason': form.cleaned_data['rejection_reason']}
+                    {'reason': form.cleaned_data['rejection_reason'],
+                     'candidate_name': candidate_name,
+                     'retry_upload_link': retry_upload_link}
                 ),
             )
             flash(
