@@ -213,6 +213,7 @@ class PhotoReviewTests(WebTest):
     @patch('candidates.popit.PopIt')
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
+    @override_settings(SUPPORT_EMAIL='support@example.com')
     def test_photo_review_upload_rejected_privileged(
             self,
             mock_popit,
@@ -248,7 +249,7 @@ class PhotoReviewTests(WebTest):
             'YourNextMP image moderation results',
             u"Thank-you for uploading a photo of Tessa Jowell\nto YourNextMP, but unfortunately we can't use that image because:\n\n  No clear source or copyright statement\n\nYou can just reply to this email if you want to discuss that\nfurther, or you can try uploading a photo with a different reason\nor justification for its use using this link:\n\n  http://localhost:80/moderation/photo/upload/2009\n\nMany thanks,\nThe YourNextMP volunteers\n",
             'admins@example.com',
-            [u'john@example.com'],
+            [u'john@example.com', 'support@example.com'],
             fail_silently=False
         )
 

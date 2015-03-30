@@ -158,12 +158,15 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         )
         return context
 
-    def send_mail(self, subject, message):
+    def send_mail(self, subject, message, email_support_too=False):
+        recipients = [self.queued_image.user.email]
+        if email_support_too:
+            recipients.append(settings.SUPPORT_EMAIL)
         return send_mail(
             subject,
             message,
             settings.DEFAULT_FROM_EMAIL,
-            [self.queued_image.user.email],
+            recipients,
             fail_silently=False,
         )
 
@@ -299,6 +302,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                      'candidate_name': candidate_name,
                      'retry_upload_link': retry_upload_link}
                 ),
+                email_support_too=True,
             )
             flash(
                 messages.INFO,
