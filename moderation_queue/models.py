@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -68,3 +69,6 @@ class QueuedImage(models.Model):
             user=self.user,
             popit_person_id=self.popit_person_id
         )
+
+    def get_absolute_url(self):
+        return reverse('photo-review', kwargs={'queued_image_id': self.id})

@@ -11,3 +11,6 @@ or justification for its use using this link:
 
 Many thanks,
 The YourNextMP volunteers
+
+-- 
+For administrators' use: {{ photo_review_url }}

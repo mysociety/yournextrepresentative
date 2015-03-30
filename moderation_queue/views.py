@@ -218,6 +218,9 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
             url=candidate_path,
             name=candidate_name,
         )
+        photo_review_url = self.request.build_absolute_uri(
+            self.queued_image.get_absolute_url()
+        )
         def flash(level, message):
             messages.add_message(
                 self.request,
@@ -300,7 +303,8 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                     'moderation_queue/photo_rejected_email.txt',
                     {'reason': form.cleaned_data['rejection_reason'],
                      'candidate_name': candidate_name,
-                     'retry_upload_link': retry_upload_link}
+                     'retry_upload_link': retry_upload_link,
+                     'photo_review_url': photo_review_url},
                 ),
                 email_support_too=True,
             )
