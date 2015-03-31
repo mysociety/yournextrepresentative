@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
 from .mixins import ContributorsMixin
@@ -10,6 +12,10 @@ from ..mapit import get_wmc_from_postcode
 class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ConstituencyPostcodeFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
@@ -29,6 +35,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 class ConstituencyNameFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = ConstituencyForm
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         constituency_id = form.cleaned_data['constituency']

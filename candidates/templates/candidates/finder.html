@@ -35,14 +35,12 @@ it’s a waste of money.</p>
 <div class="finder__forms">
 
   <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
-    {% csrf_token %}
     {{ postcode_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
     <a class="show-other-form" href="{% url 'lookup-name' %}">Or select a constituency</a>
   </form>
 
   <form id="form-name" action="{% url 'lookup-name' %}" method="post" {% if show_postcode_form %}style="display: none"{% endif %}>
-    {% csrf_token %}
     {{ constituency_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
     <a class="show-other-form" href="{% url 'lookup-postcode' %}">Or search by postcode</a>
