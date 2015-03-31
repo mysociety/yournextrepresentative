@@ -1,4 +1,4 @@
-Thank-you for uploading a photo of {{ candidate_name }}
+{% autoescape off %}Thank-you for uploading a photo of {{ candidate_name }}
 to YourNextMP, but unfortunately we can't use that image because:
 
   {{ reason }}
@@ -13,4 +13,4 @@ Many thanks,
 The YourNextMP volunteers
 
 -- 
-For administrators' use: {{ photo_review_url }}
+For administrators' use: {{ photo_review_url }}{% endautoescape %}

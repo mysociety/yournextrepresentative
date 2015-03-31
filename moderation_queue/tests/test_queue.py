@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os.path import join, realpath, dirname
 import re
 from urlparse import urlsplit
@@ -231,7 +233,7 @@ class PhotoReviewTests(WebTest):
         )
         form = review_page_response.forms['photo-review-form']
         form['decision'] = 'rejected'
-        form['rejection_reason'] = 'No clear source or copyright statement'
+        form['rejection_reason'] = u'There\'s no clear source or copyright statement'
         response = form.submit(user=self.test_reviewer)
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
@@ -247,7 +249,7 @@ class PhotoReviewTests(WebTest):
 
         mock_send_mail.assert_called_once_with(
             'YourNextMP image moderation results',
-            u"Thank-you for uploading a photo of Tessa Jowell\nto YourNextMP, but unfortunately we can't use that image because:\n\n  No clear source or copyright statement\n\nYou can just reply to this email if you want to discuss that\nfurther, or you can try uploading a photo with a different reason\nor justification for its use using this link:\n\n  http://localhost:80/moderation/photo/upload/2009\n\nMany thanks,\nThe YourNextMP volunteers\n\n-- \nFor administrators' use: http://localhost:80/moderation/photo/review/1\n",
+            u"Thank-you for uploading a photo of Tessa Jowell\nto YourNextMP, but unfortunately we can't use that image because:\n\n  There\'s no clear source or copyright statement\n\nYou can just reply to this email if you want to discuss that\nfurther, or you can try uploading a photo with a different reason\nor justification for its use using this link:\n\n  http://localhost:80/moderation/photo/upload/2009\n\nMany thanks,\nThe YourNextMP volunteers\n\n-- \nFor administrators' use: http://localhost:80/moderation/photo/review/1\n",
             'admins@example.com',
             [u'john@example.com', 'support@example.com'],
             fail_silently=False
