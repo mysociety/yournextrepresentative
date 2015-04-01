@@ -27,7 +27,6 @@ class Command(PopItApiMixin, BaseCommand):
             if not needs_update:
                 continue
             for image in person.get('images', []):
-                image.pop('_id', None)
                 # Some images have an empty 'created' field, which
                 # causes an Elasticsearch indexing error, so remove
                 # that if it's the case:
