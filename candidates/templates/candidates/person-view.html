@@ -96,7 +96,11 @@
     <dt>Age</dt>
     {% with dob=person.date_of_birth %}
       {% if dob %}
-        <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
+        {% if dob|length_is:"4" %}
+          <dd>{{ person.age }}<small class="dob">(Year of birth: {{ dob }})</small>
+        {% else %}
+          <dd>{{ person.age }}<small class="dob">(Date of birth: {{ dob|date:"jS F Y" }})</small>
+        {% endif %}
       {% else %}
         <dd>Unknown
       {% endif %}</dd>

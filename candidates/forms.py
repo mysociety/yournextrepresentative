@@ -7,6 +7,7 @@ from .static_data import MapItData, PartyData
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django_date_extensions.fields import ApproximateDateFormField
 
 from .mapit import get_wmc_from_postcode, BaseMapItException
 from .models import UserTermsAgreement
@@ -99,8 +100,8 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
-    birth_date = forms.DateField(
-        label="Date of birth (as YYYY-MM-DD)",
+    birth_date = ApproximateDateFormField(
+        label="Date of birth (as YYYY-MM-DD or YYYY)",
         required=False,
     )
     wikipedia_url = forms.URLField(

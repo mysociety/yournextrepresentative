@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.views.decorators.cache import cache_control
 from django.views.generic import FormView, TemplateView, View
+from django_date_extensions.fields import ApproximateDate
 
 from braces.views import LoginRequiredMixin
 
@@ -38,7 +39,7 @@ def copy_person_form_data(cleaned_data):
     # it into a string:
     birth_date_date = result['birth_date']
     if birth_date_date:
-        result['birth_date'] = str(birth_date_date)
+        result['birth_date'] = repr(birth_date_date).replace("-00-00", "")
     area_id = result.get('constituency')
     if area_id:
         country_name =  MapItData.constituencies_2010.get(area_id)['country_name']

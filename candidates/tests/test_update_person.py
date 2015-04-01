@@ -35,7 +35,7 @@ class TestUpdatePerson(TestCase):
         view.create_party_memberships = MagicMock()
 
         new_person_data = {
-            "birth_date": None,
+            "birth_date": '1947',
             "email": "foo@example.org",
             "homepage_url": "http://foo.example.org",
             "id": "2009",
@@ -102,7 +102,7 @@ class TestUpdatePerson(TestCase):
         self.assertEqual(2, len(mocked_put.call_args_list))
 
         first_put_call_args = {
-                'birth_date': None,
+                'birth_date': '1947',
                 'contact_details': [],
                 'email': u'foo@example.org',
                 'gender': None,
@@ -126,7 +126,7 @@ class TestUpdatePerson(TestCase):
             }
 
         second_put_call_args = {
-                'birth_date': None,
+                'birth_date': '1947',
                 'contact_details': [
                     {
                         'type': 'twitter',

@@ -22,7 +22,7 @@ class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
 
 
 EXPECTED_ARGS = {
-    'birth_date': None,
+    'birth_date': '1988-01-01',
     'email': u'jane@example.org',
     'gender': 'female',
     'honorific_prefix': None,
@@ -91,7 +91,7 @@ EXPECTED_ARGS = {
                 'facebook_page_url': 'http://notreallyfacebook/tessajowellcampaign',
                 'facebook_personal_url': 'http://notreallyfacebook/tessajowell',
                 'party_ppc_page_url': 'http://labour.example.org/tessajowell',
-                'birth_date': None,
+                'birth_date': '1988-01-01',
                 'gender': 'female',
                 'name': 'Jane Doe',
                 'wikipedia_url': '',
@@ -138,6 +138,7 @@ NEW_PERSON_DATA = {
     "facebook_personal_url": "http://notreallyfacebook/tessajowell",
     "facebook_page_url": "http://notreallyfacebook/tessajowellcampaign",
     "party_ppc_page_url": "http://labour.example.org/tessajowell",
+    "birth_date": "1988-01-01",
 }
 
 @patch.object(FakePersonCollection, 'post')

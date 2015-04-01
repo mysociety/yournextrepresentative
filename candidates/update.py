@@ -224,8 +224,14 @@ class PersonParseMixin(PopItApiMixin):
         # candidate's age in years:
         dob_str = person.popit_data.get('birth_date')
         if dob_str:
-            extra_for_template['date_of_birth'] = datetime.strptime(dob_str, '%Y-%m-%d').date()
-            extra_for_template['age'] = years_ago(extra_for_template['date_of_birth'], date.today())
+            dob_str = dob_str.replace('-00-00', '')
+            if len(dob_str) == 4:
+                extra_for_template['date_of_birth'] = dob_str
+                approx_age = date.today().year - int(dob_str)
+                extra_for_template['age'] = "{0} or {1}".format(approx_age - 1, approx_age)
+            else:
+               extra_for_template['date_of_birth'] = datetime.strptime(dob_str, '%Y-%m-%d').date()
+               extra_for_template['age'] = years_ago(extra_for_template['date_of_birth'], date.today())
         else:
             extra_for_template['date_of_birth'] = extra_for_template['age'] = ''
         extra_for_template['last_party'] = self.get_last_party(person.popit_data)
