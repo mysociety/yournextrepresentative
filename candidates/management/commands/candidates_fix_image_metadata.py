@@ -90,10 +90,10 @@ class Command(PopItApiMixin, BaseCommand):
                 print "  Image with URL:", image['url']
                 fix_image(image)
                 # Some images have an empty 'created' field, which
-                # causes an Elasticsearch indexing error, so remove
-                # that if it's the case:
+                # causes an Elasticsearch indexing error, so change it
+                # to null if that's the case:
                 if not image.get('created'):
-                    image.pop('created', None)
+                    image['created'] = None
             fix_dates(person)
             try:
                 self.api.persons(person['id']).put(person)
