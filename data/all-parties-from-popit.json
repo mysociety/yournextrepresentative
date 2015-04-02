@@ -8043,6 +8043,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-18",
+        "id": "party:2551",
+        "identifiers": [
+            {
+                "identifier": "PP2551",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Above and Beyond Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-above-and-beyond-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2015-02-27",
         "id": "party:2552",
         "identifiers": [
