@@ -17,6 +17,8 @@ from ..models import (
 from ..popit import PopItApiMixin
 from ..static_data import MapItData
 
+from ..cache import cache_posts
+
 # From http://stackoverflow.com/a/517974/223092
 def strip_accents(s):
     return u"".join(
@@ -69,8 +71,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
                 'ignored_slug': slugify(context['constituency_name'])
             }))
 
-        mp_post = self.api.posts(mapit_area_id).get(
-            embed='membership.person.membership.organization')
+        mp_post = cache_posts(self.api, mapit_area_id)
 
         current_candidates = set()
         past_candidates = set()

@@ -111,6 +111,7 @@ from .models import candidate_list_name_re
 from .models import create_person_with_id_retries
 
 from .popit import PopItApiMixin
+from .cache import invalidate_person
 
 import django.dispatch
 person_added = django.dispatch.Signal(providing_args=["data"])
@@ -284,6 +285,7 @@ class PersonUpdateMixin(PopItApiMixin):
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
         person_added.send(sender=PopItPerson, data=data)
+        invalidate_person(person_id)
         return person_id
 
     def update_person(self, data, change_metadata, previous_versions):
@@ -313,4 +315,5 @@ class PersonUpdateMixin(PopItApiMixin):
         # And then create any that should be there:
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
+        invalidate_person(person_id)
         return person.id
