@@ -1,3 +1,4 @@
+from datetime import date
 import json
 from os import rename
 from os.path import dirname
@@ -25,6 +26,10 @@ class Command(LabelCommand):
         ):
             if party['classification'] != 'Party':
                 continue
+            if 'dissolution_date' in party:
+                dissolution_date = party['dissolution_date']
+                if dissolution_date < str(date.today()):
+                    continue
             # These URLs are specific to the server this data is
             # extracted from:
             del party['url']
