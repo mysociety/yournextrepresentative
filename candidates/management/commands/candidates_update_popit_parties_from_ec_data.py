@@ -31,7 +31,7 @@ IMAGES_TO_USE = {
     # Labour Party
     'party:53': 'Rose with the word Labour underneath',
     # Green Party
-    'party:63': 'World with Petals and Green Party name English',
+    'party:63': 'World with petals and Green Party name English',
     # Another Green Party
     'party:305': 'Emblem 3',
     # Plaid Cymru
