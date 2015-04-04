@@ -45,16 +45,21 @@ class Command(PopItApiMixin, BaseCommand):
             if person['standing_in'].get('2015'):
                 counts['candidates_2015'] += 1
                 party_id = person['party_memberships']['2015']['id']
-                counts['parties'][party_id]['count'] += 1
-                constituency_id = person['standing_in']['2015']['post_id']
-                counts['constituencies'][constituency_id]['count'] += 1
-                if person['standing_in'].get('2010'):
-                    if party_id == person['party_memberships']['2010']['id']:
-                        standing_again_same_party += 1
+                if party_id in counts['parties']:
+                    counts['parties'][party_id]['count'] += 1
+                    constituency_id = person['standing_in']['2015']['post_id']
+                    counts['constituencies'][constituency_id]['count'] += 1
+                    if person['standing_in'].get('2010'):
+                        if party_id == person['party_memberships']['2010']['id']:
+                            standing_again_same_party += 1
+                        else:
+                            standing_again_different_party += 1
                     else:
-                        standing_again_different_party += 1
+                        new_candidates += 1
                 else:
-                    new_candidates += 1
+                    message = u"WARNING: candidate {0} is standing in 2015 " + \
+                        "for a dissolved or deleted party {1}"
+                    print message.format(person['id'], party_id).encode('utf-8')
 
         # Add or create objects in the database
         # Parties
