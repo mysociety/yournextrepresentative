@@ -4943,6 +4943,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-03-25",
+        "id": "party:2626",
+        "identifiers": [
+            {
+                "identifier": "PP2626",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Consensus",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "consensus"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2015-04-01",
         "id": "party:2628",
         "identifiers": [
