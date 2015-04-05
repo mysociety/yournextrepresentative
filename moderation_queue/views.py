@@ -63,6 +63,10 @@ def upload_photo(request, popit_person_id):
         request,
         'moderation_queue/photo-upload-new.html',
         {'form': form,
+         'queued_images': QueuedImage.objects.filter(
+             popit_person_id=popit_person_id,
+             decision='undecided',
+         ).order_by('created'),
          'person': PopItPerson.create_from_popit(api, popit_person_id)}
     )
 

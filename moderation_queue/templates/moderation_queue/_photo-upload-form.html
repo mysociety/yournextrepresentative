@@ -1,7 +1,29 @@
 <form id="person-upload-photo" action="{% url 'photo-upload' popit_person_id %}" method="post" enctype="multipart/form-data">
+
+  {% if queued_images %}
+    <p>
+      <strong>Warning:</strong> there
+      {{ queued_images.count|pluralize:"is,are" }} already
+      {{ queued_images.count }} photo{{ queued_images.count|pluralize }}
+      of {{ person.name }} in the queue, waiting to be moderated:
+      <ul>
+        {% for qi in queued_images %}
+          <li>Photo uploaded by {{ qi.user.username }} at {{ qi.created }}</li>
+        {% endfor %}
+      </ul>
+    </p>
+  {% endif %}
+
   {{ form.non_field_errors }}
   {% csrf_token %}
-  <p>First, select an image from your computer:</p>
+  <p>
+    {% if queued_images %}If you still want to upload another photo of
+    {{ person.name }}, first
+    {% else %}
+    First,
+    {% endif %}
+    select an image from your computer:
+  </p>
   <p>
     {{ form.image.errors }}
   </p>
