@@ -292,7 +292,7 @@ NOSE_ARGS = [
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
 we prefer URLs of news stories or official candidate pages.'''
 
-# By default, cache successful results from MapIt for 30 minutes
+# By default, cache successful results from MapIt for a day
 MAPIT_CACHE_SECONDS = 86400
 
 FORCE_HTTPS_IMAGES = conf.get('FORCE_HTTPS_IMAGES')
