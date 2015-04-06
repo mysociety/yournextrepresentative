@@ -107,7 +107,6 @@ INSTALLED_APPS = (
 SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.cache.UpdateCacheMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'candidates.middleware.PopItDownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -117,7 +116,6 @@ MIDDLEWARE_CLASSES = (
     'candidates.middleware.CopyrightAssignmentMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -308,8 +306,3 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-
-if DEBUG:
-    CACHE_MIDDLEWARE_SECONDS = 0
-else:
-    CACHE_MIDDLEWARE_SECONDS = 60 * 20 # Twenty minutes
