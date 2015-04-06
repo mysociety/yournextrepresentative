@@ -14,6 +14,7 @@ import requests
 from slumber.exceptions import HttpServerError
 import dateutil.parser
 
+from candidates.models import invalidate_cache_entries_from_person_data
 from candidates.popit import create_popit_api_object
 
 from ..images import get_file_md5sum, image_uploaded_already
@@ -110,6 +111,21 @@ class Command(BaseCommand):
                         self.upload_images(ec_party['emblems'], party_id)
                     else:
                         raise
+                organization_with_memberships = \
+                    self.api.organizations(
+                        party_id,
+                        embed='membership.person'
+                    )['result']
+                # Make sure any members of these parties are
+                # invalidated from the cache so that the embedded
+                # party information when getting posts and persons is
+                # up-to-date:
+                for membership in organization_with_memberships.get(
+                        'memberships', []
+                ):
+                    invalidate_cache_entries_from_person_data(
+                        membership['person_id']
+                    )
 
     def clean_date(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d")

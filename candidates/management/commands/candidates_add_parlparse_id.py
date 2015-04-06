@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 import json
 from lxml import objectify
 
+from candidates.models import invalidate_cache_entries_from_person_data
 from candidates.popit import create_popit_api_object
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.views.version_data import get_change_metadata
@@ -102,6 +103,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, BaseCommand):
             change_metadata,
             previous_versions,
         )
+        invalidate_cache_entries_from_person_data(person_data)
         if self.verbosity > 0:
             msg = u"Successfully updated {} with {}"
             self.stdout.write(msg.format(name, parlparse_id))

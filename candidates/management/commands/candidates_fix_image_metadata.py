@@ -5,6 +5,7 @@ import requests
 import sys
 from StringIO import StringIO
 
+from candidates.models import invalidate_cache_entries_from_person_data
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 from candidates.update import fix_dates
 
@@ -100,3 +101,4 @@ class Command(PopItApiMixin, BaseCommand):
             except HttpClientError as e:
                 print "HttpClientError", e.content
                 sys.exit(1)
+            invalidate_cache_entries_from_person_data(person)

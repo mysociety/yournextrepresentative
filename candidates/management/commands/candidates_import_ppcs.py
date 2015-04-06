@@ -21,6 +21,7 @@ from django.conf import settings
 
 import requests
 
+from candidates.models import invalidate_cache_entries_from_person_data
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.static_data import MapItData
 from candidates.views.version_data import get_change_metadata
@@ -282,6 +283,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, BaseCommand):
             else:
                 print "Uploading image..."
                 self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
+        invalidate_cache_entries_from_person_data(merged_person_data)
         return person_id
 
     def add_popit_person(self, ppc_data, image_filename):
@@ -293,6 +295,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, BaseCommand):
         person_id = self.create_person(person_data, change_metadata)
         if image_filename:
             self.upload_person_image(person_id, image_filename, ppc_data['image_url'])
+        invalidate_cache_entries_from_person_data(person_data)
         return person_id
 
     def already_added_for_2015(self, ppc_data, popit_result):

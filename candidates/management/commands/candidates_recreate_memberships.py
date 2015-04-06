@@ -6,6 +6,7 @@
 
 from django.core.management.base import BaseCommand, CommandError
 
+from candidates.cache import invalidate_posts, invalidate_person
 from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object
 from candidates.update import PersonUpdateMixin
@@ -22,6 +23,10 @@ class Command(PersonUpdateMixin, BaseCommand):
             person = PopItPerson.create_from_popit(
                 create_popit_api_object(), person_id
             )
+            posts_to_invalidate = person.get_associated_posts()
             person.delete_memberships()
             self.create_party_memberships(person_id, person.popit_data)
             self.create_candidate_list_memberships(person_id, person.popit_data)
+            posts_to_invalidate.update(person.get_associated_posts())
+            invalidate_posts(posts_to_invalidate)
+            invalidate_person(person_id)
