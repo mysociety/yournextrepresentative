@@ -301,8 +301,16 @@ if conf.get('NGINX_SSL'):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+if DEBUG:
+    cache = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
+else:
+    cache = {
+        'TIMEOUT': None, # cache keys never expire; we invalidate them
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': DATABASES['default']['NAME'],
     }
+
+CACHES = {
+    'default': cache
 }
