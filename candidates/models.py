@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
+from .cache import get_person_cached, invalidate_person, invalidate_posts
 from .static_data import MapItData
 
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
@@ -391,6 +392,10 @@ class PopItPerson(object):
     def get_associated_posts(self):
         return get_post_ids_from_standing_in(self.standing_in)
 
+    def invalidate_cache_entries(self):
+        invalidate_posts(self.get_associated_posts())
+        invalidate_person(self.id)
+
     @property
     def known_status_in_2015(self):
         standing_in = self.popit_data.get('standing_in', {})
@@ -563,6 +568,12 @@ def get_post_ids_from_standing_in(standing_in):
             if post_id:
                 post_ids.add(post_id)
     return post_ids
+
+def invalidate_cache_entries_from_person_data(person_data):
+    invalidate_posts(
+        get_post_ids_from_standing_in(person_data.get('standing_in', {}))
+    )
+    invalidate_person(person_data['id'])
 
 
 class MaxPopItIds(models.Model):
