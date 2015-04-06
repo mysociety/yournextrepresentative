@@ -262,8 +262,7 @@ class PopItPerson(object):
 
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
-        popit_data = api.persons(popit_person_id).get(
-            embed='membership.organization')['result']
+        popit_data = get_person_cached(api, popit_person_id)['result']
         new_person = cls(api=api, popit_data=popit_data)
         return new_person
 

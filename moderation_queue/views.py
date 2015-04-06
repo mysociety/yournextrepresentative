@@ -17,7 +17,6 @@ from django.views.generic import ListView, TemplateView
 from PIL import Image
 
 from auth_helpers.views import GroupRequiredMixin
-from candidates.cache import invalidate_posts
 from candidates.management.images import get_file_md5sum
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 
@@ -208,7 +207,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 files={'image': f.read()},
                 headers={'APIKey': self.api.api_key}
             )
-            invalidate_posts(person.get_associated_posts())
+        person.invalidate_cache_entries()
         # Remove the cropped temporary image file:
         os.remove(ntf.name)
 

@@ -111,7 +111,7 @@ from .models import candidate_list_name_re
 from .models import create_person_with_id_retries
 
 from .popit import PopItApiMixin
-from .cache import invalidate_posts
+from .cache import invalidate_posts, invalidate_person
 
 import django.dispatch
 person_added = django.dispatch.Signal(providing_args=["data"])
@@ -290,6 +290,7 @@ class PersonUpdateMixin(PopItApiMixin):
         # person:
         new_posts = get_post_ids_from_standing_in(data.get('standing_in', {}))
         invalidate_posts(new_posts)
+        invalidate_person(person_id)
         return person_id
 
     def update_person(self, data, change_metadata, previous_versions):
@@ -328,4 +329,5 @@ class PersonUpdateMixin(PopItApiMixin):
             )
             posts.update(old_posts)
         invalidate_posts(posts)
+        invalidate_person(person_id)
         return person.id
