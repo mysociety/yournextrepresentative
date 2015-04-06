@@ -103,7 +103,7 @@ import math
 
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
-from .models import get_person_data_from_dict
+from .models import get_person_data_from_dict, get_post_ids_from_standing_in
 from .models import form_simple_fields, form_complex_fields_locations
 
 from .models import election_date_2005, election_date_2010
@@ -111,7 +111,7 @@ from .models import candidate_list_name_re
 from .models import create_person_with_id_retries
 
 from .popit import PopItApiMixin
-from .cache import invalidate_person
+from .cache import invalidate_posts
 
 import django.dispatch
 person_added = django.dispatch.Signal(providing_args=["data"])
@@ -285,7 +285,11 @@ class PersonUpdateMixin(PopItApiMixin):
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
         person_added.send(sender=PopItPerson, data=data)
-        invalidate_person(person_id)
+        # Data about memberships of the post may be cached, so
+        # invalidate any cache entries for posts associated with this
+        # person:
+        new_posts = get_post_ids_from_standing_in(data.get('standing_in', {}))
+        invalidate_posts(new_posts)
         return person_id
 
     def update_person(self, data, change_metadata, previous_versions):
@@ -315,5 +319,13 @@ class PersonUpdateMixin(PopItApiMixin):
         # And then create any that should be there:
         self.create_party_memberships(person_id, data)
         self.create_candidate_list_memberships(person_id, data)
-        invalidate_person(person_id)
+        # Find the posts that might have been affected, so we can
+        # invalidate any cached post data.
+        posts = get_post_ids_from_standing_in(data.get('standing_in', {}))
+        if previous_versions:
+            old_posts = get_post_ids_from_standing_in(
+                previous_versions[0]['data'].get('standing_in', {})
+            )
+            posts.update(old_posts)
+        invalidate_posts(posts)
         return person.id

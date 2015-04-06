@@ -17,7 +17,7 @@ from django.views.generic import ListView, TemplateView
 from PIL import Image
 
 from auth_helpers.views import GroupRequiredMixin
-from candidates.cache import invalidate_person
+from candidates.cache import invalidate_posts
 from candidates.management.images import get_file_md5sum
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 
@@ -185,6 +185,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         cropped.save(ntf.name, 'PNG')
         # Upload the image to PopIt...
         person_id = self.queued_image.popit_person_id
+        person = PopItPerson.create_from_popit(self.api, person_id)
         image_upload_url = '{base}persons/{person_id}/image'.format(
             base=self.get_base_url(),
             person_id=person_id
@@ -207,7 +208,7 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
                 files={'image': f.read()},
                 headers={'APIKey': self.api.api_key}
             )
-            invalidate_person(person_id)
+            invalidate_posts(person.get_associated_posts())
         # Remove the cropped temporary image file:
         os.remove(ntf.name)
 

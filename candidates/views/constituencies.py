@@ -19,7 +19,7 @@ from ..models import (
 from ..popit import PopItApiMixin
 from ..static_data import MapItData
 
-from ..cache import cache_posts
+from ..cache import get_post_cached
 
 # From http://stackoverflow.com/a/517974/223092
 def strip_accents(s):
@@ -79,7 +79,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
                 'ignored_slug': slugify(context['constituency_name'])
             }))
 
-        mp_post = cache_posts(self.api, mapit_area_id)
+        mp_post = get_post_cached(self.api, mapit_area_id)
 
         current_candidates = set()
         past_candidates = set()

@@ -388,6 +388,9 @@ class PopItPerson(object):
 
         return results
 
+    def get_associated_posts(self):
+        return get_post_ids_from_standing_in(self.standing_in)
+
     @property
     def known_status_in_2015(self):
         standing_in = self.popit_data.get('standing_in', {})
@@ -549,6 +552,17 @@ def get_person_data_from_dict(data):
         if new_value:
             update_values_in_sub_array(result, location, new_value)
     return result
+
+def get_post_ids_from_standing_in(standing_in):
+    post_ids = set()
+    if not standing_in:
+        return post_ids
+    for year, data in standing_in.items():
+        if data:
+            post_id = data.get('post_id')
+            if post_id:
+                post_ids.add(post_id)
+    return post_ids
 
 
 class MaxPopItIds(models.Model):
