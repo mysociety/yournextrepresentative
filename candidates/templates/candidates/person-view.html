@@ -6,6 +6,20 @@
 
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ canonical_url }}" />
+    {% if person.image %}
+      <meta property="og:image" content="{{ person.proxy_image|fixproxyurl }}/0/80" />
+    {% elif person.gender|lower == 'female' %}
+      <meta property="og:image" content="{% static 'candidates/img/blank-woman.png' %}"/>
+    {% else %}
+     <meta property="og:image" content="{% static 'candidates/img/blank-man.png' %}"/>
+    {% endif %}
+    <meta property="og:site_name" content="YourNextMP" />
+    <meta property="og:locale" content="en_GB" />
 {% endblock %}
 
 
