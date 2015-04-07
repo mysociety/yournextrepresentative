@@ -26,14 +26,6 @@ class Command(PopItApiMixin, BaseCommand):
                     del data['last_party']
             if not needs_update:
                 continue
-            for image in person.get('images', []):
-                image.pop('_id', None)
-                # Some images have an empty 'created' field, which
-                # causes an Elasticsearch indexing error, so remove
-                # that if it's the case:
-                if not image.get('created'):
-                    image.pop('created', None)
-            fix_dates(person)
             try:
                 self.api.persons(person['id']).put(person)
             except HttpClientError as e:

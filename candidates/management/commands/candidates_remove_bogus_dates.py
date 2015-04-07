@@ -35,12 +35,6 @@ class Command(PopItApiMixin, BaseCommand):
                 ]
             )
             for image in person.get('images', []):
-                image.pop('_id', None)
-                # Some images have an empty 'created' field, which
-                # causes an Elasticsearch indexing error, so remove
-                # that if it's the case:
-                if not image.get('created'):
-                    image.pop('created', None)
                 strip_bogus_fields(
                     image,
                     [
@@ -52,7 +46,6 @@ class Command(PopItApiMixin, BaseCommand):
                         'end_date'
                     ]
                 )
-            fix_dates(person)
             try:
                 self.api.persons(person['id']).put(person)
             except HttpClientError as e:
