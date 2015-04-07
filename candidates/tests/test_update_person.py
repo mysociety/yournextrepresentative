@@ -57,6 +57,26 @@ class TestUpdatePerson(TestCase):
             "wikipedia_url": "",
         }
 
+        # This is for the previous versions array; just include the
+        # fields we need to notice a change in posts that should be
+        # invalidated:
+        previous_version = {
+            'data': {
+                "standing_in": {
+                    "2010": {
+                        "mapit_url": "http://mapit.mysociety.org/area/65808",
+                        "name": "Dulwich and West Norwood",
+                        "post_id": "65808",
+                    },
+                    "2015": {
+                        "mapit_url": "http://mapit.mysociety.org/area/65913",
+                        "name": "Camberwell and Peckham",
+                        "post_id": "65913",
+                    }
+                },
+            }
+        }
+
         view.update_person(
             new_person_data,
             {
@@ -65,7 +85,7 @@ class TestUpdatePerson(TestCase):
                 'version_id': '6054aa38b30b4418',
                 'timestamp': '2014-09-28T14:02:44.567413',
             },
-            [] # No previous versions, say...
+            [previous_version]
         )
         # FIXME: really we should only need the second call here, but
         # see the FIXME in candidates/update.py:
@@ -91,7 +111,9 @@ class TestUpdatePerson(TestCase):
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',
                         'data': new_person_data
-                    }],
+                    },
+                    previous_version
+                ],
             }
 
         second_put_call_args = {
@@ -140,7 +162,9 @@ class TestUpdatePerson(TestCase):
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',
                         'data': new_person_data
-                    }],
+                    },
+                    previous_version
+                ],
             }
 
 
