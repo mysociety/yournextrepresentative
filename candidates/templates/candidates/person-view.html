@@ -142,6 +142,20 @@
       and <a href="{% url 'help-about' %}">its license.</a></p>
   </div>
 
+  {% if user.is_staff %}
+    <div class="person__actions__action person__actions__edit">
+      <h2>Invalidate Cache</h2>
+      <p>As a staff user, you can invalidate any cached data for this
+        user. This may <em>occasionally</em> be necessary if the page is
+        showing stale information for more than 10 seconds.</p>
+        <form method="post" action="{% url 'person-cache-invalidate' %}">
+          {% csrf_token %}
+          <input type="hidden" name="person_id", value="{{ person_id }}">
+          <input type="submit" class="button" value="Invalidate">
+        </form>
+    </div>
+  {% endif %}
+
 </div>
 
 {% include 'candidates/person-versions.html' %}
