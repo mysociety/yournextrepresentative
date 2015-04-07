@@ -3,6 +3,7 @@
 {% load staticfiles %}
 {% load imagefixes %}
 {% load standing %}
+{% load metadescription %}
 
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
@@ -19,7 +20,22 @@
      <meta property="og:image" content="{% static 'candidates/img/blank-man.png' %}"/>
     {% endif %}
     <meta property="og:site_name" content="YourNextMP" />
+    <meta property="og:description" content="{% metadescription person last_cons DATE_TODAY DATE_ELECTION %}">
     <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter card data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@yournextmp" />
+    <meta name="twitter:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    {% if person.image %}
+      <meta property="twitter:image" content="{{ person.proxy_image|fixproxyurl }}/0/80" />
+    {% elif person.gender|lower == 'female' %}
+      <meta property="twitter:image" content="{% static 'candidates/img/blank-woman.png' %}"/>
+    {% else %}
+     <meta property="twitter:image" content="{% static 'candidates/img/blank-man.png' %}"/>
+    {% endif %}
+    <meta name="twitter:url" content="{{ canonical_url }}" />
+    <meta name="twitter:description" content="{% metadescription person last_cons DATE_TODAY DATE_ELECTION %}" />
 {% endblock %}
 
 
