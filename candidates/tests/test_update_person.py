@@ -46,11 +46,13 @@ class TestUpdatePerson(TestCase):
             "standing_in": {
                 "2010": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 },
                 "2015": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 }
             },
             "twitter_username": "jowellt",
@@ -148,11 +150,13 @@ class TestUpdatePerson(TestCase):
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     },
                     '2010': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     }
                 },
                 'versions': [
