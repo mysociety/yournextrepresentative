@@ -16,8 +16,16 @@ class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
 class TestUpdatePerson(TestCase):
 
     @patch.object(FakePersonCollection, 'put')
+    @patch('candidates.update.invalidate_posts')
+    @patch('candidates.update.invalidate_person')
     @patch('candidates.popit.PopIt')
-    def test_update_tessa_jowell(self, mock_popit, mocked_put):
+    def test_update_tessa_jowell(
+            self,
+            mock_popit,
+            mock_invalidate_person,
+            mock_invalidate_posts,
+            mocked_put
+    ):
 
         mock_popit.return_value.organizations = FakeOrganizationCollection
         mock_popit.return_value.persons = FakePersonCollection
@@ -196,3 +204,6 @@ class TestUpdatePerson(TestCase):
             '2009',
             new_person_data
         )
+
+        mock_invalidate_person.assert_called_with('2009')
+        mock_invalidate_posts.assert_called_with(set(['65808', '65913']))

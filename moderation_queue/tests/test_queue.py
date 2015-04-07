@@ -138,12 +138,16 @@ class PhotoReviewTests(WebTest):
     @patch('moderation_queue.views.requests.post')
     @patch('moderation_queue.views.PhotoReview.get_person')
     @patch('moderation_queue.views.PhotoReview.update_person')
+    @patch('candidates.models.invalidate_person')
+    @patch('candidates.models.invalidate_posts')
     @patch('candidates.popit.PopIt')
     @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_approved_privileged(
             self,
             mock_popit,
+            mock_invalidate_posts,
+            mock_invalidate_person,
             mock_update_person,
             mock_get_person,
             mock_requests_post,
@@ -207,6 +211,9 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(la.user.username, 'jane')
         self.assertEqual(la.action_type, 'photo-approve')
         self.assertEqual(la.popit_person_id, '2009')
+
+        mock_invalidate_person.assert_called_with('2009')
+        mock_invalidate_posts.assert_called_with(set(['65808']))
 
         self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'approved')
 
