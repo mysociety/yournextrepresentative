@@ -74,6 +74,21 @@ class Command(PopItApiMixin, BaseCommand):
 
             self.add_or_update(obj)
 
+        # Remove any parties that have dissolved but still might have
+        # entries in the database:
+        parties_in_database = set(
+            CachedCount.objects.filter(count_type='party'). \
+                values_list('object_id', flat=True)
+        )
+        current_parties = set(
+            PartyData.party_id_to_name.keys()
+        )
+        parties_to_remove = parties_in_database - current_parties
+        CachedCount.objects.filter(
+            count_type='party',
+            object_id__in=parties_to_remove
+        ).delete()
+
         # Constituencies
         for constituency_id, data in counts['constituencies'].items():
             obj = {
