@@ -2,6 +2,25 @@
 
 {% load staticfiles %}
 
+{% block extra_head %}
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{% static 'img/logo.png' %}" />
+    <meta property="og:site_name" content="YourNextMP" />
+    <meta property="og:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election - find out more on YourNextMP">
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter card data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@yournextmp" />
+    <meta name="twitter:title" content="Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election" />
+    <meta property="twitter:image" content="{% static 'img/logo.png' %}" />
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election - find out more on YourNextMP"  />
+{% endblock %}
+
 {% block body_class %}constituency{% endblock %}
 
 {% block title %}Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election{% endblock %}
