@@ -4,6 +4,7 @@ from .models import QueuedImage
 class QueuedImageAdmin(admin.ModelAdmin):
     list_display = ('user', 'popit_person_id', 'created', 'decision')
     search_fields = ('user__username', 'popit_person_id')
+    list_filter = ('decision',)
     ordering = ('-created',)
 
 admin.site.register(QueuedImage, QueuedImageAdmin)
