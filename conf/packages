@@ -8,3 +8,4 @@ libxml2-dev
 libxslt-dev
 libffi-dev
 libssl-dev
+memcached

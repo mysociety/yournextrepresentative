@@ -2,6 +2,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
+from candidates.models import invalidate_cache_entries_from_person_data
 from candidates.popit import create_popit_api_object
 from candidates.update import PersonParseMixin, PersonUpdateMixin
 from candidates.views import CandidacyMixin
@@ -45,6 +46,8 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
             popit.persons(person_id).put(person_data)
         except (HttpClientError, HttpServerError):
             raise CommandError("Failed to update that person")
+
+        invalidate_cache_entries_from_person_data(person_data)
 
         # FIXME: this should create a new version in the versions
         # array too, otherwise you manually have to edit on YourNextMP

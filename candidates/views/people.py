@@ -6,7 +6,9 @@ from django.core.urlresolvers import reverse
 from django.http import (
     HttpResponseRedirect, HttpResponsePermanentRedirect
 )
+from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
+from django.views.decorators.cache import cache_control
 from django.views.generic import FormView, TemplateView, View
 
 from braces.views import LoginRequiredMixin
@@ -51,6 +53,12 @@ def copy_person_form_data(cleaned_data):
 
 class PersonView(PersonParseMixin, TemplateView):
     template_name = 'candidates/person-view.html'
+
+    @method_decorator(cache_control(max_age=(60 * 20)))
+    def dispatch(self, *args, **kwargs):
+        return super(PersonView, self).dispatch(
+            *args, **kwargs
+        )
 
     def get_last_constituency(self, person_data):
         result = None

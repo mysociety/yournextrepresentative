@@ -16,8 +16,16 @@ class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
 class TestUpdatePerson(TestCase):
 
     @patch.object(FakePersonCollection, 'put')
+    @patch('candidates.update.invalidate_posts')
+    @patch('candidates.update.invalidate_person')
     @patch('candidates.popit.PopIt')
-    def test_update_tessa_jowell(self, mock_popit, mocked_put):
+    def test_update_tessa_jowell(
+            self,
+            mock_popit,
+            mock_invalidate_person,
+            mock_invalidate_posts,
+            mocked_put
+    ):
 
         mock_popit.return_value.organizations = FakeOrganizationCollection
         mock_popit.return_value.persons = FakePersonCollection
@@ -46,15 +54,37 @@ class TestUpdatePerson(TestCase):
             "standing_in": {
                 "2010": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 },
                 "2015": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 }
             },
             "twitter_username": "jowellt",
             "wikipedia_url": "",
+        }
+
+        # This is for the previous versions array; just include the
+        # fields we need to notice a change in posts that should be
+        # invalidated:
+        previous_version = {
+            'data': {
+                "standing_in": {
+                    "2010": {
+                        "mapit_url": "http://mapit.mysociety.org/area/65808",
+                        "name": "Dulwich and West Norwood",
+                        "post_id": "65808",
+                    },
+                    "2015": {
+                        "mapit_url": "http://mapit.mysociety.org/area/65913",
+                        "name": "Camberwell and Peckham",
+                        "post_id": "65913",
+                    }
+                },
+            }
         }
 
         view.update_person(
@@ -65,7 +95,7 @@ class TestUpdatePerson(TestCase):
                 'version_id': '6054aa38b30b4418',
                 'timestamp': '2014-09-28T14:02:44.567413',
             },
-            [] # No previous versions, say...
+            [previous_version]
         )
         # FIXME: really we should only need the second call here, but
         # see the FIXME in candidates/update.py:
@@ -91,7 +121,9 @@ class TestUpdatePerson(TestCase):
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',
                         'data': new_person_data
-                    }],
+                    },
+                    previous_version
+                ],
             }
 
         second_put_call_args = {
@@ -126,11 +158,13 @@ class TestUpdatePerson(TestCase):
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     },
                     '2010': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     }
                 },
                 'versions': [
@@ -140,7 +174,9 @@ class TestUpdatePerson(TestCase):
                         'version_id': '6054aa38b30b4418',
                         'timestamp': '2014-09-28T14:02:44.567413',
                         'data': new_person_data
-                    }],
+                    },
+                    previous_version
+                ],
             }
 
 
@@ -168,3 +204,6 @@ class TestUpdatePerson(TestCase):
             '2009',
             new_person_data
         )
+
+        mock_invalidate_person.assert_called_with('2009')
+        mock_invalidate_posts.assert_called_with(set(['65808', '65913']))

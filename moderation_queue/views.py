@@ -183,9 +183,11 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         ntf = NamedTemporaryFile(delete=False)
         cropped.save(ntf.name, 'PNG')
         # Upload the image to PopIt...
+        person_id = self.queued_image.popit_person_id
+        person = PopItPerson.create_from_popit(self.api, person_id)
         image_upload_url = '{base}persons/{person_id}/image'.format(
             base=self.get_base_url(),
-            person_id=self.queued_image.popit_person_id
+            person_id=person_id
         )
         data = {
             'md5sum': get_file_md5sum(ntf.name),
@@ -199,12 +201,13 @@ class PhotoReview(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, Templ
         if make_primary:
             data['index'] = 'first'
         with open(ntf.name) as f:
-            result = requests.post(
+            requests.post(
                 image_upload_url,
                 data=data,
                 files={'image': f.read()},
                 headers={'APIKey': self.api.api_key}
             )
+        person.invalidate_cache_entries()
         # Remove the cropped temporary image file:
         os.remove(ntf.name)
 

@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from slumber.exceptions import HttpServerError
 
+from .cache import get_person_cached, invalidate_person, invalidate_posts
 from .static_data import MapItData
 
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
@@ -261,8 +262,7 @@ class PopItPerson(object):
 
     @classmethod
     def create_from_popit(cls, api, popit_person_id):
-        popit_data = api.persons(popit_person_id).get(
-            embed='membership.organization')['result']
+        popit_data = get_person_cached(api, popit_person_id)['result']
         new_person = cls(api=api, popit_data=popit_data)
         return new_person
 
@@ -387,6 +387,13 @@ class PopItPerson(object):
             break
 
         return results
+
+    def get_associated_posts(self):
+        return get_post_ids_from_standing_in(self.standing_in)
+
+    def invalidate_cache_entries(self):
+        invalidate_posts(self.get_associated_posts())
+        invalidate_person(self.id)
 
     @property
     def known_status_in_2015(self):
@@ -549,6 +556,23 @@ def get_person_data_from_dict(data):
         if new_value:
             update_values_in_sub_array(result, location, new_value)
     return result
+
+def get_post_ids_from_standing_in(standing_in):
+    post_ids = set()
+    if not standing_in:
+        return post_ids
+    for year, data in standing_in.items():
+        if data:
+            post_id = data.get('post_id')
+            if post_id:
+                post_ids.add(post_id)
+    return post_ids
+
+def invalidate_cache_entries_from_person_data(person_data):
+    invalidate_posts(
+        get_post_ids_from_standing_in(person_data.get('standing_in', {}))
+    )
+    invalidate_person(person_data['id'])
 
 
 class MaxPopItIds(models.Model):

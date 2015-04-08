@@ -4,7 +4,10 @@ from django.core.management.base import BaseCommand
 
 from ...update import PersonParseMixin, PersonUpdateMixin
 from ...views import CandidacyMixin
-from ...models import election_date_2015, membership_covers_date
+from ...models import (
+    election_date_2015, membership_covers_date,
+    invalidate_cache_entries_from_person_data
+)
 
 def get_parlparse_id(person_data):
     parlparse_identifiers = [
@@ -88,6 +91,7 @@ class Command(PersonParseMixin, PersonUpdateMixin, CandidacyMixin, BaseCommand):
                 change_metadata,
                 previous_versions,
             )
+            invalidate_cache_entries_from_person_data(person_data)
 
             message = u"Marked an incumbent ({name} - {party}) as standing again in {cons_url}"
             print message.format(

@@ -147,4 +147,19 @@ leaflets for {{ constituency_name }} at ElectionLeaflets.org</a> or
 any <a href="{{ meetyournextmp_url }}">public events at which candidates
 will be debating at MeetYourNextMP.com</a>.</div>
 
+{% if user.is_staff %}
+  <div class="constituency-invalidate-cache">
+    <h3>Invalidate Cache</h3>
+    <p>As a staff user, you can invalidate any cached data for this
+      constituency. This may <em>occasionally</em> be necessary if the
+      page is showing stale information for more than 10 seconds.</p>
+    </p>
+    <form method="post" action="{% url 'constituency-cache-invalidate' %}">
+      {% csrf_token %}
+      <input type="hidden" name="mapit_area_id", value="{{ mapit_area_id }}">
+      <input type="submit" class="button" value="Invalidate">
+    </form>
+  </div>
+{% endif %}
+
 {% endblock %}

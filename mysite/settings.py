@@ -107,7 +107,6 @@ INSTALLED_APPS = (
 SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.cache.UpdateCacheMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'candidates.middleware.PopItDownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -117,7 +116,6 @@ MIDDLEWARE_CLASSES = (
     'candidates.middleware.CopyrightAssignmentMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -294,7 +292,7 @@ NOSE_ARGS = [
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
 we prefer URLs of news stories or official candidate pages.'''
 
-# By default, cache successful results from MapIt for 30 minutes
+# By default, cache successful results from MapIt for a day
 MAPIT_CACHE_SECONDS = 86400
 
 FORCE_HTTPS_IMAGES = conf.get('FORCE_HTTPS_IMAGES')
@@ -303,13 +301,16 @@ if conf.get('NGINX_SSL'):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    }
-}
-
 if DEBUG:
-    CACHE_MIDDLEWARE_SECONDS = 0
+    cache = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
 else:
-    CACHE_MIDDLEWARE_SECONDS = 60 * 20 # Twenty minutes
+    cache = {
+        'TIMEOUT': None, # cache keys never expire; we invalidate them
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': DATABASES['default']['NAME'],
+    }
+
+CACHES = {
+    'default': cache
+}
