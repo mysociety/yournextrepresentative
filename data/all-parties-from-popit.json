@@ -4663,6 +4663,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-07",
+        "id": "party:2566",
+        "identifiers": [
+            {
+                "identifier": "PP2566",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Campaign",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "campaign"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2015-02-27",
         "id": "party:2567",
         "identifiers": [
