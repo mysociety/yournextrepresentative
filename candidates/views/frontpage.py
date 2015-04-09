@@ -1,4 +1,5 @@
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
@@ -13,6 +14,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
 
+    @method_decorator(cache_control(max_age=(60 * 10)))
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(ConstituencyPostcodeFinderView, self).dispatch(*args, **kwargs)
@@ -36,6 +38,7 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = ConstituencyForm
 
+    @method_decorator(cache_control(max_age=(60 * 10)))
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
         return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
