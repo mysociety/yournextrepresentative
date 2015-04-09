@@ -405,7 +405,7 @@ class PopItPerson(object):
         # If there's a standing_in element present, its '2015' value
         # is set to None, then we someone has marked that person as
         # not standing...
-        standing_in = self.popit_data.get('standing_in', {})
+        standing_in = self.popit_data.get('standing_in', {}) or {}
         return ('2015' in standing_in) and standing_in['2015'] == None
 
     def delete_memberships(self):
