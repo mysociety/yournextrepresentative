@@ -76,38 +76,40 @@
       {{ form.email.errors }}
     </div>
 
-    <h2>Constituencies:</h2>
+    <div class="{{ class_for_2015_data }}">
+      <h2>Constituencies:</h2>
 
-    <div class="form-item {% if form.standing.errors %}form-item--errors{% endif %}">
-      <p>
-        {{ form.standing.label_tag }}
-        {{ form.standing }}
-      </p>
-      {{ form.standing.errors }}
-    </div>
+      <div class="form-item {% if form.standing.errors %}form-item--errors{% endif %}">
+        <p>
+          {{ form.standing.label_tag }}
+          {{ form.standing }}
+        </p>
+        {{ form.standing.errors }}
+      </div>
 
-    <div class="form-item {% if form.constituency.errors %}form-item--errors{% endif %}">
-      <p>
-        {{ form.constituency.label_tag }}
-        {{ form.constituency }}
-      </p>
-      {{ form.constituency.errors }}
-    </div>
+      <div class="form-item {% if form.constituency.errors %}form-item--errors{% endif %}">
+        <p>
+          {{ form.constituency.label_tag }}
+          {{ form.constituency }}
+        </p>
+        {{ form.constituency.errors }}
+      </div>
 
-    <div class="form-item {% if form.party_gb.errors %}form-item--errors{% endif %}">
-      <p>
-        {{ form.party_gb.label_tag }}
-        {{ form.party_gb }}
-      </p>
-      {{ form.party_gb.errors }}
-    </div>
+      <div class="form-item {% if form.party_gb.errors %}form-item--errors{% endif %}">
+        <p>
+          {{ form.party_gb.label_tag }}
+          {{ form.party_gb }}
+        </p>
+        {{ form.party_gb.errors }}
+      </div>
 
-    <div class="form-item {% if form.party_ni.errors %}form-item--errors{% endif %}">
-      <p>
-        {{ form.party_ni.label_tag }}
-        {{ form.party_ni }}
-      </p>
-      {{ form.party_ni.errors }}
+      <div class="form-item {% if form.party_ni.errors %}form-item--errors{% endif %}">
+        <p>
+          {{ form.party_ni.label_tag }}
+          {{ form.party_ni }}
+        </p>
+        {{ form.party_ni.errors }}
+      </div>
     </div>
 
     <h2>Links and social media:</h2>

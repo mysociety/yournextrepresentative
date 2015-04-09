@@ -11,8 +11,10 @@ from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.utils.http import urlquote
 
+from auth_helpers.views import user_in_group
 from .version_data import create_version_id, get_current_timestamp
-from ..models import LoggedAction
+from ..cache import get_post_cached
+from ..models import LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 from ..static_data import MapItData
 
 
@@ -58,3 +60,26 @@ class CandidacyMixin(object):
             'post_id': post_id,
             mapit_url_key: url_format.format(post_id),
         }
+
+    def get_constituency_lock_from_person_data(self, person_data):
+        """Return whether the constituency is locked and whether this user can edit"""
+
+        standing_in = person_data.get('standing_in') or {}
+        return self.get_constituency_lock(
+            standing_in.get('2015', {}).get('post_id')
+        )
+
+    def get_constituency_lock(self, post_id):
+        """Return whether the constituency is locked and whether this user can edit"""
+
+        if not post_id:
+            return False, True
+        # Use the cached version because it'll be faster than going to
+        # PopIt, even if it brings in embeds that we don't need:
+        post_data = get_post_cached(self.api, post_id)['result']
+        candidates_locked = bool(post_data.get('candidates_locked'))
+        edits_allowed = (
+            user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME) or
+            not candidates_locked
+        )
+        return candidates_locked, edits_allowed

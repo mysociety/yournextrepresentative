@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.views.generic import TemplateView, View
 
-from auth_helpers.views import GroupRequiredMixin
+from auth_helpers.views import GroupRequiredMixin, user_in_group
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm
 from ..models import (
@@ -98,6 +98,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
                 'lock': not context['candidates_locked'],
             },
         )
+        context['candidate_list_edits_allowed'] = \
+            self.request.user.is_authenticated() and (
+                user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME) or
+                (not context['candidates_locked'])
+            )
 
         current_candidates = set()
         past_candidates = set()

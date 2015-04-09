@@ -72,10 +72,14 @@
                 {% include 'candidates/_person_in_list.html' with year='2015' %}
                 {% if user.is_authenticated %}
                 <p>
-                  <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
+                  {% if candidate_list_edits_allowed %}
+                    <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
+                  {% endif %}
                   <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
                 </p>
-                {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+                {% if candidate_list_edits_allowed %}
+                  {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+                {% endif %}
                 {% endif %}
             </li>
         {% endfor %}
@@ -94,13 +98,13 @@
       </div>
     {% endfor %}
 
-    {% if candidates_2015 and user.is_authenticated %}
+    {% if candidates_2015 and candidate_list_edits_allowed %}
         <p><a class="show-new-candidate-form button">Add a new candidate</a></p>
     {% endif %}
 
   </div>
 
-  {% if user.is_authenticated %}
+{% if candidate_list_edits_allowed %}
   <div class="candidates__new" {% if add_candidate_form.errors %}style="display: block"{% endif %}>
 
     <h4>Add a new candidate</h4>
@@ -119,7 +123,9 @@
     </form>
 
   </div>
-  {% endif %}
+{% endif %}
+
+{% if not candidates_locked %}
 
 {% if candidates_2010_might_stand_again %}
   <div class="candidates__previous">
@@ -136,12 +142,16 @@
           {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>
-            <a class="button tiny js-toggle-source-confirmation standing">Standing again</a>
-            <a class="button tiny js-toggle-source-confirmation not-standing">Not standing again</a>
+            {% if candidate_list_edits_allowed %}
+              <a class="button tiny js-toggle-source-confirmation standing">Standing again</a>
+              <a class="button tiny js-toggle-source-confirmation not-standing">Not standing again</a>
+            {% endif %}
             <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
           </p>
-          {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}
-          {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+          {% if candidate_list_edits_allowed %}
+            {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}
+            {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+          {% endif %}
           {% endif %}
         </li>
       {% endfor %}
@@ -162,16 +172,22 @@
           {% include 'candidates/_person_in_list.html' with year='2010' %}
           {% if user.is_authenticated %}
           <p>
-            <a class="button tiny js-toggle-source-confirmation standing">Actually, they are standing!</a>
+            {% if candidate_list_edits_allowed %}
+              <a class="button tiny js-toggle-source-confirmation standing">Actually, they are standing!</a>
+            {% endif %}
             <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
           </p>
-          {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}
+          {% if candidate_list_edits_allowed %}
+            {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}
+          {% endif %}
           {% endif %}
         </li>
       {% endfor %}
     </ul>
 
   </div>
+{% endif %}
+
 {% endif %}
 
 <div>You can also find any <a href="{{ electionleaflets_url }}">election

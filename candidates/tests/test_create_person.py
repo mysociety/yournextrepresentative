@@ -151,6 +151,7 @@ def mock_create_person(mock_popit, mocked_post):
 
     mock_popit.return_value.organizations = FakeOrganizationCollection
     mock_popit.return_value.persons = FakePersonCollection
+    mock_popit.return_value.posts = FakePostCollection
 
     view = MinimalUpdateClass()
 
