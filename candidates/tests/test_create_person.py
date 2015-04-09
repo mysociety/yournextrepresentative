@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 
 from mock import patch, MagicMock
@@ -9,7 +10,16 @@ from .helpers import equal_call_args
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
 
 class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(MinimalUpdateClass, self).__init__(*args, **kwargs)
+        self.request = MagicMock()
+        if user is None:
+            self.request.user = AnonymousUser()
+        else:
+            self.request.user = user
+
 
 EXPECTED_ARGS = {
     'birth_date': None,
