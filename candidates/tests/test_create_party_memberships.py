@@ -48,11 +48,13 @@ class TestCreatePerson(TestCase):
             "standing_in": {
                 "2010": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 },
                 "2015": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 }
             },
             "twitter_username": "",

@@ -52,7 +52,9 @@ EXPECTED_ARGS = {
     'standing_in': {
         '2015': {
             'name': 'Dulwich and West Norwood',
-            'mapit_url': 'http://mapit.mysociety.org/area/65808'}
+            'mapit_url': 'http://mapit.mysociety.org/area/65808',
+            'post_id': '65808',
+        }
     },
     'versions': [
         {
@@ -65,7 +67,8 @@ EXPECTED_ARGS = {
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     }
                 },
                 'homepage_url': 'http://janedoe.example.org',
@@ -116,6 +119,7 @@ NEW_PERSON_DATA = {
     "standing_in": {
         "2015": {
             "mapit_url": "http://mapit.mysociety.org/area/65808",
+            "post_id": "65808",
             "name": "Dulwich and West Norwood"
         }
     },
