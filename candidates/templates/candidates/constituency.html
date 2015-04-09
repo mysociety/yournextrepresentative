@@ -36,6 +36,22 @@
     {% endfor %}
   </p>
 
+  {% if user_can_lock %}
+    <form method="post" action="{% url 'constituency-lock' %}">
+      {% csrf_token %}
+      {% for field in lock_form %}{{ field }}{% endfor %}
+      <input type="submit" class="button small" value="{% if candidates_locked %}Unlock{% else %}Lock{% endif %} candidate list">
+      (This list of candidates is currently
+      <strong>{% if candidates_locked %}locked{% else %}unlocked{% endif %}</strong>.)
+    </form>
+  {% else %}
+    {% if candidates_locked %}
+      <p>This list of candidates is now <strong>locked</strong>;
+      you can still update contact details of candidates, but
+      can't change the people standing in this constituency.</p>
+    {% endif %}
+  {% endif %}
+
   <div class="candidates__known">
 
     <h3>Known candidates for the 2015 general election</h3>

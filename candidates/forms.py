@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 
 from .mapit import get_wmc_from_postcode, BaseMapItException
 from .models import UserTermsAgreement
+from .static_data import MapItData
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
@@ -282,3 +283,21 @@ class UserTermsAgreementForm(forms.Form):
             )
             raise ValidationError(message)
         return assigned_to_dc
+
+
+class ToggleLockForm(forms.Form):
+    lock = forms.BooleanField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
+    post_id = forms.CharField(
+        max_length=256,
+        widget=forms.HiddenInput()
+    )
+
+    def clean_post_id(self):
+        post_id = self.cleaned_data['post_id']
+        if post_id not in MapItData.constituencies_2010:
+            message = '{0} was not a known post ID'
+            raise ValidationError(message.format(post_id))
+        return post_id
