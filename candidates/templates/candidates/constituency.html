@@ -21,18 +21,20 @@
   {% endif %}
 
   <h3>Nomination papers</h3>
-  {% for paper in nomination_papers %}
-    <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a>
-  {% empty %}
-  <p>We don't have nomination papers for {{ constituency_name }} yet.</p>
-  <p>Can you help us by <a href="https://docs.google.com/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/edit#gid=0">
-    adding them to this google spreadsheet</a>?</p>
-  {% if user_can_upload_documents %}
-  <p>Or, as you have permission to upload documents, you can
-    <a href="{% url 'upload_document_view' mapit_area_id %}">
-      upload it directly</a>.</p>
-  {% endif %}
-  {% endfor %}
+  <p>
+    {% for paper in nomination_papers %}
+      <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a><br>
+    {% empty %}
+      We don't have nomination papers for {{ constituency_name }} yet.
+      Can you help us by <a href="https://docs.google.com/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/edit#gid=0">
+        adding them to this google spreadsheet</a>?
+      {% if user_can_upload_documents %}
+      Or, as you have permission to upload documents, you can
+        <a href="{% url 'upload_document_view' mapit_area_id %}">
+        upload it directly</a>.
+      {% endif %}
+    {% endfor %}
+  </p>
 
   <div class="candidates__known">
 
