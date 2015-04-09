@@ -7,11 +7,9 @@ from mock import patch, MagicMock
 from .fake_popit import (
     FakePersonCollection, FakeOrganizationCollection
 )
+from .test_create_person import MinimalUpdateClass
 from .helpers import equal_call_args
-from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
 
-class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
-    pass
 
 class TestUpdatePerson(TestCase):
 

@@ -5,10 +5,7 @@ from mock import call, patch
 from .fake_popit import (
     FakePersonCollection, FakeOrganizationCollection
 )
-from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
-
-class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
-    pass
+from .test_create_person import MinimalUpdateClass
 
 # FIXME: should this really be calling POST outside the
 # create_with_id_retries? Probably not...
