@@ -54,7 +54,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                 )
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
-            (i['notes'], i['url'])
+            (i['notes'], i['proxy_url'] + '/240/0')
             for i in party.get('images', [])
         ]
         countries = ('England', 'Northern Ireland', 'Scotland', 'Wales')
