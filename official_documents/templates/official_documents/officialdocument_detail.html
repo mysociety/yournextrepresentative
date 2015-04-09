@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load compressed %}
+
+
+{% block extra_css %}
+{% compressed_css 'official_documents' %}
+{% endblock %}
+
+{% block hero %}<h1>{{ object.document_type }}</h1>{% endblock hero %}
+
+{% block content %}
+
+{{ object.document_type }} for <a href="{% url 'constituency' mapit_area_id=object.mapit_id ignored_slug=constituency.name|slugify %}">{{ constituency.name }}</a>
+
+<iframe
+  src="http://docs.google.com/viewer?url=http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ object.uploaded_file.url | urlencode}}&amp;embedded=true"
+  frameborder="0"
+  allowfullscreen
+  class="document_viewer"></iframe>
+
+{% endblock content %}
