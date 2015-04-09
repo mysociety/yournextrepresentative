@@ -397,7 +397,7 @@ class PopItPerson(object):
 
     @property
     def known_status_in_2015(self):
-        standing_in = self.popit_data.get('standing_in', {})
+        standing_in = self.popit_data.get('standing_in', {}) or {}
         return '2015' in standing_in
 
     @property
