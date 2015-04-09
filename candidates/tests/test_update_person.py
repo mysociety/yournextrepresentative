@@ -5,7 +5,7 @@ from django.test import TestCase
 from mock import patch, MagicMock
 
 from .fake_popit import (
-    FakePersonCollection, FakeOrganizationCollection
+    FakePersonCollection, FakeOrganizationCollection, FakePostCollection
 )
 from .test_create_person import MinimalUpdateClass
 from .helpers import equal_call_args
@@ -27,6 +27,7 @@ class TestUpdatePerson(TestCase):
 
         mock_popit.return_value.organizations = FakeOrganizationCollection
         mock_popit.return_value.persons = FakePersonCollection
+        mock_popit.return_value.posts = FakePostCollection
 
         view = MinimalUpdateClass()
 

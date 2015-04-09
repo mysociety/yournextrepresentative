@@ -3,7 +3,7 @@ from django.test import TestCase
 from mock import patch, MagicMock
 
 from .fake_popit import (
-    FakePersonCollection, FakeOrganizationCollection
+    FakePersonCollection, FakeOrganizationCollection, FakePostCollection
 )
 from .helpers import equal_call_args
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin

@@ -8,7 +8,7 @@ from .auth import TestUserMixin
 from .helpers import equal_call_args
 from .fake_popit import (
     get_example_popit_json,
-    FakeOrganizationCollection, FakePersonCollection
+    FakeOrganizationCollection, FakePersonCollection, FakePostCollection
 )
 from ..models import LoggedAction
 
@@ -61,6 +61,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
         # Get the constituency page:
         mock_popit.return_value.organizations = FakeOrganizationCollection
         mock_popit.return_value.persons = FakePersonCollection
+        mock_popit.return_value.posts = FakePostCollection
         # Just a smoke test for the moment:
         response = self.app.get(
             '/constituency/65808/dulwich-and-west-norwood',
