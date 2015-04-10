@@ -293,6 +293,14 @@ class PopItPerson(object):
         return self.popit_data.get('image')
 
     @property
+    def last_name(self):
+        split_name = self.name.split()
+        if split_name:
+            return split_name[-1]
+        else:
+            return ''
+
+    @property
     def parties(self):
         results = {}
         for membership in self.popit_data['memberships']:

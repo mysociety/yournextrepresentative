@@ -132,7 +132,10 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['candidates_2010_might_stand_again'] = \
             set(p for p in other_candidates_2010 if not p.known_status_in_2015)
 
-        context['candidates_2015'] = current_candidates
+        context['candidates_2015'] = sorted(
+            current_candidates,
+            key=lambda c: c.last_name
+        )
 
         context['add_candidate_form'] = NewPersonForm(
             initial={'constituency': mapit_area_id}
