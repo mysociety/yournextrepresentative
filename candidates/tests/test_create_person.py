@@ -1,15 +1,25 @@
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 
 from mock import patch, MagicMock
 
 from .fake_popit import (
-    FakePersonCollection, FakeOrganizationCollection
+    FakePersonCollection, FakeOrganizationCollection, FakePostCollection
 )
 from .helpers import equal_call_args
 from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
 
 class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
-    pass
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(MinimalUpdateClass, self).__init__(*args, **kwargs)
+        self.request = MagicMock()
+        if user is None:
+            self.request.user = AnonymousUser()
+        else:
+            self.request.user = user
+
 
 EXPECTED_ARGS = {
     'birth_date': None,
@@ -52,7 +62,9 @@ EXPECTED_ARGS = {
     'standing_in': {
         '2015': {
             'name': 'Dulwich and West Norwood',
-            'mapit_url': 'http://mapit.mysociety.org/area/65808'}
+            'mapit_url': 'http://mapit.mysociety.org/area/65808',
+            'post_id': '65808',
+        }
     },
     'versions': [
         {
@@ -65,7 +77,8 @@ EXPECTED_ARGS = {
                 'standing_in': {
                     '2015': {
                         'name': 'Dulwich and West Norwood',
-                        'mapit_url': 'http://mapit.mysociety.org/area/65808'
+                        'mapit_url': 'http://mapit.mysociety.org/area/65808',
+                        'post_id': '65808',
                     }
                 },
                 'homepage_url': 'http://janedoe.example.org',
@@ -116,6 +129,7 @@ NEW_PERSON_DATA = {
     "standing_in": {
         "2015": {
             "mapit_url": "http://mapit.mysociety.org/area/65808",
+            "post_id": "65808",
             "name": "Dulwich and West Norwood"
         }
     },
@@ -137,6 +151,7 @@ def mock_create_person(mock_popit, mocked_post):
 
     mock_popit.return_value.organizations = FakeOrganizationCollection
     mock_popit.return_value.persons = FakePersonCollection
+    mock_popit.return_value.posts = FakePostCollection
 
     view = MinimalUpdateClass()
 

@@ -5,10 +5,7 @@ from mock import call, patch
 from .fake_popit import (
     FakePersonCollection, FakeOrganizationCollection
 )
-from ..views import PersonUpdateMixin, CandidacyMixin, PopItApiMixin
-
-class MinimalUpdateClass(PersonUpdateMixin, CandidacyMixin, PopItApiMixin):
-    pass
+from .test_create_person import MinimalUpdateClass
 
 # FIXME: should this really be calling POST outside the
 # create_with_id_retries? Probably not...
@@ -48,11 +45,13 @@ class TestCreatePerson(TestCase):
             "standing_in": {
                 "2010": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 },
                 "2015": {
                     "mapit_url": "http://mapit.mysociety.org/area/65808",
-                    "name": "Dulwich and West Norwood"
+                    "name": "Dulwich and West Norwood",
+                    "post_id": "65808",
                 }
             },
             "twitter_username": "",

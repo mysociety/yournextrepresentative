@@ -4,23 +4,25 @@ import unicodedata
 from slugify import slugify
 
 from django.views.decorators.cache import cache_control
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 
+from auth_helpers.views import GroupRequiredMixin, user_in_group
 from ..csv_helpers import list_to_csv
-from ..forms import NewPersonForm
+from ..forms import NewPersonForm, ToggleLockForm
 from ..models import (
     get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
-    election_date_2010, election_date_2015
+    election_date_2010, election_date_2015, TRUSTED_TO_LOCK_GROUP_NAME
 )
 from ..popit import PopItApiMixin
 from ..static_data import MapItData
 from official_documents.models import OfficialDocument
 
-from ..cache import get_post_cached
+from ..cache import get_post_cached, invalidate_posts
 
 # From http://stackoverflow.com/a/517974/223092
 def strip_accents(s):
@@ -87,6 +89,21 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         mp_post = get_post_cached(self.api, mapit_area_id)
 
+        context['candidates_locked'] = mp_post['result'].get(
+            'candidates_locked', False
+        )
+        context['lock_form'] = ToggleLockForm(
+            initial={
+                'post_id': mapit_area_id,
+                'lock': not context['candidates_locked'],
+            },
+        )
+        context['candidate_list_edits_allowed'] = \
+            self.request.user.is_authenticated() and (
+                user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME) or
+                (not context['candidates_locked'])
+            )
+
         current_candidates = set()
         past_candidates = set()
 
@@ -144,3 +161,28 @@ class ConstituencyListView(PopItApiMixin, TemplateView):
         context['all_constituencies'] = \
             MapItData.constituencies_2010_name_sorted
         return context
+
+
+class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
+    required_group_name = TRUSTED_TO_LOCK_GROUP_NAME
+
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        form = ToggleLockForm(data=self.request.POST)
+        if form.is_valid():
+            post_id = form.cleaned_data['post_id']
+            data = self.api.posts(post_id). \
+                get(embed='')['result']
+            data['candidates_locked'] = form.cleaned_data['lock']
+            self.api.posts(post_id).put(data)
+            invalidate_posts([post_id])
+            return HttpResponseRedirect(
+                reverse('constituency', kwargs={
+                    'mapit_area_id': post_id,
+                    'ignored_slug': slugify(data['area']['name']),
+                })
+            )
+        else:
+            message = 'Invalid data POSTed to ConstituencyLockView'
+            raise ValidationError(message)

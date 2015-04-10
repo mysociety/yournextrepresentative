@@ -268,8 +268,29 @@ class PersonUpdateMixin(PopItApiMixin):
                 membership['role'] = "Candidate"
                 self.create_membership(**membership)
 
+    def creation_allowed(self, new_data):
+        return self.get_constituency_lock(
+            new_data['standing_in']['2015']['post_id']
+        )[1]
+
+    def update_allowed(self, old_data, new_data):
+        _, old_allowed = self.get_constituency_lock_from_person_data(old_data)
+        _, new_allowed = self.get_constituency_lock_from_person_data(new_data)
+        for (field, key) in [
+                ('standing_in', 'post_id'),
+                ('party_memberships', 'id')
+        ]:
+            old_post_id = (old_data.get(field, {}) or {}).get('2015', {}).get(key)
+            new_post_id = (new_data.get(field, {}) or {}).get('2015', {}).get(key)
+            if not (old_allowed and new_allowed) and (old_post_id != new_post_id):
+                return False
+        return True
+
     def create_person(self, data, change_metadata):
         fix_dates(data)
+        if not self.creation_allowed(data):
+            message = "Creation of a person disallowed due to constituency lock"
+            raise Exception(message)
         # Create the person:
         basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
@@ -295,6 +316,12 @@ class PersonUpdateMixin(PopItApiMixin):
 
     def update_person(self, data, change_metadata, previous_versions):
         fix_dates(data)
+        old_data = {}
+        if previous_versions:
+            old_data = previous_versions[0]['data']
+        if not self.update_allowed(old_data, data):
+            message = "Update of a person disallowed due to constituency lock"
+            raise Exception(message)
         person_id = data['id']
         basic_person_data = get_person_data_from_dict(data)
         basic_person_data['standing_in'] = data['standing_in']
@@ -325,7 +352,7 @@ class PersonUpdateMixin(PopItApiMixin):
         posts = get_post_ids_from_standing_in(data.get('standing_in', {}))
         if previous_versions:
             old_posts = get_post_ids_from_standing_in(
-                previous_versions[0]['data'].get('standing_in', {})
+                old_data.get('standing_in', {})
             )
             posts.update(old_posts)
         invalidate_posts(posts)

@@ -120,7 +120,7 @@ class PersonView(PersonParseMixin, TemplateView):
             return super(PersonView, self).get(request, *args, **kwargs)
 
 
-class RevertPersonView(LoginRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
+class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
 
@@ -289,11 +289,20 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             }
         )
 
+        _, edits_allowed = self.get_constituency_lock_from_person_data(
+            context['person']
+        )
+        if edits_allowed:
+            context['class_for_2015_data'] = ''
+        else:
+            context['class_for_2015_data'] = 'person__2015-data-edit'
+
         context['versions'] = get_version_diffs(context['person']['versions'])
 
         return context
 
     def form_valid(self, form):
+
         # First parse that person's data from PopIt into our more
         # usable data structure:
 
