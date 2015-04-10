@@ -162,7 +162,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PersonParseMixin, Per
             )
         )
 
-class MergePeopleView(GroupRequiredMixin, PersonParseMixin, PersonUpdateMixin, View):
+class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, View):
 
     http_method_names = [u'post']
     required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
