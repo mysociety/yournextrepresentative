@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'moderation_queue',
     'auth_helpers',
     'debug_toolbar',
+    'official_documents',
 )
 
 SITE_ID = 1
@@ -212,6 +213,12 @@ PIPELINE_CSS = {
             'moderation_queue/css/photo-upload.scss',
         ),
         'output_filename': 'css/image-review.css',
+    },
+    'official_documents': {
+        'source_filenames': (
+            'official_documents/css/official_documents.scss',
+        ),
+        'output_filename': 'css/official_documents.css',
     },
     'all': {
         'source_filenames': (
