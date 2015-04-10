@@ -18,7 +18,7 @@ from ..models import (
     get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
     election_date_2010, election_date_2015, TRUSTED_TO_LOCK_GROUP_NAME
 )
-from ..popit import PopItApiMixin
+from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData
 from official_documents.models import OfficialDocument
 
@@ -186,3 +186,28 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
         else:
             message = 'Invalid data POSTed to ConstituencyLockView'
             raise ValidationError(message)
+
+
+class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/constituencies-unlocked.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituenciesUnlockedListView, self).get_context_data(**kwargs)
+        keys = ('locked', 'unlocked')
+        for k in keys:
+            context[k] = []
+        for post in popit_unwrap_pagination(
+                self.api.posts,
+                embed='',
+                per_page=100,
+        ):
+            context_field = 'locked' if post.get('candidates_locked') else 'unlocked'
+            context[context_field].append(
+                {
+                    'id': post['id'],
+                    'name': post['area']['name'],
+                }
+            )
+        for k in keys:
+            context[k].sort(key=lambda c: c['name'])
+        return context
