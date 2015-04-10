@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% load staticfiles %}
-{% load exists %}
 
 {% block body_class %}constituency{% endblock %}
 
@@ -56,40 +55,29 @@
 
     <h3>Known candidates for the 2015 general election</h3>
 
-    {% regroup candidates_2015|dictsort:"popit_data.email" by popit_data.email|exists as person_list %}
-    {% for group in person_list %}
-        {% if forloop.first %}
-          <ul class="candidate-list">
-        {% endif %}
+    {% for c in candidates_2015 %}
+      {% if forloop.first %}
+        <ul class="candidate-list">
+      {% endif %}
 
-        {% if group.grouper == False %}
-        <div class="missing_field">
-        <h4>The following candidate{{ group.list|pluralize:" doesn't,s don't" }} have an email address!
-            Can you add {{ group.list|pluralize:"it,them" }}?</h4>
-        {% endif %}
-        {% for c in group.list %}
-            <li class="candidates-list__person">
-                {% include 'candidates/_person_in_list.html' with year='2015' %}
-                {% if user.is_authenticated %}
-                <p>
-                  {% if candidate_list_edits_allowed %}
-                    <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
-                  {% endif %}
-                  <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
-                </p>
-                {% if candidate_list_edits_allowed %}
-                  {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
-                {% endif %}
-                {% endif %}
-            </li>
-        {% endfor %}
-        {% if group.grouper == False %}
-        </div>
-        {% endif %}
-    {% if forloop.last %}
-      </ul>
-    {% endif %}
-    {# {% endfor %} #}
+        <li class="candidates-list__person">
+          {% include 'candidates/_person_in_list.html' with year='2015' %}
+          {% if user.is_authenticated %}
+          <p>
+            {% if candidate_list_edits_allowed %}
+              <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
+            {% endif %}
+            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+          </p>
+          {% if candidate_list_edits_allowed %}
+            {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+          {% endif %}
+          {% endif %}
+        </li>
+
+      {% if forloop.last %}
+        </ul>
+      {% endif %}
     {% empty %}
       <div class="no-candidates row">
         <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ constituency_name }}
