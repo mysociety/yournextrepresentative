@@ -13,7 +13,7 @@
 {{ object.document_type }} for <a href="{% url 'constituency' mapit_area_id=object.mapit_id ignored_slug=constituency.name|slugify %}">{{ constituency.name }}</a>
 
 <iframe
-  src="http://docs.google.com/viewer?url=http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ object.uploaded_file.url | urlencode}}&amp;embedded=true"
+  src="http{% if request.is_secure %}s{% endif %}://docs.google.com/viewer?url=http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ object.uploaded_file.url | urlencode}}&amp;embedded=true"
   frameborder="0"
   allowfullscreen
   class="document_viewer"></iframe>
