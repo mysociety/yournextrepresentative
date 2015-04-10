@@ -48,6 +48,8 @@ class Command(BaseCommand):
         reader = csv.DictReader(r.raw)
         for row in reader:
             name = row['Constituency'].decode('utf-8')
+            if not name:
+                continue
             cons_data = MapItData.constituencies_2010_name_map[name]
             document_url = row['URL']
             if not document_url:
