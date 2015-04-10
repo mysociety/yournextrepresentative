@@ -112,10 +112,7 @@ class Command(BaseCommand):
                     else:
                         raise
                 organization_with_memberships = \
-                    self.api.organizations(
-                        party_id,
-                        embed='membership.person'
-                    )['result']
+                    self.api.organizations(party_id).get(embed='membership.person')['result']
                 # Make sure any members of these parties are
                 # invalidated from the cache so that the embedded
                 # party information when getting posts and persons is
