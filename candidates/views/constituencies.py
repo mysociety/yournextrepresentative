@@ -18,6 +18,7 @@ from ..models import (
 )
 from ..popit import PopItApiMixin
 from ..static_data import MapItData
+from official_documents.models import OfficialDocument
 
 from ..cache import get_post_cached
 
@@ -78,6 +79,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
                 'mapit_area_id': mapit_area_id,
                 'ignored_slug': slugify(context['constituency_name'])
             }))
+
+        context['nomination_papers'] = OfficialDocument.objects.filter(
+            document_type=OfficialDocument.NOMINATION_PAPER,
+            mapit_id=mapit_area_id,
+        )
 
         mp_post = get_post_cached(self.api, mapit_area_id)
 

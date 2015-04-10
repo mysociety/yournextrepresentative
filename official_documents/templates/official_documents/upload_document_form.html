@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block hero %}<h1>Upload document</h1>{% endblock hero %}
+
+
+{% block content %}
+<h2>Document relating to {{ constituency.name }}</h2>
+<form method=post enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <p><button type=submit class="button">Upload</button></p>
+</form>
+{% endblock content %}
