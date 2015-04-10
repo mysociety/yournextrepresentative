@@ -187,7 +187,7 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
             else:
                 suffix = '-unlock'
                 pp = 'Unlocked'
-            message = pp + ' constituency {0} ({1})'.format(
+            message = pp + u' constituency {0} ({1})'.format(
                 data['area']['name'], data['id']
             )
             self.api.posts(post_id).put(data)
