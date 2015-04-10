@@ -20,15 +20,4 @@
   {% endfor %}
 </ul>
 
-<h2>Locked Constituencies</h2>
-
-<ul>
-  {% for c in locked %}
-    <li>
-     <a href="{% url 'constituency' mapit_area_id=c.id ignored_slug=c.name|slugify %}">{{ c.name }}</a>
-    </li>
-  {% endfor %}
-</ul>
-
-
 {% endblock %}
