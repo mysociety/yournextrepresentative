@@ -36,6 +36,7 @@ pyOpenSSL==0.14
 pyasn1==0.1.7
 pycparser==2.10
 python-dateutil==2.2
+python-magic==0.4.6
 python-memcached==1.54
 python-openid==2.2.5
 python-slugify==0.0.7
