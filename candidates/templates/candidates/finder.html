@@ -93,6 +93,10 @@ it’s a waste of money.</p>
             confirmed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% elif action.action_type == 'candidacy-delete' %}
             removed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+          {% elif action.action_type == 'constituency-lock' %}
+            locked a constituency
+          {% elif action.action_type == 'constituency-unlock' %}
+            unlocked a constituency
           {% else %}
             updated <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
           {% endif %}

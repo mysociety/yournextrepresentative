@@ -12,11 +12,13 @@ from django.utils.http import urlquote
 from django.views.generic import TemplateView, View
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
+from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm
 from ..models import (
     get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
-    election_date_2010, election_date_2015, TRUSTED_TO_LOCK_GROUP_NAME
+    election_date_2010, election_date_2015, TRUSTED_TO_LOCK_GROUP_NAME,
+    LoggedAction
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData
@@ -177,9 +179,27 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
             post_id = form.cleaned_data['post_id']
             data = self.api.posts(post_id). \
                 get(embed='')['result']
-            data['candidates_locked'] = form.cleaned_data['lock']
+            lock = form.cleaned_data['lock']
+            data['candidates_locked'] = lock
+            if lock:
+                suffix = '-lock'
+                pp = 'Locked'
+            else:
+                suffix = '-unlock'
+                pp = 'Unlocked'
+            message = pp + ' constituency {0} ({1})'.format(
+                data['area']['name'], data['id']
+            )
             self.api.posts(post_id).put(data)
             invalidate_posts([post_id])
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type=('constituency' + suffix),
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version='',
+                popit_person_id='',
+                source=message,
+            )
             return HttpResponseRedirect(
                 reverse('constituency', kwargs={
                     'mapit_area_id': post_id,
