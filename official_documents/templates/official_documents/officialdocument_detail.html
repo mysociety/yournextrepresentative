@@ -13,7 +13,7 @@
 <p>
 {{ object.document_type }} for <a href="{% url 'constituency' mapit_area_id=object.mapit_id ignored_slug=constituency.name|slugify %}">{{ constituency.name }}</a>.
 The source URL for this document was:
-<a href="object.source_url">{{ object.source_url }}</a>
+<a href="{{ object.source_url }}">{{ object.source_url }}</a>
 </p>
 
 
