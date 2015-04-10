@@ -32,7 +32,7 @@ def download_file_cached(url):
     filename = join(directory, url_hash)
     if exists(filename):
         return filename
-    r = requests.get(url)
+    r = requests.get(url, verify=False)
     with open(filename, 'w') as f:
         f.write(r.content)
     return filename
@@ -61,10 +61,6 @@ class Command(BaseCommand):
                 continue
             try:
                 downloaded_filename = download_file_cached(document_url)
-            except requests.exceptions.SSLError:
-                print u"Skipping {0} due to a certificate error".format(name)
-                print u"The URL was:", document_url
-                continue
             except requests.exceptions.ConnectionError:
                 print u"Connection failed for {0}".format(name)
                 print u"The URL was:", document_url
