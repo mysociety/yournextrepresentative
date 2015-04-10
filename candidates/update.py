@@ -280,8 +280,10 @@ class PersonUpdateMixin(PopItApiMixin):
                 ('standing_in', 'post_id'),
                 ('party_memberships', 'id')
         ]:
-            old_post_id = (old_data.get(field, {}) or {}).get('2015', {}).get(key)
-            new_post_id = (new_data.get(field, {}) or {}).get('2015', {}).get(key)
+            old_field_value = old_data.get(field, {}) or {}
+            new_field_value = new_data.get(field, {}) or {}
+            old_post_id = (old_field_value.get('2015', {}) or {}).get(key)
+            new_post_id = (new_field_value.get('2015', {}) or {}).get(key)
             if not (old_allowed and new_allowed) and (old_post_id != new_post_id):
                 return False
         return True
