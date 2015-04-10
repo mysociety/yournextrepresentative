@@ -30,7 +30,9 @@ class OfficialDocument(TimeStampedModel):
         upload_to=document_file_name, max_length=800)
     mapit_id = models.CharField(blank=False, max_length=50)
     source_url = models.URLField(blank=True,
-        help_text="The page that links to this document")
+        help_text="The page that links to this document",
+        max_length=1000,
+    )
 
     def __unicode__(self):
         return u"{0} ({1})".format(
