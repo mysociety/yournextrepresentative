@@ -216,6 +216,8 @@ class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ConstituenciesUnlockedListView, self).get_context_data(**kwargs)
+        total_constituencies = 0
+        total_locked = 0
         keys = ('locked', 'unlocked')
         for k in keys:
             context[k] = []
@@ -224,7 +226,12 @@ class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
                 embed='',
                 per_page=100,
         ):
-            context_field = 'locked' if post.get('candidates_locked') else 'unlocked'
+            total_constituencies += 1
+            if post.get('candidates_locked'):
+                context_field = 'locked'
+                total_locked += 1
+            else:
+                context_field = 'unlocked'
             context[context_field].append(
                 {
                     'id': post['id'],
@@ -233,4 +240,7 @@ class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
             )
         for k in keys:
             context[k].sort(key=lambda c: c['name'])
+        context['total_constituencies'] = total_constituencies
+        context['total_left'] = total_constituencies - total_locked
+        context['percent_done'] = (100 * total_locked) / total_constituencies
         return context

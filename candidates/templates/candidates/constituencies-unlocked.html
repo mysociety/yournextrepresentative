@@ -11,7 +11,7 @@
 {% block content %}
 
 <h2>Still Unlocked Constituencies</h2>
-
+<h4>{{ total_left }} left to do ({{ percent_done }}% done)</h4>
 <ul>
   {% for c in unlocked %}
     <li>
