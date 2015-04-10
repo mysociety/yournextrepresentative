@@ -85,3 +85,5 @@ class Command(BaseCommand):
                 mapit_id=cons_data['id'],
                 source_url=document_url
             )
+            message = "Successfully added the Statement of Persons Nominated for {0}"
+            print message.format(name)
