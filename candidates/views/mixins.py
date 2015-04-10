@@ -65,8 +65,9 @@ class CandidacyMixin(object):
         """Return whether the constituency is locked and whether this user can edit"""
 
         standing_in = person_data.get('standing_in') or {}
+        standing_in_2015 = standing_in.get('2015', {}) or {}
         return self.get_constituency_lock(
-            standing_in.get('2015', {}).get('post_id')
+            standing_in_2015.get('post_id')
         )
 
     def get_constituency_lock(self, post_id):
