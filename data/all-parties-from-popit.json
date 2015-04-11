@@ -5683,6 +5683,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-07",
+        "id": "party:2730",
+        "identifiers": [
+            {
+                "identifier": "PP2730",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Common Sense Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "common-sense-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2003-02-03",
         "id": "party:276",
         "identifiers": [
