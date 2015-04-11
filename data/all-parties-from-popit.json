@@ -5123,6 +5123,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-01",
+        "id": "party:2648",
+        "identifiers": [
+            {
+                "identifier": "PP2648",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Independent Save Withybush Save Lives",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "independent-save-withybush-save-lives"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2015-02-23",
         "id": "party:2649",
         "identifiers": [
