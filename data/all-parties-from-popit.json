@@ -4763,6 +4763,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-07",
+        "id": "party:2581",
+        "identifiers": [
+            {
+                "identifier": "PP2581",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Save Hartlepool Hospital",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "save-hartlepool-hospital"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2014-11-25",
         "id": "party:2582",
         "identifiers": [
