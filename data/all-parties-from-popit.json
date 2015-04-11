@@ -5603,6 +5603,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-07",
+        "id": "party:2724",
+        "identifiers": [
+            {
+                "identifier": "PP2724",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "Cannabis is Safer than Alcohol",
+        "other_names": [],
+        "posts": [],
+        "register": "Northern-Ireland",
+        "slug": "cista-ni"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2003-02-03",
         "id": "party:276",
         "identifiers": [
