@@ -5584,6 +5584,26 @@
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "2015-04-01",
+        "id": "party:2717",
+        "identifiers": [
+            {
+                "identifier": "PP2717",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Pilgrim Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-pilgrim-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-01",
         "id": "party:2719",
         "identifiers": [
             {
