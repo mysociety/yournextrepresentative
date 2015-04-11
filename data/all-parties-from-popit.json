@@ -5263,6 +5263,26 @@
         "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
+        "founding_date": "2015-04-01",
+        "id": "party:2664",
+        "identifiers": [
+            {
+                "identifier": "PP2664",
+                "scheme": "electoral-commission"
+            }
+        ],
+        "links": [],
+        "memberships": [],
+        "name": "The Northern Party",
+        "other_names": [],
+        "posts": [],
+        "register": "Great Britain",
+        "slug": "the-northern-party"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2002-11-26",
         "id": "party:267",
         "identifiers": [
