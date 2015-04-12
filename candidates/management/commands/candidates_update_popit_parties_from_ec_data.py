@@ -57,6 +57,12 @@ def sort_emblems(emblems, party_id):
             raise Exception("Couldn't find the generic logo for " + party_id)
         emblems.insert(0, emblems.pop(generic_image_index))
 
+def get_descriptions(party):
+    return [
+        {'description': d['Description'],
+         'translation': d['Translation']}
+        for d in party['PartyDescriptions']
+    ]
 
 class Command(BaseCommand):
     help = "Update parties from a CSV of party data"
@@ -109,6 +115,7 @@ class Command(BaseCommand):
                     'name': party_name,
                     'slug': slugify(party_name),
                     'classification': 'Party',
+                    'descriptions': get_descriptions(ec_party),
                     'founding_date': party_founded,
                     'dissolution_date': party_dissolved,
                     'register': register,
