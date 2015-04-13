@@ -35,7 +35,19 @@ class MapItData(object):
     constituencies_2010_by_country = \
         get_constituencies_by_country('mapit-WMC-generation-13.json')
 
+def get_descriptions_choices(party):
+    result = []
+    descriptions = party.get('descriptions', [])
+    for d in descriptions:
+        print "d is:", d
+        versions = [d[k] for k in ('description', 'translation') if d[k]]
+        print "versions is:", versions
+        result.append(u" / ".join(versions))
+    return result
+
 def get_all_parties():
+    all_descriptions_choices = []
+    party_id_to_description_choices ={}
     result_list = defaultdict(list)
     result_dict = {}
     with open(join(data_directory, 'all-parties-from-popit.json')) as f:
@@ -43,6 +55,10 @@ def get_all_parties():
             key = party.get('register', '')
             result_list[key].append((party['id'], party['name']))
             result_dict[party['id']] = party['name']
+            description_choices = get_descriptions_choices(party)
+            all_descriptions_choices += description_choices
+            party_id_to_description_choices[party['id']] = \
+                description_choices
         # The parties without a register (e.g. the pseudo parties
         # "Independent" and "Speaker seeking re-election") don't have
         # a register, but should be added to both the Great Britain
@@ -55,7 +71,10 @@ def get_all_parties():
         for parties in result_list.values():
             parties.sort(key=lambda p: p[1].lower())
             parties.insert(0, ('party:none', ''))
-    return result_list, result_dict
+    for description in all_descriptions_choices:
+        print description
+    return result_list, result_dict, all_descriptions_choices, party_id_to_description_choices
 
 class PartyData(object):
-    party_choices, party_id_to_name = get_all_parties()
+    party_choices, party_id_to_name, all_descriptions_choices, party_id_to_description_choices = \
+        get_all_parties()
