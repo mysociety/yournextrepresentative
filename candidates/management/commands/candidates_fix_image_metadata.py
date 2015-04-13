@@ -80,25 +80,33 @@ def fix_image(image):
 class Command(PopItApiMixin, BaseCommand):
 
     def handle(self, **options):
-        for person in popit_unwrap_pagination(
-                self.api.persons,
-                embed='',
-                per_page=100
-        ):
-            msg = "Person {0}persons/{1}"
-            print msg.format(self.get_base_url(), person['id'])
-            for image in person.get('images', []):
-                print "  Image with URL:", image['url']
-                fix_image(image)
-                # Some images have an empty 'created' field, which
-                # causes an Elasticsearch indexing error, so change it
-                # to null if that's the case:
-                if not image.get('created'):
-                    image['created'] = None
-            fix_dates(person)
-            try:
-                self.api.persons(person['id']).put(person)
-            except HttpClientError as e:
-                print "HttpClientError", e.content
-                sys.exit(1)
-            invalidate_cache_entries_from_person_data(person)
+        for collection in ('organization', 'person'):
+            api_collection = getattr(self.api, collection + 's')
+            message = "{titled} {base_url}{plural}/{id}"
+            for item in popit_unwrap_pagination(
+                    api_collection,
+                    embed='',
+                    per_page=100
+            ):
+                print message.format(
+                    titled=collection.title(),
+                    base_url=self.get_base_url(),
+                    plural=(collection + "s"),
+                    id=item['id']
+                )
+                for image in item.get('images', []):
+                    print "  Image with URL:", image['url']
+                    fix_image(image)
+                    # Some images have an empty 'created' field, which
+                    # causes an Elasticsearch indexing error, so change it
+                    # to null if that's the case:
+                    if not image.get('created'):
+                        image['created'] = None
+                fix_dates(item)
+                try:
+                    api_collection(item['id']).put(item)
+                except HttpClientError as e:
+                    print "HttpClientError", e.content
+                    sys.exit(1)
+                if collection == 'person':
+                    invalidate_cache_entries_from_person_data(item)
