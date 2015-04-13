@@ -12,13 +12,6 @@
 
 {% block content %}
 
-  {% if not user.is_authenticated %}
-  <div class="encourage-login">
-    If you want to help by changing this information, please
-    <a href="{% url 'account_login' %}?next={{ redirect_after_login }}">log in</a>.
-  </div>
-  {% endif %}
-
   <p>
     {% for paper in nomination_papers %}
       View the official Statement of Nominated Persons for this constituency:
