@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 
+{% load metadescription %}
+
+{% block extra_head %}
+    <!-- Open Graph data -->
+    <meta property="og:title" content="YourNextMP" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
+    <meta property="og:image:height" content="80" />
+    <meta property="og:image:width" content="80" />
+    <meta property="og:site_name" content="YourNextMP" />
+    <meta property="og:description" content="YourNextMP - The high quality source of free candidate data for the 2015 General Election">
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter card data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@yournextmp" />
+    <meta name="twitter:title" content="YourNextMP" />
+    <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
+    <meta property="twitter:image:height" content="120" />
+    <meta property="twitter:image:width" content="120" />
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta name="twitter:description" content="YourNextMP - The high quality source of free candidate data for the 2015 General Election"  />
+{% endblock %}
+
 {% block body_class %}finder{% endblock %}
 
 {% block extra_js %}

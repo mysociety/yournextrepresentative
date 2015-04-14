@@ -3,9 +3,43 @@
 {% load staticfiles %}
 {% load imagefixes %}
 {% load standing %}
+{% load metadescription %}
 
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ canonical_url }}" />
+    {% if person.image %}
+      <meta property="og:image" content="{{ person.proxy_image|fixproxyurl }}/0/80" />
+    {% elif person.gender|lower == 'female' %}
+      <meta property="og:image" content="{{ 'candidates/img/blank-woman.png'|static_image_path:request }}"/>
+    {% else %}
+     <meta property="og:image" content="{{ 'candidates/img/blank-man.png'|static_image_path:request }}"/>
+    {% endif %}
+    <meta property="og:image:height" content="80" />
+    <meta property="og:image:width" content="80" />
+    <meta property="og:site_name" content="YourNextMP" />
+    <meta property="og:description" content="{% metadescription person last_cons DATE_TODAY DATE_ELECTION %}">
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter card data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@yournextmp" />
+    <meta name="twitter:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    {% if person.image %}
+      <meta property="twitter:image" content="{{ person.image }}" />
+    {% elif person.gender|lower == 'female' %}
+      <meta property="twitter:image" content="{{ 'candidates/img/blank-woman-160.png'|static_image_path:request }}"/>
+    {% else %}
+     <meta property="twitter:image" content="{{ 'candidates/img/blank-man-160.png'|static_image_path:request }}"/>
+    {% endif %}
+    <meta property="twitter:image:width" content="160" />
+    <meta property="twitter:image:height" content="160" />
+    <meta name="twitter:url" content="{{ canonical_url }}" />
+    <meta name="twitter:description" content="{% metadescription person last_cons DATE_TODAY DATE_ELECTION %}" />
 {% endblock %}
 
 

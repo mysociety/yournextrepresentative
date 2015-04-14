@@ -42,12 +42,14 @@ class TestPersonView(WebTest):
         mock_popit.return_value.persons = FakePersonCollection
         response = self.app.get('/person/2009/tessa-jowell')
         self.assertContains(response, 'Contesting in 2015')
+        self.assertContains(response, 'is standing for the Labour Party in Dulwich and West Norwood in 2015')
 
     @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_after)
     def test_get_tessa_jowell_after_election(self, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
         response = self.app.get('/person/2009/tessa-jowell')
         self.assertContains(response, 'Contested in 2015')
+        self.assertContains(response, 'stood for the Labour Party in Dulwich and West Norwood in 2015')
 
     def test_get_non_existent(self, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
