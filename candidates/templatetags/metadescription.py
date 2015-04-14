@@ -1,6 +1,7 @@
 from django import template
 from datetime import date
 from candidates.models import election_date_2005, election_date_2010, election_date_2015
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 register = template.Library()
 
@@ -39,3 +40,8 @@ def is_post_election(year, today, next_election):
         return today > election_date_2005
     else:
         return today > next_election
+
+@register.filter
+def static_image_path(image_name, request):
+    abs_path = static(image_name)
+    return request.build_absolute_uri(abs_path)
