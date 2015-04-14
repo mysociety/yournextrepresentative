@@ -29,11 +29,10 @@
 
   {% elif register %}
 
-    <p>The {{ party_name }} is on the Electoral Commission's register for {{ register }}.</p>
+    <p>{{ party_name }} is on the Electoral Commission's register for {{ register }}.</p>
 
-    <p>You can find more data from the party's Electoral Commission registration at the
-      <a href="{{ oec_url }}">OpenElectoralCommission page for the
-      {{ party_name }}</a>.</p>
+    <p>You can find more data about the party's registration at the
+      <a href="{{ ec_url }}">Electoral Commission page for {{ party_name }}</a>.</p>
     <p></p>
 
   {% endif %}

@@ -3,13 +3,17 @@ import os
 from os.path import join, splitext, exists
 import re
 import json
+from shutil import move
 from slugify import slugify
 from tempfile import NamedTemporaryFile
+from urllib import urlencode
 from urlparse import urljoin
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
+import magic
+import mimetypes
 import requests
 from slumber.exceptions import HttpServerError
 import dateutil.parser
@@ -20,7 +24,7 @@ from candidates.popit import create_popit_api_object
 from ..images import get_file_md5sum, image_uploaded_already
 
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
-base_emblem_url = 'http://openelectoralcommission.org.uk/party_images/'
+base_emblem_url = 'http://search.electoralcommission.org.uk/Api/Registrations/Emblems/'
 
 def find_index(l, predicate):
     for i, e in enumerate(l):
@@ -47,7 +51,7 @@ def sort_emblems(emblems, party_id):
     if party_id in IMAGES_TO_USE:
         generic_image_index = find_index(
             emblems,
-            lambda e: e['description'] == IMAGES_TO_USE[party_id]
+            lambda e: e['MonochromeDescription'] == IMAGES_TO_USE[party_id]
         )
         if generic_image_index < 0:
             raise Exception("Couldn't find the generic logo for " + party_id)
@@ -58,34 +62,48 @@ class Command(BaseCommand):
     help = "Update parties from a CSV of party data"
 
     def handle(self, **options):
+        self.mime_type_magic = magic.Magic(mime=True)
         self.api = create_popit_api_object()
-        ntf = NamedTemporaryFile(delete=False)
-        try:
-            r = requests.get('http://openelectoralcommission.org.uk/parties/index.json')
-            with open(ntf.name, 'w') as f:
-                json.dump(r.json(), f)
-            self.parse_data(ntf.name)
-        finally:
-            os.remove(ntf.name)
+        start = 0
+        per_page = 50
+        url = 'http://pefonline.electoralcommission.org.uk/api/search/Registrations'
+        params = {
+            'rows': per_page,
+            'et': ["pp", "ppm"],
+            'register': ["gb", "ni"],
+            'regStatus': ["registered", "deregistered", "lapsed"],
+        }
+        total = None
+        while total is None or start <= total:
+            ntf = NamedTemporaryFile(delete=False)
+            params['start'] = start
+            try:
+                resp = requests.get(url + '?' + urlencode(params, doseq=True)).json()
+                if total is None:
+                    total = resp['Total']
+                with open(ntf.name, 'w') as f:
+                    json.dump(resp['Result'], f)
+                self.parse_data(ntf.name)
+            finally:
+                os.remove(ntf.name)
+            start += per_page
 
     def parse_data(self, json_file):
         with open(json_file) as f:
             for ec_party in json.load(f):
-                ec_party_id = ec_party['party_id'].strip()
+                ec_party_id = ec_party['ECRef'].strip()
                 # We're only interested in political parties:
                 if not ec_party_id.startswith('PP'):
                     continue
                 party_id = self.clean_id(ec_party_id)
-                register = ec_party.get('register')
-                if not register:
-                    continue
-                register = re.sub(r' \(minor party\)', '', register)
-                party_name = self.clean_name(ec_party['party_name'])
-                party_founded = self.clean_date(ec_party['registered_date'])
-                if 'deregistered_date' in ec_party:
-                    party_dissolved = self.clean_date(ec_party['deregistered_date'])
+                if ec_party['RegulatedEntityTypeName'] == 'Minor Party':
+                    register = ec_party['RegisterNameMinorParty'].replace(
+                        ' (minor party)', ''
+                    )
                 else:
-                    party_dissolved = '9999-12-31'
+                    register = ec_party['RegisterName']
+                party_name, party_dissolved = self.clean_name(ec_party['RegulatedEntityName'])
+                party_founded = self.clean_date(ec_party['ApprovedDate'])
                 party_data = {
                     'id': party_id,
                     'name': party_name,
@@ -103,12 +121,12 @@ class Command(BaseCommand):
                 }
                 try:
                     self.api.organizations.post(party_data)
-                    self.upload_images(ec_party['emblems'], party_id)
+                    self.upload_images(ec_party['PartyEmblems'], party_id)
                 except HttpServerError as e:
                     if 'E11000' in e.content:
                         # Duplicate Party Found
                         self.api.organizations(party_id).put(party_data)
-                        self.upload_images(ec_party['emblems'], party_id)
+                        self.upload_images(ec_party['PartyEmblems'], party_id)
                     else:
                         raise
                 organization_with_memberships = \
@@ -125,10 +143,24 @@ class Command(BaseCommand):
                     )
 
     def clean_date(self, date):
-        return dateutil.parser.parse(date).strftime("%Y-%m-%d")
+        timestamp = re.match(
+            r'\/Date\((\d+)\)\/', date).group(1)
+        dt = datetime.fromtimestamp(int(timestamp) / 1000.)
+        return dt.strftime("%Y-%m-%d")
 
     def clean_name(self, name):
-        return name.strip()
+        name = name.strip()
+        if not 'de-registered' in name.lower():
+            return name, '9999-12-31'
+
+        match = re.match(
+            r'(.+)\[De-registered ([0-9]+/[0-9]+/[0-9]+)\]', name)
+        name, deregistered_date = match.groups()
+        name = re.sub(r'\([Dd]e-?registered [^\)]+\)', '', name)
+        deregistered_date = dateutil.parser.parse(
+            deregistered_date, dayfirst=True).strftime("%Y-%m-%d")
+
+        return name, deregistered_date
 
     def upload_images(self, emblems, party_id):
         image_upload_url = "{0}/{1}/organizations/{2}/image".format(
@@ -136,24 +168,21 @@ class Command(BaseCommand):
         )
         sort_emblems(emblems, party_id)
         for emblem in emblems:
-            fname = join(emblem_directory, emblem['image'])
-            if not exists(fname):
-                image_url = urljoin(base_emblem_url, emblem['image'])
-                r = requests.get(image_url)
-                with open(fname, 'w') as f:
-                    f.write(r.content)
+            emblem_id = str(emblem['Id'])
+            ntf = NamedTemporaryFile(delete=False)
+            image_url = urljoin(base_emblem_url, emblem_id)
+            r = requests.get(image_url)
+            with open(ntf.name, 'w') as f:
+                f.write(r.content)
+            mime_type = self.mime_type_magic.from_file(ntf.name)
+            extension = mimetypes.guess_extension(mime_type)
+            fname = join(emblem_directory, 'Emblem_{0}{1}'.format(emblem_id, extension))
+            move(ntf.name, fname)
             if not image_uploaded_already(
                 self.api.organizations,
                 party_id,
                 fname
             ):
-                mime_type = {
-                    '.gif': 'image/gif',
-                    '.bmp': 'image/x-ms-bmp',
-                    '.jpg': 'image/jpeg',
-                    '.jpeg': 'image/jpeg',
-                    '.png': 'image/png',
-                }[splitext(fname)[1]]
                 md5sum = get_file_md5sum(fname)
                 with open(fname, 'rb') as f:
                     requests.post(
@@ -165,9 +194,9 @@ class Command(BaseCommand):
                             'image': f
                         },
                         data={
-                            'notes': emblem['description'],
+                            'notes': emblem['MonochromeDescription'],
                             'source': 'The Electoral Commission',
-                            'id': emblem['id'],
+                            'id': emblem_id,
                             'md5sum': md5sum,
                             'mime_type': mime_type,
                         }
