@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from mock import patch, Mock
 
 from urlparse import urlsplit
@@ -75,6 +77,20 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn('Postcode &#39;FOOBAR&#39; is not valid.', response)
+
+    def test_nonascii_postcode(self, mock_requests):
+        mock_requests.get.side_effect = fake_requests_for_mapit
+        response = self.app.get('/')
+        form = response.forms['form-postcode']
+        # Postcodes with non-ASCII characters should be rejected
+        form['postcode'] = u'SW1A 1ӔA'
+        response = form.submit()
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            u'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
+            response
+        )
+
 
 class TestConstituencyNameFinderView(WebTest):
 

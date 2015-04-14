@@ -23,6 +23,10 @@ class UnknownMapitException(BaseMapItException):
 
 def get_wmc_from_postcode(original_postcode):
     postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
+    if re.search(r'[^a-z0-9]', postcode):
+        raise BadPostcodeException(
+            u'There were disallowed characters in "{0}"'.format(original_postcode)
+        )
     cached_result = cache.get(postcode)
     if cached_result:
         return cached_result
