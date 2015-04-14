@@ -8,26 +8,27 @@ register = template.Library()
 @register.simple_tag
 def metadescription(person, last_cons, today, next_election):
     output = person['name']
-    if last_cons:
-        year_to_check = int(last_cons[0])
-    else:
-        year_to_check = today.year
-    if is_post_election(year_to_check, today, next_election):
-        output += " stood "
-    else:
-        output += " is standing "
-
-    if person['last_party']['name'].strip() == "Independent":
-        output += "as an independent candidate"
-    else:
-        party_words = person['last_party']['name'].strip().split()
-        if party_words[0] != "The":
-            output += "for the"
+    if person['last_party']:
+        if last_cons:
+            year_to_check = int(last_cons[0])
         else:
-            output += "for"
-        output += " %s" % person['last_party']['name']
-    if last_cons:
-        output += " in %s in %s" % (last_cons[1]['name'], last_cons[0])
+            year_to_check = today.year
+        if is_post_election(year_to_check, today, next_election):
+            output += " stood "
+        else:
+            output += " is standing "
+
+        if person['last_party']['name'].strip() == "Independent":
+            output += "as an independent candidate"
+        else:
+            party_words = person['last_party']['name'].strip().split()
+            if party_words[0] != "The":
+                output += "for the"
+            else:
+                output += "for"
+            output += " %s" % person['last_party']['name']
+        if last_cons:
+            output += " in %s in %s" % (last_cons[1]['name'], last_cons[0])
     output += " - find out more on YourNextMP"
     return output
 
