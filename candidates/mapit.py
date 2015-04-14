@@ -22,7 +22,7 @@ class UnknownMapitException(BaseMapItException):
     pass
 
 def get_wmc_from_postcode(original_postcode):
-    postcode = re.sub(r'\s*', '', original_postcode.lower())
+    postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
     cached_result = cache.get(postcode)
     if cached_result:
         return cached_result
