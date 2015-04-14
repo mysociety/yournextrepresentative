@@ -9,7 +9,7 @@
     <link rel="canonical" href="{{ canonical_url }}" />
 
     <!-- Open Graph data -->
-    <meta property="og:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    <meta property="og:title" content="{{ person.name }}{% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{ canonical_url }}" />
     {% if person.image %}
@@ -28,7 +28,7 @@
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@yournextmp" />
-    <meta name="twitter:title" content="{{ person.name }} {% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
+    <meta name="twitter:title" content="{{ person.name }}{% if last_cons %} - Candidate (PPC) for {{ last_cons.1.name }} in {{ last_cons.0 }}{% endif %}" />
     {% if person.image %}
       <meta property="twitter:image" content="{{ person.image }}" />
     {% elif person.gender|lower == 'female' %}
