@@ -46,12 +46,10 @@ class PartyDetailView(PopItApiMixin, TemplateView):
             raise Http404("Party not found")
         party = self.api.organizations(party_id).get(embed='')['result']
         party_ec_id = get_identifier('electoral-commission', party)
-        context['oec_url'] = None
+        context['ec_url'] = None
         if party_ec_id:
-            context['oec_url'] = \
-                'http://openelectoralcommission.org.uk/parties/{0}/{1}/'.format(
-                    party_ec_id, slugify(party_name)
-                )
+            ec_tmpl = 'http://search.electoralcommission.org.uk/English/Registrations/{0}'
+            context['ec_url'] = ec_tmpl.format(party_ec_id)
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
             (i['notes'], i['proxy_url'] + '/240/0')
