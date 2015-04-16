@@ -203,7 +203,8 @@ class PhotoReviewTests(WebTest):
              'uploaded_by_user': u'john',
              'index': 'first',
              'md5sum': '603b269fccc667d72dbf462de31476b0',
-             'mime_type': 'image/png'}
+             'mime_type': 'image/png',
+             'created': None}
         )
         las = LoggedAction.objects.all()
         self.assertEqual(1, len(las))

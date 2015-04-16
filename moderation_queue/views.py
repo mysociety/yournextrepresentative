@@ -197,6 +197,7 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUp
             'mime_type': 'image/png',
             'notes': 'Approved from photo moderation queue',
             'uploaded_by_user': self.queued_image.user.username,
+            'created': None,
         }
         if make_primary:
             data['index'] = 'first'

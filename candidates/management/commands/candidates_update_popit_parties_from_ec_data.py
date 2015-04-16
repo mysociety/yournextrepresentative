@@ -206,6 +206,7 @@ class Command(BaseCommand):
                             'id': emblem_id,
                             'md5sum': md5sum,
                             'mime_type': mime_type,
+                            'created': None,
                         }
                     )
 
