@@ -1,3 +1,4 @@
+import bleach
 import os
 import re
 import requests
@@ -152,7 +153,18 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUp
         )
         context['why_allowed'] = self.queued_image.why_allowed
         context['moderator_why_allowed'] = self.queued_image.why_allowed
-        context['justification_for_use'] = self.queued_image.justification_for_use
+        # There are often source links supplied in the justification,
+        # and it's convenient to be able to follow them. However, make
+        # sure that any maliciously added HTML tags have been stripped
+        # before linkifying any URLs:
+        context['justification_for_use'] = \
+            bleach.linkify(
+                bleach.clean(
+                    self.queued_image.justification_for_use,
+                    tags=[],
+                    strip=True
+                )
+            )
         context['google_image_search_url'] = self.get_google_image_search_url(
             context['person'], context['person_extra']
         )

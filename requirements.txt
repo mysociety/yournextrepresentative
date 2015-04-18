@@ -1,5 +1,6 @@
 argparse==1.2.1
 beautifulsoup4==4.3.2
+bleach==1.4.1
 cffi==0.9.2
 coverage==3.7.1
 cryptography==0.8
@@ -15,6 +16,7 @@ docutils==0.10
 -e git+https://github.com/django-extensions/django-extensions.git@44a39ccd882b31381c3da63861d70f0b3b5690f8#egg=django-extensions
 enum34==1.0.4
 futures==2.1.6
+html5lib==0.999
 ipdb==0.8
 ipython==2.1.0
 jsonpatch==1.9

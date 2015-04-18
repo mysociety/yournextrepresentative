@@ -108,7 +108,7 @@
       {% if justification_for_use %}
         <p>
           {{ username }}'s justification for use of this photo was:
-          &#8220;{{ justification_for_use }}&#8221;
+          &#8220;{{ justification_for_use|safe }}&#8221;
         </p>
       {% endif %}
 
