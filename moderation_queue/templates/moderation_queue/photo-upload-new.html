@@ -7,10 +7,6 @@
 
 {% load pipeline %}
 
-{% block extra_css %}
-{% stylesheet 'image-review' %}
-{% endblock %}
-
 {% block hero %}
   <h1>{% blocktrans with name=person.name %}Upload a photo of {{ name }}{% endblocktrans %}</h1>
 {% endblock %}
