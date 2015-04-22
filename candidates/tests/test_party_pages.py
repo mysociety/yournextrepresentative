@@ -87,9 +87,12 @@ class TestPartyPages(WebTest):
             u"We don't know of any Labour Party candidates in Northern Ireland so far.",
             unicode(response)
         )
-        # Check there's no David Miliband (since he's not standing in 2015):
-        self.assertIn(
-            u'<li>No candidate in <a href="/constituency/65719/south-shields">South Shields</a>',
+        # Check there's no mention of David Miliband's constituency
+        # (since he's not standing in 2015) and we've not added enough
+        # example candidates to reach the threshold where all
+        # constituencies should be shown:
+        self.assertNotIn(
+            u'South Shields',
             unicode(response)
         )
         # But there is an Ed Miliband:

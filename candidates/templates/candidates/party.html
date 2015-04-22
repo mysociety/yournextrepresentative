@@ -37,20 +37,25 @@
 
   {% endif %}
 
-  {% for country, constituencies in candidates_by_country %}
+  {% for country, country_data in candidates_by_country %}
     <h3>{{ country }}</h3>
-    {% if constituencies %}
+    {% if country_data.constituencies %}
       <ul>
-        {% for post_id, constituency_name, candidate in constituencies %}
+        {% for post_id, constituency_name, candidate in country_data.constituencies %}
           {% if candidate %}
             <li><a href="{% url 'person-view' person_id=candidate.person_id %}">{{ candidate.person_name }}</a>
               is standing in
               <a href="{% url 'constituency' mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ candidate.constituency_name }}</a></li>
-          {% else %}
+          {% elif country_data.stats.show_all %}
             <li>No candidate in <a href="{% url 'constituency' mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ constituency_name }}</a></li>
           {% endif %}
         {% endfor %}
       </ul>
+      {% if not country_data.stats.show_all %}
+        <p>There were also {{ country_data.stats.missing }} constituencies in
+          {{ country }} that {{ party_name }} aren't standing a candidate in.
+        </p>
+      {% endif %}
     {% else %}
       <p>We don't know of any {{ party_name }} candidates in {{ country }} so far.</p>
     {% endif %}

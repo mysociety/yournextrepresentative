@@ -35,6 +35,23 @@ class PartyListView(PopItApiMixin, TemplateView):
         return context
 
 
+def get_country_stats(constituencies):
+    total = 0
+    candidates = 0
+    for t in constituencies:
+        total += 1
+        if t[2]:
+            candidates += 1
+    proportion = candidates / float(total)
+    return {
+        'proportion': proportion,
+        'total': total,
+        'candidates': candidates,
+        'missing': total - candidates,
+        'show_all': proportion > 0.3,
+    }
+
+
 class PartyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/party.html'
 
@@ -92,11 +109,14 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         for country in relevant_countries:
             candidates_by_country[country] = None
             if by_country[country]:
-                candidates_by_country[country] = \
-                    [
-                        (c[0], c[1], by_country[country].get(c[0]))
-                        for c in MapItData.constituencies_2010_by_country[country]
-                    ]
+                constituencies = [
+                    (c[0], c[1], by_country[country].get(c[0]))
+                    for c in MapItData.constituencies_2010_by_country[country]
+                ]
+                candidates_by_country[country] = {
+                    'constituencies': constituencies,
+                    'stats': get_country_stats(constituencies),
+                }
         context['candidates_by_country'] = sorted(
             candidates_by_country.items(),
             key=lambda k: k[0]
