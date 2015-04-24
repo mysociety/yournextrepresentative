@@ -19,6 +19,7 @@ from .static_data import MapItData
 
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
 TRUSTED_TO_LOCK_GROUP_NAME = 'Trusted To Lock'
+TRUSTED_TO_RENAME_GROUP_NAME = 'Trusted To Rename'
 
 form_simple_fields = (
     'honorific_prefix', 'name', 'honorific_suffix', 'email', 'birth_date',

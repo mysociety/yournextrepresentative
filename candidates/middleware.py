@@ -3,10 +3,15 @@ import re
 from requests.adapters import ConnectionError
 from slumber.exceptions import HttpServerError, HttpClientError
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.http import urlquote
+
+from candidates.update import NameChangeDisallowedException
+
 
 class PopItDownMiddleware(object):
 
@@ -22,6 +27,29 @@ class PopItDownMiddleware(object):
         if isinstance(exc, HttpClientError) and message_404:
             raise Http404()
         return None
+
+
+class DisallowedUpdateMiddleware(object):
+
+    def process_exception(self, request, exc):
+        if isinstance(exc, NameChangeDisallowedException):
+            # Then email the support address about the name change...
+            message = u'''As a precaution, an update was blocked:
+
+  {0}
+
+If this update is appropriate, someone should apply it manually.
+'''.format(unicode(exc))
+            send_mail(
+                'Disallowed YourNextMP update for checking',
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [settings.SUPPORT_EMAIL],
+                fail_silently=False
+            )
+            # And redirect to a page explaining to the user what has happened
+            disallowed_explanation_url = reverse('update-disallowed')
+            return HttpResponseRedirect(disallowed_explanation_url)
 
 
 class CopyrightAssignmentMiddleware(object):

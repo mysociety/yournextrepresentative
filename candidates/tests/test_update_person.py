@@ -71,6 +71,7 @@ class TestUpdatePerson(TestCase):
         # invalidated:
         previous_version = {
             'data': {
+                "name": "Tessa Jowell",
                 "standing_in": {
                     "2010": {
                         "mapit_url": "http://mapit.mysociety.org/area/65808",

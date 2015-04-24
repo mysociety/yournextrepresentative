@@ -2,7 +2,10 @@ from datetime import date
 from django.conf import settings
 from auth_helpers.views import user_in_group
 from candidates.models import (
-    election_date_2015, TRUSTED_TO_MERGE_GROUP_NAME, TRUSTED_TO_LOCK_GROUP_NAME
+    election_date_2015,
+    TRUSTED_TO_MERGE_GROUP_NAME,
+    TRUSTED_TO_LOCK_GROUP_NAME,
+    TRUSTED_TO_RENAME_GROUP_NAME,
 )
 from moderation_queue.models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
@@ -54,5 +57,6 @@ def add_group_permissions(request):
             ('user_can_merge', TRUSTED_TO_MERGE_GROUP_NAME),
             ('user_can_review_photos', PHOTO_REVIEWERS_GROUP_NAME),
             ('user_can_lock', TRUSTED_TO_LOCK_GROUP_NAME),
+            ('user_can_rename', TRUSTED_TO_RENAME_GROUP_NAME),
         )
     }
