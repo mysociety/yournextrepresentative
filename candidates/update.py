@@ -101,6 +101,8 @@
 from datetime import timedelta, datetime, date
 import math
 
+from auth_helpers.views import user_in_group
+
 from .models import PopItPerson
 from .static_data import MapItData, PartyData
 from .models import get_person_data_from_dict, get_post_ids_from_standing_in
@@ -109,6 +111,7 @@ from .models import form_simple_fields, form_complex_fields_locations
 from .models import election_date_2005, election_date_2010
 from .models import candidate_list_name_re
 from .models import create_person_with_id_retries
+from .models import TRUSTED_TO_RENAME_GROUP_NAME
 
 from .popit import PopItApiMixin
 from .cache import invalidate_posts, invalidate_person
@@ -251,6 +254,10 @@ def fix_dates(data):
             if key in other_name and not other_name[key]:
                 other_name[key] = None
 
+class NameChangeDisallowedException(Exception):
+    pass
+
+
 class PersonUpdateMixin(PopItApiMixin):
     """A mixin for updating PopIt from our representation"""
 
@@ -280,6 +287,12 @@ class PersonUpdateMixin(PopItApiMixin):
         )[1]
 
     def update_allowed(self, old_data, new_data):
+        if not (user_in_group(self.request.user, TRUSTED_TO_RENAME_GROUP_NAME) or
+                old_data['name'] == new_data['name']):
+            message = "Name change from '{0}' to '{1}' by user {2} disallowed"
+            raise NameChangeDisallowedException(message.format(
+                old_data['name'], new_data['name'], self.request.user.username
+            ))
         _, old_allowed = self.get_constituency_lock_from_person_data(old_data)
         _, new_allowed = self.get_constituency_lock_from_person_data(new_data)
         for (field, key) in [
