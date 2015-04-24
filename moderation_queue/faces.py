@@ -1,11 +1,8 @@
 # easy_thumbnails face cropping processor
 # Much of the below taken from http://stackoverflow.com/a/13243712/669631
 
-try:
-    import cv
-    faceCascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
-except:
-    faceCascade = False
+import cv
+faceCascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
 
 # Select one of the haarcascade files:
 #   haarcascade_frontalface_alt.xml  <-- Best one?
