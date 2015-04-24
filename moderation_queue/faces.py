@@ -42,30 +42,26 @@ def detectFaces(im):
 
     return faces
 
-
-def face_crop(im, size, face=False, **kwargs):
-    if not face or not faceCascade:
-        return im
-
+def face_crop_bounds(im):
     source_x, source_y = [int(v) for v in im.size]
-
     faces = detectFaces(im)
-    if faces:
-        cropBox = [0, 0, 0, 0]
-        for face, n in faces:
-            if face[2] > cropBox[2] or face[3] > cropBox[3]:
-                cropBox = face
+    if not faces:
+        return None
+    cropBox = [0, 0, 0, 0]
+    for face, n in faces:
+        if face[2] > cropBox[2] or face[3] > cropBox[3]:
+            cropBox = face
 
-        xDelta = int(max(cropBox[2] * 0.4, 0))
-        yDelta = int(max(cropBox[3] * 0.4, 0))
+    xDelta = int(max(cropBox[2] * 0.4, 0))
+    yDelta = int(max(cropBox[3] * 0.4, 0))
 
-        # Convert cv box to PIL box [left, upper, right, lower]
-        box = [
+    # Convert cv box to PIL box [left, upper, right, lower]
+    if cropBox == [0, 0, 0, 0]:
+        return None
+
+    return [
             max(cropBox[0] - xDelta, 0),
             max(cropBox[1] - yDelta, 0),
             min(cropBox[0] + cropBox[2] + xDelta, source_x - 1),
             min(cropBox[1] + cropBox[3] + yDelta, source_y - 1)
-            ]
-        im = im.crop(box)
-
-    return im
+    ]
