@@ -10,7 +10,7 @@ MAILTO=yournextmp@mysociety.org
 7,22,37,52 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
 
 # Run face detection every 15 minutes, again offset a bit:
-10,25,40,55 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py moderation_queue_detect_faces_in_queued_images
+# 10,25,40,55 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py moderation_queue_detect_faces_in_queued_images
 
 # Also create a daily archive at about 2 am:
 3 2 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/csv-archives/candidates-`date +\%Y\%m\%d`.csv
