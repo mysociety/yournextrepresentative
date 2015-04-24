@@ -43,7 +43,13 @@
   they're displayed in thumbnail form on the site.</p>
 
   <div class="image-for-review-container">
-    <img id="image-for-review" src="{{ queued_image.image.url }}">
+    <img id="image-for-review"
+      data-has-crop-bounds="{{ has_crop_bounds }}"
+      data-default-min-x="{{ guessed_crop_bounds.0 }}"
+      data-default-min-y="{{ guessed_crop_bounds.1 }}"
+      data-default-max-x="{{ guessed_crop_bounds.2 }}"
+      data-default-max-y="{{ guessed_crop_bounds.3 }}"
+      src="{{ queued_image.image.url }}">
   </div>
 
   <form id="photo-review-form" method="post">

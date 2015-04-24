@@ -294,7 +294,10 @@ NOSE_ARGS = [
     '--with-doctest',
     '--with-coverage',
     '--with-yanc',
-    '--cover-package=candidates,cached_counts,tasks,moderation_queue'
+    '--cover-package=candidates,cached_counts,tasks,moderation_queue',
+    # There are problems with OpenCV on Travis, so don't even try to
+    # import moderation_queue/faces.py
+    '--ignore-files=faces',
 ]
 
 SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014

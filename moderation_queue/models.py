@@ -60,6 +60,13 @@ class QueuedImage(models.Model):
     popit_person_id = models.CharField(max_length=256)
     user = models.ForeignKey(User, blank=True, null=True)
 
+    crop_min_x = models.IntegerField(blank=True, null=True)
+    crop_min_y = models.IntegerField(blank=True, null=True)
+    crop_max_x = models.IntegerField(blank=True, null=True)
+    crop_max_y = models.IntegerField(blank=True, null=True)
+
+    face_detection_tried = models.BooleanField(default=False)
+
     created = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
     updated = models.DateTimeField(auto_now=True, default=datetime.datetime.now)
 
@@ -72,3 +79,8 @@ class QueuedImage(models.Model):
 
     def get_absolute_url(self):
         return reverse('photo-review', kwargs={'queued_image_id': self.id})
+
+    @property
+    def has_crop_bounds(self):
+        crop_fields = ['crop_min_x', 'crop_min_y', 'crop_max_x', 'crop_max_y']
+        return not any(getattr(self, c) is None for c in crop_fields)
