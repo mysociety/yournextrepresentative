@@ -1,4 +1,5 @@
 jQuery(function($) {
+  var image = $('#image-for-review'), cropOptions;
 
   function setVisibilityFromDecision() {
     var value = $('#id_decision').val();
@@ -46,12 +47,24 @@ jQuery(function($) {
     $('input#id_y_max').attr('value', Math.round(c.y2));
   }
 
-  $('#image-for-review').Jcrop({
+  cropOptions = {
     onSelect: adjustFormValues,
     onChange: adjustFormValues,
     boxWidth: 600,
     boxHeight: 600,
-    aspectRatio: 1
-  });
+  };
+
+  if (image.data('has-crop-bounds')) {
+    cropOptions['setSelect'] = [
+      image.data('default-min-x'),
+      image.data('default-min-y'),
+      image.data('default-max-x'),
+      image.data('default-max-y')
+    ];
+  } else {
+    cropOptions['aspectRatio'] = 1;
+  }
+
+  image.Jcrop(cropOptions);
 
 });

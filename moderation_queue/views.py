@@ -105,6 +105,10 @@ def tidy_party_name(name):
     return name
 
 
+def value_if_none(v, default):
+    return default if v is None else v
+
+
 class PhotoReview(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUpdateMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
@@ -139,18 +143,28 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUp
         context['queued_image'] = self.queued_image
         context['person'], context['person_extra'] = \
             self.get_person(self.queued_image.popit_person_id)
+        context['has_crop_bounds'] = int(self.queued_image.has_crop_bounds)
+        max_x = self.queued_image.image.width - 1
+        max_y = self.queued_image.image.height - 1
+        guessed_crop_bounds = [
+            value_if_none(self.queued_image.crop_min_x, 0),
+            value_if_none(self.queued_image.crop_min_y, 0),
+            value_if_none(self.queued_image.crop_max_x, max_x),
+            value_if_none(self.queued_image.crop_max_y, max_y),
+        ]
         context['form'] = PhotoReviewForm(
             initial = {
                 'queued_image_id': self.queued_image.id,
-                'x_min': 0,
-                'x_max': self.queued_image.image.width - 1,
-                'y_min': 0,
-                'y_max': self.queued_image.image.height - 1,
                 'decision': self.queued_image.decision,
+                'x_min': guessed_crop_bounds[0],
+                'y_min': guessed_crop_bounds[1],
+                'x_max': guessed_crop_bounds[2],
+                'y_max': guessed_crop_bounds[3],
                 'moderator_why_allowed': self.queued_image.why_allowed,
                 'make_primary': True,
             }
         )
+        context['guessed_crop_bounds'] = guessed_crop_bounds
         context['why_allowed'] = self.queued_image.why_allowed
         context['moderator_why_allowed'] = self.queued_image.why_allowed
         # There are often source links supplied in the justification,
@@ -250,14 +264,20 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PersonParseMixin, PersonUp
             )
         if decision == 'approved':
             # Crop the image...
+            crop_fields = ('x_min', 'y_min', 'x_max', 'y_max')
             self.crop_and_upload_image_to_popit(
                 self.queued_image.image.path,
-                [form.cleaned_data[e] for e in
-                 ('x_min', 'y_min', 'x_max', 'y_max')],
+                [form.cleaned_data[e] for e in crop_fields],
                 form.cleaned_data['moderator_why_allowed'],
                 form.cleaned_data['make_primary'],
             )
             self.queued_image.decision = 'approved'
+            for i, field in enumerate(crop_fields):
+                setattr(
+                    self.queued_image,
+                    'crop_' + field,
+                    form.cleaned_data[field]
+                )
             self.queued_image.save()
             # Now create a new version in PopIt:
             previous_versions = person_data.pop('versions')
