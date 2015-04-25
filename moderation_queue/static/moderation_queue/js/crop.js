@@ -52,6 +52,7 @@ jQuery(function($) {
     onChange: adjustFormValues,
     boxWidth: 600,
     boxHeight: 600,
+    aspectRatio: 1
   };
 
   if (image.data('has-crop-bounds')) {
@@ -61,8 +62,6 @@ jQuery(function($) {
       image.data('default-max-x'),
       image.data('default-max-y')
     ];
-  } else {
-    cropOptions['aspectRatio'] = 1;
   }
 
   image.Jcrop(cropOptions);
