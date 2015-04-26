@@ -167,7 +167,7 @@ class Command(BaseCommand):
         deregistered_date = dateutil.parser.parse(
             deregistered_date, dayfirst=True).strftime("%Y-%m-%d")
 
-        return name, deregistered_date
+        return name.strip(), deregistered_date
 
     def upload_images(self, emblems, party_id):
         image_upload_url = "{0}/{1}/organizations/{2}/image".format(
