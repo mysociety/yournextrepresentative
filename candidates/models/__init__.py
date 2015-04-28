@@ -1,3 +1,6 @@
+from auth import get_constituency_lock
+from auth import get_constituency_lock_from_person_data
+
 from popit import get_area_from_post_id
 from popit import get_constituency_name_from_mapit_id
 from popit import get_identifier

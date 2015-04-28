@@ -93,7 +93,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, View):
         change_metadata = get_change_metadata(self.request, source)
         person.update_from_reduced_json(data_to_revert_to)
         person.record_version(change_metadata)
-        person.save_to_popit(self.api)
+        person.save_to_popit(self.api, self.request.user)
 
         # Log that that action has taken place, and will be shown in
         # the recent changes, leaderboards, etc.
@@ -145,7 +145,7 @@ class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, View):
         )
         primary_person.update_from_reduced_json(merged_person)
         primary_person.record_version(change_metadata)
-        primary_person.save_to_popit(self.api)
+        primary_person.save_to_popit(self.api, self.request.user)
         # Now we delete the old person:
         self.api.persons(secondary_person_id).delete()
         # Create a redirect from the old person to the new person:
@@ -192,11 +192,13 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
         )
         context['person'] = person
 
-        _, edits_allowed = self.get_constituency_lock_from_person(
-            person
-        )
-        context['class_for_2015_data'] = \
-            'person__2015-data-edit' if edits_allowed else ''
+        context['class_for_2015_data'] = ''
+        if person.constituency_or_party_changes_allowed(
+                self.request.user,
+                self.api,
+        ):
+            context['class_for_2015_data'] = \
+                'person__2015-data-edit'
 
         context['user_can_merge'] = user_in_group(
             self.request.user,
@@ -235,7 +237,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
         )
 
         person.record_version(change_metadata)
-        person.save_to_popit(self.api)
+        person.save_to_popit(self.api, self.request.user)
 
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
@@ -258,7 +260,7 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView)
             popit_person_new_version=change_metadata['version_id'],
             source=change_metadata['information_source'],
         )
-        person_id = person.save_to_popit(self.api)
+        person_id = person.save_to_popit(self.api, self.request.user)
         action.popit_person_id = person_id
         action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))

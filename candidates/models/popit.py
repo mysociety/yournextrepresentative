@@ -11,6 +11,11 @@ import django.dispatch
 from django_date_extensions.fields import ApproximateDate
 from slumber.exceptions import HttpServerError
 
+from .auth import (
+    get_constituency_lock_from_person_data,
+    check_creation_allowed,
+    check_update_allowed,
+)
 from .db import MaxPopItIds
 
 from ..cache import get_person_cached, invalidate_person, invalidate_posts
@@ -497,6 +502,18 @@ class PopItPerson(object):
     def version_diffs(self):
         return get_version_diffs(self.popit_data['versions'])
 
+    def get_second_last_version(self):
+        if len(self.versions) < 2:
+            raise Exception, "There was no previous version of this person"
+        return PopItPerson.create_from_reduced_json(
+            self.versions[1]['data']
+        )
+
+    def constituency_or_party_changes_allowed(self, user, api):
+        return get_constituency_lock_from_person_data(
+            user, api, self.popit_data
+        )
+
     def name_with_honorifics(self):
         name_parts = []
         pre = self.popit_data.get('honorific_prefix')
@@ -968,11 +985,21 @@ class PopItPerson(object):
         api.persons(self.id).put(popit_data_for_put)
         self.delete_memberships(api)
 
-    def save_to_popit(self, api):
+    def save_to_popit(self, api, user=None):
         fix_dates(self.popit_data)
         if self.id:
+            previous_version = self.get_second_last_version()
+            if user is not None:
+                check_update_allowed(
+                    user,
+                    api,
+                    previous_version.popit_data,
+                    self.popit_data
+                )
             self.update_person_in_popit(api)
         else:
+            if user is not None:
+                check_creation_allowed(user, api, self.popit_data)
             self.create_new_person_in_popit(api)
         self.create_party_memberships(api)
         self.create_candidate_list_memberships(api)

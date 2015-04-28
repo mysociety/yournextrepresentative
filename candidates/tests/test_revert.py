@@ -7,7 +7,7 @@ from .helpers import equal_call_args
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
-from .fake_popit import FakePersonCollection
+from .fake_popit import FakePersonCollection, FakePostCollection
 
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
@@ -27,6 +27,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
             mock_popit
     ):
         mock_popit.return_value.persons = FakePersonCollection
+        mock_popit.return_value.posts = FakePostCollection
         mock_get_current_timestamp.return_value = example_timestamp
         mock_create_version_id.return_value = example_version_id
                

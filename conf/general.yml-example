@@ -74,3 +74,7 @@ NGINX_SSL: false
 # a default location is used (a 'media' directory in the top level of
 # the repository).
 MEDIA_ROOT: null
+
+# If this is true, you have to be in the 'Trusted to Rename' group in
+# order to change the name of a candidate:
+RESTRICT_RENAMES: false

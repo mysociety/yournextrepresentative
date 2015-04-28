@@ -294,7 +294,7 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, TemplateVie
                 update_message
             )
             person.record_version(change_metadata)
-            person.save_to_popit(self.api)
+            person.save_to_popit(self.api, self.request.user)
             LoggedAction.objects.create(
                 user=self.request.user,
                 action_type='photo-approve',

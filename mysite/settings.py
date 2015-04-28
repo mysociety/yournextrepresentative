@@ -323,3 +323,5 @@ else:
 CACHES = {
     'default': cache
 }
+
+RESTRICT_RENAMES = conf.get('RESTRICT_RENAMES')

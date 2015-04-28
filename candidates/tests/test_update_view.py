@@ -72,7 +72,10 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         mock_popit.return_value.persons = FakePersonCollection
         mock_get_current_timestamp.return_value = example_timestamp
         mock_create_version_id.return_value = example_version_id
-        response = self.app.get('/person/2009/update', user=self.user)
+        response = self.app.get(
+            '/person/2009/update',
+            user=self.user_who_can_lock,
+        )
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
         form['party_gb'] = 'party:90'
@@ -110,7 +113,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 {
                     'information_source': u'Some source of this information',
                     'timestamp': '2014-09-29T10:11:59.216159',
-                    'username': u'john',
+                    'username': u'charles',
                     'data': {
                         'facebook_page_url': u'',
                         'facebook_personal_url': u'',
@@ -293,7 +296,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
                 {
                     'information_source': u'Some source of this information',
                     'timestamp': '2014-09-29T10:11:59.216159',
-                    'username': u'john',
+                    'username': u'charles',
                     'data': {
                         'facebook_page_url': u'',
                         'facebook_personal_url': u'',
