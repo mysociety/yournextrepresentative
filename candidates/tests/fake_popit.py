@@ -92,7 +92,6 @@ class FakeCollection(object):
 class FakePersonCollection(FakeCollection):
     collection = 'persons'
 
-
 class FakeOrganizationCollection(FakeCollection):
     collection = 'organizations'
 
