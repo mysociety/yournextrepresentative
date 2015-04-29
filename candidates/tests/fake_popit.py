@@ -47,10 +47,10 @@ def get_example_popit_json(basename):
 
 class FakeCollection(object):
 
-    def __init__(self, *args):
-        self.object_id = args[0] if len(args) == 1 else None
-
-    def get(self, **kwargs):
+    # This is the version of get() that's called when invoked on an
+    # instance of this class (i.e. to get a single item from a
+    # collection)
+    def _instance_get(self, **kwargs):
         try:
             return get_example_popit_json(
                 '{0}_{1}_embed={2}.json'.format(
@@ -62,6 +62,24 @@ class FakeCollection(object):
                 raise HttpClientError('Client Error 404')
             else:
                 raise
+
+    def __init__(self, *args):
+        self.get = self._instance_get
+        self.object_id = args[0] if len(args) == 1 else None
+
+    # This is the version of get() that's called when invoked as a
+    # class method (i.e. to get everything in a collection)
+    @classmethod
+    def get(cls, **kwargs):
+        return get_example_popit_json(
+            'generic_{0}_embed={1}.json'.format(
+                cls.collection,
+                kwargs.get('embed', 'membership')
+            )
+        )
+
+    def delete(self, data):
+        raise Exception("Not implemented: you should patch this")
 
     def put(self, data):
         raise Exception("Not implemented: you should patch this")
