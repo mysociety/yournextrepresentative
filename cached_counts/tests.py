@@ -26,7 +26,7 @@ def create_initial_counts(extra=()):
     for count in initial_counts:
         CachedCount(**count).save()
 
-class CachedCountTechCase(TestCase):
+class CachedCountTestCase(TestCase):
     def setUp(self):
         create_initial_counts()
 
