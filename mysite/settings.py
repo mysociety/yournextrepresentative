@@ -292,9 +292,7 @@ SOUTH_TESTS_MIGRATE = False
 NOSE_ARGS = [
     '--nocapture',
     '--with-doctest',
-    '--with-coverage',
     '--with-yanc',
-    '--cover-package=candidates,cached_counts,tasks,moderation_queue',
     # There are problems with OpenCV on Travis, so don't even try to
     # import moderation_queue/faces.py
     '--ignore-files=faces',
