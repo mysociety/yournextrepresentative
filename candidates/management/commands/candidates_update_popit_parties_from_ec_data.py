@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from os.path import join, splitext, exists
+from os.path import join
 import re
 import json
 from shutil import move
