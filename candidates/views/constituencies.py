@@ -52,7 +52,6 @@ def get_electionleaflets_url(mapit_area_id, constituency_name):
     return url_format.format(area_id=mapit_area_id, slug=slug)
 
 
-
 class ConstituencyDetailView(PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
@@ -145,6 +144,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         return context
 
+
 class ConstituencyDetailCSVView(ConstituencyDetailView):
     def render_to_response(self, context, **response_kwargs):
         all_people = []
@@ -155,7 +155,6 @@ class ConstituencyDetailCSVView(ConstituencyDetailView):
         response['Content-Disposition'] = 'attachment; filename="%s"' % filename
         response.write(list_to_csv(all_people))
         return response
-
 
 
 class ConstituencyListView(PopItApiMixin, TemplateView):
