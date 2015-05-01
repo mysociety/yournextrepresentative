@@ -261,6 +261,8 @@ def is_party_membership(membership):
         )
         return bool(party_id_match)
 
+# FIXME: really this should be a method on a PopIt base class, so it's
+# available for both people and organizations.
 def get_identifier(scheme, popit_object):
     result = None
     for identifier in popit_object.get('identifiers', []):
@@ -653,6 +655,19 @@ class PopItPerson(object):
                 membership['post_id'] = constituency['post_id']
                 membership['role'] = "Candidate"
                 api.memberships.post(membership)
+
+    def get_identifier(self, scheme):
+        return get_identifier(scheme, self.popit_data)
+
+    def set_identifier(self, scheme, value):
+        update_values_in_sub_array(
+            self.popit_data,
+            {'sub_array': 'identifiers',
+             'info_type_key': 'scheme',
+             'info_value_key': 'identifier',
+             'info_type': scheme},
+            value
+        )
 
     def as_dict(self, year='2015'):
         """
