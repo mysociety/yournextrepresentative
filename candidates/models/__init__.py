@@ -12,6 +12,8 @@ from popit import election_date_2005
 from popit import election_date_2010
 from popit import election_date_2015
 
+from popit import election_to_election_date
+
 from popit import CSV_ROW_FIELDS
 
 from popit import person_added

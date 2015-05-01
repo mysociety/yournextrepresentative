@@ -9,16 +9,16 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, FormView, View
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
-from .version_data import get_client_ip
+from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
-from ..forms import NewPersonForm, ToggleLockForm
+from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
     election_date_2010, election_date_2015, TRUSTED_TO_LOCK_GROUP_NAME,
-    LoggedAction
+    RESULT_RECORDERS_GROUP_NAME, LoggedAction
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData
@@ -243,3 +243,99 @@ class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
         context['total_left'] = total_constituencies - total_locked
         context['percent_done'] = (100 * total_locked) / total_constituencies
         return context
+
+class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
+
+    form_class = ConstituencyRecordWinnerForm
+    template_name = 'candidates/record-winner.html'
+    required_group_name = RESULT_RECORDERS_GROUP_NAME
+
+    def dispatch(self, request, *args, **kwargs):
+        person_id = self.request.POST.get(
+            'person_id',
+            self.request.GET.get('person', '')
+        )
+        self.person = PopItPerson.create_from_popit(self.api, person_id)
+        self.mapit_area_id = self.kwargs['mapit_area_id']
+        self.constituency_name = \
+            get_constituency_name_from_mapit_id(self.mapit_area_id)
+        full_parlparse_id = self.person.get_identifier(
+            'uk.org.publicwhip'
+        )
+        id_re = re.compile(r'^uk.org.publicwhip/person/(?P<numeric_id>\d+)$')
+        if full_parlparse_id:
+            m = id_re.search(full_parlparse_id)
+            if m:
+                self.parlparse_id = m.group('numeric_id')
+            else:
+                self.parlparse_id = full_parlparse_id
+        else:
+            self.parlparse_id = None
+        return super(ConstituencyRecordWinnerView, self). \
+            dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = super(ConstituencyRecordWinnerView, self). \
+            get_initial()
+        initial['person_id'] = self.person.id
+        initial['parlparse_id'] = self.parlparse_id
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituencyRecordWinnerView, self). \
+            get_context_data(**kwargs)
+        context['mapit_area_id'] = self.mapit_area_id
+        context['constituency_name'] = self.constituency_name
+        context['person'] = self.person
+        context['parlparse_id'] = self.parlparse_id
+        return context
+
+    def form_valid(self, form):
+        winner = self.person
+        post = get_post_cached(self.api, self.mapit_area_id)['result']
+        people_for_invalidation = set()
+        for membership in post.get('memberships', []):
+            if membership.get('role') != 'Candidate':
+                continue
+            if not membership_covers_date(membership, election_date_2015):
+                continue
+            candidate = PopItPerson.create_from_popit(
+                self.api, membership['person_id']['id']
+            )
+            elected = (candidate == winner)
+            candidate.set_elected(elected)
+            parlparse_id = form.cleaned_data['parlparse_id']
+            if elected and parlparse_id:
+                candidate.set_identifier(
+                    'uk.org.publicwhip',
+                    'uk.org.publicwhip/person/{0}'.format(parlparse_id)
+                )
+            change_metadata = get_change_metadata(
+                self.request,
+                form.cleaned_data['source']
+            )
+            candidate.record_version(change_metadata)
+            candidate.save_to_popit(self.api)
+            candidate.invalidate_cache_entries()
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='set-candidate-' + \
+                    ('elected' if elected else 'not-elected'),
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                popit_person_id=candidate.id,
+                source=change_metadata['information_source'],
+            )
+            people_for_invalidation.add(candidate)
+        # This shouldn't be necessary since invalidating the people
+        # will invalidate the post
+        invalidate_posts([self.mapit_area_id])
+        return HttpResponseRedirect(
+            reverse(
+                'constituency',
+                kwargs={
+                    'mapit_area_id': self.mapit_area_id,
+                    'ignored_slug': slugify(self.constituency_name),
+                }
+            )
+        )
