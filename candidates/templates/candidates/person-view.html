@@ -73,6 +73,16 @@
 
 {% block content %}
 
+{% if person|election_decision_known:"2015" %}
+  <div class="person__details__result">
+  {% if person|was_elected:"2015" %}
+    <h3>{{ person.name }} was elected</h3>
+  {% else %}
+    <h3>{{ person.name }} was not elected</h3>
+  {% endif %}
+  </div>
+{% endif %}
+
 <div class="person__details">
     {% if not person.email %}
     <div class="missing_field">

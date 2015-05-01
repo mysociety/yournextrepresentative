@@ -1180,6 +1180,14 @@ class PopItPerson(object):
         standing_in[year]['elected'] = was_elected
         self.standing_in = standing_in
 
+    def get_elected(self, year="2015"):
+        standing_in = self.popit_data.get('standing_in') or {}
+        if year not in standing_in:
+            return None
+        year_data = standing_in.get(year, {})
+        if not year_data:
+            return None
+        return year_data.get('elected')
 
 def update_values_in_sub_array(data, location, new_value):
     """Ensure that only a particular value is present in a sub-dict

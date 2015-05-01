@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load metadescription %}
+{% load standing %}
 {% load exists %}
 
 {% block extra_head %}
@@ -83,7 +84,7 @@
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="candidates-list__person">
+        <li class="candidates-list__person {% if c|was_elected:"2015" %}candidates-list__person__winner{% endif %}">
           {% include 'candidates/_person_in_list.html' with year='2015' %}
           {% if user.is_authenticated %}
           <p>
@@ -96,7 +97,7 @@
             {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
           {% endif %}
           {% endif %}
-          {% if user_can_record_results %}
+          {% if user_can_record_results and not c|election_decision_known:"2015" %}
             <p>
               <a class="candidate-won-button button"
                   href="{% url 'record-winner' mapit_area_id=mapit_area_id %}?person={{ c.id }}">This candidate won!</a>

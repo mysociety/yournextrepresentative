@@ -38,3 +38,11 @@ def constituency_in_year(person, year):
             person.party_memberships[year]['name']
         )
     return mark_safe(result)
+
+@register.filter
+def election_decision_known(person, year):
+    return person.get_elected(year) is not None
+
+@register.filter
+def was_elected(person, year):
+    return bool(person.get_elected(year))
