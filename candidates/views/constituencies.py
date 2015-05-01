@@ -12,7 +12,7 @@ from django.utils.http import urlquote
 from django.views.generic import TemplateView, View
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
-from .version_data import get_client_ip, get_change_metadata
+from .version_data import get_client_ip
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm
 from ..models import (
