@@ -4,6 +4,7 @@ from candidates.models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
     TRUSTED_TO_LOCK_GROUP_NAME,
     TRUSTED_TO_RENAME_GROUP_NAME,
+    RESULT_RECORDERS_GROUP_NAME,
 )
 from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
 
@@ -36,6 +37,11 @@ class TestUserMixin(object):
             'ermintrude@example.com',
             'stillreallynotagoodpassword',
         )
+        cls.user_who_can_record_results = User.objects.create_user(
+            'frankie',
+            'frankie@example.com',
+            'stillreallynotagoodpassword',
+        )
         merger_group = Group.objects.get(name=TRUSTED_TO_MERGE_GROUP_NAME)
         merger_group.user_set.add(cls.user_who_can_merge)
         locker_group = Group.objects.get(name=TRUSTED_TO_LOCK_GROUP_NAME)
@@ -44,6 +50,8 @@ class TestUserMixin(object):
         uploader_group.user_set.add(cls.user_who_can_upload_documents)
         renamer_group = Group.objects.get(name=TRUSTED_TO_RENAME_GROUP_NAME)
         renamer_group.user_set.add(cls.user_who_can_rename)
+        recorder_group = Group.objects.get(name=RESULT_RECORDERS_GROUP_NAME)
+        recorder_group.user_set.add(cls.user_who_can_record_results)
         for u in (
                 cls.user,
                 cls.user_who_can_merge,
