@@ -64,6 +64,7 @@ CSV_ROW_FIELDS = [
     'honorific_suffix',
     'party_id',
     'linkedin_url',
+    'elected',
 ]
 
 
@@ -776,6 +777,10 @@ class PopItPerson(object):
             theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
                 parlparse_person_id
             )
+        elected = self.get_elected(year)
+        elected_for_csv = ''
+        if elected is not None:
+            elected_for_csv = str(elected)
 
         row = {
             'honorific_prefix': self.popit_data.get('honorific_prefix', ''),
@@ -801,6 +806,7 @@ class PopItPerson(object):
             'parlparse_id': parlparse_id,
             'theyworkforyou_url': theyworkforyou_url,
             'party_id': self.parties[year].get('electoral_commission_id'),
+            'elected': elected_for_csv,
         }
 
         return row
