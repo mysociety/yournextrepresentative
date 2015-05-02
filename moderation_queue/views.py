@@ -293,6 +293,10 @@ class PhotoReview(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, TemplateVie
                 self.request,
                 update_message
             )
+            # We have to refetch the person from PopIt, otherwise
+            # saving the new version will write back the images array
+            # from before we uploaded the image:
+            person = PopItPerson.create_from_popit(self.api, person.id)
             person.record_version(change_metadata)
             person.save_to_popit(self.api, self.request.user)
             LoggedAction.objects.create(
