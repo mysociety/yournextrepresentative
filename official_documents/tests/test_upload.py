@@ -1,3 +1,4 @@
+from mock import patch
 from os.path import join, realpath, dirname
 
 from django_webtest import WebTest
@@ -6,6 +7,8 @@ from webtest import Upload
 from django.core.urlresolvers import reverse
 
 from candidates.tests.auth import TestUserMixin
+from candidates.tests.fake_popit import FakePostCollection
+
 from official_documents.models import OfficialDocument
 
 TEST_MEDIA_ROOT=realpath(
@@ -22,11 +25,13 @@ TEST_MEDIA_ROOT=realpath(
 # check whether the upload text appears correctly should be moved to
 # the candidates application tests.
 
+@patch('candidates.popit.PopIt')
 class TestModels(TestUserMixin, WebTest):
 
     mapit_id = '65808'
 
-    def test_upload_unauthorized(self):
+    def test_upload_unauthorized(self, mock_popit):
+        mock_popit.return_value.posts = FakePostCollection
         response = self.app.get(
             '/constituency/65808/dulwich-and-west-norwood',
             user=self.user
@@ -56,7 +61,8 @@ class TestModels(TestUserMixin, WebTest):
             unicode(response)
         )
 
-    def test_upload_authorized(self):
+    def test_upload_authorized(self, mock_popit):
+        mock_popit.return_value.posts = FakePostCollection
         response = self.app.get(
             '/constituency/65808/dulwich-and-west-norwood',
             user=self.user_who_can_upload_documents
