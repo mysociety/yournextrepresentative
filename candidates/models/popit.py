@@ -496,7 +496,7 @@ class PopItPerson(object):
 
     @property
     def images(self):
-        return self.popit_data['images']
+        return self.popit_data.get('images', [])
 
     @property
     def version_diffs(self):
