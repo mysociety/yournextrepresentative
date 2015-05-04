@@ -1135,10 +1135,6 @@ def update_values_in_sub_array(data, location, new_value):
                 "url": "http://en.wikipedia.org/wiki/John_Doe"
             },
             {
-                "note": "instagram",
-                "url": "http://example.org/instagram"
-            },
-            {
                 "note": "homepage",
                 "url": "http://john.doe.example.org"
             }
@@ -1155,4 +1151,4 @@ def update_values_in_sub_array(data, location, new_value):
             location['info_type_key']: location['info_type'],
             location['info_value_key']: new_value
         })
-        data[location['sub_array']] = new_info
+    data[location['sub_array']] = new_info

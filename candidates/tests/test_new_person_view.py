@@ -104,6 +104,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
         expected_call_args = ({
             "birth_date": None,
+            "contact_details": [],
             "email": "jane@example.com",
             "gender": "",
             "honorific_prefix": "",
