@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     'auth_helpers',
     'debug_toolbar',
     'official_documents',
+    'results',
 )
 
 SITE_ID = 1

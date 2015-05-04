@@ -23,6 +23,7 @@ from ..models import (
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..static_data import MapItData
 from official_documents.models import OfficialDocument
+from results.models import ResultEvent
 
 from ..cache import get_post_cached, invalidate_posts
 
@@ -305,11 +306,18 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
             elected = (candidate == winner)
             candidate.set_elected(elected)
             parlparse_id = form.cleaned_data['parlparse_id']
-            if elected and parlparse_id:
-                candidate.set_identifier(
-                    'uk.org.publicwhip',
-                    'uk.org.publicwhip/person/{0}'.format(parlparse_id)
+            if elected:
+                ResultEvent.create_from_popit_person(
+                    candidate,
+                    '2015',
+                    form.cleaned_data['source'],
+                    self.request.user,
                 )
+                if parlparse_id:
+                    candidate.set_identifier(
+                        'uk.org.publicwhip',
+                        'uk.org.publicwhip/person/{0}'.format(parlparse_id)
+                    )
             change_metadata = get_change_metadata(
                 self.request,
                 form.cleaned_data['source']
