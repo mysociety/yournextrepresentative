@@ -78,7 +78,7 @@ class FakeCollection(object):
             )
         )
 
-    def delete(self, data):
+    def delete(self):
         raise Exception("Not implemented: you should patch this")
 
     def put(self, data):
