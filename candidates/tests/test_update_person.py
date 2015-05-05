@@ -220,30 +220,30 @@ class TestUpdatePerson(TestCase):
             [
                 {
                     "end_date": "9999-12-31",
-                    "organization_id": "party:53",
                     "person_id": "2009",
+                    "post_id": "65808",
+                    "role": "Candidate",
                     "start_date": "2010-05-07"
                 },
                 {
                     "end_date": "2010-05-06",
-                    "organization_id": "party:53",
                     "person_id": "2009",
+                    "post_id": "65808",
+                    "role": "Candidate",
                     "start_date": "2005-05-06"
                 },
                 {
                     "end_date": "9999-12-31",
+                    "organization_id": "party:53",
                     "person_id": "2009",
-                    "post_id": "65808",
-                    "role": "Candidate",
                     "start_date": "2010-05-07"
                 },
                 {
                     "end_date": "2010-05-06",
+                    "organization_id": "party:53",
                     "person_id": "2009",
-                    "post_id": "65808",
-                    "role": "Candidate",
                     "start_date": "2005-05-06"
-                }
+                },
             ]
         )
 

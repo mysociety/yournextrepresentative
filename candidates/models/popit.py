@@ -373,6 +373,71 @@ def get_value_from_location(location, person_data):
             return info.get(location['info_value_key'], '')
     return ''
 
+def unembed_membership(membership):
+    """Remove any embeds from a membership to make it ready for posting
+
+    >>> m = unembed_membership({
+    ...     'foo': 'bar',
+    ...     'person_id': '123',
+    ...     'post_id': '456',
+    ...     'organization_id': '789',
+    ... })
+    >>> print json.dumps(m, indent=4, sort_keys=True) # doctest: +NORMALIZE_WHITESPACE
+    {
+        "foo": "bar",
+        "organization_id": "789",
+        "person_id": "123",
+        "post_id": "456"
+    }
+    >>> m = unembed_membership({
+    ...     'foo': 'bar',
+    ...     'person_id': {
+    ...        'id': '123',
+    ...        'name': 'Fozzie Bear',
+    ...     },
+    ...     'post_id': {
+    ...         'id': '456',
+    ...         'name': 'Member of Parliament for Manhattan',
+    ...     },
+    ...     'organization_id': {
+    ...         'id': '789',
+    ...         'name': 'The Muppet Show',
+    ...     },
+    ... })
+    >>> print json.dumps(m, indent=4, sort_keys=True) # doctest: +NORMALIZE_WHITESPACE
+    {
+        "foo": "bar",
+        "organization_id": "789",
+        "person_id": "123",
+        "post_id": "456"
+    }
+    >>> m = unembed_membership({
+    ...     'foo': 'bar',
+    ...     'person_id': {
+    ...        'id': '123',
+    ...        'name': 'Fozzie Bear',
+    ...     },
+    ...     'organization_id': {
+    ...         'id': '789',
+    ...         'name': 'The Muppet Show',
+    ...     },
+    ... })
+    >>> print json.dumps(m, indent=4, sort_keys=True) # doctest: +NORMALIZE_WHITESPACE
+    {
+        "foo": "bar",
+        "organization_id": "789",
+        "person_id": "123"
+    }
+    """
+    m = deepcopy(membership)
+    for id_field in ('organization_id', 'person_id', 'post_id'):
+        try:
+            if id_field in m:
+                m[id_field] = m[id_field].get('id')
+        except AttributeError:
+            pass
+    return m
+
 
 class StalePopItData(Exception):
     pass
@@ -670,27 +735,13 @@ class PopItPerson(object):
         for membership in person_from_popit['result']['memberships']:
             api.memberships(membership['id']).delete()
 
-    def create_party_memberships(self, api):
-        party_memberships = self.popit_data.get('party_memberships') or {}
-        for election_year, party in party_memberships.items():
-            # Create the party membership:
-            membership = election_year_to_party_dates(election_year)
-            membership['person_id'] = self.id
-            membership['organization_id'] = party['id']
-            api.memberships.post(membership)
-
-    def create_candidate_list_memberships(self, api):
-        standing_in = self.popit_data.get('standing_in') or {}
-        for election_year, constituency in standing_in.items():
-            if constituency:
-                # i.e. we know that this isn't an indication that the
-                # person isn't standing...
-                # Create the candidate list membership:
-                membership = election_year_to_party_dates(election_year)
-                membership['person_id'] = self.id
-                membership['post_id'] = constituency['post_id']
-                membership['role'] = "Candidate"
-                api.memberships.post(membership)
+    def create_memberships(self, api):
+        for m in self.popit_data['memberships']:
+            # The memberships might still be here from when the person
+            # was populated with the embed parameter, so make sure t
+            safe_to_post = unembed_membership(m)
+            safe_to_post.pop('id', None)
+            api.memberships.post(safe_to_post)
 
     def get_identifier(self, scheme):
         return get_identifier(scheme, self.popit_data)
@@ -1052,8 +1103,7 @@ class PopItPerson(object):
             if user is not None:
                 check_creation_allowed(user, api, self.popit_data)
             self.create_new_person_in_popit(api)
-        self.create_party_memberships(api)
-        self.create_candidate_list_memberships(api)
+        self.create_memberships(api)
         self.invalidate_cache_entries()
         return self.id
 

@@ -109,7 +109,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         past_candidates = set()
 
         for membership in mp_post['result']['memberships']:
-            if not membership['role'] == "Candidate":
+            if not membership.get('role') == "Candidate":
                 continue
             person = PopItPerson.create_from_dict(membership['person_id'])
             if membership_covers_date(membership, election_date_2010):
