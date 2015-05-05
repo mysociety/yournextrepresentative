@@ -84,7 +84,7 @@
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="candidates-list__person {% if c|was_elected:"2015" %}candidates-list__person__winner{% endif %}">
+        <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if c|was_elected:"2015" %} candidates-list__person__winner{% endif %}">
           {% if c|was_elected:"2015" %}
             <h4 class="candidates-list__person__elected-text">Winner</h4>
           {% endif %}
