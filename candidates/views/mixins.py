@@ -16,10 +16,13 @@ class ContributorsMixin(object):
             ('All Time', None),
             ('In the last week', timezone.now() - timedelta(days=7))
         ]:
+            interesting_actions=LoggedAction.objects.exclude(
+                action_type='set-candidate-not-elected'
+            )
             if since:
-                qs = LoggedAction.objects.filter(created__gt=since)
+                qs = interesting_actions.filter(created__gt=since)
             else:
-                qs = LoggedAction.objects.all()
+                qs = interesting_actions
             rows = qs.values('user'). \
                 annotate(edit_count=Count('user')).order_by('-edit_count')[:25]
             for row in rows:
@@ -32,7 +35,7 @@ class ContributorsMixin(object):
         return result
 
     def get_recent_changes_queryset(self):
-        return LoggedAction.objects.all().order_by('-created')
+        return LoggedAction.objects.exclude(action_type='set-candidate-not-elected').order_by('-created')
 
 
 class CandidacyMixin(object):
