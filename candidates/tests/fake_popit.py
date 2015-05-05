@@ -97,3 +97,6 @@ class FakeOrganizationCollection(FakeCollection):
 
 class FakePostCollection(FakeCollection):
     collection = 'posts'
+
+class FakeMembershipCollection(FakeCollection):
+    collection = 'memberships'
