@@ -264,18 +264,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         self.mapit_area_id = self.kwargs['mapit_area_id']
         self.constituency_name = \
             get_constituency_name_from_mapit_id(self.mapit_area_id)
-        full_parlparse_id = self.person.get_identifier(
-            'uk.org.publicwhip'
-        )
-        id_re = re.compile(r'^uk.org.publicwhip/person/(?P<numeric_id>\d+)$')
-        if full_parlparse_id:
-            m = id_re.search(full_parlparse_id)
-            if m:
-                self.parlparse_id = m.group('numeric_id')
-            else:
-                self.parlparse_id = full_parlparse_id
-        else:
-            self.parlparse_id = None
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
 
@@ -283,7 +271,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         initial = super(ConstituencyRecordWinnerView, self). \
             get_initial()
         initial['person_id'] = self.person.id
-        initial['parlparse_id'] = self.parlparse_id
         return initial
 
     def get_context_data(self, **kwargs):
@@ -292,7 +279,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         context['mapit_area_id'] = self.mapit_area_id
         context['constituency_name'] = self.constituency_name
         context['person'] = self.person
-        context['parlparse_id'] = self.parlparse_id
         return context
 
     def form_valid(self, form):
@@ -309,7 +295,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
             )
             elected = (candidate == winner)
             candidate.set_elected(elected)
-            parlparse_id = form.cleaned_data['parlparse_id']
             if elected:
                 ResultEvent.create_from_popit_person(
                     candidate,
@@ -317,11 +302,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
                     form.cleaned_data['source'],
                     self.request.user,
                 )
-                if parlparse_id:
-                    candidate.set_identifier(
-                        'uk.org.publicwhip',
-                        'uk.org.publicwhip/person/{0}'.format(parlparse_id)
-                    )
             change_metadata = get_change_metadata(
                 self.request,
                 form.cleaned_data['source']

@@ -110,10 +110,12 @@
           {% endif %}
           {% endif %}
           {% if user_can_record_results and not c|election_decision_known:"2015" %}
-            <p>
-              <a class="candidate-won-button button"
-                  href="{% url 'record-winner' mapit_area_id=mapit_area_id %}?person={{ c.id }}">This candidate won!</a>
-            </p>
+            <form class="winner-confirm" action="{% url 'record-winner' mapit_area_id=mapit_area_id %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="person_id" value="{{ c.id }}">
+              <input type="hidden" name="source" value="[Quick update from the constituency page]">
+              <input type="submit" class="button" value="This candidate won!">
+            </form>
           {% endif %}
         </li>
 

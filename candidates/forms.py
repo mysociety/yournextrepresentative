@@ -310,29 +310,7 @@ class ConstituencyRecordWinnerForm(forms.Form):
         max_length=256,
         widget=forms.HiddenInput(),
     )
-    parlparse_id = forms.CharField(
-        label=u"The person's ID from TheyWorkForYou (if available)",
-        required=False,
-        max_length=128,
-    )
     source = forms.CharField(
         label=u"Source of information that they won",
         max_length=512,
     )
-
-    def clean_parlparse_id(self):
-        original = self.cleaned_data.get('parlparse_id', '').strip()
-        if not original:
-            return original
-        elif re.search(r'^\d+$', original):
-            return original
-        # Otherwise, look to see if it's a TheyWorkForYou person URL
-        # or a full parlparse identifier:
-        m = re.search(r'theyworkforyou.com/[a-z]+/(\d+)', original)
-        if m:
-            return m.group(1)
-        m = re.search(r'uk.org.publicwhip/person/(\d+)', original)
-        if m:
-            return m.group(1)
-        message = 'This must be a parlparse ID or TheyWorkForYou person URL'
-        raise ValidationError(message)

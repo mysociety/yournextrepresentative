@@ -29,7 +29,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         record_url = reverse(
             'record-winner',
             kwargs={'mapit_area_id': '65808'}
-        ) + '?person=4322'
+        )
         self.assertIn(
             record_url,
             unicode(response),
@@ -79,7 +79,6 @@ class TestRecordWinner(TestUserMixin, WebTest):
             {
                 'csrfmiddlewaretoken': csrftoken,
                 'person_id': '4322',
-                'parlparse_id': '1234567',
                 'source': 'BBC news',
             },
             expect_errors=True,
@@ -112,7 +111,6 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
         form = form_get_response.forms[0]
         self.assertEqual(form_get_response.status_code, 200)
-        form['parlparse_id'] = '1234567'
         form['source'] = 'BBC website'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
@@ -136,15 +134,6 @@ class TestRecordWinner(TestUserMixin, WebTest):
                     'post_id': u'65808',
                 }
             }
-        )
-        self.assertEqual(
-            second_put_data['identifiers'],
-            [
-                {
-                    'scheme': 'uk.org.publicwhip',
-                    'identifier': 'uk.org.publicwhip/person/1234567'
-                }
-            ]
         )
 
     @patch('candidates.models.popit.invalidate_posts')
@@ -172,7 +161,6 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
         form = form_get_response.forms[0]
         self.assertEqual(form_get_response.status_code, 200)
-        form['parlparse_id'] = ''
         form['source'] = 'BBC website'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
@@ -272,6 +260,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
                     'scheme': 'yournextmp-candidate'
                 },
                 {
+                    'id': '55350da616edb65574ea9eaa',
                     'scheme': 'uk.org.publicwhip',
                     'identifier': 'uk.org.publicwhip/person/11740'
                 }
