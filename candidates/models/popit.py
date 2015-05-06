@@ -1183,7 +1183,10 @@ class PopItPerson(object):
             raise Exception, message
         if not standing_in.get(year):
             message = "No standing_in information for {0}".format(year)
-        standing_in[year]['elected'] = was_elected
+        if was_elected is None:
+            del standing_in[year]['elected']
+        else:
+            standing_in[year]['elected'] = was_elected
         self.standing_in = standing_in
 
     def get_elected(self, year="2015"):

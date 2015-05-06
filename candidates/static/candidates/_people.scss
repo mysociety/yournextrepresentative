@@ -98,6 +98,13 @@
 
 }
 
+.candidates-list__actions__winner-mistake {
+  background-color: $color-red;
+  &:hover, &:focus {
+    background-color: scale-color($color-red, $lightness: $button-function-factor);
+  }
+}
+
 .candidates-list__person__winner {
   background-color: lighten($color-gold, 30%);
   padding-top: 1em;

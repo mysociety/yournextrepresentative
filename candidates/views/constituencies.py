@@ -139,6 +139,10 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             key=lambda c: c.last_name
         )
 
+        context['show_retract_result'] = any(
+            c.get_elected() is not None for c in context['candidates_2015']
+        )
+
         context['add_candidate_form'] = NewPersonForm(
             initial={'constituency': mapit_area_id}
         )
@@ -344,6 +348,53 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
                 kwargs={
                     'mapit_area_id': self.mapit_area_id,
                     'ignored_slug': slugify(self.constituency_name),
+                }
+            )
+        )
+
+
+class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
+
+    required_group_name = RESULT_RECORDERS_GROUP_NAME
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        mapit_area_id = self.kwargs['mapit_area_id']
+        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
+        post = get_post_cached(self.api, mapit_area_id)['result']
+        for membership in post.get('memberships', []):
+            if membership.get('role') != 'Candidate':
+                continue
+            if not membership_covers_date(membership, election_date_2015):
+                continue
+            candidate = PopItPerson.create_from_popit(
+                self.api, membership['person_id']['id']
+            )
+            candidate.set_elected(None)
+            change_metadata = get_change_metadata(
+                self.request,
+                'Result recorded in error, retracting'
+            )
+            candidate.record_version(change_metadata)
+            candidate.save_to_popit(self.api)
+            candidate.invalidate_cache_entries()
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='retract-result',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                popit_person_id=candidate.id,
+                source=change_metadata['information_source'],
+            )
+        # This shouldn't be necessary since invalidating the people
+        # will invalidate the post
+        invalidate_posts([mapit_area_id])
+        return HttpResponseRedirect(
+            reverse(
+                'constituency',
+                kwargs={
+                    'mapit_area_id': mapit_area_id,
+                    'ignored_slug': slugify(constituency_name),
                 }
             )
         )

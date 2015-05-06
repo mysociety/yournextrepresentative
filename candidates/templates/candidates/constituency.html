@@ -75,6 +75,14 @@
     {% endif %}
   {% endif %}
 
+  {% if user_can_record_results and show_retract_result %}
+    <form action="{% url 'retract-winner' mapit_area_id=mapit_area_id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" class="button candidates-list__actions__winner-mistake" value="Unset the current winner, if incorrect">
+    </form>
+
+  {% endif %}
+
   <div class="candidates__known">
 
     <h3>Known candidates for the 2015 general election</h3>
