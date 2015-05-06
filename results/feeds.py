@@ -4,36 +4,11 @@ from django.utils.feedgenerator import Atom1Feed
 from .models import ResultEvent
 
 
-class ResultEventsAtomFeedGenerator(Atom1Feed):
-    
-    def add_item_elements(self, handler, item):
-        super(ResultEventsAtomFeedGenerator, self). \
-            add_item_elements(handler, item)
-        keys = [
-            'post_id',
-            'winner_popit_person_id',
-            'winner_person_name',
-            'winner_party_id',
-            'winner_party_name',
-            'user_id',
-            'constituency_name',
-            'information_source',
-        ]
-        for k in [
-            'image_url_template',
-            'parlparse_id',
-        ]:
-            if item[k]:
-                keys.append(k)
-        for k in keys:
-            handler.addQuickElement(k, unicode(item[k]))
-
-
-class ResultEventsFeed(Feed):
-    feed_type = ResultEventsAtomFeedGenerator
+class BasicResultEventsFeed(Feed):
+    feed_type = Atom1Feed
     title = "Election results from YourNextMP"
     link = "/"
-    description = "A feed of results from the UK 2015 General Election"
+    description = "A basic feed of results from the UK 2015 General Election"
 
     def items(self):
         return ResultEvent.objects.all()
@@ -62,8 +37,47 @@ class ResultEventsFeed(Feed):
         # page for the moment:
         return '/#{0}'.format(item.id)
 
+    def item_updateddate(self, item):
+        return item.created
+
     def item_pubdate(self, item):
         return item.created
+
+    def item_author_name(self, item):
+        if item.user:
+            return item.user.username
+        return "unknown"
+
+
+class ResultEventsAtomFeedGenerator(Atom1Feed):
+
+    def add_item_elements(self, handler, item):
+        super(ResultEventsAtomFeedGenerator, self). \
+            add_item_elements(handler, item)
+        keys = [
+            'post_id',
+            'winner_popit_person_id',
+            'winner_person_name',
+            'winner_party_id',
+            'winner_party_name',
+            'user_id',
+            'constituency_name',
+            'information_source',
+        ]
+        for k in [
+            'image_url_template',
+            'parlparse_id',
+        ]:
+            if item[k]:
+                keys.append(k)
+        for k in keys:
+            handler.addQuickElement(k, unicode(item[k]))
+
+
+class ResultEventsFeed(BasicResultEventsFeed):
+    feed_type = ResultEventsAtomFeedGenerator
+    title = "Election results from YourNextMP (with extra data)"
+    description = "A feed of results from the UK 2015 General Election (with extra data)"
 
     def item_extra_kwargs(self, o):
         return {
@@ -79,8 +93,3 @@ class ResultEventsFeed(Feed):
             'image_url_template': o.proxy_image_url_template,
             'parlparse_id': o.parlparse_id,
         }
-
-    def item_author_name(self, item):
-        if item.user:
-            return item.user.username
-        return "unknown"
