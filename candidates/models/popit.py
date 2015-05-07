@@ -2,6 +2,7 @@ from copy import deepcopy
 from datetime import date, timedelta
 import json
 import re
+import sys
 from collections import defaultdict
 
 from slugify import slugify
@@ -9,7 +10,7 @@ from slugify import slugify
 from django.core.urlresolvers import reverse
 import django.dispatch
 from django_date_extensions.fields import ApproximateDate
-from slumber.exceptions import HttpServerError
+from slumber.exceptions import HttpServerError, HttpClientError
 
 from .auth import (
     get_constituency_lock_from_person_data,
@@ -742,7 +743,16 @@ class PopItPerson(object):
             # was populated with the embed parameter, so make sure t
             safe_to_post = unembed_membership(m)
             safe_to_post.pop('id', None)
-            api.memberships.post(safe_to_post)
+            try:
+                api.memberships.post(safe_to_post)
+            except HttpClientError as hce:
+                # We've been seeing some errors in creating
+                # memberships, but with no useful error, so dump the
+                # attempted call and the error content here:
+                print >> sys.stderr, u'Error with POST of membership:'
+                print >> sys.stderr, repr(safe_to_post)
+                print >> sys.stderr, hce.content
+                raise
 
     def get_identifier(self, scheme):
         return get_identifier(scheme, self.popit_data)
