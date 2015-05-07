@@ -7,7 +7,7 @@ MAILTO=yournextmp@mysociety.org
 # their parties are fixed.]
 # */15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
 
-!!(* if ($vhost eq 'mzalendo.mysociety.org') { *)!!
+!!(* if ($vhost eq 'yournextmp.mysociety.org') { *)!!
 # Update the live CSV file every 5 minutes on the production instance, but hopefully in time for
 # TWFY to pick it up on 5n; it should take less than 3 minutes to run:
 2,7,12,17,22,27,32,37,42,47,52,57 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
