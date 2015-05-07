@@ -20,6 +20,7 @@ class Command(PopItApiMixin, BaseCommand):
         if len(args) < 1:
             raise CommandError("You must provide one or more PopIt person ID")
         for person_id in args:
+            invalidate_person(person_id)
             person = PopItPerson.create_from_popit(api, person_id)
             posts_to_invalidate = person.get_associated_posts()
             person.delete_memberships(api)
