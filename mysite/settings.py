@@ -140,7 +140,8 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
-ACCOUNT_ADAPTER = 'mysite.account_adapter.NoNewUsersAccountAdapter'
+if not conf.get('NEW_ACCOUNTS_ALLOWED', True):
+    ACCOUNT_ADAPTER = 'mysite.account_adapter.NoNewUsersAccountAdapter'
 
 ROOT_URLCONF = 'mysite.urls'
 
