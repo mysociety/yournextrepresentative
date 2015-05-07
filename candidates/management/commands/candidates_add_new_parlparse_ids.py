@@ -16,7 +16,6 @@ class Command(BaseCommand):
         if len(args) != 1:
             raise CommandError("You must provide a person.js URL")
         person_js_url = args[0]
-        print "person_js_url:", person_js_url
         people_data = requests.get(person_js_url).json()
         for person_data in people_data['persons']:
             twfy_person = PopItPerson.create_from_dict(person_data)
