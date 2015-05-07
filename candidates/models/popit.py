@@ -430,6 +430,27 @@ def unembed_membership(membership):
         "organization_id": "789",
         "person_id": "123"
     }
+
+    Also, sometimes some rogue fields have crept into memberships, so
+    remove them or they may cause the POST to fail:
+
+    >>> m = unembed_membership({
+    ...     'foo': 'bar',
+    ...     'person_id': '123',
+    ...     'organization_id': '789',
+    ...     'area': {'name': ''},
+    ...     'images': [],
+    ...     'contact_details': [],
+    ...     'links': [],
+    ...     'url': 'http://yournextmp.popit.mysociety.org/api/v0.1/memberships/blahblah',
+    ...     'html_url': 'http://yournextmp.popit.mysociety.org/memberships/blahblah',
+    ... })
+    >>> print json.dumps(m, indent=4, sort_keys=True) # doctest: +NORMALIZE_WHITESPACE
+    {
+        "foo": "bar",
+        "organization_id": "789",
+        "person_id": "123"
+    }
     """
     m = deepcopy(membership)
     for id_field in ('organization_id', 'person_id', 'post_id'):
@@ -438,6 +459,10 @@ def unembed_membership(membership):
                 m[id_field] = m[id_field].get('id')
         except AttributeError:
             pass
+    for bad_field in (
+            'area', 'images', 'contact_details', 'links', 'url', 'html_url'
+    ):
+        m.pop(bad_field, None)
     return m
 
 
