@@ -3,7 +3,9 @@
 MAILTO=yournextmp@mysociety.org
 
 # Create the cached counts every 15 minutes:
-*/15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
+# [Disabled now that the number of candidates per constituency and
+# their parties are fixed.]
+# */15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
 
 # Update the live CSV file every 15 minutes, but offset from cached
 # counts so that we reduce the load on PopIt and CPU:
