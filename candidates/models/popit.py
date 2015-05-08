@@ -1185,6 +1185,10 @@ class PopItPerson(object):
                 raise Exception(message.format(constituency_2015_mapit_id))
             new_standing_in['2015'] = \
                 get_area_from_post_id(constituency_2015_mapit_id, mapit_url_key='mapit_url')
+            # FIXME: stupid hack to preserve elected status after the election:
+            old_standing_in_2015 = self.standing_in.get('2015', {})
+            if 'elected' in old_standing_in_2015:
+                new_standing_in['2015']['elected'] = old_standing_in_2015['elected']
             new_party_memberships['2015'] = {
                 'name': PartyData.party_id_to_name[party_2015],
                 'id': party_2015,

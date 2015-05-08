@@ -319,6 +319,8 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
                 source=change_metadata['information_source'],
             )
             people_for_invalidation.add(candidate)
+        for person_for_invalidation in people_for_invalidation:
+            person_for_invalidation.invalidate_cache_entries()
         # This shouldn't be necessary since invalidating the people
         # will invalidate the post
         invalidate_posts([self.mapit_area_id])
