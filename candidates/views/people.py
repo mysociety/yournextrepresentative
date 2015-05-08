@@ -2,6 +2,7 @@ import re
 
 from slugify import slugify
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import (
     HttpResponseRedirect, HttpResponsePermanentRedirect
@@ -211,6 +212,9 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
 
     def form_valid(self, form):
 
+        if not (settings.EDITS_ALLOWED or self.request.user.is_superuser):
+            return HttpResponseRedirect(reverse('all-edits-disallowed'))
+
         # First parse that person's data from PopIt into our more
         # usable data structure:
 
@@ -247,6 +251,10 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView)
     form_class = NewPersonForm
 
     def form_valid(self, form):
+
+        if not (settings.EDITS_ALLOWED or self.request.user.is_superuser):
+            return HttpResponseRedirect(reverse('all-edits-disallowed'))
+
         person = PopItPerson()
         person.update_from_form(form)
         change_metadata = get_change_metadata(
