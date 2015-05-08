@@ -378,3 +378,36 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
                 }
             )
         )
+
+
+def memberships_contain_winner(memberships):
+    for m in memberships:
+        if m.get('organization_id') == 'commons' and m['start_date'] == "2015-05-08":
+            return True
+    return False
+
+
+class ConstituenciesDeclaredListView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/constituencies-declared.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConstituenciesDeclaredListView, self).get_context_data(**kwargs)
+        total_constituencies = 0
+        total_declared = 0
+        constituencies = []
+        for post in popit_unwrap_pagination(
+                self.api.posts,
+                embed='membership',
+                per_page=100,
+        ):
+            total_constituencies += 1
+            declared = memberships_contain_winner(post['memberships'])
+            if declared:
+                total_declared += 1
+            constituencies.append((post, declared))
+        constituencies.sort(key=lambda c: c[0]['area']['name'])
+        context['constituencies'] = constituencies
+        context['total_constituencies'] = total_constituencies
+        context['total_left'] = total_constituencies - total_declared
+        context['percent_done'] = (100 * total_declared) / total_constituencies
+        return context
