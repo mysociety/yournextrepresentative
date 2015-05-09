@@ -63,5 +63,5 @@ def add_group_permissions(request):
             ('user_can_record_results', RESULT_RECORDERS_GROUP_NAME),
         )
     }
-    result['user_can_edit'] = settings.EDITS_ALLOWED or request.user.is_superuser
+    result['user_can_edit'] = settings.EDITS_ALLOWED or request.user.is_staff
     return result

@@ -212,7 +212,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
 
     def form_valid(self, form):
 
-        if not (settings.EDITS_ALLOWED or self.request.user.is_superuser):
+        if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
         # First parse that person's data from PopIt into our more
@@ -252,7 +252,7 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView)
 
     def form_valid(self, form):
 
-        if not (settings.EDITS_ALLOWED or self.request.user.is_superuser):
+        if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
         person = PopItPerson()
