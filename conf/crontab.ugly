@@ -3,17 +3,12 @@
 MAILTO=yournextmp@mysociety.org
 
 # Create the cached counts every 15 minutes:
-# [Disabled now that the number of candidates per constituency and
-# their parties are fixed.]
-# */15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
+*/15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py cached_counts_create
 
 !!(* if ($vhost eq 'yournextmp.mysociety.org') { *)!!
-# Update the live CSV file every 5 minutes on the production instance, but hopefully in time for
-# TWFY to pick it up on 5n; it should take less than 3 minutes to run:
-2,7,12,17,22,27,32,37,42,47,52,57 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
-!!(* } else { *)!!
-# Leave the staging CSV update at every 15 minutes:
-*/15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
+# Update the live CSV file every 15 minutes on the production instance, offset
+# from generating the cached counts:
+2,17,32,47 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
 !!(* } *)!!
 
 # Run face detection every 15 minutes, again offset a bit:
@@ -22,7 +17,8 @@ MAILTO=yournextmp@mysociety.org
 # Fetch data from TheyWorkForYou and check for any new parlparse
 # IDs. (The people.json file is being updated on 5n, so fetch data a few
 # minutes later, at 5n + 3.)
-3,8,13,18,23,28,33,38,43,48,53,58 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_add_new_parlparse_ids http://www.theyworkforyou.com/pwdata/people.json
+# [Disabled now that TWFY is up to date.]
+# 3,8,13,18,23,28,33,38,43,48,53,58 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_add_new_parlparse_ids http://www.theyworkforyou.com/pwdata/people.json
 
 # Also create a daily archive at about 2 am:
 3 2 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/csv-archives/candidates-`date +\%Y\%m\%d`.csv
