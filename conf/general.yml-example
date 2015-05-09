@@ -83,3 +83,6 @@ RESTRICT_RENAMES: false
 # might want this past a certain point in the election to reduce
 # opportunities for "drive-by" malicious edits.
 NEW_ACCOUNTS_ALLOWED: true
+
+# If this is set to false, then no edits of people are allowed.
+EDITS_ALLOWED: true
