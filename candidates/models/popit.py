@@ -66,6 +66,11 @@ CSV_ROW_FIELDS = [
     'party_id',
     'linkedin_url',
     'elected',
+    'image_url',
+    'proxy_image_url_template',
+    'image_copyright',
+    'image_uploading_user',
+    'image_uploading_user_notes',
 ]
 
 
@@ -816,7 +821,19 @@ class PopItPerson(object):
         elected_for_csv = ''
         if elected is not None:
             elected_for_csv = str(elected)
-
+        image = self.popit_data.get('image', '') or ''
+        proxy_image_url_template = ''
+        image_copyright = ''
+        image_uploading_user = ''
+        image_uploading_user_notes = ''
+        if image:
+            proxy_image_url_template = \
+                self.popit_data['proxy_image'] + '/{width}/{height}.{extension}'
+            image_data = self.popit_data['images'][0]
+            image_copyright = image_data.get('moderator_why_allowed', '')
+            image_uploading_user = image_data.get('uploaded_by_user', '')
+            image_uploading_user_notes = \
+                image_data.get('user_justification_for_use', '')
         row = {
             'honorific_prefix': self.popit_data.get('honorific_prefix', ''),
             'name': self.name,
@@ -842,6 +859,11 @@ class PopItPerson(object):
             'theyworkforyou_url': theyworkforyou_url,
             'party_id': self.parties[year].get('electoral_commission_id'),
             'elected': elected_for_csv,
+            'image_url': self.popit_data.get('image', ''),
+            'proxy_image_url_template': proxy_image_url_template,
+            'image_copyright': image_copyright,
+            'image_uploading_user': image_uploading_user,
+            'image_uploading_user_notes': image_uploading_user_notes,
         }
 
         return row
