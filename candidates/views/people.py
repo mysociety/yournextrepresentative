@@ -193,10 +193,11 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         context['person'] = person
 
         context['class_for_2015_data'] = ''
-        if person.constituency_or_party_changes_allowed(
+        _, edits_allowed = person.constituency_or_party_changes_allowed(
                 self.request.user,
                 self.api,
-        ):
+        )
+        if not edits_allowed:
             context['class_for_2015_data'] = \
                 'person__2015-data-edit'
 
