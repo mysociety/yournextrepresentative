@@ -10,8 +10,6 @@ from django.core.exceptions import ValidationError
 from django_date_extensions.fields import ApproximateDateFormField
 
 from .mapit import get_wmc_from_postcode, BaseMapItException
-from .models import UserTermsAgreement
-from .static_data import MapItData
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
