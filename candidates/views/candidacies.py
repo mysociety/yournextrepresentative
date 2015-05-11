@@ -7,7 +7,6 @@ from auth_helpers.views import user_in_group
 from candidates.models import get_area_from_post_id
 
 from .helpers import get_redirect_from_mapit_id
-from .mixins import CandidacyMixin
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import PopItPerson, LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME

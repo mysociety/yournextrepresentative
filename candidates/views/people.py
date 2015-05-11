@@ -17,7 +17,6 @@ from braces.views import LoginRequiredMixin
 from auth_helpers.views import GroupRequiredMixin, user_in_group
 
 from ..diffs import get_version_diffs
-from .mixins import CandidacyMixin
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
@@ -67,7 +66,7 @@ class PersonView(PopItApiMixin, TemplateView):
             return super(PersonView, self).get(request, *args, **kwargs)
 
 
-class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, View):
+class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
 
     http_method_names = [u'post']
 
@@ -114,7 +113,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, View):
             )
         )
 
-class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, View):
+class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
 
     http_method_names = [u'post']
     required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
@@ -172,7 +171,7 @@ class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, View):
             })
         )
 
-class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView):
+class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
@@ -246,7 +245,7 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
 
-class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView):
+class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
 

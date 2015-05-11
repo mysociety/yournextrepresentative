@@ -6,10 +6,9 @@ from mock import patch, MagicMock
 from .fake_popit import FakePersonCollection
 from .helpers import equal_call_args
 from ..popit import PopItApiMixin
-from ..views import CandidacyMixin
 from ..models import PopItPerson
 
-class MinimalUpdateClass(CandidacyMixin, PopItApiMixin):
+class MinimalUpdateClass(PopItApiMixin):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)

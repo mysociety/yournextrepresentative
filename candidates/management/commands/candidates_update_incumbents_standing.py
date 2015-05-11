@@ -2,7 +2,6 @@ from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
 from django.core.management.base import BaseCommand
 
-from ...views import CandidacyMixin
 from ...models import (
     PopItPerson,
     election_date_2015, membership_covers_date
@@ -25,7 +24,7 @@ def get_parlparse_id(person_data):
         return None
 
 
-class Command(CandidacyMixin, PopItApiMixin, BaseCommand):
+class Command(PopItApiMixin, BaseCommand):
 
     def existing_candidate_same_party(self, cons_id, party_id):
         cons = self.api.posts(cons_id).get(embed='membership.person')['result']

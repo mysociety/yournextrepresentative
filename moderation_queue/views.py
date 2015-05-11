@@ -27,7 +27,6 @@ from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from candidates.popit import create_popit_api_object
 from candidates.models import PopItPerson, LoggedAction
 from candidates.views.version_data import get_client_ip, get_change_metadata
-from candidates.views import CandidacyMixin
 
 @login_required
 def upload_photo(request, popit_person_id):
@@ -112,7 +111,7 @@ def value_if_none(v, default):
     return default if v is None else v
 
 
-class PhotoReview(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, TemplateView):
+class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
     template_name = 'moderation_queue/photo-review.html'
