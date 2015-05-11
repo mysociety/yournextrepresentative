@@ -17,9 +17,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 from .helpers import mkdir_p
 
+configuration_file_basename = 'general.yml'
+# All the test data is specific to the UK, so if we seem to be running
+# tests, use the general.yml-example (which has UK settings):
+if 'test' in sys.argv:
+    configuration_file_basename = 'general.yml-example'
+
 configuration_file = os.path.join(
-    BASE_DIR, 'conf', 'general.yml'
+    BASE_DIR, 'conf', configuration_file_basename
 )
+
 with open(configuration_file) as f:
     conf = yaml.load(f)
 

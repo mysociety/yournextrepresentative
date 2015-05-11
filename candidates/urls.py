@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 
+from django.conf import settings
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -8,6 +9,7 @@ import candidates.views as views
 from .feeds import RecentChangesFeed
 
 urlpatterns = patterns('',
+    url(r'^', include(settings.ELECTION_APP_FULLY_QUALIFIED + '.urls')),
     url(r'^$', views.ConstituencyPostcodeFinderView.as_view(), name='finder'),
     url(r'^lookup/name$', views.ConstituencyNameFinderView.as_view(), name='lookup-name'),
     url(r'^lookup/postcode$', views.ConstituencyPostcodeFinderView.as_view(), name='lookup-postcode'),
