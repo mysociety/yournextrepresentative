@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+import importlib
 import os
 import sys
 import yaml
@@ -84,6 +85,9 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     "mysite.context_processors.add_notification_data",
 )
 
+ELECTION_APP = conf['ELECTION_APP']
+ELECTION_APP_FULLY_QUALIFIED = 'elections.' + ELECTION_APP
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -103,6 +107,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
     'pipeline',
+    ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
     'tasks',
     'cached_counts',
@@ -337,3 +342,14 @@ CACHES = {
 RESTRICT_RENAMES = conf.get('RESTRICT_RENAMES')
 
 EDITS_ALLOWED = conf.get('EDITS_ALLOWED', True)
+
+# Import any settings from the election application's settings module:
+ELECTION_SETTINGS_MODULE = ELECTION_APP_FULLY_QUALIFIED + '.settings'
+elections_module = importlib.import_module(ELECTION_SETTINGS_MODULE)
+
+ELECTIONS = elections_module.ELECTIONS
+
+ELECTIONS_BY_DATE = sorted(
+    ELECTIONS.items(),
+    key=lambda e: e[1]['election_date'],
+)
