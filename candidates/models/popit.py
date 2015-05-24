@@ -670,7 +670,7 @@ class PopItPerson(object):
 
     @property
     def standing_in(self):
-        return self.popit_data.get('standing_in', {})
+        return self.popit_data.get('standing_in', {}) or {}
 
     @standing_in.setter
     def standing_in(self, v):
@@ -710,7 +710,7 @@ class PopItPerson(object):
 
     @property
     def party_memberships(self):
-        return self.popit_data.get('party_memberships', {})
+        return self.popit_data.get('party_memberships', {}) or {}
 
     @party_memberships.setter
     def party_memberships(self, v):
