@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<form method="post" action="{% url 'record-winner' mapit_area_id=mapit_area_id %}">
+<form method="post" action="{% url 'record-winner' election=election mapit_area_id=mapit_area_id %}">
 
 {% csrf_token %}
 
@@ -52,7 +52,7 @@
     value="Yes, {{ person.name }} ({{ person.last_party.name }}) won in {{ constituency_name }}"/>
 
 <p>
-<a href="{% url 'constituency' mapit_area_id=mapit_area_id ignored_slug=constituency_name|slugify %}" class="button">Cancel</a>
+<a href="{% url 'constituency' election=election mapit_area_id=mapit_area_id ignored_slug=constituency_name|slugify %}" class="button">Cancel</a>
 </p>
 
 </form>

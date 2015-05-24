@@ -32,7 +32,7 @@ class MapItData(object):
             constituencies_2010.items(),
             key=lambda t: t[1]['name']
         )
-    constituencies_2010_by_country = \
+    constituencies_2010_by_post_group = \
         get_constituencies_by_country('mapit-WMC-generation-13.json')
 
 def get_all_parties():
@@ -59,3 +59,7 @@ def get_all_parties():
 
 class PartyData(object):
     party_choices, party_id_to_name = get_all_parties()
+    party_sets = (
+        {'slug': 'gb', 'name': 'Great Britain'},
+        {'slug': 'ni', 'name': 'Northern Ireland'},
+    )

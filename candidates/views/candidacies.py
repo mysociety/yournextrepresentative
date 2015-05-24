@@ -31,6 +31,7 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
 
     def form_valid(self, form):
         mapit_area_id = form.cleaned_data['mapit_area_id']
+        election = self.kwargs['election']
         raise_if_locked(self.api, self.request, mapit_area_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
@@ -47,16 +48,21 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
             popit_person_id=person.id,
             source=change_metadata['information_source'],
         )
-        person.standing_in['2015'] = get_area_from_post_id(
+        # Update standing_in and party_memberships:
+        new_standing_in = person.standing_in.copy()
+        new_standing_in[election] = get_area_from_post_id(
             mapit_area_id,
             mapit_url_key='mapit_url'
         )
-        person.party_memberships['2015'] = person.party_memberships['2010']
+        person.standing_in = new_standing_in
+        new_party_memberships = person.party_memberships.copy()
+        new_party_memberships[election] = person.last_party_reduced
+        person.party_memberships = new_party_memberships
 
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(mapit_area_id)
+        return get_redirect_from_mapit_id(election, mapit_area_id)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
@@ -74,6 +80,7 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, FormView):
 
     def form_valid(self, form):
         mapit_area_id = form.cleaned_data['mapit_area_id']
+        election = self.kwargs['election']
         raise_if_locked(self.api, self.request, mapit_area_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
@@ -91,13 +98,18 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, FormView):
             source=change_metadata['information_source'],
         )
 
-        person.standing_in['2015'] = None
-        person.party_memberships.pop('2015', None)
+        # Update standing_in and party_memberships:
+        new_standing_in = deepcopy(person.standing_in)
+        new_standing_in[election] = None
+        person.standing_in = new_standing_in
+        new_party_memberships = deepcopy(person.party_memberships)
+        new_party_memberships.pop(election, None)
+        person.party_memberships = new_party_memberships
 
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(mapit_area_id)
+        return get_redirect_from_mapit_id(election, mapit_area_id)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)

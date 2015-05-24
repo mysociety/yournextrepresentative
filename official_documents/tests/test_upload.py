@@ -33,7 +33,7 @@ class TestModels(TestUserMixin, WebTest):
     def test_upload_unauthorized(self, mock_popit):
         mock_popit.return_value.posts = FakePostCollection
         response = self.app.get(
-            '/constituency/65808/dulwich-and-west-norwood',
+            '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user
         )
         csrftoken = self.app.cookies['csrftoken']
@@ -64,7 +64,7 @@ class TestModels(TestUserMixin, WebTest):
     def test_upload_authorized(self, mock_popit):
         mock_popit.return_value.posts = FakePostCollection
         response = self.app.get(
-            '/constituency/65808/dulwich-and-west-norwood',
+            '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_upload_documents
         )
         self.assertIn(

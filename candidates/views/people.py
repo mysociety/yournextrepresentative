@@ -25,7 +25,7 @@ from ..models import (
     PopItPerson
 )
 from ..popit import merge_popit_people, PopItApiMixin
-
+from ..static_data import PartyData
 
 class PersonView(PopItApiMixin, TemplateView):
     template_name = 'candidates/person-view.html'
@@ -192,21 +192,28 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         )
         context['person'] = person
 
-        context['class_for_2015_data'] = ''
-        _, edits_allowed = person.constituency_or_party_changes_allowed(
-                self.request.user,
-                self.api,
-        )
-        if not edits_allowed:
-            context['class_for_2015_data'] = \
-                'person__2015-data-edit'
-
         context['user_can_merge'] = user_in_group(
             self.request.user,
             TRUSTED_TO_MERGE_GROUP_NAME
         )
 
         context['versions'] = get_version_diffs(person.versions)
+
+        context['constituencies_form_fields'] = []
+        for election, election_data in settings.ELECTIONS_BY_DATE:
+            if not election_data.get('current'):
+                continue
+            context['constituencies_form_fields'].append(
+                {
+                    'election_name': election_data['name'],
+                    'standing': kwargs['form']['standing_' + election],
+                    'constituency': kwargs['form']['constituency_' + election],
+                    'party_fields': [
+                        kwargs['form']['party_' + p['slug'] + '_' + election]
+                        for p in PartyData.party_sets
+                    ]
+                }
+            )
 
         return context
 
@@ -250,6 +257,11 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
 
+    def get_form_kwargs(self):
+        kwargs = super(NewPersonView, self).get_form_kwargs()
+        kwargs['election'] = self.kwargs['election']
+        return kwargs
+
     def form_valid(self, form):
 
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
@@ -272,3 +284,8 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         action.popit_person_id = person_id
         action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
+
+    def get_context_data(self, **kwargs):
+        context = super(NewPersonView, self).get_context_data(**kwargs)
+        context['election'] = self.kwargs['election']
+        return context

@@ -8,12 +8,6 @@ from popit import get_mapit_id_from_mapit_url
 from popit import membership_covers_date
 from popit import PopItPerson
 
-from popit import election_date_2005
-from popit import election_date_2010
-from popit import election_date_2015
-
-from popit import election_to_election_date
-
 from popit import CSV_ROW_FIELDS
 
 from popit import person_added

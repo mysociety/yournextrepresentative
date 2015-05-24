@@ -1,5 +1,5 @@
 <div class="source-confirmation source-confirmation-{{ standing }}">
-  <form method="post" action="{% url action %}">
+  <form method="post" action="{% url action election=election %}">
     {% csrf_token %}
     <input type="hidden" name="person_id" value="{{ c.id }}"/>
     <input type="hidden" name="mapit_area_id" value="{{ mapit_area_id }}"/>

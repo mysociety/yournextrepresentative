@@ -54,20 +54,20 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'standing',
+            'standing_2015': 'standing',
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
-            [u'If you mark the candidate as standing in 2015, you must select a constituency']
+            [u'If you mark the candidate as standing in the 2015 General Election, you must select a constituency']
         })
 
     def test_update_person_form_standing_no_party_but_gb_constituency(self):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'standing',
-            'constituency': '65808',
+            'standing_2015': 'standing',
+            'constituency_2015': '65808',
         })
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
@@ -79,9 +79,9 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'standing',
-            'constituency': '65808',
-            'party_gb': 'party:52',
+            'standing_2015': 'standing',
+            'constituency_2015': '65808',
+            'party_gb_2015': 'party:52',
         })
         self.assertTrue(form.is_valid())
 
@@ -92,7 +92,7 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'not-standing',
+            'standing_2015': 'not-standing',
         })
         self.assertTrue(form.is_valid())
 
@@ -100,8 +100,8 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'not-standing',
-            'constituency': '65808',
+            'standing_2015': 'not-standing',
+            'constituency_2015': '65808',
         })
         self.assertTrue(form.is_valid())
 
@@ -109,9 +109,9 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'standing',
-            'constituency': '65808',
-            'party_gb': 'party:52',
+            'standing_2015': 'standing',
+            'constituency_2015': '65808',
+            'party_gb_2015': 'party:52',
         })
         self.assertTrue(form.is_valid())
 
@@ -122,7 +122,7 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'not-sure',
+            'standing_2015': 'not-sure',
         })
         self.assertTrue(form.is_valid())
 
@@ -130,8 +130,8 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'not-sure',
-            'constituency': '65808',
+            'standing_2015': 'not-sure',
+            'constituency_2015': '65808',
         })
         self.assertTrue(form.is_valid())
 
@@ -139,8 +139,8 @@ class TestValidators(TestCase):
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
-            'standing': 'not-sure',
-            'constituency': '65808',
-            'party_gb': 'party:52',
+            'standing_2015': 'not-sure',
+            'constituency_2015': '65808',
+            'party_gb_2015': 'party:52',
         })
         self.assertTrue(form.is_valid())

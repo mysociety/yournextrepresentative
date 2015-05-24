@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
@@ -21,7 +22,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        return get_redirect_from_mapit_id(wmc)
+        return get_redirect_from_mapit_id(
+            settings.ARBITRARY_CURRENT_ELECTION[0],
+            wmc
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
@@ -45,7 +49,10 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
 
     def form_valid(self, form):
         constituency_id = form.cleaned_data['constituency']
-        return get_redirect_from_mapit_id(constituency_id)
+        return get_redirect_from_mapit_id(
+            settings.ARBITRARY_CURRENT_ELECTION[0],
+            constituency_id
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)

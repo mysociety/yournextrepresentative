@@ -29,6 +29,11 @@ class CachedCount(models.Model):
     def object_url(self):
         if self.count_type == "constituency":
             return reverse('constituency', kwargs={
+                # FIXME: for the moment, just return the the URL for
+                # the 2015 election, but really 'election' should be
+                # another field in CachedCount, and 'constituency'
+                # should be migrated to 'post'.
+                'election': '2015',
                 'mapit_area_id': self.object_id,
                 'ignored_slug': slugify(self.name)
             })

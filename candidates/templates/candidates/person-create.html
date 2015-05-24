@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-  <form id="person-details" action="{% url 'person-create' %}" method="post">
+  <form id="person-details" action="{% url 'person-create' election=election %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" class="button" value="Save changes">

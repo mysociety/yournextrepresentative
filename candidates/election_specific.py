@@ -5,7 +5,11 @@ from django.conf import settings
 # country-specific you want to be available through an import from
 # candidates.election_specific
 
-imports_and_defaults = []
+imports_and_defaults = (
+    ('ALL_POSSIBLE_PARTY_POST_GROUPS', []),
+    ('party_to_possible_post_groups', lambda party_data: []),
+    ('area_to_post_group', lambda area_data: None),
+)
 
 # Note that one could do this without the dynamic import and use of
 # globals() by switching on country names and importing * from each

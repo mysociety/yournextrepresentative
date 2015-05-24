@@ -15,7 +15,7 @@
 <ul>
   {% for c in unlocked %}
     <li>
-     <a href="{% url 'constituency' mapit_area_id=c.id ignored_slug=c.name|slugify %}">{{ c.name }}</a>
+     <a href="{% url 'constituency' election=election mapit_area_id=c.id ignored_slug=c.name|slugify %}">{{ c.name }}</a>
     </li>
   {% endfor %}
 </ul>

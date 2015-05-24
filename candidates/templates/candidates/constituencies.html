@@ -16,7 +16,7 @@
 <ul>
   {% for c in all_constituencies %}  
     <li>
-     <a href="{% url 'constituency' mapit_area_id=c.0 ignored_slug=c.1.name|slugify %}">{{ c.1.name }}</a>
+     <a href="{% url 'constituency' election=election mapit_area_id=c.0 ignored_slug=c.1.name|slugify %}">{{ c.1.name }}</a>
     </li>
   {% endfor %}
 </ul>

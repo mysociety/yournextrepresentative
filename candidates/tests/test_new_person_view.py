@@ -69,7 +69,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
         mock_popit.return_value.posts = FakePostCollection
         # Just a smoke test for the moment:
         response = self.app.get(
-            '/constituency/65808/dulwich-and-west-norwood',
+            '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user
         )
         mock_get_current_timestamp.return_value = example_timestamp
@@ -80,9 +80,9 @@ class TestNewPersonView(TestUserMixin, WebTest):
             'name': 'Jane Doe',
             # Make Jane Doe be standing for the Monster Raving Loony
             # Party in Dulwich and West Norwood:
-            'party_gb': 'party:66',
-            'party_ni': 'party:none',
-            'constituency': '65808',
+            'party_gb_2015': 'party:66',
+            'party_ni_2015': 'party:none',
+            'constituency_2015': '65808',
             'email': 'jane@example.com',
             'wikipedia_url': 'http://en.wikipedia.org/wiki/Jane_Doe',
         }

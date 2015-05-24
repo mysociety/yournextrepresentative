@@ -19,17 +19,17 @@
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@yournextmp" />
-    <meta name="twitter:title" content="Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election" />
+    <meta name="twitter:title" content="Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }}" />
     <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="twitter:image:height" content="120" />
     <meta property="twitter:image:width" content="120" />
     <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election - find out more on YourNextMP"  />
+    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }} - find out more on YourNextMP"  />
 {% endblock %}
 
 {% block body_class %}constituency{% endblock %}
 
-{% block title %}Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election{% endblock %}
+{% block title %}Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }}{% endblock %}
 
 {% block hero %}
   <h1>Candidates for <span id="constituency-name">{{ constituency_name }}</a></h1>
@@ -60,7 +60,7 @@
   </p>
 
   {% if user_can_lock %}
-    <form method="post" action="{% url 'constituency-lock' %}">
+    <form method="post" action="{% url 'constituency-lock' election=election %}">
       {% csrf_token %}
       {% for field in lock_form %}{{ field }}{% endfor %}
       <input type="submit" class="button small" value="{% if candidates_locked %}Unlock{% else %}Lock{% endif %} candidate list">
@@ -76,7 +76,7 @@
   {% endif %}
 
   {% if user_can_record_results and show_retract_result %}
-    <form action="{% url 'retract-winner' mapit_area_id=mapit_area_id %}" method="post">
+    <form action="{% url 'retract-winner' election=election mapit_area_id=mapit_area_id %}" method="post">
       {% csrf_token %}
       <input type="submit" class="button candidates-list__actions__winner-mistake" value="Unset the current winner, if incorrect">
     </form>
@@ -85,19 +85,19 @@
 
   <div class="candidates__known">
 
-    <h3>Known candidates for the 2015 general election</h3>
+    <h3>Known candidates for the {{ election_data.name }}</h3>
 
-    {% for c in candidates_2015 %}
+    {% for c in candidates %}
       {% if forloop.first %}
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if c|was_elected:"2015" %} candidates-list__person__winner{% endif %}">
-          {% if c|was_elected:"2015" %}
+        <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if c|was_elected:election %} candidates-list__person__winner{% endif %}">
+          {% if c|was_elected:election %}
             <h4 class="candidates-list__person__elected-text">Winner</h4>
           {% endif %}
 
-          {% include 'candidates/_person_in_list.html' with year='2015' %}
+          {% include 'candidates/_person_in_list.html' %}
           {% if user.is_authenticated %}
           <p>
             {% if candidate_list_edits_allowed %}
@@ -109,8 +109,8 @@
             {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
           {% endif %}
           {% endif %}
-          {% if user_can_record_results and not c|election_decision_known:"2015" %}
-            <form class="winner-confirm" action="{% url 'record-winner' mapit_area_id=mapit_area_id %}" method="post">
+          {% if user_can_record_results and not c|election_decision_known:election %}
+            <form class="winner-confirm" action="{% url 'record-winner' election=election mapit_area_id=mapit_area_id %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="person_id" value="{{ c.id }}">
               <input type="hidden" name="source" value="[Quick update from the constituency page]">
@@ -125,12 +125,12 @@
     {% empty %}
       <div class="no-candidates row">
         <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ constituency_name }}
-        for the 2015 general election yet.</p>
+        for the {{ election_data.name }} yet.</p>
         <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
       </div>
     {% endfor %}
 
-    {% if candidates_2015 and candidate_list_edits_allowed %}
+    {% if candidates and candidate_list_edits_allowed %}
         <p><a class="show-new-candidate-form button">Add a new candidate</a></p>
     {% endif %}
 
@@ -141,7 +141,7 @@
 
     <h4>Add a new candidate</h4>
 
-    <form method="post" id="new-candidate-form" action="{% url 'person-create' %}">
+    <form method="post" id="new-candidate-form" action="{% url 'person-create' election=election %}">
       {% csrf_token %}
         {% for field in add_candidate_form.visible_fields %}
           <p>
@@ -149,7 +149,7 @@
             {{ field.label_tag }} {{ field }}
           </p>
         {% endfor %}
-        <input type="hidden" id="id_constituency" name="constituency" value="{{ mapit_area_id }}">
+        <input type="hidden" id="id_constituency_{{ election }}" name="constituency_{{ election }}" value="{{ mapit_area_id }}">
       <input type="submit" class="button" value="Add new candidate">
       <a class="hide-new-candidate-form button secondary">Cancel</a>
     </form>
@@ -159,19 +159,19 @@
 
 {% if not candidates_locked %}
 
-{% if candidates_2010_might_stand_again %}
+{% if candidates_might_stand_again %}
   <div class="candidates__previous">
 
     {% if user.is_authenticated %}
     <h3>Is a candidate from the 2010 election standing again?</h3>
     {% else %}
-    <h3>We don't know if these candidates from the 2010 election are standing again</h3>
+    <h3>We don't know if these candidates from earlier elections are standing again</h3>
     {% endif %}
 
     <ul class="candidate-list">
-      {% for c in candidates_2010_might_stand_again %}
+      {% for c in candidates_might_stand_again %}
         <li class="candidates-list__person">
-          {% include 'candidates/_person_in_list.html' with year='2010' %}
+          {% include 'candidates/_person_in_list.html' %}
           {% if user.is_authenticated %}
           <p>
             {% if candidate_list_edits_allowed %}
@@ -193,15 +193,15 @@
 {% endif %}
 
 
-{% if candidates_2010_not_standing_again %}
+{% if candidates_not_standing_again %}
   <div class="candidates__not-standing">
 
-    <h3>These candidates from 2010 are known not to be standing again</h3>
+    <h3>These candidates from earlier elections are known not to be standing again</h3>
 
     <ul class="candidate-list">
-      {% for c in candidates_2010_not_standing_again %}
+      {% for c in candidates_not_standing_again %}
         <li class="candidates-list__person">
-          {% include 'candidates/_person_in_list.html' with year='2010' %}
+          {% include 'candidates/_person_in_list.html' %}
           {% if user.is_authenticated %}
           <p>
             {% if candidate_list_edits_allowed %}

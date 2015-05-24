@@ -53,7 +53,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/constituency/65759/cities-of-london-and-westminster'
+            '/election/2015/post/65759/cities-of-london-and-westminster'
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):
@@ -103,7 +103,7 @@ class TestConstituencyNameFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/constituency/66044/epping-forest'
+            '/election/2015/post/66044/epping-forest'
         )
 
     def test_post_no_constituency_selected(self):

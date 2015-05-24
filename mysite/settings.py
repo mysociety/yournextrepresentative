@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 import importlib
 import os
+import re
 import sys
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -351,5 +352,19 @@ ELECTIONS = elections_module.ELECTIONS
 
 ELECTIONS_BY_DATE = sorted(
     ELECTIONS.items(),
-    key=lambda e: e[1]['election_date'],
+    key=lambda e: (e[1]['election_date'], e[0]),
 )
+
+ELECTION_RE = '(?P<election>'
+ELECTION_RE += '|'.join(
+    re.escape(t[0]) for t in ELECTIONS_BY_DATE
+)
+ELECTION_RE += ')'
+
+ELECTIONS_CURRENT = [t for t in ELECTIONS_BY_DATE if t[1].get('current')]
+
+# FIXME: we should never really need "an arbitrary current election";
+# this is just here for the moment because we don't have a page for
+# "all elections for this point" yet (i.e. area pages) - places where
+# this is used in the code are effectively FIXMEs too.
+ARBITRARY_CURRENT_ELECTION = ELECTIONS_CURRENT[-1] if ELECTIONS_CURRENT else None
