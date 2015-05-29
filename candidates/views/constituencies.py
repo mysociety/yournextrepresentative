@@ -13,13 +13,13 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.views.generic import TemplateView, FormView, View
 
-from auth_helpers.views import GroupRequiredMixin, user_in_group
+from auth_helpers.views import GroupRequiredMixin
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
-    TRUSTED_TO_LOCK_GROUP_NAME,
+    TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
@@ -106,10 +106,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             },
         )
         context['candidate_list_edits_allowed'] = \
-            self.request.user.is_authenticated() and (
-                user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME) or
-                (not context['candidates_locked'])
-            )
+            get_edits_allowed(self.request.user, context['candidates_locked'])
 
         current_candidates = set()
         past_candidates = set()
