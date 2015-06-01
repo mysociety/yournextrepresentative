@@ -14,6 +14,7 @@ from django.utils.http import urlquote
 from django.views.generic import TemplateView, FormView, View
 
 from auth_helpers.views import GroupRequiredMixin
+from .helpers import get_people_from_memberships
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
@@ -96,6 +97,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         mp_post = get_post_cached(self.api, mapit_area_id)
 
+        context['post_data'] = {
+            k: v for k, v in mp_post['result'].items()
+            if k in ('id', 'label')
+        }
+
         context['candidates_locked'] = mp_post['result'].get(
             'candidates_locked', False
         )
@@ -108,27 +114,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         context['candidate_list_edits_allowed'] = \
             get_edits_allowed(self.request.user, context['candidates_locked'])
 
-        current_candidates = set()
-        past_candidates = set()
-
-        for membership in mp_post['result']['memberships']:
-            if not membership.get('role') == "Candidate":
-                continue
-            person = PopItPerson.create_from_dict(membership['person_id'])
-            if membership_covers_date(
-                    membership,
-                    settings.ELECTIONS[election]['election_date']
-            ):
-                current_candidates.add(person)
-            else:
-                for election, election_data in settings.ELECTIONS_BY_DATE:
-                    if not election_data.get('use_for_candidate_suggestions'):
-                        continue
-                    if membership_covers_date(
-                            membership,
-                            election_data['election_date'],
-                    ):
-                        past_candidates.add(person)
+        current_candidates, past_candidates = \
+            get_people_from_memberships(
+                election,
+                mp_post['result']['memberships']
+            )
 
         context['candidates_standing_again'] = \
             past_candidates.intersection(current_candidates)

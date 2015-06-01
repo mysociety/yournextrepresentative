@@ -7,8 +7,8 @@
     election
     election_data
 
-    constituency_name # FIXME should be post.label or something
-    mapit_area_id # FIXME should be post_id
+    post_data.id
+    post_data.label
 
     candidates
     candidates_might_stand_again
@@ -52,16 +52,16 @@
        <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a><br>
     {% endfor %}
     {% if user_can_upload_documents %}
-      <a href="{% url 'upload_document_view' mapit_area_id %}">
+      <a href="{% url 'upload_document_view' post_data.id %}">
       Upload an updated Statement of Nominated Persons</a>.
     {% endif %}
   {% else %}
-    We don't have nomination papers for {{ constituency_name }} yet.
+    We don't have nomination papers for {{ post_data.label }} yet.
     Can you help us by <a href="https://docs.google.com/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/edit#gid=0">
       adding them to this google spreadsheet</a>?
     {% if user_can_upload_documents %}
       Or, as you have permission to upload documents, you can
-      <a href="{% url 'upload_document_view' mapit_area_id %}">
+      <a href="{% url 'upload_document_view' post_data.id %}">
       upload it directly</a>.
     {% endif %}
   {% endif %}
@@ -84,7 +84,7 @@
 {% endif %}
 
 {% if user_can_record_results and show_retract_result %}
-  <form action="{% url 'retract-winner' election=election mapit_area_id=mapit_area_id %}" method="post">
+  <form action="{% url 'retract-winner' election=election mapit_area_id=post_data.id %}" method="post">
     {% csrf_token %}
     <input type="submit" class="button candidates-list__actions__winner-mistake" value="Unset the current winner, if incorrect">
   </form>
@@ -92,7 +92,10 @@
 
 <div class="candidates__known">
 
-  <h3>Known candidates for the {{ election_data.name }}</h3>
+  <h3>Known candidates for
+    {# Use the post label here, since multiple posts may be used on a page #}
+    <a href="{% url 'constituency' election=election mapit_area_id=post_data.id ignored_slug=post_data.label|slugify %}">{{ post_data.label }}</a>
+  </h3>
 
   {% for c in candidates %}
     {% if forloop.first %}
@@ -117,7 +120,7 @@
         {% endif %}
         {% endif %}
         {% if user_can_record_results and not c|election_decision_known:election %}
-          <form class="winner-confirm" action="{% url 'record-winner' election=election mapit_area_id=mapit_area_id %}" method="post">
+          <form class="winner-confirm" action="{% url 'record-winner' election=election mapit_area_id=post_data.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="person_id" value="{{ c.id }}">
             <input type="hidden" name="source" value="[Quick update from the constituency page]">
@@ -131,7 +134,7 @@
     {% endif %}
   {% empty %}
     <div class="no-candidates row">
-      <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ constituency_name }}
+      <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ post_data.label }}
       for the {{ election_data.name }} yet.</p>
       <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
     </div>
@@ -156,7 +159,7 @@
             {{ field.label_tag }} {{ field }}
           </p>
         {% endfor %}
-        <input type="hidden" id="id_constituency_{{ election }}" name="constituency_{{ election }}" value="{{ mapit_area_id }}">
+        <input type="hidden" id="id_constituency_{{ election }}" name="constituency_{{ election }}" value="{{ post_data.id }}">
       <input type="submit" class="button" value="Add new candidate">
       <a class="hide-new-candidate-form button secondary">Cancel</a>
     </form>
