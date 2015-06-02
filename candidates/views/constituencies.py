@@ -90,10 +90,16 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
                 'ignored_slug': slugify(context['constituency_name'])
             }))
 
-        context['nomination_papers'] = OfficialDocument.objects.filter(
-            document_type=OfficialDocument.NOMINATION_PAPER,
-            mapit_id=mapit_area_id,
-        )
+        documents_by_type = {}
+        # Make sure that every available document type has a key in
+        # the dictionary, even if there are no such documents.
+        for t in OfficialDocument.DOCUMENT_TYPES:
+            documents_by_type[t[0]] = []
+        for od in OfficialDocument.objects.filter(
+            mapit_id=mapit_area_id
+        ):
+            documents_by_type[od.document_type].append(od)
+        context['official_documents'] = documents_by_type.items()
 
         mp_post = get_post_cached(self.api, mapit_area_id)
 

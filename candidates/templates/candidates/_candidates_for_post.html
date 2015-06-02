@@ -18,8 +18,6 @@
     show_retract_result
     candidates_list_edits_allowed
 
-    nomination_papers
-
     lock_form
     add_candidate_form
 
@@ -43,29 +41,15 @@
       standing (either 'standing' or 'not-standing')
       mapit_area_id
 
+    official_documents/_post.html
+
+      official_documents
+      post_data.label
+      post_data.id
+
 {% endcomment %}
 
-<p>
-  {% if nomination_papers %}
-    {% for paper in nomination_papers %}
-      View the official Statement of Nominated Persons for this constituency:
-       <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a><br>
-    {% endfor %}
-    {% if user_can_upload_documents %}
-      <a href="{% url 'upload_document_view' post_data.id %}">
-      Upload an updated Statement of Nominated Persons</a>.
-    {% endif %}
-  {% else %}
-    We don't have nomination papers for {{ post_data.label }} yet.
-    Can you help us by <a href="https://docs.google.com/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/edit#gid=0">
-      adding them to this google spreadsheet</a>?
-    {% if user_can_upload_documents %}
-      Or, as you have permission to upload documents, you can
-      <a href="{% url 'upload_document_view' post_data.id %}">
-      upload it directly</a>.
-    {% endif %}
-  {% endif %}
-</p>
+{% include 'official_documents/_post.html' %}
 
 {% if user_can_lock %}
   <form method="post" action="{% url 'constituency-lock' election=election %}">
