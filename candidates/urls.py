@@ -114,6 +114,11 @@ patterns_to_format = [
         'name': 'person-view'
     },
     {
+        'pattern': r'^areas/(?P<type_and_area_ids>.*?)(?:/(?P<ignored_slug>.*))?$',
+        'view': views.AreasView.as_view(),
+        'name': 'areas-view',
+    },
+    {
         'pattern': r'^election/{election}/party/(?P<organization_id>[a-z-]+:[-\d]+)/(?P<ignored_slug>.*)$',
         'view': views.PartyDetailView.as_view(),
         'name': 'party'
