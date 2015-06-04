@@ -67,7 +67,7 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MapItData.constituencies_2010.get(
+        context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
             self.request.POST.get('mapit_area_id')
         )
         return context
@@ -114,7 +114,7 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MapItData.constituencies_2010.get(
+        context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
             self.request.POST.get('mapit_area_id')
         )
         return context

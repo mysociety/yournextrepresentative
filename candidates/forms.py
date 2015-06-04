@@ -168,7 +168,7 @@ class BasePersonForm(forms.Form):
             # selected constituency.
             constituency = cleaned_data['constituency_' + election]
             try:
-                mapit_area = MapItData.constituencies_2010[constituency]
+                mapit_area = MapItData.areas_by_id[('WMC', 22)][constituency]
             except KeyError:
                 message = "If you mark the candidate as standing in the "
                 message += "{election}, you must select a constituency"
@@ -271,7 +271,7 @@ class UpdatePersonForm(BasePersonForm):
                         [
                             (mapit_id, constituency['name'])
                             for mapit_id, constituency
-                            in MapItData.constituencies_2010.items()
+                            in MapItData.areas_by_id[('WMC', 22)].items()
                         ],
                         key=lambda t: t[1]
                     )
@@ -339,7 +339,7 @@ class ToggleLockForm(forms.Form):
 
     def clean_post_id(self):
         post_id = self.cleaned_data['post_id']
-        if post_id not in MapItData.constituencies_2010:
+        if post_id not in MapItData.areas_by_id[('WMC', 22)]:
             message = '{0} was not a known post ID'
             raise ValidationError(message.format(post_id))
         return post_id

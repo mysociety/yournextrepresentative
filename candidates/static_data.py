@@ -1,39 +1,86 @@
 from collections import defaultdict
 import json
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname, join, exists
 
-data_directory = abspath(join(dirname(__file__), '..', 'data'))
+import requests
 
-def get_mapit_constituencies(basename):
-    with open(join(data_directory, basename)) as f:
-        return json.load(f)
+from django.conf import settings
 
-def get_constituency_name_map(basename):
-    result = {}
-    for constituency in get_mapit_constituencies(basename).values():
-        result[constituency['name']] = constituency
-    return result
+from candidates.election_specific import area_to_post_group
 
-def get_constituencies_by_country(basename):
-    result = defaultdict(list)
-    for cons in get_mapit_constituencies(basename).values():
-        result[cons['country_name']].append((str(cons['id']), cons['name']))
-    for cons_list in result.values():
-        cons_list.sort(key=lambda c: c[1])
-    return result
+data_directory = abspath(join(
+    dirname(__file__), '..', 'elections', settings.ELECTION_APP, 'data'
+))
+
+ALL_MAPIT_TYPES_AND_GENERATIONS = set(
+    (mapit_type, t[1]['mapit_generation'])
+    for t in settings.ELECTIONS_BY_DATE
+    for mapit_type in t[1]['mapit_types']
+)
+
+def get_mapit_areas(area_type, generation):
+    expected_filename = join(
+        data_directory,
+        'mapit-{area_type}-generation-{generation}.json'.format(
+            area_type=area_type,
+            generation=generation,
+        )
+    )
+    if exists(expected_filename):
+        with open(expected_filename) as f:
+            return json.load(f)
+    else:
+        mapit_url_format = '{base_url}areas/{area_type}?generation={generation}'
+        mapit_url = mapit_url_format.format(
+            base_url=settings.MAPIT_BASE_URL,
+            area_type=area_type,
+            generation=generation
+        )
+        message = "WARNING: failed to find {filename} so loading from MapIt\n"
+        message += "This will make start-up slow and less reliable, so consider\n"
+        message += "committing a copy of: {url}"
+        print message.format(filename=expected_filename, url=mapit_url)
+        r = requests.get(mapit_url)
+        return r.json()
+
+# What do we need to do with MapIt data?
+#
+#  Just area related:
+#
+#    Go from MapIt ID to full area data (currently areas_by_id, was constituencies_2010)
+#    Go from an area name and type to full area data (currently areas_by_name, was constituencies_2010_name_map)
+#    Get a list of all areas of a particular type (areas_list_sorted_by_name, was constituencies_2010_name_sorted)
+#    Get a list of all areas of a particular type in a given "post group" (currently area_ids_and_names_by_post_group, was constituencies_2010_by_post_group)
+#
+#  Related to posts too:
+#
+#    Go from a MapIt ID to the posts are associated with it:
+#       (probably need a new class method for that...)
 
 class MapItData(object):
-    constituencies_2010 = \
-        get_mapit_constituencies('mapit-WMC-generation-13.json')
-    constituencies_2010_name_map = \
-        get_constituency_name_map('mapit-WMC-generation-13.json')
-    constituencies_2010_name_sorted = \
-        sorted(
-            constituencies_2010.items(),
-            key=lambda t: t[1]['name']
+
+    areas_by_id = {}
+    areas_by_name = {}
+    areas_list_sorted_by_name = {}
+    area_ids_and_names_by_post_group = {}
+
+    for t in ALL_MAPIT_TYPES_AND_GENERATIONS:
+        areas_by_id[t] = get_mapit_areas(t[0], t[1])
+        for area in areas_by_id[t].values():
+            areas_by_name.setdefault(t, {})
+            areas_by_name[t][area['name']] = area
+        areas_list_sorted_by_name[t] = sorted(
+            areas_by_id[t].items(),
+            key=lambda c: c[1]['name']
         )
-    constituencies_2010_by_post_group = \
-        get_constituencies_by_country('mapit-WMC-generation-13.json')
+        for area in areas_by_name[t].values():
+            post_group = area_to_post_group(area)
+            area_ids_and_names_by_post_group.setdefault(t, defaultdict(list))
+            area_ids_and_names_by_post_group[t][post_group].append(
+                (str(area['id']), area['name'])
+            )
+        for area_list in area_ids_and_names_by_post_group[t].values():
+            area_list.sort(key=lambda c: c[1])
 
 def get_all_parties():
     result_list = defaultdict(list)

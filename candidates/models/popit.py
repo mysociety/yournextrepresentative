@@ -156,7 +156,7 @@ def parse_approximate_date(s):
 def get_area_from_post_id(post_id, mapit_url_key='id'):
     "Get a MapIt area ID from a candidate list organization's PopIt data"
 
-    mapit_data = MapItData.constituencies_2010.get(post_id)
+    mapit_data = MapItData.areas_by_id[('WMC', 22)].get(post_id)
     if mapit_data is None:
         message = "Couldn't find the constituency with Post and MapIt Area ID: '{0}'"
         raise Exception(message.format(post_id))
@@ -343,7 +343,7 @@ def extract_constituency_name(candidate_list_organization):
     return None
 
 def get_constituency_name_from_mapit_id(mapit_id):
-    constituency_data = MapItData.constituencies_2010.get(str(mapit_id))
+    constituency_data = MapItData.areas_by_id[('WMC', 22)].get(str(mapit_id))
     if constituency_data:
         return constituency_data['name']
     return None
@@ -823,7 +823,7 @@ class PopItPerson(object):
             'constituency': self.standing_in[election]['name'],
             'mapit_url': self.standing_in[election]['mapit_url'],
             'mapit_id': self.standing_in[election]['post_id'],
-            'gss_code': MapItData.constituencies_2010[
+            'gss_code': MapItData.areas_by_id[('WMC', 22)][
                 self.standing_in[election]['post_id']]['codes']['gss'],
             'twitter_username': person_data['twitter_username'],
             'facebook_page_url': person_data['facebook_page_url'],
@@ -1028,7 +1028,7 @@ class PopItPerson(object):
                         area_id = get_mapit_id_from_mapit_url(mapit_url)
                         party_data = self.party_memberships.get(election, {})
                         party_id = party_data.get('id', '')
-                        country = MapItData.constituencies_2010.get(area_id)['country_name']
+                        country = MapItData.areas_by_id[('WMC', 22)].get(area_id)['country_name']
                         if country == 'Northern Ireland':
                             initial_data['party_ni_' + election] = party_id
                         else:
@@ -1162,7 +1162,7 @@ class PopItPerson(object):
 
             # Take either the GB or NI party select, and set it on 'party':
             if area_id:
-                country_name =  MapItData.constituencies_2010.get(area_id)['country_name']
+                country_name =  MapItData.areas_by_id[('WMC', 22)].get(area_id)['country_name']
                 key_prefix = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
                 key = key_prefix + '_' + election
                 form_data['party_' + election] = form_data[key]

@@ -12,7 +12,7 @@ class DocumentView(DetailView):
     def get_context_data(self, **kwargs):
         context = {}
         context['constituency'] = \
-            MapItData.constituencies_2010[self.object.mapit_id]
+            MapItData.areas_by_id[('WMC', 22)][self.object.mapit_id]
         context.update(kwargs)
         return context
 
@@ -31,6 +31,6 @@ class CreateDocumentView(GroupRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = {}
         context['constituency'] = \
-            MapItData.constituencies_2010[self.kwargs['mapit_id']]
+            MapItData.areas_by_id[('WMC', 22)][self.kwargs['mapit_id']]
         context.update(kwargs)
         return context

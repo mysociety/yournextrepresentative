@@ -99,7 +99,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                 if not (standing_in and standing_in.get('2015')):
                     continue
                 mapit_area_id = standing_in['2015'].get('post_id')
-                mapit_data = MapItData.constituencies_2010.get(mapit_area_id)
+                mapit_data = MapItData.areas_by_id[('WMC', 22)].get(mapit_area_id)
                 if not mapit_data:
                     continue
                 post_group = area_to_post_group(mapit_data)
@@ -117,7 +117,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
             if by_post_group[post_group]:
                 posts = [
                     (c[0], c[1], by_post_group[post_group].get(c[0]))
-                    for c in MapItData.constituencies_2010_by_post_group[post_group]
+                    for c in MapItData.area_ids_and_names_by_post_group[('WMC', 22)][post_group]
                 ]
                 candidates_by_post_group[post_group] = {
                     'constituencies': posts,

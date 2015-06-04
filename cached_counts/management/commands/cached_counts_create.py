@@ -13,7 +13,7 @@ class Command(PopItApiMixin, BaseCommand):
             defaults={'count': obj['count'], 'name': obj['name']})
 
     def handle(self, **options):
-        all_constituencies = MapItData.constituencies_2010_name_sorted
+        all_constituencies = MapItData.areas_list_sorted_by_name[('WMC', 22)]
         all_parties = PartyData.party_id_to_name
         counts = {
             'candidates_2010': 0,

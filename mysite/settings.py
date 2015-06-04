@@ -368,3 +368,20 @@ ELECTIONS_CURRENT = [t for t in ELECTIONS_BY_DATE if t[1].get('current')]
 # "all elections for this point" yet (i.e. area pages) - places where
 # this is used in the code are effectively FIXMEs too.
 ARBITRARY_CURRENT_ELECTION = ELECTIONS_CURRENT[-1] if ELECTIONS_CURRENT else None
+
+# Make sure there's a trailing slash at the end of base MapIt URL:
+MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
+
+MAPIT_TYPES = set()
+for e in ELECTIONS_CURRENT:
+    for mapit_type in e[1]['mapit_types']:
+        MAPIT_TYPES.add(mapit_type)
+
+KNOWN_MAPIT_GENERATIONS = set(
+    e[1]['mapit_generation'] for e in ELECTIONS_CURRENT
+)
+if len(KNOWN_MAPIT_GENERATIONS) > 1:
+    message = "More than one MapIt generation for current elections: {0}"
+    raise Exception(message.format(KNOWN_MAPIT_GENERATIONS))
+
+MAPIT_CURRENT_GENERATION = list(KNOWN_MAPIT_GENERATIONS)[0]

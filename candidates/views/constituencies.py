@@ -186,7 +186,7 @@ class ConstituencyListView(PopItApiMixin, TemplateView):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['election'] = kwargs['election']
         context['all_constituencies'] = \
-            MapItData.constituencies_2010_name_sorted
+            MapItData.areas_list_sorted_by_name[('WMC', 22)]
         return context
 
 

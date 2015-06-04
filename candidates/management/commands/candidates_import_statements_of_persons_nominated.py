@@ -50,7 +50,7 @@ class Command(BaseCommand):
             name = row['Constituency'].decode('utf-8')
             if not name:
                 continue
-            cons_data = MapItData.constituencies_2010_name_map[name]
+            cons_data = MapItData.areas_by_name[('WMC', 22)][name]
             document_url = row['URL']
             if not document_url:
                 print u"No URL for {0}".format(name)
