@@ -11,6 +11,7 @@ from candidates.tests.fake_popit import (
 class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
 
     def test_constituency_lock_unauthorized(self, mock_popit):
+        mock_popit.return_value.posts = FakePostCollection
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user,
