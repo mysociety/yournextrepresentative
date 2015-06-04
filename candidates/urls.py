@@ -15,18 +15,8 @@ urlpatterns = \
 patterns_to_format = [
     {
         'pattern': r'^$',
-        'view': views.ConstituencyPostcodeFinderView.as_view(),
-        'name': 'lookup-name',
-    },
-    {
-        'pattern': r'^lookup/name$',
-        'view': views.ConstituencyNameFinderView.as_view(),
-        'name': 'lookup-name'
-    },
-    {
-        'pattern': r'^lookup/postcode$',
-        'view': views.ConstituencyPostcodeFinderView.as_view(),
-        'name': 'lookup-postcode'
+        'view': views.AddressFinderView.as_view(),
+        'name': 'lookup-address',
     },
     {
         'pattern': r'^election/{election}/constituencies$',

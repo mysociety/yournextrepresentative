@@ -32,6 +32,7 @@ PopIt-Python==0.1.10
 psycopg2==2.5.4
 pyasn1==0.1.7
 pycparser==2.10
+pygeocoder==1.2.5
 pyOpenSSL==0.14
 python-dateutil==2.2
 python-magic==0.4.6

@@ -15,5 +15,5 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         mock_popit.return_value.posts = FakePostCollection
 
         # Just a smoke test for the moment:
-        response = self.app.get('/areas/WMC:65808/dulwich-and-west-norwood')
+        response = self.app.get('/areas/WMC-65808/dulwich-and-west-norwood')
         self.assertEqual(response.status_code, 200)

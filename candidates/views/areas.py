@@ -17,7 +17,7 @@ class AreasView(PopItApiMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         self.types_and_areas = []
         for type_and_area in kwargs['type_and_area_ids'].split(','):
-            m = re.search(r'^([A-Z0-9]{3}):(\d+)$', type_and_area)
+            m = re.search(r'^([A-Z0-9]{3})-(\d+)$', type_and_area)
             if not m:
                 message = "Malformed type and area: '{0}'"
                 return HttpResponseBadRequest(message.format(type_and_area))

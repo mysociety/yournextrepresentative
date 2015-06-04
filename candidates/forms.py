@@ -2,6 +2,7 @@
 
 import re
 
+from .models.address import check_address
 from .static_data import MapItData, PartyData
 
 from django import forms
@@ -9,43 +10,21 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django_date_extensions.fields import ApproximateDateFormField
 
-from .mapit import get_wmc_from_postcode, BaseMapItException
-
-class PostcodeForm(forms.Form):
-    postcode = forms.CharField(
-        label='Enter your postcode',
-        max_length=20
+class AddressForm(forms.Form):
+    address = forms.CharField(
+        label='Enter your address or town',
+        max_length=2048,
     )
 
-    def clean_postcode(self):
-        postcode = self.cleaned_data['postcode']
-        try:
-            # Go to MapIt to check if this postcode is valid and
-            # contained in a constituency. (If it's valid then the
-            # result is cached, so this doesn't cause a double lookup.)
-            get_wmc_from_postcode(postcode)
-        except BaseMapItException as e:
-            raise ValidationError(unicode(e))
-        return postcode
+    def clean_address(self):
+        address = self.cleaned_data['address']
+        check_address(address)
+        return address
 
-class ConstituencyForm(forms.Form):
-    constituency = forms.ChoiceField(
-        label='Select a constituency',
-        choices=[('none', '')] + sorted(
-            [
-                (mapit_id, constituency['name'])
-                for mapit_id, constituency
-                in MapItData.constituencies_2010.items()
-            ],
-            key=lambda t: t[1]
-        )
-    )
+    def tidy_address(self, address):
+        '''This is here so you can override it to add, say, ", Argentina"'''
+        return address
 
-    def clean_constituency(self):
-        constituency = self.cleaned_data['constituency']
-        if constituency == 'none':
-            raise ValidationError("You must select a constituency")
-        return constituency
 
 class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(
