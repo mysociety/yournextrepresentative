@@ -79,16 +79,7 @@ def merge_popit_people(primary, secondary):
             result[primary_key] = primary_value
     return result
 
-
-class PopItApiMixin(object):
-
-    """This provides helper methods for manipulating data in a PopIt instance"""
-
-    def __init__(self, *args, **kwargs):
-        super(PopItApiMixin, self).__init__(*args, **kwargs)
-        self.api = create_popit_api_object()
-
-    def get_base_url(self):
+def get_base_url():
         port = settings.POPIT_PORT
         instance_hostname = settings.POPIT_INSTANCE + \
             '.' + settings.POPIT_HOSTNAME
@@ -99,13 +90,21 @@ class PopItApiMixin(object):
         )
         return base_url
 
-    def get_search_url(self, collection, query, **kwargs):
-        base_search_url = self.get_base_url() + 'search/'
-        parameters = {
-            'q': query,
-        }
-        parameters.update(kwargs)
-        query_string = '&'.join(
-            k + '=' + urlquote(v) for k, v in parameters.items()
-        )
-        return base_search_url + collection + '?' + query_string
+def get_search_url(collection, query, **kwargs):
+    base_search_url = get_base_url() + 'search/'
+    parameters = {
+        'q': query,
+    }
+    parameters.update(kwargs)
+    query_string = '&'.join(
+        k + '=' + urlquote(v) for k, v in parameters.items()
+    )
+    return base_search_url + collection + '?' + query_string
+
+class PopItApiMixin(object):
+
+    """This provides helper methods for manipulating data in a PopIt instance"""
+
+    def __init__(self, *args, **kwargs):
+        super(PopItApiMixin, self).__init__(*args, **kwargs)
+        self.api = create_popit_api_object()

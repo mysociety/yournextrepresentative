@@ -6,7 +6,7 @@ import requests
 from cached_counts.models import CachedCount
 
 from ..models import get_identifier
-from ..popit import PopItApiMixin, popit_unwrap_pagination
+from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
 from ..static_data import MapItData, PartyData
 from ..election_specific import (
     ALL_POSSIBLE_PARTY_POST_GROUPS, party_to_possible_post_groups,
@@ -82,7 +82,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
             for i in party.get('images', [])
         ]
         by_post_group = {pg: {} for pg in ALL_POSSIBLE_PARTY_POST_GROUPS}
-        url = self.get_search_url(
+        url = get_search_url(
             'persons',
             'party_memberships.{0}.id:"{1}"'.format(
                 kwargs['election'],

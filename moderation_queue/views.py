@@ -19,7 +19,7 @@ from PIL import Image
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
-from candidates.popit import PopItApiMixin
+from candidates.popit import PopItApiMixin, get_base_url
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
@@ -217,7 +217,7 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
         person_id = self.queued_image.popit_person_id
         person = PopItPerson.create_from_popit(self.api, person_id)
         image_upload_url = '{base}persons/{person_id}/image'.format(
-            base=self.get_base_url(),
+            base=get_base_url(),
             person_id=person_id
         )
         data = {

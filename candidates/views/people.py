@@ -24,7 +24,9 @@ from ..models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
     PopItPerson
 )
-from ..popit import merge_popit_people, PopItApiMixin
+from ..popit import (
+    merge_popit_people, PopItApiMixin, get_base_url
+)
 from ..static_data import PartyData
 
 class PersonView(PopItApiMixin, TemplateView):
@@ -38,7 +40,7 @@ class PersonView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
-        context['popit_api_url'] = self.get_base_url()
+        context['popit_api_url'] = get_base_url()
         path = self.person.get_absolute_url()
         context['redirect_after_login'] = urlquote(path)
         context['canonical_url'] = self.request.build_absolute_uri(path)
