@@ -1,6 +1,8 @@
 from copy import deepcopy
 from urlparse import urlunsplit
 
+import requests
+
 from django.conf import settings
 from django.utils.http import urlquote
 
@@ -21,20 +23,39 @@ def create_popit_api_object():
         api_properties['password'] = settings.POPIT_PASSWORD
     return PopIt(**api_properties)
 
-def popit_unwrap_pagination(api_collection, **kwargs):
+def generic_unwrap_pagination(get_json_response):
     page = 1
     keep_fetching = True
     while keep_fetching:
-        get_kwargs = {
+        pagination_kwargs = {
             'per_page': 50,
-            'page': page,
+            'page': page
         }
-        get_kwargs.update(kwargs)
-        response = api_collection.get(**get_kwargs)
-        keep_fetching = response.get('has_more', False)
+        json_response = get_json_response(pagination_kwargs)
+        keep_fetching = json_response.get('has_more', False)
         page += 1
-        for api_object in response['result']:
+        for api_object in json_response['result']:
             yield api_object
+
+def popit_unwrap_pagination(api_collection, **kwargs):
+    def get_json_response(pagination_kwargs):
+        get_kwargs = kwargs.copy()
+        get_kwargs.update(pagination_kwargs)
+        return api_collection.get(**get_kwargs)
+    return generic_unwrap_pagination(get_json_response)
+
+def unwrap_search_pagination(collection, query, **kwargs):
+    def get_json_response(pagination_kwargs):
+        get_kwargs = kwargs.copy()
+        get_kwargs.update(pagination_kwargs)
+        search_url = get_search_url(collection, query, **get_kwargs)
+        r = requests.get(search_url)
+        return r.json()
+    return generic_unwrap_pagination(get_json_response)
+
+def get_all_posts(role, **kwargs):
+    kwargs.setdefault('embed', '')
+    return unwrap_search_pagination('posts', 'role:' + role, **kwargs)
 
 def merge_popit_dicts(primary, secondary):
     result = {}
