@@ -16,6 +16,7 @@ class CachedCount(models.Model):
     name = models.CharField(blank=False, max_length=100)
     count = models.IntegerField(blank=False, null=False)
     object_id = models.CharField(blank=True, max_length=100)
+    election = models.CharField(blank=True, null=True, max_length=512)
 
     class Meta:
         ordering = ['-count', 'name']
