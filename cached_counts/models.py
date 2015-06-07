@@ -21,6 +21,19 @@ class CachedCount(models.Model):
     class Meta:
         ordering = ['-count', 'name']
 
+    def __repr__(self):
+        fmt = '<CachedCount: election={e} count_type={ct}, name={n}, count={c}, object_id={o}>'
+        return fmt.format(
+            e=repr(self.election),
+            ct=repr(self.count_type),
+            n=repr(self.name),
+            c=repr(self.count),
+            o=repr(self.object_id),
+        )
+
+    def __unicode__(self):
+        return repr(self)
+
     @classmethod
     def total_2015(cls):
         print cls.objects.get(name="total_2015")
