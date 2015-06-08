@@ -35,24 +35,6 @@ class CachedCount(models.Model):
         return repr(self)
 
     @classmethod
-    def total_2015(cls):
-        print cls.objects.get(name="total_2015")
-        return cls.objects.get(name="total_2015").count
-
-    @property
-    def object_url(self):
-        if self.count_type == "constituency":
-            return reverse('constituency', kwargs={
-                # FIXME: for the moment, just return the the URL for
-                # the 2015 election, but really 'election' should be
-                # another field in CachedCount, and 'constituency'
-                # should be migrated to 'post'.
-                'election': '2015',
-                'mapit_area_id': self.object_id,
-                'ignored_slug': slugify(self.name)
-            })
-
-    @classmethod
     def increment_count(cls, count_type, object_id):
         """
         Increments the count of the object with the type of `count_type` and

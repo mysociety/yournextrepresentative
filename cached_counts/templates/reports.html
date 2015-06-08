@@ -9,16 +9,53 @@
 
 {% block content %}
 
-<ul class="total_percent">
-    <li>Percent done compared to 2010: {{percent_of_2010|floatformat}}%</li>
-    <li>2010 candidates known: {{candidates_2010|intcomma}}</li>
-    <li>2015 candidates known: {{candidates_2015|intcomma}}</li>
-    <li>New candidates: {{new_candidates|intcomma}}</li>
-    <li>Candidates standing again: {{standing_again|intcomma}}</li>
-    <li>Candidates standing again for the same party: {{standing_again_same_party|intcomma}}</li>
-    <li>Candidates standing again for a different party: {{standing_again_different_party|intcomma}}</li>
-    <li><a href="{% url "constituencies_counts" %}">Candidates per constituency</a></li>
-    <li><a href="{% url "party_counts" %}">Candidates per party</a></li>
-</ul>
+  {% for era, elections in all_elections.items %}
+
+    <div class="statistics-elections {{ era }}">
+      <h2>{{ era|title }} Elections</h2>
+
+      {% for election in elections %}
+        <div id="statistics-election-{{ election.id }}">
+           <h3>Statistics for the {{ election.name }}<h3>
+           <ul>
+             <li>Total candidates: {{ election.total }}</li>
+             <li><a href="{% url "posts_counts" election=election.id %}">Candidates per post</a></li>
+             <li><a href="{% url "parties_counts" election=election.id %}">Candidates per party</a></li>
+           </ul>
+           {% if election.prior_elections %}
+             {% for prior_election in election.prior_elections %}
+               <div "statistics-compared-to-prior-election">
+                 <h4>Statistics compared to the {{ prior_election.name }}<h4>
+                 <ul>
+                   <li>Total candidates in {{ prior_election.name }}:
+                     {{ prior_election.total }}
+                   </li>
+                   <li>Percentage ({{ election.name }} / {{ prior_election.name }}):
+                     {{ prior_election.percentage|floatformat }}%
+                   </li>
+                   <li>New candidates compared to the {{ prior_election.name }}
+                     {{ prior_election.new_candidates|intcomma }}
+                   </li>
+                   <li>Candidates standing again from the {{ prior_election.name }}
+                     {{ prior_election.standing_again |intcomma }}
+                   </li>
+                   <li>Candidates standing again from the {{ prior_election.name }}
+                     for the same party:
+                     {{ prior_election.standing_again_same_party|intcomma }}
+                   </li>
+                   <li>Candidates standing again from the {{ prior_election.name }}
+                     for a different party:
+                     {{ prior_election.standing_again_different_party |intcomma }}
+                   </li>
+                 </ul>
+               </div>
+             {% endfor %}
+          {% endif %}
+        </div>
+      {% endfor %}
+
+    </div>
+
+  {% endfor %}
 
 {% endblock content %}

@@ -29,3 +29,13 @@ class PersonCreateRedirect(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return '/election/2015/person/create/'
+
+
+class CachedCountsRedirect(RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        if kwargs['rest_of_path'] == 'constituencies':
+            new_rest_of_path = 'posts'
+        else:
+            new_rest_of_path = 'parties'
+        return '/numbers/election/2015/' + new_rest_of_path

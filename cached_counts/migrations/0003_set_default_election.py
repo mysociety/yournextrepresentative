@@ -23,5 +23,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(set_uk_2015_election),
+        migrations.RunPython(
+            set_uk_2015_election,
+            lambda apps, schema_editor: None
+        ),
     ]

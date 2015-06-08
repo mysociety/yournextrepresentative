@@ -1,26 +1,54 @@
-from mock import patch
+from mock import patch, MagicMock
+import re
 
 from django.core.management import call_command
 from django.test import TestCase
 
 from candidates.tests.test_create_person import mock_create_person
-from candidates.tests.fake_popit import FakePersonCollection
+from candidates.tests.fake_popit import get_example_popit_json
 
 from .models import CachedCount
+
+def fake_mp_post_search_results(url, **kwargs):
+    mock_requests_response = MagicMock()
+    page = "1"
+    m = re.search(r'[^_]page=(\d+)', url)
+    if m:
+        page = m.group(1)
+    mock_requests_response.json.return_value = get_example_popit_json(
+        'search_mp_posts_page={0}.json'.format(page)
+    )
+    return mock_requests_response
 
 def create_initial_counts(extra=()):
     initial_counts = (
         {
+            'election': '2015',
             'count_type': 'constituency',
             'name': 'Dulwich and West Norwood',
             'count': 10,
             'object_id': '65808'
         },
         {
+            'election': '2015',
             'count_type': 'party',
             'name': 'Labour',
             'count': 0,
             'object_id': 'party:53'
+        },
+        {
+            'election': '2015',
+            'count_type': 'total',
+            'name': 'total',
+            'count': 1024,
+            'object_id': '2015'
+        },
+        {
+            'election': '2010',
+            'count_type': 'total',
+            'name': 'total',
+            'count': 1500,
+            'object_id': '2010'
         },
     )
     initial_counts = initial_counts + extra
@@ -31,10 +59,6 @@ def create_initial_counts(extra=()):
 class CachedCountTestCase(TestCase):
     def setUp(self):
         create_initial_counts()
-
-    def test_object_urls(self):
-        for count in CachedCount.objects.filter(count_type='constituency'):
-            self.assertTrue(count.object_url)
 
     def test_increment_count(self):
         self.assertEqual(CachedCount.objects.get(object_id='party:53').count, 0)
@@ -50,9 +74,9 @@ class CachedCountTestCase(TestCase):
 
 class TestCachedCountsCreateCommand(TestCase):
 
-    @patch('candidates.popit.PopIt')
-    def test_cached_counts_create_command(self, mock_popit):
-        mock_popit.return_value.persons = FakePersonCollection
+    @patch('candidates.popit.requests')
+    def test_cached_counts_create_command(self, mock_requests):
+        mock_requests.get.side_effect = fake_mp_post_search_results
         call_command('cached_counts_create')
         non_zero_counts = CachedCount.objects.exclude(count=0). \
             order_by('count_type', 'name', 'object_id'). \

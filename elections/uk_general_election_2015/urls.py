@@ -39,5 +39,9 @@ urlpatterns = [
     url(
         r'^person/create/$',
         views.PersonCreateRedirect.as_view()
+    ),
+    url(
+        r'^numbers/(?P<rest_of_path>constituencies|parties)$',
+        views.CachedCountsRedirect.as_view()
     )
 ]
