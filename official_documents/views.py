@@ -12,7 +12,7 @@ class DocumentView(DetailView):
     def get_context_data(self, **kwargs):
         context = {}
         context['constituency'] = \
-            MapItData.areas_by_id[('WMC', 22)][self.object.mapit_id]
+            MapItData.areas_by_id[('WMC', 22)][self.object.post_id]
         context.update(kwargs)
         return context
 
@@ -24,13 +24,13 @@ class CreateDocumentView(GroupRequiredMixin, CreateView):
 
     def get_initial(self):
         return {
-            'mapit_id': self.kwargs['mapit_id'],
+            'post_id': self.kwargs['post_id'],
             'document_type': OfficialDocument.NOMINATION_PAPER
         }
 
     def get_context_data(self, **kwargs):
         context = {}
         context['constituency'] = \
-            MapItData.areas_by_id[('WMC', 22)][self.kwargs['mapit_id']]
+            MapItData.areas_by_id[('WMC', 22)][self.kwargs['post_id']]
         context.update(kwargs)
         return context

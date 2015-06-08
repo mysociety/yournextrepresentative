@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 print u"No URL for {0}".format(name)
                 continue
             existing_documents = OfficialDocument.objects.filter(
-                mapit_id=cons_data['id']
+                post_id=cons_data['id']
             )
             if existing_documents.count() > 0:
                 print u"Skipping {0} since it already had documents".format(name)
@@ -75,8 +75,8 @@ class Command(BaseCommand):
                     name,
                 )
                 continue
-            filename = "official_documents/{mapit_id}/statement-of-persons-nominated{extension}".format(
-                mapit_id=cons_data['id'],
+            filename = "official_documents/{post_id}/statement-of-persons-nominated{extension}".format(
+                post_id=cons_data['id'],
                 extension=extension,
             )
             with open(downloaded_filename, 'rb') as f:
@@ -84,7 +84,7 @@ class Command(BaseCommand):
             OfficialDocument.objects.create(
                 document_type=OfficialDocument.NOMINATION_PAPER,
                 uploaded_file=storage_filename,
-                mapit_id=cons_data['id'],
+                post_id=cons_data['id'],
                 source_url=document_url
             )
             message = "Successfully added the Statement of Persons Nominated for {0}"

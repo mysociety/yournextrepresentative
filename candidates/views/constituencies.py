@@ -96,7 +96,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         for t in OfficialDocument.DOCUMENT_TYPES:
             documents_by_type[t[0]] = []
         for od in OfficialDocument.objects.filter(
-            mapit_id=mapit_area_id
+            post_id=mapit_area_id
         ):
             documents_by_type[od.document_type].append(od)
         context['official_documents'] = documents_by_type.items()

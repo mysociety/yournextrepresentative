@@ -28,7 +28,7 @@ TEST_MEDIA_ROOT=realpath(
 @patch('candidates.popit.PopIt')
 class TestModels(TestUserMixin, WebTest):
 
-    mapit_id = '65808'
+    post_id = '65808'
 
     def test_upload_unauthorized(self, mock_popit):
         mock_popit.return_value.posts = FakePostCollection
@@ -39,7 +39,7 @@ class TestModels(TestUserMixin, WebTest):
         csrftoken = self.app.cookies['csrftoken']
         upload_url = reverse(
             'upload_document_view',
-            kwargs={'mapit_id': self.mapit_id}
+            kwargs={'post_id': self.post_id}
         )
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
         with open(image_filename) as f:
@@ -47,7 +47,7 @@ class TestModels(TestUserMixin, WebTest):
                 upload_url,
                 {
                     'csrfmiddlewaretoken': csrftoken,
-                    'mapit_id': self.mapit_id,
+                    'post_id': self.post_id,
                     'document_type': OfficialDocument.NOMINATION_PAPER,
                     'source_url': 'http://example.org/foo',
                     '': Upload('pilot.jpg', f.read())
@@ -72,7 +72,7 @@ class TestModels(TestUserMixin, WebTest):
             unicode(response)
         )
         response = self.app.get(
-            reverse('upload_document_view', args=(self.mapit_id,)),
+            reverse('upload_document_view', args=(self.post_id,)),
             user=self.user_who_can_upload_documents,
         )
         form = response.forms['document-upload-form']
@@ -86,4 +86,4 @@ class TestModels(TestUserMixin, WebTest):
         self.assertEqual(ods.count(), 1)
         od = ods[0]
         self.assertEqual(od.source_url, 'http://example.org/foo')
-        self.assertEqual(od.mapit_id, '65808')
+        self.assertEqual(od.post_id, '65808')
