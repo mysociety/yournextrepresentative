@@ -294,6 +294,16 @@ def get_mapit_id_from_mapit_url(mapit_url):
         raise Exception("Failed to parse the MapIt URL: {0}".format(mapit_url))
     return m.group(1)
 
+def create_or_update(api_collection, data):
+    try:
+        api_collection.post(data)
+    except HttpServerError as hse:
+        # If that already exists, use PUT to update the post instead:
+        if 'E11000' in hse.content:
+            api_collection(data['id']).put(data)
+        else:
+            raise
+
 def create_person_with_id_retries(api, data):
     id_to_try = MaxPopItIds.get_max_persons_id() + 1
     id_str = str(id_to_try)
