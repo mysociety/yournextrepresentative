@@ -22,6 +22,7 @@ class OfficialDocument(TimeStampedModel):
         (NOMINATION_PAPER, NOMINATION_PAPER),
     )
 
+    election = models.CharField(blank=True, null=True, max_length=512)
     document_type = models.CharField(
         blank=False,
         choices=DOCUMENT_TYPES,

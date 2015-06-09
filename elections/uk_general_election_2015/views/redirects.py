@@ -39,3 +39,8 @@ class CachedCountsRedirect(RedirectView):
         else:
             new_rest_of_path = 'parties'
         return '/numbers/election/2015/' + new_rest_of_path
+
+class OfficialDocumentsRedirect(RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return '/upload_document/upload/election/2015/post/' + kwargs['rest_of_path']

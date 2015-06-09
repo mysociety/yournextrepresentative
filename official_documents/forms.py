@@ -6,6 +6,7 @@ class UploadDocumentForm(forms.ModelForm):
     class Meta:
         model = OfficialDocument
         fields = (
+            'election',
             'uploaded_file',
             'source_url',
             'post_id',
@@ -13,4 +14,5 @@ class UploadDocumentForm(forms.ModelForm):
         )
 
     post_id = forms.CharField(widget=forms.HiddenInput())
+    election = forms.CharField(widget=forms.HiddenInput())
     document_type = forms.CharField(widget=forms.HiddenInput())

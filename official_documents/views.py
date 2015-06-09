@@ -1,5 +1,7 @@
 from django.views.generic import CreateView, DetailView
 
+from candidates.cache import get_post_cached
+from candidates.popit import create_popit_api_object
 from candidates.static_data import MapItData
 from auth_helpers.views import GroupRequiredMixin
 
@@ -10,10 +12,10 @@ class DocumentView(DetailView):
     model = OfficialDocument
 
     def get_context_data(self, **kwargs):
-        context = {}
-        context['constituency'] = \
-            MapItData.areas_by_id[('WMC', 22)][self.object.post_id]
-        context.update(kwargs)
+        context = super(DocumentView, self).get_context_data(**kwargs)
+        api = create_popit_api_object()
+        post_data = get_post_cached(api, self.object.post_id)['result']
+        context['post_label'] = post_data['label']
         return context
 
 class CreateDocumentView(GroupRequiredMixin, CreateView):
@@ -24,13 +26,14 @@ class CreateDocumentView(GroupRequiredMixin, CreateView):
 
     def get_initial(self):
         return {
+            'election': self.kwargs['election'],
+            'document_type': OfficialDocument.NOMINATION_PAPER,
             'post_id': self.kwargs['post_id'],
-            'document_type': OfficialDocument.NOMINATION_PAPER
         }
 
     def get_context_data(self, **kwargs):
-        context = {}
-        context['constituency'] = \
-            MapItData.areas_by_id[('WMC', 22)][self.kwargs['post_id']]
-        context.update(kwargs)
+        context = super(CreateDocumentView, self).get_context_data(**kwargs)
+        api = create_popit_api_object()
+        post_data = get_post_cached(api, self.kwargs['post_id'])['result']
+        context['post_label'] = post_data['label']
         return context

@@ -7,7 +7,7 @@
            <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a><br>
         {% endfor %}
         {% if user_can_upload_documents %}
-          <a href="{% url 'upload_document_view' post_data.id %}">
+          <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">
           Upload an updated Statement of Nominated Persons</a>.
         {% endif %}
       {% else %}
@@ -16,7 +16,7 @@
           adding them to this google spreadsheet</a>?
         {% if user_can_upload_documents %}
           Or, as you have permission to upload documents, you can
-          <a href="{% url 'upload_document_view' post_data.id %}">
+          <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">
           upload it directly</a>.
         {% endif %}
       {% endif %}

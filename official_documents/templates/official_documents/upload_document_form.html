@@ -4,7 +4,7 @@
 
 
 {% block content %}
-<h2>Document relating to {{ constituency.name }}</h2>
+<h2>Document relating to {{ post_label }}</h2>
 <form id="document-upload-form" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}

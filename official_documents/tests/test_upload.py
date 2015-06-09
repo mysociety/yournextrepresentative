@@ -39,7 +39,7 @@ class TestModels(TestUserMixin, WebTest):
         csrftoken = self.app.cookies['csrftoken']
         upload_url = reverse(
             'upload_document_view',
-            kwargs={'post_id': self.post_id}
+            kwargs={'election': '2015', 'post_id': self.post_id}
         )
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
         with open(image_filename) as f:
@@ -72,7 +72,7 @@ class TestModels(TestUserMixin, WebTest):
             unicode(response)
         )
         response = self.app.get(
-            reverse('upload_document_view', args=(self.post_id,)),
+            reverse('upload_document_view', args=('2015', self.post_id,)),
             user=self.user_who_can_upload_documents,
         )
         form = response.forms['document-upload-form']

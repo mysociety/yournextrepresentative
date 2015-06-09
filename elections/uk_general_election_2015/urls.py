@@ -43,5 +43,8 @@ urlpatterns = [
     url(
         r'^numbers/(?P<rest_of_path>constituencies|parties)$',
         views.CachedCountsRedirect.as_view()
-    )
+    ),
+    url(r'^upload_document/upload/(?P<rest_of_path>[^/]*/)$',
+        views.OfficialDocumentsRedirect.as_view()
+    ),
 ]
