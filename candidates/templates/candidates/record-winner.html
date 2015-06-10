@@ -18,28 +18,6 @@
 
 {{ form.person_id }}
 
-{% if parlparse_id %}
-  <p>
-    We've already identified {{ person.name }} with
-    <a href="http://www.theyworkforyou.com/mp/{{ parlparse_id }}">this
-    TheyWorkForYou profile</a>. However, if that's wrong, you can correct
-    it:
-  </p>
-{% else %}
-  <p>
-    It's possible that {{ person.name }} already has a profile on
-    <a href="http://www.theyworkforyou.com/">TheyWorkForYou</a> that we
-    haven't spotted. If you can find one, please enter
-    {{ person.possessive_pronounce }} ID on TheyWorkForYou here:
-  </p>
-{% endif %}
-
-<div>
-{{ form.parlparse_id.errors }}
-{{ form.parlparse_id.label_tag }}
-{{ form.parlparse_id }}
-</div>
-
 <div>
 {{ form.source.errors }}
 {{ form.source.label_tag }}
