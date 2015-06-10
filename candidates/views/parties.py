@@ -5,7 +5,6 @@ import requests
 
 from cached_counts.models import CachedCount
 
-from ..models import get_identifier
 from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
 from ..static_data import MapItData, PartyData
 from ..election_specific import (
@@ -67,15 +66,6 @@ class PartyDetailView(PopItApiMixin, TemplateView):
             raise Http404("Party not found")
         party = self.api.organizations(party_id).get(embed='')['result']
 
-        # <<<< for UK-specific
-        party_ec_id = get_identifier('electoral-commission', party)
-        context['ec_url'] = None
-        if party_ec_id:
-            ec_tmpl = 'http://search.electoralcommission.org.uk/English/Registrations/{0}'
-            context['ec_url'] = ec_tmpl.format(party_ec_id)
-        context['register'] = party.get('register')
-        # >>>> end of for UK-specific
-
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
             (i.get('notes', ''), i['proxy_url'] + '/240/0')
@@ -109,6 +99,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                     'post_id': post_id,
                     'constituency_name': mapit_data['name']
                 }
+        context['party'] = party
         context['party_name'] = party_name
         relevant_post_groups = party_to_possible_post_groups(party)
         candidates_by_post_group = {}

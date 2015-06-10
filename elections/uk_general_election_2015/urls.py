@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 
 from . import views
@@ -17,6 +18,13 @@ urlpatterns = [
         r'^lookup/postcode$',
         views.ConstituencyPostcodeFinderView.as_view(),
         name='lookup-postcode'
+    ),
+    url(
+        r'^election/{election}/party/(?P<organization_id>[a-z-]+:[-\d]+)/(?P<ignored_slug>.*)$'.format(
+            election=settings.ELECTION_RE
+        ),
+        views.UKPartyDetailView.as_view(),
+        name='party'
     ),
     # These should all be redirects to the new URL scheme:
     url(
