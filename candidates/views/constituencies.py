@@ -70,23 +70,23 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         context['election'] = election = kwargs['election']
         context['election_data'] = settings.ELECTIONS[election]
-        context['mapit_area_id'] = mapit_area_id = kwargs['mapit_area_id']
+        context['post_id'] = post_id = kwargs['post_id']
         context['constituency_name'] = \
-            get_constituency_name_from_mapit_id(mapit_area_id)
+            get_constituency_name_from_mapit_id(post_id)
 
         if not context['constituency_name']:
             raise Http404("Constituency not found")
 
         context['electionleaflets_url'] = \
-            get_electionleaflets_url(mapit_area_id, context['constituency_name'])
+            get_electionleaflets_url(post_id, context['constituency_name'])
 
         context['meetyournextmp_url'] = \
-            u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(mapit_area_id)
+            u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(post_id)
 
         context['redirect_after_login'] = \
             urlquote(reverse('constituency', kwargs={
                 'election': election,
-                'mapit_area_id': mapit_area_id,
+                'post_id': post_id,
                 'ignored_slug': slugify(context['constituency_name'])
             }))
 
@@ -96,12 +96,12 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         for t in OfficialDocument.DOCUMENT_TYPES:
             documents_by_type[t[0]] = []
         for od in OfficialDocument.objects.filter(
-            post_id=mapit_area_id
+            post_id=post_id
         ):
             documents_by_type[od.document_type].append(od)
         context['official_documents'] = documents_by_type.items()
 
-        mp_post = get_post_cached(self.api, mapit_area_id)
+        mp_post = get_post_cached(self.api, post_id)
 
         context['post_data'] = {
             k: v for k, v in mp_post['result'].items()
@@ -113,7 +113,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         )
         context['lock_form'] = ToggleLockForm(
             initial={
-                'post_id': mapit_area_id,
+                'post_id': post_id,
                 'lock': not context['candidates_locked'],
             },
         )
@@ -150,7 +150,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         context['add_candidate_form'] = NewPersonForm(
             election=election,
-            initial={'constituency': mapit_area_id}
+            initial={'constituency': post_id}
         )
 
         return context
@@ -218,7 +218,7 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
             return HttpResponseRedirect(
                 reverse('constituency', kwargs={
                     'election': kwargs['election'],
-                    'mapit_area_id': post_id,
+                    'post_id': post_id,
                     'ignored_slug': slugify(data['area']['name']),
                 })
             )
@@ -274,7 +274,7 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         )
         self.person = PopItPerson.create_from_popit(self.api, person_id)
         self.constituency_name = \
-            get_constituency_name_from_mapit_id(self.kwargs['mapit_area_id'])
+            get_constituency_name_from_mapit_id(self.kwargs['post_id'])
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
 
@@ -288,14 +288,14 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         context = super(ConstituencyRecordWinnerView, self). \
             get_context_data(**kwargs)
         context['election'] = self.kwargs['election']
-        context['mapit_area_id'] = self.kwargs['mapit_area_id']
+        context['post_id'] = self.kwargs['post_id']
         context['constituency_name'] = self.constituency_name
         context['person'] = self.person
         return context
 
     def form_valid(self, form):
         winner = self.person
-        post = get_post_cached(self.api, self.kwargs['mapit_area_id'])['result']
+        post = get_post_cached(self.api, self.kwargs['post_id'])['result']
         people_for_invalidation = set()
         for membership in post.get('memberships', []):
             if membership.get('role') != 'Candidate':
@@ -338,13 +338,13 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
             person_for_invalidation.invalidate_cache_entries()
         # This shouldn't be necessary since invalidating the people
         # will invalidate the post
-        invalidate_posts([self.kwargs['mapit_area_id']])
+        invalidate_posts([self.kwargs['post_id']])
         return HttpResponseRedirect(
             reverse(
                 'constituency',
                 kwargs={
                     'election': self.kwargs['election'],
-                    'mapit_area_id': self.kwargs['mapit_area_id'],
+                    'post_id': self.kwargs['post_id'],
                     'ignored_slug': slugify(self.constituency_name),
                 }
             )
@@ -357,10 +357,10 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        mapit_area_id = self.kwargs['mapit_area_id']
+        post_id = self.kwargs['post_id']
         election = self.kwargs['election']
-        constituency_name = get_constituency_name_from_mapit_id(mapit_area_id)
-        post = get_post_cached(self.api, mapit_area_id)['result']
+        constituency_name = get_constituency_name_from_mapit_id(post_id)
+        post = get_post_cached(self.api, post_id)['result']
         for membership in post.get('memberships', []):
             if membership.get('role') != 'Candidate':
                 continue
@@ -390,12 +390,12 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
             )
         # This shouldn't be necessary since invalidating the people
         # will invalidate the post
-        invalidate_posts([mapit_area_id])
+        invalidate_posts([post_id])
         return HttpResponseRedirect(
             reverse(
                 'constituency',
                 kwargs={
-                    'mapit_area_id': mapit_area_id,
+                    'post_id': post_id,
                     'election': election,
                     'ignored_slug': slugify(constituency_name),
                 }

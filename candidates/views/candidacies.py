@@ -30,9 +30,9 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/candidacy-create.html'
 
     def form_valid(self, form):
-        mapit_area_id = form.cleaned_data['mapit_area_id']
+        post_id = form.cleaned_data['post_id']
         election = self.kwargs['election']
-        raise_if_locked(self.api, self.request, mapit_area_id)
+        raise_if_locked(self.api, self.request, post_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
         )
@@ -51,7 +51,7 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
         # Update standing_in and party_memberships:
         new_standing_in = person.standing_in.copy()
         new_standing_in[election] = get_area_from_post_id(
-            mapit_area_id,
+            post_id,
             mapit_url_key='mapit_url'
         )
         person.standing_in = new_standing_in
@@ -62,13 +62,13 @@ class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(election, mapit_area_id)
+        return get_redirect_from_mapit_id(election, post_id)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
         context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
-            self.request.POST.get('mapit_area_id')
+            self.request.POST.get('post_id')
         )
         return context
 
@@ -79,9 +79,9 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/candidacy-delete.html'
 
     def form_valid(self, form):
-        mapit_area_id = form.cleaned_data['mapit_area_id']
+        post_id = form.cleaned_data['post_id']
         election = self.kwargs['election']
-        raise_if_locked(self.api, self.request, mapit_area_id)
+        raise_if_locked(self.api, self.request, post_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
         )
@@ -109,12 +109,12 @@ class CandidacyDeleteView(LoginRequiredMixin, PopItApiMixin, FormView):
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(election, mapit_area_id)
+        return get_redirect_from_mapit_id(election, post_id)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
         context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
-            self.request.POST.get('mapit_area_id')
+            self.request.POST.get('post_id')
         )
         return context

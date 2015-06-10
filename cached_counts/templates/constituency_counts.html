@@ -10,7 +10,7 @@
         <tbody>
         {% for object in object_list %}
             <tr {% if object.count == 0 %}class="no_known"{% endif%}>
-                <td><a href="{% url 'constituency' election=election mapit_area_id=object.object_id ignored_slug=object.name|slugify %}">{{ object.name}}</a></td>
+                <td><a href="{% url 'constituency' election=election post_id=object.object_id ignored_slug=object.name|slugify %}">{{ object.name}}</a></td>
                 <td>{{ object.count}}</td>
             </tr>
         {% endfor %}

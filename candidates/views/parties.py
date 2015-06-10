@@ -98,15 +98,15 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                 standing_in = person.get('standing_in')
                 if not (standing_in and standing_in.get('2015')):
                     continue
-                mapit_area_id = standing_in['2015'].get('post_id')
-                mapit_data = MapItData.areas_by_id[('WMC', 22)].get(mapit_area_id)
+                post_id = standing_in['2015'].get('post_id')
+                mapit_data = MapItData.areas_by_id[('WMC', 22)].get(post_id)
                 if not mapit_data:
                     continue
                 post_group = area_to_post_group(mapit_data)
-                by_post_group[post_group][mapit_area_id] = {
+                by_post_group[post_group][post_id] = {
                     'person_id': person['id'],
                     'person_name': person['name'],
-                    'post_id': mapit_area_id,
+                    'post_id': post_id,
                     'constituency_name': mapit_data['name']
                 }
         context['party_name'] = party_name

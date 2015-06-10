@@ -53,7 +53,7 @@ will be debating at MeetYourNextMP.com</a>.</div>
     </p>
     <form method="post" action="{% url 'constituency-cache-invalidate' %}">
       {% csrf_token %}
-      <input type="hidden" name="mapit_area_id", value="{{ mapit_area_id }}">
+      <input type="hidden" name="post_id", value="{{ post_id }}">
       <input type="submit" class="button" value="Invalidate">
     </form>
   </div>

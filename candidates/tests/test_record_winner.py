@@ -30,7 +30,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             'record-winner',
             kwargs={
                 'election': '2015',
-                'mapit_area_id': '65808',
+                'post_id': '65808',
             }
         )
         self.assertIn(
@@ -72,7 +72,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             'record-winner',
             kwargs={
                 'election': '2015',
-                'mapit_area_id': '65808',
+                'post_id': '65808',
             }
         )
         form_get_response = self.app.get(
@@ -110,7 +110,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             'record-winner',
             kwargs={
                 'election': '2015',
-                'mapit_area_id': '65808',
+                'post_id': '65808',
             }
         )
         form_get_response = self.app.get(
@@ -163,7 +163,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             'record-winner',
             kwargs={
                 'election': '2015',
-                'mapit_area_id': '65808',
+                'post_id': '65808',
             }
         )
         form_get_response = self.app.get(
@@ -224,7 +224,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             'record-winner',
             kwargs={
                 'election': '2015',
-                'mapit_area_id': '65735',
+                'post_id': '65735',
             }
         )
         form_get_response = self.app.get(

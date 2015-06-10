@@ -24,7 +24,7 @@ def get_redirect_from_mapit_id(election, mapit_id):
             'constituency',
             kwargs={
                 'election': election,
-                'mapit_area_id': mapit_id,
+                'post_id': mapit_id,
                 'ignored_slug': slugify(constituency_name),
             }
         )

@@ -31,8 +31,8 @@ class BaseCandidacyForm(forms.Form):
         label='Person ID',
         max_length=256,
     )
-    mapit_area_id = forms.CharField(
-        label='MapIt Area ID',
+    post_id = forms.CharField(
+        label='Post ID',
         max_length=256,
     )
 

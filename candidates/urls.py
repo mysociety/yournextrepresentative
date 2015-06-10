@@ -174,7 +174,7 @@ urlpatterns += [
     url(
         p['pattern'].format(
             election=settings.ELECTION_RE,
-            post=r'(?P<mapit_area_id>[-\w]+)',
+            post=r'(?P<post_id>[-\w]+)',
         ),
         p['view'],
         name=p['name'],

@@ -1,7 +1,7 @@
 <form method="post" action="{% url action %}">
   {% csrf_token %}
   <input type="hidden" name="person_id" value="{{ person.id }}"/>
-  <input type="hidden" name="mapit_area_id" value="{{ constituency.id }}"/>
+  <input type="hidden" name="post_id" value="{{ constituency.id }}"/>
   <label for="id_source"> Please indicate your source for that information in the box
 below:</label>
   <div class="row">

@@ -1,8 +1,8 @@
 from django.core.cache import cache
 
-def post_cache_key(mapit_area_id):
+def post_cache_key(post_id):
     """Form the cache key used for post data"""
-    return "post:{0}".format(mapit_area_id)
+    return "post:{0}".format(post_id)
 
 def person_cache_key(person_id):
     """Form the cache key used for person data"""
@@ -17,13 +17,13 @@ def invalidate_person(person_id):
     person_key = person_cache_key(person_id)
     cache.delete(person_key)
 
-def get_post_cached(api, mapit_area_id):
-    post_key = post_cache_key(mapit_area_id)
+def get_post_cached(api, post_id):
+    post_key = post_cache_key(post_id)
     result_from_cache = cache.get(post_key)
     if result_from_cache is not None:
         return result_from_cache
 
-    mp_post = api.posts(mapit_area_id).get(
+    mp_post = api.posts(post_id).get(
         embed='membership.person.membership.organization')
     # Add posts data with an indefinite time-out (we should be
     # invalidating the cached on any change).

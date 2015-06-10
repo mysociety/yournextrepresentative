@@ -45,9 +45,9 @@
           {% if candidate %}
             <li><a href="{% url 'person-view' person_id=candidate.person_id %}">{{ candidate.person_name }}</a>
               is standing in
-              <a href="{% url 'constituency' election=election mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ candidate.constituency_name }}</a></li>
+              <a href="{% url 'constituency' election=election post_id=post_id ignored_slug=constituency_name|slugify %}">{{ candidate.constituency_name }}</a></li>
           {% elif country_data.stats.show_all %}
-            <li>No candidate in <a href="{% url 'constituency' election=election mapit_area_id=post_id ignored_slug=constituency_name|slugify %}">{{ constituency_name }}</a></li>
+            <li>No candidate in <a href="{% url 'constituency' election=election post_id=post_id ignored_slug=constituency_name|slugify %}">{{ constituency_name }}</a></li>
           {% endif %}
         {% endfor %}
       </ul>

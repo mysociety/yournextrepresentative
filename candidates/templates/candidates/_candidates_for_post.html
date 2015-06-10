@@ -39,7 +39,7 @@
 
       c
       standing (either 'standing' or 'not-standing')
-      mapit_area_id
+      post_data.id
 
     official_documents/_post.html
 
@@ -70,7 +70,7 @@
   {% endif %}
 
   {% if user_can_record_results and show_retract_result %}
-    <form action="{% url 'retract-winner' election=election mapit_area_id=post_data.id %}" method="post">
+    <form action="{% url 'retract-winner' election=election post_id=post_data.id %}" method="post">
       {% csrf_token %}
       <input type="submit" class="button candidates-list__actions__winner-mistake" value="Unset the current winner, if incorrect">
     </form>
@@ -80,7 +80,7 @@
 
     <h3>Known candidates for
       {# Use the post label here, since multiple posts may be used on a page #}
-      <a href="{% url 'constituency' election=election mapit_area_id=post_data.id ignored_slug=post_data.label|slugify %}">{{ post_data.label }}</a>
+      <a href="{% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify %}">{{ post_data.label }}</a>
     </h3>
 
     {% for c in candidates %}
@@ -106,7 +106,7 @@
           {% endif %}
           {% endif %}
           {% if user_can_record_results and not c|election_decision_known:election %}
-            <form class="winner-confirm" action="{% url 'record-winner' election=election mapit_area_id=post_data.id %}" method="post">
+            <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="person_id" value="{{ c.id }}">
               <input type="hidden" name="source" value="[Quick update from the constituency page]">

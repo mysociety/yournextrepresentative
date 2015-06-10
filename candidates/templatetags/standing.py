@@ -27,7 +27,7 @@ def constituency_in_year(person, election):
                 'constituency',
                 kwargs={
                     'election': election,
-                    'mapit_area_id': standing_in[election]['post_id'],
+                    'post_id': standing_in[election]['post_id'],
                     'ignored_slug': slugify(standing_in[election]['name']),
                 }
             ),
