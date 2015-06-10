@@ -55,7 +55,7 @@ def unwrap_search_pagination(collection, query, **kwargs):
 
 def get_all_posts(role, **kwargs):
     kwargs.setdefault('embed', '')
-    return unwrap_search_pagination('posts', 'role:' + role, **kwargs)
+    return unwrap_search_pagination('posts', 'role:"' + role + '"', **kwargs)
 
 def merge_popit_dicts(primary, secondary):
     result = {}

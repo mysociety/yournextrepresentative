@@ -19,6 +19,11 @@ patterns_to_format = [
         'name': 'lookup-address',
     },
     {
+        'pattern': r'^posts$',
+        'view': views.PostListView.as_view(),
+        'name': 'posts',
+    },
+    {
         'pattern': r'^election/{election}/constituencies$',
         'view': views.ConstituencyListView.as_view(),
         'name': 'constituencies'
