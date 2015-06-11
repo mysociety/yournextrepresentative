@@ -44,3 +44,7 @@ def switch_link(symlink_filename, target_filename):
     os.symlink(target_filename, symlink_filename)
 
 switch_link(general_yml_symlink, general_yml_target)
+
+# Now touch manage.py to cause a restart if you're running the dev
+# server:
+os.utime(join(root_directory, 'manage.py'), None)
