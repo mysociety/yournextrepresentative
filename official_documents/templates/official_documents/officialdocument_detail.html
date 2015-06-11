@@ -11,12 +11,10 @@
 {% block content %}
 
 <p>
-{{ object.document_type }} for <a href="{% url 'constituency' mapit_area_id=object.mapit_id ignored_slug=constituency.name|slugify %}">{{ constituency.name }}</a>.
+{{ object.document_type }} for <a href="{% url 'constituency' election=object.election post_id=object.post_id ignored_slug=post_label|slugify %}">{{ post_label }}</a>.
 The source URL for this document was:
 <a href="{{ object.source_url }}">{{ object.source_url }}</a>
 </p>
-
-
 
 <iframe
   src="http{% if request.is_secure %}s{% endif %}://docs.google.com/viewer?url=http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}{{ object.uploaded_file.url | urlencode}}&amp;embedded=true"

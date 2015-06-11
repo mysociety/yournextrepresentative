@@ -2,6 +2,7 @@
 
 import re
 
+from .models.address import check_address
 from .static_data import MapItData, PartyData
 
 from django import forms
@@ -9,53 +10,29 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django_date_extensions.fields import ApproximateDateFormField
 
-from .mapit import get_wmc_from_postcode, BaseMapItException
-from .models import UserTermsAgreement
-from .static_data import MapItData
-
-class PostcodeForm(forms.Form):
-    postcode = forms.CharField(
-        label='Enter your postcode',
-        max_length=20
+class AddressForm(forms.Form):
+    address = forms.CharField(
+        label='Enter your address or town',
+        max_length=2048,
     )
 
-    def clean_postcode(self):
-        postcode = self.cleaned_data['postcode']
-        try:
-            # Go to MapIt to check if this postcode is valid and
-            # contained in a constituency. (If it's valid then the
-            # result is cached, so this doesn't cause a double lookup.)
-            get_wmc_from_postcode(postcode)
-        except BaseMapItException as e:
-            raise ValidationError(unicode(e))
-        return postcode
+    def clean_address(self):
+        address = self.cleaned_data['address']
+        check_address(address)
+        return address
 
-class ConstituencyForm(forms.Form):
-    constituency = forms.ChoiceField(
-        label='Select a constituency',
-        choices=[('none', '')] + sorted(
-            [
-                (mapit_id, constituency['name'])
-                for mapit_id, constituency
-                in MapItData.constituencies_2010.items()
-            ],
-            key=lambda t: t[1]
-        )
-    )
+    def tidy_address(self, address):
+        '''This is here so you can override it to add, say, ", Argentina"'''
+        return address
 
-    def clean_constituency(self):
-        constituency = self.cleaned_data['constituency']
-        if constituency == 'none':
-            raise ValidationError("You must select a constituency")
-        return constituency
 
 class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(
         label='Person ID',
         max_length=256,
     )
-    mapit_area_id = forms.CharField(
-        label='MapIt Area ID',
+    post_id = forms.CharField(
+        label='Post ID',
         max_length=256,
     )
 
@@ -156,43 +133,74 @@ class BasePersonForm(forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
-        # Make sure that there is a party selected; we need to do this
-        # from the clean method rather than single field validation
-        # since the party field that should be checked depends on the
-        # selected constituency.
-        constituency = cleaned_data['constituency']
-        try:
-            mapit_area = MapItData.constituencies_2010[constituency]
-        except KeyError:
-            message = "If you mark the candidate as standing in 2015, you must select a constituency"
-            raise forms.ValidationError(message)
-        if mapit_area['country_name'] == 'Northern Ireland':
-            party_field = 'party_ni'
-        else:
-            party_field = 'party_gb'
-        party_id = cleaned_data[party_field]
-        if party_id not in PartyData.party_id_to_name:
-            message = "You must specify a party for the 2015 election"
-            raise forms.ValidationError(message)
+        for election, election_data in settings.ELECTIONS_CURRENT:
+
+            standing_status = cleaned_data.get(
+                'standing_' + election, 'standing'
+            )
+            if standing_status != 'standing':
+               continue
+
+            # Make sure that there is a party selected; we need to do this
+            # from the clean method rather than single field validation
+            # since the party field that should be checked depends on the
+            # selected constituency.
+            constituency = cleaned_data['constituency_' + election]
+            try:
+                mapit_area = MapItData.areas_by_id[('WMC', 22)][constituency]
+            except KeyError:
+                message = "If you mark the candidate as standing in the "
+                message += "{election}, you must select a constituency"
+                raise forms.ValidationError(
+                    message.format(election=election_data['name'])
+                )
+            if mapit_area['country_name'] == 'Northern Ireland':
+                party_field = 'party_ni_' + election
+            else:
+                party_field = 'party_gb_' + election
+            party_id = cleaned_data[party_field]
+            if party_id not in PartyData.party_id_to_name:
+                message = "You must specify a party for the 2015 election"
+                raise forms.ValidationError(message)
         return cleaned_data
 
 
 class NewPersonForm(BasePersonForm):
-    constituency = forms.CharField(
-        label="Constituency in 2015",
-        max_length=256,
-        widget=forms.HiddenInput(),
-    )
-    party_gb = forms.ChoiceField(
-        label="Party in 2015 (Great Britain)",
-        choices=PartyData.party_choices['Great Britain'],
-        required=False,
-    )
-    party_ni = forms.ChoiceField(
-        label="Party in 2015 (Northern Ireland)",
-        choices=PartyData.party_choices['Northern Ireland'],
-        required=False,
-    )
+
+    def __init__(self, *args, **kwargs):
+        election = kwargs.pop('election', None)
+        super(NewPersonForm, self).__init__(*args, **kwargs)
+
+        if election not in settings.ELECTIONS:
+            raise Exception, "Unknown election {0}".format(election)
+
+        election_data = settings.ELECTIONS[election]
+        self.fields['constituency_' + election] = \
+            forms.CharField(
+                label=("Constituency in " + election_data['name']),
+                max_length=256,
+                widget=forms.HiddenInput(),
+            )
+        # It seems to be common in elections around the world for
+        # there to be different sets of parties that candidates can
+        # stand for depending on, for example, where in the country
+        # they're standing. (For example, in the UK General Election,
+        # there is a different register of parties for Northern
+        # Ireland and Great Britain constituencies.) We create a party
+        # choice field for each such "party set" and make sure only
+        # the appropriate one is shown, depending on the election and
+        # selected constituency, using Javascript.
+        for party_set in PartyData.party_sets:
+            self.fields['party_' + party_set['slug'] + '_' + election] = \
+                forms.ChoiceField(
+                    label="Party in {election} ({party_set_name})".format(
+                        election=election_data['name'],
+                        party_set_name=party_set['name'],
+                    ),
+                    choices=PartyData.party_choices[party_set['name']],
+                    required=False,
+                )
+
     source = forms.CharField(
         label=u"Source of information ({0})".format(
             settings.SOURCE_HINTS
@@ -214,37 +222,50 @@ class NewPersonForm(BasePersonForm):
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
 class UpdatePersonForm(BasePersonForm):
+
     STANDING_CHOICES = (
         ('not-sure', "Don’t Know"),
         ('standing', "Yes"),
         ('not-standing', "No"),
     )
-    standing = forms.ChoiceField(
-        label='Standing in 2015',
-        choices=STANDING_CHOICES,
-    )
-    constituency = forms.ChoiceField(
-        label='Constituency in 2015',
-        required=False,
-        choices=[('', '')] + sorted(
-            [
-                (mapit_id, constituency['name'])
-                for mapit_id, constituency
-                in MapItData.constituencies_2010.items()
-            ],
-            key=lambda t: t[1]
-        )
-    )
-    party_gb = forms.ChoiceField(
-        label="Party in 2015 (Great Britain)",
-        choices=PartyData.party_choices['Great Britain'],
-        required=False,
-    )
-    party_ni = forms.ChoiceField(
-        label="Party in 2015 (Northern Ireland)",
-        choices=PartyData.party_choices['Northern Ireland'],
-        required=False,
-    )
+
+    def __init__(self, *args, **kwargs):
+        super(UpdatePersonForm, self).__init__(*args, **kwargs)
+
+        # The fields on this form depends on how many elections are
+        # going on at the same time. (FIXME: this might be better done
+        # with formsets?)
+
+        for election, election_data in settings.ELECTIONS_CURRENT:
+            self.fields['standing_' + election] = \
+                forms.ChoiceField(
+                    label=('Standing in ' + election_data['name']),
+                    choices=self.STANDING_CHOICES,
+                )
+            self.fields['constituency_' + election] = \
+                forms.ChoiceField(
+                    label=('Constituency in ' + election_data['name']),
+                    required=False,
+                    choices=[('', '')] + sorted(
+                        [
+                            (mapit_id, constituency['name'])
+                            for mapit_id, constituency
+                            in MapItData.areas_by_id[('WMC', 22)].items()
+                        ],
+                        key=lambda t: t[1]
+                    )
+                )
+            for party_set in PartyData.party_sets:
+                self.fields['party_' + party_set['slug'] + '_' + election] = \
+                    forms.ChoiceField(
+                        label="Party in {election} ({party_set_name})".format(
+                            election=election_data['name'],
+                            party_set_name=party_set['name'],
+                        ),
+                        choices=PartyData.party_choices[party_set['name']],
+                        required=False,
+                    )
+
     source = forms.CharField(
         label=u"Source of information for this change ({0})".format(
             settings.SOURCE_HINTS
@@ -263,9 +284,8 @@ class UpdatePersonForm(BasePersonForm):
 
     def clean(self):
         cleaned_data = super(UpdatePersonForm, self).clean()
-        if cleaned_data['standing'] == 'standing':
-            return self.check_party_and_constituency_are_selected(cleaned_data)
-        return cleaned_data
+        return self.check_party_and_constituency_are_selected(cleaned_data)
+
 
 class UserTermsAgreementForm(forms.Form):
 
@@ -298,7 +318,7 @@ class ToggleLockForm(forms.Form):
 
     def clean_post_id(self):
         post_id = self.cleaned_data['post_id']
-        if post_id not in MapItData.constituencies_2010:
+        if post_id not in MapItData.areas_by_id[('WMC', 22)]:
             message = '{0} was not a known post ID'
             raise ValidationError(message.format(post_id))
         return post_id

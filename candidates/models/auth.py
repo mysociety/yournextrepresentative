@@ -25,6 +25,12 @@ def get_constituency_lock_from_person_data(user, api, person_popit_data):
         standing_in_2015.get('post_id')
     )
 
+def get_edits_allowed(user, candidates_locked):
+    return user.is_authenticated() and (
+        user_in_group(user, TRUSTED_TO_LOCK_GROUP_NAME) or
+        (not candidates_locked)
+    )
+
 def get_constituency_lock(user, api, post_id):
     """Return whether the constituency is locked and whether this user can edit"""
 
@@ -34,10 +40,7 @@ def get_constituency_lock(user, api, post_id):
     # PopIt, even if it brings in embeds that we don't need:
     post_data = get_post_cached(api, post_id)['result']
     candidates_locked = bool(post_data.get('candidates_locked'))
-    edits_allowed = (
-        user_in_group(user, TRUSTED_TO_LOCK_GROUP_NAME) or
-        not candidates_locked
-    )
+    edits_allowed = get_edits_allowed(user, candidates_locked)
     return candidates_locked, edits_allowed
 
 def check_creation_allowed(user, api, new_popit_data):

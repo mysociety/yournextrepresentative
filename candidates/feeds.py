@@ -49,7 +49,7 @@ class RecentChangesFeed(Feed):
         m = lock_re.search(item.source)
         if m:
             return reverse('constituency', kwargs={
-                'mapit_area_id': m.group(2),
+                'post_id': m.group(2),
                 'ignored_slug': slugify(m.group(1))
             })
         else:

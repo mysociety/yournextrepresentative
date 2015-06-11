@@ -10,16 +10,25 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+import importlib
 import os
+import re
 import sys
 import yaml
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 from .helpers import mkdir_p
 
+configuration_file_basename = 'general.yml'
+# All the test data is specific to the UK, so if we seem to be running
+# tests, use the general.yml-example (which has UK settings):
+if 'test' in sys.argv:
+    configuration_file_basename = 'general.yml-example'
+
 configuration_file = os.path.join(
-    BASE_DIR, 'conf', 'general.yml'
+    BASE_DIR, 'conf', configuration_file_basename
 )
+
 with open(configuration_file) as f:
     conf = yaml.load(f)
 
@@ -77,6 +86,9 @@ TEMPLATE_CONTEXT_PROCESSORS += (
     "mysite.context_processors.add_notification_data",
 )
 
+ELECTION_APP = conf['ELECTION_APP']
+ELECTION_APP_FULLY_QUALIFIED = 'elections.' + ELECTION_APP
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -96,12 +108,14 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
     'pipeline',
+    ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
     'tasks',
     'cached_counts',
     'moderation_queue',
     'auth_helpers',
     'debug_toolbar',
+    'template_timings_panel',
     'official_documents',
     'results',
 )
@@ -148,6 +162,22 @@ ROOT_URLCONF = 'mysite.urls'
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+]
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -330,3 +360,45 @@ CACHES = {
 RESTRICT_RENAMES = conf.get('RESTRICT_RENAMES')
 
 EDITS_ALLOWED = conf.get('EDITS_ALLOWED', True)
+
+# Import any settings from the election application's settings module:
+ELECTION_SETTINGS_MODULE = ELECTION_APP_FULLY_QUALIFIED + '.settings'
+elections_module = importlib.import_module(ELECTION_SETTINGS_MODULE)
+
+ELECTIONS = elections_module.ELECTIONS
+
+ELECTIONS_BY_DATE = sorted(
+    ELECTIONS.items(),
+    key=lambda e: (e[1]['election_date'], e[0]),
+)
+
+ELECTION_RE = '(?P<election>'
+ELECTION_RE += '|'.join(
+    re.escape(t[0]) for t in ELECTIONS_BY_DATE
+)
+ELECTION_RE += ')'
+
+ELECTIONS_CURRENT = [t for t in ELECTIONS_BY_DATE if t[1].get('current')]
+
+# FIXME: we should never really need "an arbitrary current election";
+# this is just here for the moment because we don't have a page for
+# "all elections for this point" yet (i.e. area pages) - places where
+# this is used in the code are effectively FIXMEs too.
+ARBITRARY_CURRENT_ELECTION = ELECTIONS_CURRENT[-1] if ELECTIONS_CURRENT else None
+
+# Make sure there's a trailing slash at the end of base MapIt URL:
+MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
+
+MAPIT_TYPES = set()
+for e in ELECTIONS_CURRENT:
+    for mapit_type in e[1]['mapit_types']:
+        MAPIT_TYPES.add(mapit_type)
+
+KNOWN_MAPIT_GENERATIONS = set(
+    e[1]['mapit_generation'] for e in ELECTIONS_CURRENT
+)
+if len(KNOWN_MAPIT_GENERATIONS) > 1:
+    message = "More than one MapIt generation for current elections: {0}"
+    raise Exception(message.format(KNOWN_MAPIT_GENERATIONS))
+
+MAPIT_CURRENT_GENERATION = list(KNOWN_MAPIT_GENERATIONS)[0]

@@ -25,7 +25,7 @@ class ResultEvent(models.Model):
 
     @property
     def constituency_name(self):
-        return MapItData.constituencies_2010[self.post_id]['name']
+        return MapItData.areas_by_id[('WMC', 22)][self.post_id]['name']
 
     @classmethod
     def create_from_popit_person(cls, popit_person, election, source, user):

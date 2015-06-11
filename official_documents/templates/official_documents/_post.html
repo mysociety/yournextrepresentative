@@ -1,0 +1,32 @@
+{% if official_documents %}
+  <p>The following official documents are associate with this post:</p>
+{% endif %}
+
+{% for doc_type, docs in official_documents %}
+
+  <h4>{{ doc_type|pluralize }}</h4>
+
+  {% if docs %}
+
+    <ul>
+      {% for doc in docs %}
+        <li><a href="{{ doc.get_absolute_url }}">{{ doc.document_type }}</a> uploaded on
+          {{ doc.created }}
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+
+    We don't have any {{ paper_type|pluralize }} for the post
+    {{ post_data.label }}
+
+    {% if user_can_upload_documents %}
+      As you have permission to upload documents, you can
+      <a href="{% url 'upload_document_view' post_data.id %}">upload
+      a {{ paper_type }}</a>.
+    {% endif %}
+
+  {% endif %}
+
+{% endfor %}

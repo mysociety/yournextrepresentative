@@ -43,7 +43,7 @@ class ResultEventAdmin(admin.ModelAdmin):
         url = reverse(
             'constituency',
             kwargs={
-                'mapit_area_id': o.post_id,
+                'post_id': o.post_id,
                 'ignored_slug': slugify(o.constituency_name),
             }
         )

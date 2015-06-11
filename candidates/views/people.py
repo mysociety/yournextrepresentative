@@ -17,7 +17,6 @@ from braces.views import LoginRequiredMixin
 from auth_helpers.views import GroupRequiredMixin, user_in_group
 
 from ..diffs import get_version_diffs
-from .mixins import CandidacyMixin
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
@@ -25,8 +24,10 @@ from ..models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
     PopItPerson
 )
-from ..popit import merge_popit_people, PopItApiMixin
-
+from ..popit import (
+    merge_popit_people, PopItApiMixin, get_base_url
+)
+from ..static_data import PartyData
 
 class PersonView(PopItApiMixin, TemplateView):
     template_name = 'candidates/person-view.html'
@@ -39,7 +40,7 @@ class PersonView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
-        context['popit_api_url'] = self.get_base_url()
+        context['popit_api_url'] = get_base_url()
         path = self.person.get_absolute_url()
         context['redirect_after_login'] = urlquote(path)
         context['canonical_url'] = self.request.build_absolute_uri(path)
@@ -67,7 +68,7 @@ class PersonView(PopItApiMixin, TemplateView):
             return super(PersonView, self).get(request, *args, **kwargs)
 
 
-class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, View):
+class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
 
     http_method_names = [u'post']
 
@@ -114,7 +115,7 @@ class RevertPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, View):
             )
         )
 
-class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, View):
+class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
 
     http_method_names = [u'post']
     required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
@@ -172,7 +173,7 @@ class MergePeopleView(GroupRequiredMixin, CandidacyMixin, PopItApiMixin, View):
             })
         )
 
-class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView):
+class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
@@ -193,20 +194,28 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
         )
         context['person'] = person
 
-        context['class_for_2015_data'] = ''
-        if person.constituency_or_party_changes_allowed(
-                self.request.user,
-                self.api,
-        ):
-            context['class_for_2015_data'] = \
-                'person__2015-data-edit'
-
         context['user_can_merge'] = user_in_group(
             self.request.user,
             TRUSTED_TO_MERGE_GROUP_NAME
         )
 
         context['versions'] = get_version_diffs(person.versions)
+
+        context['constituencies_form_fields'] = []
+        for election, election_data in settings.ELECTIONS_BY_DATE:
+            if not election_data.get('current'):
+                continue
+            context['constituencies_form_fields'].append(
+                {
+                    'election_name': election_data['name'],
+                    'standing': kwargs['form']['standing_' + election],
+                    'constituency': kwargs['form']['constituency_' + election],
+                    'party_fields': [
+                        kwargs['form']['party_' + p['slug'] + '_' + election]
+                        for p in PartyData.party_sets
+                    ]
+                }
+            )
 
         return context
 
@@ -246,9 +255,14 @@ class UpdatePersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormVi
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
 
-class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView):
+class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
+
+    def get_form_kwargs(self):
+        kwargs = super(NewPersonView, self).get_form_kwargs()
+        kwargs['election'] = self.kwargs['election']
+        return kwargs
 
     def form_valid(self, form):
 
@@ -272,3 +286,8 @@ class NewPersonView(LoginRequiredMixin, CandidacyMixin, PopItApiMixin, FormView)
         action.popit_person_id = person_id
         action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
+
+    def get_context_data(self, **kwargs):
+        context = super(NewPersonView, self).get_context_data(**kwargs)
+        context['election'] = self.kwargs['election']
+        return context

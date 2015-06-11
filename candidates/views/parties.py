@@ -2,20 +2,22 @@ from django.http import Http404
 from django.views.generic import TemplateView
 
 import requests
-from slugify import slugify
 
 from cached_counts.models import CachedCount
 
-from ..models import get_identifier
-from ..popit import PopItApiMixin, popit_unwrap_pagination
+from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
 from ..static_data import MapItData, PartyData
-
+from ..election_specific import (
+    ALL_POSSIBLE_PARTY_POST_GROUPS, party_to_possible_post_groups,
+    area_to_post_group
+)
 
 class PartyListView(PopItApiMixin, TemplateView):
     template_name = 'candidates/party-list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PartyListView, self).get_context_data(**kwargs)
+        context['election'] = kwargs['election']
         party_ids_with_any_candidates = set(
             CachedCount.objects.filter(count_type='party', count__gt=0). \
                 values_list('object_id', flat=True)
@@ -35,10 +37,10 @@ class PartyListView(PopItApiMixin, TemplateView):
         return context
 
 
-def get_country_stats(constituencies):
+def get_post_group_stats(posts):
     total = 0
     candidates = 0
-    for t in constituencies:
+    for t in posts:
         total += 1
         if t[2]:
             candidates += 1
@@ -57,26 +59,25 @@ class PartyDetailView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PartyDetailView, self).get_context_data(**kwargs)
+        context['election'] = kwargs['election']
         party_id = kwargs['organization_id']
         party_name = PartyData.party_id_to_name.get(party_id)
         if not party_name:
             raise Http404("Party not found")
         party = self.api.organizations(party_id).get(embed='')['result']
-        party_ec_id = get_identifier('electoral-commission', party)
-        context['ec_url'] = None
-        if party_ec_id:
-            ec_tmpl = 'http://search.electoralcommission.org.uk/English/Registrations/{0}'
-            context['ec_url'] = ec_tmpl.format(party_ec_id)
+
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
             (i.get('notes', ''), i['proxy_url'] + '/240/0')
             for i in party.get('images', [])
         ]
-        countries = ('England', 'Northern Ireland', 'Scotland', 'Wales')
-        by_country = {c: {} for c in countries}
-        url = self.get_search_url(
+        by_post_group = {pg: {} for pg in ALL_POSSIBLE_PARTY_POST_GROUPS}
+        url = get_search_url(
             'persons',
-            u'party_memberships.2015.id:"{0}"'.format(party_id),
+            'party_memberships.{0}.id:"{1}"'.format(
+                kwargs['election'],
+                party_id,
+            ),
             per_page=100
         )
         while url:
@@ -87,38 +88,34 @@ class PartyDetailView(PopItApiMixin, TemplateView):
                 standing_in = person.get('standing_in')
                 if not (standing_in and standing_in.get('2015')):
                     continue
-                mapit_area_id = standing_in['2015'].get('post_id')
-                mapit_data = MapItData.constituencies_2010.get(mapit_area_id)
+                post_id = standing_in['2015'].get('post_id')
+                mapit_data = MapItData.areas_by_id[('WMC', 22)].get(post_id)
                 if not mapit_data:
                     continue
-                by_country[mapit_data['country_name']][mapit_area_id] = {
+                post_group = area_to_post_group(mapit_data)
+                by_post_group[post_group][post_id] = {
                     'person_id': person['id'],
                     'person_name': person['name'],
-                    'post_id': mapit_area_id,
+                    'post_id': post_id,
                     'constituency_name': mapit_data['name']
                 }
+        context['party'] = party
         context['party_name'] = party_name
-        context['register'] = party.get('register')
-        if context['register'] == 'Northern Ireland':
-            relevant_countries = ('Northern Ireland',)
-        elif context['register'] == 'Great Britain':
-            relevant_countries = ('England', 'Scotland', 'Wales')
-        else:
-            relevant_countries = ('England', 'Northern Ireland', 'Scotland', 'Wales')
-        candidates_by_country = {}
-        for country in relevant_countries:
-            candidates_by_country[country] = None
-            if by_country[country]:
-                constituencies = [
-                    (c[0], c[1], by_country[country].get(c[0]))
-                    for c in MapItData.constituencies_2010_by_country[country]
+        relevant_post_groups = party_to_possible_post_groups(party)
+        candidates_by_post_group = {}
+        for post_group in relevant_post_groups:
+            candidates_by_post_group[post_group] = None
+            if by_post_group[post_group]:
+                posts = [
+                    (c[0], c[1], by_post_group[post_group].get(c[0]))
+                    for c in MapItData.area_ids_and_names_by_post_group[('WMC', 22)][post_group]
                 ]
-                candidates_by_country[country] = {
-                    'constituencies': constituencies,
-                    'stats': get_country_stats(constituencies),
+                candidates_by_post_group[post_group] = {
+                    'constituencies': posts,
+                    'stats': get_post_group_stats(posts),
                 }
-        context['candidates_by_country'] = sorted(
-            candidates_by_country.items(),
+        context['candidates_by_post_group'] = sorted(
+            candidates_by_post_group.items(),
             key=lambda k: k[0]
         )
         return context

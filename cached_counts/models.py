@@ -16,22 +16,23 @@ class CachedCount(models.Model):
     name = models.CharField(blank=False, max_length=100)
     count = models.IntegerField(blank=False, null=False)
     object_id = models.CharField(blank=True, max_length=100)
+    election = models.CharField(blank=True, null=True, max_length=512)
 
     class Meta:
         ordering = ['-count', 'name']
 
-    @classmethod
-    def total_2015(cls):
-        print cls.objects.get(name="total_2015")
-        return cls.objects.get(name="total_2015").count
+    def __repr__(self):
+        fmt = '<CachedCount: election={e} count_type={ct}, name={n}, count={c}, object_id={o}>'
+        return fmt.format(
+            e=repr(self.election),
+            ct=repr(self.count_type),
+            n=repr(self.name),
+            c=repr(self.count),
+            o=repr(self.object_id),
+        )
 
-    @property
-    def object_url(self):
-        if self.count_type == "constituency":
-            return reverse('constituency', kwargs={
-                'mapit_area_id': self.object_id,
-                'ignored_slug': slugify(self.name)
-            })
+    def __unicode__(self):
+        return repr(self)
 
     @classmethod
     def increment_count(cls, count_type, object_id):

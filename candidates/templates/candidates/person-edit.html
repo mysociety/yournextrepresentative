@@ -19,7 +19,7 @@
   <h1>Editing: {{ person.name }}</h1>
   {% with last_cons=person.last_cons %}
     {% if last_cons %}
-      <p>Candidate for <a href="{% url 'constituency' last_cons.1.post_id last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
+      <p>Candidate for <a href="{% url 'constituency' election=last_cons.0 post_id=last_cons.1.post_id ignored_slug=last_cons.1.name|slugify %}">{{ last_cons.1.name }}</a> in {{ last_cons.0 }}</p>
     {% endif %}
   {% endwith %}
 </div>
@@ -80,40 +80,43 @@
         {{ form.email.errors }}
       </div>
 
-      <div class="{{ class_for_2015_data }}">
+      <div>
         <h2>Constituencies:</h2>
 
-        <div class="form-item {% if form.standing.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.standing.label_tag }}
-            {{ form.standing }}
-          </p>
-          {{ form.standing.errors }}
-        </div>
+        {% for constituency_fields in constituencies_form_fields %}
 
-        <div class="form-item {% if form.constituency.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.constituency.label_tag }}
-            {{ form.constituency }}
-          </p>
-          {{ form.constituency.errors }}
-        </div>
+          <h3>{{ constituency_fields.election_name }}</h3>
 
-        <div class="form-item {% if form.party_gb.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.party_gb.label_tag }}
-            {{ form.party_gb }}
-          </p>
-          {{ form.party_gb.errors }}
-        </div>
+          <div class="form-item {% if constituency_fields.standing.errors %}form-item--errors{% endif %}">
+            <p>
+              {{ constituency_fields.standing.label_tag }}
+              {{ constituency_fields.standing }}
+            </p>
+            {{ constituency_fields.standing.errors }}
+          </div>
 
-        <div class="form-item {% if form.party_ni.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.party_ni.label_tag }}
-            {{ form.party_ni }}
-          </p>
-          {{ form.party_ni.errors }}
-        </div>
+          <div class="form-item {% if constituency_fields.constituency.errors %}form-item--errors{% endif %}">
+            <p>
+              {{ constituency_fields.constituency.label_tag }}
+              {{ constituency_fields.constituency }}
+            </p>
+            {{ constituency_fields.constituency.errors }}
+          </div>
+
+          {% for party_field in constituency_fields.party_fields %}
+
+            <div class="form-item {% if party_field.errors %}form-item--errors{% endif %}">
+              <p>
+                {{ party_field.label_tag }}
+                {{ party_field }}
+              </p>
+              {{ party_field.errors }}
+            </div>
+
+          {% endfor %}
+
+        {% endfor %}
+
       </div>
 
       <h2>Links and social media:</h2>

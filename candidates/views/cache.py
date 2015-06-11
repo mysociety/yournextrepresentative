@@ -31,12 +31,12 @@ class InvalidatePostView(LoginRequiredMixin, StaffuserRequiredMixin, View):
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
-        post_id = request.POST['mapit_area_id']
+        post_id = request.POST['post_id']
         if re.search(r'^\d+$', post_id):
             invalidate_posts([post_id])
         return HttpResponseRedirect(
             reverse('constituency', kwargs={
-                'mapit_area_id': post_id,
+                'post_id': post_id,
                 'ignored_slug': ''
             })
         )

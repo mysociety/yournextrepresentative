@@ -7,8 +7,9 @@ cryptography==0.8
 Django==1.7.4
 django-allauth==0.18.0
 django-braces==1.4.0
-django_date_extensions==0.1dev
+django-date-extensions==0.1.dev0
 django-debug-toolbar==1.2.1
+django-debug-toolbar-template-timings==0.6.4
 django-nose==1.3
 django-pipeline==1.3.25
 django-webtest==1.7.7
@@ -32,6 +33,7 @@ PopIt-Python==0.1.10
 psycopg2==2.5.4
 pyasn1==0.1.7
 pycparser==2.10
+pygeocoder==1.2.5
 pyOpenSSL==0.14
 python-dateutil==2.2
 python-magic==0.4.6
@@ -45,7 +47,7 @@ six==1.7.3
 slumber==0.6.0
 South==1.0.1
 sqlparse==0.1.11
-Unidecode==0.04.17
+Unidecode==0.4.17
 waitress==0.8.9
 WebOb==1.4
 WebTest==2.0.15

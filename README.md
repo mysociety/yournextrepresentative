@@ -108,3 +108,30 @@ master database in MongoDB.
 Then set the maximum PopIt person ID by running:
 
     ./manage.py candidates_set_max_person_id
+
+### Customizing YourNextMP for a new election
+
+(This is a rough description at the moment; making YourNextMP fully
+generic is a work-in-progress.)
+
+To use this code to collect informations about candidates in a new
+jurisdiction, you should start by adding a new election application
+under `elections` - you can use `uk_general_election_2015` as an
+example. You should then set `ELECTION_APP` in your `general.yml` to
+the name of that application (not including `elections.`).
+
+In that application, you should create a `settings` module which
+defines `ELECTIONS`.
+
+If you want to customize behaviour of YourNextMP for this
+jurisdiction, then you can do one of the following:
+
+* Override generic templates in your election application.
+
+* Add a urls.py and views.py and override and augment and of the
+  generic URLs that you want to customize.
+
+* Some behaviour can be customized by adding functions or variables in
+  `lib.py` in your election application.
+
+FIXME: add details of translating the interface
