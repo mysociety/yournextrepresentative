@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize i18n %}
 
 {% block hero %}
 <div class="person__hero">
-  <h1>Reports</h1>
+  <h1>{% trans "Reports" %}</h1>
 </div>
 {% endblock hero %}
 
@@ -12,46 +12,50 @@
   {% for era, elections in all_elections.items %}
 
     <div class="statistics-elections {{ era }}">
-      <h2>{{ era|title }} Elections</h2>
+      <h2>{% blocktrans with era=era|title %}{{ era }} Elections{% endblocktrans %}</h2>
 
       {% for election in elections %}
+        {% with election_name=election.name %}
         <div id="statistics-election-{{ election.id }}">
-           <h3>Statistics for the {{ election.name }}<h3>
+           <h3>{% blocktrans %}Statistics for the {{ election_name }}{% endblocktrans %}</h3>
            <ul>
-             <li>Total candidates: {{ election.total }}</li>
-             <li><a href="{% url "posts_counts" election=election.id %}">Candidates per post</a></li>
-             <li><a href="{% url "parties_counts" election=election.id %}">Candidates per party</a></li>
+             <li>{% blocktrans with total=election.total %}Total candidates:{% endblocktrans %} {{ total }}</li>
+             <li><a href="{% url "posts_counts" election=election.id %}">{% trans "Candidates per post" %}</a></li>
+             <li><a href="{% url "parties_counts" election=election.id %}">{% trans "Candidates per party" %}</a></li>
            </ul>
            {% if election.prior_elections %}
              {% for prior_election in election.prior_elections %}
+               {% with prior_election_name=prior_election.name %}
                <div "statistics-compared-to-prior-election">
-                 <h4>Statistics compared to the {{ prior_election.name }}<h4>
+                 <h4>{% blocktrans %}Statistics compared to the {{ prior_election_name }}{% endblocktrans %}</h4>
                  <ul>
-                   <li>Total candidates in {{ prior_election.name }}:
+                   <li>{% blocktrans %}Total candidates in {{ prior_election_name }}:{% endblocktrans %}
                      {{ prior_election.total }}
                    </li>
-                   <li>Percentage ({{ election.name }} / {{ prior_election.name }}):
+                   <li>{% blocktrans %}Percentage ({{ election_name }} / {{ prior_election_name }}):{% endblocktrans %}
                      {{ prior_election.percentage|floatformat }}%
                    </li>
-                   <li>New candidates compared to the {{ prior_election.name }}
+                   <li>{% blocktrans %}New candidates compared to the {{ prior_election_name }}:{% endblocktrans %}
                      {{ prior_election.new_candidates|intcomma }}
                    </li>
-                   <li>Candidates standing again from the {{ prior_election.name }}
+                   <li>{% blocktrans %}Candidates standing again from the {{ prior_election_name }}:{% endblocktrans %}
                      {{ prior_election.standing_again |intcomma }}
                    </li>
-                   <li>Candidates standing again from the {{ prior_election.name }}
-                     for the same party:
+                   <li>{% blocktrans trimmed %}Candidates standing again from the {{ prior_election_name }}
+                     for the same party:{% endblocktrans %}
                      {{ prior_election.standing_again_same_party|intcomma }}
                    </li>
-                   <li>Candidates standing again from the {{ prior_election.name }}
-                     for a different party:
+                   <li>{% blocktrans trimmed %}Candidates standing again from the {{ prior_election_name }}
+                     for a different party:{% endblocktrans %}
                      {{ prior_election.standing_again_different_party |intcomma }}
                    </li>
                  </ul>
                </div>
+               {% endwith %}
              {% endfor %}
           {% endif %}
         </div>
+        {% endwith %}
       {% endfor %}
 
     </div>

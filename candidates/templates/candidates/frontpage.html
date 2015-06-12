@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
 {% load metadescription %}
 
 {% block extra_head %}
@@ -29,10 +30,9 @@
 
 {% block hero %}
 
-  <h1>Find candidates to be your next representative</h1>
+  <h1>{% trans "Find candidates to be your next representative" %}</h1>
 
-  <p class="lead"> Don’t pay for a candidate database sold by a data vendor —
-it’s a waste of money.</p>
+  <p class="lead">{% trans "Don’t pay for a candidate database sold by a data vendor — it’s a waste of money." %}</p>
 
 {% endblock %}
 
@@ -42,7 +42,7 @@ it’s a waste of money.</p>
 
   <form id="form-address" action="{% url 'lookup-address' %}" method="post">
     {{ form.as_p }}
-    <input type="submit" class="button" value="Show candidates" />
+    <input type="submit" class="button" value="{% trans "Show candidates" %}">
   </form>
 
 </div>
@@ -51,14 +51,15 @@ it’s a waste of money.</p>
 
 <div class="finder__description">
   <div class="container">
-    <p>This is a crowd-sourced database of election candidates.
+    <p>{% trans "This is a crowd-sourced database of election candidates." %}
     </p>
-    <p>The database is transparently sourced and
-      available as structured data, suitable for building other
-      election websites.
-      <a href="{% url 'help-api' %}">Get the data now</a>, or
-      <a href="{% url "tasks_home" %}">help by contributing new candidate
-      details.</a>
+    {% url 'help-api' as api_url %}
+    {% url "tasks_home" as tasks_url %}
+    <p>{% blocktrans trimmed %}The database is transparently sourced and
+      available as structured data, suitable for building other election
+      websites. <a href="{{ api_url }}">Get the data now</a>, or
+      <a href="{{ tasks_url }}">help by contributing new candidate details.</a>
+      {% endblocktrans %}
     </p>
   </div>
 </div>
@@ -67,52 +68,103 @@ it’s a waste of money.</p>
 
 <div class="finder__activity">
   <div class="finder__activity__changes">
-    <h2><a href="{% url 'recent-changes' %}">Recent changes</a></h2>
+    <h2><a href="{% url 'recent-changes' %}">{% trans "Recent changes" %}</a></h2>
     <ol>
       {% for action in recent_actions %}
-        <li>User <strong>{{ action.user.username }}</strong>
+        <li>{% with username=action.user.username when=action.created|timesince person_id=action.popit_person_id %}
+          {% url 'person-view' person_id=person_id as person_url %}
           {% if action.action_type == 'person-create' %}
-            {% if action.popit_person_id %}
-              created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+            {% if person_id %}
+            {% blocktrans trimmed %}
+              User <strong>{{ username }}</strong>
+              created <a href="{{ person_url }}">a new candidate</a>
+              <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
             {% else %}
-              is creating a new candidate
+            {% blocktrans trimmed %}
+              User <strong>{{ username }}</strong> is creating a new candidate
+              <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
             {% endif %}
           {% elif action.action_type == 'person-merge' %}
-            merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            merged another candidate into <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'photo-upload' %}
-            uploaded a photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> for moderation
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            uploaded a photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a> for moderation
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'photo-approve' %}
-            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            approved an uploaded photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'photo-reject' %}
-            rejected an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            rejected an uploaded photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'person-revert' %}
-            reverted to an earlier version of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            reverted to an earlier version of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'candidacy-create' %}
-            confirmed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            confirmed candidacy for <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'candidacy-delete' %}
-            removed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            removed candidacy for <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'constituency-lock' %}
-            locked a constituency
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong> locked a constituency <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'constituency-unlock' %}
-            unlocked a constituency
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong> unlocked a constituency <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% elif action.action_type == 'set-candidate-elected' %}
-            marked <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> as the winner
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            marked <a href="{{ person_url }}">candidate #{{ person_id }}</a> as the winner
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% else %}
-            updated <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            {% blocktrans trimmed %}
+            User <strong>{{ username }}</strong>
+            updated <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            <span class="when">{{ when }} ago</span>
+            {% endblocktrans %}
           {% endif %}
-        <span class="when">{{ action.created|timesince }} ago</span></li>
+        {% endwith %}</li>
       {% endfor %}
     </ol>
-    <p class="more"><a href="{% url 'recent-changes' %}">Show more changes…</a></p>
+    <p class="more"><a href="{% url 'recent-changes' %}">{% trans "Show more changes…" %}</a></p>
   </div>
   <div class="finder__activity__leaderboard">
-    <h2><a href="{% url 'leaderboard' %}">Top users this week</a></h2>
+    <h2><a href="{% url 'leaderboard' %}">{% trans "Top users this week" %}</a></h2>
     <ol>
       {% for row in top_users %}
-        <li><strong>{{ row.username }}</strong> <span class="edits">{{ row.edit_count }} edit{{ row.edit_count|pluralize }}</span></li>
+        <li><strong>{{ row.username }}</strong>
+        <span class="edits">{% blocktrans trimmed count count=row.edit_count %}
+           {{ count }} edit{% plural %}{{ count }} edits
+          {% endblocktrans %}</span></li>
       {% endfor %}
     </ol>
-    <p class="more"><a href="{% url 'leaderboard' %}">Show full leaderboard…</a></p>
+    <p class="more"><a href="{% url 'leaderboard' %}">{% trans "Show full leaderboard…" %}</a></p>
   </div>
 </div>
 

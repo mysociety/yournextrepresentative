@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from django.db.models import Count
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from ..models import LoggedAction
 from ..static_data import MapItData
@@ -13,8 +14,8 @@ class ContributorsMixin(object):
     def get_leaderboards(self):
         result = []
         for title, since in [
-            ('All Time', None),
-            ('In the last week', timezone.now() - timedelta(days=7))
+            (_('All Time'), None),
+            (_('In the last week'), timezone.now() - timedelta(days=7))
         ]:
             interesting_actions=LoggedAction.objects.exclude(
                 action_type='set-candidate-not-elected'

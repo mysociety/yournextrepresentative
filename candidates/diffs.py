@@ -3,11 +3,13 @@
 
 import re
 
+from django.utils.translation import ugettext as _
+
 import jsonpatch
 import jsonpointer
 
 def get_descriptive_value(year, attribute, value, leaf):
-    """Get a sentence fragmetn describing someone's status in a particular year
+    """Get a sentence fragment describing someone's status in a particular year
 
     'attribute' is either "standing_in" or "party_membership", 'year'
     is either "2010" or "2015", and 'value' is what would be under
@@ -20,46 +22,46 @@ def get_descriptive_value(year, attribute, value, leaf):
             # In that case, there's only a particular value in the
             # dictionary that's changed:
             if leaf == 'name':
-                message = u"{0} known to be standing for the party '{1}' in {2}"
+                message = _(u"{0} known to be standing for the party '{1}' in {2}")
                 return message.format(prefix, value, year)
             elif leaf == 'id':
-                message = u'{0} known to be standing for the party with ID {1} in {2}'
+                message = _(u'{0} known to be standing for the party with ID {1} in {2}')
                 return message.format(prefix, value, year)
             else:
-                message = u"Unexpected leaf {0} (attribute: {1}, year: {2}"
+                message = _(u"Unexpected leaf {0} (attribute: {1}, year: {2}")
                 raise Exception, message.format(
                     leaf, attribute, year
                 )
         else:
-            message = u'{0} known to be standing for the party "{1}" in {2}'
+            message = _(u'{0} known to be standing for the party "{1}" in {2}')
             return message.format(prefix, value['name'], year)
     elif attribute == 'standing_in':
         if value is None:
-            message = u'{0} known not to be standing in {1}'
+            message = _(u'{0} known not to be standing in {1}')
             return message.format(prefix, year)
         else:
             if leaf:
                 if leaf == 'post_id':
-                    message = "{0} known to be standing for the post with ID {1} in {2}"
+                    message = _("{0} known to be standing for the post with ID {1} in {2}")
                     return message.format(prefix, value, year)
                 elif leaf == 'mapit_url':
-                    message = "{0} known to be standing in the constituency with MapIt URL {1} in {2}"
+                    message = _("{0} known to be standing in the constituency with MapIt URL {1} in {2}")
                     return message.format(prefix, value, year)
                 elif leaf == 'name':
-                    message = "{0} known to be standing in {1} in {2}"
+                    message = _("{0} known to be standing in {1} in {2}")
                     return message.format(prefix, value, year)
                 elif leaf == 'elected':
-                    return "was {whether}elected in {year}".format(
-                        whether=('' if value else 'not '),
-                        year=year
-                    )
+                    if value:
+                        return _("was elected in {year}").format(year=year)
+                    else:
+                        return _("was not elected in {year}").format(year=year)
                 else:
-                    message = u"Unexpected leaf {0} (attribute: {1}, year: {2}"
+                    message = _(u"Unexpected leaf {0} (attribute: {1}, year: {2}")
                     raise Exception, message.format(
                         leaf, attribute, year
                     )
             else:
-                message = u'{0} known to be standing in {1} in {2}'
+                message = _(u'{0} known to be standing in {1} in {2}')
                 return message.format(prefix, value['name'], year)
 
 def explain_standing_in_and_party_memberships(operation, attribute, year, leaf):

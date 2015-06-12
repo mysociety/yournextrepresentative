@@ -1,29 +1,30 @@
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
+from django.utils.translation import ugettext_lazy as _
 
 from .models import ResultEvent
 
 
 class BasicResultEventsFeed(Feed):
     feed_type = Atom1Feed
-    title = "Election results from YourNextMP"
+    title = _("Election results from YourNextMP")
     link = "/"
-    description = "A basic feed of results from the UK 2015 General Election"
+    description = _("A basic feed of results from the UK 2015 General Election")
 
     def items(self):
         return ResultEvent.objects.all()
 
     def item_title(self, item):
-        return u'{name} ({party}) won in {cons}'.format(
+        return _(u'{name} ({party}) won in {cons}').format(
             name=item.winner_person_name,
             party=item.winner_party_name,
             cons=item.constituency_name,
         )
 
     def item_description(self, item):
-        message = u'A YourNextMP volunteer recorded at {datetime} that ' \
-            u'{name} ({party}) won the ballot in {cons}, quoting the ' \
-            u"source '{source}'."
+        message = _(u'A YourNextMP volunteer recorded at {datetime} that '
+            u'{name} ({party}) won the ballot in {cons}, quoting the '
+            u"source '{source}').")
         return message.format(
             name=item.winner_person_name,
             datetime=item.created.strftime("%Y-%m-%d %H:%M:%S"),
@@ -76,8 +77,8 @@ class ResultEventsAtomFeedGenerator(Atom1Feed):
 
 class ResultEventsFeed(BasicResultEventsFeed):
     feed_type = ResultEventsAtomFeedGenerator
-    title = "Election results from YourNextMP (with extra data)"
-    description = "A feed of results from the UK 2015 General Election (with extra data)"
+    title = _("Election results from YourNextMP (with extra data)")
+    description = _("A feed of results from the UK 2015 General Election (with extra data)")
 
     def item_extra_kwargs(self, o):
         return {

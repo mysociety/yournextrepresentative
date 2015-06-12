@@ -1,4 +1,5 @@
 from django.views.generic import FormView
+from django.utils.translation import ugettext as _
 
 from braces.views import LoginRequiredMixin
 
@@ -21,7 +22,7 @@ def raise_if_locked(api, request, post_id):
     # Otherwise, if the constituency is locked, raise an exception:
     data = api.posts(post_id).get(embed='')
     if data.get('candidates_locked'):
-        raise Exception("Attempt to edit a candidacy in a locked constituency")
+        raise Exception(_("Attempt to edit a candidacy in a locked constituency"))
 
 
 class CandidacyView(LoginRequiredMixin, PopItApiMixin, FormView):

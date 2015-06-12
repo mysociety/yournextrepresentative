@@ -65,7 +65,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         form['postcode'] = 'CB2 8RQ'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
-        self.assertIn('The postcode &quot;CB2 8RQ&quot; couldn&#39;t be found', response)
+        self.assertIn('The postcode “CB2 8RQ” couldn’t be found', response)
 
     def test_nonsense_postcode_returns_to_finder_with_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit

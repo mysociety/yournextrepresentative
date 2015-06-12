@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+from django.utils.translation import ugettext_lazy as _
 import importlib
 import os
 import re
@@ -212,6 +213,10 @@ TIME_ZONE = 'Europe/London'
 
 USE_I18N = True
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
+
 USE_L10N = True
 
 USE_TZ = True
@@ -331,8 +336,8 @@ NOSE_ARGS = [
     '--ignore-files=faces',
 ]
 
-SOURCE_HINTS = u'''Please don't quote third-party candidate sites \u2014
-we prefer URLs of news stories or official candidate pages.'''
+SOURCE_HINTS = _(u'''Please don't quote third-party candidate sites \u2014
+we prefer URLs of news stories or official candidate pages.''')
 
 # By default, cache successful results from MapIt for a day
 MAPIT_CACHE_SECONDS = 86400

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block body_class %}{% endblock %}
 
-{% block title %}Confirm that {{ person.name }} won in {{ constituency_name }}{% endblock %}
+{% block title %}{% blocktrans with name=person.name %}Confirm that {{ name }} won in {{ constituency_name }}{% endblocktrans %}{% endblock %}
 
 {% block hero %}
-  <h1>Confirm that {{ person.name }} won</h1>
+  <h1>{% blocktrans with name=person.name %}Confirm that {{ name }} won{% endblocktrans %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -27,10 +28,11 @@
 <input
     type="submit"
     class="button"
-    value="Yes, {{ person.name }} ({{ person.last_party.name }}) won in {{ constituency_name }}"/>
+    value="{% blocktrans trimmed with name=person.name party=person.last_party.name %}
+Yes, {{ name }} ({{ party }}) won in {{ constituency_name }}{% endblocktrans %}"/>
 
 <p>
-<a href="{% url 'constituency' election=election post_id=post_id ignored_slug=constituency_name|slugify %}" class="button">Cancel</a>
+<a href="{% url 'constituency' election=election post_id=post_id ignored_slug=constituency_name|slugify %}" class="button">{% trans "Cancel" %}</a>
 </p>
 
 </form>

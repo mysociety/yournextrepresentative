@@ -9,6 +9,7 @@ from slugify import slugify
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 import django.dispatch
 from django_date_extensions.fields import ApproximateDate
 from slumber.exceptions import HttpServerError, HttpClientError
@@ -151,14 +152,14 @@ def parse_approximate_date(s):
             return ApproximateDate(*(int(g, 10) for g in m.groups()))
     if s == 'future':
         return ApproximateDate(future=True)
-    raise Exception, "Couldn't parse '{0}' as an ApproximateDate".format(s)
+    raise Exception, _("Couldn't parse '{0}' as an ApproximateDate").format(s)
 
 def get_area_from_post_id(post_id, mapit_url_key='id'):
     "Get a MapIt area ID from a candidate list organization's PopIt data"
 
     mapit_data = MapItData.areas_by_id[('WMC', 22)].get(post_id)
     if mapit_data is None:
-        message = "Couldn't find the constituency with Post and MapIt Area ID: '{0}'"
+        message = _("Couldn't find the constituency with Post and MapIt Area ID: '{0}'")
         raise Exception(message.format(post_id))
     url_format = 'http://mapit.mysociety.org/area/{0}'
     return {
@@ -202,7 +203,7 @@ def complete_partial_date(iso_8601_date_partial, start=True):
     elif re.search(r'^\d{4}-\d{2}-\d{2}$', iso_8601_date_partial):
         return iso_8601_date_partial
     else:
-        raise Exception, "Unknown partial ISO 8601 data format: {0}".format(iso_8601_date_partial)
+        raise Exception, _("Unknown partial ISO 8601 data format: {0}").format(iso_8601_date_partial)
 
 def membership_covers_date(membership, date):
     """See if the dates in a membership cover a particular date
@@ -291,7 +292,7 @@ def get_identifier(scheme, popit_object):
 def get_mapit_id_from_mapit_url(mapit_url):
     m = re.search(r'http://mapit.mysociety.org/area/(\d+)', mapit_url)
     if not m:
-        raise Exception("Failed to parse the MapIt URL: {0}".format(mapit_url))
+        raise Exception(_("Failed to parse the MapIt URL: {0}").format(mapit_url))
     return m.group(1)
 
 def create_or_update(api_collection, data):
@@ -563,7 +564,7 @@ class PopItPerson(object):
             return super(PopItPerson, self).__getattr__(name)
         else:
             raise AttributeError(
-                "'PopItPerson' has no attribute '{0}'".format(name)
+                _("'PopItPerson' has no attribute '{0}'").format(name)
             )
 
     def __setattr__(self, name, value):
@@ -616,7 +617,7 @@ class PopItPerson(object):
 
     def get_second_last_version(self):
         if len(self.versions) < 2:
-            raise Exception, "There was no previous version of this person"
+            raise Exception, _("There was no previous version of this person")
         return PopItPerson.create_from_reduced_json(
             self.versions[1]['data']
         )
@@ -801,7 +802,7 @@ class PopItPerson(object):
         if parlparse_id:
             m = re.search(r'^uk.org.publicwhip/person/(\d+)$', parlparse_id)
             if not m:
-                message = "Malformed parlparse ID found {0}"
+                message = _("Malformed parlparse ID found {0}")
                 raise Exception, message.format(parlparse_id)
             parlparse_person_id = m.group(1)
             theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
@@ -1191,7 +1192,7 @@ class PopItPerson(object):
                     constituency_mapit_id
                 )
                 if not constituency_name:
-                    message = "Failed to find a constituency with MapIt ID {}"
+                    message = _("Failed to find a constituency with MapIt ID {}")
                     raise Exception(message.format(constituency_mapit_id))
                 new_standing_in[election] = \
                     get_area_from_post_id(constituency_mapit_id, mapit_url_key='mapit_url')
@@ -1228,10 +1229,10 @@ class PopItPerson(object):
     def set_elected(self, was_elected, election):
         standing_in = self.standing_in
         if not standing_in:
-            message = "Can't set_elected of a candidate with no standing_in"
+            message = _("Can't set_elected of a candidate with no standing_in")
             raise Exception, message
         if not standing_in.get(election):
-            message = "No standing_in information for {0}".format(election)
+            message = _("No standing_in information for {0}").format(election)
         if was_elected is None:
             del standing_in[election]['elected']
         else:

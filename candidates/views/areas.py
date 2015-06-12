@@ -3,6 +3,7 @@ import re
 from django.conf import settings
 from django.http import HttpResponseBadRequest
 from django.views.generic import TemplateView
+from django.utils.translation import ugettext as _
 
 from candidates.cache import get_post_cached
 from candidates.models.auth import get_edits_allowed
@@ -19,7 +20,7 @@ class AreasView(PopItApiMixin, TemplateView):
         for type_and_area in kwargs['type_and_area_ids'].split(','):
             m = re.search(r'^([A-Z0-9]{3})-(\d+)$', type_and_area)
             if not m:
-                message = "Malformed type and area: '{0}'"
+                message = _("Malformed type and area: '{0}'")
                 return HttpResponseBadRequest(message.format(type_and_area))
             self.types_and_areas.append(m.groups())
         return super(AreasView, self).get(request, *args, **kwargs)

@@ -1,4 +1,5 @@
 {% load standing %}
+{% load i18n %}
 
 {% comment %}
 
@@ -58,29 +59,32 @@
       {% csrf_token %}
       {% for field in lock_form %}{{ field }}{% endfor %}
       <input type="submit" class="button small" value="{% if candidates_locked %}Unlock{% else %}Lock{% endif %} candidate list">
-      (This list of candidates is currently
-      <strong>{% if candidates_locked %}locked{% else %}unlocked{% endif %}</strong>.)
+      {% if candidates_locked %}
+        {% trans "(This list of candidates is currently <strong>locked</strong>.)" %}
+      {% else %}
+        {% trans "(This list of candidates is currently <strong>unlocked</strong>.)" %}
+      {% endif %}
     </form>
   {% else %}
     {% if candidates_locked %}
-      <p>This list of candidates is now <strong>locked</strong>;
+      <p>{% blocktrans trimmed %}This list of candidates is now <strong>locked</strong>;
       you can still update contact details of candidates, but
-      can't change the people standing in this constituency.</p>
+      can't change the people standing in this constituency.{% endblocktrans %}</p>
     {% endif %}
   {% endif %}
 
   {% if user_can_record_results and show_retract_result %}
     <form action="{% url 'retract-winner' election=election post_id=post_data.id %}" method="post">
       {% csrf_token %}
-      <input type="submit" class="button candidates-list__actions__winner-mistake" value="Unset the current winner, if incorrect">
+      <input type="submit" class="button candidates-list__actions__winner-mistake" value="{% trans "Unset the current winner, if incorrect" %}">
     </form>
   {% endif %}
 
   <div class="candidates__known">
 
-    <h3>Known candidates for
-      {# Use the post label here, since multiple posts may be used on a page #}
-      <a href="{% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify %}">{{ post_data.label }}</a>
+    {# Use the post label here, since multiple posts may be used on a page #}
+    {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
+    <h3>{% blocktrans with post_label=post_data.label %}Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
     </h3>
 
     {% for c in candidates %}
@@ -90,16 +94,16 @@
 
         <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if c|was_elected:election %} candidates-list__person__winner{% endif %}">
           {% if c|was_elected:election %}
-            <h4 class="candidates-list__person__elected-text">Winner</h4>
+            <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
           {% endif %}
 
           {% include 'candidates/_person_in_list.html' with election=election %}
           {% if user.is_authenticated %}
           <p>
             {% if candidate_list_edits_allowed %}
-              <a class="button tiny js-toggle-source-confirmation not-standing">Not actually standing?</a>
+              <a class="button tiny js-toggle-source-confirmation not-standing">{% trans "Not actually standing?" %}</a>
             {% endif %}
-            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
           </p>
           {% if candidate_list_edits_allowed %}
             {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
@@ -109,8 +113,8 @@
             <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="person_id" value="{{ c.id }}">
-              <input type="hidden" name="source" value="[Quick update from the constituency page]">
-              <input type="submit" class="button" value="This candidate won!">
+              <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
+              <input type="submit" class="button" value="{% trans "This candidate won!" %}">
             </form>
           {% endif %}
         </li>
@@ -120,14 +124,15 @@
       {% endif %}
     {% empty %}
       <div class="no-candidates row">
-        <p class="medium-8 columns"><strong>Oh no!</strong> We don’t know of any candidates in {{ post_data.label }}
-        for the {{ election_data.name }} yet.</p>
-        <p class="medium-4 columns"><a class="show-new-candidate-form button">Add a new candidate</a></p>
+        <p class="medium-8 columns">{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name %}
+            <strong>Oh no!</strong> We don’t know of any candidates in {{ post_label }}
+        for the {{ election_name }} yet.{% endblocktrans %}</p>
+        <p class="medium-4 columns"><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
       </div>
     {% endfor %}
 
     {% if candidates and candidate_list_edits_allowed %}
-        <p><a class="show-new-candidate-form button">Add a new candidate</a></p>
+        <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
     {% endif %}
 
   </div>
@@ -135,7 +140,7 @@
   {% if candidate_list_edits_allowed %}
     <div class="candidates__new" {% if add_candidate_form.errors %}style="display: block"{% endif %}>
 
-      <h4>Add a new candidate</h4>
+      <h4>{% trans "Add a new candidate" %}</h4>
 
       <form method="post" id="new-candidate-form" action="{% url 'person-create' election=election %}">
         {% csrf_token %}
@@ -146,8 +151,8 @@
             </p>
           {% endfor %}
           <input type="hidden" id="id_constituency_{{ election }}" name="constituency_{{ election }}" value="{{ post_data.id }}">
-        <input type="submit" class="button" value="Add new candidate">
-        <a class="hide-new-candidate-form button secondary">Cancel</a>
+        <input type="submit" class="button" value="{% trans "Add new candidate" %}">
+        <a class="hide-new-candidate-form button secondary">{% trans "Cancel" %}</a>
       </form>
 
     </div>
@@ -159,9 +164,9 @@
       <div class="candidates__previous">
 
         {% if user.is_authenticated %}
-        <h3>Is a candidate from the 2010 election standing again?</h3>
+        <h3>{% trans "Is a candidate from the 2010 election standing again?" %}</h3>
         {% else %}
-        <h3>We don't know if these candidates from earlier elections are standing again</h3>
+        <h3>{% trans "We don't know if these candidates from earlier elections are standing again" %}</h3>
         {% endif %}
 
         <ul class="candidate-list">
@@ -171,10 +176,10 @@
               {% if user.is_authenticated %}
               <p>
                 {% if candidate_list_edits_allowed %}
-                  <a class="button tiny js-toggle-source-confirmation standing">Standing again</a>
-                  <a class="button tiny js-toggle-source-confirmation not-standing">Not standing again</a>
+                  <a class="button tiny js-toggle-source-confirmation standing">{% trans "Standing again" %}</a>
+                  <a class="button tiny js-toggle-source-confirmation not-standing">{% trans "Not standing again" %}</a>
                 {% endif %}
-                <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+                <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
               </p>
               {% if candidate_list_edits_allowed %}
                 {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}
@@ -191,7 +196,7 @@
     {% if candidates_not_standing_again %}
       <div class="candidates__not-standing">
 
-        <h3>These candidates from earlier elections are known not to be standing again</h3>
+        <h3>{% trans "These candidates from earlier elections are known not to be standing again" %}</h3>
 
         <ul class="candidate-list">
           {% for c in candidates_not_standing_again %}
@@ -200,9 +205,9 @@
               {% if user.is_authenticated %}
               <p>
                 {% if candidate_list_edits_allowed %}
-                  <a class="button tiny js-toggle-source-confirmation standing">Actually, they are standing!</a>
+                  <a class="button tiny js-toggle-source-confirmation standing">{% trans "Actually, they are standing!" %}</a>
                 {% endif %}
-                <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">Edit</a>
+                <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
               </p>
               {% if candidate_list_edits_allowed %}
                 {% include 'candidates/_source_confirmation.html' with standing='standing' action='candidacy-create' %}

@@ -1,5 +1,5 @@
 {% for doc_type, docs in official_documents %}
-  {% if doc_type == 'Nomination paper' %}
+  {% if doc_type.0 == 'Nomination paper' %}
     <p>
       {% if docs %}
         {% for paper in docs %}

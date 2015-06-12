@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
+from django.utils.translation import ugettext as _
 
 from pygeocoder import Geocoder, GeocoderError
 import requests
@@ -16,7 +17,7 @@ def check_address(address_string, country=None):
     try:
         location_results = Geocoder.geocode(tidied_address)
     except GeocoderError:
-        message = u"Failed to find a location for '{0}'"
+        message = _(u"Failed to find a location for '{0}'")
         raise ValidationError(message.format(tidied_address))
     lat, lon = location_results[0].coordinates
     mapit_lookup_url = '{base_url}point/4326/{lon},{lat}'.format(
@@ -35,7 +36,7 @@ def check_address(address_string, country=None):
         key=lambda t: (t[1]['type'], int(t[0]))
     )
     if not sorted_mapit_results:
-        message = u"The address '{0}' appears to be outside the area this site knows about"
+        message = _(u"The address '{0}' appears to be outside the area this site knows about")
         raise ValidationError(message.format(tidied_address))
     types_and_areas = ','.join(
         '{0}-{1}'.format(a[1]['type'],a[0]) for a in

@@ -2,6 +2,7 @@ import json
 
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from django.utils.translation import ugettext as _
 
 from django.views.generic import ListView, TemplateView
 
@@ -109,7 +110,7 @@ class ElectionListView(ListView):
         context = super(ElectionListView, self).get_context_data(**kwargs)
         election = self.kwargs['election']
         if election not in settings.ELECTIONS:
-            raise Http404("Unknown election: '{0}'".format(election))
+            raise Http404(_("Unknown election: '{election}'").format(election=election))
         context['election'] = election
         context['election_data'] = settings.ELECTIONS[election]
         return context

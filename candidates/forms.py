@@ -8,11 +8,13 @@ from .static_data import MapItData, PartyData
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+
 from django_date_extensions.fields import ApproximateDateFormField
 
 class AddressForm(forms.Form):
     address = forms.CharField(
-        label='Enter your address or town',
+        label=_('Enter your address or town'),
         max_length=2048,
     )
 
@@ -28,17 +30,17 @@ class AddressForm(forms.Form):
 
 class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(
-        label='Person ID',
+        label=_('Person ID'),
         max_length=256,
     )
     post_id = forms.CharField(
-        label='Post ID',
+        label=_('Post ID'),
         max_length=256,
     )
 
 class CandidacyCreateForm(BaseCandidacyForm):
     source = forms.CharField(
-        label=u"Source of information that they're standing ({0})".format(
+        label=_(u"Source of information that they're standing ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -46,7 +48,7 @@ class CandidacyCreateForm(BaseCandidacyForm):
 
 class CandidacyDeleteForm(BaseCandidacyForm):
     source = forms.CharField(
-        label=u"Information source for this change ({0})".format(
+        label=_(u"Information source for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -54,65 +56,65 @@ class CandidacyDeleteForm(BaseCandidacyForm):
 
 class BasePersonForm(forms.Form):
     honorific_prefix = forms.CharField(
-        label="Title / pre-nominal honorific (e.g. Dr, Sir, etc.)",
+        label=_("Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"),
         max_length=256,
         required=False,
     )
     name = forms.CharField(
-        label="Full name",
+        label=_("Full name"),
         max_length=1024,
     )
     honorific_suffix = forms.CharField(
-        label="Post-nominal letters (e.g. CBE, DSO, etc.)",
+        label=_("Post-nominal letters (e.g. CBE, DSO, etc.)"),
         max_length=256,
         required=False,
     )
     email = forms.EmailField(
-        label="Email",
+        label=_("Email"),
         max_length=256,
         required=False,
     )
     gender = forms.CharField(
-        label="Gender (e.g. “male”, “female”)",
+        label=_("Gender (e.g. “male”, “female”)"),
         max_length=256,
         required=False,
     )
     birth_date = ApproximateDateFormField(
-        label="Date of birth (as YYYY-MM-DD or YYYY)",
+        label=_("Date of birth (as YYYY-MM-DD or YYYY)"),
         required=False,
     )
     wikipedia_url = forms.URLField(
-        label="Wikipedia URL",
+        label=_("Wikipedia URL"),
         max_length=256,
         required=False,
     )
     homepage_url = forms.URLField(
-        label="Homepage URL",
+        label=_("Homepage URL"),
         max_length=256,
         required=False,
     )
     twitter_username = forms.CharField(
-        label="Twitter username (e.g. “democlub”)",
+        label=_("Twitter username (e.g. “democlub”)"),
         max_length=256,
         required=False,
     )
     facebook_personal_url = forms.URLField(
-        label="Facebook profile URL",
+        label=_("Facebook profile URL"),
         max_length=256,
         required=False,
     )
     facebook_page_url = forms.URLField(
-        label="Facebook page (e.g. for their campaign)",
+        label=_("Facebook page (e.g. for their campaign)"),
         max_length=256,
         required=False,
     )
     linkedin_url = forms.URLField(
-        label="LinkedIn URL",
+        label=_("LinkedIn URL"),
         max_length=256,
         required=False,
     )
     party_ppc_page_url = forms.URLField(
-        label="The party’s PPC page for this person",
+        label=_(u"The party’s candidate page for this person"),
         max_length=256,
         required=False,
     )
@@ -126,7 +128,7 @@ class BasePersonForm(forms.Form):
         # If there's a leading '@', strip that off:
         username = re.sub(r'^@', '', username)
         if not re.search(r'^\w*$', username):
-            message = "The Twitter username must only consist of alphanumeric characters or underscore"
+            message = _("The Twitter username must only consist of alphanumeric characters or underscore")
             raise ValidationError(message)
         return username
 
@@ -149,8 +151,8 @@ class BasePersonForm(forms.Form):
             try:
                 mapit_area = MapItData.areas_by_id[('WMC', 22)][constituency]
             except KeyError:
-                message = "If you mark the candidate as standing in the "
-                message += "{election}, you must select a constituency"
+                message = _("If you mark the candidate as standing in the "
+                            "{election}, you must select a constituency")
                 raise forms.ValidationError(
                     message.format(election=election_data['name'])
                 )
@@ -160,7 +162,7 @@ class BasePersonForm(forms.Form):
                 party_field = 'party_gb_' + election
             party_id = cleaned_data[party_field]
             if party_id not in PartyData.party_id_to_name:
-                message = "You must specify a party for the 2015 election"
+                message = _("You must specify a party for the 2015 election")
                 raise forms.ValidationError(message)
         return cleaned_data
 
@@ -193,7 +195,7 @@ class NewPersonForm(BasePersonForm):
         for party_set in PartyData.party_sets:
             self.fields['party_' + party_set['slug'] + '_' + election] = \
                 forms.ChoiceField(
-                    label="Party in {election} ({party_set_name})".format(
+                    label=_("Party in {election} ({party_set_name})").format(
                         election=election_data['name'],
                         party_set_name=party_set['name'],
                     ),
@@ -202,17 +204,17 @@ class NewPersonForm(BasePersonForm):
                 )
 
     source = forms.CharField(
-        label=u"Source of information ({0})".format(
+        label=_(u"Source of information ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
         error_messages={
-            'required': 'You must indicate how you know about this candidate'
+            'required': _('You must indicate how you know about this candidate')
         },
         widget=forms.TextInput(
             attrs={
                 'required': 'required',
-                'placeholder': 'How you know about this candidate'
+                'placeholder': _('How you know about this candidate')
             }
         )
     )
@@ -224,9 +226,9 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     STANDING_CHOICES = (
-        ('not-sure', "Don’t Know"),
-        ('standing', "Yes"),
-        ('not-standing', "No"),
+        ('not-sure', _(u"Don’t Know")),
+        ('standing', _(u"Yes")),
+        ('not-standing', _(u"No")),
     )
 
     def __init__(self, *args, **kwargs):
@@ -239,12 +241,12 @@ class UpdatePersonForm(BasePersonForm):
         for election, election_data in settings.ELECTIONS_CURRENT:
             self.fields['standing_' + election] = \
                 forms.ChoiceField(
-                    label=('Standing in ' + election_data['name']),
+                    label=_('Standing in %s') % election_data['name'],
                     choices=self.STANDING_CHOICES,
                 )
             self.fields['constituency_' + election] = \
                 forms.ChoiceField(
-                    label=('Constituency in ' + election_data['name']),
+                    label=_('Constituency in %s') % election_data['name'],
                     required=False,
                     choices=[('', '')] + sorted(
                         [
@@ -258,7 +260,7 @@ class UpdatePersonForm(BasePersonForm):
             for party_set in PartyData.party_sets:
                 self.fields['party_' + party_set['slug'] + '_' + election] = \
                     forms.ChoiceField(
-                        label="Party in {election} ({party_set_name})".format(
+                        label=_("Party in {election} ({party_set_name})").format(
                             election=election_data['name'],
                             party_set_name=party_set['name'],
                         ),
@@ -267,17 +269,17 @@ class UpdatePersonForm(BasePersonForm):
                     )
 
     source = forms.CharField(
-        label=u"Source of information for this change ({0})".format(
+        label=_(u"Source of information for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
         error_messages={
-            'required': 'You must indicate how you know about this candidate'
+            'required': _('You must indicate how you know about this candidate')
         },
         widget=forms.TextInput(
             attrs={
                 'required': 'required',
-                'placeholder': 'How you know about this candidate'
+                'placeholder': _('How you know about this candidate')
             }
         )
     )
@@ -298,7 +300,7 @@ class UserTermsAgreementForm(forms.Form):
     def clean_assigned_to_dc(self):
         assigned_to_dc = self.cleaned_data['assigned_to_dc']
         if not assigned_to_dc:
-            message = (
+            message = _(
                 "You can only edit data on YourNextMP if you agree to "
                 "this copyright assignment."
             )
@@ -319,18 +321,18 @@ class ToggleLockForm(forms.Form):
     def clean_post_id(self):
         post_id = self.cleaned_data['post_id']
         if post_id not in MapItData.areas_by_id[('WMC', 22)]:
-            message = '{0} was not a known post ID'
+            message = _('{0} was not a known post ID')
             raise ValidationError(message.format(post_id))
         return post_id
 
 
 class ConstituencyRecordWinnerForm(forms.Form):
     person_id = forms.CharField(
-        label='Person ID',
+        label=_('Person ID'),
         max_length=256,
         widget=forms.HiddenInput(),
     )
     source = forms.CharField(
-        label=u"Source of information that they won",
+        label=_(u"Source of information that they won"),
         max_length=512,
     )

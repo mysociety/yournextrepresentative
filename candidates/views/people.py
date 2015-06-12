@@ -9,6 +9,7 @@ from django.http import (
 )
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
+from django.utils.translation import ugettext as _
 from django.views.decorators.cache import cache_control
 from django.views.generic import FormView, TemplateView, View
 
@@ -89,7 +90,7 @@ class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
                 break
 
         if not data_to_revert_to:
-            message = "Couldn't find the version {0} of person {1}"
+            message = _("Couldn't find the version {0} of person {1}")
             raise Exception(message.format(version_id, person_id))
 
         change_metadata = get_change_metadata(self.request, source)
@@ -125,10 +126,10 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
         primary_person_id = self.kwargs['person_id']
         secondary_person_id = self.request.POST['other']
         if not re.search('^\d+$', secondary_person_id):
-            message = "Malformed person ID '{0}'"
+            message = _("Malformed person ID '{0}'")
             raise ValueError(message.format(secondary_person_id))
         if primary_person_id == secondary_person_id:
-            message = "You can't merge a person ({0}) with themself ({1})"
+            message = _("You can't merge a person ({0}) with themself ({1})")
             raise ValueError(message.format(
                 primary_person_id, secondary_person_id
             ))
@@ -143,7 +144,7 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
         )
         # Update the primary person in PopIt:
         change_metadata = get_change_metadata(
-            self.request, 'After merging person {0}'.format(secondary_person_id)
+            self.request, _('After merging person {0}').format(secondary_person_id)
         )
         primary_person.update_from_reduced_json(merged_person)
         primary_person.record_version(change_metadata)

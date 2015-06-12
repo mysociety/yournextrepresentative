@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-    <h2>Number of known {{ election_data.name }} candidates per party</h2>
+<h2>{% blocktrans trimmed with election_name=election_data.name %}
+    Number of known {{ election_name }} candidates per party
+    {% endblocktrans %}</h2>
     <table class="counts_table">
         <thead>
-            <th>Party Name</th>
-            <th>Number of Candidates</th>
+            <th>{% trans "Party Name" %}</th>
+            <th>{% trans "Number of Candidates" %}</th>
         </thead>
         <tbody>
         {% for object in object_list %}

@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.views.generic import TemplateView
+from django.utils.translation import ugettext as _
 
 import requests
 
@@ -63,7 +64,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         party_id = kwargs['organization_id']
         party_name = PartyData.party_id_to_name.get(party_id)
         if not party_name:
-            raise Http404("Party not found")
+            raise Http404(_("Party not found"))
         party = self.api.organizations(party_id).get(embed='')['result']
 
         # Make the party emblems conveniently available in the context too:

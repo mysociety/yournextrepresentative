@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
+from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, FormView, View
 
 from auth_helpers.views import GroupRequiredMixin
@@ -75,7 +76,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
             get_constituency_name_from_mapit_id(post_id)
 
         if not context['constituency_name']:
-            raise Http404("Constituency not found")
+            raise Http404(_("Constituency not found"))
 
         context['electionleaflets_url'] = \
             get_electionleaflets_url(post_id, context['constituency_name'])
@@ -93,12 +94,13 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         documents_by_type = {}
         # Make sure that every available document type has a key in
         # the dictionary, even if there are no such documents.
-        for t in OfficialDocument.DOCUMENT_TYPES:
-            documents_by_type[t[0]] = []
+        doc_lookup = {t[0]: (t[1], t[2]) for t in OfficialDocument.DOCUMENT_TYPES}
+        for t in doc_lookup.values():
+            documents_by_type[t] = []
         for od in OfficialDocument.objects.filter(
             post_id=post_id
         ):
-            documents_by_type[od.document_type].append(od)
+            documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
 
         mp_post = get_post_cached(self.api, post_id)
@@ -223,7 +225,7 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
                 })
             )
         else:
-            message = 'Invalid data POSTed to ConstituencyLockView'
+            message = _('Invalid data POSTed to ConstituencyLockView')
             raise ValidationError(message)
 
 
@@ -375,7 +377,7 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
             candidate.set_elected(None, election)
             change_metadata = get_change_metadata(
                 self.request,
-                'Result recorded in error, retracting'
+                _('Result recorded in error, retracting')
             )
             candidate.record_version(change_metadata)
             candidate.save_to_popit(self.api)

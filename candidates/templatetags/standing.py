@@ -4,6 +4,7 @@ from django import template
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -13,14 +14,14 @@ def constituency_in_year(person, election):
     election_data = settings.ELECTIONS[election]
     if election not in standing_in:
         if election_data.get('current'):
-            result = u'<span class="constituency-value-unknown">No information yet</span>'
+            result = u'<span class="constituency-value-unknown">%s</span>' % _('No information yet')
         else:
-            result = u'<span class="constituency-not-standing">Did not stand</span>'
+            result = u'<span class="constituency-not-standing">%s</span>' % _('Did not stand')
     elif not standing_in[election]:
         if election_data.get('current'):
-            result = u'<span class="constituency-value-not-standing">Not standing</span>'
+            result = u'<span class="constituency-value-not-standing">%s</span>' % _('Not standing')
         else:
-            result = u'<span class="constituency-value-not-standing">Did not stand</span>'
+            result = u'<span class="constituency-value-not-standing">%s</span>' % _('Did not stand')
     else:
         link = u'<a href="{cons_url}">{cons_name}</a>'.format(
             cons_url=reverse(

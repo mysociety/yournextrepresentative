@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
 {% load metadescription %}
 {% load standing %}
 {% load exists %}
@@ -29,32 +30,36 @@
 
 {% block body_class %}constituency{% endblock %}
 
-{% block title %}Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }}{% endblock %}
+{% block title %}{% blocktrans with election_name=election_data.name %}Candidates for {{ constituency_name }} in the {{ election_name }}{% endblocktrans %}{% endblock %}
 
 {% block hero %}
-  <h1>Candidates for <span id="constituency-name">{{ constituency_name }}</a></h1>
+  <h1>{% blocktrans %}Candidates for <span id="constituency-name">{{ constituency_name }}</span>{% endblocktrans %}</h1>
 {% endblock %}
 
 {% block content %}
 
 {% include 'candidates/_candidates_for_post.html' %}
 
-<div>You can also find any <a href="{{ electionleaflets_url }}">election
+<div>{% blocktrans trimmed %}
+You can also find any <a href="{{ electionleaflets_url }}">election
 leaflets for {{ constituency_name }} at ElectionLeaflets.org</a> or
 any <a href="{{ meetyournextmp_url }}">public events at which candidates
-will be debating at MeetYourNextMP.com</a>.</div>
+will be debating at MeetYourNextMP.com</a>.
+{% endblocktrans %}</div>
 
 {% if user.is_staff %}
   <div class="constituency-invalidate-cache">
-    <h3>Invalidate Cache</h3>
-    <p>As a staff user, you can invalidate any cached data for this
+    <h3>{% trans "Invalidate Cache" %}</h3>
+    <p>{% blocktrans trimmed %}
+      As a staff user, you can invalidate any cached data for this
       constituency. This may <em>occasionally</em> be necessary if the
-      page is showing stale information for more than 10 seconds.</p>
+      page is showing stale information for more than 10 seconds.
+      {% endblocktrans %}</p>
     </p>
     <form method="post" action="{% url 'constituency-cache-invalidate' %}">
       {% csrf_token %}
       <input type="hidden" name="post_id", value="{{ post_id }}">
-      <input type="submit" class="button" value="Invalidate">
+      <input type="submit" class="button" value="{% trans "Invalidate Cache" %}">
     </form>
   </div>
 {% endif %}
