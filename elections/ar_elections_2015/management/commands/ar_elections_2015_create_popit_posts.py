@@ -19,10 +19,16 @@ class Command(PopItApiMixin, BaseCommand):
                 mapit_type, id
             )
             role = election_data['for_post_role']
+            area_mapit_url = settings.MAPIT_BASE_URL + 'area/' + str(area['id'])
             post_data = {
                 'role': role,
                 'id': post_id,
                 'label': role + u' por ' + area['name'],
+                'area': {
+                    'name': area['name'],
+                    'id': 'mapit:' + str(area['id']),
+                    'identifier': area_mapit_url,
+                }
             }
             create_or_update(self.api.posts, post_data)
 
