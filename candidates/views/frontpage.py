@@ -4,6 +4,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
+from django.conf import settings
 
 from candidates.models.address import check_address
 from .mixins import ContributorsMixin
@@ -34,4 +35,5 @@ class AddressFinderView(ContributorsMixin, FormView):
         context = super(AddressFinderView, self).get_context_data(**kwargs)
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
+        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
         return context

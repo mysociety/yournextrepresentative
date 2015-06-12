@@ -48,6 +48,13 @@ class PersonView(PopItApiMixin, TemplateView):
         context['redirect_after_login'] = urlquote(path)
         context['canonical_url'] = self.request.build_absolute_uri(path)
         context['person'] = self.person
+        context['last_election'] = self.person.last_cons
+        if self.person.last_cons:
+            context['constituency'] = self.person.last_cons[1]['name']
+            context['contested_election'] = self.person.last_cons[0]
+        else:
+            context['constituency'] = ''
+            context['contested_election'] = ''
         return context
 
     def get(self, request, *args, **kwargs):

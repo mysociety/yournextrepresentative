@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load i18n %}
 {% load metadescription %}
 {% load standing %}
@@ -7,25 +6,25 @@
 
 {% block extra_head %}
     <!-- Open Graph data -->
-    <meta property="og:title" content="Candidates (PPCs) for {{ post_label_shorter }} in the UK 2015 General Election" />
+    <meta property="og:title" content="{% blocktrans with election_name=election_data.name %}Candidates for {{ post_label_shorter }} in the {{ election_name }}{% endblocktrans %}" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="og:image:height" content="80" />
     <meta property="og:image:width" content="80" />
-    <meta property="og:site_name" content="YourNextMP" />
-    <meta property="og:description" content="List of Candidates (PPCs) for {{ post_label_shorter }} in the UK 2015 General Election - find out more on YourNextMP">
-    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content="{% trans "YourNextMP" %}" />
+    <meta property="og:description" content="{% blocktrans with election=election_data.name post=constituency_name %}List of Candidates for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %} - {% trans "find out more on YourNextMP" %}">
+    <meta property="og:locale" content="{{ LOCALE }}" />
 
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@yournextmp" />
-    <meta name="twitter:title" content="Candidates (PPCs) for {{ post_label_shorter }} in the {{ election_data.name }}" />
+    <meta name="twitter:site" content="{% trans "@yournextmp" %}" />
+    <meta name="twitter:title" content="{% blocktrans with election=election_data.name post=constituency_name %}List of Candidates for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %}" />
     <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="twitter:image:height" content="120" />
     <meta property="twitter:image:width" content="120" />
     <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ post_label_shorter }} in the {{ election_data.name }} - find out more on YourNextMP"  />
+    <meta name="twitter:description" content="{% blocktrans with election=election_data.name %}List of Candidates for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %} - {% trans "find out more on YourNextMP" %}"  />
 {% endblock %}
 
 {% block body_class %}constituency{% endblock %}

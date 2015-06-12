@@ -38,6 +38,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView)
         context['show_name_form'] = False
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
+        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
         return context
 
 
@@ -66,4 +67,5 @@ class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
         context['show_name_form'] = True
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
+        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
         return context
