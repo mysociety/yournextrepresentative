@@ -19,6 +19,7 @@ from auth_helpers.views import GroupRequiredMixin, user_in_group
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
+from ..election_specific import party_sets
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
@@ -215,7 +216,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
                     'constituency': kwargs['form']['constituency_' + election],
                     'party_fields': [
                         kwargs['form']['party_' + p['slug'] + '_' + election]
-                        for p in PartyData.party_sets
+                        for p in party_sets
                     ]
                 }
             )

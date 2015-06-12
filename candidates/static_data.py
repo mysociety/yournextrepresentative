@@ -5,6 +5,7 @@ from os.path import abspath, dirname, join, exists
 import requests
 
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from candidates.election_specific import area_to_post_group
 
@@ -12,11 +13,11 @@ data_directory = abspath(join(
     dirname(__file__), '..', 'elections', settings.ELECTION_APP, 'data'
 ))
 
-ALL_MAPIT_TYPES_AND_GENERATIONS = set(
-    (mapit_type, t[1]['mapit_generation'])
-    for t in settings.ELECTIONS_BY_DATE
+MAPIT_TYPES_GENERATIONS_ELECTIONS = {
+    (mapit_type, t[1]['mapit_generation']): t[1]
+    for t in settings.ELECTIONS_CURRENT
     for mapit_type in t[1]['mapit_types']
-)
+}
 
 def get_mapit_areas(area_type, generation):
     expected_filename = join(
@@ -63,12 +64,19 @@ class MapItData(object):
     areas_by_name = {}
     areas_list_sorted_by_name = {}
     area_ids_and_names_by_post_group = {}
+    areas_by_post_id = {}
 
-    for t in ALL_MAPIT_TYPES_AND_GENERATIONS:
-        areas_by_id[t] = get_mapit_areas(t[0], t[1])
+    for t, election_data in MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+        mapit_type, mapit_generation = t
+        areas_by_id[t] = get_mapit_areas(mapit_type, mapit_generation)
         for area in areas_by_id[t].values():
             areas_by_name.setdefault(t, {})
             areas_by_name[t][area['name']] = area
+            post_id = election_data['get_post_id'](mapit_type, area['id'])
+            if post_id in areas_by_post_id:
+                message = _("Found multiple areas for the post ID {post_id}")
+                raise Exception(message.format(post_id=post_id))
+            areas_by_post_id[post_id] = area
         areas_list_sorted_by_name[t] = sorted(
             areas_by_id[t].items(),
             key=lambda c: c[1]['name']
@@ -106,7 +114,3 @@ def get_all_parties():
 
 class PartyData(object):
     party_choices, party_id_to_name = get_all_parties()
-    party_sets = (
-        {'slug': 'gb', 'name': 'Great Britain'},
-        {'slug': 'ni', 'name': 'Northern Ireland'},
-    )

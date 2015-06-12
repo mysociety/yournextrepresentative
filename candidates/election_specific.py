@@ -9,6 +9,8 @@ imports_and_defaults = (
     ('ALL_POSSIBLE_PARTY_POST_GROUPS', []),
     ('party_to_possible_post_groups', lambda party_data: []),
     ('area_to_post_group', lambda area_data: None),
+    ('party_sets', ()),
+    ('post_id_to_party_set', lambda post_id: None),
 )
 
 # Note that one could do this without the dynamic import and use of

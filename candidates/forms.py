@@ -2,6 +2,7 @@
 
 import re
 
+from .election_specific import party_sets
 from .models.address import check_address
 from .static_data import MapItData, PartyData
 
@@ -192,7 +193,7 @@ class NewPersonForm(BasePersonForm):
         # choice field for each such "party set" and make sure only
         # the appropriate one is shown, depending on the election and
         # selected constituency, using Javascript.
-        for party_set in PartyData.party_sets:
+        for party_set in party_sets:
             self.fields['party_' + party_set['slug'] + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
@@ -243,6 +244,7 @@ class UpdatePersonForm(BasePersonForm):
                 forms.ChoiceField(
                     label=_('Standing in %s') % election_data['name'],
                     choices=self.STANDING_CHOICES,
+                    widget=forms.Select(attrs={'class': 'standing-select'}),
                 )
             self.fields['constituency_' + election] = \
                 forms.ChoiceField(
@@ -255,9 +257,10 @@ class UpdatePersonForm(BasePersonForm):
                             in MapItData.areas_by_id[('WMC', 22)].items()
                         ],
                         key=lambda t: t[1]
-                    )
+                    ),
+                    widget=forms.Select(attrs={'class': 'post-select'}),
                 )
-            for party_set in PartyData.party_sets:
+            for party_set in party_sets:
                 self.fields['party_' + party_set['slug'] + '_' + election] = \
                     forms.ChoiceField(
                         label=_("Party in {election} ({party_set_name})").format(
@@ -266,6 +269,11 @@ class UpdatePersonForm(BasePersonForm):
                         ),
                         choices=PartyData.party_choices[party_set['name']],
                         required=False,
+                        widget=forms.Select(
+                            attrs={
+                                'class': 'party-select party-select-' + election
+                            }
+                        ),
                     )
 
     source = forms.CharField(
