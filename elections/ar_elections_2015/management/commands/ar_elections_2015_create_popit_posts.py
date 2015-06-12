@@ -7,6 +7,8 @@ from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
 from candidates.static_data import MapItData
 
+from slumber.exceptions import HttpServerError, HttpClientError
+
 class Command(PopItApiMixin, BaseCommand):
     help = "Create the posts for the 2015 elections in Argentina"
 
@@ -25,16 +27,20 @@ class Command(PopItApiMixin, BaseCommand):
             create_or_update(self.api.posts, post_data)
 
     def handle(self, **options):
-        for election, election_data in settings.ELECTIONS.items():
-            if election == 'presidentes-argentina-paso-2015':
-                create_or_update(
-                    self.api.posts,
-                    {
-                        'id': 'presidente',
-                        'label': 'Candidato a Presidente',
-                        'role': 'Candidato a Presidente',
-                    }
-                )
-            else:
-                for mapit_type in election_data['mapit_types']:
-                    self.handle_mapit_type(election, election_data, mapit_type)
+        try:
+            for election, election_data in settings.ELECTIONS.items():
+                if election == 'presidentes-argentina-paso-2015':
+                    create_or_update(
+                        self.api.posts,
+                        {
+                            'id': 'presidente',
+                            'label': 'Candidato a Presidente',
+                            'role': 'Candidato a Presidente',
+                        }
+                    )
+                else:
+                    for mapit_type in election_data['mapit_types']:
+                        self.handle_mapit_type(election, election_data, mapit_type)
+        except (HttpServerError, HttpClientError) as hse:
+            print "The body of the error was:", hse.content
+            raise
