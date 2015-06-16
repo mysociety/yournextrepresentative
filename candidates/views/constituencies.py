@@ -14,6 +14,7 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, FormView, View
 
+from elections.mixins import ElectionMixin
 from auth_helpers.views import GroupRequiredMixin
 from .helpers import get_people_from_memberships
 from .version_data import get_client_ip, get_change_metadata
@@ -30,6 +31,7 @@ from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
 from ..cache import get_post_cached, invalidate_posts
+
 
 # From http://stackoverflow.com/a/517974/223092
 def strip_accents(s):
@@ -57,7 +59,7 @@ def get_electionleaflets_url(mapit_area_id, constituency_name):
     return url_format.format(area_id=mapit_area_id, slug=slug)
 
 
-class ConstituencyDetailView(PopItApiMixin, TemplateView):
+class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
@@ -69,8 +71,6 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
-        context['election'] = election = kwargs['election']
-        context['election_data'] = settings.ELECTIONS[election]
         context['post_id'] = post_id = kwargs['post_id']
         context['constituency_name'] = \
             get_constituency_name_from_mapit_id(post_id)
@@ -86,7 +86,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         context['redirect_after_login'] = \
             urlquote(reverse('constituency', kwargs={
-                'election': election,
+                'election': self.election,
                 'post_id': post_id,
                 'ignored_slug': slugify(context['constituency_name'])
             }))
@@ -124,7 +124,7 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 
         current_candidates, past_candidates = \
             get_people_from_memberships(
-                election,
+                self.election_data,
                 mp_post['result']['memberships']
             )
 
@@ -136,10 +136,10 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         # Now split those candidates into those that we know aren't
         # standing again, and those that we just don't know about:
         context['candidates_not_standing_again'] = \
-            set(p for p in other_candidates if p.not_standing_in_election(election))
+            set(p for p in other_candidates if p.not_standing_in_election(self.election))
 
         context['candidates_might_stand_again'] = \
-            set(p for p in other_candidates if not p.known_status_in_election(election))
+            set(p for p in other_candidates if not p.known_status_in_election(self.election))
 
         context['candidates'] = sorted(
             current_candidates,
@@ -147,11 +147,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
         )
 
         context['show_retract_result'] = any(
-            c.get_elected(election) is not None for c in context['candidates']
+            c.get_elected(self.election) is not None for c in context['candidates']
         )
 
         context['add_candidate_form'] = NewPersonForm(
-            election=election,
+            election=self.election,
             initial={'constituency': post_id}
         )
 
@@ -161,11 +161,11 @@ class ConstituencyDetailView(PopItApiMixin, TemplateView):
 class ConstituencyDetailCSVView(ConstituencyDetailView):
     def render_to_response(self, context, **response_kwargs):
         all_people = [
-            person.as_dict(context['election'])
+            person.as_dict(self.election)
             for person in context['candidates']
         ]
         filename = "{election}-{constituency_slug}.csv".format(
-            election=context['election'],
+            election=self.election,
             constituency_slug=slugify(context['constituency_name']),
         )
         response = HttpResponse(content_type='text/csv')
@@ -174,18 +174,17 @@ class ConstituencyDetailCSVView(ConstituencyDetailView):
         return response
 
 
-class ConstituencyListView(PopItApiMixin, TemplateView):
+class ConstituencyListView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituencies.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
-        context['election'] = kwargs['election']
         context['all_constituencies'] = \
             MapItData.areas_list_sorted_by_name[('WMC', 22)]
         return context
 
 
-class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
+class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, View):
     required_group_name = TRUSTED_TO_LOCK_GROUP_NAME
 
     http_method_names = ['post']
@@ -219,7 +218,7 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
             )
             return HttpResponseRedirect(
                 reverse('constituency', kwargs={
-                    'election': kwargs['election'],
+                    'election': self.election,
                     'post_id': post_id,
                     'ignored_slug': slugify(data['area']['name']),
                 })
@@ -229,7 +228,7 @@ class ConstituencyLockView(GroupRequiredMixin, PopItApiMixin, View):
             raise ValidationError(message)
 
 
-class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
+class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituencies-unlocked.html'
 
     def get_context_data(self, **kwargs):
@@ -263,7 +262,7 @@ class ConstituenciesUnlockedListView(PopItApiMixin, TemplateView):
         context['percent_done'] = (100 * total_locked) / total_constituencies
         return context
 
-class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
+class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, FormView):
 
     form_class = ConstituencyRecordWinnerForm
     template_name = 'candidates/record-winner.html'
@@ -289,7 +288,6 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyRecordWinnerView, self). \
             get_context_data(**kwargs)
-        context['election'] = self.kwargs['election']
         context['post_id'] = self.kwargs['post_id']
         context['constituency_name'] = self.constituency_name
         context['person'] = self.person
@@ -304,18 +302,18 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
                 continue
             if not membership_covers_date(
                     membership,
-                    settings.ELECTIONS[self.kwargs['election']]['election_date']
+                    self.election_data['election_date']
             ):
                 continue
             candidate = PopItPerson.create_from_popit(
                 self.api, membership['person_id']['id']
             )
             elected = (candidate == winner)
-            candidate.set_elected(elected, self.kwargs['election'])
+            candidate.set_elected(elected, self.election)
             if elected:
                 ResultEvent.create_from_popit_person(
                     candidate,
-                    self.kwargs['election'],
+                    self.election,
                     form.cleaned_data['source'],
                     self.request.user,
                 )
@@ -345,7 +343,7 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
             reverse(
                 'constituency',
                 kwargs={
-                    'election': self.kwargs['election'],
+                    'election': self.election,
                     'post_id': self.kwargs['post_id'],
                     'ignored_slug': slugify(self.constituency_name),
                 }
@@ -353,14 +351,13 @@ class ConstituencyRecordWinnerView(GroupRequiredMixin, PopItApiMixin, FormView):
         )
 
 
-class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
+class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, View):
 
     required_group_name = RESULT_RECORDERS_GROUP_NAME
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
         post_id = self.kwargs['post_id']
-        election = self.kwargs['election']
         constituency_name = get_constituency_name_from_mapit_id(post_id)
         post = get_post_cached(self.api, post_id)['result']
         for membership in post.get('memberships', []):
@@ -368,13 +365,13 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
                 continue
             if not membership_covers_date(
                     membership,
-                    settings.ELECTIONS[election]['election_date']
+                    self.election_data['election_date']
             ):
                 continue
             candidate = PopItPerson.create_from_popit(
                 self.api, membership['person_id']['id']
             )
-            candidate.set_elected(None, election)
+            candidate.set_elected(None, self.election)
             change_metadata = get_change_metadata(
                 self.request,
                 _('Result recorded in error, retracting')
@@ -398,15 +395,14 @@ class ConstituencyRetractWinnerView(GroupRequiredMixin, PopItApiMixin, View):
                 'constituency',
                 kwargs={
                     'post_id': post_id,
-                    'election': election,
+                    'election': self.election,
                     'ignored_slug': slugify(constituency_name),
                 }
             )
         )
 
 
-def memberships_contain_winner(memberships, election):
-    election_data = settings.ELECTIONS[election]
+def memberships_contain_winner(memberships, election_data):
     for m in memberships:
         correct_org = m.get('organization_id') == election_data['organization_id']
         day_after_election = election_data['election_date'] + timedelta(days=1)
@@ -416,12 +412,11 @@ def memberships_contain_winner(memberships, election):
     return False
 
 
-class ConstituenciesDeclaredListView(PopItApiMixin, TemplateView):
+class ConstituenciesDeclaredListView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituencies-declared.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConstituenciesDeclaredListView, self).get_context_data(**kwargs)
-        context['election'] = kwargs['election']
         total_constituencies = 0
         total_declared = 0
         constituencies = []
@@ -433,7 +428,7 @@ class ConstituenciesDeclaredListView(PopItApiMixin, TemplateView):
             total_constituencies += 1
             declared = memberships_contain_winner(
                 post['memberships'],
-                self.kwargs['election']
+                self.election_data
             )
             if declared:
                 total_declared += 1

@@ -174,7 +174,7 @@ class NewPersonForm(BasePersonForm):
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
         if election not in settings.ELECTIONS:
-            raise Exception, "Unknown election {0}".format(election)
+            raise Exception, _("Unknown election: '{election}'").format(election=election)
 
         election_data = settings.ELECTIONS[election]
         self.fields['constituency_' + election] = \

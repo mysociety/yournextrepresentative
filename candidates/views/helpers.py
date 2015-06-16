@@ -30,7 +30,7 @@ def get_redirect_from_mapit_id(election, mapit_id):
         )
     )
 
-def get_people_from_memberships(election, memberships):
+def get_people_from_memberships(election_data, memberships):
     current_candidates = set()
     past_candidates = set()
     for membership in memberships:
@@ -39,7 +39,7 @@ def get_people_from_memberships(election, memberships):
         person = PopItPerson.create_from_dict(membership['person_id'])
         if membership_covers_date(
                 membership,
-                settings.ELECTIONS[election]['election_date']
+                election_data['election_date']
         ):
             current_candidates.add(person)
         else:

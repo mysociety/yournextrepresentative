@@ -6,7 +6,10 @@ from django.utils.translation import ugettext as _
 
 from django.views.generic import ListView, TemplateView
 
+from elections.mixins import ElectionMixin
+
 from .models import CachedCount
+
 
 def get_count(all_counts, **kwargs):
     matching_counts = [
@@ -103,20 +106,7 @@ class ReportsHomeView(TemplateView):
         return super(ReportsHomeView, self).get(*args, **kwargs)
 
 
-class ElectionListView(ListView):
-    '''A ListView that adds election data from the URL to the context'''
-
-    def get_context_data(self, **kwargs):
-        context = super(ElectionListView, self).get_context_data(**kwargs)
-        election = self.kwargs['election']
-        if election not in settings.ELECTIONS:
-            raise Http404(_("Unknown election: '{election}'").format(election=election))
-        context['election'] = election
-        context['election_data'] = settings.ELECTIONS[election]
-        return context
-
-
-class PartyCountsView(ElectionListView):
+class PartyCountsView(ElectionMixin, ListView):
     template_name = "party_counts.html"
 
     def get_queryset(self):
@@ -126,7 +116,7 @@ class PartyCountsView(ElectionListView):
         )
 
 
-class ConstituencyCountsView(ElectionListView):
+class ConstituencyCountsView(ElectionMixin, ListView):
     template_name = "constituency_counts.html"
 
     def get_queryset(self):

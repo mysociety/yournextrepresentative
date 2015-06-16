@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 import requests
 
 from cached_counts.models import CachedCount
+from elections.mixins import ElectionMixin
 
 from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
 from ..static_data import MapItData, PartyData
@@ -13,12 +14,12 @@ from ..election_specific import (
     area_to_post_group
 )
 
-class PartyListView(PopItApiMixin, TemplateView):
+
+class PartyListView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/party-list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PartyListView, self).get_context_data(**kwargs)
-        context['election'] = kwargs['election']
         party_ids_with_any_candidates = set(
             CachedCount.objects.filter(count_type='party', count__gt=0). \
                 values_list('object_id', flat=True)
@@ -55,12 +56,11 @@ def get_post_group_stats(posts):
     }
 
 
-class PartyDetailView(PopItApiMixin, TemplateView):
+class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/party.html'
 
     def get_context_data(self, **kwargs):
         context = super(PartyDetailView, self).get_context_data(**kwargs)
-        context['election'] = kwargs['election']
         party_id = kwargs['organization_id']
         party_name = PartyData.party_id_to_name.get(party_id)
         if not party_name:
@@ -76,7 +76,7 @@ class PartyDetailView(PopItApiMixin, TemplateView):
         url = get_search_url(
             'persons',
             'party_memberships.{0}.id:"{1}"'.format(
-                kwargs['election'],
+                self.election,
                 party_id,
             ),
             per_page=100

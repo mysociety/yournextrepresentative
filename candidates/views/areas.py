@@ -40,7 +40,7 @@ class AreasView(PopItApiMixin, TemplateView):
                     all_post_labels.append(post_data['label'])
                     locked = post_data.get('candidates_locked', False)
                     current_candidates, _ = get_people_from_memberships(
-                        election,
+                        election_data,
                         post_data['memberships'],
                     )
                     context['posts'].append({

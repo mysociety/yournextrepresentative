@@ -16,6 +16,7 @@ from django.views.generic import FormView, TemplateView, View
 from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
+from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
 from .version_data import get_client_ip, get_change_metadata
@@ -29,6 +30,7 @@ from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
 from ..static_data import PartyData
+
 
 class PersonView(PopItApiMixin, TemplateView):
     template_name = 'candidates/person-view.html'
@@ -256,13 +258,13 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
 
-class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
+class NewPersonView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
 
     def get_form_kwargs(self):
         kwargs = super(NewPersonView, self).get_form_kwargs()
-        kwargs['election'] = self.kwargs['election']
+        kwargs['election'] = self.election
         return kwargs
 
     def form_valid(self, form):
@@ -287,8 +289,3 @@ class NewPersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         action.popit_person_id = person_id
         action.save()
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
-
-    def get_context_data(self, **kwargs):
-        context = super(NewPersonView, self).get_context_data(**kwargs)
-        context['election'] = self.kwargs['election']
-        return context
