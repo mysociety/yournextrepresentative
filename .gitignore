@@ -2,6 +2,7 @@
 /db.sqlite3
 /static
 /candidates/static/candidates/style.css
+/elections/*/static/candidates/style.css
 .sass-cache
 /htmlcov
 /.coverage
