@@ -9,6 +9,7 @@ from candidates.cache import get_post_cached
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 
+from ..election_specific import AREA_POST_DATA
 from ..forms import NewPersonForm
 from .helpers import get_people_from_memberships, join_with_commas_and_and
 
@@ -33,9 +34,7 @@ class AreasView(PopItApiMixin, TemplateView):
             # Show candidates from the current elections:
             for election, election_data in settings.ELECTIONS_CURRENT:
                 if mapit_type in election_data['mapit_types']:
-                    post_id = election_data['get_post_id'](
-                        mapit_type, area_id
-                    )
+                    post_id = AREA_POST_DATA.get_post_id(mapit_type, area_id)
                     post_data = get_post_cached(self.api, post_id)['result']
                     all_post_labels.append(post_data['label'])
                     locked = post_data.get('candidates_locked', False)

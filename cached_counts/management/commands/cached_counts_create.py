@@ -3,7 +3,7 @@ from optparse import make_option
 
 from candidates.models import membership_covers_date
 from candidates.popit import PopItApiMixin, get_all_posts
-from candidates.static_data import PartyData
+from candidates.election_specific import PARTY_DATA
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -42,7 +42,7 @@ class Command(PopItApiMixin, BaseCommand):
             all_posts = list(
                 get_all_posts(post_role, embed='membership.person')
             )
-            all_parties = PartyData.party_id_to_name
+            all_parties = PARTY_DATA.party_id_to_name
             counts = {
                 'candidates': 0,
                 'parties': {
@@ -182,7 +182,7 @@ class Command(PopItApiMixin, BaseCommand):
                     values_list('object_id', flat=True)
             )
             current_parties = set(
-                PartyData.party_id_to_name.keys()
+                PARTY_DATA.party_id_to_name.keys()
             )
             parties_to_remove = parties_in_database - current_parties
             CachedCount.objects.filter(

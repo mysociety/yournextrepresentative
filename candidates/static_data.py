@@ -7,17 +7,9 @@ import requests
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from candidates.election_specific import area_to_post_group
-
 data_directory = abspath(join(
     dirname(__file__), '..', 'elections', settings.ELECTION_APP, 'data'
 ))
-
-MAPIT_TYPES_GENERATIONS_ELECTIONS = {
-    (mapit_type, t[1]['mapit_generation']): t[1]
-    for t in settings.ELECTIONS_CURRENT
-    for mapit_type in t[1]['mapit_types']
-}
 
 def get_mapit_areas(area_type, generation):
     expected_filename = join(
@@ -44,73 +36,152 @@ def get_mapit_areas(area_type, generation):
         r = requests.get(mapit_url)
         return r.json()
 
-# What do we need to do with MapIt data?
-#
-#  Just area related:
-#
-#    Go from MapIt ID to full area data (currently areas_by_id, was constituencies_2010)
-#    Go from an area name and type to full area data (currently areas_by_name, was constituencies_2010_name_map)
-#    Get a list of all areas of a particular type (areas_list_sorted_by_name, was constituencies_2010_name_sorted)
-#    Get a list of all areas of a particular type in a given "post group" (currently area_ids_and_names_by_post_group, was constituencies_2010_by_post_group)
-#
-#  Related to posts too:
-#
-#    Go from a MapIt ID to the posts are associated with it:
-#       (probably need a new class method for that...)
 
-class MapItData(object):
+class BaseMapItData(object):
 
-    areas_by_id = {}
-    areas_by_name = {}
-    areas_list_sorted_by_name = {}
-    area_ids_and_names_by_post_group = {}
-    areas_by_post_id = {}
+    """Load MapIt data and make it availale in helpful data structures
 
-    for t, election_data in MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
-        mapit_type, mapit_generation = t
-        areas_by_id[t] = get_mapit_areas(mapit_type, mapit_generation)
-        for area in areas_by_id[t].values():
-            areas_by_name.setdefault(t, {})
-            areas_by_name[t][area['name']] = area
-            post_id = election_data['get_post_id'](mapit_type, area['id'])
-            if post_id in areas_by_post_id:
-                message = _("Found multiple areas for the post ID {post_id}")
-                raise Exception(message.format(post_id=post_id))
-            areas_by_post_id[post_id] = area
-        areas_list_sorted_by_name[t] = sorted(
-            areas_by_id[t].items(),
-            key=lambda c: c[1]['name']
-        )
-        for area in areas_by_name[t].values():
-            post_group = area_to_post_group(area)
-            area_ids_and_names_by_post_group.setdefault(t, defaultdict(list))
-            area_ids_and_names_by_post_group[t][post_group].append(
-                (str(area['id']), area['name'])
+    FIXME: check that these are sensible descriptions
+
+    On instantiation, the following attributes are created:
+
+        'areas_by_id', a dictionary that maps from a MapIt ID to full
+        area data
+
+        'areas_by_name', a dictionary that maps an area name and typ
+        to full area data
+
+        'areas_list_sorted_by_name', a list of all areas of a
+        particular type
+
+    """
+
+    def __init__(self):
+
+        self.areas_by_id = {}
+        self.areas_by_name = {}
+        self.areas_list_sorted_by_name = {}
+        self.areas_by_post_id = {}
+
+        for t, election_data in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+            mapit_type, mapit_generation = t
+            self.areas_by_id[t] = get_mapit_areas(mapit_type, mapit_generation)
+            for area in self.areas_by_id[t].values():
+                self.areas_by_name.setdefault(t, {})
+                self.areas_by_name[t][area['name']] = area
+            self.areas_list_sorted_by_name[t] = sorted(
+                self.areas_by_id[t].items(),
+                key=lambda c: c[1]['name']
             )
-        for area_list in area_ids_and_names_by_post_group[t].values():
-            area_list.sort(key=lambda c: c[1])
 
-def get_all_parties():
-    result_list = defaultdict(list)
-    result_dict = {}
-    with open(join(data_directory, 'all-parties-from-popit.json')) as f:
-        for party in json.load(f):
-            key = party.get('register', '')
-            result_list[key].append((party['id'], party['name']))
-            result_dict[party['id']] = party['name']
-        # The parties without a register (e.g. the pseudo parties
-        # "Independent" and "Speaker seeking re-election") don't have
-        # a register, but should be added to both the Great Britain
-        # and Northern Ireland lists:
-        for register in ('Great Britain', 'Northern Ireland'):
-            result_list[register] += result_list['']
-        # Then remove those parties without a register:
-        result_list.pop('', None)
-        # Now sort the parties, and an an empty default at the start:
-        for parties in result_list.values():
-            parties.sort(key=lambda p: p[1].lower())
-            parties.insert(0, ('party:none', ''))
-    return result_list, result_dict
 
-class PartyData(object):
-    party_choices, party_id_to_name = get_all_parties()
+class BasePartyData(object):
+
+    """You should subclass this in your election application to define the
+    election-specific 'party sets'.
+
+    FIXME: check that these are sensible descriptions
+
+    When instantiated, this gives you helpful access to party data in
+    two attributes:
+
+    'party_choices' is a dictionary where the keys are the names of
+    party sets and the values are lists that can be used as choices in
+    a ChoiceField, e.g.:
+
+        {u'Great Britain': [
+          ('party:none', ''),
+          (u'party:52', u'Conservative Party'),
+          (u'joint-party:53-119', u'Labour and Co-operative Party'),
+          (u'party:53', u'Labour Party'),
+          (u'ynmp-party:2', u'Independent'),
+          (u'ynmp-party:12522', u'Speaker seeking re-election')],
+         u'Northern Ireland': [
+          ('party:none', ''),
+          (u'party:51', u'Conservative and Unionist Party'),
+          (u'party:434', u'Labour Party of Northern Ireland'),
+          (u'ynmp-party:2', u'Independent'),
+          (u'ynmp-party:12522', u'Speaker seeking re-election')]}
+
+    'party_id_to_name' is a dictionary that maps party IDs to party
+    names, e.g.:
+
+        {u'party:434': u'Labour Party of Northern Ireland',
+         u'party:53': u'Labour Party',
+         u'joint-party:53-119': u'Labour and Co-operative Party',
+         u'party:51': u'Conservative and Unionist Party',
+         u'party:52': u'Conservative Party',
+         u'ynmp-party:12522': u'Speaker seeking re-election',
+         u'ynmp-party:2': u'Independent'}
+
+    """
+
+    def party_data_to_party_set(self, party_data):
+        raise NotImplementedError(
+            "You should implement party_data_to_party_set in a subclass"
+        )
+
+    def __init__(self):
+
+        self.party_choices = defaultdict(list)
+        self.party_id_to_name = {}
+        with open(join(data_directory, 'all-parties-from-popit.json')) as f:
+            for party in json.load(f):
+                for party_set in self.party_data_to_party_sets(party):
+                    self.party_choices[party_set].append(
+                        (party['id'], party['name'])
+                    )
+                    self.party_id_to_name[party['id']] = party['name']
+            # Now sort the parties, and an an empty default at the start:
+            for parties in self.party_choices.values():
+                parties.sort(key=lambda p: p[1].lower())
+                parties.insert(0, ('party:none', ''))
+
+
+class BaseAreaPostData(object):
+
+    """Instantiate this class to provide mappings between areas and posts
+
+    FIXME: check that these are sensible descriptions
+
+    If you instantiate this class you will get the following attributes:
+
+         'area_ids_and_names_by_post_group', maps a post group to a
+         list of all areas of a particular type
+
+         'areas_by_post_id', maps a post ID to all areas associated
+         with it
+    """
+
+    def area_to_post_group(self, area_data):
+        raise NotImplementedError(
+            "You should implement area_to_post_group in a subclass"
+        )
+
+    def get_post_id(mapit_type, area_id):
+        raise NotImplementedError(
+            "You should implement get_post_id in a subclass"
+        )
+
+    def __init__(self, mapit_data, party_data):
+        self.mapit_data = mapit_data
+        self.party_data = party_data
+        self.areas_by_post_id = {}
+        self.area_ids_and_names_by_post_group = {}
+
+        for t, election_data in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+            mapit_type, mapit_generation = t
+            for area in self.mapit_data.areas_by_id[t].values():
+                post_id = self.get_post_id(mapit_type, area['id'])
+                if post_id in self.areas_by_post_id:
+                    message = _("Found multiple areas for the post ID {post_id}")
+                    raise Exception(message.format(post_id=post_id))
+                self.areas_by_post_id[post_id] = area
+            for area in mapit_data.areas_by_name[t].values():
+                post_group = self.area_to_post_group(area)
+                self.area_ids_and_names_by_post_group.setdefault(t, defaultdict(list))
+                self.area_ids_and_names_by_post_group[t][post_group].append(
+                    (str(area['id']), area['name'])
+                )
+            for area_list in self.area_ids_and_names_by_post_group[t].values():
+                area_list.sort(key=lambda c: c[1])

@@ -5,7 +5,7 @@ from django.conf import settings
 
 from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
-from candidates.static_data import MapItData
+from candidates.election_specific import MAPIT_DATA
 
 from slumber.exceptions import HttpServerError, HttpClientError
 
@@ -14,7 +14,7 @@ class Command(PopItApiMixin, BaseCommand):
 
     def handle_mapit_type(self, election, election_data, mapit_type):
         mapit_tuple = (mapit_type, election_data['mapit_generation'])
-        for id, area in MapItData.areas_by_id[mapit_tuple].items():
+        for id, area in MAPIT_DATA.areas_by_id[mapit_tuple].items():
             post_id = election_data['get_post_id'](
                 mapit_type, id
             )

@@ -408,3 +408,9 @@ if len(KNOWN_MAPIT_GENERATIONS) > 1:
     raise Exception(message.format(KNOWN_MAPIT_GENERATIONS))
 
 MAPIT_CURRENT_GENERATION = list(KNOWN_MAPIT_GENERATIONS)[0]
+
+MAPIT_TYPES_GENERATIONS_ELECTIONS = {
+    (mapit_type, t[1]['mapit_generation']): t[1]
+    for t in ELECTIONS_CURRENT
+    for mapit_type in t[1]['mapit_types']
+}

@@ -19,7 +19,7 @@ from auth_helpers.views import GroupRequiredMixin, user_in_group
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
-from ..election_specific import party_sets
+from ..election_specific import PARTY_DATA
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
@@ -30,7 +30,6 @@ from ..models import (
 from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
-from ..static_data import PartyData
 
 
 class PersonView(PopItApiMixin, TemplateView):
@@ -216,7 +215,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
                     'constituency': kwargs['form']['constituency_' + election],
                     'party_fields': [
                         kwargs['form']['party_' + p['slug'] + '_' + election]
-                        for p in party_sets
+                        for p in PARTY_DATA.ALL_PARTY_SETS
                     ]
                 }
             )

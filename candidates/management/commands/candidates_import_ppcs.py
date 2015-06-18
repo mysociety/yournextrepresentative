@@ -22,7 +22,7 @@ from django.conf import settings
 import requests
 
 from candidates.models import PopItPerson
-from candidates.static_data import MapItData
+from candidates.election_specific import MAPIT_DATA
 from candidates.views.version_data import get_change_metadata
 from candidates.popit import PopItApiMixin, get_search_url
 
@@ -73,7 +73,7 @@ def cons_key(s):
 
 constituency_lookup = {
     cons_key(k): v for k, v in
-    MapItData.areas_by_name[('WMC', 22)].items()
+    MAPIT_DATA.areas_by_name[('WMC', 22)].items()
 }
 
 class UnknownConstituencyException(Exception):

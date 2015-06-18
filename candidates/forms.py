@@ -2,9 +2,8 @@
 
 import re
 
-from .election_specific import party_sets
+from .election_specific import MAPIT_DATA, PARTY_DATA
 from .models.address import check_address
-from .static_data import MapItData, PartyData
 
 from django import forms
 from django.conf import settings
@@ -150,7 +149,7 @@ class BasePersonForm(forms.Form):
             # selected constituency.
             constituency = cleaned_data['constituency_' + election]
             try:
-                mapit_area = MapItData.areas_by_id[('WMC', 22)][constituency]
+                mapit_area = MAPIT_DATA.areas_by_id[('WMC', 22)][constituency]
             except KeyError:
                 message = _("If you mark the candidate as standing in the "
                             "{election}, you must select a constituency")
@@ -162,7 +161,7 @@ class BasePersonForm(forms.Form):
             else:
                 party_field = 'party_gb_' + election
             party_id = cleaned_data[party_field]
-            if party_id not in PartyData.party_id_to_name:
+            if party_id not in PARTY_DATA.party_id_to_name:
                 message = _("You must specify a party for the 2015 election")
                 raise forms.ValidationError(message)
         return cleaned_data
@@ -193,14 +192,14 @@ class NewPersonForm(BasePersonForm):
         # choice field for each such "party set" and make sure only
         # the appropriate one is shown, depending on the election and
         # selected constituency, using Javascript.
-        for party_set in party_sets:
+        for party_set in PARTY_DATA.ALL_PARTY_SETS:
             self.fields['party_' + party_set['slug'] + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
                         election=election_data['name'],
                         party_set_name=party_set['name'],
                     ),
-                    choices=PartyData.party_choices[party_set['name']],
+                    choices=PARTY_DATA.party_choices[party_set['slug']],
                     required=False,
                 )
 
@@ -254,20 +253,20 @@ class UpdatePersonForm(BasePersonForm):
                         [
                             (mapit_id, constituency['name'])
                             for mapit_id, constituency
-                            in MapItData.areas_by_id[('WMC', 22)].items()
+                            in MAPIT_DATA.areas_by_id[('WMC', 22)].items()
                         ],
                         key=lambda t: t[1]
                     ),
                     widget=forms.Select(attrs={'class': 'post-select'}),
                 )
-            for party_set in party_sets:
+            for party_set in PARTY_DATA.ALL_PARTY_SETS:
                 self.fields['party_' + party_set['slug'] + '_' + election] = \
                     forms.ChoiceField(
                         label=_("Party in {election} ({party_set_name})").format(
                             election=election_data['name'],
                             party_set_name=party_set['name'],
                         ),
-                        choices=PartyData.party_choices[party_set['name']],
+                        choices=PARTY_DATA.party_choices[party_set['slug']],
                         required=False,
                         widget=forms.Select(
                             attrs={
@@ -328,7 +327,7 @@ class ToggleLockForm(forms.Form):
 
     def clean_post_id(self):
         post_id = self.cleaned_data['post_id']
-        if post_id not in MapItData.areas_by_id[('WMC', 22)]:
+        if post_id not in MAPIT_DATA.areas_by_id[('WMC', 22)]:
             message = _('{0} was not a known post ID')
             raise ValidationError(message.format(post_id))
         return post_id

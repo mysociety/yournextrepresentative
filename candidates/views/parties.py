@@ -8,11 +8,7 @@ from cached_counts.models import CachedCount
 from elections.mixins import ElectionMixin
 
 from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
-from ..static_data import MapItData, PartyData
-from ..election_specific import (
-    ALL_POSSIBLE_PARTY_POST_GROUPS, party_to_possible_post_groups,
-    area_to_post_group
-)
+from ..election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 
 
 class PartyListView(ElectionMixin, PopItApiMixin, TemplateView):
@@ -62,7 +58,7 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PartyDetailView, self).get_context_data(**kwargs)
         party_id = kwargs['organization_id']
-        party_name = PartyData.party_id_to_name.get(party_id)
+        party_name = PARTY_DATA.party_id_to_name.get(party_id)
         if not party_name:
             raise Http404(_("Party not found"))
         party = self.api.organizations(party_id).get(embed='')['result']
@@ -72,7 +68,9 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             (i.get('notes', ''), i['proxy_url'] + '/240/0')
             for i in party.get('images', [])
         ]
-        by_post_group = {pg: {} for pg in ALL_POSSIBLE_PARTY_POST_GROUPS}
+        by_post_group = {
+            pg: {} for pg in AREA_POST_DATA.ALL_POSSIBLE_POST_GROUPS
+        }
         url = get_search_url(
             'persons',
             'party_memberships.{0}.id:"{1}"'.format(
@@ -90,10 +88,10 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
                 if not (standing_in and standing_in.get('2015')):
                     continue
                 post_id = standing_in['2015'].get('post_id')
-                mapit_data = MapItData.areas_by_id[('WMC', 22)].get(post_id)
+                mapit_data = MAPIT_DATA.areas_by_id[('WMC', 22)].get(post_id)
                 if not mapit_data:
                     continue
-                post_group = area_to_post_group(mapit_data)
+                post_group = AREA_POST_DATA.area_to_post_group(mapit_data)
                 by_post_group[post_group][post_id] = {
                     'person_id': person['id'],
                     'person_name': person['name'],
@@ -102,14 +100,14 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
                 }
         context['party'] = party
         context['party_name'] = party_name
-        relevant_post_groups = party_to_possible_post_groups(party)
+        relevant_post_groups = AREA_POST_DATA.party_to_possible_post_groups(party)
         candidates_by_post_group = {}
         for post_group in relevant_post_groups:
             candidates_by_post_group[post_group] = None
             if by_post_group[post_group]:
                 posts = [
                     (c[0], c[1], by_post_group[post_group].get(c[0]))
-                    for c in MapItData.area_ids_and_names_by_post_group[('WMC', 22)][post_group]
+                    for c in AREA_POST_DATA.area_ids_and_names_by_post_group[('WMC', 22)][post_group]
                 ]
                 candidates_by_post_group[post_group] = {
                     'constituencies': posts,

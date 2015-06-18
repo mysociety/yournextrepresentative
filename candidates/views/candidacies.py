@@ -13,7 +13,7 @@ from .version_data import get_client_ip, get_change_metadata
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import PopItPerson, LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 from ..popit import PopItApiMixin
-from ..static_data import MapItData
+from ..election_specific import MAPIT_DATA
 
 
 def raise_if_locked(api, request, post_id):
@@ -69,7 +69,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
+        context['constituency'] = MAPIT_DATA.areas_by_id[('WMC', 22)].get(
             self.request.POST.get('post_id')
         )
         return context
@@ -115,7 +115,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, Form
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MapItData.areas_by_id[('WMC', 22)].get(
+        context['constituency'] = MAPIT_DATA.areas_by_id[('WMC', 22)].get(
             self.request.POST.get('post_id')
         )
         return context

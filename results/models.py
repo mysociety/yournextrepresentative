@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from candidates.static_data import MapItData, PartyData
+from candidates.election_specific import MAPIT_DATA, PARTY_DATA
 
 class ResultEvent(models.Model):
 
@@ -21,11 +21,11 @@ class ResultEvent(models.Model):
 
     @property
     def winner_party_name(self):
-        return PartyData.party_id_to_name.get(self.winner_party_id)
+        return PARTY_DATA.party_id_to_name.get(self.winner_party_id)
 
     @property
     def constituency_name(self):
-        return MapItData.areas_by_id[('WMC', 22)][self.post_id]['name']
+        return MAPIT_DATA.areas_by_id[('WMC', 22)][self.post_id]['name']
 
     @classmethod
     def create_from_popit_person(cls, popit_person, election, source, user):
