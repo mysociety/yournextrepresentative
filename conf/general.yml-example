@@ -19,6 +19,10 @@ YNMP_DB_HOST: ''
 # uk_general_election_2015 or ar_elections_2015):
 ELECTION_APP: 'uk_general_election_2015'
 
+# Default language/timezone of the installation
+LANGUAGE_CODE: 'en-gb'
+TIME_ZONE: 'Europe/London'
+
 # The path to the gems directory:
 GEMS_DIRECTORY: ''
 
