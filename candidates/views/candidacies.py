@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.views.generic import FormView
 from django.utils.translation import ugettext as _
 
