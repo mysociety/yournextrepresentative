@@ -1,4 +1,5 @@
 *.pyc
+*.mo
 /db.sqlite3
 /static
 /candidates/static/candidates/style.css
