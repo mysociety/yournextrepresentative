@@ -1,1 +1,65 @@
-* { border: 5px solid red; }
+@import "../../../../candidates/static/foundation/scss/foundation/functions";
+
+$color-darkgreen: #00372d;
+$color-green: #005f4b;
+$color-lightgreen: #00ab87;
+$color-pink: #f5006c;
+$color-offwhite: #ece7e1;
+$color-cream: #e4dfdb;
+$color-red: #c55e59;
+$color-yellow: #fdf2d5;
+
+$header-background-color: $color-green;
+$body-background-color: mix($color-offwhite, #fff, 60%);
+$footer-text-color: mix($color-offwhite, #000, 60%);
+
+$muted-text-color: darken($color-cream, 20%);
+
+$message-background-color: mix($color-pink, #fff, 90%);
+$message-border-color: lighten($color-pink, 30%);
+
+$highlight-background-color: $color-yellow;
+$information-background-color: $color-lightgreen;
+$danger-background-color: mix($color-red, #fff, 15%);
+
+$confirmation-background-color: $color-cream;
+$error-background-color: mix($color-red, #fff, 15%);
+$error-text-color: darken($color-red, 10%);
+$error-border-color: mix($color-red, #fff, 30%);
+$error-input-border-color: mix($color-red, #fff, 40%);
+
+$avatar-background-color: #ddd;
+
+$unknown-candidate-status-color: $color-pink;
+$not-standing-candidate-status-color: $color-red;
+
+$homepage-description-background-color: $body-background-color;
+$homepage-description-text-color: #887; // dark desaturated browny-grey
+$homepage-activity-color: #333;
+$homepage-leaderboard-color: #333;
+
+// Override Foundation variables here
+$primary-color: $color-green;
+$secondary-color: $color-cream;
+$button-tny: rem-calc(6);
+$button-sml: rem-calc(8);
+$button-med: rem-calc(10);
+$button-lrg: rem-calc(14);
+$button-radius: 3px;
+$code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
+
+@import "../../../../candidates/static/foundation/scss/normalize";
+@import "../../../../candidates/static/foundation/scss/foundation";
+
+@import "../../../../candidates/static/candidates/header";
+@import "../../../../candidates/static/candidates/content";
+@import "../../../../candidates/static/candidates/footer";
+@import "../../../../candidates/static/candidates/forms";
+
+@import "../../../../candidates/static/candidates/finder";
+@import "../../../../candidates/static/candidates/people";
+@import "../../../../candidates/static/candidates/versions";
+@import "../../../../candidates/static/candidates/parties";
+@import "../../../../candidates/static/candidates/person_edit";
+@import "../../../../candidates/static/candidates/copyright-assignment";
+@import "../../../../candidates/static/candidates/leaderboards";
