@@ -1,17 +1,19 @@
 @import "../../../../candidates/static/foundation/scss/foundation/functions";
 
-$color-darkgreen: #00372d;
-$color-green: #005f4b;
-$color-lightgreen: #00ab87;
-$color-pink: #f5006c;
-$color-offwhite: #ece7e1;
+$color-darkgreen: #16312d;
+$color-green: #155847;
+$color-lightgreen: #1e9577;
+$color-palegreen: #bcdad5;
+$color-pink: #dd3975;
+$color-offwhite: #ddd;
 $color-cream: #e4dfdb;
 $color-red: #c55e59;
 $color-yellow: #fdf2d5;
 
 $header-background-color: $color-green;
-$body-background-color: mix($color-offwhite, #fff, 60%);
-$footer-text-color: mix($color-offwhite, #000, 60%);
+$body-background-color: $color-darkgreen;
+$footer-text-color: mix($color-darkgreen, #fff, 50%);
+$content-background-color: $color-offwhite;
 
 $muted-text-color: darken($color-cream, 20%);
 
@@ -46,7 +48,19 @@ $button-sml: rem-calc(8);
 $button-med: rem-calc(10);
 $button-lrg: rem-calc(14);
 $button-radius: 3px;
+$header-font-family: "Politica", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
+
+@font-face {
+  font-family: Politica;
+  src: url(fonts/POLITICA.TTF);
+}
+
+@font-face {
+  font-family: Politica;
+  src: url(fonts/POLITICA_BOLD.TTF);
+  font-weight: bold;
+}
 
 @import "../../../../candidates/static/foundation/scss/normalize";
 @import "../../../../candidates/static/foundation/scss/foundation";
@@ -63,3 +77,42 @@ $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 @import "../../../../candidates/static/candidates/person_edit";
 @import "../../../../candidates/static/candidates/copyright-assignment";
 @import "../../../../candidates/static/candidates/leaderboards";
+
+.header {
+  font-family: $header-font-family;
+  font-size: 1.3125em; // 21px up from default 16px
+  text-align: center;
+  color: $color-palegreen;
+}
+
+.header__logo {
+  display: block;
+  margin: 1em auto 0 auto;
+  width: 287px;
+  height: 62px;
+  background: transparent url(img/YQSlogo.jpg) center center no-repeat;
+  background-size: 287px;
+  height: 62px;
+  text-indent: -9999px;
+}
+
+a.header__logo {
+  &:hover, &:focus {
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.header__nav__item {
+  display: inline-block;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.header__hero {
+  display: none;
+}
+
+.footer a {
+  color: $color-lightgreen;
+}
