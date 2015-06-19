@@ -39,7 +39,9 @@
   {% endif %}
 
   {% for country, country_data in candidates_by_post_group %}
-    <h3>{{ country }}</h3>
+    {% if country %}
+      <h3>{{ country }}</h3>
+    {% endif %}
     {% if country_data.constituencies %}
       <ul>
         {% for post_id, constituency_name, candidate in country_data.constituencies %}
