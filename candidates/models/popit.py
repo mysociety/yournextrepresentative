@@ -999,17 +999,13 @@ class PopItPerson(object):
                 standing_in_election = self.standing_in[election]
                 if standing_in_election:
                     initial_data[standing_key] = 'standing'
-                    initial_data[constituency_key] = standing_in_election['post_id']
-                    mapit_url = standing_in_election.get('mapit_url')
-                    if mapit_url:
-                        area_id = get_mapit_id_from_mapit_url(mapit_url)
-                        party_data = self.party_memberships.get(election, {})
-                        party_id = party_data.get('id', '')
-                        country = MAPIT_DATA.areas_by_id[('WMC', 22)].get(area_id)['country_name']
-                        if country == 'Northern Ireland':
-                            initial_data['party_ni_' + election] = party_id
-                        else:
-                            initial_data['party_gb_' + election] = party_id
+                    post_id = standing_in_election['post_id']
+                    initial_data[constituency_key] = post_id
+                    party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+                    party_data = self.party_memberships.get(election, {})
+                    party_id = party_data.get('id', '')
+                    party_key = 'party_' + party_set + '_' + election
+                    initial_data[party_key] = party_id
                 else:
                     initial_data[standing_key] = 'not-standing'
                     initial_data[constituency_key] = ''
