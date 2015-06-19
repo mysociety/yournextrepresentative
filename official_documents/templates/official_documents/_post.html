@@ -22,7 +22,7 @@
   {% else %}
 
   {% blocktrans trimmed with post_label=post_data.label type=doc_type.1 %}
-    We don't have any {{ type }} for the post {{ post_label }}.
+    We don't have any {{ type }} for the post {{ post_data.label }}.
   {% endblocktrans %}
 
     {% if user_can_upload_documents %}

@@ -8,7 +8,7 @@ from cached_counts.models import CachedCount
 from elections.mixins import ElectionMixin
 
 from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
-from ..election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from ..election_specific import PARTY_DATA, AREA_POST_DATA
 
 
 class PartyListView(ElectionMixin, PopItApiMixin, TemplateView):
@@ -88,15 +88,15 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
                 if not (standing_in and standing_in.get('2015')):
                     continue
                 post_id = standing_in['2015'].get('post_id')
-                mapit_data = MAPIT_DATA.areas_by_id[('WMC', 22)].get(post_id)
-                if not mapit_data:
-                    continue
-                post_group = AREA_POST_DATA.area_to_post_group(mapit_data)
+                post_name = standing_in['2015'].get('name')
+                post_group = AREA_POST_DATA.post_id_to_post_group(
+                    kwargs['election'], post_id
+                )
                 by_post_group[post_group][post_id] = {
                     'person_id': person['id'],
                     'person_name': person['name'],
                     'post_id': post_id,
-                    'constituency_name': mapit_data['name']
+                    'constituency_name': post_name,
                 }
         context['party'] = party
         context['party_name'] = party_name

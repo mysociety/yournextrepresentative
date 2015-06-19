@@ -7,45 +7,41 @@
 
 {% block extra_head %}
     <!-- Open Graph data -->
-    <meta property="og:title" content="Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election" />
+    <meta property="og:title" content="Candidates (PPCs) for {{ post_label_shorter }} in the UK 2015 General Election" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="og:image:height" content="80" />
     <meta property="og:image:width" content="80" />
     <meta property="og:site_name" content="YourNextMP" />
-    <meta property="og:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the UK 2015 General Election - find out more on YourNextMP">
+    <meta property="og:description" content="List of Candidates (PPCs) for {{ post_label_shorter }} in the UK 2015 General Election - find out more on YourNextMP">
     <meta property="og:locale" content="en_GB" />
 
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@yournextmp" />
-    <meta name="twitter:title" content="Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }}" />
+    <meta name="twitter:title" content="Candidates (PPCs) for {{ post_label_shorter }} in the {{ election_data.name }}" />
     <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="twitter:image:height" content="120" />
     <meta property="twitter:image:width" content="120" />
     <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ constituency_name }} in the {{ election_data.name }} - find out more on YourNextMP"  />
+    <meta name="twitter:description" content="List of Candidates (PPCs) for {{ post_label_shorter }} in the {{ election_data.name }} - find out more on YourNextMP"  />
 {% endblock %}
 
 {% block body_class %}constituency{% endblock %}
 
-{% block title %}{% blocktrans with election_name=election_data.name %}Candidates for {{ constituency_name }} in the {{ election_name }}{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans with election_name=election_data.name %}Candidates for {{ post_label_shorter }} in the {{ election_name }}{% endblocktrans %}{% endblock %}
 
 {% block hero %}
-  <h1>{% blocktrans %}Candidates for <span id="constituency-name">{{ constituency_name }}</span>{% endblocktrans %}</h1>
+  <h1>{% blocktrans %}Candidates for <span id="constituency-name">{{ post_label_shorter }}</span>{% endblocktrans %}</h1>
 {% endblock %}
 
 {% block content %}
 
 {% include 'candidates/_candidates_for_post.html' %}
 
-<div>{% blocktrans trimmed %}
-You can also find any <a href="{{ electionleaflets_url }}">election
-leaflets for {{ constituency_name }} at ElectionLeaflets.org</a> or
-any <a href="{{ meetyournextmp_url }}">public events at which candidates
-will be debating at MeetYourNextMP.com</a>.
-{% endblocktrans %}</div>
+{% block other_resources %}
+{% endblock %}
 
 {% if user.is_staff %}
   <div class="constituency-invalidate-cache">

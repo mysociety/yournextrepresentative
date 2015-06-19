@@ -1,6 +1,4 @@
 from datetime import timedelta
-import re
-import unicodedata
 
 from slugify import slugify
 
@@ -8,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
@@ -32,33 +30,6 @@ from results.models import ResultEvent
 
 from ..cache import get_post_cached, invalidate_posts
 
-
-# From http://stackoverflow.com/a/517974/223092
-def strip_accents(s):
-    return u"".join(
-        c for c in unicodedata.normalize('NFKD', s)
-        if not unicodedata.combining(c)
-    )
-
-def get_electionleaflets_url(mapit_area_id, constituency_name):
-    """Generate an electionleaflets.org URL from a constituency name
-
-    >>> get_electionleaflets_url(u"66115", u"Ynys M\u00F4n")
-    u'http://electionleaflets.org/constituencies/66115/ynys_mon/'
-    >>> get_electionleaflets_url(u"66056", u"Ashton-under-Lyne")
-    u'http://electionleaflets.org/constituencies/66056/ashton_under_lyne/'
-    >>> get_electionleaflets_url(u"14403", u"Ayr, Carrick and Cumnock")
-    u'http://electionleaflets.org/constituencies/14403/ayr_carrick_and_cumnock/'
-    """
-    result = strip_accents(constituency_name)
-    result = result.lower()
-    result = re.sub(r'[^a-z]+', ' ', result)
-    result = re.sub(r'\s+', ' ', result).strip()
-    slug = result.replace(' ', '_')
-    url_format = u'http://electionleaflets.org/constituencies/{area_id}/{slug}/'
-    return url_format.format(area_id=mapit_area_id, slug=slug)
-
-
 class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
@@ -68,28 +39,14 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             *args, **kwargs
         )
 
+    def shorten_post_label(self, post_label):
+        return post_label
+
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        context['constituency_name'] = \
-            get_constituency_name_from_mapit_id(post_id)
-
-        if not context['constituency_name']:
-            raise Http404(_("Constituency not found"))
-
-        context['electionleaflets_url'] = \
-            get_electionleaflets_url(post_id, context['constituency_name'])
-
-        context['meetyournextmp_url'] = \
-            u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(post_id)
-
-        context['redirect_after_login'] = \
-            urlquote(reverse('constituency', kwargs={
-                'election': self.election,
-                'post_id': post_id,
-                'ignored_slug': slugify(context['constituency_name'])
-            }))
+        mp_post = get_post_cached(self.api, post_id)
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
@@ -103,7 +60,17 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
 
-        mp_post = get_post_cached(self.api, post_id)
+        context['post_label'] = mp_post['result']['label']
+        context['post_label_shorter'] = self.shorten_post_label(
+            context['post_label']
+        )
+
+        context['redirect_after_login'] = \
+            urlquote(reverse('constituency', kwargs={
+                'election': self.election,
+                'post_id': post_id,
+                'ignored_slug': slugify(context['post_label_shorter'])
+            }))
 
         context['post_data'] = {
             k: v for k, v in mp_post['result'].items()
