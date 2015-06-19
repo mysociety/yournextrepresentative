@@ -1,7 +1,14 @@
 from django.core.cache import cache
 from django.utils.text import slugify
 
+from slumber.exceptions import HttpClientError
+
 from .popit import get_all_posts
+
+
+class UnknownPostException(Exception):
+    pass
+
 
 def post_cache_key(post_id):
     """Form the cache key used for post data"""
@@ -26,8 +33,16 @@ def get_post_cached(api, post_id):
     if result_from_cache is not None:
         return result_from_cache
 
-    mp_post = api.posts(post_id).get(
-        embed='membership.person.membership.organization')
+    try:
+        mp_post = api.posts(post_id).get(
+            embed='membership.person.membership.organization')
+    except HttpClientError as hce:
+        # Disappointingly, slumber doesn't seem to store the response
+        # status code on the HttpClientError exception, so just look
+        # for the expected message content:
+        if 'not found' in hce.content:
+            raise UnknownPostException()
+        raise
     # Add posts data with an indefinite time-out (we should be
     # invalidating the cached on any change).
     cache.set(post_key, mp_post, None)
