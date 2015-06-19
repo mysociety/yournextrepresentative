@@ -46,11 +46,14 @@ class AreaPostData(BaseAreaPostData):
         return str(area_id)
 
     def post_id_to_party_set(self, post_id):
-        area = self.areas_by_post_id[post_id]
+        area = self.areas_by_post_id.get(post_id, None)
+        if area is None:
+            return area
         if area['country_name'] == 'Northern Ireland':
             return 'ni'
-        else:
+        elif area['country_name'] in ('England', 'Scotland', 'Wales'):
             return 'gb'
+        return None
 
     def post_id_to_post_group(self, election, post_id):
         # In the UK, the post IDs are the same as MapIt IDs,
