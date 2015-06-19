@@ -7,15 +7,15 @@ from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import user_in_group
 
-from candidates.models import get_area_from_post_id
 from elections.mixins import ElectionMixin
 
-from .helpers import get_redirect_from_mapit_id
+from .helpers import get_redirect_to_post
 from .version_data import get_client_ip, get_change_metadata
+from ..cache import get_post_cached
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import PopItPerson, LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 from ..popit import PopItApiMixin
-from ..election_specific import MAPIT_DATA
+from ..election_specific import MAPIT_DATA, AREA_POST_DATA
 
 
 def raise_if_locked(api, request, post_id):
@@ -36,6 +36,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
 
     def form_valid(self, form):
         post_id = form.cleaned_data['post_id']
+        post_data = get_post_cached(self.api, post_id)['result']
         raise_if_locked(self.api, self.request, post_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
@@ -66,7 +67,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(self.election, post_id)
+        return get_redirect_to_post(self.election, post_data)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
@@ -84,6 +85,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, Form
 
     def form_valid(self, form):
         post_id = form.cleaned_data['post_id']
+        post_data = get_post_cached(self.api, post_id)['result']
         raise_if_locked(self.api, self.request, post_id)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
@@ -112,7 +114,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, Form
         person.record_version(change_metadata)
         person.save_to_popit(self.api)
         person.invalidate_cache_entries()
-        return get_redirect_from_mapit_id(self.election, post_id)
+        return get_redirect_to_post(self.election, post_data)
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)

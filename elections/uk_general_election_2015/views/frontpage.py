@@ -4,14 +4,16 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
+from candidates.cache import get_post_cached
+from candidates.popit import PopItApiMixin
+from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
 
-from candidates.views.helpers import get_redirect_from_mapit_id
 from ..forms import (PostcodeForm, ConstituencyForm)
 from candidates.mapit import get_wmc_from_postcode
 
 
-class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
+class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
 
@@ -22,9 +24,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        return get_redirect_from_mapit_id(
+        post_data = get_post_cached(self.api, wmc)['result']
+        return get_redirect_to_post(
             settings.ARBITRARY_CURRENT_ELECTION[0],
-            wmc
+            post_data
         )
 
     def get_context_data(self, **kwargs):
@@ -38,7 +41,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         return context
 
 
-class ConstituencyNameFinderView(ContributorsMixin, FormView):
+class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = ConstituencyForm
 
@@ -48,10 +51,11 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
         return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        constituency_id = form.cleaned_data['constituency']
-        return get_redirect_from_mapit_id(
+        post_id = form.cleaned_data['constituency']
+        post_data = get_post_cached(self.api, post_id)['result']
+        return get_redirect_to_post(
             settings.ARBITRARY_CURRENT_ELECTION[0],
-            constituency_id
+            post_data
         )
 
     def get_context_data(self, **kwargs):

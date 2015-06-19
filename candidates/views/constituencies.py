@@ -14,7 +14,7 @@ from django.views.generic import TemplateView, FormView, View
 
 from elections.mixins import ElectionMixin
 from auth_helpers.views import GroupRequiredMixin
-from .helpers import get_people_from_memberships
+from .helpers import get_people_from_memberships, get_redirect_to_post
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
@@ -241,8 +241,7 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
             self.request.GET.get('person', '')
         )
         self.person = PopItPerson.create_from_popit(self.api, person_id)
-        self.constituency_name = \
-            get_post_label_from_post_id(self.kwargs['post_id'])
+        self.post_data = get_post_cached(self.api, self.kwargs['post_id'])['result']
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
 
@@ -256,15 +255,14 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
         context = super(ConstituencyRecordWinnerView, self). \
             get_context_data(**kwargs)
         context['post_id'] = self.kwargs['post_id']
-        context['constituency_name'] = self.constituency_name
+        context['constituency_name'] = self.post_data['label']
         context['person'] = self.person
         return context
 
     def form_valid(self, form):
         winner = self.person
-        post = get_post_cached(self.api, self.kwargs['post_id'])['result']
         people_for_invalidation = set()
-        for membership in post.get('memberships', []):
+        for membership in self.post_data.get('memberships', []):
             if membership.get('role') != 'Candidate':
                 continue
             if not membership_covers_date(
@@ -306,15 +304,9 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
         # This shouldn't be necessary since invalidating the people
         # will invalidate the post
         invalidate_posts([self.kwargs['post_id']])
-        return HttpResponseRedirect(
-            reverse(
-                'constituency',
-                kwargs={
-                    'election': self.election,
-                    'post_id': self.kwargs['post_id'],
-                    'ignored_slug': slugify(self.constituency_name),
-                }
-            )
+        return get_redirect_to_post(
+            self.election,
+            self.post_data,
         )
 
 

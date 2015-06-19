@@ -4,8 +4,9 @@ from django.http import HttpResponseRedirect
 
 from slugify import slugify
 
+from ..election_specific import AREA_POST_DATA
 from ..models import (
-    get_post_label_from_post_id, PopItPerson, membership_covers_date
+    PopItPerson, membership_covers_date
 )
 
 def join_with_commas_and_and(a):
@@ -17,15 +18,17 @@ def join_with_commas_and_and(a):
     result += u', and '.join(a[-2:])
     return result
 
-def get_redirect_from_mapit_id(election, mapit_id):
-    post_label = get_post_label_from_post_id(mapit_id)
+def get_redirect_to_post(election, post_data):
+    short_post_label = AREA_POST_DATA.shorten_post_label(
+        election, post_data['label']
+    )
     return HttpResponseRedirect(
         reverse(
             'constituency',
             kwargs={
                 'election': election,
-                'post_id': mapit_id,
-                'ignored_slug': slugify(post_label),
+                'post_id': post_data['id'],
+                'ignored_slug': slugify(short_post_label),
             }
         )
     )
