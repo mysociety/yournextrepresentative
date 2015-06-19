@@ -24,7 +24,7 @@ from ..models import (
     RESULT_RECORDERS_GROUP_NAME, LoggedAction
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
-from ..election_specific import MAPIT_DATA
+from ..election_specific import MAPIT_DATA, AREA_POST_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
@@ -38,9 +38,6 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         return super(ConstituencyDetailView, self).dispatch(
             *args, **kwargs
         )
-
-    def shorten_post_label(self, post_label):
-        return post_label
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
@@ -61,8 +58,8 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         context['official_documents'] = documents_by_type.items()
 
         context['post_label'] = mp_post['result']['label']
-        context['post_label_shorter'] = self.shorten_post_label(
-            context['post_label']
+        context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
+            self.election, context['post_label']
         )
 
         context['redirect_after_login'] = \

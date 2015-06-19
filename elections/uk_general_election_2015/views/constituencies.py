@@ -33,9 +33,6 @@ class UKConstituencyDetailView(ConstituencyDetailView):
 
     template_name = 'uk_general_election_2015/constituency.html'
 
-    def shorten_post_label(self, post_label):
-        return re.sub(r'^Member of Parliament for ', '', post_label)
-
     def get_context_data(self, **kwargs):
         context = super(UKConstituencyDetailView, self).get_context_data(**kwargs)
 
