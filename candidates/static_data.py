@@ -61,7 +61,6 @@ class BaseMapItData(object):
         self.areas_by_id = {}
         self.areas_by_name = {}
         self.areas_list_sorted_by_name = {}
-        self.areas_by_post_id = {}
 
         for t, election_data in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
             mapit_type, mapit_generation = t

@@ -46,7 +46,7 @@ class AreaPostData(BaseAreaPostData):
         return str(area_id)
 
     def post_id_to_party_set(self, post_id):
-        area = self.mapit_data.areas_by_post_id[post_id]
+        area = self.areas_by_post_id[post_id]
         if area['country_name'] == 'Northern Ireland':
             return 'ni'
         else:
