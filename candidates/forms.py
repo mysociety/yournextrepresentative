@@ -2,6 +2,8 @@
 
 import re
 
+from .cache import get_all_posts_cached
+from .popit import create_popit_api_object
 from .election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
@@ -230,11 +232,17 @@ class UpdatePersonForm(BasePersonForm):
     def __init__(self, *args, **kwargs):
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
+        # We should only need to actually go to the API for the first
+        # time this form is loaded; it'll be cached indefinitely after
+        # that, but still need the API object for the first time.
+        api = create_popit_api_object()
+
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
         # with formsets?)
 
         for election, election_data in settings.ELECTIONS_CURRENT:
+            role = election_data['for_post_role']
             self.fields['standing_' + election] = \
                 forms.ChoiceField(
                     label=_('Standing in %s') % election_data['name'],
@@ -247,9 +255,12 @@ class UpdatePersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (mapit_id, constituency['name'])
-                            for mapit_id, constituency
-                            in MAPIT_DATA.areas_by_id[('WMC', 22)].items()
+                            (post['id'],
+                             AREA_POST_DATA.shorten_post_label(
+                                 election,
+                                 post['label']
+                             ))
+                            for post in get_all_posts_cached(api, role)
                         ],
                         key=lambda t: t[1]
                     ),
