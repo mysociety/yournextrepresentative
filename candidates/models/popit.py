@@ -335,25 +335,6 @@ def election_to_party_dates(election):
         'end_date': str(election_data['party_membership_end_date']),
     }
 
-def extract_constituency_name(candidate_list_organization):
-    """Return the constituency name from a candidate list organization
-
-    >>> extract_constituency_name({
-    ...     'name': 'Candidates for Altrincham and Sale West in 2015'
-    ... })
-    'Altrincham and Sale West'
-    >>> constituency_name = extract_constituency_name({
-    ...     'name': 'Another Organization'
-    ... })
-    >>> print constituency_name
-    None
-    """
-    m = candidate_list_name_re.search(
-        candidate_list_organization['name']
-    )
-    if m:
-        return m.group(1)
-    return None
 def get_post_label_from_post_id(api, post_id):
     post_data = get_post_cached(api, post_id)
     return post_data['label']
