@@ -2,7 +2,6 @@ from django.views.generic import CreateView, DetailView
 
 from candidates.cache import get_post_cached
 from candidates.popit import create_popit_api_object
-from candidates.static_data import MapItData
 from auth_helpers.views import GroupRequiredMixin
 from elections.mixins import ElectionMixin
 

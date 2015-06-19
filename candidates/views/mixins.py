@@ -6,7 +6,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from ..models import LoggedAction
-from ..static_data import MapItData
 
 
 class ContributorsMixin(object):
