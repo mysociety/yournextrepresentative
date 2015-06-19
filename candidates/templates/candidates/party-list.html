@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<h2>{% trans "All parties with any candidates standing in 2015" %}</h2>
+<h2>{% blocktrans with election_name=election_data.name %}All parties with any candidates standing in {{ election_name }}{% endblocktrans %}</h2>
 
 <ul class="party-list">
   {% for p in parties %}

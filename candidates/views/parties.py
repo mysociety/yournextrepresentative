@@ -85,10 +85,10 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             url = next_url if next_url else None
             for person in page_result['result']:
                 standing_in = person.get('standing_in')
-                if not (standing_in and standing_in.get('2015')):
+                if not (standing_in and standing_in.get(self.election)):
                     continue
-                post_id = standing_in['2015'].get('post_id')
-                post_name = standing_in['2015'].get('name')
+                post_id = standing_in[self.election].get('post_id')
+                post_name = standing_in[self.election].get('name')
                 post_group = AREA_POST_DATA.post_id_to_post_group(
                     kwargs['election'], post_id
                 )
@@ -107,7 +107,10 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             if by_post_group[post_group]:
                 posts = [
                     (c[0], c[1], by_post_group[post_group].get(c[0]))
-                    for c in AREA_POST_DATA.area_ids_and_names_by_post_group[('WMC', 22)][post_group]
+                    for mapit_type in self.election_data['mapit_types']
+                    for c in AREA_POST_DATA.area_ids_and_names_by_post_group[
+                        (mapit_type, self.election_data['mapit_generation'])
+                    ][post_group]
                 ]
                 candidates_by_post_group[post_group] = {
                     'constituencies': posts,
