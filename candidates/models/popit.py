@@ -25,7 +25,7 @@ from ..cache import (
     get_person_cached, invalidate_person, get_post_cached, invalidate_posts
 )
 from ..diffs import get_version_diffs
-from ..election_specific import MAPIT_DATA, PARTY_DATA
+from ..election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 
 person_added = django.dispatch.Signal(providing_args=["data"])
 
@@ -155,20 +155,6 @@ def parse_approximate_date(s):
     if s == 'future':
         return ApproximateDate(future=True)
     raise Exception, _("Couldn't parse '{0}' as an ApproximateDate").format(s)
-
-def get_area_from_post_id(post_id, mapit_url_key='id'):
-    "Get a MapIt area ID from a candidate list organization's PopIt data"
-
-    mapit_data = MAPIT_DATA.areas_by_id[('WMC', 22)].get(post_id)
-    if mapit_data is None:
-        message = _("Couldn't find the constituency with Post and MapIt Area ID: '{0}'")
-        raise Exception(message.format(post_id))
-    url_format = 'http://mapit.mysociety.org/area/{0}'
-    return {
-        'name': mapit_data['name'],
-        'post_id': post_id,
-        mapit_url_key: url_format.format(post_id),
-    }
 
 def complete_partial_date(iso_8601_date_partial, start=True):
     """If we have a partial date string, complete it for range comparisons
@@ -1134,7 +1120,7 @@ class PopItPerson(object):
         self.invalidate_cache_entries()
         return self.id
 
-    def update_from_form(self, form):
+    def update_from_form(self, api, form):
         form_data = form.cleaned_data.copy()
         # The date is returned as a datetime.date, so if that's set, turn
         # it into a string:
@@ -1164,18 +1150,17 @@ class PopItPerson(object):
 
             # Extract some fields that we will deal with separately:
             standing = form_data.pop('standing_' + election, 'standing')
-            constituency_mapit_id = form_data.pop('constituency_' + election)
+            post_id = form_data.pop('constituency_' + election)
             party = form_data.pop('party_' + election)
 
             if standing == 'standing':
-                constituency_name = get_post_label_from_post_id(
-                    constituency_mapit_id
-                )
-                if not constituency_name:
-                    message = _("Failed to find a constituency with MapIt ID {}")
-                    raise Exception(message.format(constituency_mapit_id))
-                new_standing_in[election] = \
-                    get_area_from_post_id(constituency_mapit_id, mapit_url_key='mapit_url')
+                post_data = get_post_cached(api, post_id)['result']
+                post_label = post_data['label']
+                new_standing_in[election] = {
+                    'post_id': post_data['id'],
+                    'name': AREA_POST_DATA.shorten_post_label(election, post_label),
+                    'mapit_url': post_data['area']['identifier'],
+                }
                 # FIXME: stupid hack to preserve elected status after the election:
                 old_standing_in = self.standing_in.get(election, {})
                 if (old_standing_in is not None) and ('elected' in old_standing_in):

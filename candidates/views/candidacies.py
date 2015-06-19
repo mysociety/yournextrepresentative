@@ -55,10 +55,12 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
         )
         # Update standing_in and party_memberships:
         new_standing_in = person.standing_in.copy()
-        new_standing_in[self.election] = get_area_from_post_id(
-            post_id,
-            mapit_url_key='mapit_url'
-        )
+        post_label = post_data['label']
+        new_standing_in[self.election] = {
+            'post_id': post_data['id'],
+            'name': AREA_POST_DATA.shorten_post_label(self.election, post_label),
+            'mapit_url': post_data['area']['identifier'],
+        }
         person.standing_in = new_standing_in
         new_party_memberships = person.party_memberships.copy()
         new_party_memberships[self.election] = person.last_party_reduced

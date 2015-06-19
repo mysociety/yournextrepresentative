@@ -241,7 +241,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
             self.request, form.cleaned_data.pop('source')
         )
 
-        person.update_from_form(form)
+        person.update_from_form(self.api, form)
 
         LoggedAction.objects.create(
             user=self.request.user,
@@ -273,7 +273,7 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
         person = PopItPerson()
-        person.update_from_form(form)
+        person.update_from_form(self.api, form)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
         )
