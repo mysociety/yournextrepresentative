@@ -5,12 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
 from candidates.cache import get_post_cached
+from candidates.mapit import get_wmc_from_postcode
 from candidates.popit import PopItApiMixin
 from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
 
 from ..forms import (PostcodeForm, ConstituencyForm)
-from candidates.mapit import get_wmc_from_postcode
 
 
 class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView):
