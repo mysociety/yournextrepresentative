@@ -1131,18 +1131,16 @@ class PopItPerson(object):
 
         for election, election_data in settings.ELECTIONS_CURRENT:
 
-            area_id = form_data.get('constituency_' + election)
-
-            # Take either the GB or NI party select, and set it on 'party':
-            if area_id:
-                country_name =  MAPIT_DATA.areas_by_id[('WMC', 22)].get(area_id)['country_name']
-                key_prefix = 'party_ni' if country_name == 'Northern Ireland' else 'party_gb'
-                key = key_prefix + '_' + election
-                form_data['party_' + election] = form_data[key]
+            post_id = form_data.get('constituency_' + election)
+            if post_id:
+                party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+                party_key = 'party_' + party_set + '_' + election
+                form_data['party_' + election] = form_data[party_key]
             else:
                 form_data['party_' + election] = None
-            del form_data['party_gb_' + election]
-            del form_data['party_ni_' + election]
+            # Delete all the party set specific party information:
+            for party_set in PARTY_DATA.ALL_PARTY_SETS:
+                form_data.pop('party_' + party_set['slug']  + '_' + election)
 
             # Extract some fields that we will deal with separately:
             standing = form_data.pop('standing_' + election, 'standing')
