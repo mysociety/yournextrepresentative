@@ -72,7 +72,7 @@ class TestValidators(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
-            [u'You must specify a party for the 2015 election']
+            [u'You must specify a party for the 2015 General Election']
         })
 
     def test_update_person_form_standing_party_and_gb_constituency(self):
