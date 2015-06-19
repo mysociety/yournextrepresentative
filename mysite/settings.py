@@ -102,12 +102,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_nose',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.twitter',
     'pipeline',
     ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
@@ -119,6 +113,12 @@ INSTALLED_APPS = (
     'template_timings_panel',
     'official_documents',
     'results',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
 )
 
 SITE_ID = 1

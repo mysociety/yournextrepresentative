@@ -76,7 +76,7 @@
   {% if user_can_record_results and show_retract_result %}
     <form action="{% url 'retract-winner' election=election post_id=post_data.id %}" method="post">
       {% csrf_token %}
-      <input type="submit" class="button candidates-list__actions__winner-mistake" value="{% trans "Unset the current winner, if incorrect" %}">
+      <input type="submit" class="button alert" value="{% trans "Unset the current winner, if incorrect" %}">
     </form>
   {% endif %}
 

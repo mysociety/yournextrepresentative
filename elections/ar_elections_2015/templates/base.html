@@ -29,7 +29,7 @@
     {% block extra_js %}
     {% endblock %}
 
-    <title>{% block title %}{% trans "YourNextMP - 2015 UK general election candidates" %}{% endblock %}</title>
+    <title>{% block title %}{% trans "Yo Quiero Saber" %}{% endblock %}</title>
 
     {% if settings.GOOGLE_ANALYTICS_ACCOUNT %}
       <script>
@@ -51,22 +51,22 @@
 <body class="{% block body_class %}{% endblock %}">
   <div class="header">
     <div class="container">
+      <a href="/" class="header__logo">Yo Quiero Saber</a>
       <div class="header__nav">
-        <a href="/" class="header__nav__logo">{% trans "YourNextMP" %}</a>
-        <a href="{% url 'help-about' %}" class="header__nav__logo">{% trans "About" %}</a>
-        <a href="{% url 'posts' %}" class="header__nav__logo">{% trans "Posts" %}</a>
-        <a href="{% url 'reports_home' %}" class="header__nav__logo">{% trans "Numbers" %}</a>
+        <a href="{% url 'help-about' %}" class="header__nav__item">{% trans "About" %}</a>
+        <a href="{% url 'posts' %}" class="header__nav__item">{% trans "Posts" %}</a>
+        <a href="{% url 'reports_home' %}" class="header__nav__item">{% trans "Numbers" %}</a>
         {% if user_can_review_photos and photos_for_review > 0 %}
-          <a href="{% url 'photo-review-list' %}" class="header__nav__logo header__nav__notification">{{ photos_for_review }}</a>
+          <a href="{% url 'photo-review-list' %}" class="header__nav__item header__nav__notification">{{ photos_for_review }}</a>
         {% endif %}
         {% if user.is_authenticated %}
-          <span class="header__nav__logout">
+          <span class="header__nav__item">
             {% blocktrans with username=user.username %}Signed in as <strong>{{ username }}</strong>{% endblocktrans %}
-            <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}">{% trans "Sign out" %}</a>
           </span>
+          <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="header__nav__item">{% trans "Sign out" %}</a>
         {% else %}
           <a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}"
-             class="header__nav__login">{% trans "Sign in to edit" %}</a>
+             class="header__nav__item">{% trans "Sign in to edit" %}</a>
         {% endif %}
       </div>
       <div class="header__hero">
@@ -103,19 +103,16 @@
       <div class="footer__links">
         <p><a href="{% url 'help-api' %}">{% trans "Open data API" %}</a>
             &middot; <a href="{% url 'help-about' %}">{% trans "About" %}</a>
-            &middot; <a href="https://github.com/mysociety/yournextmp-popit/issues">{% trans "Issue tracker" %}</a> 
             &middot; <a href="{% url 'help-privacy' %}">{% trans "Privacy policy" %}</a></p>
       </div>
       <div class="footer__bylines">
         <p>{% blocktrans trimmed %}
-          Supported by <a href="https://fullfact.org">Full Fact</a>,
-          <a href="http://unlockdemocracy.org.uk">Unlock Democracy</a>, and
-          <a href="https://mysociety.org">mySociety</a>.
+          Supported by <a href="#">Blah blah</a>,
+          <a href="#">Blah</a>, and
+          <a href="#">Blah blah</a>.
           {% endblocktrans %}</p>
-        {% static "img/logo-with-text.png" as logo_url %}
         <p>{% blocktrans trimmed %}
-          Built by <a href="https://democracyclub.org.uk/">
-          <img src="{{ logo_url }}" %} alt="Democracy Club" class="dc-logo"></a>
+          Built by <a href="#">Congreso Interactivo</a>.
           {% endblocktrans %}
         </p>
       </div>
