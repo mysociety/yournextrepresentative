@@ -21,7 +21,7 @@ from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
-    get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date,
+    get_post_label_from_post_id, PopItPerson, membership_covers_date,
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction
 )
@@ -275,7 +275,7 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
         )
         self.person = PopItPerson.create_from_popit(self.api, person_id)
         self.constituency_name = \
-            get_constituency_name_from_mapit_id(self.kwargs['post_id'])
+            get_post_label_from_post_id(self.kwargs['post_id'])
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
 
@@ -358,7 +358,7 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiM
 
     def post(self, request, *args, **kwargs):
         post_id = self.kwargs['post_id']
-        constituency_name = get_constituency_name_from_mapit_id(post_id)
+        constituency_name = get_post_label_from_post_id(post_id)
         post = get_post_cached(self.api, post_id)['result']
         for membership in post.get('memberships', []):
             if membership.get('role') != 'Candidate':

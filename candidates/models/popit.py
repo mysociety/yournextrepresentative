@@ -21,7 +21,9 @@ from .auth import (
 )
 from .db import MaxPopItIds
 
-from ..cache import get_person_cached, invalidate_person, invalidate_posts
+from ..cache import (
+    get_person_cached, invalidate_person, get_post_cached, invalidate_posts
+)
 from ..diffs import get_version_diffs
 from ..election_specific import MAPIT_DATA, PARTY_DATA
 
@@ -352,12 +354,9 @@ def extract_constituency_name(candidate_list_organization):
     if m:
         return m.group(1)
     return None
-
-def get_constituency_name_from_mapit_id(mapit_id):
-    constituency_data = MAPIT_DATA.areas_by_id[('WMC', 22)].get(str(mapit_id))
-    if constituency_data:
-        return constituency_data['name']
-    return None
+def get_post_label_from_post_id(api, post_id):
+    post_data = get_post_cached(api, post_id)
+    return post_data['label']
 
 def reduced_organization_data(organization):
     return {
@@ -1188,7 +1187,7 @@ class PopItPerson(object):
             party = form_data.pop('party_' + election)
 
             if standing == 'standing':
-                constituency_name = get_constituency_name_from_mapit_id(
+                constituency_name = get_post_label_from_post_id(
                     constituency_mapit_id
                 )
                 if not constituency_name:

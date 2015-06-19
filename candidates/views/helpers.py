@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from slugify import slugify
 
 from ..models import (
-    get_constituency_name_from_mapit_id, PopItPerson, membership_covers_date
+    get_post_label_from_post_id, PopItPerson, membership_covers_date
 )
 
 def join_with_commas_and_and(a):
@@ -18,14 +18,14 @@ def join_with_commas_and_and(a):
     return result
 
 def get_redirect_from_mapit_id(election, mapit_id):
-    constituency_name = get_constituency_name_from_mapit_id(mapit_id)
+    post_label = get_post_label_from_post_id(mapit_id)
     return HttpResponseRedirect(
         reverse(
             'constituency',
             kwargs={
                 'election': election,
                 'post_id': mapit_id,
-                'ignored_slug': slugify(constituency_name),
+                'ignored_slug': slugify(post_label),
             }
         )
     )
