@@ -2,7 +2,7 @@
 
 import re
 
-from .cache import get_all_posts_cached
+from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
 from .popit import create_popit_api_object
 from .election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
@@ -334,7 +334,11 @@ class ToggleLockForm(forms.Form):
 
     def clean_post_id(self):
         post_id = self.cleaned_data['post_id']
-        if post_id not in MAPIT_DATA.areas_by_id[('WMC', 22)]:
+        # Use get_post_cached to check if this is a real post:
+        try:
+            api = create_popit_api_object()
+            get_post_cached(api, post_id)
+        except UnknownPostException:
             message = _('{0} was not a known post ID')
             raise ValidationError(message.format(post_id))
         return post_id
