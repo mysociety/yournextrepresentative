@@ -713,8 +713,8 @@ class PopItPerson(object):
         return election in standing_in
 
     def not_standing_in_election(self, election):
-        # If there's a standing_in element present, its '2015' value
-        # is set to None, then we someone has marked that person as
+        # If there's a standing_in element present, and the value for
+        # election is set to None, then someone has marked that person as
         # not standing...
         standing_in = self.popit_data.get('standing_in', {}) or {}
         return (election in standing_in) and standing_in[election] == None
@@ -1170,14 +1170,14 @@ class PopItPerson(object):
                     'id': party,
                 }
             elif standing == 'not-standing':
-                # If the person is not standing in 2015, record that
-                # they're not and remove the party membership for 2015:
+                # If the person is not standing in this election, record that
+                # they're not and remove the party membership for the election:
                 new_standing_in[election] = None
                 if election in new_party_memberships:
                     del new_party_memberships[election]
             elif standing == 'not-sure':
                 # If the update specifies that we're not sure if they're
-                # standing in 2015, then remove the standing_in and
+                # standing in this election, then remove the standing_in and
                 # party_memberships entries for that year:
                 new_standing_in.pop(election, None)
                 new_party_memberships.pop(election, None)
