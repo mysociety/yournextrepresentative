@@ -106,7 +106,9 @@ class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             candidates_by_post_group[post_group] = None
             if by_post_group[post_group]:
                 posts = [
-                    (c[0], c[1], by_post_group[post_group].get(c[0]))
+                    (c[0], c[1], by_post_group[post_group].get(
+                        AREA_POST_DATA.get_post_id(self.election, mapit_type, c[0])
+                    ))
                     for mapit_type in self.election_data['mapit_types']
                     for c in AREA_POST_DATA.area_ids_and_names_by_post_group[
                         (mapit_type, self.election_data['mapit_generation'])

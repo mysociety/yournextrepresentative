@@ -59,10 +59,17 @@
         {% endfor %}
       </ul>
       {% if not country_data.stats.show_all %}
-        <p>{% blocktrans trimmed with missing=country_data.stats.missing %}
-          There were also {{ missing }} constituencies in
-          {{ country }} that {{ party_name }} aren't standing a candidate in.{% endblocktrans %}
-        </p>
+        {% if country %}
+          <p>{% blocktrans trimmed with missing=country_data.stats.missing %}
+            There were also {{ missing }} posts in
+            {{ country }} that {{ party_name }} aren't standing a candidate for.{% endblocktrans %}
+          </p>
+        {% else %}
+          <p>{% blocktrans trimmed with missing=country_data.stats.missing %}
+            There were also {{ missing }} posts
+            that {{ party_name }} aren't standing a candidate for.{% endblocktrans %}
+          </p>
+        {% endif %}
       {% endif %}
     {% else %}
       <p>{% blocktrans %}We don't know of any {{ party_name }} candidates in {{ country }} so far.{% endblocktrans %}</p>
