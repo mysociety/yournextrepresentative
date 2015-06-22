@@ -15,15 +15,15 @@ class NameChangeDisallowedException(Exception):
 class ChangeToLockedConstituencyDisallowedException(Exception):
     pass
 
-def get_constituency_lock_from_person_data(user, api, person_popit_data):
+def get_constituency_lock_from_person_data(user, api, election, person_popit_data):
     """Return whether the constituency is locked and whether this user can edit"""
 
     standing_in = person_popit_data.get('standing_in', {}) or {}
-    standing_in_2015 = standing_in.get('2015', {}) or {}
+    standing_in_election = standing_in.get(election, {}) or {}
     return get_constituency_lock(
         user,
         api,
-        standing_in_2015.get('post_id')
+        standing_in_election.get('post_id')
     )
 
 def get_edits_allowed(user, candidates_locked):
@@ -45,15 +45,19 @@ def get_constituency_lock(user, api, post_id):
     return candidates_locked, edits_allowed
 
 def check_creation_allowed(user, api, new_popit_data):
-    dummy, edits_allowed = get_constituency_lock(
-        user,
-        api,
-        new_popit_data['standing_in']['2015']['post_id']
-    )
-    if not edits_allowed:
-        raise ChangeToLockedConstituencyDisallowedException(
-            _("The candidates for this constituency are locked now")
+    for election in settings.ELECTIONS:
+        standing_in = new_popit_data['standing_in']
+        if election not in standing_in:
+            continue
+        dummy, edits_allowed = get_constituency_lock(
+            user,
+            api,
+            standing_in[election]['post_id']
         )
+        if not edits_allowed:
+            raise ChangeToLockedConstituencyDisallowedException(
+                _("The candidates for this post are locked now")
+            )
 
 def check_update_allowed(user, api, old_popit_data, new_popit_data):
     if settings.RESTRICT_RENAMES:
@@ -64,18 +68,19 @@ def check_update_allowed(user, api, old_popit_data, new_popit_data):
             raise NameChangeDisallowedException(message.format(
                 old_popit_data['name'], new_popit_data['name'], user.username
             ))
-    dummy, old_allowed = get_constituency_lock_from_person_data(user, api, old_popit_data)
-    dummy, new_allowed = get_constituency_lock_from_person_data(user, api, new_popit_data)
-    for (field, key) in [
-            ('standing_in', 'post_id'),
-            ('party_memberships', 'id')
-    ]:
-        old_field_value = old_popit_data.get(field, {}) or {}
-        new_field_value = new_popit_data.get(field, {}) or {}
-        old_post_id = (old_field_value.get('2015', {}) or {}).get(key)
-        new_post_id = (new_field_value.get('2015', {}) or {}).get(key)
-        if not (old_allowed and new_allowed) and (old_post_id != new_post_id):
-            raise ChangeToLockedConstituencyDisallowedException(
-                _("That update isn't allowed because candidates in a locked "
-                "constituency would be changed")
-            )
+    for election in settings.ELECTIONS:
+        old_allowed = get_constituency_lock_from_person_data(user, api, election, old_popit_data)[1]
+        new_allowed = get_constituency_lock_from_person_data(user, api, election, new_popit_data)[1]
+        for (field, key) in [
+                ('standing_in', 'post_id'),
+                ('party_memberships', 'id')
+        ]:
+            old_field_value = old_popit_data.get(field, {}) or {}
+            new_field_value = new_popit_data.get(field, {}) or {}
+            old_post_id = (old_field_value.get(election, {}) or {}).get(key)
+            new_post_id = (new_field_value.get(election, {}) or {}).get(key)
+            if not (old_allowed and new_allowed) and (old_post_id != new_post_id):
+                raise ChangeToLockedConstituencyDisallowedException(
+                    _("That update isn't allowed because candidates for a locked "
+                    "post would be changed")
+                )
