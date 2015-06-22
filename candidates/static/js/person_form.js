@@ -15,7 +15,7 @@ function setSelect2Visibility(select2Element, visibility) {
   /* If visibility is false, this both disables the Select2 boxes and
    * hides them by hiding their enclosing element. Otherwise it
    * enables it and makes the enclosure visible. */
-  var enclosure = getSelect2Enclosure(select2Element);n
+  var enclosure = getSelect2Enclosure(select2Element);
   select2Element.prop(
     'disabled',
     !visibility
