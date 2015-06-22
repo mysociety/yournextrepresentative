@@ -42,9 +42,6 @@ class AreaPostData(BaseAreaPostData):
     def area_to_post_group(self, area_data):
         return area_data['country_name']
 
-    def get_post_id(self, mapit_type, area_id):
-        return str(area_id)
-
     def post_id_to_party_set(self, post_id):
         area = self.areas_by_post_id.get(post_id, None)
         if area is None:

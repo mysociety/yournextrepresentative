@@ -34,7 +34,7 @@ class AreasView(PopItApiMixin, TemplateView):
             # Show candidates from the current elections:
             for election, election_data in settings.ELECTIONS_CURRENT:
                 if mapit_type in election_data['mapit_types']:
-                    post_id = AREA_POST_DATA.get_post_id(mapit_type, area_id)
+                    post_id = AREA_POST_DATA.get_post_id(election, mapit_type, area_id)
                     post_data = get_post_cached(self.api, post_id)['result']
                     all_post_labels.append(post_data['label'])
                     locked = post_data.get('candidates_locked', False)

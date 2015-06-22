@@ -23,7 +23,7 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': ['PRV'],
         'mapit_generation': 1,
-        'get_post_id': lambda mapit_type, area_id: 'dip-prim-{0}'.format(area_id),
+        'post_id_format': 'dip-prim-{area_id}',
     },
     # Party primaries for governors of provinces
     #  'organization_id': 'gobernador',
@@ -38,7 +38,7 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': ['PRV'],
         'mapit_generation': 1,
-        'get_post_id': lambda mapit_type, area_id: 'gob-prim-{0}'.format(area_id),
+        'post_id_format': 'gob-prim-{area_id}',
     },
     #  'organization_id': 'hcsn',
     #  'organization_name': 'Senado de la Nación',
@@ -52,7 +52,7 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': ['PRV'],
         'mapit_generation': 1,
-        'get_post_id': lambda mapit_type, area_id: 'sen-prim-{0}'.format(area_id),
+        'post_id_format': 'sen-prim-{area_id}',
     },
     # Presidential candidates
     'presidentes-argentina-paso-2015': {
@@ -67,7 +67,7 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': [], # The whole country...
         'mapit_generation': 1,
-        'get_post_id': lambda mapit_type, area_id: 'pres-prim-{0}'.format(area_id),
+        'post_id_format': 'pres-prim-{area_id}',
     },
 }
 

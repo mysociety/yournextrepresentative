@@ -157,9 +157,9 @@ class BaseAreaPostData(object):
             "You should implement area_to_post_group in a subclass"
         )
 
-    def get_post_id(mapit_type, area_id):
-        raise NotImplementedError(
-            "You should implement get_post_id in a subclass"
+    def get_post_id(self, election, mapit_type, area_id):
+        return settings.ELECTIONS[election]['post_id_format'].format(
+            area_id=area_id
         )
 
     def __init__(self, mapit_data, party_data):
@@ -168,10 +168,11 @@ class BaseAreaPostData(object):
         self.areas_by_post_id = {}
         self.area_ids_and_names_by_post_group = {}
 
-        for t, election_data in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+        for t, election_tuple in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+            election, election_data = election_tuple
             mapit_type, mapit_generation = t
             for area in self.mapit_data.areas_by_id[t].values():
-                post_id = self.get_post_id(mapit_type, area['id'])
+                post_id = self.get_post_id(election, mapit_type, area['id'])
                 if post_id in self.areas_by_post_id:
                     message = _("Found multiple areas for the post ID {post_id}")
                     raise Exception(message.format(post_id=post_id))

@@ -28,9 +28,6 @@ class AreaPostData(BaseAreaPostData):
     def area_to_post_group(self, area_data):
         return None
 
-    def get_post_id(self, mapit_type, area_id):
-        return str(area_id)
-
     def post_id_to_party_set(self, post_id):
         return 'nacionale'
 
