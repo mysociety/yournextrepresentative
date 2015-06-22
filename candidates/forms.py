@@ -137,8 +137,9 @@ class BasePersonForm(forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
-        for election, election_data in settings.ELECTIONS_CURRENT:
+        for election, election_data in self.elections_with_fields:
             election_name = election_data['name']
+
             standing_status = cleaned_data.get(
                 'standing_' + election, 'standing'
             )
@@ -175,6 +176,11 @@ class NewPersonForm(BasePersonForm):
             raise Exception, _("Unknown election: '{election}'").format(election=election)
 
         election_data = settings.ELECTIONS[election]
+
+        self.elections_with_fields = [
+            (election, election_data)
+        ]
+
         self.fields['constituency_' + election] = \
             forms.CharField(
                 label=("Constituency in " + election_data['name']),
@@ -237,11 +243,13 @@ class UpdatePersonForm(BasePersonForm):
         # that, but still need the API object for the first time.
         api = create_popit_api_object()
 
+        self.elections_with_fields = settings.ELECTIONS_CURRENT
+
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
         # with formsets?)
 
-        for election, election_data in settings.ELECTIONS_CURRENT:
+        for election, election_data in self.elections_with_fields:
             role = election_data['for_post_role']
             self.fields['standing_' + election] = \
                 forms.ChoiceField(

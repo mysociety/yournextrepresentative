@@ -1129,7 +1129,7 @@ class PopItPerson(object):
         new_standing_in = deepcopy(self.standing_in)
         new_party_memberships = deepcopy(self.party_memberships)
 
-        for election, election_data in settings.ELECTIONS_CURRENT:
+        for election, election_data in form.elections_with_fields:
 
             post_id = form_data.get('constituency_' + election)
             if post_id:
