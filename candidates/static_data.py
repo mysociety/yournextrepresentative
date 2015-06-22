@@ -124,8 +124,10 @@ class BasePartyData(object):
 
         self.party_choices = defaultdict(list)
         self.party_id_to_name = {}
+        self.all_party_data = []
         with open(join(data_directory, 'all-parties-from-popit.json')) as f:
             for party in json.load(f):
+                self.all_party_data.append(party)
                 for party_set in self.party_data_to_party_sets(party):
                     self.party_choices[party_set].append(
                         (party['id'], party['name'])
