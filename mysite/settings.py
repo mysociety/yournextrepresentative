@@ -245,6 +245,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'mysite/static'),
 )
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
 PIPELINE_CSS = {
     'image-review': {
         'source_filenames': (

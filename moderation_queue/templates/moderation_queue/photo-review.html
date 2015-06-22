@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% load i18n %}
-{% load compressed %}
+{% load pipeline %}
 {% load imagefixes %}
 
 {% block extra_css %}
-{% compressed_css 'image-review' %}
+{% stylesheet 'image-review' %}
 {% endblock %}
 
 {% block extra_js %}
-{% compressed_js 'image-review' %}
+{% javascript 'image-review' %}
 {% endblock %}
 
 {% block body_class %}{% endblock %}

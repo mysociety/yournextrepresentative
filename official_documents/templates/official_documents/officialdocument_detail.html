@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load compressed %}
+{% load pipeline %}
 
 
 {% block extra_css %}
-{% compressed_css 'official_documents' %}
+{% stylesheet 'official_documents' %}
 {% endblock %}
 
 {% block hero %}<h1>{{ object.document_type }}</h1>{% endblock hero %}

@@ -5,10 +5,10 @@
 
 {% block title %}{% trans "Upload a candidate photo" %}{% endblock %}
 
-{% load compressed %}
+{% load pipeline %}
 
 {% block extra_css %}
-{% compressed_css 'image-review' %}
+{% stylesheet 'image-review' %}
 {% endblock %}
 
 {% block hero %}

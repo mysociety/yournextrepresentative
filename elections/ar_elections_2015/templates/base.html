@@ -14,8 +14,8 @@
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
     <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}"/>
 
-    {% load compressed %}
-    {% compressed_css 'all' %}
+    {% load pipeline %}
+    {% stylesheet 'all' %}
     {% block extra_css %}
     {% endblock %}
 
@@ -25,7 +25,7 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
     <![endif]-->
 
-    {% compressed_js 'all' %}
+    {% javascript 'all' %}
     {% block extra_js %}
     {% endblock %}
 
