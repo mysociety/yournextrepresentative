@@ -19,7 +19,7 @@
         <div id="statistics-election-{{ election.id }}">
            <h3>{% blocktrans %}Statistics for the {{ election_name }}{% endblocktrans %}</h3>
            <ul>
-             <li>{% blocktrans with total=election.total %}Total candidates:{% endblocktrans %} {{ total }}</li>
+             <li>{% blocktrans %}Total candidates:{% endblocktrans %} {{ election.total }}</li>
              <li><a href="{% url "posts_counts" election=election.id %}">{% trans "Candidates per post" %}</a></li>
              <li><a href="{% url "parties_counts" election=election.id %}">{% trans "Candidates per party" %}</a></li>
            </ul>
