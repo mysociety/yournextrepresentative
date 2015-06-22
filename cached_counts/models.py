@@ -35,12 +35,13 @@ class CachedCount(models.Model):
         return repr(self)
 
     @classmethod
-    def increment_count(cls, count_type, object_id):
+    def increment_count(cls, election, count_type, object_id):
         """
         Increments the count of the object with the type of `count_type` and
         the id of `object_id`.  If this object does not exist, do nothing.
         """
         filters = {
+            'election': election,
             'count_type': count_type,
             'object_id': object_id,
         }
@@ -58,10 +59,13 @@ def person_added_handler(sender, **kwargs):
     data = kwargs['data']
 
     # constituency
-    constituency_url = data['standing_in'].get('2015', {}).get('mapit_url')
-    constituency_id = constituency_url.split('/')[-1]
-    CachedCount.increment_count('constituency', constituency_id)
+    for election, standing_in_data in data['standing_in'].items():
+        if standing_in_data:
+            post_id = standing_in_data.get('post_id')
+            CachedCount.increment_count(election, 'constituency', post_id)
 
     # party
-    party_id = data['party_memberships'].get('2015', {}).get('id')
-    CachedCount.increment_count('party', party_id)
+    for election, party_membership_data in data['party_memberships'].items():
+        if party_membership_data:
+            party_id = party_membership_data['id']
+            CachedCount.increment_count(election, 'party', party_id)
