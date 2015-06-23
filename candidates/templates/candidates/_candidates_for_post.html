@@ -17,6 +17,7 @@
     candidates_not_standing_again
 
     candidates_locked
+    show_confirm_result
     show_retract_result
     candidates_list_edits_allowed
 
@@ -110,7 +111,7 @@
             {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
           {% endif %}
           {% endif %}
-          {% if user_can_record_results and not c|election_decision_known:election %}
+          {% if user_can_record_results and show_confirm_result %}
             <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
               {% csrf_token %}
               <input type="hidden" name="person_id" value="{{ c.id }}">
