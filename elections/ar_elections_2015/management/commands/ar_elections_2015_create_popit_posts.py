@@ -28,7 +28,8 @@ class Command(PopItApiMixin, BaseCommand):
                     'name': area['name'],
                     'id': 'mapit:' + str(area['id']),
                     'identifier': area_mapit_url,
-                }
+                },
+                'organization_id': election_data['organization_id'],
             }
             create_or_update(self.api.posts, post_data)
 
@@ -39,9 +40,10 @@ class Command(PopItApiMixin, BaseCommand):
                     create_or_update(
                         self.api.posts,
                         {
-                            'id': 'presidente',
-                            'label': 'Candidato a Presidente',
-                            'role': 'Candidato a Presidente',
+                            'id': 'candidato-a-presidente',
+                            'label': election_data['for_post_role'],
+                            'role': election_data['for_post_role'],
+                            'organization_id': election_data['organization_id'],
                         }
                     )
                 else:

@@ -27,7 +27,8 @@ class Command(PopItApiMixin, BaseCommand):
     def existing_candidate_same_party(self, cons_id, party_id):
         cons = self.api.posts(cons_id).get(embed='membership.person')['result']
         for cons_membership in cons['memberships']:
-            if cons_membership['role'] != 'Candidate':
+            candidate_role = settings.ELECTIONS['2015']
+            if cons_membership['role'] != candidate_role:
                 continue
             if not membership_covers_date(
                     cons_membership,

@@ -255,17 +255,14 @@ def is_party_membership(membership):
         return bool(party_id_match)
 
 def is_candidacy_membership(membership):
-    role = membership.get('role', '').lower()
-    return (role == 'candidate')
-
-def is_mp_membership(membership):
-    role = membership.get('role', 'Member').lower()
-    if role != 'member':
+    if not membership.get('election'):
         return False
-    return membership.get('organization_id') == 'commons'
+    role = membership.get('role')
+    election_data = settings.ELECTIONS[membership['election']]
+    return role == election_data['candidate_membership_role']
 
 def is_standing_in_membership(membership):
-    return is_candidacy_membership(membership) or is_mp_membership(membership)
+    return is_candidacy_membership(membership)
 
 # FIXME: really this should be a method on a PopIt base class, so it's
 # available for both people and organizations.
@@ -648,9 +645,11 @@ class PopItPerson(object):
                 # person isn't standing...
                 # Create the candidate list membership:
                 membership = election_to_party_dates(election)
+                membership['election'] = election
                 membership['person_id'] = self.id
                 membership['post_id'] = constituency['post_id']
-                membership['role'] = "Candidate"
+                candidate_role = settings.ELECTIONS[election]['candidate_membership_role']
+                membership['role'] = candidate_role
                 memberships.append(membership)
                 if constituency.get('elected'):
                     day_after = settings.ELECTIONS[election]['election_date'] + \

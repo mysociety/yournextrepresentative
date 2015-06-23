@@ -37,7 +37,7 @@ def get_people_from_memberships(election_data, memberships):
     current_candidates = set()
     past_candidates = set()
     for membership in memberships:
-        if not membership.get('role') == 'Candidate':
+        if not membership.get('role') == election_data['candidate_membership_role']:
             continue
         person = PopItPerson.create_from_dict(membership['person_id'])
         if membership_covers_date(
