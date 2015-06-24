@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-19 13:19+0100\n"
+"POT-Creation-Date: 2015-06-24 09:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,54 +117,102 @@ msgid ""
 "party:"
 msgstr ""
 
-#: candidates/diffs.py:25
-#, python-brace-format
-msgid "{0} known to be standing for the party '{1}' in {2}"
+#: cached_counts/templates/reports.html:60
+msgid "No election data found."
 msgstr ""
 
-#: candidates/diffs.py:28
+#: candidates/diffs.py:32
 #, python-brace-format
-msgid "{0} known to be standing for the party with ID {1} in {2}"
+msgid "is known to be standing for the party '{party}' in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:31 candidates/diffs.py:59
+#: candidates/diffs.py:34
 #, python-brace-format
-msgid "Unexpected leaf {0} (attribute: {1}, year: {2}"
+msgid "was known to be standing for the party '{party}' in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:36
+#: candidates/diffs.py:38
 #, python-brace-format
-msgid "{0} known to be standing for the party \"{1}\" in {2}"
+msgid "is known to be standing for the party with ID {party} in the {election}"
 msgstr ""
 
 #: candidates/diffs.py:40
 #, python-brace-format
-msgid "{0} known not to be standing in {1}"
+msgid ""
+"was known to be standing for the party with ID {party} in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:45
+#: candidates/diffs.py:43 candidates/diffs.py:86
 #, python-brace-format
-msgid "{0} known to be standing for the post with ID {1} in {2}"
+msgid "Unexpected leaf {0} (attribute: {1}, election: {2}"
 msgstr ""
 
-#: candidates/diffs.py:48
+#: candidates/diffs.py:49
 #, python-brace-format
-msgid "{0} known to be standing in the constituency with MapIt URL {1} in {2}"
+msgid "is known to be standing for the party \"{party}\" in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:51 candidates/diffs.py:64
+#: candidates/diffs.py:51
 #, python-brace-format
-msgid "{0} known to be standing in {1} in {2}"
+msgid "was known to be standing for the party \"{party}\" in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:55
+#: candidates/diffs.py:56
 #, python-brace-format
-msgid "was elected in {year}"
+msgid "is known not to be standing in the {election}"
 msgstr ""
 
-#: candidates/diffs.py:57
+#: candidates/diffs.py:58
 #, python-brace-format
-msgid "was not elected in {year}"
+msgid "was known not to be standing in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:64
+#, python-brace-format
+msgid "is known to be standing for the post with ID {party} in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:66
+#, python-brace-format
+msgid "was known to be standing for the post with ID {party} in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:70
+#, python-brace-format
+msgid ""
+"is known to be standing in the constituency with MapIt URL {party} in the "
+"{election}"
+msgstr ""
+
+#: candidates/diffs.py:72
+#, python-brace-format
+msgid ""
+"was known to be standing in the constituency with MapIt URL {party} in the "
+"{election}"
+msgstr ""
+
+#: candidates/diffs.py:76 candidates/diffs.py:92
+#, python-brace-format
+msgid "is known to be standing in {party} in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:78 candidates/diffs.py:94
+#, python-brace-format
+msgid "was known to be standing in {party} in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:82
+#, python-brace-format
+msgid "was elected in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:84
+#, python-brace-format
+msgid "was not elected in the {election}"
+msgstr ""
+
+#: candidates/diffs.py:121
+msgid " and "
 msgstr ""
 
 #: candidates/feeds.py:14
@@ -180,159 +228,160 @@ msgstr ""
 msgid "Updated at {0}"
 msgstr ""
 
-#: candidates/forms.py:17
+#: candidates/forms.py:19
 msgid "Enter your address or town"
 msgstr ""
 
-#: candidates/forms.py:33 candidates/forms.py:338
+#: candidates/forms.py:35 candidates/forms.py:357
 msgid "Person ID"
 msgstr ""
 
-#: candidates/forms.py:37
+#: candidates/forms.py:39
 msgid "Post ID"
 msgstr ""
 
-#: candidates/forms.py:43
+#: candidates/forms.py:45
 #, python-brace-format
 msgid "Source of information that they're standing ({0})"
 msgstr ""
 
-#: candidates/forms.py:51
+#: candidates/forms.py:53
 #, python-brace-format
 msgid "Information source for this change ({0})"
 msgstr ""
 
-#: candidates/forms.py:59
+#: candidates/forms.py:61
 msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
 msgstr ""
 
-#: candidates/forms.py:64
+#: candidates/forms.py:66
 msgid "Full name"
 msgstr ""
 
-#: candidates/forms.py:68
+#: candidates/forms.py:70
 msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
 msgstr ""
 
-#: candidates/forms.py:73 candidates/templates/candidates/person-view.html:113
+#: candidates/forms.py:75 candidates/templates/candidates/person-view.html:113
 msgid "Email"
 msgstr ""
 
-#: candidates/forms.py:78
+#: candidates/forms.py:80
 msgid "Gender (e.g. “male”, “female”)"
 msgstr ""
 
-#: candidates/forms.py:83
+#: candidates/forms.py:85
 msgid "Date of birth (as YYYY-MM-DD or YYYY)"
 msgstr ""
 
-#: candidates/forms.py:87
+#: candidates/forms.py:89
 msgid "Wikipedia URL"
 msgstr ""
 
-#: candidates/forms.py:92
+#: candidates/forms.py:94
 msgid "Homepage URL"
 msgstr ""
 
-#: candidates/forms.py:97
+#: candidates/forms.py:99
 msgid "Twitter username (e.g. “democlub”)"
 msgstr ""
 
-#: candidates/forms.py:102
+#: candidates/forms.py:104
 msgid "Facebook profile URL"
 msgstr ""
 
-#: candidates/forms.py:107
+#: candidates/forms.py:109
 msgid "Facebook page (e.g. for their campaign)"
 msgstr ""
 
-#: candidates/forms.py:112
+#: candidates/forms.py:114
 msgid "LinkedIn URL"
 msgstr ""
 
-#: candidates/forms.py:117
+#: candidates/forms.py:119
 msgid "The party’s candidate page for this person"
 msgstr ""
 
-#: candidates/forms.py:131
+#: candidates/forms.py:133
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr ""
 
-#: candidates/forms.py:154
+#: candidates/forms.py:156
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "constituency"
 msgstr ""
 
-#: candidates/forms.py:165
-msgid "You must specify a party for the 2015 election"
+#: candidates/forms.py:164
+#, python-brace-format
+msgid "You must specify a party for the {election}"
 msgstr ""
 
-#: candidates/forms.py:177 elections/mixins.py:10
+#: candidates/forms.py:176 elections/mixins.py:10
 #, python-brace-format
 msgid "Unknown election: '{election}'"
 msgstr ""
 
-#: candidates/forms.py:198 candidates/forms.py:265
+#: candidates/forms.py:202 candidates/forms.py:280
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr ""
 
-#: candidates/forms.py:207
+#: candidates/forms.py:211
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr ""
 
-#: candidates/forms.py:212 candidates/forms.py:284
+#: candidates/forms.py:216 candidates/forms.py:299
 msgid "You must indicate how you know about this candidate"
 msgstr ""
 
-#: candidates/forms.py:217 candidates/forms.py:289
+#: candidates/forms.py:221 candidates/forms.py:304
 msgid "How you know about this candidate"
 msgstr ""
 
-#: candidates/forms.py:229
+#: candidates/forms.py:233
 msgid "Don’t Know"
 msgstr ""
 
-#: candidates/forms.py:230
+#: candidates/forms.py:234
 msgid "Yes"
 msgstr ""
 
-#: candidates/forms.py:231
+#: candidates/forms.py:235
 msgid "No"
 msgstr ""
 
-#: candidates/forms.py:244
+#: candidates/forms.py:256
 #, python-format
 msgid "Standing in %s"
 msgstr ""
 
-#: candidates/forms.py:250
+#: candidates/forms.py:262
 #, python-format
 msgid "Constituency in %s"
 msgstr ""
 
-#: candidates/forms.py:279
+#: candidates/forms.py:294
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr ""
 
-#: candidates/forms.py:311
+#: candidates/forms.py:326
 msgid ""
 "You can only edit data on YourNextMP if you agree to this copyright "
 "assignment."
 msgstr ""
 
-#: candidates/forms.py:331
+#: candidates/forms.py:350
 #, python-brace-format
 msgid "{0} was not a known post ID"
 msgstr ""
 
-#: candidates/forms.py:343
+#: candidates/forms.py:362
 msgid "Source of information that they won"
 msgstr ""
 
@@ -380,19 +429,19 @@ msgstr ""
 msgid "The address '{0}' appears to be outside the area this site knows about"
 msgstr ""
 
-#: candidates/models/auth.py:55
-msgid "The candidates for this constituency are locked now"
+#: candidates/models/auth.py:59
+msgid "The candidates for this post are locked now"
 msgstr ""
 
-#: candidates/models/auth.py:63
+#: candidates/models/auth.py:67
 #, python-brace-format
 msgid "Name change from '{0}' to '{1}' by user {2} disallowed"
 msgstr ""
 
-#: candidates/models/auth.py:79
+#: candidates/models/auth.py:84
 msgid ""
-"That update isn't allowed because candidates in a locked constituency would "
-"be changed"
+"That update isn't allowed because candidates for a locked post would be "
+"changed"
 msgstr ""
 
 #: candidates/models/db.py:29
@@ -429,16 +478,16 @@ msgstr ""
 msgid "Malformed parlparse ID found {0}"
 msgstr ""
 
-#: candidates/models/popit.py:1197
+#: candidates/models/popit.py:1191
 msgid "Can't set_elected of a candidate with no standing_in"
 msgstr ""
 
-#: candidates/models/popit.py:1200
+#: candidates/models/popit.py:1194
 #, python-brace-format
 msgid "No standing_in information for {0}"
 msgstr ""
 
-#: candidates/static_data.py:177
+#: candidates/static_data.py:179
 #, python-brace-format
 msgid "Found multiple areas for the post ID {post_id}"
 msgstr ""
@@ -1360,14 +1409,21 @@ msgstr ""
 msgid "No candidate in <a href=\"%(post_url)s\">%(constituency_name)s</a>"
 msgstr ""
 
-#: candidates/templates/candidates/party.html:62
+#: candidates/templates/candidates/party.html:63
 #, python-format
 msgid ""
-"There were also %(missing)s constituencies in %(country)s that "
-"%(party_name)s aren't standing a candidate in."
+"There were also %(missing)s posts in %(country)s that %(party_name)s aren't "
+"standing a candidate for."
 msgstr ""
 
 #: candidates/templates/candidates/party.html:68
+#, python-format
+msgid ""
+"There were also %(missing)s posts that %(party_name)s aren't standing a "
+"candidate for."
+msgstr ""
+
+#: candidates/templates/candidates/party.html:75
 #, python-format
 msgid "We don't know of any %(party_name)s candidates in %(country)s so far."
 msgstr ""
@@ -1891,7 +1947,7 @@ msgstr ""
 msgid "In the last week"
 msgstr ""
 
-#: candidates/views/parties.py:64
+#: candidates/views/parties.py:63
 msgid "Party not found"
 msgstr ""
 
@@ -2312,7 +2368,7 @@ msgstr ""
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr ""
 
-#: mysite/settings.py:340
+#: mysite/settings.py:346
 msgid ""
 "Please don't quote third-party candidate sites —\n"
 "we prefer URLs of news stories or official candidate pages."
