@@ -2,16 +2,17 @@
 # coding=UTF-8
 
 import os
-from os.path import dirname, join, normpath, realpath
+from os.path import dirname, join, normpath, realpath, isdir
 import sys
 
 script_directory = dirname(realpath(sys.argv[0]))
 root_directory = join(script_directory, '..')
 root_directory = normpath(root_directory)
+elections_directory = join(root_directory, 'elections')
 
 election_options = [
-    e for e in os.listdir(join(root_directory, 'elections'))
-    if not e.startswith('__init__.py')
+    e for e in os.listdir(elections_directory)
+    if isdir(join(elections_directory, e))
 ]
 
 def usage_and_exit():
