@@ -74,9 +74,9 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super(CandidacyView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MAPIT_DATA.areas_by_id[('WMC', 22)].get(
-            self.request.POST.get('post_id')
-        )
+        post_id = self.request.POST.get('post_id')
+        post_data = get_post_cached(self.api, post_id)
+        context['post_label'] = post_data['result']['label']
         return context
 
 
@@ -121,7 +121,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, Form
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)
         context['person'], _ = self.get_person(self.request.POST.get('person_id'))
-        context['constituency'] = MAPIT_DATA.areas_by_id[('WMC', 22)].get(
-            self.request.POST.get('post_id')
-        )
+        post_id = self.request.POST.get('post_id')
+        post_data = get_post_cached(self.api, post_id)
+        context['post_label'] = post_data['result']['label']
         return context
