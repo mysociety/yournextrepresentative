@@ -60,13 +60,13 @@
           <a href="{% url 'photo-review-list' %}" class="header__nav__item header__nav__notification">{{ photos_for_review }}</a>
         {% endif %}
         {% if user.is_authenticated %}
-          <span class="header__nav__item">
+          <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="header__nav__item header__nav__item--secondary">{% trans "Sign out" %}</a>
+          <span class="header__nav__item header__nav__item--secondary">
             {% blocktrans with username=user.username %}Signed in as <strong>{{ username }}</strong>{% endblocktrans %}
           </span>
-          <a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="header__nav__item">{% trans "Sign out" %}</a>
         {% else %}
           <a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}"
-             class="header__nav__item">{% trans "Sign in to edit" %}</a>
+             class="header__nav__item header__nav__item--secondary">{% trans "Sign in to edit" %}</a>
         {% endif %}
       </div>
       <div class="header__hero">

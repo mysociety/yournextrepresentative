@@ -5,7 +5,7 @@ $color-green: #155847;
 $color-lightgreen: #1e9577;
 $color-palegreen: #bcdad5;
 $color-pink: #dd3975;
-$color-offwhite: #ddd;
+$color-offwhite: #dddddd;
 $color-cream: #e4dfdb;
 $color-red: #c55e59;
 $color-yellow: #fdf2d5;
@@ -30,7 +30,7 @@ $error-text-color: darken($color-red, 10%);
 $error-border-color: mix($color-red, #fff, 30%);
 $error-input-border-color: mix($color-red, #fff, 40%);
 
-$avatar-background-color: #ddd;
+$avatar-background-color: #dddddd;
 
 $unknown-candidate-status-color: $color-pink;
 $not-standing-candidate-status-color: $color-red;
@@ -78,6 +78,18 @@ $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 @import "../candidates/copyright-assignment";
 @import "../candidates/leaderboards";
 
+h1, h2, h3 {
+    margin-bottom: 0.5em;
+    line-height: 1.1em;
+}
+
+a {
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+
 .header {
   font-family: $header-font-family;
   font-size: 1.3125em; // 21px up from default 16px
@@ -109,10 +121,127 @@ a.header__logo {
   margin-right: 0.5em;
 }
 
+@media #{$medium-up} {
+    .header__nav {
+        @include clearfix();
+        margin-left: -0.5em;
+        margin-right: -0.5em;
+    }
+
+    .header__nav__item {
+        float: left;
+    }
+
+    .header__nav__item--secondary {
+        float: right;
+    }
+}
+
 .header__hero {
   display: none;
 }
 
 .footer a {
   color: $color-lightgreen;
+}
+
+// Home page
+
+body.finder .content {
+    padding-bottom: 0;
+    padding-top: 0;
+    background-color: #f3f3f3;
+
+    .container {
+        padding-top: 2em;
+        padding-bottom: 2em;
+    }
+}
+
+.finder__getting-started {
+    background-color: $color-offwhite;
+}
+
+.finder__intro {
+    p {
+        font-size: 1.2em;
+    }
+}
+
+.finder__forms {
+    background-color: $color-palegreen;
+    border: 1px solid darken($color-palegreen, 5%);
+    padding: 1em;
+    margin-bottom: 0;
+
+    label {
+        font-size: 1em;
+        margin-bottom: 1em;
+    }
+
+    .button {
+        @include button-style($color-pink, true);
+    }
+}
+
+.iframe-4-by-3 {
+    position: relative;
+    padding-top: 75%;
+    padding-bottom: 30px;
+    height: 0;
+    overflow: auto;
+
+    iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media #{$medium-up} {
+    .finder__intro {
+        width: 50%;
+    }
+
+    .finder__forms {
+        top: auto;
+        bottom: -2em;
+        padding: 2em 3em;
+    }
+
+    .finder__getting-started {
+        body.finder & .container { // TODO: overspecified selector!!
+            padding-top: 3em;
+            padding-bottom: 4em;
+        }
+
+        h2 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    .finder__getting-started__demo {
+        @include grid-column($columns: 6, $collapse: true);
+    }
+
+    .finder__getting-started__help {
+        @include grid-column($columns: 5, $collapse: true, $offset: 1);
+    }
+
+    .finder__getting-started__priorities {
+        list-style: none;
+        margin: 0;
+
+        li a {
+            display: block;
+            padding: 0.5em 0;
+        }
+
+        li + li {
+            border-top: 1px solid mix($color-offwhite, $color-green, 80%);
+        }
+    }
 }

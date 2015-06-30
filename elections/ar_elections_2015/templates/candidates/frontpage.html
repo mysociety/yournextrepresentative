@@ -1,9 +1,50 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block body_class %}finder{% endblock %}
 
 {% block content %}
 
-  <p>Homepage content will go here</p>
+    <div class="finder__intro">
+        <h1>This is an eye-catching title</h1>
+        <p>This text will introduce Yo Quiero Saber, explain why it exists and what its goal is.</p>
+        <p>It will talk about how we’re crowdsourcing the data, and how we want people like <em>you</em> to get involved.</p>
+    </div>
+
+    <div class="finder__forms">
+        <form id="form-address" action="{% url 'lookup-address' %}" method="post">
+            <h2>Call to action!</h2>
+            {{ form.as_p }}
+            <input type="submit" class="button" value="{% trans "Show candidates" %}">
+        </form>
+    </div>
+
+</div><!-- close .container -->
+
+<div class="finder__getting-started">
+    <div class="container">
+
+        <div class="finder__getting-started__demo">
+            <h2>Some subtitle about contributing</h2>
+            <div class="iframe-4-by-3">
+                <iframe src="https://docs.google.com/presentation/d/1OR3hr5TVz9Qw8Vxr3prD0ymjbYpRassA4l_85ZRN2wU/embed?start=false&loop=true&delayms=5000" frameborder="0" width="960" height="749" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            </div>
+        </div>
+
+        <div class="finder__getting-started__help">
+            <h2>Enthusiastic title!</h2>
+            <p>This text might encourage the user by telling them it’s easy to contribute new data. Or it might explain some of the different actions a user can take to do their part.</p>
+
+            <h2>Why not start with…</h2>
+            <ul class="finder__getting-started__priorities">
+                <li><a href="#">Candidato a Senador Nacional por BUENOS AIRES</a></li>
+                <li><a href="#">Candidato a Gobernador por LA RIOJA</a></li>
+                <li><a href="#">Candidato a Diputado Nacional por CORDOBA</a></li>
+                <li><a href="#">Candidato a Senador Nacional por SAN JUAN</a></li>
+                <li><a href="#">Candidato a Gobernador por SANTIAGO DEL ESTERO</a></li>
+            </ul>
+        </div>
+    </div>
 
 {% endblock %}
