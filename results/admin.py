@@ -12,6 +12,7 @@ class ResultEventAdmin(admin.ModelAdmin):
         'winner_party_id',
         'winner_party_name',
         'post_id',
+        'post_name',
         'constituency_link',
         'source',
     )
@@ -21,6 +22,7 @@ class ResultEventAdmin(admin.ModelAdmin):
         'winner_person_name',
         'winner_party_id',
         'post_id',
+        'post_name',
         'source',
     )
     ordering = ('-created',)
@@ -30,7 +32,7 @@ class ResultEventAdmin(admin.ModelAdmin):
             'person-view',
             kwargs={
                 'person_id': o.winner_popit_person_id,
-                'ignored_slug': slugify(o.constituency_name),
+                'ignored_slug': slugify(o.post_name),
             }
         )
         return '<a href="{0}">{1}</a>'.format(
@@ -44,12 +46,12 @@ class ResultEventAdmin(admin.ModelAdmin):
             'constituency',
             kwargs={
                 'post_id': o.post_id,
-                'ignored_slug': slugify(o.constituency_name),
+                'ignored_slug': slugify(o.post_name),
             }
         )
         return '<a href="{0}">{1}</a>'.format(
             url,
-            o.constituency_name,
+            o.post_name,
         )
     constituency_link.allow_tags = True
 

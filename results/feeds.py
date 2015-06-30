@@ -18,7 +18,7 @@ class BasicResultEventsFeed(Feed):
         return _(u'{name} ({party}) won in {cons}').format(
             name=item.winner_person_name,
             party=item.winner_party_name,
-            cons=item.constituency_name,
+            cons=item.post_name,
         )
 
     def item_description(self, item):
@@ -29,7 +29,7 @@ class BasicResultEventsFeed(Feed):
             name=item.winner_person_name,
             datetime=item.created.strftime("%Y-%m-%d %H:%M:%S"),
             party=item.winner_party_name,
-            cons=item.constituency_name,
+            cons=item.post_name,
             source=item.source,
         )
 
@@ -62,7 +62,7 @@ class ResultEventsAtomFeedGenerator(Atom1Feed):
             'winner_party_id',
             'winner_party_name',
             'user_id',
-            'constituency_name',
+            'post_name',
             'information_source',
         ]
         for k in [
@@ -89,7 +89,7 @@ class ResultEventsFeed(BasicResultEventsFeed):
             'winner_party_name': o.winner_party_name,
             'user_id': o.user.id,
             'user_id': o.user.id,
-            'constituency_name': o.constituency_name,
+            'post_name': o.post_name,
             'information_source': o.source,
             'image_url_template': o.proxy_image_url_template,
             'parlparse_id': o.parlparse_id,
