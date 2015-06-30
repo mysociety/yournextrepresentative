@@ -5,7 +5,7 @@ from django.http import HttpResponseBadRequest
 from django.views.generic import TemplateView
 from django.utils.translation import ugettext as _
 
-from candidates.cache import get_post_cached
+from candidates.cache import get_post_cached, UnknownPostException
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 
@@ -24,7 +24,12 @@ class AreasView(PopItApiMixin, TemplateView):
                 message = _("Malformed type and area: '{0}'")
                 return HttpResponseBadRequest(message.format(type_and_area))
             self.types_and_areas.append(m.groups())
-        return super(AreasView, self).get(request, *args, **kwargs)
+        try:
+            view = super(AreasView, self).get(request, *args, **kwargs)
+        except UnknownPostException:
+            message = _("Malformed type and area: '{0}'")
+            return HttpResponseBadRequest(message.format(kwargs['type_and_area_ids']))
+        return view
 
     def get_context_data(self, **kwargs):
         context = super(AreasView, self).get_context_data(**kwargs)
