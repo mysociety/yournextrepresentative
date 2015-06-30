@@ -56,7 +56,8 @@ class Command(PopItApiMixin, BaseCommand):
             }
             for post in all_posts:
                 for m in post['memberships']:
-                    if m.get('role') != 'Candidate':
+                    candidate_role = election_data['candidate_membership_role']
+                    if m.get('role') != candidate_role:
                         continue
                     person = m['person_id']
                     standing_in = person.get('standing_in') or {}

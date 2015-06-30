@@ -8,7 +8,7 @@ MAILTO=yournextmp@mysociety.org
 !!(* if ($vhost eq 'yournextmp.mysociety.org') { *)!!
 # Update the live CSV file every 15 minutes on the production instance, offset
 # from generating the cached counts:
-2,17,32,47 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/candidates.csv
+2,17,32,47 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv /data/vhost/!!(*= $vhost *)!!/media_root/candidates
 !!(* } *)!!
 
 # Run face detection every 15 minutes, again offset a bit:
@@ -21,4 +21,4 @@ MAILTO=yournextmp@mysociety.org
 # 3,8,13,18,23,28,33,38,43,48,53,58 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_add_new_parlparse_ids http://www.theyworkforyou.com/pwdata/people.json
 
 # Also create a daily archive at about 2 am:
-3 2 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/csv-archives/candidates-`date +\%Y\%m\%d`.csv
+3 2 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextmp-popit/manage.py candidates_create_csv -o /data/vhost/!!(*= $vhost *)!!/media_root/csv-archives/candidates-`date +\%Y\%m\%d`

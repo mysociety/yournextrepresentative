@@ -25,7 +25,10 @@ from ..cache import (
     get_person_cached, invalidate_person, get_post_cached, invalidate_posts
 )
 from ..diffs import get_version_diffs
-from ..election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from ..election_specific import (
+    MAPIT_DATA, PARTY_DATA, AREA_POST_DATA,
+    EXTRA_CSV_ROW_FIELDS, get_extra_csv_values
+)
 
 person_added = django.dispatch.Signal(providing_args=["data"])
 
@@ -47,35 +50,33 @@ other_fields_to_proxy = [
 ]
 
 CSV_ROW_FIELDS = [
-    'name',
     'id',
-    'party',
-    'constituency',
-    'mapit_id',
+    'name',
+    'honorific_prefix',
+    'honorific_suffix',
+    'gender',
+    'birth_date',
+    'election',
+    'party_id',
+    'party_name',
+    'post_id',
+    'post_label',
     'mapit_url',
-    'gss_code',
+    'elected',
+    'email',
     'twitter_username',
     'facebook_page_url',
     'party_ppc_page_url',
-    'gender',
     'facebook_personal_url',
-    'email',
     'homepage_url',
     'wikipedia_url',
-    'birth_date',
-    'parlparse_id',
-    'theyworkforyou_url',
-    'honorific_prefix',
-    'honorific_suffix',
-    'party_id',
     'linkedin_url',
-    'elected',
     'image_url',
     'proxy_image_url_template',
     'image_copyright',
     'image_uploading_user',
     'image_uploading_user_notes',
-]
+] + EXTRA_CSV_ROW_FIELDS
 
 
 form_complex_fields_locations = {
@@ -255,17 +256,14 @@ def is_party_membership(membership):
         return bool(party_id_match)
 
 def is_candidacy_membership(membership):
-    role = membership.get('role', '').lower()
-    return (role == 'candidate')
-
-def is_mp_membership(membership):
-    role = membership.get('role', 'Member').lower()
-    if role != 'member':
+    if not membership.get('election'):
         return False
-    return membership.get('organization_id') == 'commons'
+    role = membership.get('role')
+    election_data = settings.ELECTIONS[membership['election']]
+    return role == election_data['candidate_membership_role']
 
 def is_standing_in_membership(membership):
-    return is_candidacy_membership(membership) or is_mp_membership(membership)
+    return is_candidacy_membership(membership)
 
 # FIXME: really this should be a method on a PopIt base class, so it's
 # available for both people and organizations.
@@ -648,9 +646,11 @@ class PopItPerson(object):
                 # person isn't standing...
                 # Create the candidate list membership:
                 membership = election_to_party_dates(election)
+                membership['election'] = election
                 membership['person_id'] = self.id
                 membership['post_id'] = constituency['post_id']
-                membership['role'] = "Candidate"
+                candidate_role = settings.ELECTIONS[election]['candidate_membership_role']
+                membership['role'] = candidate_role
                 memberships.append(membership)
                 if constituency.get('elected'):
                     day_after = settings.ELECTIONS[election]['election_date'] + \
@@ -756,72 +756,75 @@ class PopItPerson(object):
 
     def as_dict(self, election):
         """
-        Returns a list in the order of CSV_ROW_FIELDS, for ease of
-        converting PopItPerson objects in to CSV representations.
+        Returns a dict with keys corresponding to the values in
+        CSV_ROW_FIELDS, for ease of converting PopItPerson objects
+        to CSV representations.
         """
 
-        person_data = defaultdict(str)
-        person_data.update(self.popit_data['versions'][0]['data'])
+        class EmptyForNoneAttributes(object):
+            def __init__(self, person):
+                self.person = person
+            def __getattr__(self, name):
+                value = getattr(self.person, name)
+                if value is None:
+                    return ''
+                return value
 
-        theyworkforyou_url = None
-        parlparse_id = get_identifier('uk.org.publicwhip', self.popit_data)
-        if parlparse_id:
-            m = re.search(r'^uk.org.publicwhip/person/(\d+)$', parlparse_id)
-            if not m:
-                message = _("Malformed parlparse ID found {0}")
-                raise Exception, message.format(parlparse_id)
-            parlparse_person_id = m.group(1)
-            theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
-                parlparse_person_id
-            )
+        person_data = EmptyForNoneAttributes(self)
+        post_id = self.standing_in[election]['post_id']
+
+        # Get whether this candidate was a winner in this election:
         elected = self.get_elected(election)
         elected_for_csv = ''
         if elected is not None:
             elected_for_csv = str(elected)
-        image = self.popit_data.get('image', '') or ''
+
+        # Get all the image-related data:
+
+        image = person_data.image
         proxy_image_url_template = ''
         image_copyright = ''
         image_uploading_user = ''
         image_uploading_user_notes = ''
         if image:
             proxy_image_url_template = \
-                self.popit_data['proxy_image'] + '/{width}/{height}.{extension}'
+                person_data.proxy_image + '/{width}/{height}.{extension}'
             image_data = self.popit_data['images'][0]
             image_copyright = image_data.get('moderator_why_allowed', '')
             image_uploading_user = image_data.get('uploaded_by_user', '')
             image_uploading_user_notes = \
                 image_data.get('user_justification_for_use', '')
+
         row = {
-            'honorific_prefix': self.popit_data.get('honorific_prefix', ''),
-            'name': self.name,
-            'honorific_suffix': self.popit_data.get('honorific_suffix', ''),
             'id': self.id,
-            'party': person_data['party_memberships'][election]['name'],
-            'constituency': self.standing_in[election]['name'],
+            'name': self.name,
+            'honorific_prefix': person_data.honorific_prefix,
+            'honorific_suffix': person_data.honorific_suffix,
+            'gender': person_data.gender,
+            'birth_date': person_data.birth_date,
+            'election': election,
+            'party_id': self.party_memberships[election]['id'],
+            'party_name': self.party_memberships[election]['name'],
+            'post_id': post_id,
+            'post_label': self.standing_in[election]['name'],
             'mapit_url': self.standing_in[election]['mapit_url'],
-            'mapit_id': self.standing_in[election]['post_id'],
-            'gss_code': MAPIT_DATA.areas_by_id[('WMC', 22)][
-                self.standing_in[election]['post_id']]['codes']['gss'],
-            'twitter_username': person_data['twitter_username'],
-            'facebook_page_url': person_data['facebook_page_url'],
-            'linkedin_url': person_data['linkedin_url'],
-            'party_ppc_page_url': person_data['party_ppc_page_url'],
-            'gender': person_data['gender'],
-            'facebook_personal_url': person_data['facebook_personal_url'],
-            'email': person_data['email'],
-            'homepage_url': person_data['homepage_url'],
-            'wikipedia_url': person_data['wikipedia_url'],
-            'birth_date': person_data['birth_date'],
-            'parlparse_id': parlparse_id,
-            'theyworkforyou_url': theyworkforyou_url,
-            'party_id': self.parties[election].get('electoral_commission_id'),
             'elected': elected_for_csv,
-            'image_url': self.popit_data.get('image', ''),
+            'email': person_data.email,
+            'twitter_username': person_data.twitter_username,
+            'facebook_page_url': person_data.facebook_page_url,
+            'linkedin_url': person_data.linkedin_url,
+            'party_ppc_page_url': person_data.party_ppc_page_url,
+            'facebook_personal_url': person_data.facebook_personal_url,
+            'homepage_url': person_data.homepage_url,
+            'wikipedia_url': person_data.wikipedia_url,
+            'image_url': image,
             'proxy_image_url_template': proxy_image_url_template,
             'image_copyright': image_copyright,
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
         }
+        extra_csv_data = get_extra_csv_values(self, election, MAPIT_DATA)
+        row.update(extra_csv_data)
 
         return row
 

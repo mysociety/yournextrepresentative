@@ -3,6 +3,8 @@ from datetime import date
 ELECTIONS = {
     '2010': {
         'for_post_role': 'Member of Parliament',
+        'candidate_membership_role': 'Candidate',
+        'winner_membership_role': None,
         'election_date': date(2010, 5, 6),
         'candidacy_start_date': date(2005, 5, 6),
         'organization_id': 'commons',
@@ -17,6 +19,8 @@ ELECTIONS = {
     },
     '2015': {
         'for_post_role': 'Member of Parliament',
+        'candidate_membership_role': 'Candidate',
+        'winner_membership_role': None,
         'election_date': date(2015, 5, 7),
         'candidacy_start_date': date(2010, 5, 7),
         'organization_id': 'commons',
