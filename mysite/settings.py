@@ -213,7 +213,21 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale')
 ]
 
+# The code below sets LANGUAGES to only those we have translations
+# for, so at the time of writing that will be:
+#   [('en', 'English'), ('es-ar', 'Argentinian Spanish')]
+# whereas the default setting is a long list of languages which
+# includes:
+#   ('es', 'Spanish').
+# If someone's browser sends 'Accept-Language: es', that means that it
+# will be found in this list, but since there are no translations for 'es'
+# it'll fall back to LANGUAGE_CODE.  However, if there is no 'es' in
+# LANGUAGES, then Django will attempt to do a best match, so if
+# Accept-Language is 'es' then it will use the 'es-ar' translation.  We think
+# this is generally desirable (e.g. so someone can see YourNextMP in Spanish
+# if their browser asks for Spanish).
 LANGUAGES = [l for l in LANGUAGES if os.path.exists(os.path.join(LOCALE_PATHS[0], to_locale(l[0])))]
+
 LANGUAGE_CODE = conf.get('LANGUAGE_CODE', 'en-gb')
 
 TIME_ZONE = conf.get('TIME_ZONE', 'Europe/London')
