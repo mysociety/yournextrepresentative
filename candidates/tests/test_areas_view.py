@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from mock import patch
 import re
 
@@ -289,6 +291,45 @@ class TestAreasView(TestUserMixin, WebTest):
 
         # should not allow recording the winner from this page
         self.assertNotIn('This candidate won!', response)
+
+
+    def test_no_candidates_without_login(self, mock_popit):
+        mock_popit.return_value.organizations = FakeOrganizationCollection
+        mock_popit.return_value.persons = FakePersonCollection
+        mock_popit.return_value.posts = FakePostCollection
+
+        response = self.app.get('/areas/WMC-65730/aldershot')
+
+        # should see the no candidates message
+        self.assertIn('We don’t know of any candidates', response)
+
+        # should be invited to sign in to add a candidate
+        self.assertFalse(
+            response.html.find(
+                'a', {'text': 'Sign in to add a new candidate'}
+            )
+        )
+
+
+    def test_no_candidates_with_login(self, mock_popit):
+        mock_popit.return_value.organizations = FakeOrganizationCollection
+        mock_popit.return_value.persons = FakePersonCollection
+        mock_popit.return_value.posts = FakePostCollection
+
+        response = self.app.get(
+            '/areas/WMC-65730/aldershot',
+            user=self.user
+        )
+
+        # should see the no candidates message
+        self.assertIn('We don’t know of any candidates', response)
+
+        # should be invited to add a candidate
+        self.assertFalse(
+            response.html.find(
+                'a', {'text': 'Add a new candidate'}
+            )
+        )
 
 
     def test_get_malformed_url(self, mock_popit):

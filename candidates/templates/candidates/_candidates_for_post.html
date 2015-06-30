@@ -129,7 +129,11 @@
         <p class="medium-8 columns">{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name %}
             <strong>Oh no!</strong> We don’t know of any candidates in {{ post_label }}
         for the {{ election_name }} yet.{% endblocktrans %}</p>
-        <p class="medium-4 columns"><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
+        {% if candidate_list_edits_allowed %}
+          <p class="medium-4 columns"><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
+        {% else %}
+          <p class="medium-4 columns"><a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="show-new-candidate-form button">{% trans "Sign in to add a new candidate" %}</a></p>
+        {% endif %}
       </div>
     {% endfor %}
 
