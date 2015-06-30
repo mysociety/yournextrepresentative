@@ -114,6 +114,10 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             c.get_elected(self.election) is not None for c in context['candidates']
         )
 
+        context['show_confirm_result'] = any(
+            c.get_elected(self.election) is None for c in context['candidates']
+        )
+
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
             initial={'constituency': post_id}

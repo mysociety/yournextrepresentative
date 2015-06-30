@@ -59,7 +59,9 @@ class FakeCollection(object):
                     kwargs.get('embed', 'membership')))
         except IOError as e:
             if e.errno == errno.ENOENT:
-                raise HttpClientError('Client Error 404')
+                raise HttpClientError(
+                    'Client Error 404',
+                    content='Fake content not found')
             else:
                 raise
 
