@@ -9,22 +9,23 @@ $color-offwhite: #f3f3f3;
 $color-cream: #e4dfdb;
 $color-red: #c55e59;
 $color-yellow: #fdf2d5;
+$color-grey: #d3d3d3;
 
 $header-background-color: $color-green;
 $body-background-color: $color-darkgreen;
 $footer-text-color: mix($color-darkgreen, #fff, 50%);
 $content-background-color: $color-offwhite;
 
-$muted-text-color: darken($color-cream, 20%);
+$muted-text-color: darken($color-grey, 20%);
 
-$message-background-color: mix($color-pink, #fff, 90%);
-$message-border-color: lighten($color-pink, 30%);
+$message-background-color: mix($color-palegreen, #fff, 50%);
+$message-border-color: mix($color-palegreen, #fff, 80%);
 
 $highlight-background-color: $color-yellow;
 $information-background-color: $color-lightgreen;
 $danger-background-color: mix($color-red, #fff, 15%);
+$confirmation-background-color: $color-yellow;
 
-$confirmation-background-color: $color-cream;
 $error-background-color: mix($color-red, #fff, 15%);
 $error-text-color: darken($color-red, 10%);
 $error-border-color: mix($color-red, #fff, 30%);
@@ -41,8 +42,8 @@ $homepage-activity-color: #333;
 $homepage-leaderboard-color: #333;
 
 // Override Foundation variables here
-$primary-color: $color-green;
-$secondary-color: $color-cream;
+$primary-color: $color-lightgreen;
+$secondary-color: $color-grey;
 $button-tny: rem-calc(6);
 $button-sml: rem-calc(8);
 $button-med: rem-calc(10);
@@ -310,5 +311,30 @@ body.finder .content {
         li + li {
             border-top: 1px solid mix($color-offwhite, $color-green, 80%);
         }
+    }
+}
+
+.person__actions__action {
+    background-color: $message-background-color;
+}
+
+.person__actions__edit,
+.person__actions__sourcing {
+    background-color: $highlight-background-color;
+}
+
+.person__actions__data {
+    background-color: $information-background-color;
+}
+
+.person__actions__merge {
+    background-color: $danger-background-color;
+}
+
+.official-documents {
+    @extend .candidates__known;
+
+    @media #{$medium-up} {
+      background-image: url(img/icon-official-documents.gif);
     }
 }
