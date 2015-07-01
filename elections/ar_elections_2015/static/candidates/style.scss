@@ -51,6 +51,8 @@ $button-radius: 3px;
 $header-font-family: "Politica", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 
+$high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi';
+
 @font-face {
   font-family: Politica;
   src: url(fonts/POLITICA.TTF);
@@ -91,24 +93,48 @@ a {
 }
 
 .header {
-  font-family: $header-font-family;
-  font-size: 1.3125em; // 21px up from default 16px
-  text-align: center;
-  color: $color-palegreen;
+    font-family: $header-font-family;
+    font-size: 1.3125em; // 21px up from default 16px
+    text-align: center;
+    color: $color-palegreen;
+
+    .container {
+        position: relative;
+    }
+
+    a {
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+    }
 }
 
 .header__logo {
-  display: block;
-  margin: 1em auto 0 auto;
-  width: 287px;
-  height: 62px;
-  background: transparent url(img/YQSlogo.jpg) center center no-repeat;
-  background-size: 287px;
-  height: 62px;
-  text-indent: -9999px;
+    display: block !important;
+    margin: 1em auto 0 auto;
+    width: 230px;
+    height: 53px;
+    background: transparent url(img/logo-yqs-investigacion.png) center center no-repeat;
+    text-indent: -9999px;
+
+    // Special case for very narrow screens,
+    // to leave room for social icons
+    @media (max-width: 30em) {
+        width: 230px * 0.75;
+        height: 53px * 0.75;
+        background-size: 230px * 0.75;
+        margin-left: 0;
+    }
+
+    @media ($high_dpi_screen) {
+        background-image: url(img/logo-yqs-investigacion@2.png);
+        background-size: 230px;
+    }
 }
 
-a.header__logo {
+a.header__logo,
+.header__nav__social a {
   &:hover, &:focus {
     margin-bottom: 0;
     border-bottom: none;
@@ -117,8 +143,49 @@ a.header__logo {
 
 .header__nav__item {
   display: inline-block;
-  margin-left: 0.5em;
-  margin-right: 0.5em;
+  margin-left: 0.3em;
+  margin-right: 0.3em;
+
+  @media #{$medium-up} {
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+  }
+}
+
+.header__nav__primary {
+    margin-bottom: 0.5em;
+}
+
+.header__nav__social {
+    position: absolute;
+    top: 0;
+    right: $column-gutter / 2;
+
+    a {
+        display: block;
+        float: left;
+        width: 36px;
+        height: 50px;
+        text-indent: -9999px;
+        background-position: 8px 22px;
+        background-repeat: no-repeat;
+
+        &[href*="facebook"] {
+            background-color: #3b5998;
+            background-image: url(img/logo-facebook.png);
+        }
+
+        &[href*="twitter"] {
+            background-color: #55acee;
+            background-image: url(img/logo-twitter.png);
+        }
+
+        &:hover,
+        &:focus {
+            height: 54px;
+            background-position: 8px 26px;
+        }
+    }
 }
 
 @media #{$medium-up} {
@@ -128,11 +195,12 @@ a.header__logo {
         margin-right: -0.5em;
     }
 
-    .header__nav__item {
+    .header__nav__primary {
         float: left;
+        margin-bottom: 0;
     }
 
-    .header__nav__item--secondary {
+    .header__nav__secondary {
         float: right;
     }
 }
