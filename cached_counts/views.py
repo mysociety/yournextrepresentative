@@ -1,8 +1,7 @@
 import json
 
 from django.conf import settings
-from django.http import HttpResponse, Http404
-from django.utils.translation import ugettext as _
+from django.http import HttpResponse
 
 from django.views.generic import ListView, TemplateView
 
