@@ -5,7 +5,7 @@ $color-green: #155847;
 $color-lightgreen: #1e9577;
 $color-palegreen: #bcdad5;
 $color-pink: #dd3975;
-$color-offwhite: #dddddd;
+$color-offwhite: #f3f3f3;
 $color-cream: #e4dfdb;
 $color-red: #c55e59;
 $color-yellow: #fdf2d5;
@@ -218,7 +218,6 @@ a.header__logo,
 body.finder .content {
     padding-bottom: 0;
     padding-top: 0;
-    background-color: #f3f3f3;
 
     .container {
         padding-top: 2em;
@@ -227,7 +226,7 @@ body.finder .content {
 }
 
 .finder__getting-started {
-    background-color: $color-offwhite;
+    background-color: darken($color-offwhite, 5%);
 }
 
 .finder__intro {
