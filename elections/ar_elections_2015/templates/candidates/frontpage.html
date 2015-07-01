@@ -7,17 +7,18 @@
 {% block content %}
 
     <div class="finder__intro">
-        <h1>This is an eye-catching title</h1>
-        <p>This text will introduce Yo Quiero Saber, explain why it exists and what its goal is.</p>
-        <p>It will talk about how we’re crowdsourcing the data, and how we want people like <em>you</em> to get involved.</p>
+        <h1>Investigación electoral colectiva</h1>
+        <p>YoQuieroSaber Investigación es una iniciativa colaborativa para saber más sobre los candidatos a las elecciones PASO del 9 de Agosto.</p>
+        <p>Ayudános aportando información de los candidatos de tu provincia.</p>
     </div>
 
     <div class="finder__forms">
         <form id="form-address" action="{% url 'lookup-address' %}" method="post">
-            <h2>Call to action!</h2>
+            <h2>Empezá por tu provincia</h2>
             {{ form.as_p }}
             <input type="submit" class="button" value="{% trans "Show candidates" %}">
         </form>
+        <p><a href="">Ver todas las provincias</a></p>
     </div>
 
 </div><!-- close .container -->
@@ -26,17 +27,18 @@
     <div class="container">
 
         <div class="finder__getting-started__demo">
-            <h2>Some subtitle about contributing</h2>
+            <h2>Instrucciones para colaborar</h2>
             <div class="iframe-4-by-3">
-                <iframe src="https://docs.google.com/presentation/d/1lc8AllCgljerYa5gdwvTwhGSRlnQG-af-MPdD6FgiHo/embed?start=false&loop=false&delayms=60000" frameborder="0" width="960" height="749" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+                <iframe src="https://docs.google.com/presentation/d/1lc8AllCgljerYa5gdwvTwhGSRlnQG-af-MPdD6FgiHo/embed?start=false&loop=false&delayms=60000" framegborder="0" width="960" height="749" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
             </div>
         </div>
 
         <div class="finder__getting-started__help">
-            <h2>Enthusiastic title!</h2>
-            <p>This text might encourage the user by telling them it’s easy to contribute new data. Or it might explain some of the different actions a user can take to do their part.</p>
+            <h2>¡Podés comenzar ya mismo!</h2>
+            <p>Si querés aportar información sobre los candidatos, registrate en el sitio, revisá que no exista la información que querés aportar y agregala ¡Es así de simple!</p>
+            <p>Ah, no te olvides de citar la fuente donde te enteraste ;)</p>
 
-            <h2>Why not start with…</h2>
+            <h2>¿Conocés los candidatos en estas elecciones?</h2>
             <ul class="finder__getting-started__priorities">
               {% for cc in needing_attention %}
                 <li><a href="{% url 'constituency' election=cc.election post_id=cc.object_id ignored_slug=cc.name|slugify %}">{{ cc.name }}</a></li>
