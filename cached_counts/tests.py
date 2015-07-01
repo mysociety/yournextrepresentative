@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 from mock import patch, MagicMock
 import re
 
 from django.core.management import call_command
-from django.test import TestCase
+from django_webtest import WebTest
 
 from candidates.tests.test_create_person import mock_create_person
 from candidates.tests.fake_popit import get_example_popit_json
@@ -31,6 +33,20 @@ def create_initial_counts(extra=()):
         },
         {
             'election': '2015',
+            'count_type': 'post',
+            'name': 'Camberwell and Peckham',
+            'count': 3,
+            'object_id': '65913'
+        },
+        {
+            'election': '2015',
+            'count_type': 'post',
+            'name': u'Ynys Môn',
+            'count': 0,
+            'object_id': '66115'
+        },
+        {
+            'election': '2015',
             'count_type': 'party',
             'name': 'Labour',
             'count': 0,
@@ -56,7 +72,7 @@ def create_initial_counts(extra=()):
     for count in initial_counts:
         CachedCount(**count).save()
 
-class CachedCountTestCase(TestCase):
+class CachedCountTestCase(WebTest):
     def setUp(self):
         create_initial_counts()
 
@@ -68,11 +84,29 @@ class CachedCountTestCase(TestCase):
         self.assertEqual(CachedCount.objects.get(object_id='party:53').count, 1)
 
     def test_reports_top_page(self):
-        response = self.client.get('/numbers/')
+        response = self.app.get('/numbers/')
         self.assertEqual(response.status_code, 200)
 
+    def test_attention_needed_page(self):
+        response = self.app.get('/numbers/attention-needed')
+        rows = [
+            tuple(unicode(td) for td in row.find_all('td'))
+            for row in response.html.find_all('tr')
+        ]
+        self.assertEqual(
+            rows,
+            [
+                (u'<td><a href="/election/2015/post/66115/ynys-mon">Ynys M\xf4n</a></td>',
+                 u'<td>0</td>'),
+                (u'<td><a href="/election/2015/post/65913/camberwell-and-peckham">Camberwell and Peckham</a></td>',
+                 u'<td>3</td>'),
+                (u'<td><a href="/election/2015/post/65808/dulwich-and-west-norwood">Dulwich and West Norwood</a></td>',
+                 u'<td>10</td>')
+            ]
+        )
 
-class TestCachedCountsCreateCommand(TestCase):
+
+class TestCachedCountsCreateCommand(WebTest):
 
     @patch('candidates.popit.requests')
     def test_cached_counts_create_command(self, mock_requests):

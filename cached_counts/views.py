@@ -124,3 +124,10 @@ class ConstituencyCountsView(ElectionMixin, ListView):
             election=self.kwargs['election'],
             count_type='post',
         )
+
+
+class AttentionNeededView(ListView):
+    template_name = "attention_needed.html"
+
+    def get_queryset(self):
+        return CachedCount.get_attention_needed_queryset()
