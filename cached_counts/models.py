@@ -62,7 +62,7 @@ def person_added_handler(sender, **kwargs):
     for election, standing_in_data in data['standing_in'].items():
         if standing_in_data:
             post_id = standing_in_data.get('post_id')
-            CachedCount.increment_count(election, 'constituency', post_id)
+            CachedCount.increment_count(election, 'post', post_id)
 
     # party
     for election, party_membership_data in data['party_memberships'].items():

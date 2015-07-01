@@ -21,7 +21,7 @@ class Command(PopItApiMixin, BaseCommand):
         # Now we create the organizations that all the posts are
         # associated with:
 
-        for election, election_data in settings.ELECTIONS:
+        for election, election_data in settings.ELECTIONS.items():
             create_or_update(
                 self.api.organizations,
                 {

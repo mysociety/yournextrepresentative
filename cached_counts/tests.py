@@ -24,7 +24,7 @@ def create_initial_counts(extra=()):
     initial_counts = (
         {
             'election': '2015',
-            'count_type': 'constituency',
+            'count_type': 'post',
             'name': 'Dulwich and West Norwood',
             'count': 10,
             'object_id': '65808'
