@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-02 05:46-0300\n"
-"PO-Revision-Date: 2015-07-02 08:49+0000\n"
+"POT-Creation-Date: 2015-07-02 16:08-0300\n"
+"PO-Revision-Date: 2015-07-02 19:09+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/yournextmp/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -1057,11 +1057,17 @@ msgid ""
 "the YourNextMP data.)"
 msgstr ""
 
+#: candidates/templates/candidates/areas-of-type.html:10
+#: candidates/templates/candidates/areas-of-type.html:13
+#, python-format
+msgid "%(area_type_name)s"
+msgstr ""
+
 #: candidates/templates/candidates/areas.html:10
 #: candidates/templates/candidates/areas.html:13
 #, python-format
-msgid "Candidates for %(all_post_labels)s"
-msgstr "Candidatos para %(all_post_labels)s"
+msgid "Areas: %(all_area_names)s"
+msgstr ""
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:6
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:9
@@ -1264,6 +1270,7 @@ msgid ""
 msgstr "No le pagues a un proveedor de bases de datos -- es un desperdicio de dinero."
 
 #: candidates/templates/candidates/frontpage.html:44
+#: elections/ar_elections_2015/templates/candidates/frontpage.html:21
 msgid "Show candidates"
 msgstr "Mostrar candidatos"
 
@@ -1823,7 +1830,7 @@ msgstr "Sigue uno de los enlaces abajo para ver los candidatos de ese cargo:"
 
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
-#: elections/ar_elections_2015/templates/base.html:106
+#: elections/ar_elections_2015/templates/base.html:119
 #: mysite/templates/generic_base.html:107
 msgid "Privacy policy"
 msgstr "Política de privacidad"
@@ -1992,10 +1999,24 @@ msgstr "No se presentó"
 msgid "Not standing"
 msgstr "No se presenta"
 
-#: candidates/views/areas.py:24 candidates/views/areas.py:30
+#: candidates/views/areas.py:28 candidates/views/areas.py:34
 #, python-brace-format
 msgid "Malformed type and area: '{0}'"
 msgstr "Disculpas, ocurrió un error. Malformed type and area {0}"
+
+#: candidates/views/areas.py:86
+#, python-brace-format
+msgid "Area '{0}' not found"
+msgstr ""
+
+#: candidates/views/areas.py:88
+#, python-brace-format
+msgid "Multiple MapIt generations for type {mapit_type} found"
+msgstr ""
+
+#: candidates/views/areas.py:110
+msgid "[No areas found]"
+msgstr ""
 
 #: candidates/views/candidacies.py:29
 msgid "Attempt to edit a candidacy in a locked constituency"
@@ -2021,22 +2042,55 @@ msgstr "La semana pasada"
 msgid "Party not found"
 msgstr "Partido no encontrado"
 
-#: candidates/views/people.py:102
+#: candidates/views/people.py:37
+#, python-brace-format
+msgid "Thank-you for adding <a href=\"{person_url}\">{person_name}</a>!"
+msgstr ""
+
+#: candidates/views/people.py:39
+#, python-brace-format
+msgid "Thank-you for updating <a href=\"{person_url}\">{person_name}</a>!"
+msgstr ""
+
+#: candidates/views/people.py:41
+msgid " Now you can carry on to:"
+msgstr ""
+
+#: candidates/views/people.py:51
+#, python-brace-format
+msgid ""
+"<li><a href=\"{person_create_url}\">Add another candidate in the "
+"{election_name}</a></li>"
+msgstr ""
+
+#: candidates/views/people.py:68
+#, python-brace-format
+msgid "<li><a href=\"{person_edit_url}\">Edit {person_name} again</a></li>"
+msgstr ""
+
+#: candidates/views/people.py:70
+#, python-brace-format
+msgid ""
+"<li>Add a candidate for <a href=\"{needing_attention_url}\">one of the posts"
+" with fewest candidates</a></li>"
+msgstr ""
+
+#: candidates/views/people.py:144
 #, python-brace-format
 msgid "Couldn't find the version {0} of person {1}"
 msgstr "No se pudo encontrar la versión {0} del candidato {1}"
 
-#: candidates/views/people.py:138
+#: candidates/views/people.py:180
 #, python-brace-format
 msgid "Malformed person ID '{0}'"
 msgstr "Disculpas, ocurrió un error. Malformed person ID '{0}'"
 
-#: candidates/views/people.py:141
+#: candidates/views/people.py:183
 #, python-brace-format
 msgid "You can't merge a person ({0}) with themself ({1})"
 msgstr "No se puede unificar al candidato ({0}) consigo mismo ({1})"
 
-#: candidates/views/people.py:156
+#: candidates/views/people.py:198
 #, python-brace-format
 msgid "After merging person {0}"
 msgstr "Después de unificar el candidato {0}"
@@ -2045,52 +2099,76 @@ msgstr "Después de unificar el candidato {0}"
 msgid "Yo Quiero Saber"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:56
-#: elections/ar_elections_2015/templates/base.html:105
+#: elections/ar_elections_2015/templates/base.html:57
+#: elections/ar_elections_2015/templates/base.html:118
 #: mysite/templates/generic_base.html:56
 #: mysite/templates/generic_base.html:105
 msgid "About"
 msgstr "Sobre YQS"
 
-#: elections/ar_elections_2015/templates/base.html:57
+#: elections/ar_elections_2015/templates/base.html:58
 #: mysite/templates/generic_base.html:57
 msgid "Posts"
 msgstr "Cargos"
 
-#: elections/ar_elections_2015/templates/base.html:58
+#: elections/ar_elections_2015/templates/base.html:59
+msgid "Provinces"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/base.html:60
 #: mysite/templates/generic_base.html:58
 msgid "Numbers"
 msgstr "Estadísticas"
 
-#: elections/ar_elections_2015/templates/base.html:64
+#: elections/ar_elections_2015/templates/base.html:68
 #: mysite/templates/generic_base.html:64
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr "Iniciaste sesión como <strong>%(username)s</strong>"
 
-#: elections/ar_elections_2015/templates/base.html:66
+#: elections/ar_elections_2015/templates/base.html:70
 #: mysite/templates/generic_base.html:65
 msgid "Sign out"
 msgstr "Cerrar sesión"
 
-#: elections/ar_elections_2015/templates/base.html:69
+#: elections/ar_elections_2015/templates/base.html:73
 #: mysite/templates/generic_base.html:69
 msgid "Sign in to edit"
 msgstr "Iniciá sesión para editar"
 
-#: elections/ar_elections_2015/templates/base.html:104
+#: elections/ar_elections_2015/templates/base.html:117
 #: mysite/templates/generic_base.html:104
 msgid "Open data API"
 msgstr "API de datos abiertos"
 
-#: elections/ar_elections_2015/templates/base.html:109
+#: elections/ar_elections_2015/templates/base.html:122
 msgid ""
 "Supported by <a href=\"#\">Blah blah</a>, <a href=\"#\">Blah</a>, and <a "
 "href=\"#\">Blah blah</a>."
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:114
+#: elections/ar_elections_2015/templates/base.html:127
 msgid "Built by <a href=\"#\">Congreso Interactivo</a>."
+msgstr ""
+
+#: elections/ar_elections_2015/templates/official_documents/_post.html:5
+msgid "Official documents for this post"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/official_documents/_post.html:13
+#: official_documents/templates/official_documents/_post.html:15
+#, python-format
+msgid "<a href=\"%(url)s\">%(type)s</a> uploaded on %(created)s"
+msgstr "<a href=\"%(url)s\">%(type)s</a> subido en %(created)s"
+
+#: elections/ar_elections_2015/templates/official_documents/_post.html:22
+#, python-format
+msgid "<p>We don't have any %(type)s for the post %(post_data.label)s.</p>"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/official_documents/_post.html:28
+#, python-format
+msgid "Upload a %(type)s"
 msgstr ""
 
 #: elections/uk_general_election_2015/templates/candidates/finder.html:14
@@ -2541,11 +2619,6 @@ msgstr "La página que enlaza a este documento"
 #: official_documents/templates/official_documents/_post.html:4
 msgid "The following official documents are associate with this post:"
 msgstr "Los siguientes documentos oficiales están asociados con este cargo:"
-
-#: official_documents/templates/official_documents/_post.html:15
-#, python-format
-msgid "<a href=\"%(url)s\">%(type)s</a> uploaded on %(created)s"
-msgstr "<a href=\"%(url)s\">%(type)s</a> subido en %(created)s"
 
 #: official_documents/templates/official_documents/_post.html:24
 #, python-format
