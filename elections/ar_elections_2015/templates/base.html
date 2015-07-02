@@ -78,11 +78,15 @@
             <a href="https://twitter.com/YQS_Argentina">Twitter</a>
         </div>
       </div>
-      <div class="header__hero">
-        {% block hero %}
-        {% endblock %}
-      </div>
     </div>
+    {% block hero_outer %}
+      <div class="header__hero">
+        <div class="container">
+          {% block hero %}
+          {% endblock %}
+        </div>
+      </div>
+    {% endblock %}
   </div>
   <div class="content">
     <div class="container">

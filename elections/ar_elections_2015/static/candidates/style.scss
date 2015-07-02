@@ -207,7 +207,44 @@ a.header__logo,
 }
 
 .header__hero {
-  display: none;
+    background-color: $color-lightgreen;
+    padding: 1em 0;
+    text-align: left;
+
+    @media #{$medium-up} {
+      h1 {
+          font-size: $h1-font-size * 0.8;
+      }
+
+      h2 {
+          font-size: $h2-font-size * 0.8;
+      }
+    }
+}
+
+.person__hero {
+    h1 {
+        color: #fff;
+
+        & + p {
+            color: $color-palegreen;
+        }
+    }
+
+    p {
+        font-family: $body-font-family;
+    }
+
+    @media #{$medium-up} {
+        h1 {
+            font-size: $h1-font-size;
+            margin-bottom: 0.1em;
+        }
+
+        .person-avatar {
+            height: 4em;
+        }
+    }
 }
 
 .footer a {
