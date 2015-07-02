@@ -45,7 +45,7 @@ class AreaPostData(BaseAreaPostData):
     def post_id_to_party_set(self, post_id):
         area = self.areas_by_post_id.get(post_id, None)
         if area is None:
-            return area
+            return None
         if area['country_name'] == 'Northern Ireland':
             return 'ni'
         elif area['country_name'] in ('England', 'Scotland', 'Wales'):
