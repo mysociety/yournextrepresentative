@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-02 16:08-0300\n"
-"PO-Revision-Date: 2015-07-02 19:09+0000\n"
+"POT-Creation-Date: 2015-07-02 16:34-0300\n"
+"PO-Revision-Date: 2015-07-02 19:36+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/yournextmp/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -815,29 +815,47 @@ msgid "CSV/Excel Download"
 msgstr "Descarga CSV (formato Excel)"
 
 #: candidates/templates/candidates/api.html:26
-msgid "Download of the 2015 candidates"
-msgstr "Descarga las candidaturas 2015"
+msgid "Current elections"
+msgstr ""
 
-#: candidates/templates/candidates/api.html:28
+#: candidates/templates/candidates/api.html:32
+#: candidates/templates/candidates/api.html:47
+#, python-format
+msgid "Download of the %(title)s candidates "
+msgstr ""
+
+#: candidates/templates/candidates/api.html:41
+msgid "Historic elections"
+msgstr ""
+
+#: candidates/templates/candidates/api.html:55
+msgid "All elections"
+msgstr ""
+
+#: candidates/templates/candidates/api.html:59
+msgid "Download of the candidates for all elections"
+msgstr ""
+
+#: candidates/templates/candidates/api.html:64
 msgid "API"
 msgstr "API "
 
-#: candidates/templates/candidates/api.html:31
+#: candidates/templates/candidates/api.html:67
 msgid "The base API URL for the data is:"
 msgstr "La URL base para la API es:"
 
-#: candidates/templates/candidates/api.html:36
+#: candidates/templates/candidates/api.html:72
 msgid ""
 "You can read <a href=\"http://popit.poplus.org/docs/api/\">more generic "
 "documentation for the PopIt API</a> or just follow the simple examples that "
 "follow."
 msgstr "Podés leer <a href=\"http://popit.poplus.org/docs/api/\">documentación más genérica para la API de PopIt</a> o seguir los simples ejemplos a continuación."
 
-#: candidates/templates/candidates/api.html:42
+#: candidates/templates/candidates/api.html:78
 msgid "Find a Constituency ID"
 msgstr "Encontrar el ID de un distrito"
 
-#: candidates/templates/candidates/api.html:44
+#: candidates/templates/candidates/api.html:80
 msgid ""
 "In order to look up candidates for a constituency, you have to find the ID "
 "of that constituency. The IDs that we use for constituencies are the IDs for"
@@ -845,34 +863,34 @@ msgid ""
 "href=\"http://mapit.mysociety.org\">MapIt</a>."
 msgstr "Con el fin de buscar candidatos para un distrito electoral, usted tiene que encontrar el ID de ese distrito. Los identificadores que utilizamos para los distritos electorales son los ID del distrito electoral de Westminster en otro servicio web, <a href=\"http://mapit.mysociety.org\"> MapIt </a>."
 
-#: candidates/templates/candidates/api.html:52
+#: candidates/templates/candidates/api.html:88
 msgid "... from a postcode"
 msgstr "... de un código postal"
 
-#: candidates/templates/candidates/api.html:54
+#: candidates/templates/candidates/api.html:90
 msgid ""
 "Suppose you want to find the constituency for the postcode SW1A&nbsp;1AA, "
 "then you would make a GET request to the following URL:"
 msgstr "Suponga usted quiere encontrar el distrito electoral para el código postal SW1A&nbsp;1AA, después usted podría intentar una búsqueda para el siguiente URL:"
 
-#: candidates/templates/candidates/api.html:64
+#: candidates/templates/candidates/api.html:100
 msgid ""
 "This <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">returns a JSON "
 "object</a>, wherein the constituency ID can be found at "
 "<tt>.shortcuts.WMC</tt>."
 msgstr "Esto <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">regresará a objeto JSON </a>, en donde la identificación del distrito electoral puede ser encontrada como <tt>.shortcuts.WMC</tt>."
 
-#: candidates/templates/candidates/api.html:70
+#: candidates/templates/candidates/api.html:106
 msgid ""
 "There's more documentation available on <a href=\"http://mapit.mysociety.org"
 "/#api-by_postcode\">postcode lookups on the MapIt front-page</a>."
 msgstr "Hay más documentación disponible en <a href=\"http://mapit.mysociety.org/#api-by_postcode\">la búsqueda del código postal en la pagina principal de Maplt </a>."
 
-#: candidates/templates/candidates/api.html:76
+#: candidates/templates/candidates/api.html:112
 msgid "... from a latitude / longitude or other coordinate"
 msgstr "... de una latitud / longitud u otra coordenada"
 
-#: candidates/templates/candidates/api.html:78
+#: candidates/templates/candidates/api.html:114
 msgid ""
 "You can look up constituencies in MapIt using a variety of coordinate "
 "systems. To give the most common example, you might have a WGS84 coordinate "
@@ -881,30 +899,30 @@ msgid ""
 " looked up with:"
 msgstr "Usted puede buscar el distrito electoral en Maplt usando una varieda de sistemas de coordenadas. Para dar el ejemplo más común, usted puede tener una coordenada WGS84 de un GPS o una ubicación API, en donde podrá poner la SRID 4326 en su búsqueda. Por ejemplo, latitud 52.205083 y longitud 0.115194  puede ser buscada como: "
 
-#: candidates/templates/candidates/api.html:90
+#: candidates/templates/candidates/api.html:126
 msgid ""
 "(Note that the longitude comes before the latitude, which might not be what "
 "you expect.) The only key in that object is the constituency ID."
 msgstr "(Note que la longitud viene después de la latitud, que puede ser lo que usted espere.) La única clave in ese caso objeto es la identificación del distrito electoral."
 
-#: candidates/templates/candidates/api.html:96
+#: candidates/templates/candidates/api.html:132
 msgid ""
 "There's more documentation available on <a href=\"http://mapit.mysociety.org"
 "/#api-by_point\">point lookups on the MapIt front-page</a>."
 msgstr "Hay más documentación disponible en <a href=\"http://mapit.mysociety.org/#api-by_point\">la búsqueda del código postal en la pagina principal de Maplt </a>."
 
-#: candidates/templates/candidates/api.html:102
+#: candidates/templates/candidates/api.html:138
 msgid "... by selecting it from its name"
 msgstr "... seleccionando por su nombre"
 
-#: candidates/templates/candidates/api.html:104
+#: candidates/templates/candidates/api.html:140
 msgid ""
 "If you need to produce a list of all constituencies (e.g. for a select box) "
 "and allow the user to pick one, you can get a list of all Westminster "
 "constituencies in the UK from this request:"
 msgstr "si necesita producir una lista de todos los distritos electorales (por ejemplo para una caja de selección) y permitir a los usuarios elegir uno, puede tomar la lista del distrito electoral de Westminster en el UK para esta solicitud:"
 
-#: candidates/templates/candidates/api.html:114
+#: candidates/templates/candidates/api.html:150
 msgid ""
 "The <a href=\"http://mapit.mysociety.org/areas/WMC\">returned data from that"
 " request</a> has the constituency ID as its keys; the values are objects "
@@ -912,11 +930,11 @@ msgid ""
 " official name of the constituency."
 msgstr "El <a href=\"http://mapit.mysociety.org/areas/WMC\">dato resultante de esa búsqueda </a> tiene la identificación del distrito electoral como su clave; los valores son objetos que incluyen (entre otras cosas) un <tt>nombre</tt> elemento que te da el nombre oficial del distrito electoral"
 
-#: candidates/templates/candidates/api.html:122
+#: candidates/templates/candidates/api.html:158
 msgid "Find Candidates for a Constituency"
 msgstr "Encontrar candidatos para un distrito electoral"
 
-#: candidates/templates/candidates/api.html:124
+#: candidates/templates/candidates/api.html:160
 msgid ""
 "There are broadly two ways you can approach getting candidate data for a "
 "constituency; one is slightly simpler, and just gives you the basic "
@@ -925,17 +943,17 @@ msgid ""
 "generically process Popolo data."
 msgstr "Existen dos maneras usted puede aproximarse a los datos de un candidato para un distrito electoral: una es bastante simple, y solo te da los candidatos básicos y la información del partido, mientras el segundo te da los datos completos en formato Popolo, que es más complejo pero útil si usa herramientas que generalmente procesan datos Popolo."
 
-#: candidates/templates/candidates/api.html:133
+#: candidates/templates/candidates/api.html:169
 msgid "Simpler (Basic candidate information)"
 msgstr "Simple (Información básica del candidato)"
 
-#: candidates/templates/candidates/api.html:135
+#: candidates/templates/candidates/api.html:171
 msgid ""
 "You can get all the candidates for a constituency, both in 2010 and 2015 by "
 "a query like:"
 msgstr "Puede mirar todos los candidatos en un distrio electoral, tanto en 2010 como en 2015, en una búsqueda tipo: "
 
-#: candidates/templates/candidates/api.html:144
+#: candidates/templates/candidates/api.html:180
 #, python-format
 msgid ""
 "For example, for Dulwich and West Norwood, <a "
@@ -943,20 +961,20 @@ msgid ""
 " results</a>."
 msgstr "Por ejemplo, para Dulwich y West Norwood, <a href=\"%(popit_url)sposts/65808?embed=membership.person\">este puede ser el resultado</a>."
 
-#: candidates/templates/candidates/api.html:150
+#: candidates/templates/candidates/api.html:186
 msgid ""
 "If you iterate over the <tt>memberships</tt> in that result, each person "
 "will look something like:"
 msgstr "Si usted hace una iteración sobre la<tt>memebresía<tt> en ese resultado, cada persona verá algo como:"
 
-#: candidates/templates/candidates/api.html:178
+#: candidates/templates/candidates/api.html:214
 msgid ""
 "(I've removed some fields there to keep the example simpler.) The two fields"
 " of particular interest are probably <tt>standing_in</tt> and "
 "<tt>party_memberships</tt>."
 msgstr "(Removimos algunos campos para mantener el ejemplo simple). Los dos campos de particular interés son probablemente <tt>se presenta<tt> y <tt>membresía_partido<tt>"
 
-#: candidates/templates/candidates/api.html:186
+#: candidates/templates/candidates/api.html:222
 msgid ""
 "This object will only have keys '2010' or '2015'. If one of these keys is "
 "present then we have known information about the candidate for the UK "
@@ -968,7 +986,7 @@ msgid ""
 "we know isn't standing in any consituency in 2015."
 msgstr "Este objeto solo tienen claves '2010' o '2015'. Si una de esas claves se presenta entonces sabemos infomación acerca del candidato para las elecciones generales del UK en ese año. Si el valor es <tt>null<tt> entonces sabemos que ellos <em>not</em> se presentan. Si ellos están (o estuvieron) presentandose en las elecciones generales en ese año, entonces habrá un diccionario dandole detalles del distrito electoral en que ellos se presentaron. Entonces, en el ejemplo de arriba podemos ver que Tessa Jowell se situó en 2010 en Dulwich y West Norwood, pero sabemos no se está presentando en ningún distrito electoral en 2015"
 
-#: candidates/templates/candidates/api.html:200
+#: candidates/templates/candidates/api.html:236
 msgid ""
 "This object will similarly only have keys '2010' or '2015' and tells you "
 "what party the candidate is / was standing for in the general election of "
@@ -977,18 +995,18 @@ msgid ""
 "<tt>standing_in</tt> tells us) she's not standing in 2015."
 msgstr "Este objeto similar solo tiene llaves '2010' o '2015' y le dice qué partido se presentó o se está presentando para las elecciones generales de ese año. Entonces en el ejemplo de arriba, puede ver que Tessa Jowell se situó para el Partido LAboral en 2010, peso no tiene entradas para el 2015 (porque, como la <tt>standing_in</tt> nos dice) ella nos e presenta en 2015."
 
-#: candidates/templates/candidates/api.html:209
+#: candidates/templates/candidates/api.html:245
 msgid "More complex (Full Popolo information)"
 msgstr "Mas complejo (Información Popolo completa)"
 
-#: candidates/templates/candidates/api.html:211
+#: candidates/templates/candidates/api.html:247
 msgid ""
 "All the candidates we know about for a constituency can be returned by "
 "making a GET request to a URL of this form, where you should substitute in "
 "the constituency ID for CONSTITUENCY_ID:"
 msgstr "Todos los candidatos que conocemos por un distrito electoral pueden ser devueltos haciendo una búsqueda GET a una URL de esta forma, donde usted pude sustituir en la identificación del distrito electoral por DISTRITO ELECTORAL_ID:"
 
-#: candidates/templates/candidates/api.html:222
+#: candidates/templates/candidates/api.html:258
 #, python-format
 msgid ""
 "For example, for Dulwich and West Norwood, <a "
@@ -1000,14 +1018,14 @@ msgid ""
 "were candidates at one point."
 msgstr "Por ejemplo, para Dulwich y West Norwood, <a href=\"%(popit_url)sposts/65808?embed=membership.person.membership.organization\">este puede ser el resultado</a>. PAra explicar detalladamente, se muestra informacion acerca del <em>post</em>\"MP for Dulwich y West Norwood\". Dentro de la clave del diccionario de <tt>membresía</tt> puede encontrar todas las membres´´ias para este puesto - aquellos que tiene el <tt>rol</tt>como\"Candidato\"o fueron candidatos en algún momento."
 
-#: candidates/templates/candidates/api.html:232
+#: candidates/templates/candidates/api.html:268
 msgid ""
 "You should then look at the start and end dates of that membership, which "
 "will tell you whether they're a candidate for the 2015 election or were a "
 "past candidate for the 2010 election:"
 msgstr "Después puede mirar al comienzo y fin de la membresía, lo que le dirá si es un candidato para la elección del 2015, o lo fue antes para la elección del 2010:"
 
-#: candidates/templates/candidates/api.html:245
+#: candidates/templates/candidates/api.html:281
 msgid ""
 "Under <tt>person_id</tt> attribute of each of those membership you can find "
 "information about that candidate, like their name, contact details and (in "
@@ -1016,17 +1034,17 @@ msgid ""
 " whether it's their party membership at the 2010 or 2015 election."
 msgstr "Dentro del atributo <tt>person_id</tt> de cada uno de las membresías puede encontrar información acerca del candidato, como su nombre, detalles de contacto (in otro objeto anidado <tt>memberships</tt>), sus participaciones en partidos políticos. La membresía del partído político usa los mismos valores de datos como indica arriba tanto si es una membresía de las elecciones del 2010 o del 2015."
 
-#: candidates/templates/candidates/api.html:257
+#: candidates/templates/candidates/api.html:293
 msgid "Find a candidate by name"
 msgstr "Buscar un candidato por nombre"
 
-#: candidates/templates/candidates/api.html:259
+#: candidates/templates/candidates/api.html:295
 msgid ""
 "You can use the <tt>search/persons</tt> endpoint with a query paramter like "
 "<tt>q=name:\"John Doe\"</tt>."
 msgstr "Puede usar la <tt>search/persons</tt> endpoint con una búsqueda paramétrica como <tt>q=name:\"John Doe\"</tt>."
 
-#: candidates/templates/candidates/api.html:268
+#: candidates/templates/candidates/api.html:304
 #, python-format
 msgid ""
 "For example, you can find every David Jones in the database with <a "
@@ -1036,11 +1054,11 @@ msgid ""
 "standing in, and for which parties."
 msgstr ""
 
-#: candidates/templates/candidates/api.html:277
+#: candidates/templates/candidates/api.html:313
 msgid "Get all known 2015 candidates"
 msgstr "Conozca a los pre-candidatos de las PASO 2015"
 
-#: candidates/templates/candidates/api.html:279
+#: candidates/templates/candidates/api.html:315
 #, python-format
 msgid ""
 "You can also use the <tt>search/persons</tt> endpoint to find all the "
@@ -1049,7 +1067,7 @@ msgid ""
 "\">this query</a>:"
 msgstr ""
 
-#: candidates/templates/candidates/api.html:290
+#: candidates/templates/candidates/api.html:326
 #, python-format
 msgid ""
 "(This question was raised on the <a href=\"%(url)s\">Democracy Club Google "
