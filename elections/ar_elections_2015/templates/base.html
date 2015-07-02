@@ -12,7 +12,7 @@
 
     {% load staticfiles %}
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
-    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}"/>
+    <link rel="apple-touch-icon-precomposed" href="{% static 'img/apple-touch-icon.png' %}"/>
 
     {% load pipeline %}
     {% stylesheet 'all' %}
@@ -78,11 +78,15 @@
             <a href="https://twitter.com/YQS_Argentina">Twitter</a>
         </div>
       </div>
-      <div class="header__hero">
-        {% block hero %}
-        {% endblock %}
-      </div>
     </div>
+    {% block hero_outer %}
+      <div class="header__hero">
+        <div class="container">
+          {% block hero %}
+          {% endblock %}
+        </div>
+      </div>
+    {% endblock %}
   </div>
   <div class="content">
     <div class="container">
