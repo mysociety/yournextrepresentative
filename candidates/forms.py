@@ -4,7 +4,7 @@ import re
 
 from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
 from .popit import create_popit_api_object, PopItApiMixin
-from .election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
 from django import forms
