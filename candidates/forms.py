@@ -184,23 +184,50 @@ class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
         election = kwargs.pop('election', None)
+        hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
         if election not in settings.ELECTIONS:
             raise Exception, _("Unknown election: '{election}'").format(election=election)
 
         election_data = settings.ELECTIONS[election]
+        role = election_data['for_post_role']
 
         self.elections_with_fields = [
             (election, election_data)
         ]
+        post_field_kwargs = {
+            'label': _("Post in the {election}").format(
+                election=election_data['name']
+            ),
+            'max_length': 256,
+        }
+        if hidden_post_widget:
+            post_field_kwargs['widget'] = forms.HiddenInput()
+            post_field = forms.CharField(**post_field_kwargs)
+        else:
+            post_field = \
+                forms.ChoiceField(
+                    label=_('Post in the {election}').format(
+                        election=election_data['name']
+                    ),
+                    required=False,
+                    choices=[('', '')] + sorted(
+                        [
+                            (post['id'],
+                             AREA_POST_DATA.shorten_post_label(
+                                 election,
+                                 post['label']
+                             ))
+                            for post in get_all_posts_cached(self.api, role)
+                        ],
+                        key=lambda t: t[1]
+                    ),
+                    widget=forms.Select(attrs={'class': 'post-select'}),
+                )
 
-        self.fields['constituency_' + election] = \
-            forms.CharField(
-                label=("Constituency in " + election_data['name']),
-                max_length=256,
-                widget=forms.HiddenInput(),
-            )
+        self.fields['constituency_' + election] = post_field
+
         # It seems to be common in elections around the world for
         # there to be different sets of parties that candidates can
         # stand for depending on, for example, where in the country
