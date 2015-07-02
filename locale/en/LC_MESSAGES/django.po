@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-30 17:59+0100\n"
+"POT-Creation-Date: 2015-07-02 05:46-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,18 +29,24 @@ msgid ""
 "have access to this page."
 msgstr ""
 
-#: cached_counts/templates/constituency_counts.html:5
-#, python-format
-msgid "Number of known %(election_name)s candidates per post"
+#: cached_counts/templates/attention_needed.html:5
+msgid "Posts needing most attention"
 msgstr ""
 
+#: cached_counts/templates/attention_needed.html:8
 #: cached_counts/templates/constituency_counts.html:10
 msgid "Post Name"
 msgstr ""
 
+#: cached_counts/templates/attention_needed.html:9
 #: cached_counts/templates/constituency_counts.html:11
 #: cached_counts/templates/party_counts.html:11
 msgid "Number of Candidates"
+msgstr ""
+
+#: cached_counts/templates/constituency_counts.html:5
+#, python-format
+msgid "Number of known %(election_name)s candidates per post"
 msgstr ""
 
 #: cached_counts/templates/party_counts.html:5
@@ -56,68 +62,82 @@ msgstr ""
 msgid "Reports"
 msgstr ""
 
+#: cached_counts/templates/reports.html:12
+msgid "Which posts have fewest candidates so far?"
+msgstr ""
+
 #: cached_counts/templates/reports.html:15
+#, python-format
+msgid ""
+"\n"
+"        You can see a list of all the posts in current elections\n"
+"        <a href=\"%(url)s\">ordered starting with those with the fewest\n"
+"        candidates</a>.\n"
+"     "
+msgstr ""
+
+#: cached_counts/templates/reports.html:25
 #, python-format
 msgid "%(era)s Elections"
 msgstr ""
 
-#: cached_counts/templates/reports.html:20
+#: cached_counts/templates/reports.html:30
 #, python-format
 msgid "Statistics for the %(election_name)s"
 msgstr ""
 
-#: cached_counts/templates/reports.html:22
+#: cached_counts/templates/reports.html:32
 msgid "Total candidates:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:23
+#: cached_counts/templates/reports.html:33
 msgid "Candidates per post"
 msgstr ""
 
-#: cached_counts/templates/reports.html:24
+#: cached_counts/templates/reports.html:34
 msgid "Candidates per party"
 msgstr ""
 
-#: cached_counts/templates/reports.html:30
+#: cached_counts/templates/reports.html:40
 #, python-format
 msgid "Statistics compared to the %(prior_election_name)s"
 msgstr ""
 
-#: cached_counts/templates/reports.html:32
+#: cached_counts/templates/reports.html:42
 #, python-format
 msgid "Total candidates in %(prior_election_name)s:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:35
+#: cached_counts/templates/reports.html:45
 #, python-format
 msgid "Percentage (%(election_name)s / %(prior_election_name)s):"
 msgstr ""
 
-#: cached_counts/templates/reports.html:38
+#: cached_counts/templates/reports.html:48
 #, python-format
 msgid "New candidates compared to the %(prior_election_name)s:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:41
+#: cached_counts/templates/reports.html:51
 #, python-format
 msgid "Candidates standing again from the %(prior_election_name)s:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:44
+#: cached_counts/templates/reports.html:54
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for the same "
 "party:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:48
+#: cached_counts/templates/reports.html:58
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for a different "
 "party:"
 msgstr ""
 
-#: cached_counts/templates/reports.html:60
+#: cached_counts/templates/reports.html:70
 msgid "No election data found."
 msgstr ""
 
