@@ -1,6 +1,6 @@
 {% load i18n %}
 
-{% if official_documents %}
+{% if user_can_upload_documents or some_official_documents %}
     <div class="official-documents">
         <h3>{% trans "Official documents for this post" %}</h3>
 

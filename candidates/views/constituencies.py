@@ -51,11 +51,11 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         doc_lookup = {t[0]: (t[1], t[2]) for t in OfficialDocument.DOCUMENT_TYPES}
         for t in doc_lookup.values():
             documents_by_type[t] = []
-        for od in OfficialDocument.objects.filter(
-            post_id=post_id
-        ):
+        documents_for_post = OfficialDocument.objects.filter(post_id=post_id)
+        for od in documents_for_post:
             documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
+        context['some_official_documents'] = documents_for_post.count()
 
         context['post_label'] = mp_post['result']['label']
         context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
