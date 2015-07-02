@@ -3,7 +3,7 @@
 import re
 
 from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
-from .popit import create_popit_api_object
+from .popit import create_popit_api_object, PopItApiMixin
 from .election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
@@ -56,7 +56,7 @@ class CandidacyDeleteForm(BaseCandidacyForm):
         max_length=512,
     )
 
-class BasePersonForm(forms.Form):
+class BasePersonForm(PopItApiMixin, forms.Form):
     honorific_prefix = forms.CharField(
         label=_("Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"),
         max_length=256,
