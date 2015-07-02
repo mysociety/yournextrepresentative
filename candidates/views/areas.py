@@ -3,8 +3,10 @@
 import re
 
 from django.conf import settings
-from django.http import HttpResponseBadRequest
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import TemplateView
+from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from candidates.cache import get_post_cached, UnknownPostException
@@ -66,4 +68,46 @@ class AreasView(PopItApiMixin, TemplateView):
                         ),
                     })
         context['all_area_names'] = u' — '.join(all_area_names)
+        return context
+
+class AreasOfTypeView(PopItApiMixin, TemplateView):
+    template_name = 'candidates/areas-of-type.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AreasOfTypeView, self).get_context_data(**kwargs)
+        requested_mapit_type = kwargs['mapit_type']
+        all_mapit_tuples = set(
+            (mapit_type, election_data['mapit_generation'])
+            for election, election_data in settings.ELECTIONS_CURRENT
+            for mapit_type in election_data['mapit_types']
+            if mapit_type == requested_mapit_type
+        )
+        if not all_mapit_tuples:
+            raise Http404(_("Area '{0}' not found").format(requested_mapit_type))
+        if len(all_mapit_tuples) > 1:
+            message = _("Multiple MapIt generations for type {mapit_type} found")
+            raise Exception(message.format(mapit_type=requested_mapit_type))
+        mapit_tuple = list(all_mapit_tuples)[0]
+        areas = [
+            (
+                reverse(
+                    'areas-view',
+                    kwargs={
+                        'type_and_area_ids': '{type}-{area_id}'.format(
+                            type=requested_mapit_type,
+                            area_id=area['id']
+                        ),
+                        'ignored_slug': slugify(area['name'])
+                    }
+                ),
+                area['name'],
+                area['type_name'],
+            )
+            for area in MAPIT_DATA.areas_by_id[mapit_tuple].values()
+        ]
+        areas.sort(key=lambda a: a[1])
+        context['areas'] = areas
+        context['area_type_name'] = _('[No areas found]')
+        if areas:
+            context['area_type_name'] = areas[0][2]
         return context
