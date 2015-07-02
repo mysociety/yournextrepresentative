@@ -150,13 +150,27 @@ class BasePersonForm(PopItApiMixin, forms.Form):
             # from the clean method rather than single field validation
             # since the party field that should be checked depends on the
             # selected constituency.
-            constituency = cleaned_data['constituency_' + election]
-            party_set = AREA_POST_DATA.post_id_to_party_set(constituency)
-            if not party_set:
+            post_id = cleaned_data['constituency_' + election]
+            if not post_id:
                 message = _("If you mark the candidate as standing in the "
-                            "{election}, you must select a constituency")
+                            "{election}, you must select a post")
+                raise forms.ValidationError(message.format(
+                    election=election_name
+                ))
+            # Check that that post actually exists:
+            try:
+                get_post_cached(self.api, post_id)
+            except UnknownPostException:
+                message = _("An unknown post ID '{post_id}' was specified")
                 raise forms.ValidationError(
-                    message.format(election=election_name)
+                    message.format(post_id=post_id)
+                )
+            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+            if not party_set:
+                message = _("Could not find parties for the post with ID "
+                            "'{post_id}' in the {election}")
+                raise forms.ValidationError(
+                    message.format(post_id=post_id, election=election_name)
                 )
             party_field = 'party_' + party_set + '_' + election
             party_id = cleaned_data[party_field]
