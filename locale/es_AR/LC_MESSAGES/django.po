@@ -255,7 +255,7 @@ msgstr "Actualizado a las {0}"
 
 #: candidates/forms.py:19
 msgid "Enter your address or town"
-msgstr "Ingresá tu provincia (ciudad o dirección también funciona)"
+msgstr "Ingresá tu dirección o ciudad"
 
 #: candidates/forms.py:35 candidates/forms.py:357
 msgid "Person ID"
