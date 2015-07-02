@@ -23,7 +23,7 @@
             <p>We don't have any {{ type }} for the post {{ post_data.label }}.</p>
           {% endblocktrans %}
 
-          {% url 'upload_document_view' post_data.id as url %}
+          {% url 'upload_document_view' election=election post_id=post_data.id as url %}
           <a href="{{ url }}" class="button">
             {% blocktrans with type=doc_type.0 %}Upload a {{ type }}{% endblocktrans %}
           </a>
