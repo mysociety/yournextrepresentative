@@ -333,8 +333,26 @@ body.finder .content {
 
 .official-documents {
     @extend .candidates__known;
+}
 
-    @media #{$medium-up} {
-      background-image: url(img/icon-official-documents.gif);
+@media #{$medium-up} {
+    .candidates__known {
+        background-image: url(img/icon-candidates.png);
+    }
+
+    .candidates__new {
+        background-image: url(img/icon-add-candidate.png);
+    }
+
+    .candidates__previous {
+        background-image: url(img/icon-question.png);
+    }
+
+    .candidates__not-standing {
+        background-image: url(img/icon-cross.png);
+    }
+
+    .official-documents {
+        background-image: url(img/icon-documents.png);
     }
 }
