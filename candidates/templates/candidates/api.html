@@ -23,14 +23,40 @@ out more about PopIt here</a>.)
 
 <h2>{% trans "CSV/Excel Download" %}</h2>
 
+<h3>{% trans "Current elections" %}</h3>
+
 <p>
   <ul>
-    <li><a href="{{ MEDIA_URL }}candidates-all.csv">{% trans "Download of the candidates for all elections" %}</a></li>
-    {% for csv in csv_list %}
+    {% for csv in current_csv_list %}
       {% with slug=csv.slug title=csv.name %}
       <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
       {% endwith %}
     {% endfor %}
+  </ul>
+</p>
+
+
+{% if historic_csv_list %}
+
+<h3>{% trans "Historic elections" %}</h3>
+
+<p>
+  <ul>
+    {% for csv in historic_csv_list %}
+      {% with slug=csv.slug title=csv.name %}
+      <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
+      {% endwith %}
+    {% endfor %}
+  </ul>
+</p>
+{% endif %}
+
+
+<h3>{% trans "All elections" %}</h3>
+
+<p>
+  <ul>
+    <li><a href="{{ MEDIA_URL }}candidates-all.csv">{% trans "Download of the candidates for all elections" %}</a></li>
   </ul>
 </p>
 
