@@ -9,15 +9,6 @@ from ..models import (
     PopItPerson, membership_covers_date
 )
 
-def join_with_commas_and_and(a):
-    # FIXME: this is English-specific
-    result = ''
-    if len(a) >= 3:
-        result += u', '.join(a[:-2])
-        result += u', '
-    result += u', and '.join(a[-2:])
-    return result
-
 def get_redirect_to_post(election, post_data):
     short_post_label = AREA_POST_DATA.shorten_post_label(
         election, post_data['label']

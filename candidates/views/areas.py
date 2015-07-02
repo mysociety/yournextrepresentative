@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 
 from django.conf import settings
@@ -9,9 +11,9 @@ from candidates.cache import get_post_cached, UnknownPostException
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 
-from ..election_specific import AREA_POST_DATA
+from ..election_specific import AREA_POST_DATA, MAPIT_DATA
 from ..forms import NewPersonForm
-from .helpers import get_people_from_memberships, join_with_commas_and_and
+from .helpers import get_people_from_memberships
 
 class AreasView(PopItApiMixin, TemplateView):
     template_name = 'candidates/areas.html'
@@ -33,15 +35,18 @@ class AreasView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AreasView, self).get_context_data(**kwargs)
-        all_post_labels = []
+        all_area_names = set()
         context['posts'] = []
         for mapit_type, area_id in self.types_and_areas:
             # Show candidates from the current elections:
             for election, election_data in settings.ELECTIONS_CURRENT:
+                mapit_generation = election_data['mapit_generation']
                 if mapit_type in election_data['mapit_types']:
+                    mapit_tuple = (mapit_type, mapit_generation)
                     post_id = AREA_POST_DATA.get_post_id(election, mapit_type, area_id)
                     post_data = get_post_cached(self.api, post_id)['result']
-                    all_post_labels.append(post_data['label'])
+                    area_name = MAPIT_DATA.areas_by_id[mapit_tuple][area_id]['name']
+                    all_area_names.add(area_name)
                     locked = post_data.get('candidates_locked', False)
                     current_candidates, _ = get_people_from_memberships(
                         election_data,
@@ -60,5 +65,5 @@ class AreasView(PopItApiMixin, TemplateView):
                             initial={'constituency': post_id}
                         ),
                     })
-        context['all_post_labels'] = join_with_commas_and_and(all_post_labels)
+        context['all_area_names'] = u' — '.join(all_area_names)
         return context
