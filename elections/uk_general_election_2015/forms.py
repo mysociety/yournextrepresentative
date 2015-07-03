@@ -5,7 +5,8 @@ from django.core.exceptions import ValidationError
 
 from candidates.election_specific import MAPIT_DATA
 
-from candidates.mapit import get_wmc_from_postcode, BaseMapItException
+from candidates.mapit import BaseMapItException
+from .mapit import get_wmc_from_postcode
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(

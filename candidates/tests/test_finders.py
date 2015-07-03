@@ -34,7 +34,7 @@ def fake_requests_for_mapit(url):
         'status_code': status_code
     })
 
-@patch('candidates.mapit.requests')
+@patch('elections.uk_general_election_2015.mapit.requests')
 class TestConstituencyPostcodeFinderView(WebTest):
 
     def test_front_page(self, mock_requests):
