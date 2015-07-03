@@ -703,10 +703,10 @@ msgstr "Por favor envíe un correo a <a href=\"mailto:%(email)s\">%(email)s</a> 
 #: candidates/templates/candidates/about.html:26
 msgid ""
 "The source code for this site is <a href=\"https://github.com/mysociety"
-"/yournextmp-popit/\">available on GitHub</a>, and you can find a <a "
-"href=\"https://github.com/mysociety/yournextmp-popit/issues\">list of known "
+"/yournextrepresentative/\">available on GitHub</a>, and you can find a <a "
+"href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of known "
 "bugs</a> there as well."
-msgstr "El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextmp-popit/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextmp-popit/issues\">lista de errores conocidos</a> ahí también.\nY este es nuestro <a href=\"https://github.com/YoQuieroSaber/yournextmp-popit/\">fork para Argentina</a>, en GitHub también."
+msgstr "El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextrepresentative/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">lista de errores conocidos</a> ahí también.\nY este es nuestro <a href=\"https://github.com/YoQuieroSaber/yournextrepresentative/\">fork para Argentina</a>, en GitHub también."
 
 #: candidates/templates/candidates/about.html:34
 msgid ""

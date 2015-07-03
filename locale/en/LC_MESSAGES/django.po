@@ -698,8 +698,8 @@ msgstr ""
 #: candidates/templates/candidates/about.html:26
 msgid ""
 "The source code for this site is <a href=\"https://github.com/mysociety/"
-"yournextmp-popit/\">available on GitHub</a>, and you can find a <a href="
-"\"https://github.com/mysociety/yournextmp-popit/issues\">list of known bugs</"
+"yournextrepresentative/\">available on GitHub</a>, and you can find a <a href="
+"\"https://github.com/mysociety/yournextrepresentative/issues\">list of known bugs</"
 "a> there as well."
 msgstr ""
 

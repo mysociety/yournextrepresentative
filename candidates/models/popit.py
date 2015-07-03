@@ -660,7 +660,7 @@ class PopItPerson(object):
                         'end_date': '9999-12-31',
                         'person_id': self.id,
                         'post_id': constituency['post_id'],
-                        # FIXME: https://github.com/mysociety/yournextmp-popit/issues/354
+                        # FIXME: https://github.com/mysociety/yournextrepresentative/issues/354
                         'organization_id': 'commons',
                     })
 
