@@ -2,11 +2,9 @@
 
 The idea of this project is to make a web-based front-end to
 [PopIt](http://popit.poplus.org/) for crowd-sourcing candidates
-who are standing in the next UK general election in 2015.
-
-This is pretty functional now - we're testing with small numbers
-of users at the moment, but will make it more widely available
-soon.
+for upcoming elections; it was used for
+[YourNextMP](https://yournextmp.com) in the UK for the 2015
+General Election.
 
 ## Known Bugs
 
