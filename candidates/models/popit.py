@@ -120,7 +120,8 @@ form_complex_fields_locations = {
         'sub_array': 'links',
         'info_type_key': 'note',
         'info_value_key': 'url',
-        'info_type': 'party PPC page',
+        'info_type': 'party candidate page',
+        'old_info_type': 'party PPC page',
     }
 }
 
@@ -331,8 +332,12 @@ def reduced_organization_data(organization):
 
 def get_value_from_location(location, person_data):
     for info in person_data.get(location['sub_array'], []):
-        if info[location['info_type_key']] == location['info_type']:
-            return info.get(location['info_value_key'], '')
+        all_info_types = [location['info_type']]
+        if 'old_info_type' in location:
+            all_info_types.insert(0, location['old_info_type'])
+        for info_type in all_info_types:
+            if info[location['info_type_key']] == info_type:
+                return info.get(location['info_value_key'], '')
     return ''
 
 def unembed_membership(membership):
@@ -1239,7 +1244,15 @@ def update_values_in_sub_array(data, location, new_value):
     ...         {
     ...             'note': "homepage",
     ...             'url': "http://oops.duplicate.example.org"
-    ...         }
+    ...         },
+    ...         {
+    ...             'note': "party PPC page",
+    ...             'url': "http://conservatives.example.org/foo"
+    ...         },
+    ...         {
+    ...             'note': "party candidate page",
+    ...             'url': "http://conservatives.example.org/bar"
+    ...         },
     ...     ],
     ... }
     >>> update_values_in_sub_array(
@@ -1266,6 +1279,15 @@ def update_values_in_sub_array(data, location, new_value):
     ...      'info_type': 'instagram'},
     ...     ""
     ... )
+    >>> update_values_in_sub_array(
+    ...     person_data,
+    ...     {'sub_array': 'links',
+    ...      'info_type_key': 'note',
+    ...      'info_value_key': 'url',
+    ...      'info_type': 'party candidate page',
+    ...      'old_info_type': 'party PPC page'},
+    ...     "http://conservatives.example.org/newfoo"
+    ... )
    >>> print json.dumps(person_data, indent=4) # doctest: +NORMALIZE_WHITESPACE
     {
         "email": "john-doe@example.org",
@@ -1278,14 +1300,21 @@ def update_values_in_sub_array(data, location, new_value):
             {
                 "note": "homepage",
                 "url": "http://john.doe.example.org"
+            },
+            {
+                "note": "party candidate page",
+                "url": "http://conservatives.example.org/newfoo"
             }
         ],
         "name": "John Doe"
     }
     """
+    existing_info_types = [location['info_type']]
+    if 'old_info_type' in location:
+        existing_info_types.append(location['old_info_type'])
     new_info = [
         c for c in data.get(location['sub_array'], [])
-        if c.get(location['info_type_key']) != location['info_type']
+        if c.get(location['info_type_key']) not in existing_info_types
     ]
     if new_value:
         new_info.append({
