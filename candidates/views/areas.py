@@ -68,6 +68,7 @@ class AreasView(PopItApiMixin, TemplateView):
                         ),
                     })
         context['all_area_names'] = u' — '.join(all_area_names)
+        context['suppress_official_documents'] = True
         return context
 
 class AreasOfTypeView(PopItApiMixin, TemplateView):
