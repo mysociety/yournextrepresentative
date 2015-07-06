@@ -666,6 +666,7 @@ class PopItPerson(object):
 
         self.popit_data['memberships'] = memberships
         self.popit_data['standing_in'] = v
+        self.store_posts_for_invalidation()
 
     @property
     def party_memberships(self):
