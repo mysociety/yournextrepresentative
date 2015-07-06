@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-02 16:34-0300\n"
-"PO-Revision-Date: 2015-07-02 19:36+0000\n"
+"POT-Creation-Date: 2015-07-06 16:17+0100\n"
+"PO-Revision-Date: 2015-07-06 15:17+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/projects/p/yournextmp/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -410,26 +410,6 @@ msgstr "{0} no era un ID de cargo conocido"
 msgid "Source of information that they won"
 msgstr "Fuente de información de que ganaron"
 
-#: candidates/mapit.py:30
-#, python-brace-format
-msgid "There were disallowed characters in \"{0}\""
-msgstr "Disculpas, pero hay caracteres no permitidos en \"{0}\""
-
-#: candidates/mapit.py:42
-#, python-brace-format
-msgid "No constituency found for the postcode \"{0}\""
-msgstr "Disculpas, no se encontró el distrito correspondiente al código postal \"{0}\""
-
-#: candidates/mapit.py:53
-#, python-brace-format
-msgid "The postcode “{0}” couldn’t be found"
-msgstr "Disculpas, el código postal \"{0}\" no pudo ser encontrado"
-
-#: candidates/mapit.py:57
-#, python-brace-format
-msgid "Unknown MapIt error for postcode \"{0}\""
-msgstr "Disculpas, ocurrió un error desconocido de MapIt para el código postal \"{0}\""
-
 #: candidates/middleware.py:42
 #, python-brace-format
 msgid ""
@@ -498,11 +478,11 @@ msgstr "Disculpas, ocurrió un error. 'PopItPerson' has no attribute '{0}'"
 msgid "There was no previous version of this person"
 msgstr "No hay versión anterior de la información de este candidato."
 
-#: candidates/models/popit.py:1194
+#: candidates/models/popit.py:1195
 msgid "Can't set_elected of a candidate with no standing_in"
 msgstr "Disculpas, ocurrió un error. Can't set_elected of a candidate with no standing_in"
 
-#: candidates/models/popit.py:1197
+#: candidates/models/popit.py:1198
 #, python-brace-format
 msgid "No standing_in information for {0}"
 msgstr "Disculpas, ocurrió un error.  No hay información de que se presente a cargos para {0}. No standing_in information for {0}"
@@ -702,10 +682,11 @@ msgstr "Por favor envíe un correo a <a href=\"mailto:%(email)s\">%(email)s</a> 
 
 #: candidates/templates/candidates/about.html:26
 msgid ""
-"The source code for this site is <a href=\"https://github.com/mysociety"
-"/yournextrepresentative/\">available on GitHub</a>, and you can find a <a "
-"href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of known "
-"bugs</a> there as well."
+"The source code for this site is <a "
+"href=\"https://github.com/mysociety/yournextrepresentative/\">available on "
+"GitHub</a>, and you can find a <a "
+"href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of "
+"known bugs</a> there as well."
 msgstr "El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextrepresentative/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">lista de errores conocidos</a> ahí también.\nY este es nuestro <a href=\"https://github.com/YoQuieroSaber/yournextrepresentative/\">fork para Argentina</a>, en GitHub también."
 
 #: candidates/templates/candidates/about.html:34
@@ -1288,7 +1269,7 @@ msgid ""
 msgstr "No le pagues a un proveedor de bases de datos -- es un desperdicio de dinero."
 
 #: candidates/templates/candidates/frontpage.html:44
-#: elections/ar_elections_2015/templates/candidates/frontpage.html:21
+#: elections/ar_elections_2015/templates/candidates/frontpage.html:45
 msgid "Show candidates"
 msgstr "Mostrar candidatos"
 
@@ -2022,17 +2003,17 @@ msgstr "No se presenta"
 msgid "Malformed type and area: '{0}'"
 msgstr "Disculpas, ocurrió un error. Malformed type and area {0}"
 
-#: candidates/views/areas.py:86
+#: candidates/views/areas.py:87
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr ""
 
-#: candidates/views/areas.py:88
+#: candidates/views/areas.py:89
 #, python-brace-format
 msgid "Multiple MapIt generations for type {mapit_type} found"
 msgstr ""
 
-#: candidates/views/areas.py:110
+#: candidates/views/areas.py:111
 msgid "[No areas found]"
 msgstr ""
 
@@ -2160,34 +2141,64 @@ msgid "Open data API"
 msgstr "API de datos abiertos"
 
 #: elections/ar_elections_2015/templates/base.html:122
-msgid ""
-"Supported by <a href=\"#\">Blah blah</a>, <a href=\"#\">Blah</a>, and <a "
-"href=\"#\">Blah blah</a>."
+msgid "Made by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:127
-msgid "Built by <a href=\"#\">Congreso Interactivo</a>."
+#: elections/ar_elections_2015/templates/base.html:129
+msgid "Partners"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/official_documents/_post.html:5
+#: elections/ar_elections_2015/templates/base.html:136
+msgid "Supported by"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/base.html:142
+msgid "Developed by"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/base.html:149
+msgid "Show all the collaborators and volunteers"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/official_documents/_post.html:6
 msgid "Official documents for this post"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/official_documents/_post.html:13
+#: elections/ar_elections_2015/templates/official_documents/_post.html:14
 #: official_documents/templates/official_documents/_post.html:15
 #, python-format
 msgid "<a href=\"%(url)s\">%(type)s</a> uploaded on %(created)s"
 msgstr "<a href=\"%(url)s\">%(type)s</a> subido en %(created)s"
 
-#: elections/ar_elections_2015/templates/official_documents/_post.html:22
+#: elections/ar_elections_2015/templates/official_documents/_post.html:23
 #, python-format
 msgid "<p>We don't have any %(type)s for the post %(post_data.label)s.</p>"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/official_documents/_post.html:28
+#: elections/ar_elections_2015/templates/official_documents/_post.html:29
 #, python-format
 msgid "Upload a %(type)s"
 msgstr ""
+
+#: elections/uk_general_election_2015/mapit.py:25
+#, python-brace-format
+msgid "There were disallowed characters in \"{0}\""
+msgstr "Disculpas, pero hay caracteres no permitidos en \"{0}\""
+
+#: elections/uk_general_election_2015/mapit.py:37
+#, python-brace-format
+msgid "No constituency found for the postcode \"{0}\""
+msgstr "Disculpas, no se encontró el distrito correspondiente al código postal \"{0}\""
+
+#: elections/uk_general_election_2015/mapit.py:48
+#, python-brace-format
+msgid "The postcode “{0}” couldn’t be found"
+msgstr "Disculpas, el código postal \"{0}\" no pudo ser encontrado"
+
+#: elections/uk_general_election_2015/mapit.py:52
+#, python-brace-format
+msgid "Unknown MapIt error for postcode \"{0}\""
+msgstr "Disculpas, ocurrió un error desconocido de MapIt para el código postal \"{0}\""
 
 #: elections/uk_general_election_2015/templates/candidates/finder.html:14
 #: elections/uk_general_election_2015/templates/candidates/finder.html:25
