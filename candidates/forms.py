@@ -3,8 +3,8 @@
 import re
 
 from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
-from .popit import create_popit_api_object
-from .election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from .popit import create_popit_api_object, PopItApiMixin
+from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
 from django import forms
@@ -56,7 +56,7 @@ class CandidacyDeleteForm(BaseCandidacyForm):
         max_length=512,
     )
 
-class BasePersonForm(forms.Form):
+class BasePersonForm(PopItApiMixin, forms.Form):
     honorific_prefix = forms.CharField(
         label=_("Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"),
         max_length=256,
@@ -150,13 +150,27 @@ class BasePersonForm(forms.Form):
             # from the clean method rather than single field validation
             # since the party field that should be checked depends on the
             # selected constituency.
-            constituency = cleaned_data['constituency_' + election]
-            party_set = AREA_POST_DATA.post_id_to_party_set(constituency)
-            if not party_set:
+            post_id = cleaned_data['constituency_' + election]
+            if not post_id:
                 message = _("If you mark the candidate as standing in the "
-                            "{election}, you must select a constituency")
+                            "{election}, you must select a post")
+                raise forms.ValidationError(message.format(
+                    election=election_name
+                ))
+            # Check that that post actually exists:
+            try:
+                get_post_cached(self.api, post_id)
+            except UnknownPostException:
+                message = _("An unknown post ID '{post_id}' was specified")
                 raise forms.ValidationError(
-                    message.format(election=election_name)
+                    message.format(post_id=post_id)
+                )
+            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+            if not party_set:
+                message = _("Could not find parties for the post with ID "
+                            "'{post_id}' in the {election}")
+                raise forms.ValidationError(
+                    message.format(post_id=post_id, election=election_name)
                 )
             party_field = 'party_' + party_set + '_' + election
             party_id = cleaned_data[party_field]
@@ -170,23 +184,50 @@ class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
         election = kwargs.pop('election', None)
+        hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
         if election not in settings.ELECTIONS:
             raise Exception, _("Unknown election: '{election}'").format(election=election)
 
         election_data = settings.ELECTIONS[election]
+        role = election_data['for_post_role']
 
         self.elections_with_fields = [
             (election, election_data)
         ]
+        post_field_kwargs = {
+            'label': _("Post in the {election}").format(
+                election=election_data['name']
+            ),
+            'max_length': 256,
+        }
+        if hidden_post_widget:
+            post_field_kwargs['widget'] = forms.HiddenInput()
+            post_field = forms.CharField(**post_field_kwargs)
+        else:
+            post_field = \
+                forms.ChoiceField(
+                    label=_('Post in the {election}').format(
+                        election=election_data['name']
+                    ),
+                    required=False,
+                    choices=[('', '')] + sorted(
+                        [
+                            (post['id'],
+                             AREA_POST_DATA.shorten_post_label(
+                                 election,
+                                 post['label']
+                             ))
+                            for post in get_all_posts_cached(self.api, role)
+                        ],
+                        key=lambda t: t[1]
+                    ),
+                    widget=forms.Select(attrs={'class': 'post-select'}),
+                )
 
-        self.fields['constituency_' + election] = \
-            forms.CharField(
-                label=("Constituency in " + election_data['name']),
-                max_length=256,
-                widget=forms.HiddenInput(),
-            )
+        self.fields['constituency_' + election] = post_field
+
         # It seems to be common in elections around the world for
         # there to be different sets of parties that candidates can
         # stand for depending on, for example, where in the country

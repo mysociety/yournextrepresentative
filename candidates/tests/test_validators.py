@@ -59,7 +59,7 @@ class TestValidators(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
-            [u'If you mark the candidate as standing in the 2015 General Election, you must select a constituency']
+            [u'If you mark the candidate as standing in the 2015 General Election, you must select a post']
         })
 
     def test_update_person_form_standing_no_party_but_gb_constituency(self):
