@@ -430,3 +430,14 @@ MAPIT_TYPES_GENERATIONS_ELECTIONS = {
     for t in ELECTIONS_CURRENT
     for mapit_type in t[1]['mapit_types']
 }
+
+# Use Matthew's suggestion for allowing local settings overrides with
+# both Python 2 and Python 3; this uses exec rather than import so
+# that the local settings can modify existing values rather than just
+# overwriting them.
+LOCAL_SETTINGS_FILE = os.path.join(BASE_DIR, 'mysite', 'local_settings.py')
+try:
+    with open(LOCAL_SETTINGS_FILE) as f:
+        exec(compile(f.read(), 'local_settings.py', 'exec'))
+except IOError:
+    pass

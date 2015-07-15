@@ -12,3 +12,4 @@
 /conf/general.yml.deployed
 /conf/httpd.conf
 /conf/httpd.conf.deployed
+/mysite/local_settings.py
