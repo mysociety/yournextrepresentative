@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-06 16:17+0100\n"
-"PO-Revision-Date: 2015-07-13 19:12+0000\n"
-"Last-Translator: Martín Szyszlican <martinsz@gmail.com>\n"
+"POT-Creation-Date: 2015-07-15 12:55+0100\n"
+"PO-Revision-Date: 2015-07-15 11:56+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/p/yournextmp/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +257,7 @@ msgstr "Actualizado a las {0}"
 msgid "Enter your address or town"
 msgstr "Ingresá tu dirección o ciudad"
 
-#: candidates/forms.py:35 candidates/forms.py:357
+#: candidates/forms.py:35 candidates/forms.py:398
 msgid "Person ID"
 msgstr "ID de Persona"
 
@@ -333,80 +333,96 @@ msgid ""
 "underscore"
 msgstr "El usuario de twitter sólo debe contener caracteres alfanuméricos o guión abajo "
 
-#: candidates/forms.py:156
+#: candidates/forms.py:155
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
-"constituency"
-msgstr "Si marcas un candidato como que se presenta en {election}, debes seleccionar un distrito"
+"post"
+msgstr ""
 
 #: candidates/forms.py:164
+#, python-brace-format
+msgid "An unknown post ID '{post_id}' was specified"
+msgstr ""
+
+#: candidates/forms.py:170
+#, python-brace-format
+msgid ""
+"Could not find parties for the post with ID '{post_id}' in the {election}"
+msgstr ""
+
+#: candidates/forms.py:178
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr "debe especificar un partido para la {election}"
 
-#: candidates/forms.py:176 elections/mixins.py:10
+#: candidates/forms.py:191 elections/mixins.py:10
 #, python-brace-format
 msgid "Unknown election: '{election}'"
 msgstr "Elección desconocida: '{election}'"
 
-#: candidates/forms.py:202 candidates/forms.py:280
+#: candidates/forms.py:200 candidates/forms.py:211
+#, python-brace-format
+msgid "Post in the {election}"
+msgstr ""
+
+#: candidates/forms.py:243 candidates/forms.py:321
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr "Partido en {election} ({party_set_name})"
 
-#: candidates/forms.py:211
+#: candidates/forms.py:252
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr "Fuente de información ({0})"
 
-#: candidates/forms.py:216 candidates/forms.py:299
+#: candidates/forms.py:257 candidates/forms.py:340
 msgid "You must indicate how you know about this candidate"
 msgstr "Debe indicar cómo se enteró de este candidato"
 
-#: candidates/forms.py:221 candidates/forms.py:304
+#: candidates/forms.py:262 candidates/forms.py:345
 msgid "How you know about this candidate"
 msgstr "Cómo se enteró de este candidato"
 
-#: candidates/forms.py:233
+#: candidates/forms.py:274
 msgid "Don’t Know"
 msgstr "No sé"
 
-#: candidates/forms.py:234
+#: candidates/forms.py:275
 msgid "Yes"
 msgstr "Si"
 
-#: candidates/forms.py:235
+#: candidates/forms.py:276
 msgid "No"
 msgstr "No"
 
-#: candidates/forms.py:256
+#: candidates/forms.py:297
 #, python-format
 msgid "Standing in %s"
 msgstr "Se presenta en %s"
 
-#: candidates/forms.py:262
+#: candidates/forms.py:303
 #, python-format
 msgid "Constituency in %s"
 msgstr "Distrito en %s"
 
-#: candidates/forms.py:294
+#: candidates/forms.py:335
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr "Fuente de información para este cambio ({0})"
 
-#: candidates/forms.py:326
+#: candidates/forms.py:367
 msgid ""
 "You can only edit data on YourNextMP if you agree to this copyright "
 "assignment."
 msgstr "Sólo podrás editar datos en YoQuieroSaber Investigación si aceptas estos términos."
 
-#: candidates/forms.py:350
+#: candidates/forms.py:391
 #, python-brace-format
 msgid "{0} was not a known post ID"
 msgstr "{0} no era un ID de cargo conocido"
 
-#: candidates/forms.py:362
+#: candidates/forms.py:403
 msgid "Source of information that they won"
 msgstr "Fuente de información de que ganaron"
 
@@ -2003,17 +2019,17 @@ msgstr "No se presenta"
 msgid "Malformed type and area: '{0}'"
 msgstr "Disculpas, ocurrió un error. Malformed type and area {0}"
 
-#: candidates/views/areas.py:87
+#: candidates/views/areas.py:88
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr "Area '{0}' no encontrado"
 
-#: candidates/views/areas.py:89
+#: candidates/views/areas.py:90
 #, python-brace-format
 msgid "Multiple MapIt generations for type {mapit_type} found"
 msgstr "Generaciónes Maplt multiples para el tipo {mapit_type} encontrada"
 
-#: candidates/views/areas.py:111
+#: candidates/views/areas.py:112
 msgid "[No areas found]"
 msgstr "[No areas found]"
 
@@ -2021,11 +2037,11 @@ msgstr "[No areas found]"
 msgid "Attempt to edit a candidacy in a locked constituency"
 msgstr "Esta actualización no está permitida porque el distrito ya está cerrado."
 
-#: candidates/views/constituencies.py:195
+#: candidates/views/constituencies.py:196
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr "Disculpenos, a ocurrido un error. Invalid data POSTed to ConstituencyLockView"
 
-#: candidates/views/constituencies.py:338
+#: candidates/views/constituencies.py:339
 msgid "Result recorded in error, retracting"
 msgstr "Este resultado fue ingresado por error, retractándose"
 
@@ -2450,7 +2466,7 @@ msgstr "No había fotos de este candidato."
 msgid "Upload a candidate photo"
 msgstr "Subir foto del candidato"
 
-#: moderation_queue/templates/moderation_queue/photo-upload-new.html:15
+#: moderation_queue/templates/moderation_queue/photo-upload-new.html:11
 #, python-format
 msgid "Upload a photo of %(name)s"
 msgstr "Subir foto de %(name)s"
