@@ -31,6 +31,9 @@ def check_address(address_string, country=None):
     )
     mapit_result = requests.get(mapit_lookup_url)
     mapit_json = mapit_result.json()
+    if 'error' in mapit_json:
+        message = _(u"The area lookup returned an error: '{error}'")
+        raise ValidationError(message.format(error=mapit_json['error']))
     sorted_mapit_results = sorted(
         mapit_json.items(),
         key=lambda t: (t[1]['type'], int(t[0]))
