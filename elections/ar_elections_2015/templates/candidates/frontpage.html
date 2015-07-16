@@ -44,7 +44,7 @@
             {{ form.as_p }}
             <input type="submit" class="button" value="{% trans "Show candidates" %}">
         </form>
-        <p><a href="">Ver todas las provincias</a></p>
+        <p><a href="{% url 'areas-of-type-view' mapit_type='PRV' ignored_slug='provincia' %}">Ver todas las provincias</a></p>
     </div>
 
 </div><!-- close .container -->
