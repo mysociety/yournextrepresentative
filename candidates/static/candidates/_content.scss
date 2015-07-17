@@ -5,6 +5,7 @@
 }
 
 .container {
+  max-width: 960px; // for browsers that don't understand rems
   @include grid-row();
   padding-left: $column-gutter / 2;
   padding-right: $column-gutter / 2;
