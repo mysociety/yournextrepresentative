@@ -44,7 +44,8 @@ Now update the `.po` files with any new strings that have been
 added to the project with:
 
 ```
-./manage.py makemessages -a --ignore=data
+./manage.py makemessages -a \
+    --ignore=data --ignore=candidates/static/foundation
 ```
 
 That will add some fuzzily inferred translations to the `.po`

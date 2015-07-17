@@ -68,8 +68,8 @@ class QueuedImage(models.Model):
 
     face_detection_tried = models.BooleanField(default=False)
 
-    created = models.DateTimeField(auto_now_add=True, default=datetime.datetime.now)
-    updated = models.DateTimeField(auto_now=True, default=datetime.datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
         message = _(u'Image uploaded by {user} of candidate {popit_person_id}')

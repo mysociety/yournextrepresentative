@@ -57,8 +57,8 @@ class TestPartyPages(WebTest):
         lis = ul.find_all('li')
         self.assertEqual(len(lis), 2)
         for i, t in enumerate((
-            ('/election/2015/party/party%3A52/conservative-party', 'Conservative Party'),
-            ('/election/2015/party/party%3A53/labour-party', 'Labour Party'),
+            ('/election/2015/party/party:52/conservative-party', 'Conservative Party'),
+            ('/election/2015/party/party:53/labour-party', 'Labour Party'),
         )):
             expected_url = t[0]
             expected_text = t[1]
