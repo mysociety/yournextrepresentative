@@ -1,14 +1,8 @@
 import re
-import unicodedata
 
+from candidates.utils import strip_accents
 from candidates.views import ConstituencyDetailView
 
-# From http://stackoverflow.com/a/517974/223092
-def strip_accents(s):
-    return u"".join(
-        c for c in unicodedata.normalize('NFKD', s)
-        if not unicodedata.combining(c)
-    )
 
 def get_electionleaflets_url(mapit_area_id, constituency_name):
     """Generate an electionleaflets.org URL from a constituency name
