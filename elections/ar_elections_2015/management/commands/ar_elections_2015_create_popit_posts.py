@@ -43,6 +43,11 @@ class Command(PopItApiMixin, BaseCommand):
                             'id': 'presidente',
                             'label': election_data['for_post_role'],
                             'role': election_data['for_post_role'],
+                            'area': {
+                                'name': 'Argentina',
+                                'id': 'mapit:0',
+                                'identifier': settings.MAPIT_BASE_URL + 'area/0',
+                            },
                             'organization_id': election_data['organization_id'],
                         }
                     )

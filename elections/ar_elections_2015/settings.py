@@ -68,7 +68,7 @@ ELECTIONS = {
         'current': True,
         'party_membership_start_date': date(2015, 6, 22),
         'party_membership_end_date': date(9999, 12, 31),
-        'mapit_types': [], # The whole country...
+        'mapit_types': ['NAT'], # The national level...
         'mapit_generation': 1,
         # There's only one such post:
         'post_id_format': 'pres',
