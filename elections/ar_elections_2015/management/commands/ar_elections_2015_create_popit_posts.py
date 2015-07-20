@@ -40,7 +40,7 @@ class Command(PopItApiMixin, BaseCommand):
                     create_or_update(
                         self.api.posts,
                         {
-                            'id': 'candidato-a-presidente',
+                            'id': 'presidente',
                             'label': election_data['for_post_role'],
                             'role': election_data['for_post_role'],
                             'organization_id': election_data['organization_id'],

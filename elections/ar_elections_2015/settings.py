@@ -5,7 +5,7 @@ from datetime import date
 ELECTIONS = {
     # Party primaries for the chamber of deputies:
     'diputados-argentina-paso-2015': {
-        'for_post_role': 'Candidato a Diputado Nacional',
+        'for_post_role': 'Diputado Nacional',
         'candidate_membership_role': 'Primary Candidate',
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 8, 9),
@@ -19,11 +19,11 @@ ELECTIONS = {
         'mapit_generation': 1,
         'organization_id': 'hcdn',
         'organization_name': 'Cámara de Diputados',
-        'post_id_format': 'dip-prim-{area_id}',
+        'post_id_format': 'dip-{area_id}',
     },
     # Party primaries for governors of provinces
     'gobernadores-argentina-paso-2015': {
-        'for_post_role': 'Candidato a Gobernador',
+        'for_post_role': 'Gobernador',
         'candidate_membership_role': 'Primary Candidate',
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 8, 9),
@@ -36,11 +36,11 @@ ELECTIONS = {
         'mapit_generation': 1,
         'organization_id': 'gobernador',
         'organization_name': 'Gobernador',
-        'post_id_format': 'gob-prim-{area_id}',
+        'post_id_format': 'gob-{area_id}',
     },
     # Party primaries for national senators
     'senadores-argentina-paso-2015': {
-        'for_post_role': 'Candidato a Senador Nacional',
+        'for_post_role': 'Senador Nacional',
         'candidate_membership_role': 'Primary Candidate',
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 8, 9),
@@ -53,11 +53,11 @@ ELECTIONS = {
         'mapit_generation': 1,
         'organization_id': 'hcsn',
         'organization_name': 'Senado de la Nación',
-        'post_id_format': 'sen-prim-{area_id}',
+        'post_id_format': 'sen-{area_id}',
     },
     # Presidential candidates
     'presidentes-argentina-paso-2015': {
-        'for_post_role': 'Candidato a Presidente',
+        'for_post_role': 'Presidente',
         'candidate_membership_role': 'Primary Candidate',
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 8, 9),
@@ -70,7 +70,8 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': [], # The whole country...
         'mapit_generation': 1,
-        'post_id_format': 'pres-prim-{area_id}',
+        # There's only one such post:
+        'post_id_format': 'pres',
     },
 }
 
