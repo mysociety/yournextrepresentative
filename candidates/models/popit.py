@@ -267,7 +267,8 @@ def is_standing_in_membership(membership):
     return is_candidacy_membership(membership)
 
 # FIXME: really this should be a method on a PopIt base class, so it's
-# available for both people and organizations.
+# available for both people and organizations. (The same goes for
+# set_identifier.)
 def get_identifier(scheme, popit_object):
     result = None
     for identifier in popit_object.get('identifiers', []):
