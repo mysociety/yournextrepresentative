@@ -120,6 +120,9 @@ class BasePartyData(object):
             "You should implement party_data_to_party_set in a subclass"
         )
 
+    def sort_parties_in_place(self, parties):
+        parties.sort(key=lambda p: p[1].lower())
+
     def __init__(self):
 
         self.party_choices = defaultdict(list)
@@ -135,7 +138,7 @@ class BasePartyData(object):
                     self.party_id_to_name[party['id']] = party['name']
             # Now sort the parties, and an an empty default at the start:
             for parties in self.party_choices.values():
-                parties.sort(key=lambda p: p[1].lower())
+                self.sort_parties_in_place(parties)
                 parties.insert(0, ('party:none', ''))
 
 

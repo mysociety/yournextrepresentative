@@ -7,6 +7,17 @@ class MapItData(BaseMapItData):
     pass
 
 
+def index_lambda(sequence, predicate):
+    for i, item in enumerate(sequence):
+        if predicate(item):
+            return i
+    return -1
+
+def move_to_front(l, predicate):
+    i = index_lambda(l, lambda x: predicate(x))
+    l.insert(0, l.pop(i))
+
+
 class PartyData(BasePartyData):
 
     def __init__(self):
@@ -17,6 +28,12 @@ class PartyData(BasePartyData):
 
     def party_data_to_party_sets(self, party_data):
         return ['nacionale']
+
+    def sort_parties_in_place(self, parties):
+        parties.sort(key=lambda p: p[1].lower())
+        # Then we need 'unknown' and 'not listed' at the top:
+        move_to_front(parties, lambda x: x[0] == 'not-listed')
+        move_to_front(parties, lambda x: x[0] == 'unknown')
 
 
 class AreaPostData(BaseAreaPostData):
