@@ -70,8 +70,6 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'mapit_types': [], # The whole country...
         'mapit_generation': 1,
-        'organization_id': 'republica-argentina',
-        'organization_name': 'República Argentina',
         'post_id_format': 'pres-prim-{area_id}',
     },
 }
