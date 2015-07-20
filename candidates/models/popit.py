@@ -1048,7 +1048,7 @@ class PopItPerson(object):
         for election, election_data in settings.ELECTIONS_BY_DATE:
             cons = self.popit_data['standing_in'].get(election)
             if cons:
-                result = (election, cons)
+                result = (election, cons, election_data['name'])
         return result
 
     def record_version(self, change_metadata):

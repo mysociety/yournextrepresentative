@@ -67,7 +67,7 @@
     {% if person.last_cons %}
       {% with last_cons=person.last_cons %}
         {% url 'constituency' election=last_cons.0 post_id=last_cons.1.post_id ignored_slug=last_cons.1.name|slugify as url %}
-        <p>{% blocktrans trimmed with post=person.last_cons.1.name election=person.last_cons.0 %}
+        <p>{% blocktrans trimmed with post=last_cons.1.name election=last_cons.2 %}
           Candidate for <a href="{{ url }}">{{ post }}</a> in {{ election }}
           {% endblocktrans %}
         </p>
