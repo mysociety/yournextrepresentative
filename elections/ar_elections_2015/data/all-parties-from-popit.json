@@ -638,7 +638,7 @@
         "territory": "Nacional"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "1983-04-06",
@@ -654,7 +654,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1998",
@@ -670,7 +670,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/6/2003",
@@ -686,7 +686,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2004",
@@ -702,7 +702,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/7/2005",
@@ -718,7 +718,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2009",
@@ -734,7 +734,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "26/12/2011",
@@ -750,7 +750,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/8/2012",
@@ -766,7 +766,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2014",
@@ -782,7 +782,7 @@
         "territory": "San Luis"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/8/1992",
@@ -798,7 +798,7 @@
         "territory": "Santa Cruz"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/4/2009",
@@ -814,7 +814,7 @@
         "territory": "Santa Cruz"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/3/1995",
@@ -830,7 +830,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "1/9/1997",
@@ -846,7 +846,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/4/2009",
@@ -862,7 +862,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2009",
@@ -878,7 +878,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/4/2013",
@@ -894,7 +894,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/7/1985",
@@ -910,7 +910,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/2/2014",
@@ -926,7 +926,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "24/4/2015",
@@ -942,7 +942,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/4/2015",
@@ -958,7 +958,7 @@
         "territory": "Santa Fe"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/2/1997",
@@ -974,7 +974,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/10/2000",
@@ -990,7 +990,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/6/2004",
@@ -1006,7 +1006,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/9/2005",
@@ -1022,7 +1022,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/7/2007",
@@ -1038,7 +1038,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "9/6/2011",
@@ -1054,7 +1054,7 @@
         "territory": "Santiago Del Estero"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/4/1983",
@@ -1070,7 +1070,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/8/2001",
@@ -1086,7 +1086,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/12/1993",
@@ -1102,7 +1102,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/5/2011",
@@ -1118,7 +1118,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "22/3/2011",
@@ -1134,7 +1134,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2011",
@@ -1150,7 +1150,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/6/2013",
@@ -1166,7 +1166,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/3/2015",
@@ -1182,7 +1182,7 @@
         "territory": "Tierra del Fuego"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/9/1996",
@@ -1198,7 +1198,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/8/2010",
@@ -1214,7 +1214,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "1/7/1988",
@@ -1230,7 +1230,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/12/2010",
@@ -1246,7 +1246,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/12/2010",
@@ -1262,7 +1262,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "19/9/2013",
@@ -1278,7 +1278,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
@@ -1294,7 +1294,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
@@ -1310,7 +1310,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
@@ -1326,7 +1326,7 @@
         "territory": "Tucum\u00e1n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "10/12/1998",
@@ -1342,7 +1342,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "22/2/1991",
@@ -1358,7 +1358,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/8/1991",
@@ -1374,7 +1374,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/7/1993",
@@ -1390,7 +1390,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/6/1996",
@@ -1406,7 +1406,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "2/9/1997",
@@ -1422,7 +1422,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/10/2002",
@@ -1438,7 +1438,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
@@ -1454,7 +1454,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2003",
@@ -1470,7 +1470,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2003",
@@ -1486,7 +1486,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/6/2005",
@@ -1502,7 +1502,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/8/2012",
@@ -1518,7 +1518,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/9/2014",
@@ -1534,7 +1534,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/5/2013",
@@ -1550,7 +1550,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
@@ -1566,7 +1566,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/9/2014",
@@ -1582,7 +1582,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "1/6/2011",
@@ -1598,7 +1598,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/5/2011",
@@ -1614,7 +1614,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
@@ -1630,7 +1630,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
@@ -1646,7 +1646,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/3/2013",
@@ -1662,7 +1662,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2013",
@@ -1678,7 +1678,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2013",
@@ -1694,7 +1694,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2013",
@@ -1710,7 +1710,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
@@ -1726,7 +1726,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/6/2013",
@@ -1742,7 +1742,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/6/2013",
@@ -1758,7 +1758,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/12/2013",
@@ -1774,7 +1774,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2014",
@@ -1790,7 +1790,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2014",
@@ -1806,7 +1806,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
@@ -1822,7 +1822,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/4/2015",
@@ -1838,7 +1838,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
@@ -1854,7 +1854,7 @@
         "territory": "Buenos Aires"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/4/1983",
@@ -1870,7 +1870,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/9/2001",
@@ -1886,7 +1886,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/5/2005",
@@ -1902,7 +1902,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "2/8/2011",
@@ -1918,7 +1918,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/4/2009",
@@ -1934,7 +1934,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/5/2009",
@@ -1950,7 +1950,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
@@ -1966,7 +1966,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/6/2011",
@@ -1982,7 +1982,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
@@ -1998,7 +1998,7 @@
         "territory": "Mendoza"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/9/2004",
@@ -2014,7 +2014,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/9/2004",
@@ -2030,7 +2030,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/12/2005",
@@ -2046,7 +2046,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2007",
@@ -2062,7 +2062,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/7/2007",
@@ -2078,7 +2078,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/8/1983",
@@ -2094,7 +2094,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/9/2010",
@@ -2110,7 +2110,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
@@ -2126,7 +2126,7 @@
         "territory": "Misiones"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/5/1983",
@@ -2142,7 +2142,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/8/2003",
@@ -2158,7 +2158,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "22/8/2005",
@@ -2174,7 +2174,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
@@ -2190,7 +2190,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/4/2013",
@@ -2206,7 +2206,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "26/3/2015",
@@ -2222,7 +2222,7 @@
         "territory": "Neuqu\u00e9n"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1993",
@@ -2238,7 +2238,7 @@
         "territory": "R\u00edo Negro"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/9/1999",
@@ -2254,7 +2254,7 @@
         "territory": "R\u00edo Negro"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/4/1983",
@@ -2270,7 +2270,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/4/1994",
@@ -2286,7 +2286,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "22/6/2001",
@@ -2302,7 +2302,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/4/2007",
@@ -2318,7 +2318,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/8/2007",
@@ -2334,7 +2334,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/4/2009",
@@ -2350,7 +2350,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/10/2010",
@@ -2366,7 +2366,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/4/2013",
@@ -2382,7 +2382,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/5/2013",
@@ -2398,7 +2398,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/8/2013",
@@ -2414,7 +2414,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "26/1/2015",
@@ -2430,7 +2430,7 @@
         "territory": "Salta"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/3/1983",
@@ -2446,7 +2446,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/3/1983",
@@ -2462,7 +2462,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/11/1996",
@@ -2478,7 +2478,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/11/2001",
@@ -2494,7 +2494,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2002",
@@ -2510,7 +2510,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/8/2002",
@@ -2526,7 +2526,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/12/2004",
@@ -2542,7 +2542,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "1/10/2010",
@@ -2558,7 +2558,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "19/3/2014",
@@ -2574,7 +2574,7 @@
         "territory": "San Juan"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/4/1983",
@@ -2590,7 +2590,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/7/1997",
@@ -2606,7 +2606,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/5/2001",
@@ -2622,7 +2622,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "26/8/2002",
@@ -2638,7 +2638,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/5/2004",
@@ -2654,7 +2654,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
@@ -2670,7 +2670,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
@@ -2686,7 +2686,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/4/1983",
@@ -2702,7 +2702,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/6/1987",
@@ -2718,7 +2718,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2001",
@@ -2734,7 +2734,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
@@ -2750,7 +2750,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2014",
@@ -2766,7 +2766,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/12/2014",
@@ -2782,7 +2782,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "10/4/2015",
@@ -2798,7 +2798,7 @@
         "territory": "Corrientes"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/10/2003",
@@ -2814,7 +2814,7 @@
         "territory": "Entre R\u00edos"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/9/2014",
@@ -2830,7 +2830,7 @@
         "territory": "Entre R\u00edos"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
@@ -2846,7 +2846,7 @@
         "territory": "Entre R\u00edos"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/10/2011",
@@ -2862,7 +2862,7 @@
         "territory": "Entre R\u00edos"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/8/1983",
@@ -2878,7 +2878,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/10/1987",
@@ -2894,7 +2894,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/6/1993",
@@ -2910,7 +2910,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "10/4/1995",
@@ -2926,7 +2926,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2001",
@@ -2942,7 +2942,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2001",
@@ -2958,7 +2958,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2001",
@@ -2974,7 +2974,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/5/2005",
@@ -2990,7 +2990,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "2/7/2007",
@@ -3006,7 +3006,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2011",
@@ -3022,7 +3022,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "26/5/1993",
@@ -3038,7 +3038,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2014",
@@ -3054,7 +3054,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/5/2015",
@@ -3070,7 +3070,7 @@
         "territory": "Formosa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/5/1983",
@@ -3086,7 +3086,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/6/2001",
@@ -3102,7 +3102,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/2/2003",
@@ -3118,7 +3118,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/7/2003",
@@ -3134,7 +3134,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2007",
@@ -3150,7 +3150,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/4/2009",
@@ -3166,7 +3166,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
@@ -3182,7 +3182,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
@@ -3198,7 +3198,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/5/2013",
@@ -3214,7 +3214,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/6/2013",
@@ -3230,7 +3230,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/7/2013",
@@ -3246,7 +3246,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/7/2013",
@@ -3262,7 +3262,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/3/2015",
@@ -3278,7 +3278,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/4/2015",
@@ -3294,7 +3294,7 @@
         "territory": "Jujuy"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "25/3/1995",
@@ -3310,7 +3310,7 @@
         "territory": "La Pampa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "10/6/2013",
@@ -3326,7 +3326,7 @@
         "territory": "La Pampa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/5/2011",
@@ -3342,7 +3342,7 @@
         "territory": "La Pampa"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/4/2001",
@@ -3358,7 +3358,7 @@
         "territory": "La Rioja"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/12/2006",
@@ -3374,7 +3374,7 @@
         "territory": "La Rioja"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "19/3/2007",
@@ -3390,7 +3390,7 @@
         "territory": "La Rioja"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/5/2007",
@@ -3406,7 +3406,7 @@
         "territory": "La Rioja"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/2/2012",
@@ -3422,7 +3422,7 @@
         "territory": "La Rioja"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/6/1983",
@@ -3438,7 +3438,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/3/1996",
@@ -3454,7 +3454,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/4/2003",
@@ -3470,7 +3470,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2001",
@@ -3486,7 +3486,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/8/2013",
@@ -3502,7 +3502,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/6/2005",
@@ -3518,7 +3518,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/11/2006",
@@ -3534,7 +3534,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "23/3/2007",
@@ -3550,7 +3550,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/3/2007",
@@ -3566,7 +3566,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/12/2010",
@@ -3582,7 +3582,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/10/2012",
@@ -3598,7 +3598,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/5/2013",
@@ -3614,7 +3614,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
@@ -3630,7 +3630,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "6/5/2014",
@@ -3646,7 +3646,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "22/5/2014",
@@ -3662,7 +3662,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2014",
@@ -3678,7 +3678,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/8/2014",
@@ -3694,7 +3694,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/11/2014",
@@ -3710,7 +3710,7 @@
         "territory": "Capital Federal"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "19/6/1985",
@@ -3726,7 +3726,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/12/1988",
@@ -3742,7 +3742,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "9/5/1991",
@@ -3758,7 +3758,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/1/2005",
@@ -3774,7 +3774,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1989",
@@ -3790,7 +3790,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "11/9/2003",
@@ -3806,7 +3806,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
@@ -3822,7 +3822,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/5/2013",
@@ -3838,7 +3838,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "3/4/2014",
@@ -3854,7 +3854,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/3/2015",
@@ -3870,7 +3870,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "17/3/2015",
@@ -3886,7 +3886,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2015",
@@ -3902,7 +3902,7 @@
         "territory": "Catamarca"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/9/2003",
@@ -3918,7 +3918,7 @@
         "territory": "Chubut"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/9/2003",
@@ -3934,7 +3934,7 @@
         "territory": "Chubut"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2009",
@@ -3950,7 +3950,7 @@
         "territory": "Chubut"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "29/4/1983",
@@ -3966,7 +3966,7 @@
         "territory": "Chubut"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/10/1989",
@@ -3982,7 +3982,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "5/2/1988",
@@ -3998,7 +3998,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/8/2001",
@@ -4014,7 +4014,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/8/1997",
@@ -4030,7 +4030,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "28/7/1999",
@@ -4046,7 +4046,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/7/2001",
@@ -4062,7 +4062,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/10/2002",
@@ -4078,7 +4078,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "14/2/2003",
@@ -4094,7 +4094,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "30/6/2003",
@@ -4110,7 +4110,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/7/2003",
@@ -4126,7 +4126,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2003",
@@ -4142,7 +4142,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "31/7/2007",
@@ -4158,7 +4158,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "20/8/2010",
@@ -4174,7 +4174,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "19/10/2010",
@@ -4190,7 +4190,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2011",
@@ -4206,7 +4206,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "25/3/2013",
@@ -4222,7 +4222,7 @@
         "territory": "C\u00f3rdoba"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "12/9/1988",
@@ -4238,7 +4238,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/5/1999",
@@ -4254,7 +4254,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "13/2/2009",
@@ -4270,7 +4270,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2009",
@@ -4286,7 +4286,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "7/4/2011",
@@ -4302,7 +4302,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/9/2006",
@@ -4318,7 +4318,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "15/7/2011",
@@ -4334,7 +4334,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "9/2/2012",
@@ -4350,7 +4350,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "18/4/2012",
@@ -4366,7 +4366,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2013",
@@ -4382,7 +4382,7 @@
         "territory": "Chaco"
     },
     {
-        "classification": [],
+        "classification": "Party",
         "contact_details": [],
         "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2014",
