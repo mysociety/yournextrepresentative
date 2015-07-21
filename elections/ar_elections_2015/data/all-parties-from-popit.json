@@ -640,7 +640,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "1983-04-06",
         "id": "party:176",
         "identifiers": [],
@@ -656,7 +656,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1998",
         "id": "party:177",
         "identifiers": [],
@@ -672,7 +672,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/6/2003",
         "id": "party:183",
         "identifiers": [],
@@ -688,7 +688,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2004",
         "id": "party:184",
         "identifiers": [],
@@ -704,7 +704,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/7/2005",
         "id": "party:190",
         "identifiers": [],
@@ -720,7 +720,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2009",
         "id": "party:196",
         "identifiers": [],
@@ -736,7 +736,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "26/12/2011",
         "id": "party:197",
         "identifiers": [],
@@ -752,7 +752,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/8/2012",
         "id": "party:198",
         "identifiers": [],
@@ -768,7 +768,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2014",
         "id": "party:199",
         "identifiers": [],
@@ -784,7 +784,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/8/1992",
         "id": "party:154",
         "identifiers": [],
@@ -800,7 +800,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/4/2009",
         "id": "party:164",
         "identifiers": [],
@@ -816,7 +816,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/3/1995",
         "id": "party:162",
         "identifiers": [],
@@ -832,7 +832,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "1/9/1997",
         "id": "party:167",
         "identifiers": [],
@@ -848,7 +848,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/4/2009",
         "id": "party:179",
         "identifiers": [],
@@ -864,7 +864,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2009",
         "id": "party:180",
         "identifiers": [],
@@ -880,7 +880,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/4/2013",
         "id": "party:188",
         "identifiers": [],
@@ -896,7 +896,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/7/1985",
         "id": "party:191",
         "identifiers": [],
@@ -912,7 +912,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/2/2014",
         "id": "party:192",
         "identifiers": [],
@@ -928,7 +928,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "24/4/2015",
         "id": "party:195",
         "identifiers": [],
@@ -944,7 +944,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/4/2015",
         "id": "party:196",
         "identifiers": [],
@@ -960,7 +960,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/2/1997",
         "id": "party:173",
         "identifiers": [],
@@ -976,7 +976,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/10/2000",
         "id": "party:178",
         "identifiers": [],
@@ -992,7 +992,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/6/2004",
         "id": "party:179",
         "identifiers": [],
@@ -1008,7 +1008,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/9/2005",
         "id": "party:183",
         "identifiers": [],
@@ -1024,7 +1024,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/7/2007",
         "id": "party:187",
         "identifiers": [],
@@ -1040,7 +1040,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "9/6/2011",
         "id": "party:202",
         "identifiers": [],
@@ -1056,7 +1056,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/4/1983",
         "id": "party:154",
         "identifiers": [],
@@ -1072,7 +1072,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/8/2001",
         "id": "party:167",
         "identifiers": [],
@@ -1088,7 +1088,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/12/1993",
         "id": "party:174",
         "identifiers": [],
@@ -1104,7 +1104,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/5/2011",
         "id": "party:187",
         "identifiers": [],
@@ -1120,7 +1120,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "22/3/2011",
         "id": "party:188",
         "identifiers": [],
@@ -1136,7 +1136,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2011",
         "id": "party:192",
         "identifiers": [],
@@ -1152,7 +1152,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/6/2013",
         "id": "party:200",
         "identifiers": [],
@@ -1168,7 +1168,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/3/2015",
         "id": "party:201",
         "identifiers": [],
@@ -1184,7 +1184,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/9/1996",
         "id": "party:170",
         "identifiers": [],
@@ -1200,7 +1200,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/8/2010",
         "id": "party:177",
         "identifiers": [],
@@ -1216,7 +1216,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "1/7/1988",
         "id": "party:181",
         "identifiers": [],
@@ -1232,7 +1232,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/12/2010",
         "id": "party:184",
         "identifiers": [],
@@ -1248,7 +1248,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/12/2010",
         "id": "party:185",
         "identifiers": [],
@@ -1264,7 +1264,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "19/9/2013",
         "id": "party:197",
         "identifiers": [],
@@ -1280,7 +1280,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
         "id": "party:202",
         "identifiers": [],
@@ -1296,7 +1296,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
         "id": "party:203",
         "identifiers": [],
@@ -1312,7 +1312,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
         "id": "party:204",
         "identifiers": [],
@@ -1328,7 +1328,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "10/12/1998",
         "id": "party:153",
         "identifiers": [],
@@ -1344,7 +1344,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "22/2/1991",
         "id": "party:170",
         "identifiers": [],
@@ -1360,7 +1360,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/8/1991",
         "id": "party:177",
         "identifiers": [],
@@ -1376,7 +1376,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/7/1993",
         "id": "party:181",
         "identifiers": [],
@@ -1392,7 +1392,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/6/1996",
         "id": "party:191",
         "identifiers": [],
@@ -1408,7 +1408,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2/9/1997",
         "id": "party:197",
         "identifiers": [],
@@ -1424,7 +1424,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/10/2002",
         "id": "party:213",
         "identifiers": [],
@@ -1440,7 +1440,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
         "id": "party:220",
         "identifiers": [],
@@ -1456,7 +1456,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2003",
         "id": "party:221",
         "identifiers": [],
@@ -1472,7 +1472,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2003",
         "id": "party:226",
         "identifiers": [],
@@ -1488,7 +1488,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/6/2005",
         "id": "party:230",
         "identifiers": [],
@@ -1504,7 +1504,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/8/2012",
         "id": "party:236",
         "identifiers": [],
@@ -1520,7 +1520,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/9/2014",
         "id": "party:244",
         "identifiers": [],
@@ -1536,7 +1536,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/5/2013",
         "id": "party:249",
         "identifiers": [],
@@ -1552,7 +1552,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
         "id": "party:258",
         "identifiers": [],
@@ -1568,7 +1568,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/9/2014",
         "id": "party:259",
         "identifiers": [],
@@ -1584,7 +1584,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "1/6/2011",
         "id": "party:267",
         "identifiers": [],
@@ -1600,7 +1600,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/5/2011",
         "id": "party:268",
         "identifiers": [],
@@ -1616,7 +1616,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
         "id": "party:273",
         "identifiers": [],
@@ -1632,7 +1632,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
         "id": "party:275",
         "identifiers": [],
@@ -1648,7 +1648,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/3/2013",
         "id": "party:288",
         "identifiers": [],
@@ -1664,7 +1664,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2013",
         "id": "party:289",
         "identifiers": [],
@@ -1680,7 +1680,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2013",
         "id": "party:291",
         "identifiers": [],
@@ -1696,7 +1696,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2013",
         "id": "party:292",
         "identifiers": [],
@@ -1712,7 +1712,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
         "id": "party:293",
         "identifiers": [],
@@ -1728,7 +1728,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/6/2013",
         "id": "party:294",
         "identifiers": [],
@@ -1744,7 +1744,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/6/2013",
         "id": "party:295",
         "identifiers": [],
@@ -1760,7 +1760,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/12/2013",
         "id": "party:296",
         "identifiers": [],
@@ -1776,7 +1776,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2014",
         "id": "party:297",
         "identifiers": [],
@@ -1792,7 +1792,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2014",
         "id": "party:298",
         "identifiers": [],
@@ -1808,7 +1808,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2015",
         "id": "party:299",
         "identifiers": [],
@@ -1824,7 +1824,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/4/2015",
         "id": "party:300",
         "identifiers": [],
@@ -1840,7 +1840,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/5/2015",
         "id": "party:301",
         "identifiers": [],
@@ -1856,7 +1856,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/4/1983",
         "id": "party:151",
         "identifiers": [],
@@ -1872,7 +1872,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/9/2001",
         "id": "party:164",
         "identifiers": [],
@@ -1888,7 +1888,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/5/2005",
         "id": "party:181",
         "identifiers": [],
@@ -1904,7 +1904,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2/8/2011",
         "id": "party:188",
         "identifiers": [],
@@ -1920,7 +1920,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/4/2009",
         "id": "party:195",
         "identifiers": [],
@@ -1936,7 +1936,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/5/2009",
         "id": "party:196",
         "identifiers": [],
@@ -1952,7 +1952,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
         "id": "party:211",
         "identifiers": [],
@@ -1968,7 +1968,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/6/2011",
         "id": "party:213",
         "identifiers": [],
@@ -1984,7 +1984,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
         "id": "party:217",
         "identifiers": [],
@@ -2000,7 +2000,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/9/2004",
         "id": "party:152",
         "identifiers": [],
@@ -2016,7 +2016,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/9/2004",
         "id": "party:153",
         "identifiers": [],
@@ -2032,7 +2032,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/12/2005",
         "id": "party:161",
         "identifiers": [],
@@ -2048,7 +2048,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2007",
         "id": "party:164",
         "identifiers": [],
@@ -2064,7 +2064,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/7/2007",
         "id": "party:165",
         "identifiers": [],
@@ -2080,7 +2080,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/8/1983",
         "id": "party:167",
         "identifiers": [],
@@ -2096,7 +2096,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/9/2010",
         "id": "party:169",
         "identifiers": [],
@@ -2112,7 +2112,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
         "id": "party:170",
         "identifiers": [],
@@ -2128,7 +2128,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/5/1983",
         "id": "party:151",
         "identifiers": [],
@@ -2144,7 +2144,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/8/2003",
         "id": "party:162",
         "identifiers": [],
@@ -2160,7 +2160,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "22/8/2005",
         "id": "party:166",
         "identifiers": [],
@@ -2176,7 +2176,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
         "id": "party:180",
         "identifiers": [],
@@ -2192,7 +2192,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/4/2013",
         "id": "party:181",
         "identifiers": [],
@@ -2208,7 +2208,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "26/3/2015",
         "id": "party:186",
         "identifiers": [],
@@ -2224,7 +2224,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1993",
         "id": "party:153",
         "identifiers": [],
@@ -2240,7 +2240,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/9/1999",
         "id": "party:161",
         "identifiers": [],
@@ -2256,7 +2256,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/4/1983",
         "id": "party:152",
         "identifiers": [],
@@ -2272,7 +2272,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/4/1994",
         "id": "party:174",
         "identifiers": [],
@@ -2288,7 +2288,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "22/6/2001",
         "id": "party:189",
         "identifiers": [],
@@ -2304,7 +2304,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/4/2007",
         "id": "party:197",
         "identifiers": [],
@@ -2320,7 +2320,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/8/2007",
         "id": "party:200",
         "identifiers": [],
@@ -2336,7 +2336,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/4/2009",
         "id": "party:202",
         "identifiers": [],
@@ -2352,7 +2352,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/10/2010",
         "id": "party:203",
         "identifiers": [],
@@ -2368,7 +2368,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/4/2013",
         "id": "party:215",
         "identifiers": [],
@@ -2384,7 +2384,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/5/2013",
         "id": "party:216",
         "identifiers": [],
@@ -2400,7 +2400,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/8/2013",
         "id": "party:217",
         "identifiers": [],
@@ -2416,7 +2416,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "26/1/2015",
         "id": "party:221",
         "identifiers": [],
@@ -2432,7 +2432,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/3/1983",
         "id": "party:153",
         "identifiers": [],
@@ -2448,7 +2448,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/3/1983",
         "id": "party:154",
         "identifiers": [],
@@ -2464,7 +2464,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/11/1996",
         "id": "party:164",
         "identifiers": [],
@@ -2480,7 +2480,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/11/2001",
         "id": "party:167",
         "identifiers": [],
@@ -2496,7 +2496,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/6/2002",
         "id": "party:168",
         "identifiers": [],
@@ -2512,7 +2512,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/8/2002",
         "id": "party:169",
         "identifiers": [],
@@ -2528,7 +2528,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/12/2004",
         "id": "party:171",
         "identifiers": [],
@@ -2544,7 +2544,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "1/10/2010",
         "id": "party:176",
         "identifiers": [],
@@ -2560,7 +2560,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "19/3/2014",
         "id": "party:177",
         "identifiers": [],
@@ -2576,7 +2576,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/4/1983",
         "id": "party:151",
         "identifiers": [],
@@ -2592,7 +2592,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/7/1997",
         "id": "party:165",
         "identifiers": [],
@@ -2608,7 +2608,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/5/2001",
         "id": "party:167",
         "identifiers": [],
@@ -2624,7 +2624,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "26/8/2002",
         "id": "party:169",
         "identifiers": [],
@@ -2640,7 +2640,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/5/2004",
         "id": "party:170",
         "identifiers": [],
@@ -2656,7 +2656,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
         "id": "party:178",
         "identifiers": [],
@@ -2672,7 +2672,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "8/6/2011",
         "id": "party:180",
         "identifiers": [],
@@ -2688,7 +2688,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/4/1983",
         "id": "party:186",
         "identifiers": [],
@@ -2704,7 +2704,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/6/1987",
         "id": "party:190",
         "identifiers": [],
@@ -2720,7 +2720,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2001",
         "id": "party:194",
         "identifiers": [],
@@ -2736,7 +2736,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
         "id": "party:201",
         "identifiers": [],
@@ -2752,7 +2752,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2014",
         "id": "party:204",
         "identifiers": [],
@@ -2768,7 +2768,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/12/2014",
         "id": "party:205",
         "identifiers": [],
@@ -2784,7 +2784,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "10/4/2015",
         "id": "party:206",
         "identifiers": [],
@@ -2800,7 +2800,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/10/2003",
         "id": "party:166",
         "identifiers": [],
@@ -2816,7 +2816,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/9/2014",
         "id": "party:171",
         "identifiers": [],
@@ -2832,7 +2832,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
         "id": "party:186",
         "identifiers": [],
@@ -2848,7 +2848,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/10/2011",
         "id": "party:188",
         "identifiers": [],
@@ -2864,7 +2864,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/8/1983",
         "id": "party:152",
         "identifiers": [],
@@ -2880,7 +2880,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/10/1987",
         "id": "party:155",
         "identifiers": [],
@@ -2896,7 +2896,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/6/1993",
         "id": "party:167",
         "identifiers": [],
@@ -2912,7 +2912,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "10/4/1995",
         "id": "party:171",
         "identifiers": [],
@@ -2928,7 +2928,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2001",
         "id": "party:181",
         "identifiers": [],
@@ -2944,7 +2944,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/6/2001",
         "id": "party:182",
         "identifiers": [],
@@ -2960,7 +2960,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/6/2001",
         "id": "party:183",
         "identifiers": [],
@@ -2976,7 +2976,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/5/2005",
         "id": "party:200",
         "identifiers": [],
@@ -2992,7 +2992,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "2/7/2007",
         "id": "party:203",
         "identifiers": [],
@@ -3008,7 +3008,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2011",
         "id": "party:204",
         "identifiers": [],
@@ -3024,7 +3024,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "26/5/1993",
         "id": "party:211",
         "identifiers": [],
@@ -3040,7 +3040,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/5/2014",
         "id": "party:212",
         "identifiers": [],
@@ -3056,7 +3056,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/5/2015",
         "id": "party:220",
         "identifiers": [],
@@ -3072,7 +3072,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/5/1983",
         "id": "party:151",
         "identifiers": [],
@@ -3088,7 +3088,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/6/2001",
         "id": "party:187",
         "identifiers": [],
@@ -3104,7 +3104,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/2/2003",
         "id": "party:190",
         "identifiers": [],
@@ -3120,7 +3120,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/7/2003",
         "id": "party:192",
         "identifiers": [],
@@ -3136,7 +3136,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2007",
         "id": "party:194",
         "identifiers": [],
@@ -3152,7 +3152,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/4/2009",
         "id": "party:200",
         "identifiers": [],
@@ -3168,7 +3168,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
         "id": "party:204",
         "identifiers": [],
@@ -3184,7 +3184,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/6/2011",
         "id": "party:205",
         "identifiers": [],
@@ -3200,7 +3200,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/5/2013",
         "id": "party:207",
         "identifiers": [],
@@ -3216,7 +3216,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/6/2013",
         "id": "party:208",
         "identifiers": [],
@@ -3232,7 +3232,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/7/2013",
         "id": "party:209",
         "identifiers": [],
@@ -3248,7 +3248,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/7/2013",
         "id": "party:210",
         "identifiers": [],
@@ -3264,7 +3264,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/3/2015",
         "id": "party:219",
         "identifiers": [],
@@ -3280,7 +3280,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/4/2015",
         "id": "party:220",
         "identifiers": [],
@@ -3296,7 +3296,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "25/3/1995",
         "id": "party:182",
         "identifiers": [],
@@ -3312,7 +3312,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "10/6/2013",
         "id": "party:184",
         "identifiers": [],
@@ -3328,7 +3328,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/5/2011",
         "id": "party:190",
         "identifiers": [],
@@ -3344,7 +3344,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/4/2001",
         "id": "party:153",
         "identifiers": [],
@@ -3360,7 +3360,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/12/2006",
         "id": "party:157",
         "identifiers": [],
@@ -3376,7 +3376,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "19/3/2007",
         "id": "party:158",
         "identifiers": [],
@@ -3392,7 +3392,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/5/2007",
         "id": "party:159",
         "identifiers": [],
@@ -3408,7 +3408,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/2/2012",
         "id": "party:165",
         "identifiers": [],
@@ -3424,7 +3424,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/6/1983",
         "id": "party:151",
         "identifiers": [],
@@ -3440,7 +3440,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/3/1996",
         "id": "party:170",
         "identifiers": [],
@@ -3456,7 +3456,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/4/2003",
         "id": "party:175",
         "identifiers": [],
@@ -3472,7 +3472,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2001",
         "id": "party:187",
         "identifiers": [],
@@ -3488,7 +3488,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/8/2013",
         "id": "party:189",
         "identifiers": [],
@@ -3504,7 +3504,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/6/2005",
         "id": "party:234",
         "identifiers": [],
@@ -3520,7 +3520,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/11/2006",
         "id": "party:262",
         "identifiers": [],
@@ -3536,7 +3536,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "23/3/2007",
         "id": "party:263",
         "identifiers": [],
@@ -3552,7 +3552,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/3/2007",
         "id": "party:268",
         "identifiers": [],
@@ -3568,7 +3568,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/12/2010",
         "id": "party:302",
         "identifiers": [],
@@ -3584,7 +3584,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/10/2012",
         "id": "party:315",
         "identifiers": [],
@@ -3600,7 +3600,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/5/2013",
         "id": "party:320",
         "identifiers": [],
@@ -3616,7 +3616,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/6/2013",
         "id": "party:321",
         "identifiers": [],
@@ -3632,7 +3632,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "6/5/2014",
         "id": "party:326",
         "identifiers": [],
@@ -3648,7 +3648,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "22/5/2014",
         "id": "party:327",
         "identifiers": [],
@@ -3664,7 +3664,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2014",
         "id": "party:328",
         "identifiers": [],
@@ -3680,7 +3680,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/8/2014",
         "id": "party:329",
         "identifiers": [],
@@ -3696,7 +3696,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/11/2014",
         "id": "party:330",
         "identifiers": [],
@@ -3712,7 +3712,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "19/6/1985",
         "id": "party:154",
         "identifiers": [],
@@ -3728,7 +3728,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/12/1988",
         "id": "party:157",
         "identifiers": [],
@@ -3744,7 +3744,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "9/5/1991",
         "id": "party:162",
         "identifiers": [],
@@ -3760,7 +3760,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/1/2005",
         "id": "party:178",
         "identifiers": [],
@@ -3776,7 +3776,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/3/1989",
         "id": "party:183",
         "identifiers": [],
@@ -3792,7 +3792,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "11/9/2003",
         "id": "party:194",
         "identifiers": [],
@@ -3808,7 +3808,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/6/2011",
         "id": "party:198",
         "identifiers": [],
@@ -3824,7 +3824,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/5/2013",
         "id": "party:202",
         "identifiers": [],
@@ -3840,7 +3840,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "3/4/2014",
         "id": "party:204",
         "identifiers": [],
@@ -3856,7 +3856,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/3/2015",
         "id": "party:206",
         "identifiers": [],
@@ -3872,7 +3872,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "17/3/2015",
         "id": "party:207",
         "identifiers": [],
@@ -3888,7 +3888,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/5/2015",
         "id": "party:208",
         "identifiers": [],
@@ -3904,7 +3904,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/9/2003",
         "id": "party:151",
         "identifiers": [],
@@ -3920,7 +3920,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/9/2003",
         "id": "party:152",
         "identifiers": [],
@@ -3936,7 +3936,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "16/4/2009",
         "id": "party:153",
         "identifiers": [],
@@ -3952,7 +3952,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "29/4/1983",
         "id": "party:157",
         "identifiers": [],
@@ -3968,7 +3968,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/10/1989",
         "id": "party:162",
         "identifiers": [],
@@ -3984,7 +3984,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "5/2/1988",
         "id": "party:167",
         "identifiers": [],
@@ -4000,7 +4000,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/8/2001",
         "id": "party:169",
         "identifiers": [],
@@ -4016,7 +4016,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/8/1997",
         "id": "party:178",
         "identifiers": [],
@@ -4032,7 +4032,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "28/7/1999",
         "id": "party:181",
         "identifiers": [],
@@ -4048,7 +4048,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/7/2001",
         "id": "party:186",
         "identifiers": [],
@@ -4064,7 +4064,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/10/2002",
         "id": "party:191",
         "identifiers": [],
@@ -4080,7 +4080,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "14/2/2003",
         "id": "party:195",
         "identifiers": [],
@@ -4096,7 +4096,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "30/6/2003",
         "id": "party:199",
         "identifiers": [],
@@ -4112,7 +4112,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/7/2003",
         "id": "party:200",
         "identifiers": [],
@@ -4128,7 +4128,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "4/8/2003",
         "id": "party:201",
         "identifiers": [],
@@ -4144,7 +4144,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "31/7/2007",
         "id": "party:207",
         "identifiers": [],
@@ -4160,7 +4160,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "20/8/2010",
         "id": "party:216",
         "identifiers": [],
@@ -4176,7 +4176,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "19/10/2010",
         "id": "party:217",
         "identifiers": [],
@@ -4192,7 +4192,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2011",
         "id": "party:223",
         "identifiers": [],
@@ -4208,7 +4208,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "25/3/2013",
         "id": "party:231",
         "identifiers": [],
@@ -4224,7 +4224,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "12/9/1988",
         "id": "party:156",
         "identifiers": [],
@@ -4240,7 +4240,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/5/1999",
         "id": "party:163",
         "identifiers": [],
@@ -4256,7 +4256,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "13/2/2009",
         "id": "party:171",
         "identifiers": [],
@@ -4272,7 +4272,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/4/2009",
         "id": "party:173",
         "identifiers": [],
@@ -4288,7 +4288,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "7/4/2011",
         "id": "party:175",
         "identifiers": [],
@@ -4304,7 +4304,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/9/2006",
         "id": "party:176",
         "identifiers": [],
@@ -4320,7 +4320,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "15/7/2011",
         "id": "party:179",
         "identifiers": [],
@@ -4336,7 +4336,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "9/2/2012",
         "id": "party:180",
         "identifiers": [],
@@ -4352,7 +4352,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "18/4/2012",
         "id": "party:181",
         "identifiers": [],
@@ -4368,7 +4368,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "27/5/2013",
         "id": "party:189",
         "identifiers": [],
@@ -4384,7 +4384,7 @@
     {
         "classification": [],
         "contact_details": [],
-        "dissolution_date": [],
+        "dissolution_date": "9999-12-31",
         "founding_date": "21/8/2014",
         "id": "party:191",
         "identifiers": [],
