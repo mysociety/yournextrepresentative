@@ -9,7 +9,7 @@ from candidates.models.popit import membership_covers_date
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
 class Command(PopItApiMixin, BaseCommand):
-    help = "Set an election field on all memberhips that represent candidacies"
+    help = "Set an election field on all memberships that represent candidacies"
 
     def handle(self, **options):
 
