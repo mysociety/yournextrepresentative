@@ -249,12 +249,15 @@ def is_party_membership(membership):
         return classification.lower() == 'party'
     except AttributeError:
         # If organization_id is actually just an ID, guess from the
-        # ID's format:
+        # ID's format.  FIXME: don't do this; fetch the organization
+        # to check the classification, so it's correct rather than
+        # "probably right".
         party_id_match = re.search(
             r'^(party|ynmp-party|joint-party):',
             organization_id
         )
-        return bool(party_id_match)
+        special_party = (organization_id in ('unknown', 'not-listed'))
+        return bool(party_id_match) or special_party
 
 def is_candidacy_membership(membership):
     if not membership.get('election'):

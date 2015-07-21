@@ -124,7 +124,7 @@ patterns_to_format = [
         'name': 'areas-of-type-view',
     },
     {
-        'pattern': r'^election/{election}/party/(?P<organization_id>[a-z-]+:[-\d]+)/(?P<ignored_slug>.*)$',
+        'pattern': r'^election/{election}/party/(?P<organization_id>[a-z-]+(:[-\d]+)?)/(?P<ignored_slug>.*)$',
         'view': views.PartyDetailView.as_view(),
         'name': 'party'
     },
