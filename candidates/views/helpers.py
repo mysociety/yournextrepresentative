@@ -37,12 +37,12 @@ def get_people_from_memberships(election_data, memberships):
         ):
             current_candidates.add(person)
         else:
-            for election, election_data in settings.ELECTIONS_BY_DATE:
-                if not election_data.get('use_for_candidate_suggestions'):
+            for other_election, other_election_data in settings.ELECTIONS_BY_DATE:
+                if not other_election_data.get('use_for_candidate_suggestions'):
                     continue
                 if membership_covers_date(
                         membership,
-                        election_data['election_date'],
+                        other_election_data['election_date'],
                 ):
                     past_candidates.add(person)
 
