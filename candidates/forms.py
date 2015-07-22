@@ -57,6 +57,13 @@ class CandidacyDeleteForm(BaseCandidacyForm):
     )
 
 class BasePersonForm(PopItApiMixin, forms.Form):
+
+    STANDING_CHOICES = (
+        ('not-sure', _(u"Don’t Know")),
+        ('standing', _(u"Yes")),
+        ('not-standing', _(u"No")),
+    )
+
     honorific_prefix = forms.CharField(
         label=_("Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"),
         max_length=256,
@@ -193,9 +200,21 @@ class NewPersonForm(BasePersonForm):
         election_data = settings.ELECTIONS[election]
         role = election_data['for_post_role']
 
+        standing_field_kwargs = {
+            'label': _('Standing in %s') % election_data['name'],
+            'choices': self.STANDING_CHOICES,
+        }
+        if hidden_post_widget:
+            standing_field_kwargs['widget'] = forms.HiddenInput()
+        else:
+            standing_field_kwargs['widget'] = forms.Select(attrs={'class': 'standing-select'})
+        self.fields['standing_' + election] = \
+            forms.ChoiceField(**standing_field_kwargs)
+
         self.elections_with_fields = [
             (election, election_data)
         ]
+
         post_field_kwargs = {
             'label': _("Post in the {election}").format(
                 election=election_data['name']
@@ -284,12 +303,6 @@ class NewPersonForm(BasePersonForm):
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
 class UpdatePersonForm(BasePersonForm):
-
-    STANDING_CHOICES = (
-        ('not-sure', _(u"Don’t Know")),
-        ('standing', _(u"Yes")),
-        ('not-standing', _(u"No")),
-    )
 
     def __init__(self, *args, **kwargs):
         super(UpdatePersonForm, self).__init__(*args, **kwargs)

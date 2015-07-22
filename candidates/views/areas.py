@@ -66,6 +66,7 @@ class AreasView(PopItApiMixin, TemplateView):
                             election=election,
                             initial={
                                 ('constituency_' + election): post_id,
+                                ('standing_' + election): 'standing',
                             },
                             hidden_post_widget=True,
                         ),

@@ -122,6 +122,7 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             election=self.election,
             initial={
                 ('constituency_' + self.election): post_id,
+                ('standing_' + self.election): 'standing',
             },
             hidden_post_widget=True,
         )
