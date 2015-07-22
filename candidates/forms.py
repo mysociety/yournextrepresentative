@@ -237,7 +237,17 @@ class NewPersonForm(BasePersonForm):
         # choice field for each such "party set" and make sure only
         # the appropriate one is shown, depending on the election and
         # selected constituency, using Javascript.
+        specific_party_set_slug = None
+        if hidden_post_widget:
+            # Then the post can't be changed, so only add the
+            # particular party set relevant for that post:
+            post_id = kwargs['initial']['constituency']
+            specific_party_set_slug = \
+                AREA_POST_DATA.post_id_to_party_set(post_id)
+
         for party_set in PARTY_DATA.ALL_PARTY_SETS:
+            if specific_party_set_slug and (party_set['slug'] != specific_party_set_slug):
+                continue
             self.fields['party_' + party_set['slug'] + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(

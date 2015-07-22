@@ -81,7 +81,6 @@ class TestNewPersonView(TestUserMixin, WebTest):
             # Make Jane Doe be standing for the Monster Raving Loony
             # Party in Dulwich and West Norwood:
             'party_gb_2015': 'party:66',
-            'party_ni_2015': 'party:none',
             'constituency_2015': '65808',
             'email': 'jane@example.com',
             'wikipedia_url': 'http://en.wikipedia.org/wiki/Jane_Doe',
