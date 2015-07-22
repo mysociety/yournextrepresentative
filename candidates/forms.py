@@ -246,6 +246,11 @@ class NewPersonForm(BasePersonForm):
                     ),
                     choices=PARTY_DATA.party_choices[party_set['slug']],
                     required=False,
+                    widget=forms.Select(
+                        attrs={
+                            'class': 'party-select party-select-' + election
+                        }
+                    ),
                 )
 
     source = forms.CharField(
