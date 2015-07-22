@@ -241,7 +241,7 @@ class NewPersonForm(BasePersonForm):
         if hidden_post_widget:
             # Then the post can't be changed, so only add the
             # particular party set relevant for that post:
-            post_id = kwargs['initial']['constituency']
+            post_id = kwargs['initial']['constituency_' + election]
             specific_party_set_slug = \
                 AREA_POST_DATA.post_id_to_party_set(post_id)
 

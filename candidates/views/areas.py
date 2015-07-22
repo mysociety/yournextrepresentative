@@ -64,7 +64,9 @@ class AreasView(PopItApiMixin, TemplateView):
                         'candidates': current_candidates,
                         'add_candidate_form': NewPersonForm(
                             election=election,
-                            initial={'constituency': post_id},
+                            initial={
+                                ('constituency_' + election): post_id,
+                            },
                             hidden_post_widget=True,
                         ),
                     })

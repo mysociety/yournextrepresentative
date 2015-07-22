@@ -120,7 +120,9 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
-            initial={'constituency': post_id},
+            initial={
+                ('constituency_' + self.election): post_id,
+            },
             hidden_post_widget=True,
         )
 
