@@ -14,7 +14,7 @@
         {% for object in object_list %}
             <tr {% if object.count == 0 %}class="no_known"{% endif%}>
               {% if object.count == 0 %}
-                <td>{{ object.name }}</a></td>
+                <td>{{ object.name }}</td>
               {% else %}
                 <td><a href="{% url 'party' election=election organization_id=object.object_id ignored_slug=object.name|slugify %}">{{ object.name }}</a></td>
               {% endif %}
