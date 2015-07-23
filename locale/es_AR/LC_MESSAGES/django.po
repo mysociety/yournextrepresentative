@@ -2133,7 +2133,7 @@ msgstr "Yo Quiero Saber"
 #: mysite/templates/generic_base.html:55
 #: mysite/templates/generic_base.html:104
 msgid "About"
-msgstr "Sobre YQS"
+msgstr "Acerca de Yo Quiero Saber"
 
 #: elections/ar_elections_2015/templates/base.html:57
 #: mysite/templates/generic_base.html:56
@@ -2142,7 +2142,7 @@ msgstr "Cargos"
 
 #: elections/ar_elections_2015/templates/base.html:58
 msgid "Provinces"
-msgstr "Provincia"
+msgstr "Candidatos por provincia"
 
 #: elections/ar_elections_2015/templates/base.html:59
 #: mysite/templates/generic_base.html:57
