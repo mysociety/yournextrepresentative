@@ -1239,7 +1239,7 @@ msgid ""
 "href=\"http://creativecommons.org/licenses/by-sa/4.0/\">CC-BY-SA</a> or "
 "remove copyright restrictions by releasing into the public domain (<a "
 "href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>)."
-msgstr ""
+msgstr "Gracias por participar de este proyecto colaborativo. La licencia del contenido es CC-BY-SA  (CreativeCommons, Atribución, Compartir igual)."
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:42
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:42
