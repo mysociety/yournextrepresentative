@@ -719,15 +719,13 @@ class PopItPerson(object):
         self.posts_to_invalidate.update(self.get_associated_posts())
 
     def known_status_in_election(self, election):
-        standing_in = self.popit_data.get('standing_in', {}) or {}
-        return election in standing_in
+        return election in self.standing_in
 
     def not_standing_in_election(self, election):
         # If there's a standing_in element present, and the value for
         # election is set to None, then someone has marked that person as
         # not standing...
-        standing_in = self.popit_data.get('standing_in', {}) or {}
-        return (election in standing_in) and standing_in[election] == None
+        return (election in self.standing_in) and self.standing_in[election] == None
 
     def delete_memberships(self, api):
         person_from_popit = api.persons(self.id).get(embed='membership')
@@ -1050,7 +1048,7 @@ class PopItPerson(object):
     def last_cons(self):
         result = None
         for election, election_data in settings.ELECTIONS_BY_DATE:
-            cons = self.popit_data['standing_in'].get(election)
+            cons = self.standing_in.get(election)
             if cons:
                 result = (election, cons, election_data['name'])
         return result
@@ -1212,10 +1210,9 @@ class PopItPerson(object):
         self.standing_in = standing_in
 
     def get_elected(self, election):
-        standing_in = self.popit_data.get('standing_in') or {}
-        if election not in standing_in:
+        if election not in self.standing_in:
             return None
-        standing_in_election_data = standing_in.get(election, {})
+        standing_in_election_data = self.standing_in.get(election, {})
         if not standing_in_election_data:
             return None
         return standing_in_election_data.get('elected')
