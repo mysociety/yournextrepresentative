@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
@@ -28,7 +28,7 @@ from ..election_specific import MAPIT_DATA, AREA_POST_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
-from ..cache import get_post_cached, invalidate_posts
+from ..cache import get_post_cached, invalidate_posts, UnknownPostException
 
 class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -43,7 +43,10 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        mp_post = get_post_cached(self.api, post_id)
+        try:
+            mp_post = get_post_cached(self.api, post_id)
+        except UnknownPostException:
+            raise Http404()
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
