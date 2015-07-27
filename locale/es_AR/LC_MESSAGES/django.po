@@ -2088,7 +2088,7 @@ msgstr "Gracias por la actualización <a href=\"{person_url}\">{person_name}</a>
 
 #: candidates/views/people.py:41
 msgid " Now you can carry on to:"
-msgstr "Ahora usted puede continuar:"
+msgstr " Ahora usted puede continuar:"
 
 #: candidates/views/people.py:51
 #, python-brace-format
@@ -2100,7 +2100,7 @@ msgstr "<li><a href=\"{person_create_url}\">Agrega otro candidato en la {electio
 #: candidates/views/people.py:68
 #, python-brace-format
 msgid "<li><a href=\"{person_edit_url}\">Edit {person_name} again</a></li>"
-msgstr "<li><a href=\"{person_edit_url}\">Edit{person_name}again</a></li>"
+msgstr "<li><a href=\"{person_edit_url}\">Edit {person_name} again</a></li>"
 
 #: candidates/views/people.py:70
 #, python-brace-format
