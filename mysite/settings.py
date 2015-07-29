@@ -46,6 +46,7 @@ POPIT_PASSWORD = conf.get('POPIT_PASSWORD', '')
 POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 
 GOOGLE_ANALYTICS_ACCOUNT = conf.get('GOOGLE_ANALYTICS_ACCOUNT')
+USE_UNIVERSAL_ANALYTICS = conf.get('USE_UNIVERSAL_ANALYTICS', True)
 
 # The email address which is made public on the site for sending
 # support email to:
