@@ -209,8 +209,10 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
     def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed, make_primary):
         original = Image.open(image_filename)
         # Some uploaded images are CYMK, which gives you an error when
-        # you try to write them as PNG, so convert to RGB:
-        original = original.convert('RGB')
+        # you try to write them as PNG, so convert to RGBA (this is
+        # RGBA rather than RGB so that any alpha channel (transparency)
+        # is preserved).
+        original = original.convert('RGBA')
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
         cropped.save(ntf.name, 'PNG')
