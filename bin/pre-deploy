@@ -51,7 +51,14 @@ find . -name '*.pyc' -delete
 mkdir -p "../gems"
 export GEM_HOME="$(cd ../gems && pwd -P)"
 export PATH="$GEM_HOME/bin:$PATH"
-gem install --no-ri --no-rdoc sass -v 3.2.19
+if (sass --version | grep '3\.2\.19') > /dev/null
+then
+    echo sass is already installed at the correct version
+else
+    echo Installing sass...
+    gem install --no-ri --no-rdoc sass -v 3.2.19
+    echo done.
+fi
 
 # gather all the static files in one place
 ./manage.py collectstatic --noinput
