@@ -65,3 +65,4 @@ fi
 
 # Compile all translations from .po files into .mo files
 ./manage.py compilemessages
+./manage.py compilejsi18n

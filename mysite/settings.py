@@ -106,6 +106,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django_nose',
     'pipeline',
+    'statici18n',
     ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
     'tasks',

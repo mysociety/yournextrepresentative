@@ -357,7 +357,7 @@ msgstr "El usuario de twitter sólo debe contener caracteres alfanuméricos o gu
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
-msgstr "Si indicás que el candidato se presenta a {elecion}, debes seleccionar un cargo"
+msgstr "Si indicás que el candidato se presenta a {election}, debes seleccionar un cargo"
 
 #: candidates/forms.py:171
 #, python-brace-format
