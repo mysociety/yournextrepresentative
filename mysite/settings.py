@@ -13,11 +13,11 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, LANGUAGES
 from django.utils.translation import to_locale, ugettext_lazy as _
 from collections import defaultdict
 import importlib
-from os.path import dirname, exists, join
+from os.path import dirname, exists, join, realpath
 import re
 import sys
 import yaml
-BASE_DIR = dirname(dirname(__file__))
+BASE_DIR = realpath(dirname(dirname(__file__)))
 
 from .helpers import mkdir_p
 
