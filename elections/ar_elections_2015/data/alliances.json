@@ -2,51 +2,52 @@
     "Frente para la Victoria": [
         "Partido Justicialista",
         "Partido de la Victoria",
-        "Frente Grande",
-        "Intransigente",
-        "Federal",
-        "Nuevo Encuentro",
+        "Partido Frente Grande",
+        "Partido Intransigente",
+        "Partido Federal",
+        "### Nuevo Encuentro",
         "Kolina",
-        "Movimiento Evita",
-        "Humanista",
-        "Hacer por el Progreso Social",
-        "FORJA",
-        "Por la Soberanía Popular",
-        "Solidario y EDDE"
+        "### Movimiento Evita",
+        "Partido Humanista",
+        "### Hacer por el Progreso Social",
+        "Partido de la Concertaci\u00f3n FORJA",
+        "Partido por la Soberan\u00eda Popular",
+        "Partido Solidario"
+        "### EDDE"
     ],
     "Cambiemos": [
-        "PRO",
-        "UCR",
+        "PRO-Propuesta Republicana",
+        "Uni\u00f3n C\u00edvica Radical",
         "Partido Fe",
-        "Demócrata Progresista",
-        "Conservador Popular y el Partido del Diálogo"
+        "Partido Dem\u00f3crata Progresista",
+        "Partido Conservador Popular",
+        "Partido del Dialogo"
     ],
     "Una Nueva Alternativa (UNA)": [
-        "Unión Popular",
-        "MID",
-        "Demócrata Cristiano",
-        "Unión por Córdoba",
-        "Partido Nacionalista Constitucional (PNC)-UNIR"
+        "Uni\u00f3n Popular",
+        "### MID",
+        "Partido Dem\u00f3crata Cristiano",
+        "### Unión por Córdoba",
+        "Partido Nacionalista Constitucional UNIR"
     ],
     "Progresistas": [
         "GEN",
-        "Libres del Sur",
+        "Movimiento Libres del Sur",
         "Partido Socialista",
-        "Socialista Auténtico",
-        "Movimiento Polo Social de Chubut"
+        "Partido Socialista Aut\u00e9ntico",
+        "### Movimiento Polo Social de Chubut"
     ],
     "Frente de Izquierda y los Trabajadores": [
         "Partido Obrero",
-        "PTS",
-        "Izquierda Socialista"
+        "Partido de los Trabajadores Socialistas",
+        "### Izquierda Socialista"
     ],
     "Frente Popular": [
-        "Unidad Popular",
-        "Partido del Trabajo y el Pueblo"
+        "Instrumento Electoral por la Unidad Popular",
+        "Partido del Trabajo y del Pueblo"
     ]
     "Compromiso Federal": [
         "Es Posible",
-        "Movimiento Independiente de Jubilados y Desocupados (MIJD)"
+        "### Movimiento Independiente de Jubilados y Desocupados (MIJD)"
     ]
 }
-
