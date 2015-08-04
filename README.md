@@ -12,9 +12,9 @@ You can find a list of known issues to work on here:
 
 * https://github.com/mysociety/yournextrepresentative/issues
 
-These are prioritized in Huboard:
+These are prioritized in Waffle:
 
-* https://huboard.com/mysociety/yournextrepresentative
+* https://waffle.io/mysociety/yournextrepresentative
 
 ## Getting a development version running:
 
