@@ -8,17 +8,19 @@ from django_webtest import WebTest
 
 from candidates.models import PersonRedirect
 from .auth import TestUserMixin
-from .fake_popit import FakePersonCollection
+from .fake_popit import FakePersonCollection, fake_mp_post_search_results
 
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
 
 
 @patch('candidates.popit.PopIt')
+@patch('candidates.popit.requests')
 class TestMergePeopleView(TestUserMixin, WebTest):
 
-    def test_merge_disallowed_no_form(self, mock_popit):
+    def test_merge_disallowed_no_form(self, mock_requests, mock_popit):
         mock_popit.return_value.persons = FakePersonCollection
+        mock_requests.get.side_effect = fake_mp_post_search_results
         response = self.app.get('/person/2009/update', user=self.user)
         self.assertNotIn('person-merge', response.forms)
 
@@ -26,9 +28,11 @@ class TestMergePeopleView(TestUserMixin, WebTest):
     def test_merge_two_people_disallowed(
             self,
             mocked_put,
+            mock_requests,
             mock_popit,
     ):
         mock_popit.return_value.persons = FakePersonCollection
+        mock_requests.get.side_effect = fake_mp_post_search_results
         # Get the update page for the person just to get the CSRF token:
         response = self.app.get('/person/2009/update', user=self.user)
         csrftoken = self.app.cookies['csrftoken']
@@ -54,9 +58,11 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             mock_get_current_timestamp,
             mocked_delete,
             mocked_put,
+            mock_requests,
             mock_popit
     ):
         mock_popit.return_value.persons = FakePersonCollection
+        mock_requests.get.side_effect = fake_mp_post_search_results
         mock_get_current_timestamp.return_value = example_timestamp
         mock_create_version_id.return_value = example_version_id
 
