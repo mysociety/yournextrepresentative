@@ -251,6 +251,91 @@ class TestMergePeopleView(TestUserMixin, WebTest):
                         },
                         "email": "tessa.jowell@example.com"
                     }
+                },
+                {
+                    "data": {
+                        "birth_date": None,
+                        "email": "shane@gn.apc.org",
+                        "facebook_page_url": "",
+                        "facebook_personal_url": "",
+                        "gender": "male",
+                        "homepage_url": "",
+                        "honorific_prefix": "",
+                        "honorific_suffix": "",
+                        "id": "2007",
+                        "identifiers": [
+                            {
+                                "id": "547786cc737edc5252ce5af1",
+                                "identifier": "2961",
+                                "scheme": "yournextmp-candidate"
+                            }
+                        ],
+                        "image": None,
+                        "linkedin_url": "",
+                        "name": "Shane Collins",
+                        "other_names": [],
+                        "party_memberships": {
+                            "2010": {
+                                "id": "party:63",
+                                "name": "Green Party"
+                            }
+                        },
+                        "party_ppc_page_url": "",
+                        "proxy_image": None,
+                        "standing_in": {
+                            "2010": {
+                                "mapit_url": "http://mapit.mysociety.org/area/65808",
+                                "name": "Dulwich and West Norwood",
+                                "post_id": "65808"
+                            },
+                            "2015": None
+                        },
+                        "twitter_username": "",
+                        "wikipedia_url": ""
+                    },
+                    "information_source": "http://www.lambeth.gov.uk/sites/default/files/ec-dulwich-and-west-norwood-candidates-and-notice-of-poll-2015.pdf",
+                    "timestamp": "2015-04-09T20:32:09.237610",
+                    "username": "JPCarrington",
+                    "version_id": "274e50504df330e4"
+                },
+                {
+                    "data": {
+                        "birth_date": None,
+                        "email": "shane@gn.apc.org",
+                        "facebook_page_url": None,
+                        "facebook_personal_url": None,
+                        "gender": "male",
+                        "homepage_url": None,
+                        "id": "2007",
+                        "identifiers": [
+                            {
+                                "identifier": "2961",
+                                "scheme": "yournextmp-candidate"
+                            }
+                        ],
+                        "name": "Shane Collins",
+                        "party_memberships": {
+                            "2010": {
+                                "id": "party:63",
+                                "name": "Green Party"
+                            }
+                        },
+                        "party_ppc_page_url": None,
+                        "phone": "07939 196612",
+                        "slug": "shane-collins",
+                        "standing_in": {
+                            "2010": {
+                                "mapit_url": "http://mapit.mysociety.org/area/65808",
+                                "name": "Dulwich and West Norwood",
+                                "post_id": "65808"
+                            }
+                        },
+                        "twitter_username": None,
+                        "wikipedia_url": None
+                    },
+                    "information_source": "Imported from YourNextMP data from 2010",
+                    "timestamp": "2014-11-21T18:16:47.670167",
+                    "version_id": "68a452284d95d9ab"
                 }
             ]
         }

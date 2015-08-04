@@ -188,7 +188,7 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             PopItPerson.create_from_popit(self.api, popit_id)
             for popit_id in (primary_person_id, secondary_person_id)
         ]
-        # Merge them (which will include a merged versions array):
+        # Merge the reduced JSON representations:
         merged_person = merge_popit_people(
             primary_person.as_reduced_json(),
             secondary_person.as_reduced_json(),
@@ -198,6 +198,9 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             self.request, _('After merging person {0}').format(secondary_person_id)
         )
         primary_person.update_from_reduced_json(merged_person)
+        # Make sure the secondary person's version history is appended, so it
+        # isn't lost.
+        primary_person.versions += secondary_person.versions
         primary_person.record_version(change_metadata)
         primary_person.save_to_popit(self.api, self.request.user)
         # Now we delete the old person:
