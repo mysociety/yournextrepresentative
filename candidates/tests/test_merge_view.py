@@ -108,6 +108,7 @@ class TestMergePeopleView(TestUserMixin, WebTest):
                     "scheme": "yournextmp-candidate"
                 }
             ],
+            "images": [],
             "links": [],
             "name": "Tessa Jowell",
             "phone": "02086931826",

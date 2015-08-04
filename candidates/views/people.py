@@ -198,6 +198,10 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             self.request, _('After merging person {0}').format(secondary_person_id)
         )
         primary_person.update_from_reduced_json(merged_person)
+        # Save any images from the secondary person (but make them later in
+        # the images array) - FIXME: doesn't work properly, see commit message
+        new_images = primary_person.images + secondary_person.images
+        primary_person.popit_data['images'] = new_images
         primary_person.record_version(change_metadata)
         primary_person.save_to_popit(self.api, self.request.user)
         # Now we delete the old person:
