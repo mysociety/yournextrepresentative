@@ -71,7 +71,7 @@ ELECTIONS = {
         'mapit_types': ['NAT'], # The national level...
         'mapit_generation': 1,
         # There's only one such post:
-        'post_id_format': 'pres',
+        'post_id_format': 'presidente',
     },
 }
 
