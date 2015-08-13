@@ -13,3 +13,5 @@
 /conf/httpd.conf
 /conf/httpd.conf.deployed
 /mysite/local_settings.py
+.DS_Store
+
