@@ -3,16 +3,16 @@
 $color-orange: #f97d3d;
 $color-red: #c55e59;
 $color-gold: #ba9f50;
-$color-blue: #181818;
-$color-darker-grey: #1a1a1a;
-$color-middle-grey: #333333;
-$color-pale-grey: #999999;
+$color-blue: #085184;
+$color-cyan: #029db9;
+$color-teal: #09a691;
+$color-offwhite: #ece7e1;
 $color-cream: #e4dfdb;
 $color-yellow: #fdf2d5;
 
-$header-background-color: $color-middle-grey;
-$body-background-color: mix($color-pale-grey, #fff, 60%);
-$footer-text-color: mix($color-pale-grey, #000, 60%);
+$header-background-color: $color-teal;
+$body-background-color: mix($color-offwhite, #fff, 60%);
+$footer-text-color: mix($color-offwhite, #000, 60%);
 $content-background-color: #fff;
 
 $muted-text-color: darken($color-cream, 20%);
@@ -21,7 +21,7 @@ $message-background-color: #FDF2D5; // lighter version of $color-gold
 $message-border-color: lighten($color-gold, 30%);
 
 $highlight-background-color: $color-yellow;
-$information-background-color: mix($color-darker-grey, #fff, 15%);
+$information-background-color: mix($color-cyan, #fff, 15%);
 $danger-background-color: mix($color-red, #fff, 15%);
 
 $confirmation-background-color: $color-yellow;
@@ -37,11 +37,11 @@ $not-standing-candidate-status-color: $color-red;
 
 $homepage-description-background-color: $body-background-color;
 $homepage-description-text-color: #887; // dark desaturated browny-grey
-$homepage-activity-color: $color-darker-grey;
+$homepage-activity-color: $color-cyan;
 $homepage-leaderboard-color: $color-gold;
 
 // Override Foundation variables here
-$primary-color: $color-darker-grey;
+$primary-color: $color-cyan;
 $secondary-color: $color-cream;
 $button-tny: rem-calc(6);
 $button-sml: rem-calc(8);
