@@ -1,4 +1,5 @@
 {% extends 'generic_base.html' %}
+{% load i18n %}
 
 {% block analytics %}
   {% if settings.GOOGLE_ANALYTICS_ACCOUNT %}
@@ -15,4 +16,25 @@
 
     </script>
   {% endif %}
+{% endblock %}
+
+{% block footer %}
+      <div class="footer__links">
+        <p><a href="{% url 'help-api' %}">{% trans "Open data API" %}</a>
+            &middot; <a href="{% url 'help-about' %}">{% trans "About" %}</a>
+            &middot; <a href="https://github.com/mysociety/yournextrepresentative/issues">{% trans "Issue tracker" %}</a>
+            &middot; <a href="{% url 'help-privacy' %}">{% trans "Privacy policy" %}</a></p>
+      </div>
+      <div class="footer__bylines">
+        <p>{% blocktrans trimmed %}
+          Supported by <a href="https://fullfact.org">Full Fact</a>,
+          <a href="http://unlockdemocracy.org.uk">Unlock Democracy</a>, and
+          <a href="https://mysociety.org">mySociety</a>.
+          {% endblocktrans %}</p>
+        <p>{% blocktrans trimmed %}
+          Built by <a href="https://democracyclub.org.uk/">
+          <img src="{{ logo_url }}" %} alt="Democracy Club" class="dc-logo"></a>
+          {% endblocktrans %}
+        </p>
+      </div>
 {% endblock %}
