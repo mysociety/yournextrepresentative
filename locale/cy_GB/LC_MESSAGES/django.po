@@ -1,14 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
+# Gareth Morlais, 2015
 # Gareth Morlais, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-23 20:47+0100\n"
+"POT-Creation-Date: 2015-08-18 13:28-0300\n"
 "PO-Revision-Date: 2015-08-11 11:31+0000\n"
 "Last-Translator: Gareth Morlais\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
@@ -503,11 +504,11 @@ msgstr ""
 msgid "There was no previous version of this person"
 msgstr ""
 
-#: candidates/models/popit.py:1204
+#: candidates/models/popit.py:1202
 msgid "Can't set_elected of a candidate with no standing_in"
 msgstr ""
 
-#: candidates/models/popit.py:1207
+#: candidates/models/popit.py:1205
 #, python-brace-format
 msgid "No standing_in information for {0}"
 msgstr ""
@@ -1236,7 +1237,7 @@ msgstr ""
 #: elections/uk_general_election_2015/templates/candidates/finder.html:7
 #: elections/uk_general_election_2015/templates/candidates/finder.html:13
 #: elections/uk_general_election_2015/templates/candidates/finder.html:20
-#: mysite/templates/generic_base.html:54
+#: mysite/templates/generic_base.html:67
 msgid "YourNextMP"
 msgstr ""
 
@@ -1863,8 +1864,8 @@ msgstr ""
 
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
-#: elections/ar_elections_2015/templates/base.html:119
-#: mysite/templates/generic_base.html:106
+#: elections/ar_elections_2015/templates/base.html:132
+#: mysite/templates/generic_base.html:119
 msgid "Privacy policy"
 msgstr ""
 
@@ -2055,11 +2056,11 @@ msgstr ""
 msgid "Attempt to edit a candidacy in a locked constituency"
 msgstr ""
 
-#: candidates/views/constituencies.py:199
+#: candidates/views/constituencies.py:202
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr ""
 
-#: candidates/views/constituencies.py:342
+#: candidates/views/constituencies.py:345
 msgid "Result recorded in error, retracting"
 msgstr ""
 
@@ -2128,59 +2129,59 @@ msgstr ""
 msgid "After merging person {0}"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:32
+#: elections/ar_elections_2015/templates/base.html:35
 msgid "Yo Quiero Saber"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:57
-#: elections/ar_elections_2015/templates/base.html:118
-#: mysite/templates/generic_base.html:55
-#: mysite/templates/generic_base.html:104
+#: elections/ar_elections_2015/templates/base.html:70
+#: elections/ar_elections_2015/templates/base.html:131
+#: mysite/templates/generic_base.html:68
+#: mysite/templates/generic_base.html:117
 msgid "About"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:58
+#: elections/ar_elections_2015/templates/base.html:71
 msgid "Provinces"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:68
-#: mysite/templates/generic_base.html:63
+#: elections/ar_elections_2015/templates/base.html:81
+#: mysite/templates/generic_base.html:76
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:70
-#: mysite/templates/generic_base.html:64
+#: elections/ar_elections_2015/templates/base.html:83
+#: mysite/templates/generic_base.html:77
 msgid "Sign out"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:73
-#: mysite/templates/generic_base.html:68
+#: elections/ar_elections_2015/templates/base.html:86
+#: mysite/templates/generic_base.html:81
 msgid "Sign in to edit"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:117
-#: mysite/templates/generic_base.html:103
+#: elections/ar_elections_2015/templates/base.html:130
+#: mysite/templates/generic_base.html:116
 msgid "Open data API"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:122
+#: elections/ar_elections_2015/templates/base.html:135
 msgid "Made by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:129
+#: elections/ar_elections_2015/templates/base.html:142
 msgid "Partners"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:136
+#: elections/ar_elections_2015/templates/base.html:149
 msgid "Supported by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:142
+#: elections/ar_elections_2015/templates/base.html:155
 msgid "Developed by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:149
+#: elections/ar_elections_2015/templates/base.html:162
 msgid "Show all the collaborators and volunteers"
 msgstr ""
 
@@ -2526,58 +2527,58 @@ msgstr "Ymatebwch i'r ebost hwn os am drafod ymhellach, neu gallwch lanlwytho ll
 msgid "For administrators' use: %(photo_review_url)s"
 msgstr ""
 
-#: moderation_queue/views.py:230
+#: moderation_queue/views.py:232
 msgid "Approved from photo moderation queue"
 msgstr ""
 
-#: moderation_queue/views.py:286
+#: moderation_queue/views.py:288
 #, python-brace-format
 msgid ""
 "Approved a photo upload from {uploading_user} who provided the message: "
 "\"{message}\""
 msgstr ""
 
-#: moderation_queue/views.py:311
+#: moderation_queue/views.py:313
 msgid "YourNextMP image upload approved"
 msgstr ""
 
-#: moderation_queue/views.py:320
+#: moderation_queue/views.py:322
 #, python-format
 msgid "You approved a photo upload for %s"
 msgstr ""
 
-#: moderation_queue/views.py:325
+#: moderation_queue/views.py:327
 #, python-brace-format
 msgid "Rejected a photo upload from {uploading_user}"
 msgstr ""
 
-#: moderation_queue/views.py:344
+#: moderation_queue/views.py:346
 msgid "YourNextMP image moderation results"
 msgstr ""
 
-#: moderation_queue/views.py:356
+#: moderation_queue/views.py:358
 #, python-format
 msgid "You rejected a photo upload for %s"
 msgstr ""
 
-#: moderation_queue/views.py:363
+#: moderation_queue/views.py:365
 #, python-brace-format
 msgid "You left a photo upload for {0} in the queue"
 msgstr ""
 
-#: moderation_queue/views.py:370
+#: moderation_queue/views.py:372
 #, python-brace-format
 msgid ""
 "Ignored a photo upload from {uploading_user} (This usually means it was a "
 "duplicate)"
 msgstr ""
 
-#: moderation_queue/views.py:383
+#: moderation_queue/views.py:385
 #, python-brace-format
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr ""
 
-#: mysite/settings.py:363
+#: mysite/settings.py:365
 msgid ""
 "Please don't quote third-party candidate sites —\n"
 "we prefer URLs of news stories or official candidate pages."
@@ -2636,30 +2637,30 @@ msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
 msgstr ""
 
-#: mysite/templates/generic_base.html:32
+#: mysite/templates/generic_base.html:35
 msgid "YourNextMP - 2015 UK general election candidates"
 msgstr ""
 
-#: mysite/templates/generic_base.html:56
+#: mysite/templates/generic_base.html:69
 msgid "Posts"
 msgstr ""
 
-#: mysite/templates/generic_base.html:57
+#: mysite/templates/generic_base.html:70
 msgid "Numbers"
 msgstr ""
 
-#: mysite/templates/generic_base.html:105
+#: mysite/templates/generic_base.html:118
 msgid "Issue tracker"
 msgstr ""
 
-#: mysite/templates/generic_base.html:109
+#: mysite/templates/generic_base.html:122
 msgid ""
 "Supported by <a href=\"https://fullfact.org\">Full Fact</a>, <a "
 "href=\"http://unlockdemocracy.org.uk\">Unlock Democracy</a>, and <a "
 "href=\"https://mysociety.org\">mySociety</a>."
 msgstr ""
 
-#: mysite/templates/generic_base.html:115
+#: mysite/templates/generic_base.html:128
 #, python-format
 msgid ""
 "Built by <a href=\"https://democracyclub.org.uk/\"> <img "
