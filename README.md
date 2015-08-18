@@ -63,7 +63,7 @@ your local machine, using Vagrant.
 Make a new directory named after your project (for example, in the UK this was `yournextmp`; the examples below use `myproject` which you should replace with your project's name). Change into that directory and clone the repository:
 
     cd myproject
-    git clone --recursive git@github.com:mysociety/yournextrepresentative.git
+    git clone --recursive https://github.com/mysociety/yournextrepresentative
 
 Copy the example Vagrantfile to the root of your new directory:
 
