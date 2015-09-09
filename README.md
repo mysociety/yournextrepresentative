@@ -9,10 +9,10 @@ General Election.
 The PopIt project is now being deprecated, so we will be
 migrating this project (and existing sites) to use PostgreSQL as
 the primary data store. There is a
-[GitHub issue for trakcing this work](https://github.com/mysociety/yournextrepresentative/issues/500)
+[GitHub issue for tracking this work](https://github.com/mysociety/yournextrepresentative/issues/500)
 
 Since that migration is still work in progress, if you
-*urgently* need to create an YourNextRepresentative site, for
+*urgently* need to create a YourNextRepresentative site, for
 the moment it's best to still use PopIt.
 
 This is alpha software still, so please
