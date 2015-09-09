@@ -117,17 +117,13 @@ Run the development server:
 
 Now you should be able to see the site at:
 
-    http://127.0.0.1.xip.io:8000/
-
-The site `[xip.io](http://xip.io/)` is mapping onto your own `localhost`.
-This means you *can* use `http://localhost:8000` but generally `xip` will
-behave well *FIXME: why?**
+    http://localhost:8000/
 
 Go to the admin interface:
 
-    http://127.0.0.1.xip.io:8000/admin/
+    http://localhost:8000/admin/
 
-...and login with the superuser account.
+...and login with the superuser account you created earlier.
 
 If you want to create a PopIt database based on an existing live
 instance, see the "Mirror the live database into your
