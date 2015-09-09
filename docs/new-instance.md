@@ -318,6 +318,35 @@ example, in the UK General Election, there are distinct
 registers of parties for constituencies in Northern Ireland and
 Great Britain.)
 
+To create multiple party sets, you must subclass two
+classes. This should be done in `elections/*/lib.py`:
+
+1. Create a class `PartyData`, inheriting from
+   `BasePartyData`. In its `__init__` method it should, after
+   calling the superclass initializer, set `ALL_PARTY_SETS` to a
+   tuple of dicts giving the slug and name of each party set. It
+   must also override the `party_data_to_party_sets` method,
+   which should take a party data dictionary (essentially the
+   Python version of the party's Popolo JSON from
+   `all-parties-from-popit.json`) and return a list of slugs of
+   the party sets that party is in. Here are examples for the UK
+   and Argentina:
+   * https://github.com/mysociety/yournextrepresentative/blob/master/elections/uk_general_election_2015/lib.py#L11-L31
+   * https://github.com/mysociety/yournextrepresentative/blob/master/elections/ar_elections_2015/lib.py#L87-L102
+2. Create a class `AreaPostData` inheriting from
+   `BaseAreaPostData` which overrides
+   `post_id_to_party_set`. This method should take a post ID and
+   return the slug of the party set that should be used for that
+   post. Here are examples for the UK and Argentina:
+   * https://github.com/mysociety/yournextrepresentative/blob/master/elections/uk_general_election_2015/lib.py#L45-L53
+   * https://github.com/mysociety/yournextrepresentative/blob/master/elections/ar_elections_2015/lib.py#L120-L126
+
+Once you've made those updates, you'll also need to generate a
+Javascript file with data about the party sets by running the
+Django management command
+[candidates_make_party_sets_lookup](https://github.com/mysociety/yournextrepresentative/blob/master/candidates/management/commands/candidates_make_party_sets_lookup.py)
+and commit the generated `post-to-party-set.js` file.
+
 #### Post Groups
 
 Each post can be in a particular "post group"; these are only
@@ -325,4 +354,20 @@ used to group the posts on the party detail page for a
 particular election. (For example, in the UK General Election,
 it was useful to group posts on that page by whether they were
 associated with a constituency in England, Scotland, Northern
-Ireland or Wales.
+Ireland or Wales.)
+
+To create multiple post groups, you must create a class
+`AreaPostData`, inheriting from `BaseAreaPostData` and override
+these methods:
+
+* `__init__` - after calling the superclass initializer, set
+  `self.ALL_POSSIBLE_PARTY_SETS` to a list of the names of all
+  post groups. Example:
+  * https://github.com/mysociety/yournextrepresentative/blob/master/elections/uk_general_election_2015/lib.py#L36-L40
+* `area_to_post_group` - this should take area data (a MapIt
+  area data dictionary) and return the name of the post group
+  that area is associated with. Example:
+  * https://github.com/mysociety/yournextrepresentative/blob/master/elections/uk_general_election_2015/lib.py#L42-L43
+* `post_id_to_post_group` should take an election and a post ID
+  and return the name of a post group. Example:
+  * https://github.com/mysociety/yournextrepresentative/blob/master/elections/uk_general_election_2015/lib.py#L55-L60
