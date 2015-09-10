@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
@@ -21,7 +22,9 @@ class Command(PopItApiMixin, BaseCommand):
             post_data = {
                 'role': role,
                 'id': post_id,
-                'label': role + u' por ' + area['name'],
+                'label': _('{post_role} for {area_name}').format(
+                    post_role=role, area_name=area['name']
+                ),
                 'area': {
                     'name': area['name'],
                     'id': 'mapit:' + str(area['id']),
