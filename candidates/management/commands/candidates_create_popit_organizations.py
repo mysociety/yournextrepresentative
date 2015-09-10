@@ -6,7 +6,7 @@ from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
 
 class Command(PopItApiMixin, BaseCommand):
-    help = "Create the parties for the 2015 elections in Argentina"
+    help = "Create required organizations (parties / chambers) in PopIt"
 
     def handle(self, **options):
 
