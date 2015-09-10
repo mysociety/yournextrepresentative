@@ -1,3 +1,5 @@
+from optparse import make_option
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -11,7 +13,18 @@ from slumber.exceptions import HttpServerError, HttpClientError
 class Command(PopItApiMixin, BaseCommand):
     help = "Create or update the required posts in PopIt"
 
-    def handle_mapit_type(self, election, election_data, mapit_type):
+    option_list = BaseCommand.option_list + (
+        make_option(
+            '--post-label',
+            help='Override the format string used to construct the post label [default: "%default"]',
+            default=_('{post_role} for {area_name}'),
+        ),
+    )
+
+    def handle_mapit_type(self, election, election_data, mapit_type, **options):
+        post_label_format = _('{post_role} for {area_name}')
+        if options['post_label']:
+            post_label_format = options['post_label']
         mapit_tuple = (mapit_type, election_data['mapit_generation'])
         for id, area in MAPIT_DATA.areas_by_id[mapit_tuple].items():
             post_id = AREA_POST_DATA.get_post_id(
@@ -22,7 +35,7 @@ class Command(PopItApiMixin, BaseCommand):
             post_data = {
                 'role': role,
                 'id': post_id,
-                'label': _('{post_role} for {area_name}').format(
+                'label': post_label_format.format(
                     post_role=role, area_name=area['name']
                 ),
                 'area': {
@@ -38,7 +51,9 @@ class Command(PopItApiMixin, BaseCommand):
         try:
             for election, election_data in settings.ELECTIONS.items():
                 for mapit_type in election_data['mapit_types']:
-                    self.handle_mapit_type(election, election_data, mapit_type)
+                    self.handle_mapit_type(
+                        election, election_data, mapit_type, **options
+                    )
         except (HttpServerError, HttpClientError) as hse:
             print "The body of the error was:", hse.content
             raise
