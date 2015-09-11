@@ -16,7 +16,6 @@ from candidates.cache import get_post_cached, UnknownPostException
 from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 
 UNKNOWN_PARTY_ID = 'unknown'
-GOOGLE_DOC_ID = '1yme9Y9Vt876-cVR9bose3QDqF7j8hqLnWYEjO3HUqXs'
 
 def get_existing_popit_person(person_id):
     # See if this person already exists by searching for the
@@ -44,10 +43,15 @@ def get_existing_popit_person(person_id):
 class Command(BaseCommand):
     help = "Load or update St. Paul candidates from Google docs"
 
-    def handle(self, **options):
+    args = 'GOOGLE-DOC-ID'
+
+    def handle(self, google_doc_id=None, **options):
+
+        if google_doc_id is None:
+            raise CommandError('Please provide a public Google Spreadsheet ID')
 
         spreadsheet_url = 'https://docs.google.com/spreadsheets/d/{0}/pub?output=csv'\
-                              .format(GOOGLE_DOC_ID)
+                              .format(google_doc_id)
 
         candidate_list = requests.get(spreadsheet_url)
 
@@ -59,13 +63,12 @@ class Command(BaseCommand):
         for row in reader:
 
             try:
+                post_data = get_post_cached(api, 'ward-{0}'.format(row['Ward']))['result']
                 election_data = settings.ELECTIONS['council-member-2015']
-                ocd_division = election_data['post_id_format'].format(area_id=row['Ward'])
-                post_data = get_post_cached(api, ocd_division)['result']
                 election_data['id'] = 'council-member-2015'
             except UnknownPostException:
+                post_data = get_post_cached(api, 'city-0')['result']
                 election_data = settings.ELECTIONS['school-board-2015']
-                post_data = get_post_cached(api, election_data['post_id_format'])['result']
                 election_data['id'] = 'school-board-2015'
 
             person_id = slugify(row['Name'])
@@ -73,7 +76,7 @@ class Command(BaseCommand):
             person = get_existing_popit_person(person_id)
 
             if person:
-                print("Found an existing person:", row['Name'])
+                print("Found an existing person:", person.get_absolute_url())
             else:
                 print("No existing person, creating a new one:", row['Name'])
                 person = PopItPerson()
@@ -86,9 +89,6 @@ class Command(BaseCommand):
             #     person.birth_date = str(birth_date)
             # else:
             #     person.birth_date = None
-
-            person.email = row['Campaign Email']
-
             standing_in_election = {
                 'post_id': post_data['id'],
                 'name': AREA_POST_DATA.shorten_post_label(
@@ -101,26 +101,12 @@ class Command(BaseCommand):
             person.standing_in = {
                 election_data['id']: standing_in_election
             }
-
-            if 'dfl' in row['Party'].lower():
-                party_id = 'party:101'
-            elif 'green' in row['Party'].lower():
-                party_id = 'party:201'
-            elif 'independence' in row['Party'].lower():
-                party_id = 'party:301'
-            else:
-                party_id = 'party:401'
-
-
-            party_name = PARTY_DATA.party_id_to_name[party_id]
-
             person.party_memberships = {
                 election_data['id']: {
-                    'id': party_id,
-                    'name': party_name,
+                    'id': UNKNOWN_PARTY_ID,
+                    'name': 'Unknown',
                 }
             }
-
             person.set_identifier('import-id', person_id)
             change_metadata = get_change_metadata(
                 None,
