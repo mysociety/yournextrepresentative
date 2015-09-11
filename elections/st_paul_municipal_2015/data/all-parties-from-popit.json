@@ -58,5 +58,20 @@
         "posts": [],
         "slug": "independent",
         "territory": "Global"
+    },
+    {
+        "classification": "Party",
+        "contact_details": [],
+        "dissolution_date": "9999-12-31",
+        "founding_date": "1900-01-01",
+        "id": "party:401",
+        "identifiers": [],
+        "links": [],
+        "memberships": [],
+        "name": "Unknown",
+        "other_names": [],
+        "posts": [],
+        "slug": "unknown",
+        "territory": "Global"
     }
 ]

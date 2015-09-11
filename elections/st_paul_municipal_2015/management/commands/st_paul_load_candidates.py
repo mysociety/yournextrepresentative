@@ -16,6 +16,7 @@ from candidates.cache import get_post_cached, UnknownPostException
 from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 
 UNKNOWN_PARTY_ID = 'unknown'
+GOOGLE_DOC_ID = '1yme9Y9Vt876-cVR9bose3QDqF7j8hqLnWYEjO3HUqXs'
 
 def get_existing_popit_person(person_id):
     # See if this person already exists by searching for the
@@ -43,15 +44,10 @@ def get_existing_popit_person(person_id):
 class Command(BaseCommand):
     help = "Load or update St. Paul candidates from Google docs"
 
-    args = 'GOOGLE-DOC-ID'
-
-    def handle(self, google_doc_id=None, **options):
-
-        if google_doc_id is None:
-            raise CommandError('Please provide a public Google Spreadsheet ID')
+    def handle(self, **options):
 
         spreadsheet_url = 'https://docs.google.com/spreadsheets/d/{0}/pub?output=csv'\
-                              .format(google_doc_id)
+                              .format(GOOGLE_DOC_ID)
 
         candidate_list = requests.get(spreadsheet_url)
 
@@ -76,7 +72,7 @@ class Command(BaseCommand):
             person = get_existing_popit_person(person_id)
 
             if person:
-                print("Found an existing person:", person.get_absolute_url())
+                print("Found an existing person:", row['Name'])
             else:
                 print("No existing person, creating a new one:", row['Name'])
                 person = PopItPerson()
@@ -89,6 +85,8 @@ class Command(BaseCommand):
             #     person.birth_date = str(birth_date)
             # else:
             #     person.birth_date = None
+
+
             standing_in_election = {
                 'post_id': post_data['id'],
                 'name': AREA_POST_DATA.shorten_post_label(
@@ -101,10 +99,22 @@ class Command(BaseCommand):
             person.standing_in = {
                 election_data['id']: standing_in_election
             }
+
+            if 'dfl' in row['Party'].lower():
+                party_id = 'party:101'
+            elif 'green' in row['Party'].lower():
+                party_id = 'party:201'
+            elif 'independence' in row['Party'].lower():
+                party_id = 'party:301'
+            else:
+                party_id = 'party:401'
+
+            party_name = PARTY_DATA.party_id_to_name[party_id]
+
             person.party_memberships = {
                 election_data['id']: {
-                    'id': UNKNOWN_PARTY_ID,
-                    'name': 'Unknown',
+                    'id': party_id,
+                    'name': party_name,
                 }
             }
             person.set_identifier('import-id', person_id)
