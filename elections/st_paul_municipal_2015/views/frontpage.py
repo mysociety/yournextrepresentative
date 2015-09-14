@@ -1,74 +1,65 @@
-from django.conf import settings
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_control
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import FormView
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
-from candidates.cache import get_post_cached
-from candidates.popit import PopItApiMixin
-from candidates.views.helpers import get_redirect_to_post
-from candidates.views.mixins import ContributorsMixin
+from candidates.views import AddressFinderView
+from candidates.forms import AddressForm
 
-from ..forms import (PostcodeForm, ConstituencyForm)
-from ..mapit import get_wmc_from_postcode
+from cached_counts.models import CachedCount
 
+from pygeocoder import Geocoder, GeocoderError
+import requests
 
-def get_current_election():
-    current_elections = [t[0] for t in settings.ELECTIONS_CURRENT]
-    if len(current_elections) != 1:
-        message = "There should be exactly one current election in " + \
-            "uk_general_election_2015, not {0}"
-        raise Exception(message.format(len(current_elections)))
-    return current_elections[0]
+class StPaulAddressForm(AddressForm):
 
+    def clean_address(self):
+        address = self.cleaned_data['address']
+        check_address(address)
+        return address
 
-class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView):
-    template_name = 'candidates/finder.html'
-    form_class = PostcodeForm
+class StPaulAddressFinder(AddressFinderView):
 
-    @method_decorator(cache_control(max_age=(60 * 10)))
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(ConstituencyPostcodeFinderView, self).dispatch(*args, **kwargs)
+    form_class = StPaulAddressForm
+    country = 'United States'
 
     def form_valid(self, form):
-        wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        post_data = get_post_cached(self.api, wmc)['result']
-        return get_redirect_to_post(get_current_election(), post_data)
+        form.cleaned_data['address']
+        resolved_address = check_address(
+            form.cleaned_data['address'],
+            country=self.country,
+        )
+        return HttpResponseRedirect(
+            reverse('areas-view', kwargs=resolved_address)
+        )
 
     def get_context_data(self, **kwargs):
-        context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
-        context['postcode_form'] = kwargs.get('form') or PostcodeForm()
-        context['constituency_form'] = ConstituencyForm()
-        context['show_postcode_form'] = True
-        context['show_name_form'] = False
-        context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
-        context['recent_actions'] = self.get_recent_changes_queryset()[:5]
-        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
+        context = super(StPaulAddressFinder, self).get_context_data(**kwargs)
+        context['needing_attention'] = \
+            CachedCount.get_attention_needed_queryset()[:5]
         return context
 
+def check_address(address_string, country=None):
+    tidied_address = address_string.strip()
 
-class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
-    template_name = 'candidates/finder.html'
-    form_class = ConstituencyForm
+    if country is not None:
+        tidied_address += ', ' + country
 
-    @method_decorator(cache_control(max_age=(60 * 10)))
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
+    try:
+        location_results = Geocoder.geocode(tidied_address)
+    except GeocoderError:
+        message = _(u"Failed to find a location for '{0}'")
+        raise ValidationError(message.format(tidied_address))
 
-    def form_valid(self, form):
-        post_id = form.cleaned_data['constituency']
-        post_data = get_post_cached(self.api, post_id)['result']
-        return get_redirect_to_post(get_current_election(), post_data)
+    lat, lon = location_results[0].coordinates
 
-    def get_context_data(self, **kwargs):
-        context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
-        context['postcode_form'] = PostcodeForm()
-        context['constituency_form'] = kwargs.get('form') or ConstituencyForm()
-        context['show_postcode_form'] = False
-        context['show_name_form'] = True
-        context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
-        context['recent_actions'] = self.get_recent_changes_queryset()[:5]
-        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
-        return context
+    # TODO: This is where the p in p junk needs to happen
+    # types_and_areas = ','.join(
+    #     '{0}-{1}'.format(a[1]['type'],a[0]) for a in
+    #     sorted_mapit_results
+    # )
+    # area_slugs = [slugify(a[1]['name']) for a in sorted_mapit_results]
+    # ignored_slug = '-'.join(area_slugs)
+
+    return {
+        'type_and_area_ids': types_and_areas,
+        'ignored_slug': ignored_slug,
+    }
