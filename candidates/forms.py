@@ -25,10 +25,6 @@ class AddressForm(forms.Form):
         check_address(address)
         return address
 
-    def tidy_address(self, address):
-        '''This is here so you can override it to add, say, ", Argentina"'''
-        return address
-
 
 class BaseCandidacyForm(forms.Form):
     person_id = forms.CharField(
