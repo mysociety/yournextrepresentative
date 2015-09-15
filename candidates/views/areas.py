@@ -31,7 +31,7 @@ class AreasView(PopItApiMixin, TemplateView):
         try:
             view = super(AreasView, self).get(request, *args, **kwargs)
         except UnknownPostException:
-            message = _("Malformed type and area: '{0}'")
+            message = _("Unknown post for types and areas: '{0}'")
             return HttpResponseBadRequest(message.format(kwargs['type_and_area_ids']))
         return view
 
