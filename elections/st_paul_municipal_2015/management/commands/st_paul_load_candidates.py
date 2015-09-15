@@ -111,14 +111,13 @@ class Command(BaseCommand):
 
             party_name = PARTY_DATA.party_id_to_name[party_id]
 
-            print(party_id)
-
             person.party_memberships = {
                 election_data['id']: {
                     'id': party_id,
                     'name': party_name,
                 }
             }
+
             person.set_identifier('import-id', person_id)
             change_metadata = get_change_metadata(
                 None,
