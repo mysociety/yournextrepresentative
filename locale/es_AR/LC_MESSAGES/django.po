@@ -433,11 +433,6 @@ msgstr "{0} no era un ID de cargo conocido"
 msgid "Source of information that they won"
 msgstr "Fuente de información de que ganaron"
 
-#: candidates/management/commands/candidates_create_popit_posts.py:25
-#, python-brace-format
-msgid "{post_role} for {area_name}"
-msgstr "{post_role} por {area_name}"
-
 #: candidates/middleware.py:42
 #, python-brace-format
 msgid ""
