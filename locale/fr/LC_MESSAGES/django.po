@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 13:28-0300\n"
-"PO-Revision-Date: 2015-06-18 10:05+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-09-16 14:24+0100\n"
+"PO-Revision-Date: 2015-09-16 13:25+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -429,6 +429,12 @@ msgstr ""
 msgid "Source of information that they won"
 msgstr ""
 
+#: candidates/management/commands/candidates_create_popit_posts.py:20
+#: candidates/management/commands/candidates_create_popit_posts.py:25
+#, python-brace-format
+msgid "{post_role} for {area_name}"
+msgstr ""
+
 #: candidates/middleware.py:42
 #, python-brace-format
 msgid ""
@@ -443,17 +449,17 @@ msgstr ""
 msgid "Disallowed YourNextMP update for checking"
 msgstr ""
 
-#: candidates/models/address.py:20
+#: candidates/models/address.py:22
 #, python-brace-format
 msgid "Failed to find a location for '{0}'"
 msgstr ""
 
-#: candidates/models/address.py:35
+#: candidates/models/address.py:37
 #, python-brace-format
 msgid "The area lookup returned an error: '{error}'"
 msgstr ""
 
-#: candidates/models/address.py:42
+#: candidates/models/address.py:44
 #, python-brace-format
 msgid "The address '{0}' appears to be outside the area this site knows about"
 msgstr ""
@@ -2029,9 +2035,14 @@ msgstr ""
 msgid "Not standing"
 msgstr ""
 
-#: candidates/views/areas.py:28 candidates/views/areas.py:34
+#: candidates/views/areas.py:28
 #, python-brace-format
 msgid "Malformed type and area: '{0}'"
+msgstr ""
+
+#: candidates/views/areas.py:34
+#, python-brace-format
+msgid "Unknown post for types and areas: '{0}'"
 msgstr ""
 
 #: candidates/views/areas.py:91
@@ -2572,7 +2583,7 @@ msgstr ""
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr ""
 
-#: mysite/settings.py:365
+#: mysite/settings.py:366
 msgid ""
 "Please don't quote third-party candidate sites —\n"
 "we prefer URLs of news stories or official candidate pages."

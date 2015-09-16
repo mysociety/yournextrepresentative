@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 13:28-0300\n"
-"PO-Revision-Date: 2015-07-26 03:15+0000\n"
-"Last-Translator: Martín Szyszlican <martinsz@gmail.com>\n"
+"POT-Creation-Date: 2015-09-16 14:24+0100\n"
+"PO-Revision-Date: 2015-09-16 13:25+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/mysociety/yournextmp/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -433,6 +433,12 @@ msgstr "{0} no era un ID de cargo conocido"
 msgid "Source of information that they won"
 msgstr "Fuente de información de que ganaron"
 
+#: candidates/management/commands/candidates_create_popit_posts.py:20
+#: candidates/management/commands/candidates_create_popit_posts.py:25
+#, python-brace-format
+msgid "{post_role} for {area_name}"
+msgstr ""
+
 #: candidates/middleware.py:42
 #, python-brace-format
 msgid ""
@@ -447,17 +453,17 @@ msgstr "Como precaución, esta actualización fue bloqueada:\n\n{0}\n\nSi esta a
 msgid "Disallowed YourNextMP update for checking"
 msgstr "Denegar actualización YourNextMP para revisar"
 
-#: candidates/models/address.py:20
+#: candidates/models/address.py:22
 #, python-brace-format
 msgid "Failed to find a location for '{0}'"
 msgstr "Disculpas, no se pudo encontrar la ubicación para '{0}'"
 
-#: candidates/models/address.py:35
+#: candidates/models/address.py:37
 #, python-brace-format
 msgid "The area lookup returned an error: '{error}'"
 msgstr "Disculpas, la búsqueda de ubicación dió un error: '{error}'"
 
-#: candidates/models/address.py:42
+#: candidates/models/address.py:44
 #, python-brace-format
 msgid "The address '{0}' appears to be outside the area this site knows about"
 msgstr "Disculpas, la dirección '{0}' parece estar fuera del área que este sitio conoce."
@@ -2033,10 +2039,15 @@ msgstr "No se presentó"
 msgid "Not standing"
 msgstr "No se presenta"
 
-#: candidates/views/areas.py:28 candidates/views/areas.py:34
+#: candidates/views/areas.py:28
 #, python-brace-format
 msgid "Malformed type and area: '{0}'"
 msgstr "Disculpas, ocurrió un error. Malformed type and area {0}"
+
+#: candidates/views/areas.py:34
+#, python-brace-format
+msgid "Unknown post for types and areas: '{0}'"
+msgstr ""
 
 #: candidates/views/areas.py:91
 #, python-brace-format
@@ -2576,7 +2587,7 @@ msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
 
-#: mysite/settings.py:365
+#: mysite/settings.py:366
 msgid ""
 "Please don't quote third-party candidate sites —\n"
 "we prefer URLs of news stories or official candidate pages."

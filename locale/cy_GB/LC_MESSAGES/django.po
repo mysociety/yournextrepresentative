@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-18 13:28-0300\n"
-"PO-Revision-Date: 2015-09-14 15:04+0000\n"
-"Last-Translator: Gareth Morlais\n"
+"POT-Creation-Date: 2015-09-16 14:24+0100\n"
+"PO-Revision-Date: 2015-09-16 13:25+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -355,7 +355,7 @@ msgstr "Rhaid i'r enw defnyddiwr Twitter cynnwys llythrennau, rhifau a thanlinel
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
-msgstr "Wrth nodi bod yr ymgeisydd yn sefyll yn {etholiad}, rhaid i chi ddewis etholaeth"
+msgstr "Wrth nodi bod yr ymgeisydd yn sefyll yn {election}, rhaid i chi ddewis etholaeth"
 
 #: candidates/forms.py:171
 #, python-brace-format
@@ -431,6 +431,12 @@ msgstr "Nid oedd {0} yn gyfeirnod (ID) etholaeth sy'n hysbys i ni"
 msgid "Source of information that they won"
 msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 
+#: candidates/management/commands/candidates_create_popit_posts.py:20
+#: candidates/management/commands/candidates_create_popit_posts.py:25
+#, python-brace-format
+msgid "{post_role} for {area_name}"
+msgstr ""
+
 #: candidates/middleware.py:42
 #, python-brace-format
 msgid ""
@@ -445,17 +451,17 @@ msgstr "Rhag ofn, rhwystwyd diweddariad\n\n{0}\n\nOs yw'r diweddariad yn briodol
 msgid "Disallowed YourNextMP update for checking"
 msgstr "Gwaharddwyd diweddariad YourNextMP nes iddo gael ei wirio"
 
-#: candidates/models/address.py:20
+#: candidates/models/address.py:22
 #, python-brace-format
 msgid "Failed to find a location for '{0}'"
 msgstr "Wedi methu dod o hyd i leoliad ar gyfer '{0}'"
 
-#: candidates/models/address.py:35
+#: candidates/models/address.py:37
 #, python-brace-format
 msgid "The area lookup returned an error: '{error}'"
 msgstr "Dychwelodd yr archwiliad am ardal y gwall: '{error}''"
 
-#: candidates/models/address.py:42
+#: candidates/models/address.py:44
 #, python-brace-format
 msgid "The address '{0}' appears to be outside the area this site knows about"
 msgstr "Ymddengys bod y cyfeiriad '{0}' tu allan i'r filltir sgwâr mae'r safle hwn yn adnabod"
@@ -2033,10 +2039,15 @@ msgstr "Heb sefyll"
 msgid "Not standing"
 msgstr "Dim yn sefyll"
 
-#: candidates/views/areas.py:28 candidates/views/areas.py:34
+#: candidates/views/areas.py:28
 #, python-brace-format
 msgid "Malformed type and area: '{0}'"
 msgstr "Gwall gyda math ac ardal: '{0}'"
+
+#: candidates/views/areas.py:34
+#, python-brace-format
+msgid "Unknown post for types and areas: '{0}'"
+msgstr ""
 
 #: candidates/views/areas.py:91
 #, python-brace-format
@@ -2578,7 +2589,7 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
 
-#: mysite/settings.py:365
+#: mysite/settings.py:366
 msgid ""
 "Please don't quote third-party candidate sites —\n"
 "we prefer URLs of news stories or official candidate pages."
