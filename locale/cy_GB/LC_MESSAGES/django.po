@@ -239,7 +239,7 @@ msgstr "- etholwyd yn {election}"
 #: candidates/diffs.py:84
 #, python-brace-format
 msgid "was not elected in the {election}"
-msgstr "- ni etholwyd yn {etholiad}"
+msgstr "- ni etholwyd yn {election}"
 
 #: candidates/diffs.py:121
 msgid " and "
