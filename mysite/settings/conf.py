@@ -51,6 +51,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         if exists(join(locale_paths[0], to_locale(l[0])))
     ]
     languages.append(('cy-gb', 'Welsh'))
+    languages.append(('es-cr', 'Costa Rican Spanish'))
 
     # Make sure the MEDIA_ROOT directory actually exists:
     media_root = conf.get('MEDIA_ROOT') or join(BASE_DIR, 'media')
