@@ -230,6 +230,7 @@ LOCALE_PATHS = [
 # this is generally desirable (e.g. so someone can see YourNextMP in Spanish
 # if their browser asks for Spanish).
 LANGUAGES = [l for l in LANGUAGES if exists(join(LOCALE_PATHS[0], to_locale(l[0])))]
+LANGUAGES.append(('cy-gb', 'Welsh'))
 
 LANGUAGE_CODE = conf.get('LANGUAGE_CODE', 'en-gb')
 
