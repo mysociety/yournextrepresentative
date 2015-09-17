@@ -61,3 +61,8 @@ AREAS_TO_ALWAYS_RETURN = [
         'area_id': 0,
     }
 ]
+
+EXTRA_SIMPLE_FIELDS = {
+    'cv': '',
+    'program': ''
+}

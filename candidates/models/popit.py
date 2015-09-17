@@ -3,7 +3,6 @@ from datetime import date, timedelta
 import json
 import re
 import sys
-from collections import defaultdict
 
 from slugify import slugify
 
@@ -43,6 +42,7 @@ form_simple_fields = {
     'birth_date': None,
     'gender': '',
 }
+form_simple_fields.update(settings.EXTRA_SIMPLE_FIELDS)
 preserve_fields = ('identifiers', 'other_names', 'phone', 'death_date')
 
 other_fields_to_proxy = [

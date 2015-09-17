@@ -404,6 +404,11 @@ try:
 except AttributeError:
     AREAS_TO_ALWAYS_RETURN = []
 
+try:
+    EXTRA_SIMPLE_FIELDS = elections_module.EXTRA_SIMPLE_FIELDS
+except AttributeError:
+    EXTRA_SIMPLE_FIELDS = {}
+
 ELECTIONS = elections_module.ELECTIONS
 
 ELECTIONS_BY_DATE = sorted(
