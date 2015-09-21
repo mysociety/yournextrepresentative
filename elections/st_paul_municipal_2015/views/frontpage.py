@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.utils.text import slugify
 
 from candidates.views import AddressFinderView
 from candidates.forms import AddressForm
@@ -8,6 +9,9 @@ from cached_counts.models import CachedCount
 
 from pygeocoder import Geocoder, GeocoderError
 import requests
+
+from elections.st_paul_municipal_2015.settings import OCD_BOUNDARIES_URL
+
 
 class StPaulAddressForm(AddressForm):
 
@@ -28,7 +32,7 @@ class StPaulAddressFinder(AddressFinderView):
             country=self.country,
         )
         return HttpResponseRedirect(
-            reverse('areas-view', kwargs=resolved_address)
+            reverse('st-paul-areas-view', kwargs=resolved_address)
         )
 
     def get_context_data(self, **kwargs):
@@ -49,7 +53,20 @@ def check_address(address_string, country=None):
         message = _(u"Failed to find a location for '{0}'")
         raise ValidationError(message.format(tidied_address))
 
-    lat, lon = location_results[0].coordinates
+    coords = [str(p) for p in location_results[0].coordinates]
+
+    boundaries = requests.get('{0}/boundaries'.format(OCD_BOUNDARIES_URL),
+                              params={'contains': ','.join(coords)})
+
+    areas = set()
+
+    for area in boundaries.json()['objects']:
+        division_id = area['external_id']
+        if not 'precinct' in division_id and 'ward' in division_id:
+            area_slug = slugify(area['name'])
+            areas.add('{0};{1}'.format(area_slug.rsplit('-', 1), area_slug))
+        else:
+            areas.add('1', 'city-1')
 
     # TODO: This is where the p in p junk needs to happen
     # types_and_areas = ','.join(
@@ -60,6 +77,5 @@ def check_address(address_string, country=None):
     # ignored_slug = '-'.join(area_slugs)
 
     return {
-        'type_and_area_ids': types_and_areas,
-        'ignored_slug': ignored_slug,
+        'area_ids': ','.join(areas),
     }

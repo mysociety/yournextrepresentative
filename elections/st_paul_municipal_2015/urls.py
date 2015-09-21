@@ -11,4 +11,14 @@ urlpatterns = [
         views.StPaulAddressFinder.as_view(),
         name='lookup-name'
     ),
+    url(
+        r'^areas/(?P<area_ids>.*?)$',
+        views.StPaulAreasView.as_view(),
+        name='st-paul-areas-view'
+    ),
+    url(
+        r'^areas/(?P<type_and_area_ids>.*?)(?:/(?P<ignored_slug>.*))?$',
+        views.StPaulAreasOfTypeView.as_view(),
+        name='st-paul-areas-of-type-view'
+    ),
 ]
