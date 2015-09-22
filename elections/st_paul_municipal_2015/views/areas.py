@@ -27,10 +27,10 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
         context = super(StPaulAreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
-        for area_id, area_slug in self.area_ids.split(';'):
+        for area_id, area_slug in self.area_ids.split(','):
             # Show candidates from the current elections:
             for election, election_data in settings.ELECTIONS_CURRENT:
-                if post_id_format.format(area_id) == election_data['ocd_division']:
+                if election_data['ocd_division'] in area_id:
                     post_data = get_post_cached(self.api, area_id)['result']
                     print(post_data)
                     # area_name = MAPIT_DATA.areas_by_id[mapit_tuple][area_id]['name']

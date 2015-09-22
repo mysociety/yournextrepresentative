@@ -41,6 +41,13 @@ class StPaulAddressFinder(AddressFinderView):
             CachedCount.get_attention_needed_queryset()[:5]
         return context
 
+def dictify_ocd_division(ocd_division):
+    d = {}
+    for part in ocd_division.split('/')[1:]:
+        k,v = part.split(':')
+        d[k] = v
+    return d
+
 def check_address(address_string, country=None):
     tidied_address = address_string.strip()
 
@@ -61,20 +68,12 @@ def check_address(address_string, country=None):
     areas = set()
 
     for area in boundaries.json()['objects']:
-        division_id = area['external_id']
-        if not 'precinct' in division_id and 'ward' in division_id:
-            area_slug = slugify(area['name'])
-            areas.add('{0};{1}'.format(area_slug.rsplit('-', 1), area_slug))
-        else:
-            areas.add('1', 'city-1')
-
-    # TODO: This is where the p in p junk needs to happen
-    # types_and_areas = ','.join(
-    #     '{0}-{1}'.format(a[1]['type'],a[0]) for a in
-    #     sorted_mapit_results
-    # )
-    # area_slugs = [slugify(a[1]['name']) for a in sorted_mapit_results]
-    # ignored_slug = '-'.join(area_slugs)
+        areas.add(area['external_id'])
+        # division_dict = dictify_ocd_division(area['external_id'])
+        # if division_dict.get('ward'):
+        #     areas.add('ward:{1}'.format(division_dict['ward']))
+        # else:
+        #     areas.add('place:st_paul')
 
     return {
         'area_ids': ','.join(areas),
