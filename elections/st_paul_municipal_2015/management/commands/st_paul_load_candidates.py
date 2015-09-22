@@ -59,12 +59,13 @@ class Command(BaseCommand):
         for row in reader:
 
             try:
-                post_data = get_post_cached(api, 'ward-{0}'.format(row['Ward']))['result']
                 election_data = settings.ELECTIONS['council-member-2015']
+                ocd_division = election_data['post_id_format'].format(area_id=row['Ward'])
+                post_data = get_post_cached(api, ocd_division)['result']
                 election_data['id'] = 'council-member-2015'
             except UnknownPostException:
-                post_data = get_post_cached(api, 'city-0')['result']
                 election_data = settings.ELECTIONS['school-board-2015']
+                post_data = get_post_cached(api, election_data['post_id_format'])['result']
                 election_data['id'] = 'school-board-2015'
 
             person_id = slugify(row['Name'])

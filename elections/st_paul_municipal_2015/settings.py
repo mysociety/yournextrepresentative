@@ -17,7 +17,7 @@ ELECTIONS = {
         'party_membership_end_date': date(9999, 12, 31),
         'organization_id': 'saint-paul-city-council',
         'organization_name': 'Saint Paul City Council',
-        'post_id_format': 'ocd-division/country:us/state:mn/place:st_paul/ward:{area_id}',
+        'post_id_format': 'ocd-division,country:us,state:mn,place:st_paul,ward:{area_id}',
         'ocd_division': 'ocd-division/country:us/state:mn/place:st_paul/ward',
         'mapit_types': ['WARD'],
         'mapit_generation': 1,
@@ -37,7 +37,7 @@ ELECTIONS = {
         'mapit_generation': 1,
         'organization_id': 'saint-paul-school-board',
         'organization_name': 'Saint Paul School Board',
-        'post_id_format': 'ocd-division/country:us/state:mn/place:st_paul',
+        'post_id_format': 'ocd-division,country:us,state:mn,place:st_paul',
         'ocd_division': 'ocd-division/country:us/state:mn/place:st_paul',
     },
 }

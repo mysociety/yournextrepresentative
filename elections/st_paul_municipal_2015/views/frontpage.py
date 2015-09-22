@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
@@ -11,7 +12,6 @@ from pygeocoder import Geocoder, GeocoderError
 import requests
 
 from elections.st_paul_municipal_2015.settings import OCD_BOUNDARIES_URL
-
 
 class StPaulAddressForm(AddressForm):
 
@@ -41,12 +41,15 @@ class StPaulAddressFinder(AddressFinderView):
             CachedCount.get_attention_needed_queryset()[:5]
         return context
 
-def dictify_ocd_division(ocd_division):
-    d = {}
-    for part in ocd_division.split('/')[1:]:
-        k,v = part.split(':')
-        d[k] = v
-    return d
+def get_cached_boundary(division_id):
+    if cache.get(division_id):
+        return cache.get(division_id)
+
+    boundary = requests.get('{0}/boundaries/'.format(OCD_BOUNDARIES_URL),
+                            params={'external_id': division_id})
+    cache.set(division_id, boundary.json(), None)
+
+    return boundary.json()
 
 def check_address(address_string, country=None):
     tidied_address = address_string.strip()
@@ -60,21 +63,24 @@ def check_address(address_string, country=None):
         message = _(u"Failed to find a location for '{0}'")
         raise ValidationError(message.format(tidied_address))
 
-    coords = [str(p) for p in location_results[0].coordinates]
+    coords = ','.join([str(p) for p in location_results[0].coordinates])
+
+    if cache.get(coords):
+        return {'coords': coords}
 
     boundaries = requests.get('{0}/boundaries'.format(OCD_BOUNDARIES_URL),
-                              params={'contains': ','.join(coords)})
+                              params={'contains': coords})
 
     areas = set()
 
     for area in boundaries.json()['objects']:
-        areas.add(area['external_id'])
-        # division_dict = dictify_ocd_division(area['external_id'])
-        # if division_dict.get('ward'):
-        #     areas.add('ward:{1}'.format(division_dict['ward']))
-        # else:
-        #     areas.add('place:st_paul')
+        division_slug = area['external_id'].replace('/', ',')
+        if cache.get(area['external_id']):
+            areas.add(division_slug)
+        elif not 'precinct' in division_slug:
+            cache.set(area['external_id'], area, None)
+            areas.add(division_slug)
 
     return {
-        'area_ids': ','.join(areas),
+        'area_ids': ';'.join(areas),
     }

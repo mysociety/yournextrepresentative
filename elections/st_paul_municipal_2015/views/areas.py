@@ -4,7 +4,8 @@ import re
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseBadRequest
+from django.core.cache import cache
+from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
@@ -12,14 +13,21 @@ from django.utils.translation import ugettext as _
 from candidates.cache import get_post_cached, UnknownPostException
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
+from candidates.forms import NewPersonForm
 
 from candidates.views.helpers import get_people_from_memberships
+
+from .frontpage import get_cached_boundary
 
 class StPaulAreasView(PopItApiMixin, TemplateView):
     template_name = 'candidates/areas.html'
 
     def get(self, request, *args, **kwargs):
-        self.area_ids = [a for a in kwargs['area_ids'].split(',')]
+        try:
+            area_ids = kwargs['area_ids']
+        except KeyError:
+            return HttpResponseRedirect('/')
+        self.area_ids = [o for o in area_ids.split(';')]
         view = super(StPaulAreasView, self).get(request, *args, **kwargs)
         return view
 
@@ -27,19 +35,25 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
         context = super(StPaulAreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
-        for area_id, area_slug in self.area_ids.split(','):
+        for area_id in self.area_ids:
+            ocd_division = area_id.replace(',', '/')
             # Show candidates from the current elections:
             for election, election_data in settings.ELECTIONS_CURRENT:
-                if election_data['ocd_division'] in area_id:
+
+                if election_data['ocd_division'] in ocd_division:
+
                     post_data = get_post_cached(self.api, area_id)['result']
-                    print(post_data)
-                    # area_name = MAPIT_DATA.areas_by_id[mapit_tuple][area_id]['name']
-                    # all_area_names.add(area_name)
+                    boundary_data = get_cached_boundary(ocd_division)
+
+                    all_area_names.add(boundary_data['objects'][0]['name'])
+
                     locked = post_data.get('candidates_locked', False)
+
                     current_candidates, _ = get_people_from_memberships(
                         election_data,
                         post_data['memberships'],
                     )
+
                     context['posts'].append({
                         'election': election,
                         'election_data': election_data,
@@ -51,14 +65,15 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
                         'add_candidate_form': NewPersonForm(
                             election=election,
                             initial={
-                                ('constituency_' + election): post_id,
+                                ('constituency_' + election): area_id,
                                 ('standing_' + election): 'standing',
                             },
                             hidden_post_widget=True,
                         ),
                     })
-        # context['all_area_names'] = u' — '.join(all_area_names)
+        context['all_area_names'] = u' — '.join(all_area_names)
         context['suppress_official_documents'] = True
+
         return context
 
 class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
