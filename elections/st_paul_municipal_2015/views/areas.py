@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.http import Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.views.generic import TemplateView
 from django.utils.text import slugify
+from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 
 from candidates.cache import get_post_cached, UnknownPostException
@@ -15,8 +16,11 @@ from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 from candidates.forms import NewPersonForm
 from candidates.views import ConstituencyDetailView
-
 from candidates.views.helpers import get_people_from_memberships
+
+from elections.mixins import ElectionMixin
+
+from official_documents.models import OfficialDocument
 
 from .frontpage import get_cached_boundary
 
@@ -89,7 +93,7 @@ class StPaulDistrictDetailView(ConstituencyDetailView):
     template_name = 'st_paul_municipal_2015/districts.html'
 
     def get_context_data(self, **kwargs):
-        # context = super(StPaulDistrictDetailView, self).get_context_data(**kwargs)
+        context = super(StPaulDistrictDetailView, self).get_context_data(**kwargs)
 
         # context['electionleaflets_url'] = \
         #     get_electionleaflets_url(
@@ -101,7 +105,6 @@ class StPaulDistrictDetailView(ConstituencyDetailView):
         #     u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(
         #         context['post_id']
         #     )
-        context = {}
         return context
 
 class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):

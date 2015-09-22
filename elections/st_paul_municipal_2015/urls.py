@@ -22,8 +22,11 @@ urlpatterns = [
         name='st-paul-areas-of-type-view'
     ),
     url(
-        r'^election/(?P<election>.*)/post/(?P<post_id>.*)/$',
+        r'^election/{election}/post/(?P<post_id>.*)/(?P<ignored_slug>{ignore_pattern})$'.format(
+            election=settings.ELECTION_RE,
+            ignore_pattern=post_ignored_slug_re,
+        ),
         views.StPaulDistrictDetailView.as_view(),
-        name='district'
+        name='constituency'
     ),
 ]
