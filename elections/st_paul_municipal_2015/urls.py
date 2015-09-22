@@ -21,4 +21,9 @@ urlpatterns = [
         views.StPaulAreasOfTypeView.as_view(),
         name='st-paul-areas-of-type-view'
     ),
+    url(
+        r'^election/(?P<election>.*)/post/(?P<post_id>.*)/$',
+        views.StPaulDistrictDetailView.as_view(),
+        name='district'
+    ),
 ]

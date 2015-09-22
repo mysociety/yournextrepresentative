@@ -14,6 +14,7 @@ from candidates.cache import get_post_cached, UnknownPostException
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 from candidates.forms import NewPersonForm
+from candidates.views import ConstituencyDetailView
 
 from candidates.views.helpers import get_people_from_memberships
 
@@ -33,8 +34,11 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StPaulAreasView, self).get_context_data(**kwargs)
+
         all_area_names = set()
+        area_dict = {}
         context['posts'] = []
+
         for area_id in self.area_ids:
             ocd_division = area_id.replace(',', '/')
             # Show candidates from the current elections:
@@ -54,26 +58,50 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
                         post_data['memberships'],
                     )
 
-                    context['posts'].append({
-                        'election': election,
-                        'election_data': election_data,
-                        'post_data': post_data,
-                        'candidates_locked': locked,
-                        'candidate_list_edits_allowed':
-                        get_edits_allowed(self.request.user, locked),
-                        'candidates': current_candidates,
-                        'add_candidate_form': NewPersonForm(
-                            election=election,
-                            initial={
-                                ('constituency_' + election): area_id,
-                                ('standing_' + election): 'standing',
-                            },
-                            hidden_post_widget=True,
-                        ),
-                    })
+                    if not area_dict.get(ocd_division):
+                        area_dict[ocd_division] = 'done'
+
+                        context['posts'].append({
+                            'election': election,
+                            'election_data': election_data,
+                            'post_data': post_data,
+                            'candidates_locked': locked,
+                            'candidate_list_edits_allowed':
+                            get_edits_allowed(self.request.user, locked),
+                            'candidates': current_candidates,
+                            'add_candidate_form': NewPersonForm(
+                                election=election,
+                                initial={
+                                    ('constituency_' + election): area_id,
+                                    ('standing_' + election): 'standing',
+                                },
+                                hidden_post_widget=True,
+                            ),
+                        })
+
         context['all_area_names'] = u' — '.join(all_area_names)
         context['suppress_official_documents'] = True
 
+        return context
+
+class StPaulDistrictDetailView(ConstituencyDetailView):
+
+    template_name = 'st_paul_municipal_2015/districts.html'
+
+    def get_context_data(self, **kwargs):
+        # context = super(StPaulDistrictDetailView, self).get_context_data(**kwargs)
+
+        # context['electionleaflets_url'] = \
+        #     get_electionleaflets_url(
+        #         context['post_id'],
+        #         context['post_label_shorter']
+        #     )
+
+        # context['meetyournextmp_url'] = \
+        #     u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(
+        #         context['post_id']
+        #     )
+        context = {}
         return context
 
 class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
