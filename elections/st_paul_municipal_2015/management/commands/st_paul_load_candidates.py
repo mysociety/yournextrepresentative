@@ -87,6 +87,7 @@ class Command(BaseCommand):
             # else:
             #     person.birth_date = None
 
+            person.email = row['Campaign Email']
 
             standing_in_election = {
                 'post_id': post_data['id'],
@@ -109,6 +110,7 @@ class Command(BaseCommand):
                 party_id = 'party:301'
             else:
                 party_id = 'party:401'
+
 
             party_name = PARTY_DATA.party_id_to_name[party_id]
 

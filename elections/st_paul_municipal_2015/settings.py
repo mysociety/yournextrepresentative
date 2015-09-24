@@ -10,7 +10,7 @@ ELECTIONS = {
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 11, 3),
         'candidacy_start_date': date(2015, 6, 22),
-        'name': 'Municipal Election',
+        'name': 'City Council Election',
         'current': True,
         'use_for_candidate_suggestions': False,
         'party_membership_start_date': date(2015, 6, 22),
@@ -28,7 +28,7 @@ ELECTIONS = {
         'winner_membership_role': 'Candidate',
         'election_date': date(2015, 11, 3),
         'candidacy_start_date': date(2015, 6, 22),
-        'name': 'Municipal Election',
+        'name': 'School Board Election',
         'current': True,
         'use_for_candidate_suggestions': False,
         'party_membership_start_date': date(2015, 6, 22),
@@ -43,6 +43,6 @@ ELECTIONS = {
 }
 
 MAPIT_BASE_URL = ''
-OCD_BOUNDARIES_URL = 'http://127.0.0.1:8001'
-# OCD_BOUNDARIES_URL = 'http://ocd.datamade.us'
+# OCD_BOUNDARIES_URL = 'http://127.0.0.1:8001'
+OCD_BOUNDARIES_URL = 'http://ocd.datamade.us'
 

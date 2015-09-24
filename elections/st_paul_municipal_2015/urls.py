@@ -29,4 +29,8 @@ urlpatterns = [
         views.StPaulDistrictDetailView.as_view(),
         name='constituency'
     ),
+    # url(r'^person/(?P<person_id>\d+)/update$',
+    #     views.UpdatePersonView.as_view(),
+    #     name='person-update'
+    # ),
 ]
