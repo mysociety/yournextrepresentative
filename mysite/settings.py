@@ -108,6 +108,7 @@ INSTALLED_APPS = (
     'django_nose',
     'pipeline',
     'statici18n',
+    'elections',
     ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
     'tasks',
