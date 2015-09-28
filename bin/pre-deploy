@@ -60,9 +60,11 @@ else
     echo done.
 fi
 
+# Generate the files of translated strings for Javascript to use
+./manage.py compilejsi18n
+
 # gather all the static files in one place
 ./manage.py collectstatic --noinput
 
 # Compile all translations from .po files into .mo files
 ./manage.py compilemessages
-./manage.py compilejsi18n

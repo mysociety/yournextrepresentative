@@ -257,12 +257,13 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 
 STATIC_ROOT = join(BASE_DIR, 'static')
+STATICI18N_ROOT = join(BASE_DIR, 'mysite', 'static')
 
 if 'test' not in sys.argv:
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 STATICFILES_DIRS = (
-    join(BASE_DIR, 'mysite/static'),
+    join(BASE_DIR, 'mysite', 'static'),
 )
 
 STATICFILES_FINDERS = (
