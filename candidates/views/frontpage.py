@@ -7,6 +7,7 @@ from django.views.generic import FormView
 from django.conf import settings
 
 from candidates.models.address import check_address
+from elections.models import Election
 from .mixins import ContributorsMixin
 
 from ..forms import AddressForm
@@ -40,5 +41,5 @@ class AddressFinderView(ContributorsMixin, FormView):
         context = super(AddressFinderView, self).get_context_data(**kwargs)
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
-        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
+        context['election_data'] = Election.objects.current().by_date().last()
         return context

@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.views.generic import ListView, TemplateView
 
 from elections.mixins import ElectionMixin
+from elections.models import Election
 
 from .models import CachedCount
 
@@ -59,12 +60,12 @@ def get_counts():
 
     all_elections = {
         'current':
-        [{'id': t[0], 'name': t[1]['name']}
-         for t in settings.ELECTIONS_CURRENT],
+        [{'id': t.slug, 'name': t.name}
+         for t in Election.objects.current().by_date()],
         'past':
-        [{'id': t[0], 'name': t[1]['name']}
-         for t in settings.ELECTIONS_BY_DATE
-         if not t[1]['current']],
+        [{'id': t.slug, 'name': t.name}
+         for t in Election.objects.by_date()
+         if not t.current],
     }
 
     counts = CachedCount.objects.values()
@@ -80,9 +81,9 @@ def get_counts():
                     get_prior_election_data(
                         counts, election, prior_election_id, prior_election_data
                     )
-                    for prior_election_id, prior_election_data
-                    in settings.ELECTIONS_BY_DATE
-                    if not prior_election_data['current']
+                    for prior_election_data
+                    in Election.objects.current().by_date()
+                    if not prior_election_data.current
                 ]
 
     return all_elections

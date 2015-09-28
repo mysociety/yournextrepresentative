@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
 from candidates.models import PopItPerson, person_added
+from elections.models import Election
 
 class CachedCount(models.Model):
     """
@@ -52,7 +53,7 @@ class CachedCount(models.Model):
     @classmethod
     def get_attention_needed_queryset(cls):
         # FIXME: this should probably be a queryset method instead.
-        current_election_slugs = [t[0] for t in settings.ELECTIONS_CURRENT]
+        current_election_slugs = [t.slug for t in Election.objects.current().by_date()]
         return cls.objects.filter(
             count_type='post',
             election__in=current_election_slugs

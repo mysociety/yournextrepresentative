@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from ...models import PopItPerson, membership_covers_date
 
 from candidates.views.version_data import get_change_metadata
+from elections.models import Election
 
 def get_parlparse_id(person_data):
     parlparse_identifiers = [
@@ -27,12 +28,12 @@ class Command(PopItApiMixin, BaseCommand):
     def existing_candidate_same_party(self, cons_id, party_id):
         cons = self.api.posts(cons_id).get(embed='membership.person')['result']
         for cons_membership in cons['memberships']:
-            candidate_role = settings.ELECTIONS['2015']
+            candidate_role = Election.objects.get_by_slug(2015).candidate_membership_role
             if cons_membership['role'] != candidate_role:
                 continue
             if not membership_covers_date(
                     cons_membership,
-                    settings.ELECTIONS['2015']['election_date'],
+                    Election.objects.get_by_slug(2015).election_date,
             ):
                 continue
             person_party_membership = cons_membership['person_id']['party_memberships']

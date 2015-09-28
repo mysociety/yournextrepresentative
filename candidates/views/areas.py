@@ -13,6 +13,8 @@ from candidates.cache import get_post_cached, UnknownPostException
 from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 
+from elections.models import Election
+
 from ..election_specific import AREA_POST_DATA, MAPIT_DATA
 from ..forms import NewPersonForm
 from .helpers import get_people_from_memberships, group_people_by_party
@@ -39,15 +41,15 @@ class AreasView(PopItApiMixin, TemplateView):
         context = super(AreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
-        for mapit_type, area_id in self.types_and_areas:
+        for area_type, area_id in self.types_and_areas:
             # Show candidates from the current elections:
-            for election, election_data in settings.ELECTIONS_CURRENT:
-                mapit_generation = election_data['mapit_generation']
-                if mapit_type in election_data['mapit_types']:
-                    mapit_tuple = (mapit_type, mapit_generation)
-                    post_id = AREA_POST_DATA.get_post_id(election, mapit_type, area_id)
+            for election_data in Election.objects.current().by_date():
+                area_generation = election_data.area_generation
+                if area_type in [area.name for area in election_data.area_types.all()]:
+                    area_tuple = (area_type, area_generation)
+                    post_id = AREA_POST_DATA.get_post_id(election_data.slug, area_type, area_id)
                     post_data = get_post_cached(self.api, post_id)['result']
-                    area_name = MAPIT_DATA.areas_by_id[mapit_tuple][area_id]['name']
+                    area_name = MAPIT_DATA.areas_by_id[area_tuple][area_id]['name']
                     all_area_names.add(area_name)
                     locked = post_data.get('candidates_locked', False)
                     current_candidates, _ = get_people_from_memberships(
@@ -61,13 +63,13 @@ class AreasView(PopItApiMixin, TemplateView):
                     # it from the data that goes into the context.
                     del post_data['memberships']
                     current_candidates = group_people_by_party(
-                        election,
+                        election_data.slug,
                         current_candidates,
-                        party_list=election_data.get('party_lists_in_use'),
-                        max_people=election_data.get('default_party_list_members_to_show')
+                        party_list=election_data.party_lists_in_use,
+                        max_people=election_data.default_party_list_members_to_show
                     )
                     context['posts'].append({
-                        'election': election,
+                        'election': election_data.slug,
                         'election_data': election_data,
                         'post_data': post_data,
                         'candidates_locked': locked,
@@ -75,10 +77,10 @@ class AreasView(PopItApiMixin, TemplateView):
                         get_edits_allowed(self.request.user, locked),
                         'candidates': current_candidates,
                         'add_candidate_form': NewPersonForm(
-                            election=election,
+                            election=election_data.slug,
                             initial={
-                                ('constituency_' + election): post_id,
-                                ('standing_' + election): 'standing',
+                                ('constituency_' + election_data.slug): post_id,
+                                ('standing_' + election_data.slug): 'standing',
                             },
                             hidden_post_widget=True,
                         ),
@@ -94,10 +96,10 @@ class AreasOfTypeView(PopItApiMixin, TemplateView):
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
         requested_mapit_type = kwargs['mapit_type']
         all_mapit_tuples = set(
-            (mapit_type, election_data['mapit_generation'])
-            for election, election_data in settings.ELECTIONS_CURRENT
-            for mapit_type in election_data['mapit_types']
-            if mapit_type == requested_mapit_type
+            (mapit_type.name, election_data.area_generation)
+            for election_data in Election.objects.current().by_date()
+            for mapit_type in election_data.area_types.all()
+            if mapit_type.name == requested_mapit_type
         )
         if not all_mapit_tuples:
             raise Http404(_("Area '{0}' not found").format(requested_mapit_type))

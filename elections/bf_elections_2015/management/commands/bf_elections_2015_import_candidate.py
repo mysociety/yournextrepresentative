@@ -24,6 +24,8 @@ from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
 from candidates.views.version_data import get_change_metadata
 
+from elections.models import Election
+
 UNKNOWN_PARTY_ID = 'unknown'
 USER_AGENT = (
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
@@ -33,10 +35,9 @@ USER_AGENT = (
 
 
 def get_post_data(api, election_id, province):
-    ynr_election_data = settings.ELECTIONS[election_id]
-    ynr_election_data['id'] = election_id
-    mapit_key = (ynr_election_data['mapit_types'][0],
-                 ynr_election_data['mapit_generation'])
+    ynr_election_data = Election.objects.get_by_slug(election_id)
+    mapit_key = (ynr_election_data.area_types.first().name,
+                 ynr_election_data.area_generation)
     mapit_areas_by_name = MAPIT_DATA.areas_by_name[mapit_key]
     if province != 'Burkina Faso':
         province = strip_accents(province).upper()
@@ -224,7 +225,7 @@ class Command(BaseCommand):
                     standing_in_election = {
                         'post_id': post_data['id'],
                         'name': AREA_POST_DATA.shorten_post_label(
-                            election_data['id'],
+                            election_data.slug,
                             post_data['label'],
                         ),
                         'party_list_position': party_list_order,
@@ -234,7 +235,7 @@ class Command(BaseCommand):
                         standing_in_election['mapit_url'] = post_data['area']['identifier']
 
                     person.standing_in = {
-                        election_data['id']: standing_in_election
+                        election_data.slug: standing_in_election
                     }
 
                     change_metadata = get_change_metadata(
@@ -255,7 +256,7 @@ class Command(BaseCommand):
                         party_id_missing[party_comp] = 1
 
                     person.party_memberships = {
-                        election_data['id']: {
+                        election_data.slug: {
                             'id': party_id,
                             'name': party,
                             'imported_name': party_comp

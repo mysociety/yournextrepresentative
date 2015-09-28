@@ -4,6 +4,8 @@ from django.utils.translation import ugettext as _
 from auth_helpers.views import user_in_group
 from candidates.cache import get_post_cached
 
+from elections.models import Election
+
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
 TRUSTED_TO_LOCK_GROUP_NAME = 'Trusted To Lock'
 TRUSTED_TO_RENAME_GROUP_NAME = 'Trusted To Rename'
@@ -45,14 +47,14 @@ def get_constituency_lock(user, api, post_id):
     return candidates_locked, edits_allowed
 
 def check_creation_allowed(user, api, new_popit_data):
-    for election in settings.ELECTIONS:
+    for election in Election.objects.all():
         standing_in = new_popit_data['standing_in']
-        if election not in standing_in or not standing_in[election]:
+        if election.slug not in standing_in or not standing_in[election.slug]:
             continue
         dummy, edits_allowed = get_constituency_lock(
             user,
             api,
-            standing_in[election]['post_id']
+            standing_in[election.slug]['post_id']
         )
         if not edits_allowed:
             raise ChangeToLockedConstituencyDisallowedException(
@@ -68,17 +70,17 @@ def check_update_allowed(user, api, old_popit_data, new_popit_data):
             raise NameChangeDisallowedException(message.format(
                 old_popit_data['name'], new_popit_data['name'], user.username
             ))
-    for election in settings.ELECTIONS:
-        old_allowed = get_constituency_lock_from_person_data(user, api, election, old_popit_data)[1]
-        new_allowed = get_constituency_lock_from_person_data(user, api, election, new_popit_data)[1]
+    for election in Election.objects.all():
+        old_allowed = get_constituency_lock_from_person_data(user, api, election.slug, old_popit_data)[1]
+        new_allowed = get_constituency_lock_from_person_data(user, api, election.slug, new_popit_data)[1]
         for (field, key) in [
                 ('standing_in', 'post_id'),
                 ('party_memberships', 'id')
         ]:
             old_field_value = old_popit_data.get(field, {}) or {}
             new_field_value = new_popit_data.get(field, {}) or {}
-            old_post_id = (old_field_value.get(election, {}) or {}).get(key)
-            new_post_id = (new_field_value.get(election, {}) or {}).get(key)
+            old_post_id = (old_field_value.get(election.slug, {}) or {}).get(key)
+            new_post_id = (new_field_value.get(election.slug, {}) or {}).get(key)
             if not (old_allowed and new_allowed) and (old_post_id != new_post_id):
                 raise ChangeToLockedConstituencyDisallowedException(
                     _("That update isn't allowed because candidates for a locked "

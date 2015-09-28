@@ -9,19 +9,20 @@ from django.utils.translation import ugettext as _
 import jsonpatch
 import jsonpointer
 
+from elections.models import Election
 
 
 def get_descriptive_value(election, attribute, value, leaf):
     """Get a sentence fragment describing someone's status in a particular year
 
     'attribute' is either "standing_in" or "party_membership", 'election'
-    is one of the keys from settings.ELECTIONS, and 'value' is what would
+    is one of the slugs from the elections table, and 'value' is what would
     be under that year in the 'standing_in' or 'party_memberships'
     dictionary (see the comment at the top of update.py)."""
 
-    election_data = settings.ELECTIONS[election]
-    current_election = election_data.get('current')
-    election_name = election_data['name']
+    election_data = Election.objects.get_by_slug(election)
+    current_election = election_data.current
+    election_name = election_data.name
 
     if attribute == 'party_memberships':
         if leaf:

@@ -14,6 +14,7 @@ from candidates.popit import create_popit_api_object, get_search_url
 from candidates.views.version_data import get_change_metadata
 from candidates.cache import get_post_cached, UnknownPostException
 from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from elections.models import Election
 
 import memcache
 
@@ -61,14 +62,12 @@ class Command(BaseCommand):
         for row in reader:
 
             try:
-                election_data = settings.ELECTIONS['council-member-2015']
-                ocd_division = election_data['post_id_format'].format(area_id=row['Ward'])
+                election_data = Election.objects.get_by_slug('council-member-2015')
+                ocd_division = election_data.post_id_format.format(area_id=row['Ward'])
                 post_data = get_post_cached(api, ocd_division)['result']
-                election_data['id'] = 'council-member-2015'
             except (UnknownPostException, memcache.Client.MemcachedKeyCharacterError):
-                election_data = settings.ELECTIONS['school-board-2015']
-                post_data = get_post_cached(api, election_data['post_id_format'])['result']
-                election_data['id'] = 'school-board-2015'
+                election_data = Election.objects.get_by_slug('school-board-2015')
+                post_data = get_post_cached(api, election_data.post_id_format)['result']
 
             person_id = slugify(row['Name'])
 
@@ -106,14 +105,14 @@ class Command(BaseCommand):
             standing_in_election = {
                 'post_id': post_data['id'],
                 'name': AREA_POST_DATA.shorten_post_label(
-                    election_data['id'],
+                    election_data.slug,
                     post_data['label'],
                 ),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']
             person.standing_in = {
-                election_data['id']: standing_in_election
+                election_data.slug: standing_in_election
             }
 
             if 'dfl' in row['Party'].lower():
@@ -129,7 +128,7 @@ class Command(BaseCommand):
             party_name = PARTY_DATA.party_id_to_name[party_id]
 
             person.party_memberships = {
-                election_data['id']: {
+                election_data.slug: {
                     'id': party_id,
                     'name': party_name,
                 }

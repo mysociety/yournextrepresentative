@@ -7,6 +7,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.translation import ugettext as _
 from django.utils.translation import get_language
 
+from elections.models import Election
+
 register = template.Library()
 
 @register.simple_tag
@@ -38,7 +40,7 @@ def metadescription(person, last_cons, today):
     return output
 
 def is_post_election(election, today):
-    return today > settings.ELECTIONS[election]['election_date']
+    return today > Election.objects.get_by_slug(election).election_date
 
 def format_party_name(party_name):
     party_name = party_name.strip()

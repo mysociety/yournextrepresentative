@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.http import HttpResponseRedirect
 
+from elections.models import Election
+
 from slugify import slugify
 
 from ..election_specific import AREA_POST_DATA, PARTY_DATA
@@ -32,9 +34,9 @@ def get_party_people_for_election_from_memberships(
         memberships
 ):
     people = []
-    election_data = settings.ELECTIONS[election]
+    election_data = Election.objects.get_by_slug(election)
     for membership in memberships:
-        if not membership.get('role') == election_data['candidate_membership_role']:
+        if not membership.get('role') == election_data.candidate_membership_role:
             continue
         person = PopItPerson.create_from_dict(membership['person_id'])
         if not person.party_memberships.get(election):
@@ -54,21 +56,21 @@ def get_people_from_memberships(election_data, memberships):
     current_candidates = set()
     past_candidates = set()
     for membership in memberships:
-        if not membership.get('role') == election_data['candidate_membership_role']:
+        if not membership.get('role') == election_data.candidate_membership_role:
             continue
         person = PopItPerson.create_from_dict(membership['person_id'])
         if membership_covers_date(
                 membership,
-                election_data['election_date']
+                election_data.election_date
         ):
             current_candidates.add(person)
         else:
-            for other_election, other_election_data in settings.ELECTIONS_BY_DATE:
-                if not other_election_data.get('use_for_candidate_suggestions'):
+            for other_election_data in Election.objects.by_date():
+                if not other_election_data.use_for_candidate_suggestions:
                     continue
                 if membership_covers_date(
                         membership,
-                        other_election_data['election_date'],
+                        other_election_data.election_date,
                 ):
                     past_candidates.add(person)
 
@@ -99,7 +101,7 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     party_id_to_name = {}
     party_id_to_people = defaultdict(list)
     party_truncated = dict()
-    election_data = settings.ELECTIONS[election]
+    election_data = Election.objects.get_by_slug(election)
     for person in people:
         if election in person.party_memberships:
             party_data = person.party_memberships[election]
@@ -107,13 +109,13 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
             party_data = person.last_party
         position = None
         standing_in_election = person.standing_in.get(election)
-        if standing_in_election and election_data['party_lists_in_use']:
+        if standing_in_election and election_data.party_lists_in_use:
             position = standing_in_election.get('party_list_position')
         party_id = party_data['id']
         party_id_to_name[party_id] = party_data['name']
         party_id_to_people[party_id].append((position, person))
     for party_id, people_list in party_id_to_people.items():
-        if election_data['party_lists_in_use']:
+        if election_data.party_lists_in_use:
             # sort by party list position
             people_list.sort(key=lambda p: ( p[0] is None, p[0] ))
             # only return the configured maximum number of people

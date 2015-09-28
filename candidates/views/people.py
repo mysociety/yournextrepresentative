@@ -18,6 +18,7 @@ from django.views.generic import FormView, TemplateView, View
 from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
+from elections.models import Election
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
@@ -52,11 +53,11 @@ def get_call_to_action_flash_message(person, new_person=False):
             # election name for each of those elections:
             'create_for_election_options': [
                 (
-                    reverse('person-create', kwargs={'election': election}),
-                    election_data['name']
+                    reverse('person-create', kwargs={'election': election_data.slug}),
+                    election_data.name
                 )
-                for election, election_data in settings.ELECTIONS_CURRENT
-                if person.standing_in.get(election)
+                for election_data in Election.objects.current()
+                if person.standing_in.get(election_data.slug)
             ]
         }
     )
@@ -79,6 +80,7 @@ class PersonView(PopItApiMixin, TemplateView):
         context['canonical_url'] = self.request.build_absolute_uri(path)
         context['person'] = self.person
         context['last_election'] = self.person.last_cons
+        context['elections_by_date'] = Election.objects.by_date()
         if self.person.last_cons:
             context['constituency'] = self.person.last_cons[1]['name']
             context['contested_election'] = self.person.last_cons[0]
@@ -245,19 +247,19 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         context['versions'] = get_version_diffs(person.versions)
 
         context['constituencies_form_fields'] = []
-        for election, election_data in settings.ELECTIONS_BY_DATE:
-            if not election_data.get('current'):
+        for election_data in Election.objects.by_date():
+            if not election_data.current:
                 continue
             cons_form_fields = {
-                'election_name': election_data['name'],
-                'standing': kwargs['form']['standing_' + election],
-                'constituency': kwargs['form']['constituency_' + election],
+                'election_name': election_data.name,
+                'standing': kwargs['form']['standing_' + election_data.slug],
+                'constituency': kwargs['form']['constituency_' + election_data.slug],
             }
             party_fields = []
             for ps in PARTY_DATA.ALL_PARTY_SETS:
-                key_suffix = ps['slug'] + '_' + election
+                key_suffix = ps['slug'] + '_' + election_data.slug
                 position_field = None
-                if election_data.get('party_lists_in_use'):
+                if election_data.party_lists_in_use:
                     position_field = kwargs['form']['party_list_position_' + key_suffix]
                 party_position_tuple = (
                     kwargs['form']['party_' + key_suffix],

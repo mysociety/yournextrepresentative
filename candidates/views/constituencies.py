@@ -107,23 +107,23 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             group_people_by_party(
                 self.election,
                 set(p for p in other_candidates if p.not_standing_in_election(self.election)),
-                party_list=self.election_data.get('party_lists_in_use'),
-                max_people=self.election_data.get('default_party_list_members_to_show')
+                party_list=self.election_data.party_lists_in_use,
+                max_people=self.election_data.default_party_list_members_to_show
             )
 
         context['candidates_might_stand_again'] = \
             group_people_by_party(
                 self.election,
                 set(p for p in other_candidates if not p.known_status_in_election(self.election)),
-                party_list=self.election_data.get('party_lists_in_use'),
-                max_people=self.election_data.get('default_party_list_members_to_show')
+                party_list=self.election_data.party_lists_in_use,
+                max_people=self.election_data.default_party_list_members_to_show
             )
 
         context['candidates'] = group_people_by_party(
             self.election,
             current_candidates,
-            party_list=self.election_data.get('party_lists_in_use'),
-            max_people=self.election_data.get('default_party_list_members_to_show')
+            party_list=self.election_data.party_lists_in_use,
+            max_people=self.election_data.default_party_list_members_to_show
         )
 
         just_people = sum((t[1] for t in context['candidates']['parties_and_people']), [])
@@ -170,7 +170,7 @@ class ConstituencyListView(ElectionMixin, PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['all_constituencies'] = \
-            MAPIT_DATA.areas_list_sorted_by_name[('WMC', 22)]
+            MAPIT_DATA.areas_list_sorted_by_name[(u'WMC', u'22')]
         return context
 
 
@@ -286,12 +286,12 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
         winner = self.person
         people_for_invalidation = set()
         for membership in self.post_data.get('memberships', []):
-            candidate_role = self.election_data['candidate_membership_role']
+            candidate_role = self.election_data.candidate_membership_role
             if membership.get('role') != candidate_role:
                 continue
             if not membership_covers_date(
                     membership,
-                    self.election_data['election_date']
+                    self.election_data.election_date
             ):
                 continue
             candidate = PopItPerson.create_from_popit(
@@ -344,11 +344,11 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiM
         constituency_name = get_post_label_from_post_id(post_id)
         post = get_post_cached(self.api, post_id)['result']
         for membership in post.get('memberships', []):
-            if membership.get('role') != self.election_data['candidate_membership_role']:
+            if membership.get('role') != self.election_data.candidate_membership_role:
                 continue
             if not membership_covers_date(
                     membership,
-                    self.election_data['election_date']
+                    self.election_data.election_date
             ):
                 continue
             candidate = PopItPerson.create_from_popit(
@@ -387,8 +387,8 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiM
 
 def memberships_contain_winner(memberships, election_data):
     for m in memberships:
-        correct_org = m.get('organization_id') == election_data['organization_id']
-        day_after_election = election_data['election_date'] + timedelta(days=1)
+        correct_org = m.get('organization_id') == election_data.organization_id
+        day_after_election = election_data.election_date + timedelta(days=1)
         correct_start_date = m['start_date'] == str(day_after_election)
         if correct_org and correct_start_date:
             return True

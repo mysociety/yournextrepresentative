@@ -9,17 +9,18 @@ from candidates.popit import PopItApiMixin
 from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
 
+from elections.models import Election
+
 from ..forms import (PostcodeForm, ConstituencyForm)
 from ..mapit import get_wmc_from_postcode
 
-
 def get_current_election():
-    current_elections = [t[0] for t in settings.ELECTIONS_CURRENT]
+    current_elections = Election.objects.current().by_date()
     if len(current_elections) != 1:
         message = "There should be exactly one current election in " + \
             "uk_general_election_2015, not {0}"
         raise Exception(message.format(len(current_elections)))
-    return current_elections[0]
+    return current_elections.first()
 
 
 class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView):
@@ -34,7 +35,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView)
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
         post_data = get_post_cached(self.api, wmc)['result']
-        return get_redirect_to_post(get_current_election(), post_data)
+        return get_redirect_to_post(get_current_election().slug, post_data)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
@@ -44,7 +45,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView)
         context['show_name_form'] = False
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
-        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
+        context['election_data'] = Election.objects.current().by_date().last()
         return context
 
 
@@ -60,7 +61,7 @@ class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
     def form_valid(self, form):
         post_id = form.cleaned_data['constituency']
         post_data = get_post_cached(self.api, post_id)['result']
-        return get_redirect_to_post(get_current_election(), post_data)
+        return get_redirect_to_post(get_current_election().slug, post_data)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
@@ -70,5 +71,5 @@ class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
         context['show_name_form'] = True
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
-        context['election_data'] = settings.ELECTIONS_CURRENT[-1][1]
+        context['election_data'] = Election.objects.current().by_date().last()
         return context

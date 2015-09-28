@@ -22,6 +22,8 @@ from candidates.utils import strip_accents
 from candidates.views.version_data import get_change_metadata
 from moderation_queue.models import QueuedImage
 
+from elections.models import Election
+
 UNKNOWN_PARTY_ID = 'unknown'
 USER_AGENT = (
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
@@ -43,13 +45,12 @@ def get_post_data(api, json_election_id, json_election_id_to_name):
         u'Pre-Candidatos a Gobernador de San Juan':
         'gobernadores-argentina-paso-2015',
     }[json_election_name]
-    ynr_election_data = settings.ELECTIONS[ynr_election_id]
-    ynr_election_data['id'] = ynr_election_id
+    ynr_election_data = Election.objects.get_by_slug(ynr_election_id)
     province = None
     m = re.search(r'a Gobernador de (?P<province>.*)', json_election_name)
     if m:
         province = m.group('province')
-        mapit_areas_by_name = MAPIT_DATA.areas_by_name[('PRV', 1)]
+        mapit_areas_by_name = MAPIT_DATA.areas_by_name[(u'PRV', u'1')]
         mapit_area = mapit_areas_by_name[strip_accents(province).upper()]
         post_id = AREA_POST_DATA.get_post_id(
             ynr_election_id, mapit_area['type'], mapit_area['id']
@@ -184,17 +185,17 @@ class Command(BaseCommand):
             standing_in_election = {
                 'post_id': post_data['id'],
                 'name': AREA_POST_DATA.shorten_post_label(
-                    election_data['id'],
+                    election_data.slug,
                     post_data['label'],
                 ),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']
             person.standing_in = {
-                election_data['id']: standing_in_election
+                election_data.slug: standing_in_election
             }
             person.party_memberships = {
-                election_data['id']: {
+                election_data.slug: {
                     'id': UNKNOWN_PARTY_ID,
                     'name': PARTY_DATA.party_id_to_name[UNKNOWN_PARTY_ID],
                 }

@@ -73,7 +73,7 @@ def cons_key(s):
 
 constituency_lookup = {
     cons_key(k): v for k, v in
-    MAPIT_DATA.areas_by_name[('WMC', 22)].items()
+    MAPIT_DATA.areas_by_name[(u'WMC', u'22')].items()
 }
 
 class UnknownConstituencyException(Exception):

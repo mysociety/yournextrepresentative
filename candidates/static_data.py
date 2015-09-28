@@ -8,6 +8,8 @@ import requests
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
+from elections.models import Election
+
 data_directory = abspath(join(
     dirname(__file__), '..', 'elections', settings.ELECTION_APP, 'data'
 ))
@@ -63,7 +65,7 @@ class BaseMapItData(object):
         self.areas_by_name = {}
         self.areas_list_sorted_by_name = {}
 
-        for t, election_data in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
+        for t, election_tuples in Election.objects.elections_for_area_generations().items():
             mapit_type, mapit_generation = t
             self.areas_by_id[t] = get_mapit_areas(mapit_type, mapit_generation)
             for area in self.areas_by_id[t].values():
@@ -183,7 +185,7 @@ class BaseAreaPostData(object):
         )
 
     def get_post_id(self, election, mapit_type, area_id):
-        return settings.ELECTIONS[election]['post_id_format'].format(
+        return Election.objects.get_by_slug(election).post_id_format.format(
             area_id=area_id
         )
 
@@ -193,12 +195,11 @@ class BaseAreaPostData(object):
         self.areas_by_post_id = {}
         self.area_ids_and_names_by_post_group = {}
 
-        for mapit_tuple, election_tuples in settings.MAPIT_TYPES_GENERATIONS_ELECTIONS.items():
-            for election_tuple in election_tuples:
-                election, election_data = election_tuple
+        for area_tuple, election_tuples in Election.objects.elections_for_area_generations().items():
+            for election_data in election_tuples:
                 mapit_type, mapit_generation = mapit_tuple
                 for area in self.mapit_data.areas_by_id[mapit_tuple].values():
-                    post_id = self.get_post_id(election, mapit_type, area['id'])
+                    post_id = self.get_post_id(election_data.slug, mapit_type, area['id'])
                     if post_id in self.areas_by_post_id:
                         message = _("Found multiple areas for the post ID {post_id}")
                         raise Exception(message.format(post_id=post_id))

@@ -32,7 +32,7 @@ class ConstituencyForm(forms.Form):
             [
                 (mapit_id, constituency['name'])
                 for mapit_id, constituency
-                in MAPIT_DATA.areas_by_id[('WMC', 22)].items()
+                in MAPIT_DATA.areas_by_id[(u'WMC', u'22')].items()
             ],
             key=lambda t: t[1]
         )
