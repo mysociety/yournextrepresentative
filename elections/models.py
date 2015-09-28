@@ -1,5 +1,30 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.shortcuts import get_object_or_404
+from collections import defaultdict
+
+class ElectionQuerySet(models.QuerySet):
+    def current(self):
+        return self.filter(
+            current=True
+        )
+
+    def get_by_slug(self, election):
+        return get_object_or_404(self, slug=election)
+
+    def by_date(self):
+        return self.order_by(
+            'election_date'
+        )
+
+class ElectionManager(models.Manager):
+    def elections_for_area_generations(self):
+        generations = defaultdict(list)
+        for election in self.current():
+            for area_type in election.area_types.all():
+                area_tuple = (area_type.name, election.area_generation)
+                generations[area_tuple].append(election)
+
+        return generations
 
 
 class AreaType(models.Model):
@@ -34,6 +59,8 @@ class Election(models.Model):
     ocd_division = models.CharField(max_length=250, blank=True)
 
     description = models.CharField(max_length=500, blank=True)
+
+    objects = ElectionManager.from_queryset(ElectionQuerySet)()
 
     def __unicode__(self):
         return self.name
