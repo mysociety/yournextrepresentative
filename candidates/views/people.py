@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import (
     HttpResponseRedirect, HttpResponsePermanentRedirect
 )
+from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
@@ -32,46 +33,33 @@ from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
 
-def get_flash_message(person, new_person=False):
-    if new_person:
-        prompt_intro = _('Thank-you for adding <a href="{person_url}">{person_name}</a>!')
-    else:
-        prompt_intro = _('Thank-you for updating <a href="{person_url}">{person_name}</a>!')
+def get_call_to_action_flash_message(person, new_person=False):
+    """Get HTML for a flash message after a person has been created or updated"""
 
-    prompt_intro+= _(' Now you can carry on to:')
-
-    format_kwargs = {
-        'person_url': reverse('person-view', kwargs={'person_id': person.id}),
-        'person_edit_url': reverse('person-update', kwargs={'person_id': person.id}),
-        'person_name': person.name,
-        'needing_attention_url': reverse('attention_needed'),
-    }
-
-    election_li = _(
-        '<li><a href="{person_create_url}">Add another '
-        'candidate in the {election_name}</a></li>'
+    return render_to_string(
+        'candidates/_person_update_call_to_action.html',
+        {
+            'new_person': new_person,
+            'person_url':
+            reverse('person-view', kwargs={'person_id': person.id}),
+            'person_edit_url':
+            reverse('person-update', kwargs={'person_id': person.id}),
+            'person_name': person.name,
+            'needing_attention_url': reverse('attention_needed'),
+            # We want to offer the option to add another candidate in
+            # any of the elections that this candidate is standing in,
+            # which means we'll need the "create person" URL and
+            # election name for each of those elections:
+            'create_for_election_options': [
+                (
+                    reverse('person-create', kwargs={'election': election}),
+                    election_data['name']
+                )
+                for election, election_data in settings.ELECTIONS_CURRENT
+                if person.standing_in.get(election)
+            ]
+        }
     )
-    same_post_again = '\n'.join(
-        election_li.format(
-            person_create_url=reverse(
-                'person-create', kwargs={'election': election}
-            ),
-            election_name=election_data['name']
-        )
-        for election, election_data in settings.ELECTIONS_CURRENT
-        if person.standing_in.get(election)
-    )
-
-    return (
-        prompt_intro + \
-        '<ul>' + \
-        _('<li><a href="{person_edit_url}">Edit {person_name} '
-          'again</a></li>') + \
-        _('<li>Add a candidate for <a href="{needing_attention_url}">one of '
-          'the posts with fewest candidates</a></li>') + \
-        same_post_again + \
-        '</ul>'
-    ).format(**format_kwargs)
 
 
 class PersonView(PopItApiMixin, TemplateView):
@@ -311,7 +299,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            get_flash_message(person, new_person=False),
+            get_call_to_action_flash_message(person, new_person=False),
             extra_tags='safe do-something-else'
         )
 
@@ -358,7 +346,7 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            get_flash_message(person, new_person=True),
+            get_call_to_action_flash_message(person, new_person=True),
             extra_tags='safe do-something-else'
         )
 
