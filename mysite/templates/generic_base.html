@@ -94,13 +94,13 @@
         <div class="messages">
           {% for message in messages %}
             {% if 'photo-review' in message.tags or 'do-something-else' in message.tags %}
-              <p class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+              <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
                 {% if 'safe' in message.tags %}
                   {{ message|safe }}
                 {% else %}
                   {{ message }}
                 {% endif %}
-              </p>
+              </div>
             {% endif %}
           {% endfor %}
         </div>
