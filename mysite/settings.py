@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'pipeline',
     'statici18n',
     'elections',
+    'popolo',
     ELECTION_APP_FULLY_QUALIFIED,
     'candidates',
     'tasks',
