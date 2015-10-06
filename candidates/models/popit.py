@@ -240,7 +240,9 @@ def membership_covers_date(membership, date):
 def is_party_membership(membership):
     """This predicate works whether the organization is embedded or not"""
 
-    role = membership.get('role', 'Member').lower()
+    role = membership.get('role')
+    role = role or 'Member'
+    role = role.lower()
     if role != 'member':
         return False
     organization_id = membership['organization_id']
