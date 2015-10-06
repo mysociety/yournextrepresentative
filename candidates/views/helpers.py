@@ -91,6 +91,10 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     will be ordered by the last name of the first candidate for each
     party."""
 
+    # We need to build up this dictionary based on the embedded
+    # memberships because PARTY_DATA.party_id_to_name doesn't include
+    # now-dissolved parties...
+    party_id_to_name = {}
     party_id_to_people = defaultdict(list)
     party_truncated = dict()
     election_data = settings.ELECTIONS[election]
@@ -103,6 +107,7 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
         if election_data['party_lists_in_use']:
             position = person.standing_in[election].get('party_list_position')
         party_id = party_data['id']
+        party_id_to_name[party_id] = party_data['name']
         party_id_to_people[party_id].append((position, person))
     for party_id, people_list in party_id_to_people.items():
         if election_data['party_lists_in_use']:
@@ -120,7 +125,7 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
             (
                 {
                     'id': k,
-                    'name': PARTY_DATA.party_id_to_name[k],
+                    'name': party_id_to_name[k],
                     'max_count': max_people,
                     'total_count': party_truncated.get(k)
                 },
