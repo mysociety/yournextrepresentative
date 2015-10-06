@@ -171,6 +171,7 @@ class Command(BaseCommand):
                         election_data['id'],
                         post_data['label'],
                     ),
+                    'party_list_position': candidate['Posicion'],
                 }
                 if 'area' in post_data:
                     standing_in_election['mapit_url'] = post_data['area']['identifier']
