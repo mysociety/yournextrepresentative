@@ -3,13 +3,13 @@
 STAGING: '1'
 
 # This can be either 'postgresql' or 'sqlite':
-DATABASE_SYSTEM: 'sqlite'
+DATABASE_SYSTEM: 'postgresql'
 
 # These settings are for when you've set 'postgresql' as the
 # DATABASE_SYSTEM above, otherwise (if you're using 'sqlite')
 # they're ignored.
 YNMP_DB_USER: ''
-YNMP_DB_NAME: ''
+YNMP_DB_NAME: 'ynmp'
 YNMP_DB_PASS: ''
 YNMP_DB_PORT: ''
 YNMP_DB_HOST: ''
