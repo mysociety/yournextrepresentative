@@ -424,43 +424,10 @@ try:
 except AttributeError:
     EXTRA_SIMPLE_FIELDS = {}
 
-ELECTIONS = elections_module.ELECTIONS
-
-ELECTIONS_BY_DATE = sorted(
-    ELECTIONS.items(),
-    key=lambda e: (e[1]['election_date'], e[0]),
-)
-
-ELECTION_RE = '(?P<election>'
-ELECTION_RE += '|'.join(
-    re.escape(t[0]) for t in ELECTIONS_BY_DATE
-)
-ELECTION_RE += ')'
-
-ELECTIONS_CURRENT = [t for t in ELECTIONS_BY_DATE if t[1].get('current')]
+ELECTION_RE = elections_module.ELECTION_RE
 
 # Make sure there's a trailing slash at the end of base MapIt URL:
 MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
-
-MAPIT_TYPES = set()
-for e in ELECTIONS_CURRENT:
-    for mapit_type in e[1]['mapit_types']:
-        MAPIT_TYPES.add(mapit_type)
-
-KNOWN_MAPIT_GENERATIONS = set(
-    e[1]['mapit_generation'] for e in ELECTIONS_CURRENT
-)
-if len(KNOWN_MAPIT_GENERATIONS) > 1:
-    message = "More than one MapIt generation for current elections: {0}"
-    raise Exception(message.format(KNOWN_MAPIT_GENERATIONS))
-
-MAPIT_CURRENT_GENERATION = list(KNOWN_MAPIT_GENERATIONS)[0]
-
-MAPIT_TYPES_GENERATIONS_ELECTIONS = defaultdict(list)
-for election_tuple in ELECTIONS_CURRENT:
-    for mapit_type in election_tuple[1]['mapit_types']:
-        mapit_tuple = (mapit_type, election_tuple[1]['mapit_generation'])
-        MAPIT_TYPES_GENERATIONS_ELECTIONS[mapit_tuple].append(election_tuple)
 
 # Use Matthew's suggestion for allowing local settings overrides with
 # both Python 2 and Python 3; this uses exec rather than import so
