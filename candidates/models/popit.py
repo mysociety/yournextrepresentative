@@ -24,9 +24,6 @@ from ..cache import (
     get_person_cached, invalidate_person, get_post_cached, invalidate_posts
 )
 from ..diffs import get_version_diffs
-from ..election_specific import (
-    EXTRA_CSV_ROW_FIELDS
-)
 
 from elections.models import Election
 
@@ -77,7 +74,7 @@ CSV_ROW_FIELDS = [
     'image_copyright',
     'image_uploading_user',
     'image_uploading_user_notes',
-] + EXTRA_CSV_ROW_FIELDS
+]
 
 
 form_complex_fields_locations = {
@@ -774,7 +771,6 @@ class PopItPerson(object):
         CSV_ROW_FIELDS, for ease of converting PopItPerson objects
         to CSV representations.
         """
-
         class EmptyForNoneAttributes(object):
             def __init__(self, person):
                 self.person = person
@@ -837,6 +833,7 @@ class PopItPerson(object):
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
         }
+        from ..election_specific import MAPIT_DATA, get_extra_csv_values
         extra_csv_data = get_extra_csv_values(self, election, MAPIT_DATA)
         row.update(extra_csv_data)
 
@@ -1006,8 +1003,8 @@ class PopItPerson(object):
     def get_initial_form_data(self):
         """For use to get the initial data for a form for editing the person"""
 
-        from ..election_specific import AREA_POST_DATA
 
+        from ..election_specific import AREA_POST_DATA
         initial_data = {}
         for field_name in all_form_fields:
             initial_data[field_name] = getattr(self, field_name)
