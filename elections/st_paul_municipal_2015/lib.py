@@ -31,5 +31,3 @@ class AreaPostData(BaseAreaPostData):
 
     def post_id_to_party_set(self, post_id):
         return 'st-paul'
-
-
