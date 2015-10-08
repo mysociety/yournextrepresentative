@@ -19,10 +19,10 @@
 
 {% block content %}
 
-<p>{% blocktrans with site_name=site.name trimmed %}
+<p>{% blocktrans with site_name=site.name copyright_holder=settings.COPYRIGHT_HOLDER trimmed %}
 Before you carry on to edit data in {{ site_name }}, we need you to
 agree that your contributions to this site (with the exception of
-photo uploads) are owned by Democracy Club Limited. In return, we
+photo uploads) are owned by {{ copyright_holder }}. In return, we
 agree to make the complete database available under an open licence
 such as
 <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA</a>
@@ -39,9 +39,9 @@ or remove copyright restrictions by releasing into the public domain
   {{ form.assigned_to_dc }}
     <label for="{{ form.assigned_to_dc.id_for_label }}">
       <strong>
-        {% blocktrans with site_name=site.name trimmed %}
+        {% blocktrans with site_name=site.name copyright_holder=settings.COPYRIGHT_HOLDER trimmed %}
           I assign the copyright of my contributions to {{ site_name }}
-          (apart from photo uploads) to Democracy Club Limited.
+          (apart from photo uploads) to {{ copyright_holder }}.
         {% endblocktrans %}
       </strong>
     </label>
@@ -60,7 +60,7 @@ or remove copyright restrictions by releasing into the public domain
 
   <h4>{% trans "Why are we asking you to agree to this?" %}</h4>
 
-  <p>{% blocktrans with site_name=site.name trimmed %}
+  <p>{% blocktrans with site_name=site.name copyright_holder=settings.COPYRIGHT_HOLDER trimmed %}
     When we originally set up {{ site_name }} for the 2015 UK general
     election we didn't get legal advice about the best way to deal
     with copyright and licensing. It turns out that the way that the
@@ -72,7 +72,7 @@ or remove copyright restrictions by releasing into the public domain
     can make the data as widely available as possible while preventing
     the hard work of contributors to {{ site_name }} being co-opted by
     companies building closed candidate databases is to ask you to
-    assign the copyright of your contributions to Democracy Club.
+    assign the copyright of your contributions to {{ copyright_holder }}.
     {% endblocktrans %}
   </p>
 

@@ -15,9 +15,15 @@
 
 <h3>{% trans "Simple Version" %}</h3>
 
-<p>{% blocktrans trimmed %}
-This site is run by <a href="https://democracyclub.org.uk/">Democracy Club</a>.
+{% if settings.SITE_OWNER_URL %}
+<p>{% blocktrans with site_owner=settings.SITE_OWNER site_owner_url=settings.SITE_OWNER_URL trimmed %}
+This site is run by <a href="{{ site_owner_url }}">{{ site_owner }}</a>.
 {% endblocktrans %}</p>
+{% else %}
+<p>{% blocktrans with site_owner=settings.SITE_OWNER trimmed %}
+This site is run by {{ site_owner }}.
+{% endblocktrans %}</p>
+{% endif %}
 
 <p>{% blocktrans trimmed %}
 We make the following promises about your personal
@@ -35,11 +41,11 @@ in order to run the website.
 {% endblocktrans %}</li>
 </ul>
 
-<p>{% blocktrans trimmed %}
+<p>{% blocktrans with site_owner=settings.SITE_OWNER trimmed %}
 We may use your email address to contact you about your use
 of the site if it's problematic (or particularly helpful!), or
 with occasional announcements about {{ site.name }} and other
-Democracy Club projects.
+{{ site_owner }} projects.
 {% endblocktrans %}</p>
 
 <h3>{% trans "Details" %}</h3>

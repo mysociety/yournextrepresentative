@@ -74,3 +74,6 @@ EXTRA_SIMPLE_FIELDS = {
     'cv': '',
     'program': ''
 }
+
+SITE_OWNER = 'Burkina Open Data Initiative (BODI)'
+COPYRIGHT_HOLDER = 'Burkina Open Data Initiative (BODI)'

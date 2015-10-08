@@ -146,6 +146,12 @@ In this new application you will need to do the following:
   dictionary. (The details of the meaning of these fields are
   described just below.)
 
+* Set `SITE_OWNER` and `COPYRIGHT_HOLDER` in the `settings`
+  module (and optionally `SITE_OWNER_URL`) - these will be
+  displayed on the site to indicate who runs the site
+  (`SITE_OWNER`) and who owns the database right of all the
+  crowd-sourced data (`COPYRIGHT_HOLDER`).
+
 * Override generic templates in your election application.
 
 * Optionally add a `urls.py` and `views.py` to override and

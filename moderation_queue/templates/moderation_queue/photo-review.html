@@ -105,7 +105,9 @@
         </p>
       {% elif why_allowed == 'copyright-assigned' %}
         <p>
-          {% blocktrans %}{{ username }} assigned the copyright to Democracy Club{% endblocktrans %}
+          {% blocktrans with copyright_holder=settings.COPYRIGHT_HOLDER trimmed %}
+            {{ username }} assigned the copyright to {{ copyright_holder }}
+          {% endblocktrans %}
         </p>
       {% elif why_allowed == 'profile-photo' %}
         <p>{% blocktrans trimmed %}

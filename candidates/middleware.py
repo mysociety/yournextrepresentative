@@ -69,7 +69,8 @@ class CopyrightAssignmentMiddleware(object):
     is present.
 
     If this is an authenticated user, then insist that they agree to
-    assign copyright of any conributions to Democracy Club
+    assign copyright of any contributions to the COPYRIGHT_HOLDER in
+    settings.
     """
 
     EXCLUDED_PATHS = (

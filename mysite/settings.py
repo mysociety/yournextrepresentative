@@ -399,6 +399,18 @@ EDITS_ALLOWED = conf.get('EDITS_ALLOWED', True)
 ELECTION_SETTINGS_MODULE = ELECTION_APP_FULLY_QUALIFIED + '.settings'
 elections_module = importlib.import_module(ELECTION_SETTINGS_MODULE)
 
+# The name of the organisation that runs and manages the site:
+SITE_OWNER = elections_module.SITE_OWNER
+
+# The name of the organisation that should own the data collected by
+# this site:
+COPYRIGHT_HOLDER = elections_module.COPYRIGHT_HOLDER
+
+try:
+    SITE_OWNER_URL = elections_module.SITE_OWNER_URL
+except AttributeError:
+    SITE_OWNER_URL = ''
+
 try:
     AREAS_TO_ALWAYS_RETURN = elections_module.AREAS_TO_ALWAYS_RETURN
 except AttributeError:

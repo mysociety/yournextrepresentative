@@ -5,8 +5,8 @@
   been placed in the public domain)
 {% endblocktrans %}
 {% elif reason == 'copyright-assigned' %}
-{% blocktrans trimmed %}
-  they have assigned the copyright of the image to Democracy Club
+{% blocktrans with site_owner=settings.SITE_OWNER trimmed %}
+  they have assigned the copyright of the image to {{ site_owner }}
   so that we may use it on the site
 {% endblocktrans %}
 {% elif reason == 'profile-photo' %}
