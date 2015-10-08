@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 k for k, v in mapping.items()
                 if v is None
             ]
-            f.write(json.dumps(mapping))
+            f.write(json.dumps(mapping, sort_keys=True))
             f.write(';\n')
             if unknown_post_ids:
                 print "Warning: no party set could be found for these post IDs:"
