@@ -61,12 +61,18 @@ or remove copyright restrictions by releasing into the public domain
   <h4>{% trans "Why are we asking you to agree to this?" %}</h4>
 
   <p>{% blocktrans with site_name=site.name copyright_holder=settings.COPYRIGHT_HOLDER trimmed %}
-    This is the simplest way to ensure that we can make this data as
-    widely available as possible while preventing the hard work of
-    contributors to {{ site_name }} being unfairly co-opted by
-    companies building closed candidate databases. This also allows
-    us the flexibility to release the data under different open licenses
-    in the future.
+    When we originally set up {{ site_name }} for the 2015 UK general
+    election we didn't get legal advice about the best way to deal
+    with copyright and licensing. It turns out that the way that the
+    user agreement that was worded on the 'About' page had a few
+    problems, and in particular restricted what we could do with the
+    data such that we couldn't license the database to some partners
+    who we thought would make good use of the data but who needed
+    slightly different licensing. The simplest way to ensure that we
+    can make the data as widely available as possible while preventing
+    the hard work of contributors to {{ site_name }} being co-opted by
+    companies building closed candidate databases is to ask you to
+    assign the copyright of your contributions to {{ copyright_holder }}.
     {% endblocktrans %}
   </p>
 
