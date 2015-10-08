@@ -16,7 +16,11 @@
 
 <p>{% blocktrans trimmed %}
 Please email <a href="mailto:{{ email }}">{{ email }}</a>
-with any feedback or bug reports.
+with any feedback or bug reports. If you'd like to discuss this
+site or any other project relating to elections in the UK, we'd
+suggest that you post to
+the <a href="https://groups.google.com/forum/#!forum/democracy-club">Democracy
+Club Google Group</a>.
 {% endblocktrans %}</p>
 
 <p>{% blocktrans trimmed %}
@@ -29,9 +33,16 @@ of known bugs</a> there as well.
 
 <p>{% blocktrans trimmed %}
 This site was originally developed by Mark Longair (mySociety),
-Sym Roe (Democracy Club) and Zarino Zappia (mySociety), and
+Sym Roe (Democracy Club) and Zarino Zappia (mySociety) and
 <a href="https://github.com/mysociety/yournextrepresentative/graphs/contributors">many
 other contributors</a>, to whom we owe a debt of gratitude.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+The data on candidates from the last UK general election in
+2010 is all taken from Edmund von der
+Burg's <a href="http://www.yournextmp.com">YourNextMP.com</a>,
+with many thanks.
 {% endblocktrans %}</p>
 
 {% url 'help-api' as api_url %}
@@ -44,7 +55,7 @@ terms of the Creative Commons license
 {% endblocktrans %}</p>
 
 <ul>
-    <li>{% trans "Party logos" %}</li>
+    <li>{% trans "The party logos, which are taken from the Electoral Commission's website" %}</li>
     <li>{% blocktrans trimmed %}
 Candidate photos, which are typically either submitted by the candidates
 themselves, or from sources where it seems reasonable that we might use them on
@@ -58,6 +69,18 @@ If the CC-BY-SA licence is problematic for you, but you feel that you have a
 worthwhile use of the data in mind, please <a href="mailto:{{ email }}">contact
 us</a> to discuss your situation further.
 {% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+For complicated reasons relating to database licensing, we have put
+the data as of the 4th of March 2015 into the public domain by
+declaring it to
+be <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0</a>. This
+data is available
+<a href="{{ MEDIA_URL }}csv-archives/cc0-snapshot-out-of-date/">here</a>
+but please be warned that this snapshot will become inaccurate very quickly
+- please use
+<a href="{{ api_url }}">the up-to-date data</a> instead.
+{% endblocktrans %}
 
 <h3>{% trans "Privacy Policy" %}</h3>
 
