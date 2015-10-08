@@ -125,17 +125,8 @@
             &middot; <a href="{% url 'help-privacy' %}">{% trans "Privacy policy" %}</a></p>
       </div>
       <div class="footer__bylines">
-        <p>{% blocktrans trimmed %}
-          Supported by <a href="https://fullfact.org">Full Fact</a>,
-          <a href="http://unlockdemocracy.org.uk">Unlock Democracy</a>, and
-          <a href="https://mysociety.org">mySociety</a>.
-          {% endblocktrans %}</p>
-        {% static "img/logo-with-text.png" as logo_url %}
-        <p>{% blocktrans trimmed %}
-          Built by <a href="https://democracyclub.org.uk/">
-          <img src="{{ logo_url }}" %} alt="Democracy Club" class="dc-logo"></a>
-          {% endblocktrans %}
-        </p>
+        {% block footer_bylines %}
+        {% endblock %}
       </div>
     </div>
   </div>
