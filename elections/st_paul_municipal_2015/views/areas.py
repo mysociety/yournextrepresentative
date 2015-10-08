@@ -88,25 +88,6 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
 
         return context
 
-class StPaulDistrictDetailView(ConstituencyDetailView):
-
-    template_name = 'st_paul_municipal_2015/districts.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(StPaulDistrictDetailView, self).get_context_data(**kwargs)
-
-        # context['electionleaflets_url'] = \
-        #     get_electionleaflets_url(
-        #         context['post_id'],
-        #         context['post_label_shorter']
-        #     )
-
-        # context['meetyournextmp_url'] = \
-        #     u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(
-        #         context['post_id']
-        #     )
-        return context
-
 class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
     template_name = 'candidates/areas-of-type.html'
 
