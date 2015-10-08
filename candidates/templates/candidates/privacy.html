@@ -41,10 +41,10 @@ in order to run the website.
 {% endblocktrans %}</li>
 </ul>
 
-<p>{% blocktrans with site_owner=settings.SITE_OWNER trimmed %}
+<p>{% blocktrans with site_owner=settings.SITE_OWNER site_name=site.name trimmed %}
 We may use your email address to contact you about your use
 of the site if it's problematic (or particularly helpful!), or
-with occasional announcements about {{ site.name }} and other
+with occasional announcements about {{ site_name }} and other
 {{ site_owner }} projects.
 {% endblocktrans %}</p>
 
