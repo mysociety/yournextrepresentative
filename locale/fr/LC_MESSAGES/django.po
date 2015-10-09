@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 14:27+0100\n"
-"PO-Revision-Date: 2015-10-09 13:28+0000\n"
+"POT-Creation-Date: 2015-10-09 18:57+0100\n"
+"PO-Revision-Date: 2015-10-09 17:57+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -197,28 +197,29 @@ msgstr "était connu pour ne pas être candidat aux {election}"
 
 #: candidates/diffs.py:64
 #, python-brace-format
-msgid "is known to be standing for the post with ID {party} in the {election}"
-msgstr "est connu pour être candidat au poste avec l'ID {party} aux {election}"
+msgid ""
+"is known to be standing for the post with ID {post_id} in the {election}"
+msgstr ""
 
 #: candidates/diffs.py:66
 #, python-brace-format
 msgid ""
-"was known to be standing for the post with ID {party} in the {election}"
-msgstr "était connu pour être candidat pour le poste avec l'ID {party} aux {election}"
+"was known to be standing for the post with ID {post_id} in the {election}"
+msgstr ""
 
 #: candidates/diffs.py:70
 #, python-brace-format
 msgid ""
-"is known to be standing in the constituency with MapIt URL {party} in the "
-"{election}"
-msgstr "est connu pour être candidat dans la circonscription électorale avec l'URL MapIt {party} aux {election}"
+"is known to be standing in the constituency with MapIt URL {mapit_url} in "
+"the {election}"
+msgstr ""
 
 #: candidates/diffs.py:72
 #, python-brace-format
 msgid ""
-"was known to be standing in the constituency with MapIt URL {party} in the "
-"{election}"
-msgstr "était connu pour être candidat dans la circonscription électoralle avec l'URL MapIt {party} aux {election}"
+"was known to be standing in the constituency with MapIt URL {mapit_url} in "
+"the {election}"
+msgstr ""
 
 #: candidates/diffs.py:76 candidates/diffs.py:97
 #, python-brace-format
@@ -2027,7 +2028,7 @@ msgstr ""
 
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
-#: elections/ar_elections_2015/templates/base.html:108
+#: elections/ar_elections_2015/templates/base.html:110
 #: mysite/templates/generic_base.html:125
 msgid "Privacy policy"
 msgstr ""
@@ -2292,54 +2293,53 @@ msgid "Yo Quiero Saber"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:46
-#: elections/ar_elections_2015/templates/base.html:107
-#: mysite/templates/generic_base.html:74
-#: mysite/templates/generic_base.html:123
-msgid "About"
-msgstr ""
-
-#: elections/ar_elections_2015/templates/base.html:47
 msgid "Provinces"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:57
+#: elections/ar_elections_2015/templates/base.html:58
 #: mysite/templates/generic_base.html:82
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:59
+#: elections/ar_elections_2015/templates/base.html:60
 #: mysite/templates/generic_base.html:83
 msgid "Sign out"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:62
+#: elections/ar_elections_2015/templates/base.html:63
 #: mysite/templates/generic_base.html:87
 msgid "Sign in to edit"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:106
+#: elections/ar_elections_2015/templates/base.html:108
 #: mysite/templates/generic_base.html:122
 msgid "Open data API"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:111
+#: elections/ar_elections_2015/templates/base.html:109
+#: mysite/templates/generic_base.html:74
+#: mysite/templates/generic_base.html:123
+msgid "About"
+msgstr ""
+
+#: elections/ar_elections_2015/templates/base.html:113
 msgid "Made by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:118
+#: elections/ar_elections_2015/templates/base.html:120
 msgid "Partners"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:125
+#: elections/ar_elections_2015/templates/base.html:128
 msgid "Supported by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:131
+#: elections/ar_elections_2015/templates/base.html:134
 msgid "Developed by"
 msgstr ""
 
-#: elections/ar_elections_2015/templates/base.html:138
+#: elections/ar_elections_2015/templates/base.html:141
 msgid "Show all the collaborators and volunteers"
 msgstr ""
 
