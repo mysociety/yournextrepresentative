@@ -118,7 +118,7 @@ def get_search_url(collection, query, **kwargs):
     }
     parameters.update(kwargs)
     query_string = '&'.join(
-        k + '=' + urlquote(v) for k, v in parameters.items()
+        "%s=%s" % (k, v) for k, v in parameters.items()
     )
     return base_search_url + collection + '?' + query_string
 
