@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-16 14:24+0100\n"
-"PO-Revision-Date: 2015-09-16 13:25+0000\n"
-"Last-Translator: mySociety <transifex@mysociety.org>\n"
+"PO-Revision-Date: 2015-09-16 15:08+0000\n"
+"Last-Translator: Gareth Morlais\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -435,7 +435,7 @@ msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 #: candidates/management/commands/candidates_create_popit_posts.py:25
 #, python-brace-format
 msgid "{post_role} for {area_name}"
-msgstr ""
+msgstr "{post_role} ar gyfer {area_name}"
 
 #: candidates/middleware.py:42
 #, python-brace-format
@@ -865,7 +865,7 @@ msgid ""
 "You can read <a href=\"http://popit.poplus.org/docs/api/\">more generic "
 "documentation for the PopIt API</a> or just follow the simple examples that "
 "follow."
-msgstr "Gallwch ddarllen <a href=\"http://popit.poplus.org/docs/api/\">rhagor o ddogfennau cyffredinol ar gyfer API PopIt < /a > neu dilynwch yr enghreifftiau syml sy'n dilyn."
+msgstr "Gallwch ddarllen <a href=\"http://popit.poplus.org/docs/api/\">rhagor o ddogfennau cyffredinol ar gyfer API PopIt </a> neu dilynwch yr enghreifftiau syml sy'n dilyn."
 
 #: candidates/templates/candidates/api.html:78
 msgid "Find a Constituency ID"
@@ -2047,7 +2047,7 @@ msgstr "Gwall gyda math ac ardal: '{0}'"
 #: candidates/views/areas.py:34
 #, python-brace-format
 msgid "Unknown post for types and areas: '{0}'"
-msgstr ""
+msgstr "Etholaeth anhysbys ar gyfer mathau ac ardaloedd: '{0}'"
 
 #: candidates/views/areas.py:91
 #, python-brace-format
@@ -2149,7 +2149,7 @@ msgstr "Hoffwn wybod"
 #: mysite/templates/generic_base.html:68
 #: mysite/templates/generic_base.html:117
 msgid "About"
-msgstr "Am"
+msgstr "Amdanom Ni"
 
 #: elections/ar_elections_2015/templates/base.html:71
 msgid "Provinces"
@@ -2881,7 +2881,7 @@ msgid ""
 "/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX wXspA/edit\">guidance on sourcing "
 "fields</a>, and specifically the part about what sort of email addresses we "
 "accept."
-msgstr "Darllenwch ein < href = \\ \"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX wXspA/edit\" > canllawiau ar gyrchu caeau< /a >, ac yn benodol y rhan ynghylch pa fath o gyfeiriadau ebost a dderbyniwn."
+msgstr "Darllenwch ein <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX wXspA/edit\"> canllawiau ar gyrchu caeau</a>, ac yn benodol y rhan ynghylch pa fath o gyfeiriadau ebost a dderbyniwn."
 
 #: tasks/templates/tasks/tasks_home.html:62
 msgid ""
@@ -2898,4 +2898,4 @@ msgstr "Yn fyr, dim ond ebyst gellid eu hystyried yn gyfeiriadau cyhoeddus a chy
 msgid ""
 "Once your constituency has all the email addresses entered, you can look at "
 "our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
-msgstr "Unwaith mae holl gyfeiriadau ebost eich etholaeth wedi eu cofnodi, gallwch edrych ar ein <a href=\"%(url)s\"> rhestr o'r holl ymgeiswyr sydd heb gyfeiriad ebost< /a >!"
+msgstr "Unwaith mae holl gyfeiriadau ebost eich etholaeth wedi eu cofnodi, gallwch edrych ar ein <a href=\"%(url)s\"> rhestr o'r holl ymgeiswyr sydd heb gyfeiriad ebost</a>!"

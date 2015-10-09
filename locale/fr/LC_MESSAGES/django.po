@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Teg-wende Idriss TINTO <tinto.jean@titinto.net>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-16 14:24+0100\n"
-"PO-Revision-Date: 2015-09-16 13:25+0000\n"
-"Last-Translator: mySociety <transifex@mysociety.org>\n"
+"PO-Revision-Date: 2015-10-06 13:48+0000\n"
+"Last-Translator: Teg-wende Idriss TINTO <tinto.jean@titinto.net>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,54 +21,54 @@ msgstr ""
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:6
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:9
 msgid "Permission denied"
-msgstr ""
+msgstr "Permission non accordée"
 
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:14
 msgid ""
 "You must be in the member of a particular group in order to view that page. "
 "Please contact the administrators of the site if you feel that you should "
 "have access to this page."
-msgstr ""
+msgstr "Vous devez être membre d'un groupe particulier pour voir cette page. S'il vous plaît, contactez l'administrateur du site si vous pensez devoir avoir à cette page."
 
 #: cached_counts/templates/attention_needed.html:5
 msgid "Posts needing most attention"
-msgstr ""
+msgstr "Postes demandant le plus d'attention"
 
 #: cached_counts/templates/attention_needed.html:8
 #: cached_counts/templates/constituency_counts.html:10
 msgid "Post Name"
-msgstr ""
+msgstr "Nom du poste"
 
 #: cached_counts/templates/attention_needed.html:9
 #: cached_counts/templates/constituency_counts.html:11
 #: cached_counts/templates/party_counts.html:11
 #: elections/ar_elections_2015/templates/party_counts.html:11
 msgid "Number of Candidates"
-msgstr ""
+msgstr "Nombre de candidats"
 
 #: cached_counts/templates/constituency_counts.html:5
 #, python-format
 msgid "Number of known %(election_name)s candidates per post"
-msgstr ""
+msgstr "Nombre de candidats connus à %(election_name)s par poste"
 
 #: cached_counts/templates/party_counts.html:5
 #: elections/ar_elections_2015/templates/party_counts.html:5
 #, python-format
 msgid "Number of known %(election_name)s candidates per party"
-msgstr ""
+msgstr "Nombre de candidats connus à %(election_name)s par parti"
 
 #: cached_counts/templates/party_counts.html:10
 #: elections/ar_elections_2015/templates/party_counts.html:10
 msgid "Party Name"
-msgstr ""
+msgstr "Nom du parti"
 
 #: cached_counts/templates/reports.html:6
 msgid "Reports"
-msgstr ""
+msgstr "Rapports"
 
 #: cached_counts/templates/reports.html:12
 msgid "Which posts have fewest candidates so far?"
-msgstr ""
+msgstr "Quels postes ont le moins de candidats jusque là?"
 
 #: cached_counts/templates/reports.html:15
 #, python-format
@@ -77,196 +78,196 @@ msgid ""
 "        <a href=\"%(url)s\">ordered starting with those with the fewest\n"
 "        candidates</a>.\n"
 "     "
-msgstr ""
+msgstr "\n        Vous pouvez voir une liste de tous les postes pour l'élection actuelle\n        <a href=\"%(url)s\"> ordonnée, commençant par ceux ayant le moins de candidats</a>.\n     "
 
 #: cached_counts/templates/reports.html:26
 msgid "Current Elections"
-msgstr ""
+msgstr "Élections actuelles"
 
 #: cached_counts/templates/reports.html:28
 msgid "Past Elections"
-msgstr ""
+msgstr "Élections passées"
 
 #: cached_counts/templates/reports.html:34
 #, python-format
 msgid "Statistics for the %(election_name)s"
-msgstr ""
+msgstr "Statistiques de %(election_name)s"
 
 #: cached_counts/templates/reports.html:36
 msgid "Total candidates:"
-msgstr ""
+msgstr "Total des candidats"
 
 #: cached_counts/templates/reports.html:37
 msgid "Candidates per post"
-msgstr ""
+msgstr "Candidats par postes"
 
 #: cached_counts/templates/reports.html:38
 msgid "Candidates per party"
-msgstr ""
+msgstr "Candidats par parti"
 
 #: cached_counts/templates/reports.html:44
 #, python-format
 msgid "Statistics compared to the %(prior_election_name)s"
-msgstr ""
+msgstr "Statistiques comparées à %(prior_election_name)s"
 
 #: cached_counts/templates/reports.html:46
 #, python-format
 msgid "Total candidates in %(prior_election_name)s:"
-msgstr ""
+msgstr "Total des candidats à %(prior_election_name)s:"
 
 #: cached_counts/templates/reports.html:49
 #, python-format
 msgid "Percentage (%(election_name)s / %(prior_election_name)s):"
-msgstr ""
+msgstr "Pourcentage (%(election_name)s / %(prior_election_name)s):"
 
 #: cached_counts/templates/reports.html:52
 #, python-format
 msgid "New candidates compared to the %(prior_election_name)s:"
-msgstr ""
+msgstr "Nouveaux candidats comparés à %(prior_election_name)s:"
 
 #: cached_counts/templates/reports.html:55
 #, python-format
 msgid "Candidates standing again from the %(prior_election_name)s:"
-msgstr ""
+msgstr "Candidats à %(prior_election_name)s briguant à nouveau :"
 
 #: cached_counts/templates/reports.html:58
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for the same "
 "party:"
-msgstr ""
+msgstr "Candidats à %(prior_election_name)s briguant à nouveau pour le même parti:"
 
 #: cached_counts/templates/reports.html:62
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for a different "
 "party:"
-msgstr ""
+msgstr "Candidats à %(prior_election_name)s briguant pour un parti différent :"
 
 #: cached_counts/templates/reports.html:74
 msgid "No election data found."
-msgstr ""
+msgstr "Aucune donnée d'élection trouvée"
 
 #: candidates/diffs.py:32
 #, python-brace-format
 msgid "is known to be standing for the party '{party}' in the {election}"
-msgstr ""
+msgstr "est connu pour être un(e) candidat(e) du parti '{party}' aux {election}"
 
 #: candidates/diffs.py:34
 #, python-brace-format
 msgid "was known to be standing for the party '{party}' in the {election}"
-msgstr ""
+msgstr "était connu pour être un candidat du parti '{party}' aux {election}"
 
 #: candidates/diffs.py:38
 #, python-brace-format
 msgid ""
 "is known to be standing for the party with ID {party} in the {election}"
-msgstr ""
+msgstr "est connu pour être un candidat du parti avec l'ID {party} aux {election}"
 
 #: candidates/diffs.py:40
 #, python-brace-format
 msgid ""
 "was known to be standing for the party with ID {party} in the {election}"
-msgstr ""
+msgstr "était connu pour être un candidat du parti avec l'ID {party} aux {election}"
 
 #: candidates/diffs.py:43 candidates/diffs.py:86
 #, python-brace-format
 msgid "Unexpected leaf {0} (attribute: {1}, election: {2}"
-msgstr ""
+msgstr "feuille inattendue {0} (attribut: {1}, élection: {2}"
 
 #: candidates/diffs.py:49
 #, python-brace-format
 msgid "is known to be standing for the party \"{party}\" in the {election}"
-msgstr ""
+msgstr "est connu pour être un candidat du parti \"{party}\" aux {election}"
 
 #: candidates/diffs.py:51
 #, python-brace-format
 msgid "was known to be standing for the party \"{party}\" in the {election}"
-msgstr ""
+msgstr "était connu pour être le candidat du parti \"{party}\" aux {election}"
 
 #: candidates/diffs.py:56
 #, python-brace-format
 msgid "is known not to be standing in the {election}"
-msgstr ""
+msgstr "est connu pour ne pas être un candidat aux {election}"
 
 #: candidates/diffs.py:58
 #, python-brace-format
 msgid "was known not to be standing in the {election}"
-msgstr ""
+msgstr "était connu pour ne pas être candidat aux {election}"
 
 #: candidates/diffs.py:64
 #, python-brace-format
 msgid "is known to be standing for the post with ID {party} in the {election}"
-msgstr ""
+msgstr "est connu pour être candidat au poste avec l'ID {party} aux {election}"
 
 #: candidates/diffs.py:66
 #, python-brace-format
 msgid ""
 "was known to be standing for the post with ID {party} in the {election}"
-msgstr ""
+msgstr "était connu pour être candidat pour le poste avec l'ID {party} aux {election}"
 
 #: candidates/diffs.py:70
 #, python-brace-format
 msgid ""
 "is known to be standing in the constituency with MapIt URL {party} in the "
 "{election}"
-msgstr ""
+msgstr "est connu pour être candidat dans la circonscription électorale avec l'URL MapIt {party} aux {election}"
 
 #: candidates/diffs.py:72
 #, python-brace-format
 msgid ""
 "was known to be standing in the constituency with MapIt URL {party} in the "
 "{election}"
-msgstr ""
+msgstr "était connu pour être candidat dans la circonscription électoralle avec l'URL MapIt {party} aux {election}"
 
 #: candidates/diffs.py:76 candidates/diffs.py:92
 #, python-brace-format
 msgid "is known to be standing in {party} in the {election}"
-msgstr ""
+msgstr "est connu pour être candidat dans {party} aux {election}"
 
 #: candidates/diffs.py:78 candidates/diffs.py:94
 #, python-brace-format
 msgid "was known to be standing in {party} in the {election}"
-msgstr ""
+msgstr "était connu pour être candidat dans {party} aux {election}"
 
 #: candidates/diffs.py:82
 #, python-brace-format
 msgid "was elected in the {election}"
-msgstr ""
+msgstr "a été élu aux {election}"
 
 #: candidates/diffs.py:84
 #, python-brace-format
 msgid "was not elected in the {election}"
-msgstr ""
+msgstr "n'a pas été élu aux {election}"
 
 #: candidates/diffs.py:121
 msgid " and "
-msgstr ""
+msgstr "et"
 
 #: candidates/feeds.py:14
 msgid "YourNextMP recent changes"
-msgstr ""
+msgstr "changement récents à Candidats approchés"
 
 #: candidates/feeds.py:15
 msgid "Changes to YNMP candidates"
-msgstr ""
+msgstr "changements aux candidats de Candidats approchés"
 
 #: candidates/feeds.py:36
 #, python-brace-format
 msgid "Updated at {0}"
-msgstr ""
+msgstr "Mise à jour à {0}"
 
 #: candidates/forms.py:19
 msgid "Enter your address or town"
-msgstr ""
+msgstr "Entrez votre adresse ou ville"
 
 #: candidates/forms.py:35 candidates/forms.py:426
 msgid "Person ID"
-msgstr ""
+msgstr "ID de personne "
 
 #: candidates/forms.py:39
 msgid "Post ID"
-msgstr ""
+msgstr "ID de poste"
 
 #: candidates/forms.py:45
 #, python-brace-format
@@ -280,101 +281,101 @@ msgstr ""
 
 #: candidates/forms.py:62
 msgid "Don’t Know"
-msgstr ""
+msgstr "Ne sais pas"
 
 #: candidates/forms.py:63
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: candidates/forms.py:64
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: candidates/forms.py:68
 msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
-msgstr ""
+msgstr "Titre / pré-nominal honorifique (e.g. Dr, Sir, etc.)"
 
 #: candidates/forms.py:73
 msgid "Full name"
-msgstr ""
+msgstr "Nom complet"
 
 #: candidates/forms.py:77
 msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
-msgstr ""
+msgstr "Lettres post-nominales (e.g. CBS, DSA, etc.)"
 
 #: candidates/forms.py:82 candidates/templates/candidates/person-view.html:112
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: candidates/forms.py:87
 msgid "Gender (e.g. “male”, “female”)"
-msgstr ""
+msgstr "Genre (e.g. \"homme\", \"femme\")"
 
 #: candidates/forms.py:92
 msgid "Date of birth (as YYYY-MM-DD or YYYY)"
-msgstr ""
+msgstr "Date de naissance ( YYYY-MM-DD or YYYY)"
 
 #: candidates/forms.py:96
 msgid "Wikipedia URL"
-msgstr ""
+msgstr "URL Wikipedia"
 
 #: candidates/forms.py:101
 msgid "Homepage URL"
-msgstr ""
+msgstr "URL page personnelle"
 
 #: candidates/forms.py:106
 msgid "Twitter username (e.g. “democlub”)"
-msgstr ""
+msgstr "Nom d'utilisateur twitter (e.g. \"democlud\")"
 
 #: candidates/forms.py:111
 msgid "Facebook profile URL"
-msgstr ""
+msgstr "URL du profil Facebook"
 
 #: candidates/forms.py:116
 msgid "Facebook page (e.g. for their campaign)"
-msgstr ""
+msgstr "Page Facebook (e.g. pour la campagne)"
 
 #: candidates/forms.py:121
 msgid "LinkedIn URL"
-msgstr ""
+msgstr "URL LinkedIn"
 
 #: candidates/forms.py:126
 msgid "The party’s candidate page for this person"
-msgstr ""
+msgstr "La page de candidat du parti pour cette personne"
 
 #: candidates/forms.py:140
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
-msgstr ""
+msgstr "Le nom d'utilisateur Twitter doit contenir seulement des caractères alphanumériques ou des underscore"
 
 #: candidates/forms.py:162
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
-msgstr ""
+msgstr "Si vous marquez le candidat comme participant aux  {election}, vous devez sélectionner un poste"
 
 #: candidates/forms.py:171
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
-msgstr ""
+msgstr "Un ID de post inconnu  '{post_id}' a été spécifié"
 
 #: candidates/forms.py:177
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
-msgstr ""
+msgstr "Impossible de trouver des partis pour le poste avec l'ID  '{post_id}' aux {election}"
 
 #: candidates/forms.py:185
 #, python-brace-format
 msgid "You must specify a party for the {election}"
-msgstr ""
+msgstr "Vous devez spécifier un parti pour {election}"
 
 #: candidates/forms.py:198 elections/mixins.py:10
 #, python-brace-format
 msgid "Unknown election: '{election}'"
-msgstr ""
+msgstr "Élection inconnue: '{election}'"
 
 #: candidates/forms.py:204 candidates/forms.py:325
 #, python-format
@@ -384,56 +385,56 @@ msgstr ""
 #: candidates/forms.py:219 candidates/forms.py:230
 #, python-brace-format
 msgid "Post in the {election}"
-msgstr ""
+msgstr "Poste aux  {election}"
 
 #: candidates/forms.py:272 candidates/forms.py:349
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
-msgstr ""
+msgstr "Parti aux {election} ({party_set_name})"
 
 #: candidates/forms.py:286
 #, python-brace-format
 msgid "Source of information ({0})"
-msgstr ""
+msgstr "Source d'information ({0})"
 
 #: candidates/forms.py:291 candidates/forms.py:368
 msgid "You must indicate how you know about this candidate"
-msgstr ""
+msgstr "Vous devez indiquez comment vous savez à propos de ce candidat"
 
 #: candidates/forms.py:296 candidates/forms.py:373
 msgid "How you know about this candidate"
-msgstr ""
+msgstr "Comment savez-vous à propos de ce candidat"
 
 #: candidates/forms.py:331
 #, python-format
 msgid "Constituency in %s"
-msgstr ""
+msgstr "cisconscription électorale dans %s"
 
 #: candidates/forms.py:363
 #, python-brace-format
 msgid "Source of information for this change ({0})"
-msgstr ""
+msgstr "Source d'information pour ce changement ({0})"
 
 #: candidates/forms.py:395
 msgid ""
 "You can only edit data on YourNextMP if you agree to this copyright "
 "assignment."
-msgstr ""
+msgstr "Vous pouvez seulement modifier des données sur Candidats Approchés si vous êtes d'accord avec cette cession du droit d'auteur."
 
 #: candidates/forms.py:419
 #, python-brace-format
 msgid "{0} was not a known post ID"
-msgstr ""
+msgstr "{0} n'était pas un ID de poste connu"
 
 #: candidates/forms.py:431
 msgid "Source of information that they won"
-msgstr ""
+msgstr "Source d'information qu'ils ont gagné"
 
 #: candidates/management/commands/candidates_create_popit_posts.py:20
 #: candidates/management/commands/candidates_create_popit_posts.py:25
 #, python-brace-format
 msgid "{post_role} for {area_name}"
-msgstr ""
+msgstr "{post_role} pour {area_name}"
 
 #: candidates/middleware.py:42
 #, python-brace-format
@@ -443,99 +444,99 @@ msgid ""
 "  {0}\n"
 "\n"
 "If this update is appropriate, someone should apply it manually.\n"
-msgstr ""
+msgstr "Par précaution, une modification a été bloquée:\n\n  {0}\n\nSi cette mise à jour est appropriée, quelqu'un doit l'appliquer manuellement.\n"
 
 #: candidates/middleware.py:49
 msgid "Disallowed YourNextMP update for checking"
-msgstr ""
+msgstr "Mise à jour de Candidats Approchés rejetés pour vérification "
 
 #: candidates/models/address.py:22
 #, python-brace-format
 msgid "Failed to find a location for '{0}'"
-msgstr ""
+msgstr "Impossible de trouver un emplacement pour '{0}'"
 
 #: candidates/models/address.py:37
 #, python-brace-format
 msgid "The area lookup returned an error: '{error}'"
-msgstr ""
+msgstr "La recherche de la zone a retournée une erreur : '{error}'"
 
 #: candidates/models/address.py:44
 #, python-brace-format
 msgid "The address '{0}' appears to be outside the area this site knows about"
-msgstr ""
+msgstr "L'adresse '{0}' semble être hors de la zone connue par ce site"
 
 #: candidates/models/auth.py:59
 msgid "The candidates for this post are locked now"
-msgstr ""
+msgstr "Les candidates pour ce postes sont maintenant vérrouillés "
 
 #: candidates/models/auth.py:67
 #, python-brace-format
 msgid "Name change from '{0}' to '{1}' by user {2} disallowed"
-msgstr ""
+msgstr "changement de nom de '{0}' à '{1}' par l'utilisateur {2} rejeté"
 
 #: candidates/models/auth.py:84
 msgid ""
 "That update isn't allowed because candidates for a locked post would be "
 "changed"
-msgstr ""
+msgstr "Cette mise à jour n'est pas autorisée parce que des candidats à un post verrouillé seraient changés"
 
 #: candidates/models/db.py:29
 #, python-brace-format
 msgid "given max_id is lower than the previous one ({0} vs {1})"
-msgstr ""
+msgstr "le max_id donné est plus petit que le précédant ({0} contre {1})"
 
 #: candidates/models/popit.py:159
 #, python-brace-format
 msgid "Couldn't parse '{0}' as an ApproximateDate"
-msgstr ""
+msgstr "Ne peut pas analyser '{0}' comme une ApproximateDate"
 
 #: candidates/models/popit.py:196
 #, python-brace-format
 msgid "Unknown partial ISO 8601 data format: {0}"
-msgstr ""
+msgstr "Format partiel de données ISO 8601 inconnu: {0}"
 
 #: candidates/models/popit.py:286
 #, python-brace-format
 msgid "Failed to parse the MapIt URL: {0}"
-msgstr ""
+msgstr "Analyse de l'URL MapIt echouée: {0}"
 
 #: candidates/models/popit.py:540
 #, python-brace-format
 msgid "'PopItPerson' has no attribute '{0}'"
-msgstr ""
+msgstr "'PopItPerson' n'a pas d'attribut '{0}'"
 
 #: candidates/models/popit.py:593
 msgid "There was no previous version of this person"
-msgstr ""
+msgstr "Il n'y avait aucune version précédante de cette personne"
 
 #: candidates/models/popit.py:1202
 msgid "Can't set_elected of a candidate with no standing_in"
-msgstr ""
+msgstr "Impossible de set_elected d'un candidat avec aucun standing_in"
 
 #: candidates/models/popit.py:1205
 #, python-brace-format
 msgid "No standing_in information for {0}"
-msgstr ""
+msgstr "Aucune information de standing_in pour {0}"
 
 #: candidates/static_data.py:183
 #, python-brace-format
 msgid "Found multiple areas for the post ID {post_id}"
-msgstr ""
+msgstr "De multiples zones trouvées pour l'ID de poste {post_id}"
 
 #: candidates/templates/candidates/_candidates_for_post.html:65
 msgid "(This list of candidates is currently <strong>locked</strong>.)"
-msgstr ""
+msgstr "(Cette liste de candidats est actuellement <strong>verrouillée</strong>.)"
 
 #: candidates/templates/candidates/_candidates_for_post.html:67
 msgid "(This list of candidates is currently <strong>unlocked</strong>.)"
-msgstr ""
+msgstr "(Cette liste de cancidats est actuellement <strong>Deverouillée</strong>.)"
 
 #: candidates/templates/candidates/_candidates_for_post.html:72
 msgid ""
 "This list of candidates is now <strong>locked</strong>; you can still update"
 " contact details of candidates, but can't change the people standing in this"
 " constituency."
-msgstr ""
+msgstr "Cette liste de candidats est maintenant <strong>verrouillée</strong>; vous pouvez encore mettre à jour les informations de contact des candidats, mais vous ne pouvez plus changer les personnes candidates pour cette circonscription électorale."
 
 #: candidates/templates/candidates/_candidates_for_post.html:81
 msgid "Unset the current winner, if incorrect"
@@ -544,11 +545,11 @@ msgstr ""
 #: candidates/templates/candidates/_candidates_for_post.html:89
 #, python-format
 msgid "Known candidates for <a href=\"%(post_url)s\">%(post_label)s</a>"
-msgstr ""
+msgstr "Candidats connus pour <a href=\"%(post_url)s\">%(post_label)s</a>"
 
 #: candidates/templates/candidates/_candidates_for_post.html:99
 msgid "Winner"
-msgstr ""
+msgstr "vainqueur "
 
 #: candidates/templates/candidates/_candidates_for_post.html:106
 msgid "Not actually standing?"
@@ -558,65 +559,65 @@ msgstr ""
 #: candidates/templates/candidates/_candidates_for_post.html:190
 #: candidates/templates/candidates/_candidates_for_post.html:218
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 #: candidates/templates/candidates/_candidates_for_post.html:118
 msgid "[Quick update from the constituency page]"
-msgstr ""
+msgstr "[Mise à jour rapide depuis la page de la circonscription électorale]"
 
 #: candidates/templates/candidates/_candidates_for_post.html:119
 msgid "This candidate won!"
-msgstr ""
+msgstr "Ce candidat à gagné"
 
 #: candidates/templates/candidates/_candidates_for_post.html:129
 #, python-format
 msgid ""
 "<strong>Oh no!</strong> We don’t know of any candidates in %(post_label)s "
 "for the %(election_name)s yet."
-msgstr ""
+msgstr "<strong>Oh non!</strong> Nous ne connaissons pas encore de candidats dans %(post_label)s pour %(election_name)s."
 
 #: candidates/templates/candidates/_candidates_for_post.html:133
 #: candidates/templates/candidates/_candidates_for_post.html:141
 #: candidates/templates/candidates/_candidates_for_post.html:149
 #: candidates/templates/candidates/person-create.html:7
 msgid "Add a new candidate"
-msgstr ""
+msgstr "Ajouter un nouveau candidat"
 
 #: candidates/templates/candidates/_candidates_for_post.html:135
 msgid "Sign in to add a new candidate"
-msgstr ""
+msgstr "Inscrivez vous pour ajouter un nouveau candidat"
 
 #: candidates/templates/candidates/_candidates_for_post.html:162
 msgid "Add new candidate"
-msgstr ""
+msgstr "Ajouter un nouveau candidat"
 
 #: candidates/templates/candidates/_candidates_for_post.html:163
 #: candidates/templates/candidates/record-winner.html:35
 #: moderation_queue/templates/moderation_queue/photo-review.html:158
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: candidates/templates/candidates/_candidates_for_post.html:175
 msgid "Is a candidate from the 2010 election standing again?"
-msgstr ""
+msgstr "Est-ce qu'un candidate ds élection de 2010 brigue à nouveau?"
 
 #: candidates/templates/candidates/_candidates_for_post.html:177
 msgid ""
 "We don't know if these candidates from earlier elections are standing again"
-msgstr ""
+msgstr "Nous ne savons pas si ces candidats de l'élection passée briguent à nouveau"
 
 #: candidates/templates/candidates/_candidates_for_post.html:187
 msgid "Standing again"
-msgstr ""
+msgstr "Brigue à nouveau"
 
 #: candidates/templates/candidates/_candidates_for_post.html:188
 msgid "Not standing again"
-msgstr ""
+msgstr "Ne brigue pas a nouveau"
 
 #: candidates/templates/candidates/_candidates_for_post.html:207
 msgid ""
 "These candidates from earlier elections are known not to be standing again"
-msgstr ""
+msgstr "Ces candidats de l'élection passée sont connus pour pas briguer à nouveau"
 
 #: candidates/templates/candidates/_candidates_for_post.html:216
 msgid "Actually, they are standing!"
