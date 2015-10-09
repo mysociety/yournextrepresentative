@@ -9,7 +9,7 @@ Make sure that you have the latest Transifex client installed in
 your virtualenv with:
 
 ```
-pip install transifex
+pip install transifex-client
 ```
 
 Make sure that `git status` is clean before you start.
