@@ -61,16 +61,16 @@ def get_descriptive_value(election, attribute, value, leaf):
             if leaf:
                 if leaf == 'post_id':
                     if current_election:
-                        message = _("is known to be standing for the post with ID {party} in the {election}")
+                        message = _("is known to be standing for the post with ID {post_id} in the {election}")
                     else:
-                        message = _("was known to be standing for the post with ID {party} in the {election}")
-                    return message.format(party=value, election=election_name)
+                        message = _("was known to be standing for the post with ID {post_id} in the {election}")
+                    return message.format(post_id=value, election=election_name)
                 elif leaf == 'mapit_url':
                     if current_election:
-                        message = _("is known to be standing in the constituency with MapIt URL {party} in the {election}")
+                        message = _("is known to be standing in the constituency with MapIt URL {mapit_url} in the {election}")
                     else:
-                        message = _("was known to be standing in the constituency with MapIt URL {party} in the {election}")
-                    return message.format(party=value, election=election_name)
+                        message = _("was known to be standing in the constituency with MapIt URL {mapit_url} in the {election}")
+                    return message.format(mapit_url=value, election=election_name)
                 elif leaf == 'name':
                     if current_election:
                         message = _("is known to be standing in {party} in the {election}")
