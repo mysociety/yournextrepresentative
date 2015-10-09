@@ -1162,5 +1162,11 @@
             }
         ], 
         "type": "REGROUPEMENT INDEPENDANT"
+    },
+    {
+        "classification": "Party", 
+        "id": "uknown", 
+        "name": "Unknown Party", 
+        "type": "PARTI POLITIQUE"
     }
 ]
