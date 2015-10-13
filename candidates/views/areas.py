@@ -57,7 +57,8 @@ class AreasView(PopItApiMixin, TemplateView):
                     current_candidates = group_people_by_party(
                         election,
                         current_candidates,
-                        party_list=election_data.get('party_lists_in_use')
+                        party_list=election_data.get('party_lists_in_use'),
+                        max_people=election_data.get('default_party_list_members_to_show')
                     )
                     context['posts'].append({
                         'election': election,
