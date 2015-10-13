@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 18:57+0100\n"
-"PO-Revision-Date: 2015-10-12 23:50+0000\n"
-"Last-Translator: Teg-wende Idriss TINTO <tinto.jean@titinto.net>\n"
+"POT-Creation-Date: 2015-10-13 15:11-0300\n"
+"PO-Revision-Date: 2015-10-13 18:12+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -587,8 +587,8 @@ msgstr "Afficher les meilleurs candidats."
 
 #: candidates/templates/candidates/_candidates_for_post.html:104
 #, python-format
-msgid "See all %(count)s members on the party list\" "
-msgstr "Voir tous les %(count)s membres de la liste du parti\" "
+msgid "See all %(count)s members on the party list"
+msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:115
 #: candidates/templates/candidates/ordered-party-list.html:55
@@ -2217,19 +2217,19 @@ msgstr ""
 msgid "Unknown post for types and areas: '{0}'"
 msgstr ""
 
-#: candidates/views/areas.py:96
+#: candidates/views/areas.py:103
 #: elections/st_paul_municipal_2015/views/areas.py:123
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr ""
 
-#: candidates/views/areas.py:98
+#: candidates/views/areas.py:105
 #: elections/st_paul_municipal_2015/views/areas.py:125
 #, python-brace-format
 msgid "Multiple MapIt generations for type {mapit_type} found"
 msgstr ""
 
-#: candidates/views/areas.py:120
+#: candidates/views/areas.py:127
 #: elections/st_paul_municipal_2015/views/areas.py:147
 msgid "[No areas found]"
 msgstr ""
@@ -2238,20 +2238,20 @@ msgstr ""
 msgid "Attempt to edit a candidacy in a locked constituency"
 msgstr ""
 
-#: candidates/views/constituencies.py:217
+#: candidates/views/constituencies.py:216
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr ""
 
-#: candidates/views/constituencies.py:360
+#: candidates/views/constituencies.py:359
 msgid "Result recorded in error, retracting"
 msgstr ""
 
-#: candidates/views/constituencies.py:444
+#: candidates/views/constituencies.py:443
 #, python-brace-format
 msgid "Post '{post_id}' not found"
 msgstr ""
 
-#: candidates/views/constituencies.py:453
+#: candidates/views/constituencies.py:452
 #, python-brace-format
 msgid "Party '{party_id}' not found"
 msgstr ""
