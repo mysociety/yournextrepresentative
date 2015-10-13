@@ -54,6 +54,12 @@ class AreasView(PopItApiMixin, TemplateView):
                         election_data,
                         post_data['memberships']
                     )
+                    # The 'memberships' data can be huge; when you
+                    # have Django Debug Toolbar active this causes
+                    # page loading to be incredibly slow; it's not
+                    # needed any longer from this point on, so remove
+                    # it from the data that goes into the context.
+                    del post_data['memberships']
                     current_candidates = group_people_by_party(
                         election,
                         current_candidates,
