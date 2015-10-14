@@ -24,7 +24,7 @@ class Command(BaseCommand):
             mapping = {
                 post['id']: AREA_POST_DATA.post_id_to_party_set(post['id'])
                 for election, election_data in settings.ELECTIONS_CURRENT
-                for post in get_all_posts(election_data['for_post_role'])
+                for post in get_all_posts(election, election_data['for_post_role'])
             }
             unknown_post_ids = [
                 k for k, v in mapping.items()

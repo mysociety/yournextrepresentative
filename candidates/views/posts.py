@@ -13,7 +13,7 @@ class PostListView(PopItApiMixin, TemplateView):
         for election, election_data in settings.ELECTIONS_CURRENT:
             role = election_data['for_post_role']
             all_posts[election] = {
-                'posts': get_all_posts_cached(self.api, role),
+                'posts': get_all_posts_cached(self.api, election, role),
                 'election_data': election_data,
             }
         context['all_posts'] = all_posts

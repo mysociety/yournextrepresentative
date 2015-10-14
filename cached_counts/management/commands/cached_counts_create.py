@@ -34,7 +34,7 @@ class Command(PopItApiMixin, BaseCommand):
             # We iterate over the posts twice, so just evaluate the
             # generator to a list before iterating:
             all_posts = list(
-                get_all_posts(post_role, embed='membership.person')
+                get_all_posts(election, post_role, embed='membership.person')
             )
             all_parties = PARTY_DATA.party_id_to_name
             counts = {

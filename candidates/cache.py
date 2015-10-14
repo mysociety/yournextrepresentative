@@ -62,13 +62,17 @@ def get_person_cached(api, person_id):
     cache.set(person_key, person_data, 86400)
     return person_data
 
-def get_all_posts_cached(api, role):
-    posts_key = 'posts-no-embed-with-role-' + slugify(unicode(role))
+def get_all_posts_cached(api, election, role):
+    key_template = 'posts-no-embed-with-election-{election}-and-role-{role}'
+    posts_key = key_template.format(
+        election=election,
+        role=slugify(unicode(role)),
+    )
     result_from_cache = cache.get(posts_key)
     if result_from_cache is not None:
         return result_from_cache
     all_post_data = sorted(
-        get_all_posts(role),
+        get_all_posts(election, role),
         key=lambda post: post['label'],
     )
     cache.set(posts_key, all_post_data, 86400)

@@ -33,6 +33,7 @@ class Command(PopItApiMixin, BaseCommand):
             role = election_data['for_post_role']
             area_mapit_url = settings.MAPIT_BASE_URL + 'area/' + str(area['id'])
             post_data = {
+                'election': election,
                 'role': role,
                 'id': post_id,
                 'label': post_label_format.format(
