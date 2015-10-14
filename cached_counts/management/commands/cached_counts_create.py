@@ -1,5 +1,4 @@
 from collections import defaultdict
-from optparse import make_option
 
 from candidates.models import membership_covers_date
 from candidates.popit import PopItApiMixin, get_all_posts
@@ -12,17 +11,8 @@ from cached_counts.models import CachedCount
 
 class Command(PopItApiMixin, BaseCommand):
 
-    option_list = BaseCommand.option_list + (
-        make_option(
-            '--delete-dissolved-parties',
-            action='store_true',
-            dest='delete_dissolved',
-            help='Delete cached counts for any dissolved parties'
-        ),
-    )
-
     def add_or_update(self, obj):
-        CachedCount.objects.update_or_create(
+        result, _ = CachedCount.objects.update_or_create(
             election=obj['election'],
             object_id=obj['object_id'],
             count_type=obj['count_type'],
@@ -31,10 +21,14 @@ class Command(PopItApiMixin, BaseCommand):
                 'name': obj['name'],
             }
         )
+        return result
 
     def handle(self, **options):
         person_to_elections = defaultdict(list)
         election_to_people = defaultdict(set)
+
+        stale_entries_to_remove = set(CachedCount.objects.all())
+
         for election, election_data in settings.ELECTIONS_BY_DATE:
             post_role = election_data['for_post_role']
             # We iterate over the posts twice, so just evaluate the
@@ -93,7 +87,8 @@ class Command(PopItApiMixin, BaseCommand):
                     'count': data['count'],
                     'object_id': post_id
                 }
-                self.add_or_update(obj)
+                cc_to_keep = self.add_or_update(obj)
+                stale_entries_to_remove.discard(cc_to_keep)
 
             # Add or create objects in the database
             # Parties
@@ -106,16 +101,18 @@ class Command(PopItApiMixin, BaseCommand):
                     'object_id': party_id
 
                 }
-                self.add_or_update(obj)
+                cc_to_keep = self.add_or_update(obj)
+                stale_entries_to_remove.discard(cc_to_keep)
 
             # Set the total party count
-            self.add_or_update({
+            cc_to_keep = self.add_or_update({
                 'election': election,
                 'count_type': 'total',
                 'name': 'total',
                 'count': counts['candidates'],
                 'object_id': election,
             })
+            stale_entries_to_remove.discard(cc_to_keep)
 
         # Now we've been through all candidates for all elections, go
         # back through all the current elections to see if anyone stood
@@ -164,7 +161,7 @@ class Command(PopItApiMixin, BaseCommand):
                         ('new_candidates', new_candidates_from),
                         ('standing_again', standing_again_from),
                 ):
-                    self.add_or_update({
+                    cc_to_keep = self.add_or_update({
                         'election': current_election,
                         'count_type': count_type,
                         'name': count_type,
@@ -174,19 +171,12 @@ class Command(PopItApiMixin, BaseCommand):
                         'object_id': election,
                         'count': d[election],
                     })
+                    stale_entries_to_remove.discard(cc_to_keep)
 
-        if options['delete_dissolved']:
-            # Remove any parties that have dissolved but still might have
-            # entries in the database:
-            parties_in_database = set(
-                CachedCount.objects.filter(count_type='party'). \
-                    values_list('object_id', flat=True)
-            )
-            current_parties = set(
-                PARTY_DATA.party_id_to_name.keys()
-            )
-            parties_to_remove = parties_in_database - current_parties
-            CachedCount.objects.filter(
-                count_type='party',
-                object_id__in=parties_to_remove
-            ).delete()
+        if stale_entries_to_remove:
+            self.stderr.write("Removing the following stale CachedCount objects:\n")
+            for cc in stale_entries_to_remove:
+                self.stderr.write(u"  {0}\n".format(cc))
+
+            ids_to_remove = [cc.id for cc in stale_entries_to_remove]
+            CachedCount.objects.filter(id__in=ids_to_remove).delete()
