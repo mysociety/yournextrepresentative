@@ -104,8 +104,9 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
         else:
             party_data = person.last_party
         position = None
-        if election_data['party_lists_in_use']:
-            position = person.standing_in[election].get('party_list_position')
+        standing_in = person.standing_in.get(election)
+        if standing_in and election_data['party_lists_in_use']:
+            position = standing_in[election].get('party_list_position')
         party_id = party_data['id']
         party_id_to_name[party_id] = party_data['name']
         party_id_to_people[party_id].append((position, person))
