@@ -53,9 +53,12 @@ def unwrap_search_pagination(collection, query, **kwargs):
         return r.json()
     return generic_unwrap_pagination(get_json_response)
 
-def get_all_posts(role, **kwargs):
+def get_all_posts(election, role, **kwargs):
     kwargs.setdefault('embed', '')
-    return unwrap_search_pagination('posts', 'role:"' + role + '"', **kwargs)
+    search_query = 'election:"{election}" AND role:"{role}"'.format(
+        election=election, role=role
+    )
+    return unwrap_search_pagination('posts', search_query, **kwargs)
 
 def merge_popit_dicts(primary, secondary):
     result = {}

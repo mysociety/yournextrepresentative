@@ -253,7 +253,7 @@ class NewPersonForm(BasePersonForm):
                                  election,
                                  post['label']
                              ))
-                            for post in get_all_posts_cached(self.api, role)
+                            for post in get_all_posts_cached(self.api, election, role)
                         ],
                         key=lambda t: t[1]
                     ),
@@ -352,7 +352,7 @@ class UpdatePersonForm(BasePersonForm):
                                  election,
                                  post['label']
                              ))
-                            for post in get_all_posts_cached(api, role)
+                            for post in get_all_posts_cached(api, election, role)
                         ],
                         key=lambda t: t[1]
                     ),
