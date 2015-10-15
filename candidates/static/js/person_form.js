@@ -56,6 +56,17 @@ function setUpPostSelect2s() {
   });
 }
 
+/* Set the visibility of an input element and any label for it */
+
+function setVisibility(plainInputElement, newVisiblity) {
+  var inputElement = $(plainInputElement),
+      inputElementID = plainInputElement.id,
+      labelElement = $('label[for=' + inputElementID + ']');
+  inputElement.toggle(newVisiblity);
+  labelElement.toggle(newVisiblity);
+}
+
+
 /* Update the visibility of the party and post drop-downs for a particular
    election */
 
@@ -80,7 +91,7 @@ function updateSelectsForElection(show, election) {
         );
       });
       $('.party-position-' + election).each(function(i) {
-        $(this).toggle($(this).attr('id') == partyPositionToShowID);
+        setVisibility(this, $(this).attr('id') == partyPositionToShowID);
       });
     } else {
       /* Then just show the first party select and hide the others: */
@@ -88,15 +99,16 @@ function updateSelectsForElection(show, election) {
         setSelect2Visibility($(this), i == 0);
       });
       $('.party-position-' + election).each(function(i) {
-        $(this).toggle(i == 0);
+        setVisibility(this, i == 0);
       });
     }
   } else {
     $('.party-select-' + election).each(function(i) {
       setSelect2Visibility($(this), false);
     });
-    $('.party-position-' + election).hide();
-
+    $('.party-position-' + election).each(function() {
+      setVisibility(this, false);
+    });
   }
   setSelect2Visibility($('#id_constituency_' + election), show);
 }
