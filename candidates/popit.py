@@ -4,7 +4,6 @@ from urlparse import urlunsplit
 import requests
 
 from django.conf import settings
-from django.utils.http import urlquote
 
 from popit_api import PopIt
 
