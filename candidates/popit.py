@@ -33,6 +33,9 @@ def generic_unwrap_pagination(get_json_response):
         json_response = get_json_response(pagination_kwargs)
         keep_fetching = json_response.get('has_more', False)
         page += 1
+        if 'result' not in json_response:
+            message = "No 'result' attribute found in: {json_response}"
+            raise Exception(message.format(json_response=json_response))
         for api_object in json_response['result']:
             yield api_object
 
