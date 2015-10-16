@@ -11,6 +11,7 @@
       },
       "candidates_locked": false,
       "contact_details": [],
+      "elections": ["2010", "2015"],
       "html_url": "http://candidates.127.0.0.1.xip.io:3000/posts/65808",
       "id": "65808",
       "images": [],

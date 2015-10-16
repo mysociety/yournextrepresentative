@@ -57,7 +57,7 @@ def unwrap_search_pagination(collection, query, **kwargs):
 
 def get_all_posts(election, role, **kwargs):
     kwargs.setdefault('embed', '')
-    search_query = u'election:"{election}" AND role:"{role}"'.format(
+    search_query = u'elections:"{election}" AND role:"{role}"'.format(
         election=election, role=role
     )
     return unwrap_search_pagination('posts', search_query, **kwargs)
