@@ -18,7 +18,6 @@ from .auth import (
     check_creation_allowed,
     check_update_allowed,
 )
-from .db import MaxPopItIds
 
 from ..cache import (
     get_person_cached, invalidate_person, get_post_cached, invalidate_posts

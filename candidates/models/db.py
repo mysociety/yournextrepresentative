@@ -1,33 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_save
-from django.utils.translation import ugettext as _
 
-
-class MaxPopItIds(models.Model):
-    popit_collection_name = models.CharField(max_length=255)
-    max_id = models.IntegerField(default=0)
-
-    @classmethod
-    def get_max_persons_id(cls):
-        try:
-            return cls.objects.get(popit_collection_name="persons").max_id
-        except ObjectDoesNotExist:
-            persons_max = cls(popit_collection_name="persons")
-            persons_max.save()
-            return persons_max.max_id
-
-    @classmethod
-    def update_max_persons_id(cls, max_id):
-        max_persons, created = cls.objects.get_or_create(
-            popit_collection_name="persons")
-        if max_id > max_persons.max_id:
-            max_persons.max_id = max_id
-            max_persons.save()
-        else:
-            raise ValueError(_('given max_id is lower than the previous one ({'
-                             '0} vs {1})').format(max_id, max_persons.max_id))
+from popolo.models import Person
 
 
 class LoggedAction(models.Model):
@@ -41,9 +16,9 @@ class LoggedAction(models.Model):
     malicious users.'''
 
     user = models.ForeignKey(User, blank=True, null=True)
+    person = models.ForeignKey(Person, blank=True, null=True)
     action_type = models.CharField(max_length=64)
     popit_person_new_version = models.CharField(max_length=32)
-    popit_person_id = models.CharField(max_length=256)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)

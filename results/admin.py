@@ -7,7 +7,7 @@ class ResultEventAdmin(admin.ModelAdmin):
     list_display = (
         'user',
         'created',
-        'winner_popit_person_id',
+        'winner_id',
         'person_link',
         'winner_party_id',
         'winner_party_name',
@@ -18,7 +18,7 @@ class ResultEventAdmin(admin.ModelAdmin):
     )
     search_fields = (
         'user__username',
-        'winner_popit_person_id',
+        'winner_id',
         'winner_person_name',
         'winner_party_id',
         'post_id',
@@ -31,7 +31,7 @@ class ResultEventAdmin(admin.ModelAdmin):
         url = reverse(
             'person-view',
             kwargs={
-                'person_id': o.winner_popit_person_id,
+                'person_id': o.person_id,
                 'ignored_slug': slugify(o.post_name),
             }
         )

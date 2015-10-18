@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
 from collections import defaultdict
+from popolo.models import Organization
 
 class ElectionQuerySet(models.QuerySet):
     def current(self):
@@ -51,8 +52,7 @@ class Election(models.Model):
     party_membership_end_date = models.DateField()
     area_types = models.ManyToManyField(AreaType)
     area_generation = models.CharField(max_length=128, blank=True)
-    organization_id = models.CharField(max_length=128)
-    organization_name = models.CharField(max_length=128, blank=True)
+    organization = models.ForeignKey(Organization, null=True, blank=True)
     post_id_format = models.CharField(max_length=128)
     party_lists_in_use = models.BooleanField(default=False)
     default_party_list_members_to_show = models.IntegerField(default=0)
