@@ -8,6 +8,11 @@ from popit import get_mapit_id_from_mapit_url
 from popit import membership_covers_date
 from popit import PopItPerson
 
+from popolo_extra import PersonExtra
+from popolo_extra import OrganizationExtra
+from popolo_extra import PostExtra
+from popolo_extra import MembershipExtra
+
 from popit import CSV_ROW_FIELDS
 
 from popit import person_added
