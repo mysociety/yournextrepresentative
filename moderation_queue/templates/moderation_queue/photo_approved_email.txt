@@ -1,7 +1,5 @@
-{% load i18n %}{% autoescape off %}{% blocktrans %}Thank-you for submitting a photo to {{ site_name }}; that's been
-uploaded now for the candidate page here:{% endblocktrans %}
+{% load i18n %}{% autoescape off %}{{ intro|wordwrap:64 }}
 
   {{ candidate_page_url }}
 
-{% blocktrans %}Many thanks,
-The {{ site_name }} volunteers{% endblocktrans %}{% endautoescape %}
+{{ signoff|wordwrap:64 }}{% endautoescape %}

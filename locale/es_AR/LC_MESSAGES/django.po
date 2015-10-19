@@ -462,17 +462,15 @@ msgstr "Fuente de información de que ganaron"
 msgid "{post_role} for {area_name}"
 msgstr ""
 
-#: candidates/middleware.py:43
-#, python-brace-format
-msgid ""
-"As a precaution, an update was blocked:\n"
-"\n"
-"  {0}\n"
-"\n"
-"If this update is appropriate, someone should apply it manually.\n"
-msgstr "Como precaución, esta actualización fue bloqueada:\n\n{0}\n\nSi esta actualización es apropiada, alguien debería aplicarla manualmente.\n"
+#: candidates/middleware.py:42
+msgid "As a precaution, an update was blocked:"
+msgstr "Como precaución, esta actualización fue bloqueada:"
 
-#: candidates/middleware.py:50
+#: candidates/middleware.py:43
+msgid "If this update is appropriate, someone should apply it manually."
+msgstr "Si esta actualización es apropiada, alguien debería aplicarla manualmente."
+
+#: candidates/middleware.py:51
 #, python-brace-format
 msgid "Disallowed {site_name} update for checking"
 msgstr ""
@@ -2671,36 +2669,7 @@ msgid ""
 "used. <a href=\"%(url)s\">Return to %(name)s’s page.</a>"
 msgstr "Gracias por subir una foto - recibirás un email cuando esté aprobada para ser agregada al sitio, o una explicación de porqué no puede ser usada. <a href=\"%(url)s\">Volver a la página de %(name)s.</a>"
 
-#: moderation_queue/templates/moderation_queue/photo_approved_email.txt:1
-#, python-format
-msgid ""
-"Thank-you for submitting a photo to %(site_name)s; that's been\n"
-"uploaded now for the candidate page here:"
-msgstr ""
-
-#: moderation_queue/templates/moderation_queue/photo_approved_email.txt:6
 #: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:12
-#, python-format
-msgid ""
-"Many thanks,\n"
-"The %(site_name)s volunteers"
-msgstr ""
-
-#: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:1
-#, python-format
-msgid ""
-"Thank-you for uploading a photo of %(candidate_name)s\n"
-"to %(site_name)s, but unfortunately we can't use that image because:"
-msgstr ""
-
-#: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:6
-msgid ""
-"You can just reply to this email if you want to discuss that\n"
-"further, or you can try uploading a photo with a different reason\n"
-"or justification for its use using this link:"
-msgstr "Podés responder a este email si querés seguir conversándolo, o podés intentar subir una foto con una razón o justificación diferente para su uso, en este enlace:"
-
-#: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:16
 #, python-format
 msgid "For administrators' use: %(photo_review_url)s"
 msgstr "Para uso de los administradores: %(photo_review_url)s"
@@ -2709,49 +2678,67 @@ msgstr "Para uso de los administradores: %(photo_review_url)s"
 msgid "Approved from photo moderation queue"
 msgstr "Foto aprobada de la cola de moderación"
 
-#: moderation_queue/views.py:289
+#: moderation_queue/views.py:290
 #, python-brace-format
 msgid ""
 "Approved a photo upload from {uploading_user} who provided the message: "
 "\"{message}\""
 msgstr "Aprobada la foto subida de  {uploading_user} que ingresó el mensaje: \"{message}\""
 
-#: moderation_queue/views.py:315
+#: moderation_queue/views.py:316
 #, python-brace-format
 msgid "{site_name} image upload approved"
 msgstr ""
 
-#: moderation_queue/views.py:328
+#: moderation_queue/views.py:325
+#, python-brace-format
+msgid "Thank-you for submitting a photo to {site_name}; that's been uploaded now for the candidate page here:"
+msgstr ""
+
+#: moderation_queue/views.py:330 moderation_queue/views.py:385
+msgid "Many thanks from the {{ site_name }} volunteers"
+msgstr ""
+
+#: moderation_queue/views.py:337
 #, python-format
 msgid "You approved a photo upload for %s"
 msgstr "Aprobaste una foto subida para %s"
 
-#: moderation_queue/views.py:333
+#: moderation_queue/views.py:342
 #, python-brace-format
 msgid "Rejected a photo upload from {uploading_user}"
 msgstr "Rechazada una foto subida por {uploading_user}"
 
-#: moderation_queue/views.py:352
+#: moderation_queue/views.py:361
 #, python-brace-format
 msgid "{site_name} image moderation results"
 msgstr ""
 
-#: moderation_queue/views.py:369
+#: moderation_queue/views.py:371
+#, python-brace-format
+msgid "Thank-you for uploading a photo of {candidate_name} to {site_name}, but unfortunately we can't use that image because:"
+msgstr ""
+
+#: moderation_queue/views.py:379
+msgid "You can just reply to this email if you want to discuss that further, or you can try uploading a photo with a different reason or justification for its use using this link:"
+msgstr "Podés responder a este email si querés seguir conversándolo, o podés intentar subir una foto con una razón o justificación diferente para su uso, en este enlace:"
+
+#: moderation_queue/views.py:393
 #, python-format
 msgid "You rejected a photo upload for %s"
 msgstr "Rechazaste una imágen subida por %s"
 
-#: moderation_queue/views.py:376
+#: moderation_queue/views.py:400
 #, python-brace-format
 msgid "You left a photo upload for {0} in the queue"
 msgstr "Dejaste una foto subida por {0} en la cola"
 
-#: moderation_queue/views.py:383
+#: moderation_queue/views.py:407
 #, python-brace-format
 msgid "Ignored a photo upload from {uploading_user} (This usually means it was a duplicate)"
 msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa que era duplicada)"
 
-#: moderation_queue/views.py:396
+#: moderation_queue/views.py:420
 #, python-brace-format
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
