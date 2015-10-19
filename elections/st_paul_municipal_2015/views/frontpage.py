@@ -65,16 +65,21 @@ def check_address(address_string, country=None):
     boundaries = requests.get('{0}/boundaries'.format(OCD_BOUNDARIES_URL),
                               params={'contains': coords})
 
-    areas = set()
+    if boundaries.json()['meta']['total_count'] > 0:
 
-    for area in boundaries.json()['objects']:
-        division_slug = area['external_id'].replace('/', ',')
-        if cache.get(area['external_id']):
-            areas.add(division_slug)
-        elif not 'precinct' in division_slug:
-            cache.set(area['external_id'], area, None)
-            areas.add(division_slug)
+        areas = set()
 
-    return {
-        'area_ids': ';'.join(areas),
-    }
+        for area in boundaries.json()['objects']:
+            division_slug = area['external_id'].replace('/', ',')
+            if cache.get(area['external_id']):
+                areas.add(division_slug)
+            elif not 'precinct' in division_slug:
+                cache.set(area['external_id'], area, None)
+                areas.add(division_slug)
+
+        return {
+            'area_ids': ';'.join(areas),
+        }
+
+    error = _(u"Unable to find constituency for '{0}'")
+    raise ValidationError(error.format(tidied_address))
