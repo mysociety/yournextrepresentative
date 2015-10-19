@@ -4,7 +4,7 @@
 {% block body_class %}popit-down{% endblock %}
 
 {% block title %}
-  {% blocktrans with site_name=site.name %}
+  {% blocktrans trimmed with site_name=site.name %}
     {{ site_name }} is Temporarily Unavailable
   {% endblocktrans %}
 {% endblock %}
@@ -18,7 +18,7 @@
 <div class="popit-down">
 
 <h2>
-  {% blocktrans with site_name=site.name %}
+  {% blocktrans trimmed with site_name=site.name %}
     Sorry, {{ site_name }} is temporarily unavailable
   {% endblocktrans %}
 </h2>

@@ -75,13 +75,8 @@ msgstr "¿Cuales puestos tienen menos candidatos?"
 
 #: cached_counts/templates/reports.html:15
 #, python-format
-msgid ""
-"\n"
-"        You can see a list of all the posts in current elections\n"
-"        <a href=\"%(url)s\">ordered starting with those with the fewest\n"
-"        candidates</a>.\n"
-"     "
-msgstr "\nPuedes ver una lista de todos los cargos que se disputan en estas elecciones\n<a href=\"%(url)s\">empezando con aquellos con pocos \ncandidatos cargados</a>."
+msgid "You can see a list of all the posts in current elections <a href=\"%(url)s\">ordered starting with those with the fewest candidates</a>."
+msgstr "Puedes ver una lista de todos los cargos que se disputan en estas elecciones <a href=\"%(url)s\">empezando con aquellos con pocos candidatos cargados</a>."
 
 #: cached_counts/templates/reports.html:26
 msgid "Current Elections"
@@ -686,43 +681,27 @@ msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:4
 #, python-format
-msgid ""
-"\n"
-"    Thank-you for adding <a href=\"%(person_url)s\">%(person_name)s</a>!\n"
-"  "
+msgid "Thank-you for adding <a href=\"%(person_url)s\">%(person_name)s</a>!"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:8
 #, python-format
-msgid ""
-"\n"
-"    Thank-you for updating <a href=\"%(person_url)s\">%(person_name)s</a>!\n"
-"  "
+msgid "Thank-you for updating <a href=\"%(person_url)s\">%(person_name)s</a>!"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:17
 #, python-format
-msgid ""
-"\n"
-"      <a href=\"%(person_edit_url)s\">Edit %(person_name)s again</a>\n"
-"    "
+msgid "<a href=\"%(person_edit_url)s\">Edit %(person_name)s again</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:22
 #, python-format
-msgid ""
-"\n"
-"      Add a candidate for <a href=\"%(needing_attention_url)s\">one of the\n"
-"      posts with fewest candidates</a>\n"
-"    "
+msgid "Add a candidate for <a href=\"%(needing_attention_url)s\">one of the posts with fewest candidates</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:29
 #, python-format
-msgid ""
-"\n"
-"        <a href=\"%(person_create_url)s\">Add another candidate in the %(election_name)s</a>\n"
-"      "
+msgid "<a href=\"%(person_create_url)s\">Add another candidate in the %(election_name)s</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_photo-credit.html:8
@@ -1188,21 +1167,11 @@ msgid "Areas: %(all_area_names)s"
 msgstr "Area(s): %(all_area_names)s"
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:7
-#: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:7
-#, python-format
-msgid ""
-"\n"
-"    %(site_name)s user agreement\n"
-"  "
-msgstr ""
-
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:14
+#: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:7
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:14
 #, python-format
-msgid ""
-"\n"
-"        %(site_name)s user agreement\n"
-"      "
+msgid "%(site_name)s user agreement"
 msgstr ""
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:22
@@ -1970,10 +1939,7 @@ msgstr "Como moderador, podés invalidar los datos en cache (actualizar) para es
 
 #: candidates/templates/candidates/popit_down.html:7
 #, python-format
-msgid ""
-"\n"
-"    %(site_name)s is Temporarily Unavailable\n"
-"  "
+msgid "%(site_name)s is Temporarily Unavailable"
 msgstr ""
 
 #: candidates/templates/candidates/popit_down.html:13
@@ -1982,10 +1948,7 @@ msgstr "Error"
 
 #: candidates/templates/candidates/popit_down.html:21
 #, python-format
-msgid ""
-"\n"
-"    Sorry, %(site_name)s is temporarily unavailable\n"
-"  "
+msgid "Sorry, %(site_name)s is temporarily unavailable"
 msgstr ""
 
 #: candidates/templates/candidates/popit_down.html:26
@@ -2785,9 +2748,7 @@ msgstr "Dejaste una foto subida por {0} en la cola"
 
 #: moderation_queue/views.py:383
 #, python-brace-format
-msgid ""
-"Ignored a photo upload from {uploading_user} (This usually means it was a "
-"duplicate)"
+msgid "Ignored a photo upload from {uploading_user} (This usually means it was a duplicate)"
 msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa que era duplicada)"
 
 #: moderation_queue/views.py:396
@@ -2795,10 +2756,8 @@ msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
 
-#: mysite/settings.py:368
-msgid ""
-"Please don't quote third-party candidate sites —\n"
-"we prefer URLs of news stories or official candidate pages."
+#: mysite/settings.py:369
+msgid "Please don't quote third-party candidate sites — we prefer URLs of news stories or official candidate pages."
 msgstr "dirección URL de una noticia o de un sitio oficial del candidato."
 
 #: mysite/templates/account/login.html:6 mysite/templates/account/login.html:9
@@ -2808,11 +2767,8 @@ msgstr "Acceder"
 
 #: mysite/templates/account/login.html:15
 #, python-format
-msgid ""
-"Please sign in with one\n"
-"of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
-"for a %(site_name)s account and sign in below:"
-msgstr "Por favor acceda con una de sus cuentas existentes\nen servicios de terceras partes. O <a href=\"%(signup_url)s\">regístrese</a>\npara una cuenta nueva de %(site_name)s y acceda debajo:"
+msgid "Please sign in with one of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
+msgstr "Por favor acceda con una de sus cuentas existentes en servicios de terceras partes. O <a href=\"%(signup_url)s\">regístrese</a> para una cuenta nueva de %(site_name)s y acceda debajo:"
 
 #: mysite/templates/account/login.html:25
 msgid "or"
@@ -2820,9 +2776,7 @@ msgstr "o"
 
 #: mysite/templates/account/login.html:32
 #, python-format
-msgid ""
-"If you have not created an account yet, then please\n"
-"<a href=\"%(signup_url)s\">sign up</a> first."
+msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
 msgstr "Si no has creado tu cuenta aún, entonces por favor<a href=\"%(signup_url)s\">registrate</a> primero."
 
 #: mysite/templates/account/login.html:43
@@ -2856,11 +2810,8 @@ msgstr "¿Ya tenés una cuenta? Entonces por favor  <a href=\"%(login_url)s\">in
 
 #: mysite/templates/generic_base.html:37
 #, python-format
-msgid ""
-"\n"
-"           %(site_name)s\n"
-"        "
-msgstr ""
+msgid "%(site_name)s"
+msgstr "%(site_name)s"
 
 #: mysite/templates/generic_base.html:75
 msgid "Posts"

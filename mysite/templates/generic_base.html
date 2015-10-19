@@ -34,7 +34,7 @@
 
     <title>
       {% block title %}
-        {% blocktrans with site_name=site.name %}
+        {% blocktrans trimmed with site_name=site.name %}
            {{ site_name }}
         {% endblocktrans %}
       {% endblock %}

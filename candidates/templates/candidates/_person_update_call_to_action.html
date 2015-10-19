@@ -1,11 +1,11 @@
 {% load i18n %}
 
 {% if new_person %}
-  {% blocktrans %}
+  {% blocktrans trimmed %}
     Thank-you for adding <a href="{{ person_url }}">{{ person_name }}</a>!
   {% endblocktrans %}
 {% else %}
-  {% blocktrans %}
+  {% blocktrans trimmed %}
     Thank-you for updating <a href="{{ person_url }}">{{ person_name }}</a>!
   {% endblocktrans %}
 {% endif %}
@@ -14,19 +14,19 @@ Now you can carry on to:
 
 <ul>
   <li>
-    {% blocktrans %}
+    {% blocktrans trimmed %}
       <a href="{{ person_edit_url }}">Edit {{ person_name }} again</a>
     {% endblocktrans %}
   </li>
   <li>
-    {% blocktrans %}
+    {% blocktrans trimmed %}
       Add a candidate for <a href="{{ needing_attention_url }}">one of the
       posts with fewest candidates</a>
     {% endblocktrans %}
   </li>
   {% for person_create_url, election_name in create_for_election_options %}
     <li>
-      {% blocktrans %}
+      {% blocktrans trimmed %}
         <a href="{{ person_create_url }}">Add another candidate in the {{ election_name }}</a>
       {% endblocktrans %}
     </li>

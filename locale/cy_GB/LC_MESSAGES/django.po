@@ -73,13 +73,8 @@ msgstr "Pa etholaethau sydd gyda'r nifer lleiaf o ymgeiswyr hyd yma?"
 
 #: cached_counts/templates/reports.html:15
 #, python-format
-msgid ""
-"\n"
-"        You can see a list of all the posts in current elections\n"
-"        <a href=\"%(url)s\">ordered starting with those with the fewest\n"
-"        candidates</a>.\n"
-"     "
-msgstr "\nEdrychwch ar restr trefnus o etholaethau\n<a href=\"%(url)s\">gan ddechrau gyda'r rhai gyda'r nifer leiaf o ymgeiswyr</a>."
+msgid "You can see a list of all the posts in current elections <a href=\"%(url)s\">ordered starting with those with the fewest candidates</a>."
+msgstr "Edrychwch ar restr trefnus o etholaethau <a href=\"%(url)s\">gan ddechrau gyda'r rhai gyda'r nifer leiaf o ymgeiswyr</a>."
 
 #: cached_counts/templates/reports.html:26
 msgid "Current Elections"
@@ -684,43 +679,27 @@ msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:4
 #, python-format
-msgid ""
-"\n"
-"    Thank-you for adding <a href=\"%(person_url)s\">%(person_name)s</a>!\n"
-"  "
+msgid "Thank-you for adding <a href=\"%(person_url)s\">%(person_name)s</a>!"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:8
 #, python-format
-msgid ""
-"\n"
-"    Thank-you for updating <a href=\"%(person_url)s\">%(person_name)s</a>!\n"
-"  "
+msgid "Thank-you for updating <a href=\"%(person_url)s\">%(person_name)s</a>!"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:17
 #, python-format
-msgid ""
-"\n"
-"      <a href=\"%(person_edit_url)s\">Edit %(person_name)s again</a>\n"
-"    "
+msgid "<a href=\"%(person_edit_url)s\">Edit %(person_name)s again</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:22
 #, python-format
-msgid ""
-"\n"
-"      Add a candidate for <a href=\"%(needing_attention_url)s\">one of the\n"
-"      posts with fewest candidates</a>\n"
-"    "
+msgid "Add a candidate for <a href=\"%(needing_attention_url)s\">one of the posts with fewest candidates</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:29
 #, python-format
-msgid ""
-"\n"
-"        <a href=\"%(person_create_url)s\">Add another candidate in the %(election_name)s</a>\n"
-"      "
+msgid "<a href=\"%(person_create_url)s\">Add another candidate in the %(election_name)s</a>"
 msgstr ""
 
 #: candidates/templates/candidates/_photo-credit.html:8
@@ -1186,21 +1165,11 @@ msgid "Areas: %(all_area_names)s"
 msgstr "Ardaloedd: %(all_area_names)s"
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:7
-#: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:7
-#, python-format
-msgid ""
-"\n"
-"    %(site_name)s user agreement\n"
-"  "
-msgstr ""
-
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:14
+#: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:7
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:14
 #, python-format
-msgid ""
-"\n"
-"        %(site_name)s user agreement\n"
-"      "
+msgid "%(site_name)s user agreement"
 msgstr ""
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:22
@@ -1970,10 +1939,7 @@ msgstr "Fel defnyddiwr staff, gallwch annilysu unrhyw ddata sydd wedi'i storio a
 
 #: candidates/templates/candidates/popit_down.html:7
 #, python-format
-msgid ""
-"\n"
-"    %(site_name)s is Temporarily Unavailable\n"
-"  "
+msgid "%(site_name)s is Temporarily Unavailable"
 msgstr ""
 
 #: candidates/templates/candidates/popit_down.html:13
@@ -1982,10 +1948,7 @@ msgstr "Gwall"
 
 #: candidates/templates/candidates/popit_down.html:21
 #, python-format
-msgid ""
-"\n"
-"    Sorry, %(site_name)s is temporarily unavailable\n"
-"  "
+msgid "Sorry, %(site_name)s is temporarily unavailable"
 msgstr ""
 
 #: candidates/templates/candidates/popit_down.html:26
@@ -2797,11 +2760,9 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
 
-#: mysite/settings.py:368
-msgid ""
-"Please don't quote third-party candidate sites —\n"
-"we prefer URLs of news stories or official candidate pages."
-msgstr "Peidiwch ddyfynu gwefannau trydydd parti os gwelwch chi'n dda —\nmae'n well gennym gwegyfeiriadau straeon newyddion neu o dudalennau swyddogol ymgeiswyr."
+#: mysite/settings.py:369
+msgid "Please don't quote third-party candidate sites — we prefer URLs of news stories or official candidate pages."
+msgstr "Peidiwch ddyfynu gwefannau trydydd parti os gwelwch chi'n dda — mae'n well gennym gwegyfeiriadau straeon newyddion neu o dudalennau swyddogol ymgeiswyr."
 
 #: mysite/templates/account/login.html:6 mysite/templates/account/login.html:9
 #: mysite/templates/account/login.html:42
@@ -2810,11 +2771,8 @@ msgstr "Mewngofnodi"
 
 #: mysite/templates/account/login.html:15
 #, python-format
-msgid ""
-"Please sign in with one\n"
-"of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
-"for a %(site_name)s account and sign in below:"
-msgstr "Mewngofnodwch gydag un o'ch\ncyfrifon trydydd parti. Neu,  <a href=\"%(signup_url)s\">ymunwch</a>\nar gyfer cyfrif  %(site_name)s a mewngofnodi isod:"
+msgid "Please sign in with one of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
+msgstr "Mewngofnodwch gydag un o'ch cyfrifon trydydd parti. Neu, <a href=\"%(signup_url)s\">ymunwch</a> ar gyfer cyfrif %(site_name)s a mewngofnodi isod:"
 
 #: mysite/templates/account/login.html:25
 msgid "or"
@@ -2822,10 +2780,8 @@ msgstr "neu"
 
 #: mysite/templates/account/login.html:32
 #, python-format
-msgid ""
-"If you have not created an account yet, then please\n"
-"<a href=\"%(signup_url)s\">sign up</a> first."
-msgstr "Os nad ydych wedi creu cyfrir eto\n<a href=\"%(signup_url)s\">ymaelodwch</a> yn gyntaf."
+msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr "Os nad ydych wedi creu cyfrir eto <a href=\"%(signup_url)s\">ymaelodwch</a> yn gyntaf."
 
 #: mysite/templates/account/login.html:43
 msgid "Forgot Password?"
@@ -2858,11 +2814,8 @@ msgstr "Os oes gennych gyfrif,  <a href=\"%(login_url)s\">mewngofnodwch</a> os g
 
 #: mysite/templates/generic_base.html:37
 #, python-format
-msgid ""
-"\n"
-"           %(site_name)s\n"
-"        "
-msgstr ""
+msgid "%(site_name)s"
+msgstr "%(site_name)s"
 
 #: mysite/templates/generic_base.html:75
 msgid "Posts"

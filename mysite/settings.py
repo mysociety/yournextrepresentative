@@ -365,8 +365,10 @@ NOSE_ARGS = [
     '--ignore-files=faces',
 ]
 
-SOURCE_HINTS = _(u'''Please don't quote third-party candidate sites \u2014
-we prefer URLs of news stories or official candidate pages.''')
+SOURCE_HINTS = _(
+    u"Please don't quote third-party candidate sites \u2014 "
+    u"we prefer URLs of news stories or official candidate pages."
+)
 
 # By default, cache successful results from MapIt for a day
 MAPIT_CACHE_SECONDS = 86400
