@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-13 15:11-0300\n"
+"POT-Creation-Date: 2015-10-19 16:51+0100\n"
 "PO-Revision-Date: 2015-10-13 18:12+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
@@ -459,8 +459,8 @@ msgstr "Nid oedd {0} yn gyfeirnod (ID) etholaeth sy'n hysbys i ni"
 msgid "Source of information that they won"
 msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 
-#: candidates/management/commands/candidates_create_popit_posts.py:20
-#: candidates/management/commands/candidates_create_popit_posts.py:25
+#: candidates/management/commands/candidates_create_popit_posts.py:74
+#: candidates/management/commands/candidates_create_popit_posts.py:80
 #, python-brace-format
 msgid "{post_role} for {area_name}"
 msgstr "{post_role} ar gyfer {area_name}"
@@ -549,23 +549,20 @@ msgstr "Methu set_elected o ymgeisydd heb dim standing_in"
 msgid "No standing_in information for {0}"
 msgstr "Dim gwybodaeth standing_in ar gyfer {0}"
 
-#: candidates/static_data.py:183
+#: candidates/static_data.py:203
 #, python-brace-format
 msgid "Found multiple areas for the post ID {post_id}"
 msgstr "Mae nifer o ardaloedd ar gyfer cyfeirnod swydd {post_id}"
 
 #: candidates/templates/candidates/_candidates_for_post.html:67
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:65
 msgid "(This list of candidates is currently <strong>locked</strong>.)"
 msgstr "(Bellach mae'r rhestr o ymgeiswyr yma <strong> dan glo </strong>.)"
 
 #: candidates/templates/candidates/_candidates_for_post.html:69
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:67
 msgid "(This list of candidates is currently <strong>unlocked</strong>.)"
 msgstr "(Mae'r rhestr o ymgeiswyr yma <strong> ar gael i'w olygu </strong>.)"
 
 #: candidates/templates/candidates/_candidates_for_post.html:74
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:72
 msgid ""
 "This list of candidates is now <strong>locked</strong>; you can still update"
 " contact details of candidates, but can't change the people standing in this"
@@ -573,7 +570,6 @@ msgid ""
 msgstr "Mae'r restr hon o ymgeiswyr bellach <strong>dan glo</strong>; gellir diwedaru manylion cyswllt ond nid enwau'r ymgeiswyr."
 
 #: candidates/templates/candidates/_candidates_for_post.html:83
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:81
 msgid "Unset the current winner, if incorrect"
 msgstr "Dadosod enw'r enillydd presennol, os yw'n anghywir"
 
@@ -593,13 +589,11 @@ msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:115
 #: candidates/templates/candidates/ordered-party-list.html:55
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:102
 msgid "Winner"
 msgstr "Enillydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:122
 #: candidates/templates/candidates/ordered-party-list.html:62
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:109
 msgid "Not actually standing?"
 msgstr "Falle ddim yn sefyll?"
 
@@ -607,26 +601,20 @@ msgstr "Falle ddim yn sefyll?"
 #: candidates/templates/candidates/_candidates_for_post.html:224
 #: candidates/templates/candidates/_candidates_for_post.html:269
 #: candidates/templates/candidates/ordered-party-list.html:64
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:111
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:193
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:221
 msgid "Edit"
 msgstr "Golygu"
 
 #: candidates/templates/candidates/_candidates_for_post.html:134
 #: candidates/templates/candidates/ordered-party-list.html:74
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:121
 msgid "[Quick update from the constituency page]"
 msgstr "[Diweddariad cyflym o'r dudalen etholaeth]"
 
 #: candidates/templates/candidates/_candidates_for_post.html:135
 #: candidates/templates/candidates/ordered-party-list.html:75
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:122
 msgid "This candidate won!"
 msgstr "Enillodd yr ymgeisydd yma!"
 
 #: candidates/templates/candidates/_candidates_for_post.html:150
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:132
 #, python-format
 msgid ""
 "<strong>Oh no!</strong> We don’t know of any candidates in %(post_label)s "
@@ -641,61 +629,49 @@ msgstr "<strong>Hen dro</strong>, nid ydym yn adnabod unrhyw ymgeiswyr yn  %(pos
 #: candidates/templates/candidates/ordered-party-list.html:103
 #: candidates/templates/candidates/ordered-party-list.html:109
 #: candidates/templates/candidates/person-create.html:7
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:136
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:144
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:152
 msgid "Add a new candidate"
 msgstr "Ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:156
 #: candidates/templates/candidates/ordered-party-list.html:91
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:138
 msgid "Sign in to add a new candidate"
 msgstr "Mewngofnodi er mwyn ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:185
 #: candidates/templates/candidates/ordered-party-list.html:124
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:165
 msgid "Add new candidate"
 msgstr "Ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:186
 #: candidates/templates/candidates/ordered-party-list.html:125
 #: candidates/templates/candidates/record-winner.html:35
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:166
 #: moderation_queue/templates/moderation_queue/photo-review.html:160
 msgid "Cancel"
 msgstr "Canslo"
 
 #: candidates/templates/candidates/_candidates_for_post.html:198
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:178
 msgid "Is a candidate from the 2010 election standing again?"
 msgstr "Oes yna ymgeisydd o ryw etholiad yn y gorffennol yn ail-eistedd?"
 
 #: candidates/templates/candidates/_candidates_for_post.html:200
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:180
 msgid ""
 "We don't know if these candidates from earlier elections are standing again"
 msgstr "Nid ydym yn gwybod os yw'r ymgeiswyr hyn o etholiadau cynharach yn sefyll unwaith eto"
 
 #: candidates/templates/candidates/_candidates_for_post.html:221
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:190
 msgid "Standing again"
 msgstr "Sefyll eto"
 
 #: candidates/templates/candidates/_candidates_for_post.html:222
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:191
 msgid "Not standing again"
 msgstr "Nid yw'n sefyll unwaith eto"
 
 #: candidates/templates/candidates/_candidates_for_post.html:247
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:210
 msgid ""
 "These candidates from earlier elections are known not to be standing again"
 msgstr "Gwyddys nad yw ymgeiswyr hyn o etholiadau cynharach yn sefyll eto"
 
 #: candidates/templates/candidates/_candidates_for_post.html:267
-#: elections/st_paul_municipal_2015/templates/candidates/_candidates_for_post.html:219
 msgid "Actually, they are standing!"
 msgstr "Ydyn nhw'n sefyll, go iawn?"
 
@@ -2221,19 +2197,19 @@ msgid "Unknown post for types and areas: '{0}'"
 msgstr "Etholaeth anhysbys ar gyfer mathau ac ardaloedd: '{0}'"
 
 #: candidates/views/areas.py:103
-#: elections/st_paul_municipal_2015/views/areas.py:123
+#: elections/st_paul_municipal_2015/views/areas.py:110
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr "Ardal '{0}' heb ei ffeindio"
 
 #: candidates/views/areas.py:105
-#: elections/st_paul_municipal_2015/views/areas.py:125
+#: elections/st_paul_municipal_2015/views/areas.py:112
 #, python-brace-format
 msgid "Multiple MapIt generations for type {mapit_type} found"
 msgstr "Daethpwyd o hyd i nifer o genhedlau MapIt ar gyfer {mapit_type}"
 
 #: candidates/views/areas.py:127
-#: elections/st_paul_municipal_2015/views/areas.py:147
+#: elections/st_paul_municipal_2015/views/areas.py:134
 msgid "[No areas found]"
 msgstr "[Ni chanfodwyd ardaloedd]"
 
@@ -2241,20 +2217,20 @@ msgstr "[Ni chanfodwyd ardaloedd]"
 msgid "Attempt to edit a candidacy in a locked constituency"
 msgstr "Ymgais i olygu'r ymgeisyddiaeth mewn etholaeth sydd dan glo"
 
-#: candidates/views/constituencies.py:216
+#: candidates/views/constituencies.py:217
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr "Data annilys POSTed i ConstituencyLockView"
 
-#: candidates/views/constituencies.py:359
+#: candidates/views/constituencies.py:360
 msgid "Result recorded in error, retracting"
 msgstr "Cofnodwyd canlyniad mewn camgymeriad, wrthi'n tynnu'n ôl"
 
-#: candidates/views/constituencies.py:443
+#: candidates/views/constituencies.py:444
 #, python-brace-format
 msgid "Post '{post_id}' not found"
 msgstr ""
 
-#: candidates/views/constituencies.py:452
+#: candidates/views/constituencies.py:453
 #, python-brace-format
 msgid "Party '{party_id}' not found"
 msgstr ""
