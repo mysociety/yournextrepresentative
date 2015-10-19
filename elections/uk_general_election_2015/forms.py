@@ -3,7 +3,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from candidates.election_specific import MAPIT_DATA
+from candidates.election_specific import AREA_DATA
 
 from candidates.mapit import BaseMapItException
 from .mapit import get_wmc_from_postcode
@@ -32,7 +32,7 @@ class ConstituencyForm(forms.Form):
             [
                 (mapit_id, constituency['name'])
                 for mapit_id, constituency
-                in MAPIT_DATA.areas_by_id[(u'WMC', u'22')].items()
+                in AREA_DATA.areas_by_id[(u'WMC', u'22')].items()
             ],
             key=lambda t: t[1]
         )

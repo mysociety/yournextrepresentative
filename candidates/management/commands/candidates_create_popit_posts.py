@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
-from candidates.election_specific import MAPIT_DATA, AREA_POST_DATA
+from candidates.election_specific import AREA_DATA, AREA_POST_DATA
 
 from elections.models import Election
 
@@ -37,7 +37,7 @@ def all_posts_in_all_elections():
     for election_data in Election.objects.all():
         for mapit_type in election_data.area_types.all():
             mapit_tuple = (mapit_type.name, election_data.area_generation)
-            for area_id, area in MAPIT_DATA.areas_by_id[mapit_tuple].items():
+            for area_id, area in AREA_DATA.areas_by_id[mapit_tuple].items():
                 post_id = AREA_POST_DATA.get_post_id(
                     election_data.slug, mapit_type, area_id
                 )

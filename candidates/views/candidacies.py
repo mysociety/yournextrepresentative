@@ -15,7 +15,7 @@ from ..cache import get_post_cached
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import PopItPerson, LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 from ..popit import PopItApiMixin
-from ..election_specific import MAPIT_DATA, AREA_POST_DATA
+from ..election_specific import AREA_POST_DATA
 
 
 def raise_if_locked(api, request, post_id):

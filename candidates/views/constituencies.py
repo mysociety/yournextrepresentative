@@ -28,7 +28,7 @@ from ..models import (
     RESULT_RECORDERS_GROUP_NAME, LoggedAction
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
-from ..election_specific import MAPIT_DATA, AREA_POST_DATA, PARTY_DATA
+from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
@@ -170,7 +170,7 @@ class ConstituencyListView(ElectionMixin, PopItApiMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['all_constituencies'] = \
-            MAPIT_DATA.areas_list_sorted_by_name[(u'WMC', u'22')]
+            AREA_DATA.areas_list_sorted_by_name[(u'WMC', u'22')]
         return context
 
 

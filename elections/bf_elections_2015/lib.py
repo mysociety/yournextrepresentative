@@ -3,7 +3,7 @@ from candidates.static_data import (
 )
 
 
-class MapItData(BaseMapItData):
+class AreaData(BaseMapItData):
     pass
 
 

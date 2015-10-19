@@ -128,7 +128,7 @@ class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
                 area['name'],
                 area['type_name'],
             )
-            for area in MAPIT_DATA.areas_by_id[mapit_tuple].values()
+            for area in AREA_DATA.areas_by_id[mapit_tuple].values()
         ]
         areas.sort(key=lambda a: a[1])
         context['areas'] = areas

@@ -15,7 +15,7 @@ from candidates.popit import PopItApiMixin
 
 from elections.models import Election
 
-from ..election_specific import AREA_POST_DATA, MAPIT_DATA
+from ..election_specific import AREA_POST_DATA, AREA_DATA
 from ..forms import NewPersonForm
 from .helpers import get_people_from_memberships, group_people_by_party
 
@@ -49,7 +49,7 @@ class AreasView(PopItApiMixin, TemplateView):
                     area_tuple = (area_type, area_generation)
                     post_id = AREA_POST_DATA.get_post_id(election_data.slug, area_type, area_id)
                     post_data = get_post_cached(self.api, post_id)['result']
-                    area_name = MAPIT_DATA.areas_by_id[area_tuple][area_id]['name']
+                    area_name = AREA_DATA.areas_by_id[area_tuple][area_id]['name']
                     all_area_names.add(area_name)
                     locked = post_data.get('candidates_locked', False)
                     current_candidates, _ = get_people_from_memberships(
@@ -122,7 +122,7 @@ class AreasOfTypeView(PopItApiMixin, TemplateView):
                 area['name'],
                 area['type_name'],
             )
-            for area in MAPIT_DATA.areas_by_id[mapit_tuple].values()
+            for area in AREA_DATA.areas_by_id[area_tuple].values()
         ]
         areas.sort(key=lambda a: a[1])
         context['areas'] = areas

@@ -6,7 +6,7 @@ from candidates.static_data import (
     BaseMapItData, BasePartyData, BaseAreaPostData
 )
 
-class MapItData(BaseMapItData):
+class AreaData(BaseMapItData):
     pass
 
 

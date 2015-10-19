@@ -18,7 +18,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 
 from candidates.cache import get_post_cached
-from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from candidates.election_specific import AREA_DATA, PARTY_DATA, AREA_POST_DATA
 from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
@@ -38,7 +38,7 @@ def get_post_data(api, election_id, province):
     ynr_election_data = Election.objects.get_by_slug(election_id)
     mapit_key = (ynr_election_data.area_types.first().name,
                  ynr_election_data.area_generation)
-    mapit_areas_by_name = MAPIT_DATA.areas_by_name[mapit_key]
+    mapit_areas_by_name = AREA_DATA.areas_by_name[mapit_key]
     if province != 'Burkina Faso':
         province = strip_accents(province).upper()
     mapit_area = mapit_areas_by_name[province]

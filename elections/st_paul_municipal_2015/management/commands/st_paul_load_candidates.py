@@ -13,7 +13,7 @@ from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.views.version_data import get_change_metadata
 from candidates.cache import get_post_cached, UnknownPostException
-from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
+from candidates.election_specific import PARTY_DATA, AREA_POST_DATA
 from elections.models import Election
 
 import memcache
