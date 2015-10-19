@@ -50,10 +50,10 @@ def get_post_data(api, json_election_id, json_election_id_to_name):
     m = re.search(r'a Gobernador de (?P<province>.*)', json_election_name)
     if m:
         province = m.group('province')
-        mapit_areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
-        mapit_area = mapit_areas_by_name[strip_accents(province).upper()]
+        areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
+        area = areas_by_name[strip_accents(province).upper()]
         post_id = AREA_POST_DATA.get_post_id(
-            ynr_election_id, mapit_area['type'], mapit_area['id']
+            ynr_election_id, area['type'], area['id']
         )
     else:
         # It must be the presidential election:

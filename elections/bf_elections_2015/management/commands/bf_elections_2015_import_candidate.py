@@ -36,14 +36,14 @@ USER_AGENT = (
 
 def get_post_data(api, election_id, province):
     ynr_election_data = Election.objects.get_by_slug(election_id)
-    mapit_key = (ynr_election_data.area_types.first().name,
+    area_key = (ynr_election_data.area_types.first().name,
                  ynr_election_data.area_generation)
-    mapit_areas_by_name = AREA_DATA.areas_by_name[mapit_key]
+    areas_by_name = AREA_DATA.areas_by_name[area_key]
     if province != 'Burkina Faso':
         province = strip_accents(province).upper()
-    mapit_area = mapit_areas_by_name[province]
+    area = areas_by_name[province]
     post_id = AREA_POST_DATA.get_post_id(
-        election_id, mapit_area['type'], mapit_area['id']
+        election_id, area['type'], area['id']
     )
     post_data = get_post_cached(api, post_id)['result']
     return ynr_election_data, post_data

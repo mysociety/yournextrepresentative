@@ -10,7 +10,7 @@ imports_and_defaults = (
     ('PartyData', None),
     ('AreaPostData', None),
     ('EXTRA_CSV_ROW_FIELDS', []),
-    ('get_extra_csv_values', lambda person, election, mapit_data: {}),
+    ('get_extra_csv_values', lambda person, election, area_data: {}),
 )
 
 # Note that one could do this without the dynamic import and use of

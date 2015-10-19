@@ -30,8 +30,8 @@ class ConstituencyForm(forms.Form):
         label='Select a constituency',
         choices=[('none', '')] + sorted(
             [
-                (mapit_id, constituency['name'])
-                for mapit_id, constituency
+                (area_id, constituency['name'])
+                for area_id, constituency
                 in AREA_DATA.areas_by_id[(u'WMC', u'22')].items()
             ],
             key=lambda t: t[1]

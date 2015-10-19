@@ -35,16 +35,16 @@ def all_posts_in_all_elections():
     more than once, but with different election and area data."""
 
     for election_data in Election.objects.all():
-        for mapit_type in election_data.area_types.all():
-            mapit_tuple = (mapit_type.name, election_data.area_generation)
-            for area_id, area in AREA_DATA.areas_by_id[mapit_tuple].items():
+        for area_type in election_data.area_types.all():
+            area_tuple = (area_type.name, election_data.area_generation)
+            for area_id, area in AREA_DATA.areas_by_id[area_tuple].items():
                 post_id = AREA_POST_DATA.get_post_id(
-                    election_data.slug, mapit_type, area_id
+                    election_data.slug, area_type, area_id
                 )
                 yield {
                     'election': election_data.slug,
                     'election_data': election_data,
-                    'mapit_type': mapit_type,
+                    'area_type': area_type,
                     'area_id': area_id,
                     'area': area,
                     'post_id': post_id,

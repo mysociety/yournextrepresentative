@@ -55,10 +55,10 @@ def get_post_data(api, origin_post,origin_district):
         post_id = 'pmeu'
 
     else:
-        mapit_areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
-        mapit_area = mapit_areas_by_name[origin_district]
+        areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
+        area = areas_by_name[origin_district]
         post_id = AREA_POST_DATA.get_post_id(
-            ynr_election_id, mapit_area['type'], mapit_area['id']
+            ynr_election_id, area['type'], area['id']
         )
 
     post_data = get_post_cached(api, post_id)['result']

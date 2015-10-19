@@ -100,7 +100,7 @@ class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
-        requested_mapit_type = kwargs['mapit_type']
+        requested_mapit_type = kwargs['area_type']
         all_mapit_tuples = set(
             (mapit_type.name, election_data.area_generation)
             for election_data in Election.objects.current().by_date()

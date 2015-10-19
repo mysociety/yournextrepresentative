@@ -43,7 +43,7 @@
       <div class="header__nav">
         <div class="header__nav__primary">
           <a href="/" class="header__nav__item">Inicio</a>
-          <a href="{% url 'areas-of-type-view' mapit_type='PRV' ignored_slug='provincia' %}" class="header__nav__item">{% trans "Provinces" %}</a>
+          <a href="{% url 'areas-of-type-view' area_type='PRV' ignored_slug='provincia' %}" class="header__nav__item">{% trans "Provinces" %}</a>
           <a href="{% url 'attention_needed' %}" class="header__nav__item">Prioridades</a>
          <a href="http://www.yoquierosaber.org/" class="header__nav__item">Juego</a>
           <a href="{% url 'help-reuse' %}#" class="header__nav__item">Reutilizá YQS</a>

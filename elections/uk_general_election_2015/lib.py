@@ -55,7 +55,7 @@ class AreaPostData(BaseAreaPostData):
     def post_id_to_post_group(self, election, post_id):
         # In the UK, the post IDs are the same as MapIt IDs,
         # so just look it up from the MapIt data:
-        areas_by_id = self.mapit_data.areas_by_id[(u'WMC', u'22')]
+        areas_by_id = self.area_data.areas_by_id[(u'WMC', u'22')]
         area = areas_by_id.get(post_id)
         return area['country_name']
 
@@ -78,7 +78,7 @@ EXTRA_CSV_ROW_FIELDS = [
     'party_ec_id',
 ]
 
-def get_extra_csv_values(person, election, mapit_data):
+def get_extra_csv_values(person, election, area_data):
     theyworkforyou_url = None
     parlparse_id = person.get_identifier('uk.org.publicwhip')
     if parlparse_id:
@@ -93,7 +93,7 @@ def get_extra_csv_values(person, election, mapit_data):
     party_ec_id = person.parties[election].get('electoral_commission_id', '')
 
     return {
-        'gss_code': mapit_data.areas_by_id[(u'WMC', u'22')][
+        'gss_code': area_data.areas_by_id[(u'WMC', u'22')][
             person.standing_in[election]['post_id']
         ]['codes']['gss'],
         'parlparse_id': parlparse_id,

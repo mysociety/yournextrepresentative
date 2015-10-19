@@ -94,26 +94,26 @@ class AreasOfTypeView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
-        requested_mapit_type = kwargs['mapit_type']
-        all_mapit_tuples = set(
-            (mapit_type.name, election_data.area_generation)
+        requested_area_type = kwargs['area_type']
+        all_area_tuples = set(
+            (area_type.name, election_data.area_generation)
             for election_data in Election.objects.current().by_date()
-            for mapit_type in election_data.area_types.all()
-            if mapit_type.name == requested_mapit_type
+            for area_type in election_data.area_types.all()
+            if area_type.name == requested_area_type
         )
-        if not all_mapit_tuples:
-            raise Http404(_("Area '{0}' not found").format(requested_mapit_type))
-        if len(all_mapit_tuples) > 1:
-            message = _("Multiple MapIt generations for type {mapit_type} found")
-            raise Exception(message.format(mapit_type=requested_mapit_type))
-        mapit_tuple = list(all_mapit_tuples)[0]
+        if not all_area_tuples:
+            raise Http404(_("Area '{0}' not found").format(requested_area_type))
+        if len(all_area_tuples) > 1:
+            message = _("Multiple Area generations for type {area_type} found")
+            raise Exception(message.format(area_type=requested_area_type))
+        area_tuple = list(all_area_tuples)[0]
         areas = [
             (
                 reverse(
                     'areas-view',
                     kwargs={
                         'type_and_area_ids': '{type}-{area_id}'.format(
-                            type=requested_mapit_type,
+                            type=requested_area_type,
                             area_id=area['id']
                         ),
                         'ignored_slug': slugify(area['name'])

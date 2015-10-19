@@ -124,7 +124,7 @@ patterns_to_format = [
         'name': 'areas-view',
     },
     {
-        'pattern': r'^areas-of-type/(?P<mapit_type>.*?)(?:/(?P<ignored_slug>.*))?$',
+        'pattern': r'^areas-of-type/(?P<area_type>.*?)(?:/(?P<ignored_slug>.*))?$',
         'view': views.AreasOfTypeView.as_view(),
         'name': 'areas-of-type-view',
     },
