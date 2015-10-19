@@ -15,6 +15,8 @@ from candidates.views.version_data import get_change_metadata
 from candidates.cache import get_post_cached, UnknownPostException
 from candidates.election_specific import MAPIT_DATA, PARTY_DATA, AREA_POST_DATA
 
+import memcache
+
 UNKNOWN_PARTY_ID = 'unknown'
 GOOGLE_DOC_ID = '1yme9Y9Vt876-cVR9bose3QDqF7j8hqLnWYEjO3HUqXs'
 
@@ -63,7 +65,7 @@ class Command(BaseCommand):
                 ocd_division = election_data['post_id_format'].format(area_id=row['Ward'])
                 post_data = get_post_cached(api, ocd_division)['result']
                 election_data['id'] = 'council-member-2015'
-            except UnknownPostException:
+            except (UnknownPostException, memcache.Client.MemcachedKeyCharacterError):
                 election_data = settings.ELECTIONS['school-board-2015']
                 post_data = get_post_cached(api, election_data['post_id_format'])['result']
                 election_data['id'] = 'school-board-2015'
@@ -88,6 +90,18 @@ class Command(BaseCommand):
             #     person.birth_date = None
 
             person.email = row['Campaign Email']
+            person.facebook_personal_url = row["Candidate's Personal Facebook Profile"]
+            person.facebook_page_url = row['Campaign Facebook Page']
+
+
+            person.twitter_username = row['Campaign Twitter']\
+                                          .replace('N', '')\
+                                          .replace('N/A', '')\
+                                          .replace('http://twitter.com/', '')\
+                                          .replace('https://twitter.com/', '')
+
+            person.linkedin_url = row['LinkedIn']
+            person.homepage_url = row['Campaign Website\n']
 
             standing_in_election = {
                 'post_id': post_data['id'],

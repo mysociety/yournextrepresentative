@@ -16,7 +16,7 @@ from candidates.models.auth import get_edits_allowed
 from candidates.popit import PopItApiMixin
 from candidates.forms import NewPersonForm
 from candidates.views import ConstituencyDetailView
-from candidates.views.helpers import get_people_from_memberships
+from candidates.views.helpers import get_people_from_memberships, group_people_by_party
 
 from elections.mixins import ElectionMixin
 
@@ -59,7 +59,13 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
 
                     current_candidates, _ = get_people_from_memberships(
                         election_data,
-                        post_data['memberships'],
+                        post_data['memberships']
+                    )
+
+                    current_candidates = group_people_by_party(
+                        election,
+                        current_candidates,
+                        party_list=election_data.get('party_lists_in_use')
                     )
 
                     if not area_dict.get(ocd_division):
@@ -86,25 +92,6 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
         context['all_area_names'] = u' — '.join(all_area_names)
         context['suppress_official_documents'] = True
 
-        return context
-
-class StPaulDistrictDetailView(ConstituencyDetailView):
-
-    template_name = 'st_paul_municipal_2015/districts.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(StPaulDistrictDetailView, self).get_context_data(**kwargs)
-
-        # context['electionleaflets_url'] = \
-        #     get_electionleaflets_url(
-        #         context['post_id'],
-        #         context['post_label_shorter']
-        #     )
-
-        # context['meetyournextmp_url'] = \
-        #     u'https://meetyournextmp.com/linktoseat.html?mapitid={}'.format(
-        #         context['post_id']
-        #     )
         return context
 
 class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):

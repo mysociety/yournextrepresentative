@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import url
+from candidates.views.constituencies import ConstituencyDetailView
 
 from . import views
 
@@ -26,7 +27,7 @@ urlpatterns = [
             election=settings.ELECTION_RE,
             ignore_pattern=post_ignored_slug_re,
         ),
-        views.StPaulDistrictDetailView.as_view(),
+        views.ConstituencyDetailView.as_view(),
         name='constituency'
     ),
 ]
