@@ -1969,7 +1969,7 @@ msgstr "Dilynwch un o'r dolenni isod i weld rhestr o'r ymgeiswyr sy'n hysbys inn
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
 #: elections/ar_elections_2015/templates/base.html:110
-#: mysite/templates/generic_base.html:125
+#: mysite/templates/generic_base.html:121
 msgid "Privacy policy"
 msgstr "Polisi Preifatrwydd"
 
@@ -2237,29 +2237,29 @@ msgid "Provinces"
 msgstr "Taleithiau"
 
 #: elections/ar_elections_2015/templates/base.html:58
-#: mysite/templates/generic_base.html:82
+#: mysite/templates/generic_base.html:78
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr "Wedi mewngofnodi i gyfrif <strong>%(username)s</strong>"
 
 #: elections/ar_elections_2015/templates/base.html:60
-#: mysite/templates/generic_base.html:83
+#: mysite/templates/generic_base.html:79
 msgid "Sign out"
 msgstr "Allgofnodi"
 
 #: elections/ar_elections_2015/templates/base.html:63
-#: mysite/templates/generic_base.html:87
+#: mysite/templates/generic_base.html:83
 msgid "Sign in to edit"
 msgstr "Mewngofnodi i olygu"
 
 #: elections/ar_elections_2015/templates/base.html:108
-#: mysite/templates/generic_base.html:122
+#: mysite/templates/generic_base.html:118
 msgid "Open data API"
 msgstr "Data agored yr API"
 
 #: elections/ar_elections_2015/templates/base.html:109
-#: mysite/templates/generic_base.html:74
-#: mysite/templates/generic_base.html:123
+#: mysite/templates/generic_base.html:70
+#: mysite/templates/generic_base.html:119
 msgid "About"
 msgstr "Amdanom Ni"
 
@@ -2799,20 +2799,15 @@ msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
 msgstr "Os oes gennych gyfrif,  <a href=\"%(login_url)s\">mewngofnodwch</a> os gwelwch chi'n dda."
 
-#: mysite/templates/generic_base.html:37
-#, python-format
-msgid "%(site_name)s"
-msgstr "%(site_name)s"
-
-#: mysite/templates/generic_base.html:75
+#: mysite/templates/generic_base.html:71
 msgid "Posts"
 msgstr "Etholaethau"
 
-#: mysite/templates/generic_base.html:76
+#: mysite/templates/generic_base.html:72
 msgid "Numbers"
 msgstr "Niferoedd"
 
-#: mysite/templates/generic_base.html:124
+#: mysite/templates/generic_base.html:120
 msgid "Issue tracker"
 msgstr "Traciwr materion"
 
@@ -3040,3 +3035,6 @@ msgid ""
 "Once your constituency has all the email addresses entered, you can look at "
 "our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
 msgstr "Unwaith mae holl gyfeiriadau ebost eich etholaeth wedi eu cofnodi, gallwch edrych ar ein <a href=\"%(url)s\"> rhestr o'r holl ymgeiswyr sydd heb gyfeiriad ebost</a>!"
+
+#~ msgid "%(site_name)s"
+#~ msgstr "%(site_name)s"
