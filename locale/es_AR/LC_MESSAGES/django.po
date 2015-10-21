@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Carlos Contreras <carlosconval@hotmail.com>, 2015
 # Martín Szyszlican <martinsz@gmail.com>, 2015
@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-19 16:51+0100\n"
-"PO-Revision-Date: 2015-10-13 18:12+0000\n"
+"POT-Creation-Date: 2015-10-21 10:52-0300\n"
+"PO-Revision-Date: 2015-10-21 13:51+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/mysociety/yournextmp/language/es_AR/)\n"
+"Language: es_AR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:6
@@ -73,7 +73,7 @@ msgstr "¿Cuales puestos tienen menos candidatos?"
 #: cached_counts/templates/reports.html:15
 #, python-format
 msgid "You can see a list of all the posts in current elections <a href=\"%(url)s\">ordered starting with those with the fewest candidates</a>."
-msgstr "Puedes ver una lista de todos los cargos que se disputan en estas elecciones <a href=\"%(url)s\">empezando con aquellos con pocos candidatos cargados</a>."
+msgstr ""
 
 #: cached_counts/templates/reports.html:26
 msgid "Current Elections"
@@ -442,11 +442,11 @@ msgstr ""
 
 #: candidates/middleware.py:42
 msgid "As a precaution, an update was blocked:"
-msgstr "Como precaución, esta actualización fue bloqueada:"
+msgstr ""
 
 #: candidates/middleware.py:43
 msgid "If this update is appropriate, someone should apply it manually."
-msgstr "Si esta actualización es apropiada, alguien debería aplicarla manualmente."
+msgstr ""
 
 #: candidates/middleware.py:51
 #, python-brace-format
@@ -746,7 +746,9 @@ msgstr ""
 #: candidates/templates/candidates/about.html:22
 #: elections/uk_general_election_2015/templates/candidates/about.html:26
 msgid "The source code for this site is <a href=\"https://github.com/mysociety/yournextrepresentative/\">available on GitHub</a>, and you can find a <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of known bugs</a> there as well."
-msgstr "El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextrepresentative/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">lista de errores conocidos</a> ahí también. Y este es nuestro <a href=\"https://github.com/YoQuieroSaber/yournextrepresentative/\">fork para Argentina</a>, en GitHub también."
+msgstr ""
+"El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextrepresentative/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">lista de errores conocidos</a> ahí también.\n"
+"Y este es nuestro <a href=\"https://github.com/YoQuieroSaber/yournextrepresentative/\">fork para Argentina</a>, en GitHub también."
 
 #: candidates/templates/candidates/about.html:30
 msgid "This site was originally developed by Mark Longair (mySociety), Sym Roe (Democracy Club) and Zarino Zappia (mySociety), and <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many other contributors</a>, to whom we owe a debt of gratitude."
@@ -2042,7 +2044,9 @@ msgstr ""
 #: elections/uk_general_election_2015/templates/candidates/about.html:17
 #, python-format
 msgid "Please email <a href=\"mailto:%(email)s\">%(email)s</a> with any feedback or bug reports. If you'd like to discuss this site or any other project relating to elections in the UK, we'd suggest that you post to the <a href=\"https://groups.google.com/forum/#!forum/democracy-club\">Democracy Club Google Group</a>."
-msgstr "Por favor envíe un correo a <a href=\"mailto:%(email)s\">%(email)s</a> con cualquier devolución o reporte de errores. Para debatir sobre este sitio u otros proyectos relacionados a las elecciones argentinas, puede participar en nuestra <a href=\"https://groups.google.com/forum/#!forum/yoquierosaber2015\">lista de correo</a."
+msgstr ""
+"Por favor envíe un correo a <a href=\"mailto:%(email)s\">%(email)s</a> con cualquier devolución o reporte de errores. \n"
+"Para debatir sobre este sitio u otros proyectos relacionados a las elecciones argentinas, puede participar en nuestra <a href=\"https://groups.google.com/forum/#!forum/yoquierosaber2015\">lista de correo</a>."
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:34
 msgid "This site was originally developed by Mark Longair (mySociety), Sym Roe (Democracy Club) and Zarino Zappia (mySociety) and <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many other contributors</a>, to whom we owe a debt of gratitude."
@@ -2325,7 +2329,8 @@ msgid "Thank-you for submitting a photo to {site_name}; that's been uploaded now
 msgstr ""
 
 #: moderation_queue/views.py:330 moderation_queue/views.py:385
-msgid "Many thanks from the {{ site_name }} volunteers"
+#, python-brace-format
+msgid "Many thanks from the {site_name} volunteers"
 msgstr ""
 
 #: moderation_queue/views.py:337
@@ -2350,7 +2355,7 @@ msgstr ""
 
 #: moderation_queue/views.py:379
 msgid "You can just reply to this email if you want to discuss that further, or you can try uploading a photo with a different reason or justification for its use using this link:"
-msgstr "Podés responder a este email si querés seguir conversándolo, o podés intentar subir una foto con una razón o justificación diferente para su uso, en este enlace:"
+msgstr ""
 
 #: moderation_queue/views.py:393
 #, python-format
@@ -2374,7 +2379,7 @@ msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
 
 #: mysite/settings.py:369
 msgid "Please don't quote third-party candidate sites — we prefer URLs of news stories or official candidate pages."
-msgstr "dirección URL de una noticia o de un sitio oficial del candidato."
+msgstr ""
 
 #: mysite/templates/account/login.html:6 mysite/templates/account/login.html:9
 #: mysite/templates/account/login.html:42
@@ -2384,7 +2389,7 @@ msgstr "Acceder"
 #: mysite/templates/account/login.html:15
 #, python-format
 msgid "Please sign in with one of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
-msgstr "Por favor acceda con una de sus cuentas existentes en servicios de terceras partes. O <a href=\"%(signup_url)s\">regístrese</a> para una cuenta nueva de %(site_name)s y acceda debajo:"
+msgstr ""
 
 #: mysite/templates/account/login.html:25
 msgid "or"
@@ -2393,7 +2398,7 @@ msgstr "o"
 #: mysite/templates/account/login.html:32
 #, python-format
 msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr "Si no has creado tu cuenta aún, entonces por favor<a href=\"%(signup_url)s\">registrate</a> primero."
+msgstr ""
 
 #: mysite/templates/account/login.html:43
 msgid "Forgot Password?"
@@ -2614,6 +2619,3 @@ msgstr "Preferimos direcciones de correo que puedan ser consideradas públicas y
 #, python-format
 msgid "Once your constituency has all the email addresses entered, you can look at our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
 msgstr "Una vez que tu distrito tenga todas las direcciones de correo cargadas, podés mirar nuestra <a href=\"%(url)s\">lista de todos los candidatos sin dirección de email</a>!"
-
-#~ msgid "%(site_name)s"
-#~ msgstr "%(site_name)s"

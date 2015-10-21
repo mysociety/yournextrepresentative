@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Gareth Morlais, 2015
 # Gareth Morlais, 2015
@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-19 16:51+0100\n"
-"PO-Revision-Date: 2015-10-13 18:12+0000\n"
+"POT-Creation-Date: 2015-10-21 10:52-0300\n"
+"PO-Revision-Date: 2015-10-21 13:51+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
+"Language: cy_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cy_GB\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;\n"
 
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:6
@@ -2327,7 +2327,8 @@ msgid "Thank-you for submitting a photo to {site_name}; that's been uploaded now
 msgstr ""
 
 #: moderation_queue/views.py:330 moderation_queue/views.py:385
-msgid "Many thanks from the {{ site_name }} volunteers"
+#, python-brace-format
+msgid "Many thanks from the {site_name} volunteers"
 msgstr ""
 
 #: moderation_queue/views.py:337
@@ -2618,6 +2619,3 @@ msgstr "Yn fyr, dim ond ebyst gellid eu hystyried yn gyfeiriadau cyhoeddus a chy
 #, python-format
 msgid "Once your constituency has all the email addresses entered, you can look at our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
 msgstr "Unwaith mae holl gyfeiriadau ebost eich etholaeth wedi eu cofnodi, gallwch edrych ar ein <a href=\"%(url)s\"> rhestr o'r holl ymgeiswyr sydd heb gyfeiriad ebost</a>!"
-
-#~ msgid "%(site_name)s"
-#~ msgstr "%(site_name)s"
