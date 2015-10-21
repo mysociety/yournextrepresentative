@@ -39,13 +39,14 @@ class DisallowedUpdateMiddleware(object):
 
     def process_exception(self, request, exc):
         if isinstance(exc, NameChangeDisallowedException):
+            intro = _(u'As a precaution, an update was blocked:')
+            outro = _(u'If this update is appropriate, someone should apply it manually.')
             # Then email the support address about the name change...
-            message = _(u'''As a precaution, an update was blocked:
-
-  {0}
-
-If this update is appropriate, someone should apply it manually.
-''').format(unicode(exc))
+            message = u'{intro}\n\n  {message}\n\n{outro}'.format(
+                intro=intro,
+                message=unicode(exc),
+                outro=outro,
+            )
             send_mail(
                 _('Disallowed {site_name} update for checking').format(
                     site_name=Site.objects.get_current().name

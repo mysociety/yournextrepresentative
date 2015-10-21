@@ -262,6 +262,7 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
         photo_review_url = self.request.build_absolute_uri(
             self.queued_image.get_absolute_url()
         )
+        site_name = Site.objects.get_current().name
         def flash(level, message):
             messages.add_message(
                 self.request,
@@ -313,13 +314,21 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
             candidate_full_url = person.get_absolute_url(self.request)
             self.send_mail(
                 _('{site_name} image upload approved').format(
-                    site_name=Site.objects.get_current().name
+                    site_name=site_name
                 ),
                 render_to_string(
                     'moderation_queue/photo_approved_email.txt',
                     {
-                        'site_name': Site.objects.get_current().name,
-                        'candidate_page_url': candidate_full_url
+                        'site_name': site_name,
+                        'candidate_page_url': candidate_full_url,
+                        'intro': _(
+                            "Thank-you for submitting a photo to "
+                            "{site_name}; that's been uploaded now for "
+                            "the candidate page here:"
+                        ).format(site_name=site_name),
+                        'signoff': _(
+                            "Many thanks from the {site_name} volunteers"
+                        ).format(site_name=site_name),
                     }
                 ),
             )
@@ -355,11 +364,26 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
                 render_to_string(
                     'moderation_queue/photo_rejected_email.txt',
                     {
-                        'site_name': Site.objects.get_current().name,
                         'reason': form.cleaned_data['rejection_reason'],
-                        'candidate_name': candidate_name,
                         'retry_upload_link': retry_upload_link,
-                        'photo_review_url': photo_review_url
+                        'photo_review_url': photo_review_url,
+                        'intro': _(
+                            "Thank-you for uploading a photo of "
+                            "{candidate_name} to {site_name}, but "
+                            "unfortunately we can't use that image because:"
+                        ).format(
+                            candidate_name=candidate_name,
+                            site_name=site_name
+                        ),
+                        'possible_actions': _(
+                            'You can just reply to this email if you want to '
+                            'discuss that further, or you can try uploading a '
+                            'photo with a different reason or justification '
+                            'for its use using this link:'
+                        ),
+                        'signoff': _(
+                            "Many thanks from the {site_name} volunteers"
+                        ).format(site_name=site_name),
                     },
                 ),
                 email_support_too=True,

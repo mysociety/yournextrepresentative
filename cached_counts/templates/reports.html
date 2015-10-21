@@ -12,7 +12,7 @@
   <h2>{% trans 'Which posts have fewest candidates so far?' %}</h2>
 
   <p>{% url 'attention_needed' as url %}
-     {% blocktrans %}
+     {% blocktrans trimmed %}
         You can see a list of all the posts in current elections
         <a href="{{ url }}">ordered starting with those with the fewest
         candidates</a>.

@@ -4,14 +4,14 @@
 {% block body_class %}{% endblock %}
 
 {% block title %}
-  {% blocktrans with site_name=site.name %}
+  {% blocktrans trimmed with site_name=site.name %}
     {{ site_name }} user agreement
   {% endblocktrans %}
 {% endblock %}
 
 {% block hero %}
   <h1>
-      {% blocktrans with site_name=site.name %}
+      {% blocktrans trimmed with site_name=site.name %}
         {{ site_name }} user agreement
       {% endblocktrans %}
   </h1>

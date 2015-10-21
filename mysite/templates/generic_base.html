@@ -33,11 +33,7 @@
     {% endblock %}
 
     <title>
-      {% block title %}
-        {% blocktrans with site_name=site.name %}
-           {{ site_name }}
-        {% endblocktrans %}
-      {% endblock %}
+      {% block title %}{{ site.name }}{% endblock %}
     </title>
 
     {% block analytics %}

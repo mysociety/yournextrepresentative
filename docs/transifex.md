@@ -44,7 +44,7 @@ Now update the `.po` files with any new strings that have been
 added to the project with:
 
 ```
-./manage.py makemessages -a \
+./manage.py makemessages -a --no-wrap \
     --ignore=data --ignore=candidates/static/foundation
 ```
 
