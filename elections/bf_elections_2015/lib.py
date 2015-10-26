@@ -20,6 +20,10 @@ class PartyData(BasePartyData):
 
 class AreaPostData(BaseAreaPostData):
 
+    def __init__(self, *args, **kwargs):
+        super(AreaPostData, self).__init__(*args, **kwargs)
+        self.ALL_POSSIBLE_POST_GROUPS = [None]
+
     def area_to_post_group(self, area_data):
         return None
 
@@ -31,3 +35,6 @@ class AreaPostData(BaseAreaPostData):
 
     def post_id_to_party_set(self, post_id):
         return 'national'
+
+    def party_to_possible_post_groups(self, party_data):
+        return (None,)
