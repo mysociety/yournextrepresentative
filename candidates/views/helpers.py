@@ -13,6 +13,8 @@ from ..models import (
     PopItPerson, membership_covers_date
 )
 
+from popolo.models import Person
+
 def get_redirect_to_post(election, post_data):
     short_post_label = AREA_POST_DATA.shorten_post_label(post_data['label'])
     return HttpResponseRedirect(
@@ -54,9 +56,9 @@ def get_people_from_memberships(election_data, memberships):
     current_candidates = set()
     past_candidates = set()
     for membership in memberships:
-        if not membership.get('role') == election_data.candidate_membership_role:
+        if not membership.role == election_data.candidate_membership_role:
             continue
-        person = PopItPerson.create_from_dict(membership['person_id'])
+        person = Person.objects.get(id=membership.person_id)
         if membership_covers_date(
                 membership,
                 election_data.election_date
@@ -100,17 +102,20 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     party_id_to_people = defaultdict(list)
     party_truncated = dict()
     election_data = Election.objects.get_by_slug(election)
+    #return {
+        #'party_lists_in_use': [],
+        #'parties_and_people': []
+    #}
     for person in people:
-        if election in person.party_memberships:
-            party_data = person.party_memberships[election]
-        else:
-            party_data = person.last_party
+        for m in person.memberships.all():
+            if m.organization and m.organization.classification == 'Party':
+                party_data = m.organization
         position = None
-        standing_in_election = person.standing_in.get(election)
-        if standing_in_election and election_data.party_lists_in_use:
-            position = standing_in_election.get('party_list_position')
-        party_id = party_data['id']
-        party_id_to_name[party_id] = party_data['name']
+        #standing_in_election = person.standing_in.get(election)
+        #if standing_in_election and election_data.party_lists_in_use:
+            #position = standing_in_election.get('party_list_position')
+        party_id = party_data.id
+        party_id_to_name[party_id] = party_data.name
         party_id_to_people[party_id].append((position, person))
     for party_id, people_list in party_id_to_people.items():
         if election_data.party_lists_in_use:
@@ -122,7 +127,7 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
                 party_truncated[party_id] = len(people_list)
                 del people_list[max_people:]
         else:
-            people_list.sort(key=lambda p: p[1].last_name)
+            people_list.sort(key=lambda p: p[1].family_name)
     try:
         result = [
             (
@@ -143,7 +148,7 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     if party_list:
         result.sort(key=lambda t: t[0]['name'])
     else:
-        result.sort(key=lambda t: t[1][0].last_name)
+        result.sort(key=lambda t: t[1][0].family_name)
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result

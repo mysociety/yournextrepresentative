@@ -225,10 +225,10 @@ def membership_covers_date(membership, date):
     True
     """
 
-    start_date = membership.get('start_date')
+    start_date = membership.start_date
     if not start_date:
         start_date = '0001-01-01'
-    end_date = membership.get('end_date')
+    end_date = membership.end_date
     if not end_date:
         end_date = '9999-12-31'
     start_date = complete_partial_date(start_date)

@@ -32,6 +32,8 @@ from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
+from popolo.models import Person, Post
+
 from ..cache import get_post_cached, invalidate_posts, UnknownPostException
 
 class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
@@ -47,10 +49,7 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        try:
-            mp_post = get_post_cached(self.api, post_id)
-        except UnknownPostException:
-            raise Http404()
+        mp_post = Post.objects.get(id=post_id)
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
@@ -64,7 +63,7 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         context['official_documents'] = documents_by_type.items()
         context['some_official_documents'] = documents_for_post.count()
 
-        context['post_label'] = mp_post['result']['label']
+        context['post_label'] = mp_post.label
         context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
             context['post_label']
         )
@@ -77,13 +76,11 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            k: v for k, v in mp_post['result'].items()
-            if k in ('id', 'label')
+            'id': mp_post.id,
+            'label': mp_post.label
         }
 
-        context['candidates_locked'] = mp_post['result'].get(
-            'candidates_locked', False
-        )
+        context['candidates_locked'] = False # mp_post.candidates_locked
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,
@@ -96,7 +93,7 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         current_candidates, past_candidates = \
             get_people_from_memberships(
                 self.election_data,
-                mp_post['result']['memberships']
+                mp_post.memberships.all()
             )
 
         other_candidates = past_candidates - current_candidates
@@ -128,13 +125,13 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
 
         just_people = sum((t[1] for t in context['candidates']['parties_and_people']), [])
 
-        context['show_retract_result'] = any(
-            c.get_elected(self.election) is not None for c in just_people
-        )
+        context['show_retract_result'] = False #any(
+            #c.get_elected(self.election) is not None for c in just_people
+        #)
 
-        context['show_confirm_result'] = any(
-            c.get_elected(self.election) is None for c in just_people
-        )
+        context['show_confirm_result'] = False #any(
+            #c.get_elected(self.election) is None for c in just_people
+        #)
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
