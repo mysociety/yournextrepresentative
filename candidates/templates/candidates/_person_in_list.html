@@ -15,5 +15,5 @@
 {% endif %}
 <div class="person-name-and-party">
   <a href="{% url 'person-view' c.id c.name|slugify %}" class="candidate-name">{{ c.name }}</a>
-  <span class="party">{{ c.last_party.name }}</span>
+  <span class="party">{{ c.extra.last_party.name }}</span>
 </div>

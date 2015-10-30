@@ -141,6 +141,14 @@ class PersonExtra(HasImageMixin, models.Model):
             organization_id=election.organization_id
         ).exists()
 
+    def last_party(self):
+        party = self.base.memberships.filter(
+            organization__classification='Party'
+        ).order_by('start_date').last()
+
+        return party.organization
+
+
 class OrganizationExtra(models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
 
