@@ -102,18 +102,22 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     party_id_to_people = defaultdict(list)
     party_truncated = dict()
     election_data = Election.objects.get_by_slug(election)
-    #return {
-        #'party_lists_in_use': [],
-        #'parties_and_people': []
-    #}
     for person in people:
+        position = None
+        party_data = None
+        last_party = None
         for m in person.memberships.all():
+            if m.post and hasattr(m.post, 'post_extra') \
+                    and m.post_extra.election.slug == election_data.slug:
+                party_data = m.on_behalf_of
+                position = m.post.post_extra.party_list_position
+            # TODO: sort this properly
             if m.organization and m.organization.classification == 'Party':
                 party_data = m.organization
-        position = None
-        #standing_in_election = person.standing_in.get(election)
-        #if standing_in_election and election_data.party_lists_in_use:
-            #position = standing_in_election.get('party_list_position')
+
+        if party_data is None:
+            party_data = last_party
+
         party_id = party_data.id
         party_id_to_name[party_id] = party_data.name
         party_id_to_people[party_id].append((position, person))
