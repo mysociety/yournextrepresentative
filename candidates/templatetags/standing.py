@@ -20,7 +20,7 @@ def constituency_in_year(person, election):
         else:
             result = u'<span class="constituency-not-standing">%s</span>' % _('Did not stand')
     elif not standing_in[election]:
-        if election_data.get('current'):
+        if election_data.current:
             result = u'<span class="constituency-value-not-standing">%s</span>' % _('Not standing')
         else:
             result = u'<span class="constituency-value-not-standing">%s</span>' % _('Did not stand')
