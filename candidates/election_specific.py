@@ -6,11 +6,11 @@ from django.conf import settings
 # candidates.election_specific
 
 imports_and_defaults = (
-    ('MapItData', None),
+    ('AreaData', None),
     ('PartyData', None),
     ('AreaPostData', None),
     ('EXTRA_CSV_ROW_FIELDS', []),
-    ('get_extra_csv_values', lambda person, election, mapit_data: {}),
+    ('get_extra_csv_values', lambda person, election, area_data: {}),
 )
 
 # Note that one could do this without the dynamic import and use of
@@ -37,6 +37,6 @@ for name_to_import, default_value in imports_and_defaults:
             pass
     globals()[name_to_import] = value
 
-MAPIT_DATA = MapItData()
+AREA_DATA = AreaData()
 PARTY_DATA = PartyData()
-AREA_POST_DATA = AreaPostData(MAPIT_DATA, PARTY_DATA)
+AREA_POST_DATA = AreaPostData(AREA_DATA, PARTY_DATA)

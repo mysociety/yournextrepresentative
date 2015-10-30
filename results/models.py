@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from candidates.election_specific import MAPIT_DATA, PARTY_DATA
-
 class ResultEvent(models.Model):
 
     class Meta:
@@ -23,6 +21,7 @@ class ResultEvent(models.Model):
 
     @property
     def winner_party_name(self):
+        from candidates.election_specific import PARTY_DATA
         return PARTY_DATA.party_id_to_name.get(self.winner_party_id)
 
     @classmethod

@@ -9,6 +9,8 @@ from django.core.management.base import BaseCommand
 
 from cached_counts.models import CachedCount
 
+from elections.models import Election
+
 class Command(PopItApiMixin, BaseCommand):
 
     def add_or_update(self, obj):
@@ -29,12 +31,12 @@ class Command(PopItApiMixin, BaseCommand):
 
         stale_entries_to_remove = set(CachedCount.objects.all())
 
-        for election, election_data in settings.ELECTIONS_BY_DATE:
-            post_role = election_data['for_post_role']
+        for election_data in Election.objects.by_date():
+            post_role = election_data.for_post_role
             # We iterate over the posts twice, so just evaluate the
             # generator to a list before iterating:
             all_posts = list(
-                get_all_posts(election, post_role, embed='membership.person')
+                get_all_posts(election_data.slug, post_role, embed='membership.person')
             )
             all_parties = PARTY_DATA.party_id_to_name
             counts = {
@@ -50,19 +52,19 @@ class Command(PopItApiMixin, BaseCommand):
             }
             for post in all_posts:
                 for m in post['memberships']:
-                    candidate_role = election_data['candidate_membership_role']
+                    candidate_role = election_data.candidate_membership_role
                     if m.get('role') != candidate_role:
                         continue
                     person = m['person_id']
                     standing_in = person.get('standing_in') or {}
-                    if not standing_in.get(election):
+                    if not standing_in.get(election_data.slug):
                         continue
-                    if not membership_covers_date(m, election_data['election_date']):
+                    if not membership_covers_date(m, election_data.election_date):
                         continue
                     counts['candidates'] += 1
                     counts['posts'][post['id']]['count'] += 1
-                    election_to_people[election].add(person['id'])
-                    party = person['party_memberships'][election]
+                    election_to_people[election_data.slug].add(person['id'])
+                    party = person['party_memberships'][election_data.slug]
                     party_id = party['id']
                     counts['parties'].setdefault(
                         party_id,
@@ -71,7 +73,7 @@ class Command(PopItApiMixin, BaseCommand):
                     counts['parties'][party_id]['count'] += 1
                     person_to_elections[person['id']].append(
                         {
-                            'election': election,
+                            'election': election_data.slug,
                             'election_data': election_data,
                             'party_id': party_id,
                         }
@@ -81,7 +83,7 @@ class Command(PopItApiMixin, BaseCommand):
             # Posts
             for post_id, data in counts['posts'].items():
                 obj = {
-                    'election': election,
+                    'election': election_data.slug,
                     'count_type': 'post',
                     'name': data['post_label'],
                     'count': data['count'],
@@ -94,7 +96,7 @@ class Command(PopItApiMixin, BaseCommand):
             # Parties
             for party_id, data in counts['parties'].items():
                 obj = {
-                    'election': election,
+                    'election': election_data.slug,
                     'count_type': 'party',
                     'name': data['party_name'],
                     'count': data['count'],
@@ -106,11 +108,11 @@ class Command(PopItApiMixin, BaseCommand):
 
             # Set the total party count
             cc_to_keep = self.add_or_update({
-                'election': election,
+                'election': election_data.slug,
                 'count_type': 'total',
                 'name': 'total',
                 'count': counts['candidates'],
-                'object_id': election,
+                'object_id': election_data.slug,
             })
             stale_entries_to_remove.discard(cc_to_keep)
 
@@ -118,42 +120,42 @@ class Command(PopItApiMixin, BaseCommand):
         # back through all the current elections to see if anyone stood
         # for a non-current election:
 
-        for current_election, current_election_data in settings.ELECTIONS_CURRENT:
+        for current_election_data in Election.objects.current().by_date():
             standing_again_same_party_from = defaultdict(int)
             standing_again_different_party_from = defaultdict(int)
             new_candidates_from = defaultdict(int)
             standing_again_from = defaultdict(int)
-            for person_id in election_to_people[election]:
+            for person_id in election_to_people[election_data.slug]:
                 # Get their party in the current_election:
                 current_party = None
                 for d in person_to_elections[person_id]:
-                    if current_election == d['election']:
+                    if current_election_data.slug == d['election']:
                         current_party = d['party_id']
                 # Now go through all non-current elections, and find
                 # whether that person was in them:
                 for d in person_to_elections[person_id]:
-                    election = d['election']
+                    election_data.slug = d['election']
                     election_data = d['election_data']
                     party_id = d['party_id']
-                    if election_data['current']:
+                    if election_data.current:
                         continue
-                    standing_again_from[election] += 1
+                    standing_again_from[election_data.slug] += 1
                     if party_id == current_party:
-                        standing_again_same_party_from[election] += 1
+                        standing_again_same_party_from[election_data.slug] += 1
                     else:
-                        standing_again_different_party_from[election] += 1
+                        standing_again_different_party_from[election_data.slug] += 1
             # Now work out how many new candidates there were with
             # respect to each of those previous elections.
-            for election, election_data in settings.ELECTIONS_BY_DATE:
-                if election_data['current']:
+            for election_data in Election.objects.by_date():
+                if election_data.current:
                     continue
                 total_candidates = CachedCount.objects.get(
-                    election=election,
+                    election=election_data.slug,
                     count_type='total',
                     name='total'
                 ).count
-                new_candidates_from[election] = \
-                    total_candidates - standing_again_from[election]
+                new_candidates_from[election_data.slug] = \
+                    total_candidates - standing_again_from[election_data.slug]
                 # Now add all these relative totals to the database:
                 for count_type, d in (
                         ('standing_again_same_party', standing_again_same_party_from),
@@ -162,14 +164,14 @@ class Command(PopItApiMixin, BaseCommand):
                         ('standing_again', standing_again_from),
                 ):
                     cc_to_keep = self.add_or_update({
-                        'election': current_election,
+                        'election': current_election_data.slug,
                         'count_type': count_type,
                         'name': count_type,
                         # Possibly slightly abusing the object_id
                         # field to indicate the other election these
                         # counts are relative to:
-                        'object_id': election,
-                        'count': d[election],
+                        'object_id': election_data.slug,
+                        'count': d[election_data.slug],
                     })
                     stale_entries_to_remove.discard(cc_to_keep)
 

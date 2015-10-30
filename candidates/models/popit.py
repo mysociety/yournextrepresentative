@@ -24,10 +24,8 @@ from ..cache import (
     get_person_cached, invalidate_person, get_post_cached, invalidate_posts
 )
 from ..diffs import get_version_diffs
-from ..election_specific import (
-    MAPIT_DATA, PARTY_DATA, AREA_POST_DATA,
-    EXTRA_CSV_ROW_FIELDS, get_extra_csv_values
-)
+
+from elections.models import Election
 
 person_added = django.dispatch.Signal(providing_args=["data"])
 
@@ -76,7 +74,7 @@ CSV_ROW_FIELDS = [
     'image_copyright',
     'image_uploading_user',
     'image_uploading_user_notes',
-] + EXTRA_CSV_ROW_FIELDS
+]
 
 
 form_complex_fields_locations = {
@@ -265,8 +263,8 @@ def is_candidacy_membership(membership):
     if not membership.get('election'):
         return False
     role = membership.get('role')
-    election_data = settings.ELECTIONS[membership['election']]
-    return role == election_data['candidate_membership_role']
+    election_data = Election.objects.get_by_slug(membership['election'])
+    return role == election_data.candidate_membership_role
 
 def is_standing_in_membership(membership):
     return is_candidacy_membership(membership)
@@ -320,10 +318,10 @@ def create_person_with_id_retries(api, data):
     return result
 
 def election_to_party_dates(election):
-    election_data = settings.ELECTIONS[election]
+    election_data = Election.objects.get_by_slug(election)
     return {
-        'start_date': str(election_data['party_membership_start_date']),
-        'end_date': str(election_data['party_membership_end_date']),
+        'start_date': str(election_data.party_membership_start_date),
+        'end_date': str(election_data.party_membership_end_date),
     }
 
 def get_post_label_from_post_id(api, post_id):
@@ -628,12 +626,12 @@ class PopItPerson(object):
                     organization['electoral_commission_id'] =\
                          identifier['identifier']
 
-            for election, election_data in settings.ELECTIONS.items():
+            for election_data in Election.objects.all():
                 if membership_covers_date(
                         membership,
-                        election_data['election_date']
+                        election_data.election_date
                 ):
-                    results[election] = organization
+                    results[election_data.slug] = organization
         return results
 
     @property
@@ -660,13 +658,13 @@ class PopItPerson(object):
                 membership['election'] = election
                 membership['person_id'] = self.id
                 membership['post_id'] = constituency['post_id']
-                candidate_role = settings.ELECTIONS[election]['candidate_membership_role']
+                candidate_role = Election.objects.get_by_slug(election).candidate_membership_role
                 membership['role'] = candidate_role
                 if constituency.get('party_list_position'):
                     membership['party_list_position'] = constituency['party_list_position']
                 memberships.append(membership)
                 if constituency.get('elected'):
-                    day_after = settings.ELECTIONS[election]['election_date'] + \
+                    day_after = Election.objects.get_by_slug(election).election_date + \
                         timedelta(days=1)
                     memberships.append({
                         'start_date': str(day_after),
@@ -773,7 +771,6 @@ class PopItPerson(object):
         CSV_ROW_FIELDS, for ease of converting PopItPerson objects
         to CSV representations.
         """
-
         class EmptyForNoneAttributes(object):
             def __init__(self, person):
                 self.person = person
@@ -836,7 +833,8 @@ class PopItPerson(object):
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
         }
-        extra_csv_data = get_extra_csv_values(self, election, MAPIT_DATA)
+        from ..election_specific import AREA_DATA, get_extra_csv_values
+        extra_csv_data = get_extra_csv_values(self, election, AREA_DATA)
         row.update(extra_csv_data)
 
         return row
@@ -1005,25 +1003,27 @@ class PopItPerson(object):
     def get_initial_form_data(self):
         """For use to get the initial data for a form for editing the person"""
 
+
+        from ..election_specific import AREA_POST_DATA
         initial_data = {}
         for field_name in all_form_fields:
             initial_data[field_name] = getattr(self, field_name)
-        for election, election_data in settings.ELECTIONS_CURRENT:
-            constituency_key = 'constituency_' + election
-            standing_key = 'standing_' + election
-            if election in self.standing_in:
-                standing_in_election = self.standing_in[election]
+        for election_data in Election.objects.current().by_date():
+            constituency_key = 'constituency_' + election_data.slug
+            standing_key = 'standing_' + election_data.slug
+            if election_data.slug in self.standing_in:
+                standing_in_election = self.standing_in[election_data.slug]
                 if standing_in_election:
                     initial_data[standing_key] = 'standing'
                     post_id = standing_in_election['post_id']
                     initial_data[constituency_key] = post_id
                     party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-                    party_data = self.party_memberships.get(election, {})
+                    party_data = self.party_memberships.get(election_data.slug, {})
                     party_id = party_data.get('id', '')
-                    party_key = 'party_' + party_set + '_' + election
+                    party_key = 'party_' + party_set + '_' + election_data.slug
                     initial_data[party_key] = party_id
                     position = standing_in_election.get('party_list_position')
-                    position_key = 'party_list_position_' + party_set + '_' + election
+                    position_key = 'party_list_position_' + party_set + '_' + election_data.slug
                     if position:
                         initial_data[position_key] = position
                 else:
@@ -1056,10 +1056,10 @@ class PopItPerson(object):
     @property
     def last_cons(self):
         result = None
-        for election, election_data in settings.ELECTIONS_BY_DATE:
-            cons = self.standing_in.get(election)
+        for election_data in Election.objects.by_date():
+            cons = self.standing_in.get(election_data.slug)
             if cons:
-                result = (election, cons, election_data['name'])
+                result = (election_data.slug, cons, election_data.name)
         return result
 
     def record_version(self, change_metadata):
@@ -1137,6 +1137,8 @@ class PopItPerson(object):
         return self.id
 
     def update_from_form(self, api, form):
+        from ..election_specific import AREA_POST_DATA, PARTY_DATA
+
         form_data = form.cleaned_data.copy()
         # The date is returned as a datetime.date, so if that's set, turn
         # it into a string:
@@ -1149,60 +1151,60 @@ class PopItPerson(object):
         new_standing_in = deepcopy(self.standing_in)
         new_party_memberships = deepcopy(self.party_memberships)
 
-        for election, election_data in form.elections_with_fields:
+        for election_data in form.elections_with_fields:
 
-            post_id = form_data.get('constituency_' + election)
+            post_id = form_data.get('constituency_' + election_data.slug)
             if post_id:
                 party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-                party_key = 'party_' + party_set + '_' + election
-                position_key = 'party_list_position_' + party_set + '_' + election
-                form_data['party_' + election] = form_data[party_key]
-                form_data['party_list_position_' + election] = form_data.get(position_key)
+                party_key = 'party_' + party_set + '_' + election_data.slug
+                position_key = 'party_list_position_' + party_set + '_' + election_data.slug
+                form_data['party_' + election_data.slug] = form_data[party_key]
+                form_data['party_list_position_' + election_data.slug] = form_data.get(position_key)
             else:
-                form_data['party_' + election] = None
-                form_data['party_list_position_' + election] = None
+                form_data['party_' + election_data.slug] = None
+                form_data['party_list_position_' + election_data.slug] = None
             # Delete all the party set specific party information:
             for party_set in PARTY_DATA.ALL_PARTY_SETS:
-                form_data.pop('party_' + party_set['slug'] + '_' + election)
-                form_data.pop('party_list_position_' + party_set['slug'] + '_' + election, None)
+                form_data.pop('party_' + party_set['slug'] + '_' + election_data.slug)
+                form_data.pop('party_list_position_' + party_set['slug'] + '_' + election_data.slug, None)
 
             # Extract some fields that we will deal with separately:
-            standing = form_data.pop('standing_' + election, 'standing')
-            post_id = form_data.pop('constituency_' + election)
-            party = form_data.pop('party_' + election)
-            party_list_position = form_data.pop('party_list_position_' + election)
+            standing = form_data.pop('standing_' + election_data.slug, 'standing')
+            post_id = form_data.pop('constituency_' + election_data.slug)
+            party = form_data.pop('party_' + election_data.slug)
+            party_list_position = form_data.pop('party_list_position_' + election_data.slug)
 
             if standing == 'standing':
                 post_data = get_post_cached(api, post_id)['result']
                 post_label = post_data['label']
-                new_standing_in[election] = {
+                new_standing_in[election_data.slug] = {
                     'post_id': post_data['id'],
-                    'name': AREA_POST_DATA.shorten_post_label(election, post_label),
+                    'name': AREA_POST_DATA.shorten_post_label(election_data.slug, post_label),
                     'mapit_url': post_data['area']['identifier'],
                 }
                 if party_list_position:
-                    new_standing_in[election]['party_list_position'] = \
+                    new_standing_in[election_data.slug]['party_list_position'] = \
                         party_list_position
                 # FIXME: stupid hack to preserve elected status after the election:
-                old_standing_in = self.standing_in.get(election, {})
+                old_standing_in = self.standing_in.get(election_data.slug, {})
                 if (old_standing_in is not None) and ('elected' in old_standing_in):
-                    new_standing_in[election]['elected'] = old_standing_in['elected']
-                new_party_memberships[election] = {
+                    new_standing_in[election_data.slug]['elected'] = old_standing_in['elected']
+                new_party_memberships[election_data.slug] = {
                     'name': PARTY_DATA.party_id_to_name[party],
                     'id': party,
                 }
             elif standing == 'not-standing':
                 # If the person is not standing in this election, record that
                 # they're not and remove the party membership for the election:
-                new_standing_in[election] = None
-                if election in new_party_memberships:
-                    del new_party_memberships[election]
+                new_standing_in[election_data.slug] = None
+                if election_data.slug in new_party_memberships:
+                    del new_party_memberships[election_data.slug]
             elif standing == 'not-sure':
                 # If the update specifies that we're not sure if they're
                 # standing in this election, then remove the standing_in and
                 # party_memberships entries for that year:
-                new_standing_in.pop(election, None)
-                new_party_memberships.pop(election, None)
+                new_standing_in.pop(election_data.slug, None)
+                new_party_memberships.pop(election_data.slug, None)
 
         self.standing_in = new_standing_in
         self.party_memberships = new_party_memberships

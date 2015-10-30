@@ -6,14 +6,16 @@ from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
+from elections.models import Election
+
 register = template.Library()
 
 @register.filter
 def constituency_in_year(person, election):
     standing_in = person.standing_in
-    election_data = settings.ELECTIONS[election]
+    election_data = Election.objects.get_by_slug(election)
     if election not in standing_in:
-        if election_data.get('current'):
+        if election_data.current:
             result = u'<span class="constituency-value-unknown">%s</span>' % _('No information yet')
         else:
             result = u'<span class="constituency-not-standing">%s</span>' % _('Did not stand')

@@ -19,6 +19,7 @@ from candidates.views import ConstituencyDetailView
 from candidates.views.helpers import get_people_from_memberships, group_people_by_party
 
 from elections.mixins import ElectionMixin
+from elections.models import Election
 
 from official_documents.models import OfficialDocument
 
@@ -46,9 +47,9 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
         for area_id in self.area_ids:
             ocd_division = area_id.replace(',', '/')
             # Show candidates from the current elections:
-            for election, election_data in settings.ELECTIONS_CURRENT:
+            for election_data in Election.objects.current().by_date():
 
-                if election_data['ocd_division'] in ocd_division:
+                if election_data.ocd_division in ocd_division:
 
                     post_data = get_post_cached(self.api, area_id)['result']
                     boundary_data = get_cached_boundary(ocd_division)
@@ -72,7 +73,7 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
                         area_dict[ocd_division] = 'done'
 
                         context['posts'].append({
-                            'election': election,
+                            'election': election_data.slug,
                             'election_data': election_data,
                             'post_data': post_data,
                             'candidates_locked': locked,
@@ -80,10 +81,10 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
                             get_edits_allowed(self.request.user, locked),
                             'candidates': current_candidates,
                             'add_candidate_form': NewPersonForm(
-                                election=election,
+                                election=election_data.slug,
                                 initial={
-                                    ('constituency_' + election): area_id,
-                                    ('standing_' + election): 'standing',
+                                    ('constituency_' + election_data.slug): area_id,
+                                    ('standing_' + election_data.slug): 'standing',
                                 },
                                 hidden_post_widget=True,
                             ),
@@ -99,11 +100,11 @@ class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
-        requested_mapit_type = kwargs['mapit_type']
+        requested_mapit_type = kwargs['area_type']
         all_mapit_tuples = set(
-            (mapit_type, election_data['mapit_generation'])
-            for election, election_data in settings.ELECTIONS_CURRENT
-            for mapit_type in election_data['mapit_types']
+            (mapit_type.name, election_data.area_generation)
+            for election_data in Election.objects.current().by_date()
+            for mapit_type in election_data.area_types.all()
             if mapit_type == requested_mapit_type
         )
         if not all_mapit_tuples:
@@ -127,7 +128,7 @@ class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
                 area['name'],
                 area['type_name'],
             )
-            for area in MAPIT_DATA.areas_by_id[mapit_tuple].values()
+            for area in AREA_DATA.areas_by_id[mapit_tuple].values()
         ]
         areas.sort(key=lambda a: a[1])
         context['areas'] = areas

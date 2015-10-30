@@ -6,6 +6,7 @@ from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
 
 from slumber.exceptions import HttpClientError, HttpServerError
+from elections.models import Election
 
 class Command(PopItApiMixin, BaseCommand):
     help = "Create required organizations (parties / chambers) in PopIt"
@@ -25,13 +26,12 @@ class Command(PopItApiMixin, BaseCommand):
             # Now we create the organizations that all the posts are
             # associated with:
 
-            for election, election_data in settings.ELECTIONS.items():
-
+            for election_data in Election.objects.all():
                 create_or_update(
                     self.api.organizations,
                     {
-                        'id': election_data['organization_id'],
-                        'name': election_data['organization_name'],
+                        'id': election_data.organization_id,
+                        'name': election_data.organization_name,
                     }
                 )
 

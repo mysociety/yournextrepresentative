@@ -8,26 +8,28 @@ from django.core.management.base import BaseCommand
 from candidates.models.popit import membership_covers_date
 from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
+from elections.models import Election
+
 class Command(PopItApiMixin, BaseCommand):
     help = "Set an election field on all memberships that represent candidacies"
 
     def handle(self, **options):
 
-        for election, election_data in settings.ELECTIONS.items():
+        for election_data in Election.objects.all():
             for membership in popit_unwrap_pagination(
                     self.api.memberships, embed='', per_page=100
             ):
-                if membership.get('role', '') != election_data['candidate_membership_role']:
+                if membership.get('role', '') != election_data.candidate_membership_role:
                     continue
                 if not membership_covers_date(
-                        membership, election_data['election_date']
+                        membership, election_data.election_date
                 ):
                     continue
-                if membership.get('election', '') == election:
+                if membership.get('election', '') == election_data.slug:
                     # Then the attribute is already correct, don't
                     # bother setting it.
                     continue
-                membership['election'] = election
+                membership['election'] = election_data.slug
                 # Some of these memberships have a spurious 'area'
                 # attribute, set to: {'area': {'name': ''}} which will
                 # cause the PUT to fail, so remove that.

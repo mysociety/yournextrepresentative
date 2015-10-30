@@ -45,7 +45,7 @@ class UserContributions(View):
         writer.writerow({k: k for k in headers})
         for i, user in enumerate(User.objects.annotate(
                 edit_count=Count('loggedaction')
-        ).order_by('-edit_count')):
+        ).order_by('-edit_count', 'username')):
             writer.writerow({
                 'rank': str(i),
                 'username': user.username,

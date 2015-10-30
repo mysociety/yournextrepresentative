@@ -8,7 +8,9 @@ from django.utils.translation import ugettext as _
 
 from candidates.models.popit import create_or_update
 from candidates.popit import PopItApiMixin
-from candidates.election_specific import MAPIT_DATA, AREA_POST_DATA
+from candidates.election_specific import AREA_DATA, AREA_POST_DATA
+
+from elections.models import Election
 
 from slumber.exceptions import HttpServerError, HttpClientError
 
@@ -32,17 +34,17 @@ def all_posts_in_all_elections():
     elections; this means that you might get the same post ID yielded
     more than once, but with different election and area data."""
 
-    for election, election_data in settings.ELECTIONS.items():
-        for mapit_type in election_data['mapit_types']:
-            mapit_tuple = (mapit_type, election_data['mapit_generation'])
-            for area_id, area in MAPIT_DATA.areas_by_id[mapit_tuple].items():
+    for election_data in Election.objects.all():
+        for area_type in election_data.area_types.all():
+            area_tuple = (area_type.name, election_data.area_generation)
+            for area_id, area in AREA_DATA.areas_by_id[area_tuple].items():
                 post_id = AREA_POST_DATA.get_post_id(
-                    election, mapit_type, area_id
+                    election_data.slug, area_type, area_id
                 )
                 yield {
-                    'election': election,
+                    'election': election_data.slug,
                     'election_data': election_data,
-                    'mapit_type': mapit_type,
+                    'area_type': area_type,
                     'area_id': area_id,
                     'area': area,
                     'post_id': post_id,
@@ -96,10 +98,10 @@ class Command(PopItApiMixin, BaseCommand):
                 # on the post. To detect this possibility, we use
                 # get_unique_value to extract these values:
                 role = get_unique_value(
-                    d['election_data']['for_post_role'] for d in data_list
+                    d['election_data'].for_post_role for d in data_list
                 )
                 organization_id = get_unique_value(
-                    d['election_data']['organization_id'] for d in data_list
+                    d['election_data'].organization_id for d in data_list
                 )
                 area_id = get_unique_value(d['area_id'] for d in data_list)
 

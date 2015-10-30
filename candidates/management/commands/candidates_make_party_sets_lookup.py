@@ -7,6 +7,8 @@ from django.core.management.base import BaseCommand
 from candidates.election_specific import AREA_POST_DATA
 from candidates.popit import get_all_posts
 
+from elections.models import Election
+
 class Command(BaseCommand):
 
     def handle(self, **options):
@@ -23,8 +25,8 @@ class Command(BaseCommand):
             f.write('var postIDToPartySet = ')
             mapping = {
                 post['id']: AREA_POST_DATA.post_id_to_party_set(post['id'])
-                for election, election_data in settings.ELECTIONS_CURRENT
-                for post in get_all_posts(election, election_data['for_post_role'])
+                for election_data in Election.objects.current().by_date()
+                for post in get_all_posts(election_data.slug, election_data.for_post_role)
             }
             unknown_post_ids = [
                 k for k, v in mapping.items()

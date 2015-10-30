@@ -7,6 +7,8 @@ from .popit import create_popit_api_object, PopItApiMixin
 from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
+from elections.models import Election
+
 from django import forms
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -159,8 +161,9 @@ class BasePersonForm(PopItApiMixin, forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
-        for election, election_data in self.elections_with_fields:
-            election_name = election_data['name']
+        for election_data in self.elections_with_fields:
+            election = election_data.slug
+            election_name = election_data.name
 
             standing_status = cleaned_data.get(
                 'standing_' + election, 'standing'
@@ -209,14 +212,11 @@ class NewPersonForm(BasePersonForm):
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
-        if election not in settings.ELECTIONS:
-            raise Exception, _("Unknown election: '{election}'").format(election=election)
-
-        election_data = settings.ELECTIONS[election]
-        role = election_data['for_post_role']
+        election_data = Election.objects.get_by_slug(election)
+        role = election_data.for_post_role
 
         standing_field_kwargs = {
-            'label': _('Standing in %s') % election_data['name'],
+            'label': _('Standing in %s') % election_data.name,
             'choices': self.STANDING_CHOICES,
         }
         if hidden_post_widget:
@@ -227,12 +227,12 @@ class NewPersonForm(BasePersonForm):
             forms.ChoiceField(**standing_field_kwargs)
 
         self.elections_with_fields = [
-            (election, election_data)
+            election_data
         ]
 
         post_field_kwargs = {
             'label': _("Post in the {election}").format(
-                election=election_data['name']
+                election=election_data.name
             ),
             'max_length': 256,
         }
@@ -243,7 +243,7 @@ class NewPersonForm(BasePersonForm):
             post_field = \
                 forms.ChoiceField(
                     label=_('Post in the {election}').format(
-                        election=election_data['name']
+                        election=election_data.name
                     ),
                     required=False,
                     choices=[('', '')] + sorted(
@@ -285,7 +285,7 @@ class NewPersonForm(BasePersonForm):
             self.fields['party_' + party_set['slug'] + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
-                        election=election_data['name'],
+                        election=election_data.name,
                         party_set_name=party_set['name'],
                     ),
                     choices=PARTY_DATA.party_choices[party_set['slug']],
@@ -327,23 +327,24 @@ class UpdatePersonForm(BasePersonForm):
         # that, but still need the API object for the first time.
         api = create_popit_api_object()
 
-        self.elections_with_fields = settings.ELECTIONS_CURRENT
+        self.elections_with_fields = Election.objects.current().by_date()
 
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
         # with formsets?)
 
-        for election, election_data in self.elections_with_fields:
-            role = election_data['for_post_role']
+        for election_data in self.elections_with_fields:
+            election = election_data.slug
+            role = election_data.for_post_role
             self.fields['standing_' + election] = \
                 forms.ChoiceField(
-                    label=_('Standing in %s') % election_data['name'],
+                    label=_('Standing in %s') % election_data.name,
                     choices=self.STANDING_CHOICES,
                     widget=forms.Select(attrs={'class': 'standing-select'}),
                 )
             self.fields['constituency_' + election] = \
                 forms.ChoiceField(
-                    label=_('Constituency in %s') % election_data['name'],
+                    label=_('Constituency in %s') % election_data.name,
                     required=False,
                     choices=[('', '')] + sorted(
                         [
@@ -362,7 +363,7 @@ class UpdatePersonForm(BasePersonForm):
                 self.fields['party_' + party_set['slug'] + '_' + election] = \
                     forms.ChoiceField(
                         label=_("Party in {election} ({party_set_name})").format(
-                            election=election_data['name'],
+                            election=election_data.name,
                             party_set_name=party_set['name'],
                         ),
                         choices=PARTY_DATA.party_choices[party_set['slug']],
@@ -373,7 +374,7 @@ class UpdatePersonForm(BasePersonForm):
                             }
                         ),
                     )
-                if election_data.get('party_lists_in_use'):
+                if election_data.party_lists_in_use:
                     # Then add a field to enter the position on the party list
                     # as an integer:
                     field_name = 'party_list_position_' + party_set['slug'] + \
