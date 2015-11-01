@@ -39,7 +39,8 @@ class AreaType(models.Model):
 class Election(models.Model):
     slug = models.CharField(max_length=128)
     for_post_role = models.CharField(max_length=128)
-    winner_membership_role = models.CharField(max_length=128, blank=True)
+    winner_membership_role = \
+        models.CharField(max_length=128, null=True, blank=True)
     candidate_membership_role = models.CharField(max_length=128)
     election_date = models.DateField()
     candidacy_start_date = models.DateField()
