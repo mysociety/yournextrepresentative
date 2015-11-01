@@ -7,8 +7,8 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('elections', '0004_auto_20151014_1648'),
         ('popolo', '0001_initial'),
+        ('elections', '0003_allow_null_winner_membership_role'),
         ('candidates', '0008_migrate_to_django_popolo'),
     ]
 
@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('base', models.OneToOneField(related_name='extra', to='popolo.Post')),
+                ('elections', models.ManyToManyField(related_name='posts', to='elections.Election')),
             ],
         ),
     ]
