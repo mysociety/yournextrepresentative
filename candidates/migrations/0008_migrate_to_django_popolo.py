@@ -2,7 +2,10 @@
 from __future__ import unicode_literals
 
 import re
+import requests
+from tempfile import NamedTemporaryFile
 
+from django.conf import settings
 from django.db import migrations
 
 from popolo.importers.popit import PopItImporter
@@ -47,8 +50,15 @@ class YNRPopItImporter(PopItImporter):
 
 def import_from_popit(apps, schema_editor):
     importer = YNRPopItImporter(apps, schema_editor)
-    filename = '/home/mark/yournextrepresentative/export.json'
-    importer.import_from_export_json(filename)
+    with NamedTemporaryFile('w', delete=False) as ntf:
+        url = 'http://{instance}.{hostname}:{port}/api/v0.1/export.json'.format(
+            instance=settings.POPIT_INSTANCE,
+            hostname=settings.POPIT_HOSTNAME,
+            port=settings.POPIT_PORT,
+        )
+        r = requests.get(url, stream=True)
+        ntf.write(r.raw.read())
+    importer.import_from_export_json(ntf.name)
 
 
 class Migration(migrations.Migration):
