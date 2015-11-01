@@ -9,7 +9,7 @@ DATABASE_SYSTEM: 'postgresql'
 # DATABASE_SYSTEM above, otherwise (if you're using 'sqlite')
 # they're ignored.
 YNMP_DB_USER: ''
-YNMP_DB_NAME: 'ynmp'
+YNMP_DB_NAME: 'ynr-example'
 YNMP_DB_PASS: ''
 YNMP_DB_PORT: ''
 YNMP_DB_HOST: ''
@@ -17,7 +17,7 @@ YNMP_DB_HOST: ''
 # Which election is this installation for? (This must be the name of a
 # package in the 'elections' package, at the moment one of
 # uk_general_election_2015 or ar_elections_2015):
-ELECTION_APP: 'uk_general_election_2015'
+ELECTION_APP: 'example'
 
 # Default language/timezone of the installation
 LANGUAGE_CODE: 'en-gb'
@@ -27,8 +27,9 @@ TIME_ZONE: 'Europe/London'
 GEMS_DIRECTORY: ''
 
 # The PopIt instance login details
-POPIT_INSTANCE: yournextmp
-POPIT_HOSTNAME: popit.mysociety.org
+POPIT_INSTANCE: example
+POPIT_HOSTNAME: 127.0.0.1.xip.io
+POPIT_PORT: 3000
 
 # If you're using the new-style PopIt login, where you generate an API
 # then set POPIT_API_KEY and leave POPIT_USER and POPIT_PASSWORD blank.
