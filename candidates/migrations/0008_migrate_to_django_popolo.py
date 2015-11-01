@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import re
 
-from django.db import models, migrations
+from django.db import migrations
 
 from popolo.importers.popit import PopItImporter
 
