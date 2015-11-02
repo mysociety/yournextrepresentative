@@ -64,7 +64,7 @@ def import_from_popit(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidates', '0007_add_result_recorders_group'),
+        ('candidates', '0008_membershipextra_organizationextra_personextra_postextra'),
         ('popolo', '0001_initial'),
     ]
 

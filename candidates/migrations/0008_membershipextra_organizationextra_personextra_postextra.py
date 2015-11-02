@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('popolo', '0001_initial'),
         ('elections', '0003_allow_null_winner_membership_role'),
-        ('candidates', '0008_migrate_to_django_popolo'),
+        ('candidates', '0007_add_result_recorders_group'),
     ]
 
     operations = [
