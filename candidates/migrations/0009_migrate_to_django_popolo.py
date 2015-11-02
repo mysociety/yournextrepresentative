@@ -148,6 +148,16 @@ class YNRPopItImporter(PopItImporter):
 
         return org_id, org
 
+    def update_post(self, post_data, area, org_id_to_django_object):
+        post_id, post = super(YNRPopItImporter, self).update_post(post_data, area, org_id_to_django_object)
+
+        PostExtra = self.get_model_class('candidates', 'PostExtra')
+        post_extra, created = PostExtra.objects.get_or_create(base=post)
+        post_extra.candidates_locked = post_data.get('candidates_locked', False)
+        post_extra.save()
+
+        return post_id, post
+
     def update_membership(
         self,
         membership_data,
