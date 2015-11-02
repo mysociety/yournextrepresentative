@@ -69,5 +69,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(import_from_popit),
+        migrations.RunPython(
+            import_from_popit,
+            lambda apps, schema_editor: None
+        ),
     ]
