@@ -148,6 +148,42 @@ class YNRPopItImporter(PopItImporter):
 
         return org_id, org
 
+    def update_membership(
+        self,
+        membership_data,
+        area,
+        org_id_to_django_object,
+        post_id_to_django_object,
+        person_id_to_django_object,
+    ):
+        membership_id, membership = super(YNRPopItImporter, self).update_membership(
+            membership_data,
+            area,
+            org_id_to_django_object,
+            post_id_to_django_object,
+            person_id_to_django_object,
+        )
+
+        election_slug = membership_data.get('election', None)
+        if election_slug is not None:
+            Election = self.get_model_class('elections', 'Election')
+            election = Election.objects.get(slug=election_slug)
+
+            if membership.role == election.candidate_membership_role:
+                MembershipExtra = self.get_model_class('candidates', 'MembershipExtra')
+                me, created = MembershipExtra.objects.get_or_create(
+                    base=membership,
+                    election=election
+                )
+
+                person_data = self.person_id_to_json_data[membership.person_id]
+                party = person_data['party_memberships'].get(election.slug)
+                if party is not None:
+                    membership.on_behalf_of = org_id_to_django_object[party['id']]
+                    membership.save()
+
+        return membership_id, membership
+
     def make_contact_detail_dict(self, contact_detail_data):
         new_contact_detail_data = contact_detail_data.copy()
         # There are some contact types that are used in PopIt that are
