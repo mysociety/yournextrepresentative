@@ -46,6 +46,8 @@ def get_url_cached(url):
 
 class YNRPopItImporter(PopItImporter):
 
+    person_id_to_json_data = {}
+
     def __init__(self, apps, schema_editor):
         self.apps = apps
         self.schema_editor = schema_editor
@@ -122,6 +124,8 @@ class YNRPopItImporter(PopItImporter):
         person_id, person = super(YNRPopItImporter, self).update_person(
             new_person_data
         )
+
+        self.person_id_to_json_data[person_id] = new_person_data
 
         # Create the extra person object:
         PersonExtra = self.get_model_class('candidates', 'PersonExtra')
