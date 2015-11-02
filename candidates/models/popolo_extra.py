@@ -153,6 +153,7 @@ class OrganizationExtra(models.Model):
 class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
 
+    candidates_locked = models.BooleanField(default=False)
     elections = models.ManyToManyField(Election, related_name='posts')
 
     @property

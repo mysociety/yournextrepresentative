@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('base', models.OneToOneField(related_name='extra', to='popolo.Post')),
+                ('candidates_locked', models.BooleanField(default=False)),
                 ('elections', models.ManyToManyField(related_name='posts', to='elections.Election')),
             ],
         ),
