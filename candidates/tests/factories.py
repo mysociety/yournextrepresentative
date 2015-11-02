@@ -106,7 +106,7 @@ def get_post_label(n):
     if n < len(EXAMPLE_CONSTITUENCIES):
         constituency_name = EXAMPLE_CONSTITUENCIES[n]['name']
     else:
-        constituency_name = 'Constituency{n}'.format(n=n)
+        constituency_name = 'Constituency {n}'.format(n=n)
     return 'Member of Parliament for {constituency_name}'.format(
         constituency_name=constituency_name
     )
@@ -138,6 +138,46 @@ class PostExtraFactory(factory.DjangoModelFactory):
                 self.elections.add(election)
 
 
+EXAMPLE_PARTIES = [
+    {'id': 'party:53', 'name': 'Labour Party'},
+    {'id': 'party:90', 'name': 'Liberal Democrats'},
+    {'id': 'party:63', 'name': 'Green Party'},
+    {'id': 'party:52', 'name': 'Conservative Party'},
+]
+
+def get_party_id(n):
+    if n < len(EXAMPLE_PARTIES):
+        return EXAMPLE_PARTIES[n]['id']
+    else:
+        return 'party:{ec_id}'.format(ec_id=(10000 + n))
+
+def get_party_name(n):
+    if n < len(EXAMPLE_PARTIES):
+        party_name = EXAMPLE_PARTIES[n]['name']
+    else:
+        party_name = 'Party {n}'.format(n=n)
+    return party_name
+
+
+class PartyFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'popolo.Organization'
+
+    id = factory.Sequence(get_party_id)
+    name = factory.Sequence(get_party_name)
+
+
+class PartyExtraFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.OrganizationExtra'
+
+    register = 'Great Britain'
+
+    base = factory.SubFactory(PartyFactory)
+
+
 class ParliamentaryChamberFactory(factory.DjangoModelFactory):
 
     class Meta:
@@ -145,3 +185,33 @@ class ParliamentaryChamberFactory(factory.DjangoModelFactory):
 
     id = 'commons'
     name = 'House of Commons'
+
+
+class PersonFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'popolo.Person'
+
+
+class PersonExtraFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.PersonExtra'
+
+    base = factory.SubFactory(PersonFactory)
+
+
+class CandidacyFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'popolo.Membership'
+
+    role = 'Candidate'
+
+
+class CandidacyExtraFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.MembershipExtra'
+
+    base = factory.SubFactory(CandidacyFactory)
