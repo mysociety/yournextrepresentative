@@ -230,9 +230,6 @@
     <p>{% trans "Open data JSON API:" %}</p>
     <p><strong>FIXME</strong></p>
     <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}" onclick="this.select();"></p>
-    {% comment %}
-      <p>Want a CSV download? <a href="https://github.com/mysociety/yournextrepresentative/issues/96">Tell us!</a></p>
-    {% endcomment %}
     {% url 'help-api' as api_url %}
     {% url 'help-about' as about_url %}
     <p>{% blocktrans trimmed %}
