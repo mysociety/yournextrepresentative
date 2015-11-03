@@ -184,10 +184,7 @@ class Command(BaseCommand):
                 person.birth_date = None
             standing_in_election = {
                 'post_id': post_data['id'],
-                'name': AREA_POST_DATA.shorten_post_label(
-                    election_data.slug,
-                    post_data['label'],
-                ),
+                'name': AREA_POST_DATA.shorten_post_label(post_data['label']),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']

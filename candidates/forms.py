@@ -250,7 +250,6 @@ class NewPersonForm(BasePersonForm):
                         [
                             (post['id'],
                              AREA_POST_DATA.shorten_post_label(
-                                 election,
                                  post['label']
                              ))
                             for post in get_all_posts_cached(self.api, election, role)
@@ -350,7 +349,6 @@ class UpdatePersonForm(BasePersonForm):
                         [
                             (post['id'],
                              AREA_POST_DATA.shorten_post_label(
-                                 election,
                                  post['label']
                              ))
                             for post in get_all_posts_cached(api, election, role)

@@ -14,9 +14,7 @@ from ..models import (
 )
 
 def get_redirect_to_post(election, post_data):
-    short_post_label = AREA_POST_DATA.shorten_post_label(
-        election, post_data['label']
-    )
+    short_post_label = AREA_POST_DATA.shorten_post_label(post_data['label'])
     return HttpResponseRedirect(
         reverse(
             'constituency',

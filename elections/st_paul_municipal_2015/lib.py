@@ -23,7 +23,7 @@ class PartyData(BasePartyData):
 
 class AreaPostData(BaseAreaPostData):
 
-    def shorten_post_label(self, election, post_label):
+    def shorten_post_label(self, post_label):
         return re.sub(r'^Council Member for ', '', post_label)
 
     def area_to_post_group(self, area_data):

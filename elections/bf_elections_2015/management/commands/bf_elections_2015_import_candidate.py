@@ -225,7 +225,6 @@ class Command(BaseCommand):
                     standing_in_election = {
                         'post_id': post_data['id'],
                         'name': AREA_POST_DATA.shorten_post_label(
-                            election_data.slug,
                             post_data['label'],
                         ),
                         'party_list_position': party_list_order,

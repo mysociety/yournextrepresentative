@@ -58,7 +58,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
         post_label = post_data['label']
         new_standing_in[self.election] = {
             'post_id': post_data['id'],
-            'name': AREA_POST_DATA.shorten_post_label(self.election, post_label),
+            'name': AREA_POST_DATA.shorten_post_label(post_label),
             'mapit_url': post_data['area']['identifier'],
         }
         person.standing_in = new_standing_in

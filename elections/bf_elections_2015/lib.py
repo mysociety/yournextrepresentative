@@ -27,7 +27,7 @@ class AreaPostData(BaseAreaPostData):
     def area_to_post_group(self, area_data):
         return None
 
-    def shorten_post_label(self, election, post_label):
+    def shorten_post_label(self, post_label):
         return post_label
 
     def post_id_to_post_group(self, election, post_id):

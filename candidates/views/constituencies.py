@@ -66,7 +66,7 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
 
         context['post_label'] = mp_post['result']['label']
         context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            self.election, context['post_label']
+            context['post_label']
         )
 
         context['redirect_after_login'] = \
@@ -459,7 +459,7 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
 
         context['post_label'] = mp_post['result']['label']
         context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            self.election, context['post_label']
+            context['post_label']
         )
 
         context['redirect_after_login'] = \

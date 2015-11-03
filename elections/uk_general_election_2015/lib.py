@@ -59,7 +59,7 @@ class AreaPostData(BaseAreaPostData):
         area = areas_by_id.get(post_id)
         return area['country_name']
 
-    def shorten_post_label(self, election, post_label):
+    def shorten_post_label(self, post_label):
         return re.sub(r'^Member of Parliament for ', '', post_label)
 
     def party_to_possible_post_groups(self, party_data):
