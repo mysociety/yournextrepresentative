@@ -2,6 +2,7 @@ from datetime import date
 
 from slugify import slugify
 
+from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -9,6 +10,7 @@ from django.utils.translation import ugettext as _
 from elections.models import Election
 from popolo.models import Person, Organization, Post, Membership
 from .popit import form_complex_fields_locations, parse_approximate_date
+from images.models import Image, HasImageMixin
 
 """Extensions to the base django-popolo classes for YourNextRepresentative
 
@@ -21,7 +23,7 @@ want a join or not.
 """
 
 
-class PersonExtra(models.Model):
+class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
 
     # These two fields are added just for Burkina Faso - we should
@@ -30,7 +32,7 @@ class PersonExtra(models.Model):
     cv = models.TextField(blank=True)
     program = models.TextField(blank=True)
 
-    # FIXME: have to add multiple images
+    images = generic.GenericRelation(Image)
 
     def __getattr__(self, name):
         if name in form_complex_fields_locations:
@@ -144,10 +146,11 @@ class OrganizationExtra(models.Model):
 
     # For parties, which party register is it on:
     register = models.CharField(blank=True, max_length=512)
-    # FIXME: have to add multiple images (e.g. for party logos)
+
+    images = generic.GenericRelation(Image)
 
 
-class PostExtra(models.Model):
+class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
 
     elections = models.ManyToManyField(Election, related_name='posts')
