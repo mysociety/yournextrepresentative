@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('base', models.OneToOneField(related_name='extra', to='popolo.Membership')),
                 ('election', models.ForeignKey(related_name='candidacies', blank=True, to='elections.Election', null=True)),
+                ('party_list_position', models.IntegerField(null=True)),
             ],
         ),
         migrations.CreateModel(

@@ -192,6 +192,12 @@ class YNRPopItImporter(PopItImporter):
                     membership.on_behalf_of = org_id_to_django_object[party['id']]
                     membership.save()
 
+                party_list_position = membership_data.get('party_list_position', None)
+                if party_list_position is not None:
+                    if me:
+                        me.party_list_position = party_list_position
+                        me.save()
+
         return membership_id, membership
 
     def make_contact_detail_dict(self, contact_detail_data):
