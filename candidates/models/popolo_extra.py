@@ -16,6 +16,13 @@ want a join or not.
 
 class PersonExtra(models.Model):
     base = models.OneToOneField(Person, related_name='extra')
+
+    # These two fields are added just for Burkina Faso - we should
+    # have a better way of adding arbitrary fields which are only
+    # needed for one site.
+    cv = models.TextField(blank=True)
+    program = models.TextField(blank=True)
+
     # FIXME: have to add multiple images
 
 
