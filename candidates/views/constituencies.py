@@ -32,7 +32,7 @@ from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
-from popolo.models import Person, Post
+from popolo.models import Membership, Post
 
 from ..cache import get_post_cached, invalidate_posts, UnknownPostException
 
@@ -137,15 +137,15 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             max_people=self.election_data.default_party_list_members_to_show
         )
 
-        just_people = sum((t[1] for t in context['candidates']['parties_and_people']), [])
+        context['show_retract_result'] = False
+        if Membership.objects.filter(
+            role=self.election_data.winner_membership_role,
+            extra__election__slug=self.election,
+            post=mp_post
+            ).count() == 1:
+            context['show_retract_result'] = True
 
-        context['show_retract_result'] = False #any(
-            #c.get_elected(self.election) is not None for c in just_people
-        #)
-
-        context['show_confirm_result'] = False #any(
-            #c.get_elected(self.election) is None for c in just_people
-        #)
+        context['show_confirm_result'] = not context['show_retract_result']
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
