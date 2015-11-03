@@ -105,18 +105,14 @@ def group_people_by_party(election, people, party_list=True, max_people=None):
     for person in people:
         position = None
         party_data = None
-        last_party = None
         for m in person.memberships.all():
-            if m.post and hasattr(m.post, 'post_extra') \
-                    and m.post_extra.election.slug == election_data.slug:
+            if m.post and hasattr(m, 'extra') \
+                    and m.extra.election.slug == election_data.slug:
                 party_data = m.on_behalf_of
-                position = m.post.post_extra.party_list_position
-            # TODO: sort this properly
-            if m.organization and m.organization.classification == 'Party':
-                party_data = m.organization
+                #position = m.post.extra.party_list_position
 
         if party_data is None:
-            party_data = last_party
+            party_data = person.extra.last_party()
 
         party_id = party_data.id
         party_id_to_name[party_id] = party_data.name

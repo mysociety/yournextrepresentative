@@ -103,18 +103,29 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
 
         # Now split those candidates into those that we know aren't
         # standing again, and those that we just don't know about:
+        """ need to create some sort of anti candidate for this to work
         context['candidates_not_standing_again'] = \
             group_people_by_party(
                 self.election,
-                set(p for p in other_candidates if p.not_standing_in_election(self.election)),
+                set(p for p in other_candidates if
+                    p.memberships
+                    .filter(
+                        role=self.election_data.noncandidate_membership_role,
+                        extra__election__slug=self.election)
+                    .count() != 0),
                 party_list=self.election_data.party_lists_in_use,
                 max_people=self.election_data.default_party_list_members_to_show
             )
+            """
 
         context['candidates_might_stand_again'] = \
             group_people_by_party(
                 self.election,
-                set(p for p in other_candidates if not p.known_status_in_election(self.election)),
+                set(p for p in other_candidates if
+                    p.memberships
+                    .exclude(extra__election__slug=self.election)
+                    .filter(role=self.election_data.candidate_membership_role)
+                    .count() != 0),
                 party_list=self.election_data.party_lists_in_use,
                 max_people=self.election_data.default_party_list_members_to_show
             )
