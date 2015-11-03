@@ -81,8 +81,8 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         }
 
         context['candidates_locked'] = False
-        if hasattr(mp_post, 'post_extra'):
-            context['candidates_locked'] = mp_post.post_extra.candidates_locked
+        if hasattr(mp_post, 'extra'):
+            context['candidates_locked'] = mp_post.extra.candidates_locked
 
         context['lock_form'] = ToggleLockForm(
             initial={
