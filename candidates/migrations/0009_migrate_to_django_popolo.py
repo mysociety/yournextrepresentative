@@ -198,6 +198,15 @@ class YNRPopItImporter(PopItImporter):
                         me.party_list_position = party_list_position
                         me.save()
 
+        start_date = membership_data.get('start_date', None)
+        end_date = membership_data.get('end_date', None)
+
+        if start_date is not None:
+            membership.start_date = start_date
+        if end_date is not None:
+            membership.end_date = end_date
+
+        membership.save()
         return membership_id, membership
 
     def make_contact_detail_dict(self, contact_detail_data):
