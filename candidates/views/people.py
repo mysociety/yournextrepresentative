@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import (
-    HttpResponseRedirect, HttpResponsePermanentRedirect
+    HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 )
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
@@ -33,6 +33,7 @@ from ..models import (
 from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
+from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):
     """Get HTML for a flash message after a person has been created or updated"""
@@ -63,7 +64,7 @@ def get_call_to_action_flash_message(person, new_person=False):
     )
 
 
-class PersonView(PopItApiMixin, TemplateView):
+class PersonView(TemplateView):
     template_name = 'candidates/person-view.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
@@ -74,26 +75,23 @@ class PersonView(PopItApiMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PersonView, self).get_context_data(**kwargs)
-        context['popit_api_url'] = get_base_url()
-        path = self.person.get_absolute_url()
+        path = self.person.extra.get_absolute_url()
         context['redirect_after_login'] = urlquote(path)
         context['canonical_url'] = self.request.build_absolute_uri(path)
         context['person'] = self.person
-        context['last_election'] = self.person.last_cons
         context['elections_by_date'] = Election.objects.by_date()
-        if self.person.last_cons:
-            context['constituency'] = self.person.last_cons[1]['name']
-            context['contested_election'] = self.person.last_cons[0]
-        else:
-            context['constituency'] = ''
-            context['contested_election'] = ''
+        context['last_candidacy'] = self.person.extra.last_candidacy
         return context
 
     def get(self, request, *args, **kwargs):
-        self.person = PopItPerson.create_from_popit(
-            self.api,
-            self.kwargs['person_id']
-        )
+        person_id = self.kwargs['person_id']
+        try:
+            self.person = Person.objects.select_related('extra'). \
+                get(pk=person_id)
+        except Person.DoesNotExist:
+            raise Http404(_("No person found with ID {person_id}").format(
+                person_id=person_id
+            ))
         # If there's a PersonRedirect for this person ID, do the
         # redirect, otherwise process the GET request as usual.
         try:
@@ -103,7 +101,7 @@ class PersonView(PopItApiMixin, TemplateView):
             return HttpResponsePermanentRedirect(
                 reverse('person-view', kwargs={
                     'person_id': new_person_id,
-                    'ignored_slug': self.person.get_slug(),
+                    'ignored_slug': self.person.extra.get_slug(),
                 })
             )
         except PersonRedirect.DoesNotExist:
