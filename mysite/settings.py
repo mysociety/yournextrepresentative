@@ -72,6 +72,9 @@ DEBUG = bool(int(conf.get('STAGING')))
 
 TEMPLATE_DEBUG = True
 
+if DEBUG:
+    THUMBNAIL_DEBUG = True
+
 TEMPLATE_DIRS = (
     join(BASE_DIR, 'mysite', 'templates'),
 )
@@ -108,6 +111,7 @@ INSTALLED_APPS = (
     'django_nose',
     'pipeline',
     'statici18n',
+    'sorl.thumbnail',
     'images',
     'elections',
     'popolo',
@@ -384,6 +388,7 @@ if conf.get('NGINX_SSL'):
 
 if DEBUG:
     cache = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
+    cache_thumbnails = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
 else:
     cache = {
         'TIMEOUT': None, # cache keys never expire; we invalidate them
@@ -391,10 +396,18 @@ else:
         'LOCATION': '127.0.0.1:11211',
         'KEY_PREFIX': DATABASES['default']['NAME'],
     }
-
+    cache_thumbnails = {
+        'TIMEOUT': 60 * 60 * 24 * 2, # expire after two days
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': DATABASES['default']['NAME'] + "-thumbnails",
+    }
 CACHES = {
-    'default': cache
+    'default': cache,
+    'thumbnails': cache_thumbnails,
 }
+
+THUMBNAIL_CACHE = 'thumbnails'
 
 RESTRICT_RENAMES = conf.get('RESTRICT_RENAMES')
 

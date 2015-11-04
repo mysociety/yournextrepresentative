@@ -5,6 +5,7 @@
 {% load imagefixes %}
 {% load standing %}
 {% load metadescription %}
+{% load thumbnail %}
 
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
@@ -55,8 +56,10 @@
 {% block hero %}
 <div class="person__hero">
   <div class="person__photo">
-    {% if person.image %}
-      <img class="person-avatar" src="{{ person.proxy_image|fixproxyurl }}/0/80"/>
+    {% if person.extra.primary_image %}
+      {% thumbnail person.extra.primary_image "x80" as im %}
+        <img class="person-avatar" src="{{ im.url }}"/>
+      {% endthumbnail %}
     {% elif person.gender|lower == 'female' %}
       <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
     {% else %}
@@ -204,7 +207,9 @@
 
   {% if last_candidacy.on_behalf_of.image %}
     <div class="person__party_emblem">
-      <img src="{{ last_candidacy.on_behalf_of.extra.proxy_image|fixproxyurl }}/240/0"/>
+      {% thumbnail last_candidacy.on_behalf_of.extra.primary_image "240x" as im %}
+        <img src="{{ im.url }}"/>
+      {% endthumbnail %}
     </div>
   {% endif %}
 
