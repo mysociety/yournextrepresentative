@@ -225,6 +225,8 @@ class YNRPopItImporter(PopItImporter):
 
 
 def import_from_popit(apps, schema_editor):
+    if settings.ELECTION_APP == 'example':
+        return
     importer = YNRPopItImporter(apps, schema_editor)
     url = 'http://{instance}.{hostname}:{port}/api/v0.1/export.json'.format(
         instance=settings.POPIT_INSTANCE,
