@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('popolo', '0001_initial'),
+        ('popolo', '0002_update_models_from_upstream'),
         ('elections', '0003_allow_null_winner_membership_role'),
         ('candidates', '0007_add_result_recorders_group'),
     ]
