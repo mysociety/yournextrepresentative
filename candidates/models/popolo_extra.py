@@ -2,7 +2,7 @@ from datetime import date
 
 from slugify import slugify
 
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext as _
@@ -32,7 +32,7 @@ class PersonExtra(HasImageMixin, models.Model):
     cv = models.TextField(blank=True)
     program = models.TextField(blank=True)
 
-    images = generic.GenericRelation(Image)
+    images = GenericRelation(Image)
 
     def __getattr__(self, name):
         if name in form_complex_fields_locations:
@@ -155,7 +155,7 @@ class OrganizationExtra(models.Model):
     # For parties, which party register is it on:
     register = models.CharField(blank=True, max_length=512)
 
-    images = generic.GenericRelation(Image)
+    images = GenericRelation(Image)
 
 
 class PostExtra(HasImageMixin, models.Model):
