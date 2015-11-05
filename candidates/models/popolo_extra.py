@@ -206,7 +206,7 @@ class PersonExtra(HasImageMixin, models.Model):
         election = Election.objects.get_by_slug(election_slug)
         return self.base.memberships.filter(
             role=election.winner_membership_role,
-            organization_id=election.organization_id
+            organization=election.organization
         ).exists()
 
     def last_party(self):

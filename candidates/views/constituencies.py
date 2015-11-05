@@ -401,7 +401,7 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiM
 
 def memberships_contain_winner(memberships, election_data):
     for m in memberships:
-        correct_org = m.get('organization_id') == election_data.organization_id
+        correct_org = m.get('organization_id') == election_data.organization.id
         day_after_election = election_data.election_date + timedelta(days=1)
         correct_start_date = m['start_date'] == str(day_after_election)
         if correct_org and correct_start_date:
