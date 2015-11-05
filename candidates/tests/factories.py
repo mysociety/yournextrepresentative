@@ -200,10 +200,14 @@ class PersonExtraFactory(factory.DjangoModelFactory):
     base = factory.SubFactory(PersonFactory)
 
 
-class CandidacyFactory(factory.DjangoModelFactory):
-
+class MembershipFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'popolo.Membership'
+
+    id = factory.Sequence(lambda n: n)
+
+
+class CandidacyFactory(MembershipFactory):
 
     role = 'Candidate'
 
