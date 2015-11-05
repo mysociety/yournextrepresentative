@@ -343,6 +343,7 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
                 self.request, form.cleaned_data['source']
             )
             person_extra.record_version(change_metadata)
+            person_extra.save()
             LoggedAction.objects.create(
                 user=self.request.user,
                 person=person,

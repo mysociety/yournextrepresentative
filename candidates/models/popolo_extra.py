@@ -1,4 +1,5 @@
 from datetime import date
+import json
 import sys
 
 from slugify import slugify
@@ -16,6 +17,7 @@ from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
 from .popit import parse_approximate_date
+from .versions import get_person_as_version_data
 
 from images.models import Image, HasImageMixin
 
@@ -169,7 +171,13 @@ class PersonExtra(HasImageMixin, models.Model):
         return max_id
 
     def record_version(self, change_metadata):
-        print >> sys.stderr, "FIXME: implement PersonExtra.record_version"
+        versions = []
+        if self.versions:
+            versions = json.loads(self.versions)
+        new_version = change_metadata.copy()
+        new_version['data'] = get_person_as_version_data(self.base)
+        versions.insert(0, new_version)
+        self.versions = versions
 
     def update_complex_field(self, location, new_value):
         existing_info_types = [location['info_type']]
