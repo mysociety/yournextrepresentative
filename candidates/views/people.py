@@ -1,3 +1,4 @@
+import json
 import re
 
 from slugify import slugify
@@ -9,6 +10,7 @@ from django.db import transaction
 from django.http import (
     HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 )
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
@@ -219,24 +221,25 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             })
         )
 
-class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
+class UpdatePersonView(LoginRequiredMixin, FormView):
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
     def get_initial(self):
         initial_data = super(UpdatePersonView, self).get_initial()
-        person = PopItPerson.create_from_popit(
-            self.api, self.kwargs['person_id']
+        person = get_object_or_404(
+            Person.objects.select_related('extra'),
+            pk=self.kwargs['person_id']
         )
-        initial_data.update(person.get_initial_form_data())
+        initial_data.update(person.extra.get_initial_form_data())
         return initial_data
 
     def get_context_data(self, **kwargs):
         context = super(UpdatePersonView, self).get_context_data(**kwargs)
 
-        person = PopItPerson.create_from_popit(
-            self.api,
-            self.kwargs['person_id']
+        person = get_object_or_404(
+            Person.objects.select_related('extra'),
+            pk=self.kwargs['person_id']
         )
         context['person'] = person
 
@@ -245,7 +248,9 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
             TRUSTED_TO_MERGE_GROUP_NAME
         )
 
-        context['versions'] = get_version_diffs(person.versions)
+        context['versions'] = get_version_diffs(
+            json.loads(person.extra.versions)
+        )
 
         context['constituencies_form_fields'] = []
         for election_data in Election.objects.by_date():

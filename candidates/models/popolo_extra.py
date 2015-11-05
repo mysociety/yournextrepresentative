@@ -201,6 +201,43 @@ class PersonExtra(HasImageMixin, models.Model):
             }
             related_manager.create(**kwargs)
 
+    def get_initial_form_data(self):
+        from ..election_specific import AREA_POST_DATA
+        initial_data = {}
+        fields_on_base = form_simple_fields.keys()
+        fields_on_extra = settings.EXTRA_SIMPLE_FIELDS.keys()
+        fields_on_extra += form_complex_fields_locations.keys()
+        for field_name in fields_on_base:
+            initial_data[field_name] = getattr(self.base, field_name)
+        for field_name in fields_on_extra:
+            initial_data[field_name] = getattr(self, field_name)
+        for election_data in Election.objects.current().by_date():
+            constituency_key = 'constituency_' + election_data.slug
+            standing_key = 'standing_' + election_data.slug
+            try:
+                candidacy = MembershipExtra.objects.get(
+                    election=election_data,
+                    base__person__extra=self
+                )
+            except MembershipExtra.DoesNotExist:
+                candidacy = None
+            if candidacy:
+                initial_data[standing_key] = 'standing'
+                post_id = candidacy.base.post.id
+                initial_data[constituency_key] = post_id
+                party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+                party = candidacy.base.on_behalf_of
+                party_key = 'party_' + party_set + '_' + election_data.slug
+                initial_data[party_key] = party.id
+                position = candidacy.party_list_position
+                position_key = 'party_list_position_' + party_set + '_' + election_data.slug
+                if position:
+                    initial_data[position_key] = position
+            else:
+                initial_data[standing_key] = 'not-standing'
+                initial_data[constituency_key] = ''
+        return initial_data
+
     @classmethod
     def create_from_form(cls, form):
         form_data = form.cleaned_data.copy()
