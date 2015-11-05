@@ -49,11 +49,6 @@ patterns_to_format = [
         'name': 'retract-winner'
     },
     {
-        'pattern': r'^election/{election}/post/invalidate$',
-        'view': views.InvalidatePostView.as_view(),
-        'name': 'post-cache-invalidate'
-    },
-    {
         'pattern': r'^election/{election}/post/{post}/(?P<ignored_slug>.*).csv$',
         'view': views.ConstituencyDetailCSVView.as_view(),
         'name': 'constituency_csv'
@@ -177,11 +172,6 @@ patterns_to_format = [
         'pattern': r'^copyright-question',
         'view': views.AskForCopyrightAssigment.as_view(),
         'name': 'ask-for-copyright-assignment'
-    },
-    {
-        'pattern': r'^person/invalidate$',
-        'view': views.InvalidatePersonView.as_view(),
-        'name': 'person-cache-invalidate'
     },
 ]
 
