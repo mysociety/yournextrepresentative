@@ -173,6 +173,7 @@ class PartyFactory(factory.DjangoModelFactory):
 
     id = factory.Sequence(get_party_id)
     name = factory.Sequence(get_party_name)
+    classification='Party'
 
 
 class PartyExtraFactory(factory.DjangoModelFactory):
