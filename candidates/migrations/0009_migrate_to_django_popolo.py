@@ -53,6 +53,10 @@ class YNRPopItImporter(PopItImporter):
         self.apps = apps
         self.schema_editor = schema_editor
         self.image_storage = FileSystemStorage()
+        Election = self.get_model_class('elections', 'Election')
+        self.election_cache = {
+            e.slug: e for e in Election.objects.all()
+        }
 
     def get_model_class(self, app_label, model_name):
         return self.apps.get_model(app_label, model_name)
@@ -159,6 +163,9 @@ class YNRPopItImporter(PopItImporter):
         post_extra, created = PostExtra.objects.get_or_create(base=post)
         post_extra.candidates_locked = post_data.get('candidates_locked', False)
         post_extra.save()
+
+        for election_slug in post_data['elections']:
+            post_extra.elections.add(self.election_cache[election_slug])
 
         return post_id, post
 
