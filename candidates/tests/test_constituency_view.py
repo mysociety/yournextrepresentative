@@ -1,19 +1,93 @@
-from mock import patch
-
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
-from .fake_popit import (FakePersonCollection, FakeOrganizationCollection,
-                         FakePostCollection)
+from .factories import (
+    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
+    PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
+    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
+    PartyFactory, MembershipFactory
+)
 
-@patch('candidates.popit.PopIt')
+
 class TestConstituencyDetailView(TestUserMixin, WebTest):
 
-    def test_any_constituency_page_without_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            base__id='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
+        person_extra = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+        PartyFactory.reset_sequence()
+        party_extra = PartyExtraFactory.create()
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
+        MembershipFactory.create(
+            person=person_extra.base,
+            organization=party_extra.base
+        )
 
+        winner_post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            base__id='14419',
+            base__label='Member of Parliament for Edinburgh East'
+        )
+
+        edinburgh_candidate = PersonExtraFactory.create(
+            base__id='818',
+            base__name='Sheila Gilmore'
+        )
+        edinburgh_winner = PersonExtraFactory.create(
+            base__id='5795',
+            base__name='Tommy Sheppard'
+        )
+
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=edinburgh_winner.base,
+            base__post=winner_post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
+
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=edinburgh_candidate.base,
+            base__post=winner_post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
+        MembershipFactory.create(
+            person=edinburgh_candidate.base,
+            organization=party_extra.base
+        )
+        MembershipFactory.create(
+            person=edinburgh_winner.base,
+            organization=party_extra.base
+        )
+        MembershipFactory.create(
+            person=edinburgh_winner.base,
+            post=winner_post_extra.base,
+            organization=commons
+        )
+
+
+
+    def test_any_constituency_page_without_login(self):
         # Just a smoke test for the moment:
         response = self.app.get('/election/2015/post/65808/dulwich-and-west-norwood')
         response.mustcontain('<a href="/person/2009/tessa-jowell" class="candidate-name">Tessa Jowell</a> <span class="party">Labour Party</span>')
@@ -21,11 +95,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
 
         self.assertEqual(0, len(response.forms))
 
-    def test_any_constituency_page(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_any_constituency_page(self):
         # Just a smoke test for the moment:
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
@@ -34,3 +104,8 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         response.mustcontain('<a href="/person/2009/tessa-jowell" class="candidate-name">Tessa Jowell</a> <span class="party">Labour Party</span>')
         form = response.forms['new-candidate-form']
         self.assertTrue(form)
+
+    def test_constituency_with_winner(self):
+        response = self.app.get('/election/2015/post/14419/edinburgh-east')
+        response.mustcontain('<li class="candidates-list__person candidates-list__person__winner">')
+
