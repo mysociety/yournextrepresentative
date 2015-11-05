@@ -99,33 +99,33 @@ it’s a waste of money.</p>
       {% for action in recent_actions %}
         <li>User <strong>{{ action.user.username }}</strong>
           {% if action.action_type == 'person-create' %}
-            {% if action.popit_person_id %}
-              created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+            {% if action.person.id %}
+              created <a href="{% url 'person-view' person_id=action.person.id %}">a new candidate</a>
             {% else %}
               is creating a new candidate
             {% endif %}
           {% elif action.action_type == 'person-merge' %}
-            merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            merged another candidate into <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'photo-upload' %}
-            uploaded a photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> for moderation
+            uploaded a photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a> for moderation
           {% elif action.action_type == 'photo-approve' %}
-            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'photo-reject' %}
-            rejected an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            rejected an uploaded photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'person-revert' %}
-            reverted to an earlier version of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            reverted to an earlier version of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'candidacy-create' %}
-            confirmed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            confirmed candidacy for <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'candidacy-delete' %}
-            removed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            removed candidacy for <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'constituency-lock' %}
             locked a constituency
           {% elif action.action_type == 'constituency-unlock' %}
             unlocked a constituency
           {% elif action.action_type == 'set-candidate-elected' %}
-            marked <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> as the winner
+            marked <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a> as the winner
           {% else %}
-            updated <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            updated <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% endif %}
         <span class="when">{{ action.created|timesince }} ago</span></li>
       {% endfor %}

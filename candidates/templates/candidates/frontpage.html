@@ -70,7 +70,7 @@
     <h2><a href="{% url 'recent-changes' %}">{% trans "Recent changes" %}</a></h2>
     <ol>
       {% for action in recent_actions %}
-        <li>{% with username=action.user.username when=action.created|timesince person_id=action.popit_person_id %}
+        <li>{% with username=action.user.username when=action.created|timesince person_id=action.person.id %}
           {% url 'person-view' person_id=person_id as person_url %}
           {% if action.action_type == 'person-create' %}
             {% if person_id %}
