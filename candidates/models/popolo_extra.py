@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 
 from elections.models import Election
 from popolo.models import Person, Organization, Post, Membership
+from ..diffs import get_version_diffs
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
@@ -160,6 +161,10 @@ class PersonExtra(HasImageMixin, models.Model):
         ).order_by('start_date').last()
 
         return party.organization
+
+    @property
+    def version_diffs(self):
+        return get_version_diffs(json.loads(self.versions))
 
     @classmethod
     def get_max_person_id(cls):
