@@ -214,7 +214,10 @@ class PersonExtra(HasImageMixin, models.Model):
             organization__classification='Party'
         ).order_by('start_date').last()
 
-        return party.organization
+        if party is not None:
+            return party.organization
+
+        return None
 
     @property
     def version_diffs(self):
