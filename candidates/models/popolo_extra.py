@@ -32,6 +32,60 @@ want a join or not.
 
 """
 
+def update_person_from_form(person, person_extra, form):
+    from ..election_specific import AREA_POST_DATA
+    form_data = form.cleaned_data.copy()
+    # The date is returned as a datetime.date, so if that's set, turn
+    # it into a string:
+    birth_date_date = form_data['birth_date']
+    if birth_date_date:
+        form_data['birth_date'] = repr(birth_date_date).replace("-00-00", "")
+    else:
+        form_data['birth_date'] = ''
+    for field_name in form_simple_fields.keys():
+        setattr(person, field_name, form_data[field_name])
+    for field_name in settings.EXTRA_SIMPLE_FIELDS.keys():
+        setattr(person_extra, field_name, form_data[field_name])
+    for field_name, location in form_complex_fields_locations.items():
+        person_extra.update_complex_field(location, form_data[field_name])
+    person.save()
+    person_extra.save()
+    for election_data in form.elections_with_fields:
+        post_id = form_data.get('constituency_' + election_data.slug)
+        standing = form_data.pop('standing_' + election_data.slug, 'standing')
+        if post_id:
+            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+            party_key = 'party_' + party_set + '_' + election_data.slug
+            position_key = \
+                'party_list_position_' + party_set + '_' + election_data.slug
+            party = Organization.objects.get(pk=form_data[party_key])
+            party_list_position = form_data.get(position_key) or None
+            post = Post.objects.get(pk=post_id)
+        else:
+            party = None
+            party_list_position = None
+
+        # Remove any memberships (we'll recreate them if the
+        # person's actually standing)
+        MembershipExtra.objects.filter(
+            election=election_data,
+            base__person__extra=person_extra
+        ).delete()
+
+        if standing == 'standing':
+            # Remove any existing memberships and create the new one:
+            membership = Membership.objects.create(
+                post=post,
+                on_behalf_of=party,
+                person=person,
+                role=election_data.candidate_membership_role,
+            )
+            MembershipExtra.objects.create(
+                base=membership,
+                party_list_position=party_list_position,
+                election=election_data
+            )
+
 
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
@@ -238,69 +292,19 @@ class PersonExtra(HasImageMixin, models.Model):
                 initial_data[constituency_key] = ''
         return initial_data
 
+    def update_from_form(self, form):
+        update_person_from_form(self.base, self, form)
+
     @classmethod
     def create_from_form(cls, form):
-        form_data = form.cleaned_data.copy()
-        # The date is returned as a datetime.date, so if that's set, turn
-        # it into a string:
-        birth_date_date = form_data['birth_date']
-        if birth_date_date:
-            form_data['birth_date'] = repr(birth_date_date).replace("-00-00", "")
-        else:
-            form_data['birth_date'] = ''
-        # Now set the simple fields:
-        kwargs = {
-            k: form_data[k]
-            for k in form_simple_fields.keys()
-        }
-        kwargs['id'] = cls.get_max_person_id() + 1
-        person = Person.objects.create(**kwargs)
-        kwargs = {
-            k: form_data[k]
-            for k in settings.EXTRA_SIMPLE_FIELDS.keys()
-        }
-        kwargs['base'] = person
-        person_extra = cls.objects.create(**kwargs)
-        # Set the 'complex' fields:
-        for field_name, location in form_complex_fields_locations.items():
-            person_extra.update_complex_field(location, form_data[field_name])
-        # Memberships to create:
-        for election in form.elections_with_fields:
-            post_id = form_data.get('constituency_' + election.slug)
-            if not post_id:
-                continue
-            from candidates.election_specific import AREA_POST_DATA
-            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-            party_key = 'party_' + party_set + '_' + election.slug
-            position_key = \
-                'party_list_position_' + party_set + '_' + election.slug
-            post = Post.objects.get(id=post_id)
-            # Get information for this election from the form:
-            standing = \
-                form_data.pop('standing_' + election.slug, 'standing')
-            party = Organization.objects.get(pk=form_data[party_key])
-            party_list_position = form_data.get(position_key) or None
-            if standing == 'standing':
-                membership = Membership.objects.create(
-                    post=post,
-                    on_behalf_of=party,
-                    person=person,
-                    role=election.candidate_membership_role,
-                )
-                MembershipExtra.objects.create(
-                    base=membership,
-                    party_list_position=party_list_position,
-                    election=election
-                )
-            else:
-                # Otherwise remove that person's memberships on this post:
-                for m in MembershipExtra.objects.filter(
-                        election=election,
-                        base__person=person,
-                ):
-                    # This cascades to delete the base as well:
-                    m.delete()
-        return person_extra
+        person = Person.objects.create(
+            id=(cls.get_max_person_id() + 1),
+            name=form.cleaned_data['name'],
+        )
+        person_extra = PersonExtra.objects.create(
+            base=person,
+        )
+        update_person_from_form(person, person_extra, form)
 
 
 class OrganizationExtra(models.Model):

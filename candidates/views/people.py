@@ -282,41 +282,35 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
-        # First parse that person's data from PopIt into our more
-        # usable data structure:
+        with transaction.atomic():
 
-        person = PopItPerson.create_from_popit(
-            self.api, self.kwargs['person_id']
-        )
+            person = get_object_or_404(
+                Person.objects.select_related('extra'),
+                pk=self.kwargs['person_id']
+            )
+            person_extra = person.extra
+            person_extra.update_from_form(form)
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data.pop('source')
+            )
+            person_extra.record_version(change_metadata)
+            person_extra.save()
+            LoggedAction.objects.create(
+                user=self.request.user,
+                person=person,
+                action_type='person-update',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                source=change_metadata['information_source'],
+            )
 
-        # Now we need to make any changes to that data structure based
-        # on information given in the form.
-
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data.pop('source')
-        )
-
-        person.update_from_form(self.api, form)
-
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='person-update',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            popit_person_id=person.id,
-            source=change_metadata['information_source'],
-        )
-
-        person.record_version(change_metadata)
-        person.save_to_popit(self.api, self.request.user)
-
-        # Add a message to be displayed after redirect:
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            get_call_to_action_flash_message(person, new_person=False),
-            extra_tags='safe do-something-else'
-        )
+            # Add a message to be displayed after redirect:
+            messages.add_message(
+                self.request,
+                messages.SUCCESS,
+                get_call_to_action_flash_message(person, new_person=False),
+                extra_tags='safe do-something-else'
+            )
 
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
