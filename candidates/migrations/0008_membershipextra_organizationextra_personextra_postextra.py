@@ -34,6 +34,9 @@ class Migration(migrations.Migration):
             name='PersonExtra',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('cv', models.TextField(blank=True)),
+                ('program', models.TextField(blank=True)),
+                ('versions', models.TextField(blank=True)),
                 ('base', models.OneToOneField(related_name='extra', to='popolo.Person')),
             ],
         ),
