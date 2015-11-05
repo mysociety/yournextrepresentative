@@ -32,6 +32,10 @@ class PersonExtra(HasImageMixin, models.Model):
     cv = models.TextField(blank=True)
     program = models.TextField(blank=True)
 
+    # This field stores JSON data with previous version information
+    # (as it did in PopIt).
+    versions = models.TextField(blank=True)
+
     images = GenericRelation(Image)
 
     def __getattr__(self, name):
