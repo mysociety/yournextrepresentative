@@ -36,7 +36,7 @@ from popolo.models import Membership, Post
 
 from ..cache import get_post_cached, invalidate_posts, UnknownPostException
 
-class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituencyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
