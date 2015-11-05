@@ -16,9 +16,9 @@ Follow one of the links below to see the known candidates
 for that constituency:{% endblocktrans %}</p>
 
 <ul>
-  {% for c in all_constituencies %}  
+  {% for post_extra in all_constituencies %}
     <li>
-     <a href="{% url 'constituency' election=election post_id=c.0 ignored_slug=c.1.name|slugify %}">{{ c.1.name }}</a>
+     <a href="{% url 'constituency' election=election post_id=post_extra.base.id ignored_slug=post_extra.base.label|slugify %}">{{ post_extra.base.label }}</a>
     </li>
   {% endfor %}
 </ul>

@@ -25,7 +25,7 @@ from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     get_post_label_from_post_id, PopItPerson, membership_covers_date,
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
-    RESULT_RECORDERS_GROUP_NAME, LoggedAction
+    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
 from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
@@ -175,13 +175,16 @@ class ConstituencyDetailCSVView(ConstituencyDetailView):
         return response
 
 
-class ConstituencyListView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituencyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituencies.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['all_constituencies'] = \
-            AREA_DATA.areas_list_sorted_by_name[(u'WMC', u'22')]
+            PostExtra.objects.filter(
+                elections__slug=self.election
+            ).order_by('base__label').select_related('base')
+
         return context
 
 
