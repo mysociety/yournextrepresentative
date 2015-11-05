@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import errno
 import hashlib
+import json
 import os
 from os.path import join, exists, dirname
 import re
@@ -131,7 +132,7 @@ class YNRPopItImporter(PopItImporter):
         PersonExtra = self.get_model_class('candidates', 'PersonExtra')
         extra = PersonExtra.objects.create(
             base=person,
-            versions=new_person_data['versions']
+            versions=json.dumps(new_person_data['versions'])
         )
 
         self.get_images_for_object(person_data['images'], extra)
