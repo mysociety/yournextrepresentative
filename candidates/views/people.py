@@ -5,6 +5,7 @@ from slugify import slugify
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.http import (
     HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 )
@@ -30,6 +31,7 @@ from ..models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
     PopItPerson
 )
+from ..models import PersonExtra
 from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
@@ -57,8 +59,9 @@ def get_call_to_action_flash_message(person, new_person=False):
                     reverse('person-create', kwargs={'election': election_data.slug}),
                     election_data.name
                 )
-                for election_data in Election.objects.current()
-                if person.standing_in.get(election_data.slug)
+                for election_data in Election.objects.filter(
+                        candidacies__base__person=person
+                )
             ]
         }
     )
@@ -313,7 +316,7 @@ class UpdatePersonView(LoginRequiredMixin, PopItApiMixin, FormView):
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
 
-class NewPersonView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
+class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
 
@@ -332,29 +335,29 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, PopItApiMixin, FormView):
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
-        person = PopItPerson()
-        person.update_from_form(self.api, form)
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data['source']
-        )
-        person.record_version(change_metadata)
-        action = LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='person-create',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            source=change_metadata['information_source'],
-        )
-        person_id = person.save_to_popit(self.api, self.request.user)
-        action.popit_person_id = person_id
-        action.save()
+        with transaction.atomic():
 
-        # Add a message to be displayed after redirect:
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            get_call_to_action_flash_message(person, new_person=True),
-            extra_tags='safe do-something-else'
-        )
+            person_extra = PersonExtra.create_from_form(form)
+            person = person_extra.base
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data['source']
+            )
+            person_extra.record_version(change_metadata)
+            LoggedAction.objects.create(
+                user=self.request.user,
+                person=person,
+                action_type='person-create',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                source=change_metadata['information_source'],
+            )
 
-        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person_id}))
+            # Add a message to be displayed after redirect:
+            messages.add_message(
+                self.request,
+                messages.SUCCESS,
+                get_call_to_action_flash_message(person, new_person=True),
+                extra_tags='safe do-something-else'
+            )
+
+        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))

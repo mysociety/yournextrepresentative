@@ -129,7 +129,10 @@ class YNRPopItImporter(PopItImporter):
 
         # Create the extra person object:
         PersonExtra = self.get_model_class('candidates', 'PersonExtra')
-        extra = PersonExtra.objects.create(base=person)
+        extra = PersonExtra.objects.create(
+            base=person,
+            versions=new_person_data['versions']
+        )
 
         self.get_images_for_object(person_data['images'], extra)
 

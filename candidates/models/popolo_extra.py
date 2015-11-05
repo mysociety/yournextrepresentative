@@ -1,15 +1,19 @@
 from datetime import date
+import sys
 
 from slugify import slugify
 
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
+from django.db import connection
 from django.db import models
 from django.utils.translation import ugettext as _
 
 from elections.models import Election
 from popolo.models import Person, Organization, Post, Membership
-from .popit import form_complex_fields_locations, parse_approximate_date
+from .popit import parse_approximate_date
+
 from images.models import Image, HasImageMixin
 
 """Extensions to the base django-popolo classes for YourNextRepresentative
@@ -21,6 +25,61 @@ want a join or not.
   http://stackoverflow.com/q/23466577/223092
 
 """
+
+form_simple_fields = {
+    'honorific_prefix': '',
+    'name': '',
+    'honorific_suffix': '',
+    'email': '',
+    'birth_date': None,
+    'gender': '',
+}
+
+form_complex_fields_locations = {
+    'wikipedia_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'wikipedia',
+    },
+    'linkedin_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'linkedin',
+    },
+    'homepage_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'homepage',
+    },
+    'twitter_username': {
+        'sub_array': 'contact_details',
+        'info_type_key': 'contact_type',
+        'info_value_key': 'value',
+        'info_type': 'twitter',
+    },
+    'facebook_personal_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'facebook personal',
+    },
+    'facebook_page_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'facebook page',
+    },
+    'party_ppc_page_url': {
+        'sub_array': 'links',
+        'info_type_key': 'note',
+        'info_value_key': 'url',
+        'info_type': 'party candidate page',
+        'old_info_type': 'party PPC page',
+    }
+}
 
 
 class PersonExtra(HasImageMixin, models.Model):
@@ -151,6 +210,99 @@ class PersonExtra(HasImageMixin, models.Model):
         ).order_by('start_date').last()
 
         return party.organization
+
+    @classmethod
+    def get_max_person_id(cls):
+        cursor = connection.cursor()
+        cursor.execute('SELECT MAX(CAST (id AS int)) FROM popolo_person')
+        max_id = cursor.fetchone()[0]
+        if max_id is None:
+            return 0
+        return max_id
+
+    def record_version(self, change_metadata):
+        print >> sys.stderr, "FIXME: implement PersonExtra.record_version"
+
+    def update_complex_field(self, location, new_value):
+        existing_info_types = [location['info_type']]
+        if 'old_info_type' in location:
+            existing_info_types.append(location['old_info_type'])
+        related_manager = getattr(self.base, location['sub_array'])
+        # Remove the old entries of that type:
+        kwargs = {
+            (location['info_type_key'] + '__in'): existing_info_types
+        }
+        related_manager.filter(**kwargs).delete()
+        if new_value:
+            kwargs = {
+                location['info_type_key']: location['info_type'],
+                location['info_value_key']: new_value,
+            }
+            related_manager.create(**kwargs)
+
+    @classmethod
+    def create_from_form(cls, form):
+        form_data = form.cleaned_data.copy()
+        # The date is returned as a datetime.date, so if that's set, turn
+        # it into a string:
+        birth_date_date = form_data['birth_date']
+        if birth_date_date:
+            form_data['birth_date'] = repr(birth_date_date).replace("-00-00", "")
+        else:
+            form_data['birth_date'] = ''
+        # Now set the simple fields:
+        kwargs = {
+            k: form_data[k]
+            for k in form_simple_fields.keys()
+        }
+        kwargs['id'] = cls.get_max_person_id() + 1
+        person = Person.objects.create(**kwargs)
+        kwargs = {
+            k: form_data[k]
+            for k in settings.EXTRA_SIMPLE_FIELDS.keys()
+        }
+        kwargs['base'] = person
+        person_extra = cls.objects.create(**kwargs)
+        # Set the 'complex' fields:
+        for field_name, location in form_complex_fields_locations.items():
+            person_extra.update_complex_field(location, form_data[field_name])
+        # Memberships to create:
+        for election in form.elections_with_fields:
+            post_id = form_data.get('constituency_' + election.slug)
+            if not post_id:
+                continue
+            from candidates.election_specific import AREA_POST_DATA
+            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+            party_key = 'party_' + party_set + '_' + election.slug
+            position_key = \
+                'party_list_position_' + party_set + '_' + election.slug
+            post = Post.objects.get(id=post_id)
+            # Get information for this election from the form:
+            standing = \
+                form_data.pop('standing_' + election.slug, 'standing')
+            party = Organization.objects.get(pk=form_data[party_key])
+            party_list_position = form_data.get(position_key) or None
+            if standing == 'standing':
+                membership = Membership.objects.create(
+                    post=post,
+                    on_behalf_of=party,
+                    person=person,
+                    role=election.candidate_membership_role,
+                )
+                MembershipExtra.objects.create(
+                    base=membership,
+                    party_list_position=party_list_position,
+                    election=election
+                )
+            else:
+                # Otherwise remove that person's memberships on this post:
+                for m in MembershipExtra.objects.filter(
+                        election=election,
+                        base__person=person,
+                ):
+                    # This cascades to delete the base as well:
+                    m.delete()
+        return person_extra
 
 
 class OrganizationExtra(models.Model):
