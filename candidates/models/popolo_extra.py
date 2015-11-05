@@ -182,7 +182,7 @@ class PersonExtra(HasImageMixin, models.Model):
         new_version = change_metadata.copy()
         new_version['data'] = get_person_as_version_data(self.base)
         versions.insert(0, new_version)
-        self.versions = versions
+        self.versions = json.dumps(versions)
 
     def update_complex_field(self, location, new_value):
         existing_info_types = [location['info_type']]

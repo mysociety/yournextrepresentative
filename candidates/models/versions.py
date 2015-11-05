@@ -29,9 +29,11 @@ def get_person_as_version_data(person):
     standing_in = {}
     party_memberships = {}
     for membership in person.memberships.filter(post__isnull=False):
+        from candidates.models import MembershipExtra
         post = membership.post
-        membership_extra = membership.extra
-        if not membership_extra:
+        try:
+            membership_extra = membership.extra
+        except MembershipExtra.DoesNotExist:
             continue
         election = membership_extra.election
         standing_in[election.slug] = {
