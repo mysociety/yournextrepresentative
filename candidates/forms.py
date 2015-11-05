@@ -3,7 +3,7 @@
 import re
 
 from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
-from .popit import create_popit_api_object, PopItApiMixin
+from .popit import create_popit_api_object
 from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
@@ -15,6 +15,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from popolo.models import Post
 from django_date_extensions.fields import ApproximateDateFormField
 
 class AddressForm(forms.Form):
@@ -59,7 +60,7 @@ class CandidacyDeleteForm(BaseCandidacyForm):
         max_length=512,
     )
 
-class BasePersonForm(PopItApiMixin, forms.Form):
+class BasePersonForm(forms.Form):
 
     STANDING_CHOICES = (
         ('not-sure', _(u"Don’t Know")),
@@ -183,9 +184,7 @@ class BasePersonForm(PopItApiMixin, forms.Form):
                     election=election_name
                 ))
             # Check that that post actually exists:
-            try:
-                get_post_cached(self.api, post_id)
-            except UnknownPostException:
+            if not Post.objects.filter(id=post_id).exists():
                 message = _("An unknown post ID '{post_id}' was specified")
                 raise forms.ValidationError(
                     message.format(post_id=post_id)
