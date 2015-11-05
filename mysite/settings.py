@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, LANGUAGES
 from django.utils.translation import to_locale, ugettext_lazy as _
-from collections import defaultdict
 import importlib
 from os.path import dirname, exists, join, realpath
 import re
