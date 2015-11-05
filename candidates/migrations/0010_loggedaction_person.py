@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('popolo', '0002_update_models_from_upstream'),
-        ('candidates', '0010_add_cv_and_program_fields'),
+        ('candidates', '0009_migrate_to_django_popolo'),
     ]
 
     operations = [

@@ -20,7 +20,7 @@ def db_to_popit(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('candidates', '0011_loggedaction_person'),
+        ('candidates', '0010_loggedaction_person'),
     ]
 
     operations = [
