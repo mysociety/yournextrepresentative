@@ -4,6 +4,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext as _
 
+from popolo.models import Person
+
 
 class MaxPopItIds(models.Model):
     popit_collection_name = models.CharField(max_length=255)
@@ -41,9 +43,9 @@ class LoggedAction(models.Model):
     malicious users.'''
 
     user = models.ForeignKey(User, blank=True, null=True)
+    person = models.ForeignKey(Person, blank=True, null=True)
     action_type = models.CharField(max_length=64)
     popit_person_new_version = models.CharField(max_length=32)
-    popit_person_id = models.CharField(max_length=256)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)
