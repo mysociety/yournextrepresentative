@@ -23,12 +23,10 @@ from PIL import Image as PillowImage
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
-from candidates.popit import get_base_url
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
-from candidates.popit import create_popit_api_object
 from candidates.models import LoggedAction
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
@@ -37,9 +35,9 @@ from images.models import Image
 
 @login_required
 def upload_photo(request, popit_person_id):
+    person = get_object_or_404(Person, id=popit_person_id)
     if request.method == 'POST':
         form = UploadPersonPhotoForm(request.POST, request.FILES)
-        person = Person.objects.get(id=popit_person_id)
         if form.is_valid():
             # Make sure that we save the user that made the upload
             queued_image = form.save(commit=False)
@@ -57,13 +55,13 @@ def upload_photo(request, popit_person_id):
             return HttpResponseRedirect(reverse(
                 'photo-upload-success',
                 kwargs={
-                    'popit_person_id': form.cleaned_data['popit_person_id']
+                    'popit_person_id': person.id
                 }
             ))
     else:
         form = UploadPersonPhotoForm(
             initial={
-                'popit_person_id': popit_person_id
+                'person': person
             }
         )
     return render(
@@ -71,10 +69,10 @@ def upload_photo(request, popit_person_id):
         'moderation_queue/photo-upload-new.html',
         {'form': form,
          'queued_images': QueuedImage.objects.filter(
-             popit_person_id=popit_person_id,
+             person=person,
              decision='undecided',
          ).order_by('created'),
-         'person': Person.objects.get(id=popit_person_id)}
+         'person': person}
     )
 
 
@@ -150,7 +148,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         )
         context['queued_image'] = self.queued_image
         person = Person.objects.get(
-            id=self.queued_image.popit_person_id,
+            id=self.queued_image.person.id,
         )
         context['has_crop_bounds'] = int(self.queued_image.has_crop_bounds)
         max_x = self.queued_image.image.width - 1
@@ -217,7 +215,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         # you try to write them as PNG, so convert to RGBA (this is
         # RGBA rather than RGB so that any alpha channel (transparency)
         # is preserved).
-        person_id = self.queued_image.popit_person_id
+        person_id = self.queued_image.person.id
         original = original.convert('RGBA')
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
@@ -261,7 +259,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
     def form_valid(self, form):
         decision = form.cleaned_data['decision']
         person = Person.objects.get(
-            id=self.queued_image.popit_person_id
+            id=self.queued_image.person.id
         )
         candidate_path = person.extra.get_absolute_url()
         candidate_name = person.name
@@ -360,7 +358,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             retry_upload_link = self.request.build_absolute_uri(
                 reverse(
                     'photo-upload',
-                    kwargs={'popit_person_id': self.queued_image.popit_person_id}
+                    kwargs={'popit_person_id': self.queued_image.person.id}
                 )
             )
             self.send_mail(
