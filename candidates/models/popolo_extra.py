@@ -218,7 +218,10 @@ class PersonExtra(HasImageMixin, models.Model):
 
     @property
     def version_diffs(self):
-        return get_version_diffs(json.loads(self.versions))
+        versions = self.versions
+        if not versions:
+            versions = []
+        return get_version_diffs(json.loads(versions))
 
     @classmethod
     def get_max_person_id(cls):
