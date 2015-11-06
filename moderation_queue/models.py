@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from popolo.models import Person
 
 PHOTO_REVIEWERS_GROUP_NAME = 'Photo Reviewers'
 
@@ -58,7 +59,7 @@ class QueuedImage(models.Model):
         upload_to='queued-images/%Y/%m/%d',
         max_length=512,
     )
-    popit_person_id = models.CharField(max_length=256)
+    person = models.ForeignKey(Person)
     user = models.ForeignKey(User, blank=True, null=True)
 
     crop_min_x = models.IntegerField(blank=True, null=True)
