@@ -45,7 +45,6 @@ class BaseElectionFactory(factory.DjangoModelFactory):
         date_in_near_future - timedelta(days=(FOUR_YEARS_IN_DAYS - 1))
     party_membership_end_date = date(9999, 12, 31)
     area_generation = 22
-    organization = factory.SubFactory(ParliamentaryChamberFactory)
     post_id_format = '{area_id}'
     party_lists_in_use = False
     default_party_list_members_to_show = 0
