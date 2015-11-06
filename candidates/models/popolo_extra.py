@@ -138,6 +138,16 @@ class PersonExtra(HasImageMixin, models.Model):
             order_by('extra__election__election_date')
         return ordered_candidacies.last()
 
+    def standing_in(self, election_slug):
+        election = Election.objects.get_by_slug(election_slug)
+        membership = self.base.memberships.filter(
+            role=election.candidate_membership_role,
+            extra__election=election
+        )
+        if membership.exists():
+            return membership.first().post
+        return None
+
     @property
     def proxy_image(self):
         # raise NotImplementedError()
