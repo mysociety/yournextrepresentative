@@ -96,33 +96,3 @@ class CachedCountTestCase(WebTest):
                  u'<td>10</td>')
             ]
         )
-
-
-class TestCachedCountsCreateCommand(WebTest):
-
-    @patch('candidates.popit.PopIt')
-    @patch('candidates.popit.requests')
-    def test_cached_counts_create_command(self, mock_requests, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
-        call_command('cached_counts_create')
-        non_zero_counts = CachedCount.objects.exclude(count=0). \
-            order_by('count_type', 'name', 'object_id'). \
-            values_list()
-        non_zero_counts = list(non_zero_counts)
-        expected_counts = [
-            (514, u'constituency', u'Dulwich and West Norwood', 8, u'65808'),
-            (217, u'party', u"All People's Party", 1, u'party:2137'),
-            (288, u'party', u'Conservative Party', 1, u'party:52'),
-            (230, u'party', u'Green Party', 1, u'party:63'),
-            (390, u'party', u'Independent', 1, u'ynmp-party:2'),
-            (287, u'party', u'Labour Party', 1, u'party:53'),
-            (84, u'party', u'Liberal Democrats', 1, u'party:90'),
-            (179, u'party', u'Trade Unionist and Socialist Coalition', 1, u'party:804'),
-            (145, u'party', u'UK Independence Party (UKIP)', 1, u'party:85'),
-            (1155, u'total', u'new_candidates', 6, u'new_candidates'),
-            (1160, u'total', u'standing_again', 2, u'standing_again'),
-            (1159, u'total', u'standing_again_different_party', 2, u'standing_again_different_party'),
-            (1156, u'total', u'total_2010', 2, u'candidates_2010'),
-            (1157, u'total', u'total_2015', 8, u'candidates_2015'),
-        ]

@@ -2,9 +2,6 @@
 
 MAILTO=yournextmp@mysociety.org
 
-# Create the cached counts every 15 minutes:
-*/15 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py cached_counts_create
-
 !!(* if ($vhost eq 'yournextmp.mysociety.org') { *)!!
 # Update the live CSV file every 15 minutes on the production instance, offset
 # from generating the cached counts:
