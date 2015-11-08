@@ -1,92 +1,91 @@
 import json
 
-from django.conf import settings
+from django.db import connection
+from django.db.models import Count, F
 from django.http import HttpResponse
 
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView
 
+from candidates.models import MembershipExtra
 from elections.mixins import ElectionMixin
 from elections.models import Election
+from popolo.models import Membership, Person
 
-from .models import CachedCount
 
-
-def get_count(all_counts, **kwargs):
-    matching_counts = [
-        cc['count'] for cc in
-        all_counts
-        if all(cc[k] == v for k, v in kwargs.items())
-    ]
-    if len(matching_counts) == 0:
-        return None
-    if len(matching_counts) > 1:
-        raise Exception, "Multiple counts found matching {0}". \
-            format(kwargs)
-    return matching_counts[0]
-
-def get_prior_election_data(all_counts, current_election_id, prior_id, prior_data):
-    result = {
-        count_type: get_count(
-            all_counts,
-            election=current_election_id,
-            object_id=prior_id,
-            count_type=count_type
-        )
-        for count_type in (
-                'new_candidates',
-                'standing_again',
-                'standing_again_different_party',
-                'standing_again_same_party',
-        )
+def get_prior_election_data(
+        total_current, current_election,
+        total_prior, prior_election
+):
+    # Find all those people who are standing in both elections:
+    persons_standing_again = list(Person.objects \
+        .filter(memberships__extra__election=current_election) \
+        .filter(memberships__extra__election=prior_election) \
+        .prefetch_related('memberships', 'memberships__extra')
+    )
+    # Now see how many are standing for the same party in both:
+    standing_again = len(persons_standing_again)
+    new_candidates = total_current - standing_again
+    standing_again_same_party = 0
+    for p in persons_standing_again:
+        current_party = None
+        prior_party = None
+        for m in p.memberships.all():
+            try:
+                extra = m.extra
+                if extra.election_id == current_election.id:
+                    current_party = m.on_behalf_of_id
+                elif extra.election_id == prior_election.id:
+                    prior_party = m.on_behalf_of_id
+            except MembershipExtra.DoesNotExist:
+                # We need this because some memberships may not have
+                # an extra.
+                pass
+        if current_party == prior_party:
+            standing_again_same_party += 1
+    standing_again_different_party = \
+        standing_again - standing_again_same_party
+    return {
+        'name': prior_election.name,
+        'percentage': 100 * float(total_current) / total_prior,
+        'new_candidates': new_candidates,
+        'standing_again': standing_again,
+        'standing_again_different_party': standing_again_different_party,
+        'standing_again_same_party': standing_again_same_party,
     }
-    result.update({
-        'name': prior_data['name'],
-        'total': get_count(
-            all_counts,
-            election=prior_id,
-            count_type='total',
-        )
-    })
-    result['percentage'] = \
-        100 * float(get_count(
-            all_counts,
-            election=current_election_id,
-            count_type='total'
-        )) / result['total']
-    return result
-
 
 def get_counts():
-
-    all_elections = {
-        'current':
-        [{'id': t.slug, 'name': t.name}
-         for t in Election.objects.current().by_date()],
-        'past':
-        [{'id': t.slug, 'name': t.name}
-         for t in Election.objects.by_date()
-         if not t.current],
+    election_id_to_candidates = {
+        d['extra__election']: d['count']
+        for d in Membership.objects \
+            .filter(role=F('extra__election__candidate_membership_role')) \
+            .values('extra__election') \
+            .annotate(count=Count('extra__election'))
     }
-
-    counts = CachedCount.objects.values()
-
-    for era, election_list in all_elections.items():
-        for election_dict in election_list:
-            election = election_dict['id']
-            election_dict['total'] = get_count(
-                counts, election=election, count_type='total'
-            )
+    all_elections_counts = {}
+    current_elections = list(Election.objects.current().by_date())
+    past_elections = list(Election.objects.current(False).by_date())
+    for era, elections in (
+            ('current', current_elections),
+            ('past', past_elections),
+    ):
+        all_elections_counts[era] = []
+        for e in elections:
+            total = election_id_to_candidates.get(e.id, 0)
+            election_counts = {
+                'id': e.slug,
+                'name': e.name,
+                'total': total,
+            }
             if era == 'current':
-                election_dict['prior_elections'] = [
+                election_counts['prior_elections'] = [
                     get_prior_election_data(
-                        counts, election, prior_election_id, prior_election_data
+                        total, e,
+                        election_id_to_candidates.get(pe.id, 0), pe
                     )
-                    for prior_election_data
-                    in Election.objects.current().by_date()
-                    if not prior_election_data.current
+                    for pe in past_elections
                 ]
-
-    return all_elections
+            all_elections_counts[era].append(election_counts)
+    return all_elections_counts
 
 
 class ReportsHomeView(TemplateView):
@@ -106,28 +105,102 @@ class ReportsHomeView(TemplateView):
         return super(ReportsHomeView, self).get(*args, **kwargs)
 
 
-class PartyCountsView(ElectionMixin, ListView):
+class PartyCountsView(ElectionMixin, TemplateView):
     template_name = "party_counts.html"
 
-    def get_queryset(self):
-        return CachedCount.objects.filter(
-            election=self.kwargs['election'],
-            count_type='party',
-        )
+    def get_context_data(self, **kwargs):
+        context = super(PartyCountsView, self).get_context_data(**kwargs)
+        cursor = connection.cursor()
+        cursor.execute('''
+SELECT o.id, o.name, count(m.id) AS count
+  FROM popolo_organization o
+    LEFT OUTER JOIN
+      (popolo_membership m
+        INNER JOIN candidates_membershipextra me ON me.base_id = m.id
+        INNER JOIN elections_election ee ON me.election_id = ee.id AND ee.id = %s)
+      ON o.id = m.on_behalf_of_id
+  WHERE o.classification = 'Party'
+  GROUP BY o.id
+  ORDER BY count DESC, o.name;
+        ''', [self.election_data.id])
+        context['party_counts'] = [
+            {
+                'party_id': row[0],
+                'party_name': row[1],
+                'count': row[2],
+            }
+            for row in cursor.fetchall()
+        ]
+        return context
 
 
-class ConstituencyCountsView(ElectionMixin, ListView):
+class ConstituencyCountsView(ElectionMixin, TemplateView):
     template_name = "constituency_counts.html"
 
-    def get_queryset(self):
-        return CachedCount.objects.filter(
-            election=self.kwargs['election'],
-            count_type='post',
-        )
+    def get_context_data(self, **kwargs):
+        from candidates.election_specific import AREA_POST_DATA
+        context = super(ConstituencyCountsView, self).get_context_data(**kwargs)
+        cursor = connection.cursor()
+        cursor.execute('''
+SELECT p.id, p.label, count(m.id) as count
+  FROM popolo_post p
+    INNER JOIN candidates_postextra pe ON pe.base_id = p.id
+    INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
+    INNER JOIN elections_election ee ON cppee.election_id = ee.id AND ee.id = %s
+    LEFT OUTER JOIN
+      (popolo_membership m
+        INNER JOIN candidates_membershipextra me
+        ON me.base_id = m.id)
+      ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
+         me.election_id = ee.id
+  GROUP BY p.id
+  ORDER BY count DESC;
+        ''', [self.election_data.id])
+        context['post_counts'] = [
+            {
+                'post_id': row[0],
+                'post_label': row[1],
+                'count': row[2],
+                'post_short_label': AREA_POST_DATA.shorten_post_label(row[1]),
+            }
+            for row in cursor.fetchall()
+        ]
+        return context
 
-
-class AttentionNeededView(ListView):
+class AttentionNeededView(TemplateView):
     template_name = "attention_needed.html"
 
-    def get_queryset(self):
-        return CachedCount.get_attention_needed_queryset()
+    def get_context_data(self, **kwargs):
+        context = super(AttentionNeededView, self).get_context_data(**kwargs)
+        from candidates.election_specific import AREA_POST_DATA
+        cursor = connection.cursor()
+        # This is similar to the query in ConstituencyCountsView,
+        # except it's not specific to a particular election and the
+        # results are ordered with fewest candidates first:
+        cursor.execute('''
+SELECT p.id, p.label, ee.name, ee.slug, count(m.id) as count
+  FROM popolo_post p
+    INNER JOIN candidates_postextra pe ON pe.base_id = p.id
+    INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
+    INNER JOIN elections_election ee ON cppee.election_id = ee.id
+    LEFT OUTER JOIN
+      (popolo_membership m
+        INNER JOIN candidates_membershipextra me
+        ON me.base_id = m.id)
+      ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
+         me.election_id = ee.id
+  GROUP BY p.id, ee.slug, ee.name
+  ORDER BY count, ee.name, p.label;
+        ''')
+        context['post_counts'] = [
+            {
+                'post_id': row[0],
+                'post_label': row[1],
+                'election_name': row[2],
+                'election_slug': row[3],
+                'count': row[4],
+                'post_short_label': AREA_POST_DATA.shorten_post_label(row[1]),
+            }
+            for row in cursor.fetchall()
+        ]
+        return context

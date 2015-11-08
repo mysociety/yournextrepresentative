@@ -11,14 +11,14 @@
             <th>{% trans "Number of Candidates" %}</th>
         </thead>
         <tbody>
-        {% for object in object_list %}
-            <tr {% if object.count == 0 %}class="no_known"{% endif%}>
-              {% if object.count == 0 %}
-                <td>{{ object.name }}</td>
+        {% for pc in party_counts %}
+            <tr {% if pc.count == 0 %}class="no_known"{% endif%}>
+              {% if pc.count == 0 %}
+                <td>{{ pc.party_name }}</td>
               {% else %}
-                <td><a href="{% url 'party' election=election organization_id=object.object_id ignored_slug=object.name|slugify %}">{{ object.name }}</a></td>
+                <td><a href="{% url 'party' election=election organization_id=pc.party_id ignored_slug=pc.party_name|slugify %}">{{ pc.party_name }}</a></td>
               {% endif %}
-              <td>{{ object.count}}</td>
+              <td>{{ pc.count}}</td>
             </tr>
         {% endfor %}
         </tbody>

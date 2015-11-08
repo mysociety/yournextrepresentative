@@ -5,14 +5,16 @@
 <h2>{% trans 'Posts needing most attention' %}</h2>
     <table class="counts_table">
         <thead>
+            <th>{% trans "Election" %}</th>
             <th>{% trans "Post Name" %}</th>
             <th>{% trans "Number of Candidates" %}</th>
         </thead>
         <tbody>
-        {% for object in object_list %}
-            <tr {% if object.count == 0 %}class="no_known"{% endif%}>
-                <td><a href="{% url 'constituency' election=object.election post_id=object.object_id ignored_slug=object.name|slugify %}">{{ object.name}}</a></td>
-                <td>{{ object.count}}</td>
+        {% for pc in post_counts %}
+            <tr {% if pc.count == 0 %}class="no_known"{% endif%}>
+                <td>{{ pc.election_name }}</td>
+                <td><a href="{% url 'constituency' election=pc.election_slug post_id=pc.post_id ignored_slug=pc.post_short_label|slugify %}">{{ pc.post_label }}</a></td>
+                <td>{{ pc.count }}</td>
             </tr>
         {% endfor %}
         </tbody>
