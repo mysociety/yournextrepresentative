@@ -196,33 +196,8 @@ def complete_partial_date(iso_8601_date_partial, start=True):
 def membership_covers_date(membership, date):
     """See if the dates in a membership cover a particular date
 
-    For example:
-
-    >>> membership_covers_date({
-    ...     'start_date': '2010',
-    ...     'end_date': '2015-01-01',
-    ... }, date(2010, 5, 6))
-    True
-
-    >>> membership_covers_date({
-    ...     'start_date': '2010-08',
-    ...     'end_date': '2015',
-    ... }, date(2010, 5, 6))
-    False
-
     If a start date is missing, assume it's 'since forever' and if an
-    end date is missing, assume it's 'until forever':
-
-    >>> membership_covers_date({'end_date': '2014'}, date(2010, 5, 6))
-    True
-    >>> membership_covers_date({'end_date': '2010-03'}, date(2010, 5, 6))
-    False
-    >>> membership_covers_date({'start_date': '2014'}, date(2010, 5, 6))
-    False
-    >>> membership_covers_date({'start_date': '1976'}, date(2010, 5, 6))
-    True
-    >>> membership_covers_date({}, date(2010, 5, 6))
-    True
+    end date is missing, assume it's 'until forever'.
     """
 
     start_date = membership.start_date
