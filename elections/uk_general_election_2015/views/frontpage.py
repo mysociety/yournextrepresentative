@@ -7,7 +7,6 @@ from django.views.generic import FormView
 from popolo.models import Post
 
 from candidates.cache import get_post_cached
-from candidates.popit import PopItApiMixin
 from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
 
