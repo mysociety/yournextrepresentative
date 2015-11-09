@@ -12,8 +12,10 @@ from django.test.utils import override_settings
 from PIL import Image
 import StringIO
 from django_webtest import WebTest
+from webtest import Upload
 from mock import patch
 
+from popolo.models import Person
 from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from candidates.models import LoggedAction
 
@@ -36,9 +38,9 @@ def get_image_type_and_dimensions(image_data):
     }
 
 
+@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
 class PhotoReviewTests(WebTest):
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
         election = ElectionFactory.create(
@@ -128,7 +130,39 @@ class PhotoReviewTests(WebTest):
         self.site.delete()
         super(PhotoReviewTests, self).tearDown()
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+    def test_photo_upload(self):
+        image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
+        queued_images = QueuedImage.objects.all()
+        initial_count = queued_images.count()
+        upload_form_url = reverse(
+            'photo-upload',
+            kwargs={'popit_person_id': '2009'}
+        )
+        form_page_response = self.app.get(
+            upload_form_url,
+            user=self.test_upload_user
+        )
+        form = form_page_response.forms['person-upload-photo']
+        with open(image_filename) as f:
+            form['image'] = Upload('pilot.jpg', f.read())
+        form['why_allowed'] = 'copyright-assigned'
+        form['justification_for_use'] = 'I took this photo'
+        upload_response = form.submit()
+        self.assertEqual(upload_response.status_code, 302)
+        split_location = urlsplit(upload_response.location)
+        self.assertEqual('/moderation/photo/upload/2009/success', split_location.path)
+        queued_images = QueuedImage.objects.all()
+        self.assertEqual(initial_count + 1, queued_images.count())
+        queued_image = queued_images.last()
+        self.assertEqual(queued_image.decision, 'undecided')
+        self.assertEqual(queued_image.why_allowed, 'copyright-assigned')
+        self.assertEqual(
+            queued_image.justification_for_use,
+            'I took this photo'
+        )
+        self.assertEqual(queued_image.person.id, '2009')
+        self.assertEqual(queued_image.user, self.test_upload_user)
+
     def test_photo_review_queue_view_not_logged_in(self):
         queue_url = reverse('photo-review-list')
         response = self.app.get(queue_url)
@@ -137,7 +171,6 @@ class PhotoReviewTests(WebTest):
         self.assertEqual('/accounts/login/', split_location.path)
         self.assertEqual('next=/moderation/photo/review', split_location.query)
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_queue_view_logged_in_unprivileged(self):
         queue_url = reverse('photo-review-list')
         response = self.app.get(
@@ -147,7 +180,6 @@ class PhotoReviewTests(WebTest):
         )
         self.assertEqual(response.status_code, 403)
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_queue_view_logged_in_privileged(self):
         queue_url = reverse('photo-review-list')
         response = self.app.get(queue_url, user=self.test_reviewer)
@@ -164,7 +196,6 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(link_text, 'Review')
         self.assertEqual(link_url, '/moderation/photo/review/{0}'.format(self.q1.id))
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_view_unprivileged(self):
         review_url = reverse(
             'photo-review',
@@ -177,7 +208,6 @@ class PhotoReviewTests(WebTest):
         )
         self.assertEqual(response.status_code, 403)
 
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     def test_photo_review_view_privileged(self):
         review_url = reverse(
             'photo-review',
@@ -188,11 +218,9 @@ class PhotoReviewTests(WebTest):
         # For the moment this is just a smoke test...
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_approved_privileged(
             self,
-            mocked_person_put,
             mock_send_mail
     ):
         with self.settings(SITE_ID=self.site.id):
@@ -221,37 +249,20 @@ class PhotoReviewTests(WebTest):
                 fail_silently=False
             )
 
-            """
-            FIXME: check all this in the database
-            post_call_args, post_call_kwargs = mock_requests_post.call_args_list[0]
-            self.assertEqual(1, len(post_call_args))
-            self.assertTrue(
-                re.search(r'/persons/2009/image$', post_call_args[0])
-            )
+            person = Person.objects.get(id='2009')
+            image = person.extra.images.last()
+
+            self.assertTrue(image.is_primary)
             self.assertEqual(
-                set(post_call_kwargs.keys()),
-                set(['files', 'headers', 'data']),
+                'Uploaded by john: Approved from photo moderation queue',
+                image.source
             )
-            self.assertIn('APIKey', post_call_kwargs['headers'])
-            posted_image_data = post_call_kwargs['files']['image']
-            self.assertEqual(
-                get_image_type_and_dimensions(posted_image_data),
-                {'format': 'PNG', 'width': 427, 'height': 639},
-            )
-            del post_call_kwargs['data']['md5sum']
-            self.assertEqual(
-                post_call_kwargs['data'],
-                {'user_justification_for_use':
-                 u"It's their Twitter avatar",
-                 'notes': 'Approved from photo moderation queue',
-                 'user_why_allowed': u'public-domain',
-                 'moderator_why_allowed': u'profile-photo',
-                 'uploaded_by_user': u'john',
-                 'index': 'first',
-                 'mime_type': 'image/png',
-                 'created': None}
-            )
-            """
+            self.assertEqual(427, image.image.width)
+            self.assertEqual(639, image.image.height)
+
+            self.q1.refresh_from_db()
+            self.assertEqual('public-domain', self.q1.why_allowed)
+            self.assertEqual('approved', self.q1.decision)
             las = LoggedAction.objects.all()
             self.assertEqual(1, len(las))
             la = las[0]
@@ -262,7 +273,6 @@ class PhotoReviewTests(WebTest):
             self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'approved')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     @override_settings(SUPPORT_EMAIL='support@example.com')
     def test_photo_review_upload_rejected_privileged(
@@ -305,7 +315,6 @@ class PhotoReviewTests(WebTest):
             self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'rejected')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_undecided_privileged(
             self,
@@ -332,7 +341,6 @@ class PhotoReviewTests(WebTest):
         self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'undecided')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_ignore_privileged(
             self,
