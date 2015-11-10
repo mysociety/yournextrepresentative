@@ -2,18 +2,41 @@ from mock import patch
 
 from django_webtest import WebTest
 
+from candidates.models import PostExtra
+
 from .auth import TestUserMixin
+
+from .factories import (
+    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
+    PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
+    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
+    PartyFactory, MembershipFactory
+)
+
 from candidates.tests.fake_popit import (
     FakePostCollection, FakePersonCollection, fake_mp_post_search_results
 )
 
-@patch('candidates.popit.PopIt')
-@patch('candidates.popit.requests')
 class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
 
-    def test_constituency_lock_unauthorized(self, mock_requests, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        post_extra = PostExtraFactory.create(
+            candidates_locked=False,
+            elections=(election,),
+            base__organization=commons,
+            base__id='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
+        self.post_extra_id = post_extra.id
+
+    def test_constituency_lock_unauthorized(self):
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user,
@@ -31,10 +54,10 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
         )
         self.assertEqual(response.status_code, 403)
 
-    @patch.object(FakePostCollection, 'put')
-    def test_constituency_lock(self, mocked_put, mock_requests, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_constituency_lock(self):
+        post_extra = PostExtra.objects.get(id=self.post_extra_id)
+        post_extra.candidates_locked = False
+        post_extra.save()
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock,
@@ -50,39 +73,18 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
             user=self.user_who_can_lock,
             expect_errors=True,
         )
-        expected_put = {
-            u'organization_id': u'commons',
-            u'contact_details': [],
-            u'links': [],
-            u'area': {
-                u'identifier': u'http://mapit.mysociety.org/area/65808',
-                u'name': u'Dulwich and West Norwood',
-                u'id': u'mapit:65808'
-            },
-            u'url': u'http://candidates.127.0.0.1.xip.io:3000/api/v0.1/posts/65808',
-            u'id': u'65808',
-            u'html_url': u'http://candidates.127.0.0.1.xip.io:3000/posts/65808',
-            u'label': u'Member of Parliament for Dulwich and West Norwood',
-            u'memberships': [],
-            u'candidates_locked': True,
-            u'role': u'Member of Parliament',
-            u'images': [],
-            u'start_date': u'2005-05-06'
-        }
-        self.assertEqual(
-            (expected_put,),
-            mocked_put.call_args_list[0][0]
-        )
+        post_extra.refresh_from_db()
+        self.assertEqual(True, post_extra.candidates_locked)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.location,
             "http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood"
         )
 
-    @patch.object(FakePostCollection, 'put')
-    def test_constituency_unlock(self, mocked_put, mock_requests, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_constituency_unlock(self):
+        post_extra = PostExtra.objects.get(id=self.post_extra_id)
+        post_extra.candidates_locked = True
+        post_extra.save()
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock,
@@ -98,38 +100,15 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
             user=self.user_who_can_lock,
             expect_errors=True,
         )
-        expected_put = {
-            u'organization_id': u'commons',
-            u'contact_details': [],
-            u'links': [],
-            u'area': {
-                u'identifier': u'http://mapit.mysociety.org/area/65808',
-                u'name': u'Dulwich and West Norwood',
-                u'id': u'mapit:65808'
-            },
-            u'url': u'http://candidates.127.0.0.1.xip.io:3000/api/v0.1/posts/65808',
-            u'id': u'65808',
-            u'html_url': u'http://candidates.127.0.0.1.xip.io:3000/posts/65808',
-            u'label': u'Member of Parliament for Dulwich and West Norwood',
-            u'memberships': [],
-            u'candidates_locked': False,
-            u'role': u'Member of Parliament',
-            u'images': [],
-            u'start_date': u'2005-05-06'
-        }
-        self.assertEqual(
-            (expected_put,),
-            mocked_put.call_args_list[0][0]
-        )
+        post_extra.refresh_from_db()
+        self.assertEqual(False, post_extra.candidates_locked)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.location,
             "http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood"
         )
 
-    def test_constituencies_unlocked_list(self, mock_requests, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_constituencies_unlocked_list(self):
         response = self.app.get(
             '/election/2015/constituencies/unlocked',
         )
