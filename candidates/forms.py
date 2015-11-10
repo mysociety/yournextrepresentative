@@ -437,18 +437,6 @@ class ToggleLockForm(forms.Form):
         widget=forms.HiddenInput()
     )
 
-    def clean_post_id(self):
-        post_id = self.cleaned_data['post_id']
-        # Use get_post_cached to check if this is a real post:
-        try:
-            api = create_popit_api_object()
-            get_post_cached(api, post_id)
-        except UnknownPostException:
-            message = _('{0} was not a known post ID')
-            raise ValidationError(message.format(post_id))
-        return post_id
-
-
 class ConstituencyRecordWinnerForm(forms.Form):
     person_id = forms.CharField(
         label=_('Person ID'),

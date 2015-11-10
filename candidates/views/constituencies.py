@@ -11,6 +11,8 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, FormView, View
+from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from elections.mixins import ElectionMixin
 from auth_helpers.views import GroupRequiredMixin
@@ -188,7 +190,7 @@ class ConstituencyListView(ElectionMixin, TemplateView):
         return context
 
 
-class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, View):
+class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
     required_group_name = TRUSTED_TO_LOCK_GROUP_NAME
 
     http_method_names = ['post']
@@ -197,34 +199,33 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, Vie
         form = ToggleLockForm(data=self.request.POST)
         if form.is_valid():
             post_id = form.cleaned_data['post_id']
-            data = self.api.posts(post_id). \
-                get(embed='')['result']
-            lock = form.cleaned_data['lock']
-            data['candidates_locked'] = lock
-            if lock:
-                suffix = '-lock'
-                pp = 'Locked'
-            else:
-                suffix = '-unlock'
-                pp = 'Unlocked'
-            message = pp + u' constituency {0} ({1})'.format(
-                data['area']['name'], data['id']
-            )
-            self.api.posts(post_id).put(data)
-            invalidate_posts([post_id])
-            LoggedAction.objects.create(
-                user=self.request.user,
-                action_type=('constituency' + suffix),
-                ip_address=get_client_ip(self.request),
-                popit_person_new_version='',
-                popit_person_id='',
-                source=message,
-            )
+            with transaction.atomic():
+                post = get_object_or_404(Post, id=post_id)
+                lock = form.cleaned_data['lock']
+                post.extra.candidates_locked = lock
+                post.extra.save()
+                post_name = post.area.name
+                if lock:
+                    suffix = '-lock'
+                    pp = 'Locked'
+                else:
+                    suffix = '-unlock'
+                    pp = 'Unlocked'
+                message = pp + u' constituency {0} ({1})'.format(
+                    post_name, post.id
+                )
+
+                LoggedAction.objects.create(
+                    user=self.request.user,
+                    action_type=('constituency' + suffix),
+                    ip_address=get_client_ip(self.request),
+                    source=message,
+                )
             return HttpResponseRedirect(
                 reverse('constituency', kwargs={
                     'election': self.election,
                     'post_id': post_id,
-                    'ignored_slug': slugify(data['area']['name']),
+                    'ignored_slug': post_name,
                 })
             )
         else:
