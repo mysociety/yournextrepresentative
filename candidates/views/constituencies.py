@@ -204,7 +204,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
                 lock = form.cleaned_data['lock']
                 post.extra.candidates_locked = lock
                 post.extra.save()
-                post_name = post.area.name
+                post_name = post.extra.short_label
                 if lock:
                     suffix = '-lock'
                     pp = 'Locked'
@@ -225,7 +225,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
                 reverse('constituency', kwargs={
                     'election': self.election,
                     'post_id': post_id,
-                    'ignored_slug': post_name,
+                    'ignored_slug': slugify(post_name),
                 })
             )
         else:
