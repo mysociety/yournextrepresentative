@@ -15,14 +15,14 @@ from ..models import (
 
 from popolo.models import Person
 
-def get_redirect_to_post(election, post_data):
-    short_post_label = AREA_POST_DATA.shorten_post_label(post_data['label'])
+def get_redirect_to_post(election, post):
+    short_post_label = AREA_POST_DATA.shorten_post_label(post.label)
     return HttpResponseRedirect(
         reverse(
             'constituency',
             kwargs={
                 'election': election,
-                'post_id': post_data['id'],
+                'post_id': post.id,
                 'ignored_slug': slugify(short_post_label),
             }
         )
