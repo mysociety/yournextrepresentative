@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.views.generic import FormView
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from braces.views import LoginRequiredMixin
 
@@ -42,38 +43,39 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
         )
-        person = get_object_or_404(Person, id=form.cleaned_data['person_id'])
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='candidacy-create',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            person=person,
-            source=change_metadata['information_source'],
-        )
+        with transaction.atomic():
+            person = get_object_or_404(Person, id=form.cleaned_data['person_id'])
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='candidacy-create',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                person=person,
+                source=change_metadata['information_source'],
+            )
 
-        membership_exists = Membership.objects.filter(
-            person=person,
-            post=post,
-            role=self.election_data.candidate_membership_role,
-            extra__election=self.election_data
-        ).exists()
-
-        if not membership_exists:
-            membership = Membership.objects.create(
+            membership_exists = Membership.objects.filter(
                 person=person,
                 post=post,
                 role=self.election_data.candidate_membership_role,
-                on_behalf_of=person.extra.last_party(),
-                start_date=self.election_data.candidacy_start_date,
-            )
-            extra = MembershipExtra.objects.create(
-                base=membership,
-                election=self.election_data
-            )
+                extra__election=self.election_data
+            ).exists()
 
-        person.extra.record_version(change_metadata)
-        person.extra.save()
+            if not membership_exists:
+                membership = Membership.objects.create(
+                    person=person,
+                    post=post,
+                    role=self.election_data.candidate_membership_role,
+                    on_behalf_of=person.extra.last_party(),
+                    start_date=self.election_data.candidacy_start_date,
+                )
+                extra = MembershipExtra.objects.create(
+                    base=membership,
+                    election=self.election_data
+                )
+
+            person.extra.record_version(change_metadata)
+            person.extra.save()
         return get_redirect_to_post(self.election, post)
 
     def get_context_data(self, **kwargs):
@@ -91,29 +93,30 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         post_id = form.cleaned_data['post_id']
-        post = get_object_or_404(Post, id=post_id)
-        raise_if_locked(self.request, post)
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data['source']
-        )
-        person = get_object_or_404(Person, id=form.cleaned_data['person_id'])
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='candidacy-delete',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            person=person,
-            source=change_metadata['information_source'],
-        )
+        with transaction.atomic():
+            post = get_object_or_404(Post, id=post_id)
+            raise_if_locked(self.request, post)
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data['source']
+            )
+            person = get_object_or_404(Person, id=form.cleaned_data['person_id'])
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='candidacy-delete',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                person=person,
+                source=change_metadata['information_source'],
+            )
 
-        person.memberships.filter(
-            post=post,
-            role=self.election_data.candidate_membership_role,
-            extra__election=self.election_data,
-        ).delete()
+            person.memberships.filter(
+                post=post,
+                role=self.election_data.candidate_membership_role,
+                extra__election=self.election_data,
+            ).delete()
 
-        person.extra.record_version(change_metadata)
-        person.extra.save()
+            person.extra.record_version(change_metadata)
+            person.extra.save()
         return get_redirect_to_post(self.election, post)
 
     def get_context_data(self, **kwargs):
