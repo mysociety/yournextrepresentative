@@ -4,6 +4,8 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
+from popolo.models import Post
+
 from candidates.cache import get_post_cached
 from candidates.popit import PopItApiMixin
 from candidates.views.helpers import get_redirect_to_post
@@ -23,7 +25,7 @@ def get_current_election():
     return current_elections.first()
 
 
-class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView):
+class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = PostcodeForm
 
@@ -34,8 +36,8 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView)
 
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        post_data = get_post_cached(self.api, wmc)['result']
-        return get_redirect_to_post(get_current_election().slug, post_data)
+        post = Post.objects.get(id=wmc)
+        return get_redirect_to_post(get_current_election().slug, post)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
@@ -49,7 +51,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, PopItApiMixin, FormView)
         return context
 
 
-class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
+class ConstituencyNameFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'
     form_class = ConstituencyForm
 
@@ -60,8 +62,8 @@ class ConstituencyNameFinderView(ContributorsMixin, PopItApiMixin, FormView):
 
     def form_valid(self, form):
         post_id = form.cleaned_data['constituency']
-        post_data = get_post_cached(self.api, post_id)['result']
-        return get_redirect_to_post(get_current_election().slug, post_data)
+        post = Post.objects.get(id=post_id)
+        return get_redirect_to_post(get_current_election().slug, post)
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyNameFinderView, self).get_context_data(**kwargs)
