@@ -7,14 +7,10 @@ from candidates.models import PostExtra
 from .auth import TestUserMixin
 
 from .factories import (
-    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
-    PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
-    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, MembershipFactory
-)
-
-from candidates.tests.fake_popit import (
-    FakePostCollection, FakePersonCollection, fake_mp_post_search_results
+    AreaTypeFactory, ElectionFactory, PostExtraFactory,
+    ParliamentaryChamberFactory, PersonExtraFactory,
+    CandidacyExtraFactory, PartyExtraFactory,
+    PartyFactory
 )
 
 class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
@@ -123,17 +119,62 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
         self.assertIn('Dulwich', unicode(response))
         self.assertNotIn('Camberwell', unicode(response))
 
-@patch('candidates.popit.PopIt')
-@patch('candidates.popit.requests')
+
 class TestConstituencyLockWorks(TestUserMixin, WebTest):
 
-    @patch.object(FakePersonCollection, 'post')
-    def test_add_when_locked_unprivileged_disallowed(
-            self, mocked_post, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        post_extra = PostExtraFactory.create(
+            candidates_locked=False,
+            elections=(election,),
+            base__organization=commons,
+            base__id='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
+        post_extra_locked = PostExtraFactory.create(
+            candidates_locked=True,
+            elections=(election,),
+            base__organization=commons,
+            base__id='65913',
+            base__label='Member of Parliament for Camberwell and Peckham'
+        )
+        self.post_extra_id = post_extra.id
+        person_extra = PersonExtraFactory.create(
+            base__id='4170',
+            base__name='Naomi Newstead'
+        )
+        PartyFactory.reset_sequence()
+        parties = {}
+        for i in xrange(0, 4):
+            party_extra = PartyExtraFactory.create()
+            parties[party_extra.base.id] = party_extra
+
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=post_extra_locked.base,
+            base__on_behalf_of=parties['party:63'].base
+        )
+
+        person_extra = PersonExtraFactory.create(
+            base__id='4322',
+            base__name='Helen Hayes'
+        )
+
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=parties['party:63'].base
+        )
+
+    def test_add_when_locked_unprivileged_disallowed(self):
         # Just get that page for the csrftoken cookie; the form won't
         # appear on the page, since the constituency is locked:
         response = self.app.get(
@@ -141,53 +182,37 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
             user=self.user
         )
         csrftoken = self.app.cookies['csrftoken']
-        mocked_post.return_value = {'result': {'id': '1234'}}
         response = self.app.post(
             '/election/2015/person/create/',
             {
                 'csrfmiddlewaretoken': csrftoken,
                 'name': 'Imaginary Candidate',
-                'party_gb_2015': 'party:63',
+                'party_national_2015': 'party:63',
                 'constituency_2015': '65913',
                 'standing_2015': 'standing',
                 'source': 'Testing adding a new candidate to a locked constituency',
             },
             expect_errors=True,
         )
-        self.assertFalse(mocked_post.called)
         self.assertEqual(response.status_code, 403)
 
-    @patch.object(FakePersonCollection, 'post')
-    def test_add_when_locked_privileged_allowed(
-            self, mocked_post, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
-        mocked_post.return_value = {'result': {'id': '1234'}}
+    def test_add_when_locked_privileged_allowed(self):
         response = self.app.get(
             '/election/2015/post/65913/camberwell-and-peckham',
             user=self.user_who_can_lock
         )
         form = response.forms['new-candidate-form']
         form['name'] = "Imaginary Candidate"
-        form['party_gb_2015'] = 'party:63'
+        form['party_national_2015'] = 'party:63'
         form['source'] = 'Testing adding a new candidate to a locked constituency'
         submission_response = form.submit()
-        self.assertEqual(mocked_post.call_count, 1)
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
             'http://localhost:80/person/1234'
-)
+        )
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_move_into_locked_unprivileged_disallowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_move_into_locked_unprivileged_disallowed(self):
         response = self.app.get(
             '/person/4322/update',
             user=self.user
@@ -196,16 +221,9 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         form['source'] = 'Testing a switch to a locked constituency'
         form['constituency_2015'] = '65913'
         submission_response = form.submit(expect_errors=True)
-        self.assertFalse(mocked_put.called)
         self.assertEqual(submission_response.status_code, 403)
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_move_into_locked_privileged_allowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_move_into_locked_privileged_allowed(self):
         response = self.app.get(
             '/person/4322/update',
             user=self.user_who_can_lock
@@ -214,20 +232,13 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         form['source'] = 'Testing a switch to a locked constituency'
         form['constituency_2015'] = '65913'
         submission_response = form.submit()
-        self.assertEqual(mocked_put.call_count, 2)
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
             'http://localhost:80/person/4322'
         )
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_move_out_of_locked_unprivileged_disallowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_move_out_of_locked_unprivileged_disallowed(self):
         response = self.app.get(
             '/person/4170/update',
             user=self.user
@@ -236,16 +247,9 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         form['source'] = 'Testing a switch to a unlocked constituency'
         form['constituency_2015'] = '65808'
         submission_response = form.submit(expect_errors=True)
-        self.assertFalse(mocked_put.called)
         self.assertEqual(submission_response.status_code, 403)
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_move_out_of_locked_privileged_allowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_move_out_of_locked_privileged_allowed(self):
         response = self.app.get(
             '/person/4170/update',
             user=self.user_who_can_lock
@@ -254,7 +258,6 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         form['source'] = 'Testing a switch to a unlocked constituency'
         form['constituency_2015'] = '65808'
         submission_response = form.submit()
-        self.assertEqual(mocked_put.call_count, 2)
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
@@ -264,62 +267,41 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
     # Now the tests to check that the only privileged users can change
     # the parties of people in locked constituecies.
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_change_party_in_locked_unprivileged_disallowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_change_party_in_locked_unprivileged_disallowed(self):
         response = self.app.get(
             '/person/4170/update',
             user=self.user
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_gb_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:66'
         submission_response = form.submit(expect_errors=True)
-        self.assertFalse(mocked_put.called)
         self.assertEqual(submission_response.status_code, 403)
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_change_party_in_locked_privileged_allowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_change_party_in_locked_privileged_allowed(self):
         response = self.app.get(
             '/person/4170/update',
             user=self.user_who_can_lock
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_gb_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:66'
         submission_response = form.submit()
-        self.assertEqual(mocked_put.call_count, 2)
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
             'http://localhost:80/person/4170'
         )
 
-    @patch.object(FakePersonCollection, 'put')
-    def test_change_party_in_unlocked_unprivileged_allowed(
-            self, mocked_put, mock_requests, mock_popit
-    ):
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-        mock_requests.get.side_effect = fake_mp_post_search_results
+    def test_change_party_in_unlocked_unprivileged_allowed(self):
         response = self.app.get(
             '/person/4322/update',
             user=self.user
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in an unlocked constituency'
-        form['party_gb_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:66'
         submission_response = form.submit()
-        self.assertEqual(mocked_put.call_count, 2)
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
