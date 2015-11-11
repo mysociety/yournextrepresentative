@@ -198,6 +198,7 @@ class PersonExtraFactory(factory.DjangoModelFactory):
         model = 'candidates.PersonExtra'
 
     base = factory.SubFactory(PersonFactory)
+    versions = '[]'
 
 
 class MembershipFactory(factory.DjangoModelFactory):
