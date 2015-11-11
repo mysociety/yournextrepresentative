@@ -209,7 +209,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
-            'http://localhost:80/person/1234'
+            'http://localhost:80/person/4323'
         )
 
     def test_move_into_locked_unprivileged_disallowed(self):
@@ -274,7 +274,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_national_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:52'
         submission_response = form.submit(expect_errors=True)
         self.assertEqual(submission_response.status_code, 403)
 
@@ -285,7 +285,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_national_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:52'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
@@ -300,7 +300,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in an unlocked constituency'
-        form['party_national_2015'] = 'party:66'
+        form['party_national_2015'] = 'party:52'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
