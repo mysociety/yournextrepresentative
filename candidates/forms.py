@@ -247,11 +247,11 @@ class NewPersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post['id'],
+                            (post.id,
                              AREA_POST_DATA.shorten_post_label(
-                                 post['label']
+                                 post.label
                              ))
-                            for post in get_all_posts_cached(self.api, election, role)
+                            for post in Post.objects.filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),
