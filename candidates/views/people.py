@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import (
-    HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
+    HttpResponseRedirect, HttpResponsePermanentRedirect, Http404,
+    HttpResponse
 )
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -31,13 +32,14 @@ from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
     LoggedAction, PersonRedirect,
     TRUSTED_TO_MERGE_GROUP_NAME,
+    TRUSTED_TO_LOCK_GROUP_NAME,
     PopItPerson
 )
 from ..models import PersonExtra
 from ..popit import (
     merge_popit_people, PopItApiMixin, get_base_url
 )
-from popolo.models import Person
+from popolo.models import Person, Post
 
 def get_call_to_action_flash_message(person, new_person=False):
     """Get HTML for a flash message after a person has been created or updated"""
@@ -282,8 +284,21 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
+        # FIXME: not at all sure this is the right thing to do
+        for election_data in form.elections_with_fields:
+            form_data = form.cleaned_data.copy()
+            post_id = form_data.get('constituency_' + election_data.slug)
+            post = get_object_or_404(Post, id=post_id)
+            if post.extra.candidates_locked and \
+                not user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME):
+                resp = HttpResponse()
+                resp.status_code = 403
+                return resp
+
         with transaction.atomic():
 
+            # FIXME: need to check that if we are changing the post then it's
+            # not a locked post
             person = get_object_or_404(
                 Person.objects.select_related('extra'),
                 pk=self.kwargs['person_id']
@@ -333,6 +348,17 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
 
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
+
+        # FIXME: not at all sure this is the right thing to do
+        for election_data in form.elections_with_fields:
+            form_data = form.cleaned_data.copy()
+            post_id = form_data.get('constituency_' + election_data.slug)
+            post = get_object_or_404(Post, id=post_id)
+            if post.extra.candidates_locked and \
+                not user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME):
+                resp = HttpResponse()
+                resp.status_code = 403
+                return resp
 
         with transaction.atomic():
 
