@@ -8,6 +8,7 @@ import requests
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
+from popolo.models import Organization
 from elections.models import Election
 
 data_directory = abspath(join(
@@ -133,24 +134,22 @@ class BasePartyData(object):
         self.all_party_data = []
         party_id_to_party_names = defaultdict(list)
         duplicate_ids = False
-        parties_filename = join(data_directory, 'all-parties-from-popit.json')
-        with open(parties_filename) as f:
-            for party in json.load(f):
-                party_id = party['id']
-                party_name = party['name']
-                if party_id in party_id_to_party_names:
-                    duplicate_ids = True
-                party_id_to_party_names[party_id].append(party['name'])
-                self.all_party_data.append(party)
-                for party_set in self.party_data_to_party_sets(party):
-                    self.party_choices[party_set].append(
-                        (party_id, party_name)
-                    )
-                    self.party_id_to_name[party_id] = party_name
-            # Now sort the parties, and an an empty default at the start:
-            for parties in self.party_choices.values():
-                self.sort_parties_in_place(parties)
-                parties.insert(0, ('party:none', ''))
+        for party in Organization.objects.filter(classification='Party'):
+            party_id = party.id
+            party_name = party.name
+            if party_id in party_id_to_party_names:
+                duplicate_ids = True
+            party_id_to_party_names[party_id].append(party.name)
+            self.all_party_data.append(party)
+            for party_set in self.party_data_to_party_sets(party):
+                self.party_choices[party_set].append(
+                    (party_id, party_name)
+                )
+                self.party_id_to_name[party_id] = party_name
+        # Now sort the parties, and an an empty default at the start:
+        for parties in self.party_choices.values():
+            self.sort_parties_in_place(parties)
+            parties.insert(0, ('party:none', ''))
         # Check that no ID maps to multiple parties; if there are any,
         # warn about them on standard error:
         if duplicate_ids:
