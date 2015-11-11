@@ -320,11 +320,6 @@ class UpdatePersonForm(BasePersonForm):
     def __init__(self, *args, **kwargs):
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
-        # We should only need to actually go to the API for the first
-        # time this form is loaded; it'll be cached indefinitely after
-        # that, but still need the API object for the first time.
-        api = create_popit_api_object()
-
         self.elections_with_fields = Election.objects.current().by_date()
 
         # The fields on this form depends on how many elections are
@@ -346,11 +341,11 @@ class UpdatePersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post['id'],
+                            (post.id,
                              AREA_POST_DATA.shorten_post_label(
-                                 post['label']
+                                 post.label
                              ))
-                            for post in get_all_posts_cached(api, election, role)
+                            for post in Post.objects.filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),
