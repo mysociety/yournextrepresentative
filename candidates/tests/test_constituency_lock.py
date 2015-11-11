@@ -34,6 +34,13 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
             base__id='65808',
             base__label='Member of Parliament for Dulwich and West Norwood'
         )
+        post_extra_locked = PostExtraFactory.create(
+            candidates_locked=True,
+            elections=(election,),
+            base__organization=commons,
+            base__id='65913',
+            base__label='Member of Parliament for Camberwell and Peckham'
+        )
         self.post_extra_id = post_extra.id
 
     def test_constituency_lock_unauthorized(self):

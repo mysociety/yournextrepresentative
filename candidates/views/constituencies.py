@@ -233,7 +233,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
             raise ValidationError(message)
 
 
-class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituencies-unlocked.html'
 
     def get_context_data(self, **kwargs):
@@ -243,21 +243,18 @@ class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView)
         keys = ('locked', 'unlocked')
         for k in keys:
             context[k] = []
-        for post in popit_unwrap_pagination(
-                self.api.posts,
-                embed='',
-                per_page=100,
-        ):
+        posts = Post.objects.all()
+        for post in posts:
             total_constituencies += 1
-            if post.get('candidates_locked'):
+            if post.extra.candidates_locked:
                 context_field = 'locked'
                 total_locked += 1
             else:
                 context_field = 'unlocked'
             context[context_field].append(
                 {
-                    'id': post['id'],
-                    'name': post['area']['name'],
+                    'id': post.id,
+                    'name': post.extra.short_label,
                 }
             )
         for k in keys:
