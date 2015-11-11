@@ -321,6 +321,7 @@ class PersonExtra(HasImageMixin, models.Model):
             base=person,
         )
         update_person_from_form(person, person_extra, form)
+        return person_extra
 
 
 class OrganizationExtra(models.Model):
