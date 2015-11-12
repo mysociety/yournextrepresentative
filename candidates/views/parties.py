@@ -32,11 +32,13 @@ class PartyListView(ElectionMixin, TemplateView):
 def get_post_group_stats(posts):
     total = 0
     candidates = 0
+    proportion = 0
     for t in posts:
         total += 1
         if t[2]:
             candidates += 1
-    proportion = candidates / float(total)
+    if total > 0:
+        proportion = candidates / float(total)
     return {
         'proportion': proportion,
         'total': total,
