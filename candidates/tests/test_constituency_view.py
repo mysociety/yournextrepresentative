@@ -13,12 +13,13 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        commons = ParliamentaryChamberFactory.create()
         election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
-            area_types=(wmc_area_type,)
+            area_types=(wmc_area_type,),
+            organization=commons
         )
-        commons = ParliamentaryChamberFactory.create()
         post_extra = PostExtraFactory.create(
             elections=(election,),
             base__organization=commons,
