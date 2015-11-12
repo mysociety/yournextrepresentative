@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 
-from popolo.models import Organization
+from popolo.models import Organization, Membership
 
 from cached_counts.models import CachedCount
 from elections.mixins import ElectionMixin
@@ -66,11 +66,13 @@ class PartyDetailView(ElectionMixin, TemplateView):
         by_post_group = {
             pg: {} for pg in AREA_POST_DATA.ALL_POSSIBLE_POST_GROUPS
         }
-        for membership in party.memberships.all():
+        for membership in Membership.objects.filter(
+            on_behalf_of=party,
+            extra__election=self.election_data,
+            role=self.election_data.candidate_membership_role
+        ):
             person = membership.person
-            post = person.extra.standing_in(self.election)
-            if post is None:
-                continue
+            post = membership.post
             post_id = post.id
             post_name = post.extra.short_label
             post_group = AREA_POST_DATA.post_id_to_post_group(
