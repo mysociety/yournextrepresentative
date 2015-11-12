@@ -1,16 +1,34 @@
 import re
 
-from mock import patch
-
 from django_webtest import WebTest
+
+from .factories import (
+    AreaTypeFactory, ElectionFactory,
+    PostExtraFactory, ParliamentaryChamberFactory,
+)
 
 class TestConstituencyDetailView(WebTest):
 
-    @patch('candidates.popit.PopIt')
-    def test_constituencies_page(self, mock_popit):
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        commons = ParliamentaryChamberFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,),
+            organization=commons
+        )
+        PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            base__id='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
+
+    def test_constituencies_page(self):
         # Just a smoke test to check that the page loads:
         response = self.app.get('/election/2015/constituencies')
-        aberdeen_north = response.html.find(
-            'a', text=re.compile(r'York Outer')
+        dulwich= response.html.find(
+            'a', text=re.compile(r'Dulwich and West Norwood')
         )
-        self.assertTrue(aberdeen_north)
+        self.assertTrue(dulwich)
