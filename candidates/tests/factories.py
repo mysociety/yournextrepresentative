@@ -68,7 +68,7 @@ class ElectionFactory(BaseElectionFactory):
                 self.area_types.add(area_type)
 
 
-class EarlierElectionFactory(factory.DjangoModelFactory):
+class EarlierElectionFactory(BaseElectionFactory):
 
     class Meta:
         model = 'elections.Election'
