@@ -4,10 +4,8 @@ from collections import defaultdict
 from popolo.models import Organization
 
 class ElectionQuerySet(models.QuerySet):
-    def current(self):
-        return self.filter(
-            current=True
-        )
+    def current(self, current=True):
+        return self.filter(current=current)
 
     def get_by_slug(self, election):
         return get_object_or_404(self, slug=election)
