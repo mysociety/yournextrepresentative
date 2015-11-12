@@ -21,7 +21,7 @@ class PartyData(BasePartyData):
         register = {
             'Great Britain': 'gb',
             'Northern Ireland': 'ni',
-        }.get(party_data.get('register'))
+        }.get(party_data.extra.register)
         if register:
             return [register]
         else:
@@ -63,7 +63,7 @@ class AreaPostData(BaseAreaPostData):
         return re.sub(r'^Member of Parliament for ', '', post_label)
 
     def party_to_possible_post_groups(self, party_data):
-        register = party_data.get('register')
+        register = party_data.extra.register
         if register == 'Northern Ireland':
             return ('Northern Ireland',)
         elif register == 'Great Britain':
