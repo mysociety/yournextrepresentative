@@ -214,8 +214,11 @@ class PersonExtra(HasImageMixin, models.Model):
 
     def get_elected(self, election_slug):
         election = Election.objects.get_by_slug(election_slug)
+        role = election.winner_membership_role
+        if role is None:
+            role = ''
         return self.base.memberships.filter(
-            role=election.winner_membership_role,
+            role=role,
             organization=election.organization
         ).exists()
 
