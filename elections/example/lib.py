@@ -48,7 +48,7 @@ class AreaPostData(BaseAreaPostData):
         if area['country_name'] == 'Northern Ireland':
             return 'ni'
         elif area['country_name'] in ('England', 'Scotland', 'Wales'):
-            return 'gb'
+            return 'national'
         return None
 
     def party_to_possible_post_groups(self, party_data):
