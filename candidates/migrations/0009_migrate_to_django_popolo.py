@@ -150,7 +150,7 @@ class YNRPopItImporter(PopItImporter):
 
         # Create the extra organization object:
         OrganizationExtra = self.get_model_class('candidates', 'OrganizationExtra')
-        extra = OrganizationExtra.objects.create(base=org)
+        extra = OrganizationExtra.objects.create(base=org, slug=org_data['id'])
 
         self.get_images_for_object(org_data['images'], extra)
 
@@ -160,7 +160,7 @@ class YNRPopItImporter(PopItImporter):
         post_id, post = super(YNRPopItImporter, self).update_post(post_data, area, org_id_to_django_object)
 
         PostExtra = self.get_model_class('candidates', 'PostExtra')
-        post_extra, created = PostExtra.objects.get_or_create(base=post)
+        post_extra, created = PostExtra.objects.get_or_create(base=post, slug=post_data['id'])
         post_extra.candidates_locked = post_data.get('candidates_locked', False)
         post_extra.save()
 
