@@ -65,15 +65,17 @@ def update_person_from_form(person, person_extra, form):
             party = None
             party_list_position = None
 
-        # Remove any memberships (we'll recreate them if the
-        # person's actually standing)
-        MembershipExtra.objects.filter(
-            election=election_data,
-            base__person__extra=person_extra
+        # Remove any existing memberships; we'll recreate them if the
+        # person's actually standing. (Since MembershipExtra depends
+        # on Membership, this will delete any corresponding Membership.)
+        Membership.objects.filter(
+            extra__election=election_data,
+            role=election_data.candidate_membership_role,
+            person__extra=person_extra
         ).delete()
 
         if standing == 'standing':
-            # Remove any existing memberships and create the new one:
+            # Create the new membership:
             membership = Membership.objects.create(
                 post=post,
                 on_behalf_of=party,
