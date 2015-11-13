@@ -414,16 +414,28 @@ class ConstituenciesDeclaredListView(ElectionMixin, TemplateView):
         context = super(ConstituenciesDeclaredListView, self).get_context_data(**kwargs)
         total_constituencies = 0
         total_declared = 0
+        constituency_declared = []
+        constituency_seen = {}
         constituencies = []
-        for post in Post.objects.all():
-            total_constituencies += 1
-            declared = memberships_contain_winner(
-                post.memberships,
-                self.election_data
-            )
-            if declared:
-                total_declared += 1
-            constituencies.append((post, declared))
+        total_constituencies = Post.objects.all().count()
+        for membership in Membership.objects.select_related('post', 'post__area').filter(
+            post__isnull=False,
+            organization_id=self.election_data.organization_id,
+            extra__election_id=self.election_data.id,
+            role=''
+        ):
+            constituency_declared.append(membership.post.id)
+            total_declared += 1
+            constituencies.append((membership.post, True))
+        for membership in Membership.objects.select_related('post', 'post__area').filter(
+            post__isnull=False,
+            extra__election=self.election_data,
+            role=self.election_data.candidate_membership_role
+        ).exclude(post_id__in=constituency_declared):
+            if constituency_seen.get(membership.post.id, False):
+                continue
+            constituency_seen[membership.post.id] = True
+            constituencies.append((membership.post, False))
         constituencies.sort(key=lambda c: c[0].area.name)
         context['constituencies'] = constituencies
         context['total_constituencies'] = total_constituencies
