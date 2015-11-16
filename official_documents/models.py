@@ -3,6 +3,8 @@ import os
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from popolo.models import Post
+
 from django_extensions.db.models import TimeStampedModel
 
 DOCUMENT_UPLOADERS_GROUP_NAME = "Document Uploaders"
@@ -30,7 +32,7 @@ class OfficialDocument(TimeStampedModel):
         max_length=100)
     uploaded_file = models.FileField(
         upload_to=document_file_name, max_length=800)
-    post_id = models.CharField(blank=False, max_length=50)
+    post = models.ForeignKey(Post)
     source_url = models.URLField(blank=True,
         help_text=_("The page that links to this document"),
         max_length=1000,
