@@ -184,10 +184,40 @@ class YNRPopItImporter(PopItImporter):
             post_id_to_django_object,
             person_id_to_django_object,
         )
+        Election = self.get_model_class('elections', 'Election')
 
         election_slug = membership_data.get('election', None)
+        # This is an unfortunate fixup to have to do. It seems that
+        # the scripts that we used to make sure that all memberships
+        # representing candidacies had an 'election' property didn't
+        # work consistently; lots of candidacies are missing it.  So,
+        # if it looks as if the membership is a candidacy and it's
+        # missing its election property, set it. This inference
+        # wouldn't work in general but should work for all the data in
+        # the known YNR instances based on PopIt:
+        candidacy = membership.role.lower() not in (None, '', 'member')
+        if (not election_slug) and candidacy and membership.post:
+            matching_elections = list(Election.objects.filter(
+                for_post_role=membership.post.role,
+                candidate_membership_role=membership.role,
+                election_date__gte=membership.start_date,
+                election_date__lte=membership.end_date,
+                organization_name=membership.post.organization.name,
+            ))
+            # If there's exactly one matching election, that's ideal:
+            if len(matching_elections) == 1:
+                election_slug = matching_elections[0].slug
+            # If we hit the ambiguity between the two types of
+            # Parlamentario Mercosur, there's a special case for that:
+            elif len(matching_elections) == 2 and \
+                    (membership.post.role == 'Parlamentario Mercosur'):
+                if membership.post.slug == 'pmeu':
+                    election_slug = 'parlamentarios-mercosur-unico-paso-2015'
+                else:
+                    election_slug = 'parlamentarios-mercosur-regional-paso-2015'
+            else:
+                raise Exception("Election missing on membership, and no unique matching election found")
         if election_slug is not None:
-            Election = self.get_model_class('elections', 'Election')
             election = Election.objects.get(slug=election_slug)
 
             if membership.role == election.candidate_membership_role:
