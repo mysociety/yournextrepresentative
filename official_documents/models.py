@@ -13,7 +13,7 @@ DOCUMENT_UPLOADERS_GROUP_NAME = "Document Uploaders"
 def document_file_name(instance, filename):
     return os.path.join(
         "official_documents",
-        instance.post_id,
+        str(instance.post_id),
         filename,
     )
 
@@ -40,7 +40,7 @@ class OfficialDocument(TimeStampedModel):
 
     def __unicode__(self):
         return u"{0} ({1})".format(
-            self.post_id,
+            self.post.extra.slug,
             self.source_url,
         )
 

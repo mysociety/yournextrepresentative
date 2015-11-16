@@ -9,10 +9,11 @@ class UploadDocumentForm(forms.ModelForm):
             'election',
             'uploaded_file',
             'source_url',
-            'post_id',
+            'post',
             'document_type',
         )
 
-    post_id = forms.CharField(widget=forms.HiddenInput())
+        widgets = {'post': forms.HiddenInput()}
+
     election = forms.CharField(widget=forms.HiddenInput())
     document_type = forms.CharField(widget=forms.HiddenInput())

@@ -26,7 +26,7 @@
   {% endblocktrans %}
 
     {% if user_can_upload_documents %}
-    {% url 'upload_document_view' election=election post_id=post_data.id as url %}
+    {% url 'upload_document_view' election=election post_id=post_data.extra.slug as url %}
     {% blocktrans trimmed with type=doc_type.0 %}
       As you have permission to upload documents, you can
       <a href="{{ url }}">upload a {{ type }}</a>.
