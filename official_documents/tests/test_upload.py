@@ -1,4 +1,3 @@
-from mock import patch
 from os.path import join, realpath, dirname
 
 from django_webtest import WebTest
@@ -7,9 +6,13 @@ from webtest import Upload
 from django.core.urlresolvers import reverse
 
 from candidates.tests.auth import TestUserMixin
-from candidates.tests.fake_popit import FakePostCollection
 
 from official_documents.models import OfficialDocument
+
+from candidates.tests.factories import (
+    AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
+    PostExtraFactory
+)
 
 TEST_MEDIA_ROOT=realpath(
     join(
@@ -25,13 +28,24 @@ TEST_MEDIA_ROOT=realpath(
 # check whether the upload text appears correctly should be moved to
 # the candidates application tests.
 
-@patch('candidates.popit.PopIt')
 class TestModels(TestUserMixin, WebTest):
 
-    post_id = '65808'
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        self.post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            slug='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
 
-    def test_upload_unauthorized(self, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
+    def test_upload_unauthorized(self):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user
@@ -39,7 +53,7 @@ class TestModels(TestUserMixin, WebTest):
         csrftoken = self.app.cookies['csrftoken']
         upload_url = reverse(
             'upload_document_view',
-            kwargs={'election': '2015', 'post_id': self.post_id}
+            kwargs={'election': '2015', 'post_id': self.post_extra.slug}
         )
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
         with open(image_filename) as f:
@@ -47,7 +61,7 @@ class TestModels(TestUserMixin, WebTest):
                 upload_url,
                 {
                     'csrfmiddlewaretoken': csrftoken,
-                    'post_id': self.post_id,
+                    'post_id': self.post_extra.slug,
                     'document_type': OfficialDocument.NOMINATION_PAPER,
                     'source_url': 'http://example.org/foo',
                     '': Upload('pilot.jpg', f.read())
@@ -61,18 +75,17 @@ class TestModels(TestUserMixin, WebTest):
             unicode(response)
         )
 
-    def test_upload_authorized(self, mock_popit):
-        mock_popit.return_value.posts = FakePostCollection
+    def test_upload_authorized(self):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_upload_documents
         )
         self.assertIn(
-            'as you have permission to upload documents',
+            'As you have permission to upload documents',
             unicode(response)
         )
         response = self.app.get(
-            reverse('upload_document_view', args=('2015', self.post_id,)),
+            reverse('upload_document_view', args=('2015', self.post_extra.slug)),
             user=self.user_who_can_upload_documents,
         )
         form = response.forms['document-upload-form']
@@ -86,4 +99,4 @@ class TestModels(TestUserMixin, WebTest):
         self.assertEqual(ods.count(), 1)
         od = ods[0]
         self.assertEqual(od.source_url, 'http://example.org/foo')
-        self.assertEqual(od.post_id, '65808')
+        self.assertEqual(od.post.extra.slug, '65808')
