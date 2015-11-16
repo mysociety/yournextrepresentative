@@ -13,7 +13,9 @@ class UploadDocumentForm(forms.ModelForm):
             'document_type',
         )
 
-        widgets = {'post': forms.HiddenInput()}
+        widgets = {
+            'post': forms.HiddenInput(),
+            'election': forms.HiddenInput()
+        }
 
-    election = forms.CharField(widget=forms.HiddenInput())
     document_type = forms.CharField(widget=forms.HiddenInput())

@@ -29,7 +29,7 @@ class CreateDocumentView(ElectionMixin, GroupRequiredMixin, CreateView):
     def get_initial(self):
         post = get_object_or_404(Post, extra__slug=self.kwargs['post_id'])
         return {
-            'election': self.election,
+            'election': self.election_data,
             'document_type': OfficialDocument.NOMINATION_PAPER,
             'post': post,
         }

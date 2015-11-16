@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Post
+from elections.models import Election
 
 from django_extensions.db.models import TimeStampedModel
 
@@ -25,7 +26,7 @@ class OfficialDocument(TimeStampedModel):
         (NOMINATION_PAPER, _('Nomination paper'), _('Nomination papers')),
     )
 
-    election = models.CharField(blank=True, null=True, max_length=512)
+    election = models.ForeignKey(Election)
     document_type = models.CharField(
         blank=False,
         choices=[ (d[0], d[1]) for d in DOCUMENT_TYPES ],
