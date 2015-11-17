@@ -54,7 +54,7 @@ class PartyDetailView(ElectionMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PartyDetailView, self).get_context_data(**kwargs)
         party_id = kwargs['organization_id']
-        party = get_object_or_404(Organization, id=party_id)
+        party = get_object_or_404(Organization, extra__slug=party_id)
 
         # Make the party emblems conveniently available in the context too:
         """
@@ -73,7 +73,7 @@ class PartyDetailView(ElectionMixin, TemplateView):
         ):
             person = membership.person
             post = membership.post
-            post_id = post.id
+            post_id = post.extra.slug
             post_name = post.extra.short_label
             post_group = AREA_POST_DATA.post_id_to_post_group(
                 kwargs['election'], post_id
