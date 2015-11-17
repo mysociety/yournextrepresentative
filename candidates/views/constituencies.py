@@ -51,7 +51,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        mp_post = Post.objects.get(id=post_id)
+        mp_post = Post.objects.get(extra__slug=post_id)
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
@@ -59,7 +59,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         doc_lookup = {t[0]: (t[1], t[2]) for t in OfficialDocument.DOCUMENT_TYPES}
         for t in doc_lookup.values():
             documents_by_type[t] = []
-        documents_for_post = OfficialDocument.objects.filter(post_id=post_id)
+        documents_for_post = OfficialDocument.objects.filter(post_id=mp_post.id)
         for od in documents_for_post:
             documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
@@ -78,7 +78,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            'id': mp_post.id,
+            'id': mp_post.extra.slug,
             'label': mp_post.label
         }
 
