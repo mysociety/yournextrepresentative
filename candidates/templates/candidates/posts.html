@@ -20,7 +20,7 @@
         <ul>
           {% for p in posts %}
             <li>
-             <a href="{% url 'constituency' election=election.slug post_id=p.base.id ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
+             <a href="{% url 'constituency' election=election.slug post_id=p.slug ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
             </li>
           {% endfor %}
         </ul>
