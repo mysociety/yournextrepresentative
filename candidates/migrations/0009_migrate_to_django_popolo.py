@@ -297,11 +297,9 @@ def import_from_popit(apps, schema_editor):
     importer.import_from_export_json(export_filename)
     # Now reset the database sequence for popolo_person's id field,
     # since we've specified the id when creating each person.
-    reset_sql_list = connection.ops.sequence_reset_by_name_sql(
-        no_style(),
-        [
-            {'column': u'id', 'table': u'popolo_person'},
-        ]
+    Person = apps.get_model('popolo', 'person')
+    reset_sql_list = connection.ops.sequence_reset_sql(
+        no_style(), [Person]
     )
     if reset_sql_list:
         cursor = connection.cursor()
