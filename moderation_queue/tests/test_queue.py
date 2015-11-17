@@ -160,7 +160,7 @@ class PhotoReviewTests(WebTest):
             queued_image.justification_for_use,
             'I took this photo'
         )
-        self.assertEqual(queued_image.person.id, '2009')
+        self.assertEqual(queued_image.person.id, 2009)
         self.assertEqual(queued_image.user, self.test_upload_user)
 
     def test_photo_review_queue_view_not_logged_in(self):
@@ -249,7 +249,7 @@ class PhotoReviewTests(WebTest):
                 fail_silently=False
             )
 
-            person = Person.objects.get(id='2009')
+            person = Person.objects.get(id=2009)
             image = person.extra.images.last()
 
             self.assertTrue(image.is_primary)
@@ -268,7 +268,7 @@ class PhotoReviewTests(WebTest):
             la = las[0]
             self.assertEqual(la.user.username, 'jane')
             self.assertEqual(la.action_type, 'photo-approve')
-            self.assertEqual(la.person.id, '2009')
+            self.assertEqual(la.person.id, 2009)
 
             self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'approved')
 
@@ -301,7 +301,7 @@ class PhotoReviewTests(WebTest):
             la = las[0]
             self.assertEqual(la.user.username, 'jane')
             self.assertEqual(la.action_type, 'photo-reject')
-            self.assertEqual(la.person.id, '2009')
+            self.assertEqual(la.person.id, 2009)
             self.assertEqual(la.source, 'Rejected a photo upload from john')
 
             mock_send_mail.assert_called_once_with(
@@ -370,4 +370,4 @@ class PhotoReviewTests(WebTest):
         la = las[0]
         self.assertEqual(la.user.username, 'jane')
         self.assertEqual(la.action_type, 'photo-ignore')
-        self.assertEqual(la.person.id, '2009')
+        self.assertEqual(la.person.id, 2009)
