@@ -8,7 +8,7 @@ def migrate_to_popolo_organizations(apps, schema_editor):
     Election = apps.get_model('elections', 'Election')
     Organization = apps.get_model('popolo', 'Organization')
     for e in Election.objects.all():
-        o = Organization.objects.get(pk=e.organization_id)
+        o = Organization.objects.get(extra__slug=e.organization_id)
         e.new_organization = o
         e.save()
 

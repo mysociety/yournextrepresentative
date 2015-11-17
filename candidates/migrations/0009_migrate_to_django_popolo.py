@@ -130,7 +130,7 @@ class YNRPopItImporter(PopItImporter):
             new_person_data
         )
 
-        self.person_id_to_json_data[person_id] = new_person_data
+        self.person_id_to_json_data[person_data['id']] = new_person_data
 
         # Create the extra person object:
         PersonExtra = self.get_model_class('candidates', 'PersonExtra')
@@ -227,7 +227,7 @@ class YNRPopItImporter(PopItImporter):
                     election=election
                 )
 
-                person_data = self.person_id_to_json_data[membership.person_id]
+                person_data = self.person_id_to_json_data[membership_data['person_id']]
                 party = person_data['party_memberships'].get(election.slug)
                 if party is not None:
                     membership.on_behalf_of = org_id_to_django_object[party['id']]
