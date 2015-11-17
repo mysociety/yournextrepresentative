@@ -231,7 +231,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         initial_data = super(UpdatePersonView, self).get_initial()
         person = get_object_or_404(
             Person.objects.select_related('extra'),
-            pk=self.kwargs['person_id']
+            extra__slug=self.kwargs['person_id']
         )
         initial_data.update(person.extra.get_initial_form_data())
         return initial_data
@@ -241,7 +241,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
 
         person = get_object_or_404(
             Person.objects.select_related('extra'),
-            pk=self.kwargs['person_id']
+            extra__slug=self.kwargs['person_id']
         )
         context['person'] = person
 
@@ -301,7 +301,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             # not a locked post
             person = get_object_or_404(
                 Person.objects.select_related('extra'),
-                pk=self.kwargs['person_id']
+                extra__slug=self.kwargs['person_id']
             )
             person_extra = person.extra
             person_extra.update_from_form(form)
