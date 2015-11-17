@@ -14,7 +14,8 @@ from PIL import Image as PillowImage
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from django.db import migrations
+from django.core.management.color import no_style
+from django.db import connection, migrations
 
 from popolo.importers.popit import PopItImporter, show_data_on_error
 
@@ -126,6 +127,19 @@ class YNRPopItImporter(PopItImporter):
         if email:
             email = re.sub(r'\s*', '', email)
         new_person_data['email'] = email
+        # We would like people to have the same ID as they did in
+        # PopIt (where the person IDs were just stringified
+        # integers). So create a minimal person with the right ID and
+        # an identifier to that the method we're overriding will
+        # notice that it exists.  n.b. this means we have to reset the
+        # person id sequence at the end of import_from_popit
+        Person = self.get_popolo_model_class('Person')
+        minimal_person = Person.objects.create(
+            id=int(person_data['id']),
+            name=person_data['name'],
+        )
+        self.create_identifier('person', person_data['id'], minimal_person)
+        # Now the superclass method should find and update that person.
         person_id, person = super(YNRPopItImporter, self).update_person(
             new_person_data
         )
@@ -281,6 +295,19 @@ def import_from_popit(apps, schema_editor):
     )
     export_filename = get_url_cached(url)
     importer.import_from_export_json(export_filename)
+    # Now reset the database sequence for popolo_person's id field,
+    # since we've specified the id when creating each person.
+    reset_sql_list = connection.ops.sequence_reset_by_name_sql(
+        no_style(),
+        [
+            {'column': u'id', 'table': u'popolo_person'},
+        ]
+    )
+    if reset_sql_list:
+        cursor = connection.cursor()
+        for reset_sql in reset_sql_list:
+            print "Running reset SQL:", reset_sql
+            cursor.execute(reset_sql)
 
 
 class Migration(migrations.Migration):
