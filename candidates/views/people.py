@@ -353,7 +353,7 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
         for election_data in form.elections_with_fields:
             form_data = form.cleaned_data.copy()
             post_id = form_data.get('constituency_' + election_data.slug)
-            post = get_object_or_404(Post, id=post_id)
+            post = get_object_or_404(Post, extra__slug=post_id)
             if post.extra.candidates_locked and \
                 not user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME):
                 resp = HttpResponse()

@@ -184,7 +184,7 @@ class BasePersonForm(forms.Form):
                     election=election_name
                 ))
             # Check that that post actually exists:
-            if not Post.objects.filter(id=post_id).exists():
+            if not Post.objects.filter(extra__slug=post_id).exists():
                 message = _("An unknown post ID '{post_id}' was specified")
                 raise forms.ValidationError(
                     message.format(post_id=post_id)
@@ -197,7 +197,10 @@ class BasePersonForm(forms.Form):
                     message.format(post_id=post_id, election=election_name)
                 )
             party_field = 'party_' + party_set + '_' + election
-            party_id = cleaned_data[party_field]
+            try:
+                party_id = int(cleaned_data[party_field], 10)
+            except ValueError:
+                party_id = ''
             if party_id not in PARTY_DATA.party_id_to_name:
                 message = _("You must specify a party for the {election}")
                 raise forms.ValidationError(message.format(election=election_name))
@@ -212,7 +215,6 @@ class NewPersonForm(BasePersonForm):
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
         election_data = Election.objects.get_by_slug(election)
-        role = election_data.for_post_role
 
         standing_field_kwargs = {
             'label': _('Standing in %s') % election_data.name,
@@ -247,11 +249,11 @@ class NewPersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post.id,
+                            (post.extra.slug,
                              AREA_POST_DATA.shorten_post_label(
                                  post.label
                              ))
-                            for post in Post.objects.filter(extra__elections__slug=election)
+                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),

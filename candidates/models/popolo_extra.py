@@ -60,7 +60,7 @@ def update_person_from_form(person, person_extra, form):
                 'party_list_position_' + party_set + '_' + election_data.slug
             party = Organization.objects.get(pk=form_data[party_key])
             party_list_position = form_data.get(position_key) or None
-            post = Post.objects.get(pk=post_id)
+            post = Post.objects.get(extra__slug=post_id)
         else:
             party = None
             party_list_position = None
@@ -298,7 +298,7 @@ class PersonExtra(HasImageMixin, models.Model):
                 candidacy = None
             if candidacy:
                 initial_data[standing_key] = 'standing'
-                post_id = candidacy.base.post.id
+                post_id = candidacy.base.post.extra.slug
                 initial_data[constituency_key] = post_id
                 party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
                 party = candidacy.base.on_behalf_of
