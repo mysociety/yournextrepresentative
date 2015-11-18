@@ -330,7 +330,6 @@ class UpdatePersonForm(BasePersonForm):
 
         for election_data in self.elections_with_fields:
             election = election_data.slug
-            role = election_data.for_post_role
             self.fields['standing_' + election] = \
                 forms.ChoiceField(
                     label=_('Standing in %s') % election_data.name,
@@ -343,11 +342,11 @@ class UpdatePersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post.id,
+                            (post.extra.slug,
                              AREA_POST_DATA.shorten_post_label(
                                  post.label
                              ))
-                            for post in Post.objects.filter(extra__elections__slug=election)
+                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),
