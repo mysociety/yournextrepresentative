@@ -47,16 +47,17 @@ class TestPartyPages(WebTest):
             area_types=(wmc_area_type,)
         )
         commons = ParliamentaryChamberFactory.create()
+        PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
         parties = {}
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
-            parties[party_extra.base.id] = party_extra
+            parties[party_extra.slug] = party_extra
 
         post_extra = PostExtraFactory.create(
             elections=(election, earlier_election,),
             base__organization=commons,
-            base__id='65672',
+            slug='65672',
             base__label='Member of Parliament for Doncaster North'
         )
         person_extra = PersonExtraFactory.create(
@@ -73,7 +74,7 @@ class TestPartyPages(WebTest):
         post_extra = PostExtraFactory.create(
             elections=(election, earlier_election,),
             base__organization=commons,
-            base__id='65719',
+            slug='65719',
             base__label='Member of Parliament for South Shields'
         )
         person_extra = PersonExtraFactory.create(
