@@ -8,10 +8,12 @@ from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import TemplateView
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
+from django.shortcuts import get_object_or_404
 
-from candidates.cache import get_post_cached, UnknownPostException
+from popolo.models import Post
+
+from candidates.cache import UnknownPostException
 from candidates.models.auth import get_edits_allowed
-from candidates.popit import PopItApiMixin
 
 from elections.models import Election
 
@@ -19,7 +21,7 @@ from ..election_specific import AREA_POST_DATA, AREA_DATA
 from ..forms import NewPersonForm
 from .helpers import get_people_from_memberships, group_people_by_party
 
-class AreasView(PopItApiMixin, TemplateView):
+class AreasView(TemplateView):
     template_name = 'candidates/areas.html'
 
     def get(self, request, *args, **kwargs):
@@ -48,20 +50,15 @@ class AreasView(PopItApiMixin, TemplateView):
                 if area_type in [area.name for area in election_data.area_types.all()]:
                     area_tuple = (area_type, area_generation)
                     post_id = AREA_POST_DATA.get_post_id(election_data.slug, area_type, area_id)
-                    post_data = get_post_cached(self.api, post_id)['result']
+                    post_data = get_object_or_404(Post, extra__slug=post_id)
                     area_name = AREA_DATA.areas_by_id[area_tuple][area_id]['name']
                     all_area_names.add(area_name)
-                    locked = post_data.get('candidates_locked', False)
+                    locked = post_data.extra.candidates_locked
                     current_candidates, _ = get_people_from_memberships(
                         election_data,
-                        post_data['memberships']
+                        post_data.memberships.all()
                     )
-                    # The 'memberships' data can be huge; when you
-                    # have Django Debug Toolbar active this causes
-                    # page loading to be incredibly slow; it's not
-                    # needed any longer from this point on, so remove
-                    # it from the data that goes into the context.
-                    del post_data['memberships']
+
                     current_candidates = group_people_by_party(
                         election_data.slug,
                         current_candidates,
@@ -89,7 +86,7 @@ class AreasView(PopItApiMixin, TemplateView):
         context['suppress_official_documents'] = True
         return context
 
-class AreasOfTypeView(PopItApiMixin, TemplateView):
+class AreasOfTypeView(TemplateView):
     template_name = 'candidates/areas-of-type.html'
 
     def get_context_data(self, **kwargs):
