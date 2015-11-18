@@ -17,12 +17,19 @@ class AreaTypeFactory(factory.DjangoModelFactory):
 
 
 class ParliamentaryChamberFactory(factory.DjangoModelFactory):
-
     class Meta:
         model = 'popolo.Organization'
 
-    id = 'commons'
     name = 'House of Commons'
+
+
+class ParliamentaryChamberExtraFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.OrganizationExtra'
+
+    slug = 'commons'
+    base = factory.SubFactory(ParliamentaryChamberFactory)
 
 
 class BaseElectionFactory(factory.DjangoModelFactory):
@@ -124,7 +131,6 @@ class PostFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'popolo.Post'
 
-    id = factory.Sequence(get_constituency_id)
     label = factory.Sequence(get_post_label)
     role = 'Member of Parliament'
 
@@ -134,6 +140,7 @@ class PostExtraFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'candidates.PostExtra'
 
+    slug = factory.Sequence(get_constituency_id)
     base = factory.SubFactory(PostFactory)
 
     @factory.post_generation
@@ -171,7 +178,6 @@ class PartyFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'popolo.Organization'
 
-    id = factory.Sequence(get_party_id)
     name = factory.Sequence(get_party_name)
     classification='Party'
 
@@ -183,6 +189,7 @@ class PartyExtraFactory(factory.DjangoModelFactory):
 
     register = 'Great Britain'
 
+    slug = factory.Sequence(get_party_id)
     base = factory.SubFactory(PartyFactory)
 
 
