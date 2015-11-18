@@ -15,35 +15,46 @@ from .factories import (
 
 class TestUpdatePersonView(TestUserMixin, WebTest):
 
-    def setUp(self):
+    """
+    this has to be a class method as the static_data stuff
+    is only created once and if we recreate the parties etc
+    every time then they end up with different IDs in the
+    form than the PARTY_DATA etc and things break
+    """
+    @classmethod
+    def setUpClass(cls):
+        super(TestUpdatePersonView, cls).setUpClass()
         wmc_area_type = AreaTypeFactory.create()
-        election = ElectionFactory.create(
+        cls.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,)
         )
         commons = ParliamentaryChamberFactory.create()
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
+        cls.post_extra = PostExtraFactory.create(
+            elections=(cls.election,),
             base__organization=commons,
-            base__id='65808',
+            slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood'
         )
+        PartyExtraFactory.reset_sequence()
+        PartyFactory.reset_sequence()
+        cls.parties = {}
+        for i in xrange(0, 4):
+            party_extra = PartyExtraFactory.create()
+            cls.parties[party_extra.slug] = party_extra
+
+    def setUp(self):
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
         )
-        PartyFactory.reset_sequence()
-        parties = {}
-        for i in xrange(0, 4):
-            party_extra = PartyExtraFactory.create()
-            parties[party_extra.base.id] = party_extra
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=parties['party:63'].base
+            base__post=self.post_extra.base,
+            base__on_behalf_of=self.parties['party:63'].base
         )
 
     def test_update_person_view_get_without_login(self):
@@ -70,7 +81,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/2009/update', user=self.user)
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_national_2015'] = 'party:53'
+        form['party_national_2015'] = self.parties['party:53'].base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit(user=self.user_refused)
         split_location = urlsplit(submission_response.location)
@@ -84,7 +95,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_national_2015'] = 'party:53'
+        form['party_national_2015'] = self.parties['party:53'].base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit()
 
@@ -92,7 +103,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         party = person.memberships.filter(role='Candidate')
 
         self.assertEqual(party.count(), 1)
-        self.assertEqual(party[0].on_behalf_of_id, 'party:53')
+        self.assertEqual(party[0].on_behalf_of.extra.slug, 'party:53')
 
         links = person.links.all()
         self.assertEqual(links.count(), 1)
