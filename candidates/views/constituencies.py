@@ -200,7 +200,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
         if form.is_valid():
             post_id = form.cleaned_data['post_id']
             with transaction.atomic():
-                post = get_object_or_404(Post, id=post_id)
+                post = get_object_or_404(Post, extra__slug=post_id)
                 lock = form.cleaned_data['lock']
                 post.extra.candidates_locked = lock
                 post.extra.save()
