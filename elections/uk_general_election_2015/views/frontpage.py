@@ -35,7 +35,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
     def form_valid(self, form):
         wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        post = Post.objects.get(id=wmc)
+        post = Post.objects.get(extra__slug=wmc)
         return get_redirect_to_post(get_current_election().slug, post)
 
     def get_context_data(self, **kwargs):
@@ -61,7 +61,7 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
 
     def form_valid(self, form):
         post_id = form.cleaned_data['constituency']
-        post = Post.objects.get(id=post_id)
+        post = Post.objects.get(extra__slug=post_id)
         return get_redirect_to_post(get_current_election().slug, post)
 
     def get_context_data(self, **kwargs):
