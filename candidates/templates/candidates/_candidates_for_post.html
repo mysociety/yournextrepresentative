@@ -87,7 +87,7 @@
   <div class="candidates__known">
 
     {# Use the post label here, since multiple posts may be used on a page #}
-    {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
+    {% url 'constituency' election=election post_id=post_data.extra.slug ignored_slug=post_data.label|slugify as post_url %}
     <h3>{% blocktrans with post_label=post_data.label %}Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
     </h3>
 
