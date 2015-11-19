@@ -18,7 +18,7 @@ def get_person_as_version_data(person):
         }
         for on in person.other_names.all()
     ]
-    result['identfiers'] = [
+    result['identifiers'] = [
         {
             'scheme': i.scheme,
             'identifier': i.identifier,
