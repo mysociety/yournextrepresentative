@@ -32,23 +32,17 @@ def get_party_people_for_election_from_memberships(
         party_id,
         memberships
 ):
-    people = []
     election_data = Election.objects.get_by_slug(election)
-    for membership in memberships:
-        if not membership.get('role') == election_data.candidate_membership_role:
-            continue
-        person = PopItPerson.create_from_dict(membership['person_id'])
-        if not person.party_memberships.get(election):
-            continue
-        if person.party_memberships[election]['id'] != party_id:
-            continue
-        position_in_list = membership.get('party_list_position')
-        if position_in_list:
-            position_in_list = int(position_in_list)
-        else:
-            position_in_list = None
-        people.append((position_in_list, person))
-    people.sort(key=lambda t: (t[0] is None, t[0]))
+    memberships = memberships.select_related('extra', 'person').filter(
+        role=election_data.candidate_membership_role,
+        extra__election=election_data,
+        on_behalf_of_id=party_id
+    ).order_by('extra__party_list_position').all()
+
+    people = []
+    for membership in memberships.all():
+        people.append((membership.extra.party_list_position, membership.person))
+
     return people
 
 def get_people_from_memberships(election_data, memberships):

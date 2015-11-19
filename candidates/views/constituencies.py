@@ -32,9 +32,9 @@ from ..popit import PopItApiMixin
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
-from popolo.models import Membership, Post
+from popolo.models import Membership, Post, Organization
 
-from ..cache import get_post_cached, invalidate_posts, UnknownPostException
+from ..cache import get_post_cached, invalidate_posts
 
 class ConstituencyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -443,7 +443,7 @@ class ConstituenciesDeclaredListView(ElectionMixin, TemplateView):
         return context
 
 
-class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
+class OrderedPartyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/ordered-party-list.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
@@ -457,27 +457,14 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        try:
-            mp_post = get_post_cached(self.api, post_id)
-        except UnknownPostException:
-            raise Http404(
-                _("Post '{post_id}' not found").format(
-                    post_id=post_id
-                )
-            )
+        mp_post = get_object_or_404(Post, extra__slug=post_id)
 
         context['party_id'] = party_id = kwargs['organization_id']
-        party_id = kwargs['organization_id']
-        party_name = PARTY_DATA.party_id_to_name.get(party_id)
-        if not party_name:
-            raise Http404(_("Party '{party_id}' not found").format(
-                party_id=party_id)
-            )
 
-        context['party'] = self.api.organizations(party_id). \
-            get(embed='')['result']
+        party = get_object_or_404(Organization, extra__slug=party_id)
+        context['party'] = party
 
-        context['post_label'] = mp_post['result']['label']
+        context['post_label'] = mp_post.label
         context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
             context['post_label']
         )
@@ -490,13 +477,11 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            k: v for k, v in mp_post['result'].items()
-            if k in ('id', 'label')
+            'id': mp_post.id,
+            'label': mp_post.label
         }
 
-        context['candidates_locked'] = mp_post['result'].get(
-            'candidates_locked', False
-        )
+        context['candidates_locked'] = mp_post.extra.candidates_locked
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,
@@ -508,7 +493,7 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
 
         context['positions_and_people'] = \
             get_party_people_for_election_from_memberships(
-                self.election, party_id, mp_post['result']['memberships']
+                self.election, party.id, mp_post.memberships
             )
 
         party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
