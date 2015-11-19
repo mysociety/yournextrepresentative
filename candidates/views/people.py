@@ -35,6 +35,7 @@ from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME,
     PopItPerson
 )
+from ..models.versions import revert_person_from_version_data
 from ..models import PersonExtra
 from ..popit import merge_popit_people, PopItApiMixin
 from popolo.models import Person, Post
@@ -113,7 +114,7 @@ class PersonView(TemplateView):
             return super(PersonView, self).get(request, *args, **kwargs)
 
 
-class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
+class RevertPersonView(LoginRequiredMixin, View):
 
     http_method_names = [u'post']
 
@@ -122,13 +123,16 @@ class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
         person_id = self.kwargs['person_id']
         source = self.request.POST['source']
 
-        person = PopItPerson.create_from_popit(
-            self.api,
-            self.kwargs['person_id']
+        person_extra = get_object_or_404(
+            PersonExtra.objects.select_related('base'),
+            base__id=person_id
         )
+        person = person_extra.base
+
+        versions = json.loads(person_extra.versions)
 
         data_to_revert_to = None
-        for version in person.versions:
+        for version in versions:
             if version['version_id'] == version_id:
                 data_to_revert_to = version['data']
                 break
@@ -137,21 +141,26 @@ class RevertPersonView(LoginRequiredMixin, PopItApiMixin, View):
             message = _("Couldn't find the version {0} of person {1}")
             raise Exception(message.format(version_id, person_id))
 
-        change_metadata = get_change_metadata(self.request, source)
-        person.update_from_reduced_json(data_to_revert_to)
-        person.record_version(change_metadata)
-        person.save_to_popit(self.api, self.request.user)
+        with transaction.atomic():
 
-        # Log that that action has taken place, and will be shown in
-        # the recent changes, leaderboards, etc.
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='person-revert',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            popit_person_id=person_id,
-            source=change_metadata['information_source'],
-        )
+            change_metadata = get_change_metadata(self.request, source)
+
+            # Update the person here...
+            revert_person_from_version_data(person, person_extra, data_to_revert_to)
+
+            person_extra.record_version(change_metadata)
+            person_extra.save()
+
+            # Log that that action has taken place, and will be shown in
+            # the recent changes, leaderboards, etc.
+            LoggedAction.objects.create(
+                user=self.request.user,
+                person=person,
+                action_type='person-revert',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                source=change_metadata['information_source'],
+            )
 
         return HttpResponseRedirect(
             reverse(
