@@ -91,7 +91,7 @@ def revert_person_from_version_data(person, person_extra, version_data):
     # Remove all other names, and recreate:
     person.other_names.all().delete()
     for on in version_data.get('other_names', []):
-        person.other_names.objects.create(
+        person.other_names.create(
             name=on['name'],
             note=on.get('note', ''),
             start_date=on.get('start_date'),
