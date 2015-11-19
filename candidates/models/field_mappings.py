@@ -3,7 +3,7 @@ form_simple_fields = {
     'name': '',
     'honorific_suffix': '',
     'email': '',
-    'birth_date': None,
+    'birth_date': '',
     'gender': '',
 }
 
