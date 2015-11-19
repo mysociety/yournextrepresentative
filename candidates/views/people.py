@@ -33,11 +33,12 @@ from ..models import (
     LoggedAction, PersonRedirect,
     TRUSTED_TO_MERGE_GROUP_NAME,
     TRUSTED_TO_LOCK_GROUP_NAME,
-    PopItPerson
 )
-from ..models.versions import revert_person_from_version_data
+from ..models.versions import (
+    revert_person_from_version_data, get_person_as_version_data
+)
 from ..models import PersonExtra
-from ..popit import merge_popit_people, PopItApiMixin
+from ..popit import merge_popit_people
 from popolo.models import Person, Post
 
 def get_call_to_action_flash_message(person, new_person=False):
@@ -169,7 +170,7 @@ class RevertPersonView(LoginRequiredMixin, View):
             )
         )
 
-class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
+class MergePeopleView(GroupRequiredMixin, View):
 
     http_method_names = [u'post']
     required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
@@ -186,27 +187,38 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             raise ValueError(message.format(
                 primary_person_id, secondary_person_id
             ))
-        primary_person, secondary_person = [
-            PopItPerson.create_from_popit(self.api, popit_id)
-            for popit_id in (primary_person_id, secondary_person_id)
+        primary_person_extra, secondary_person_extra = [
+            get_object_or_404(
+                PersonExtra.objects.select_related('base'),
+                base__id=person_id
+            )
+            for person_id in (primary_person_id, secondary_person_id)
         ]
+        primary_person = primary_person_extra.base
+        secondary_person = secondary_person_extra.base
         # Merge the reduced JSON representations:
-        merged_person = merge_popit_people(
-            primary_person.as_reduced_json(),
-            secondary_person.as_reduced_json(),
+        merged_person_version_data = merge_popit_people(
+            get_person_as_version_data(primary_person),
+            get_person_as_version_data(secondary_person),
         )
         # Update the primary person in PopIt:
         change_metadata = get_change_metadata(
             self.request, _('After merging person {0}').format(secondary_person_id)
         )
-        primary_person.update_from_reduced_json(merged_person)
+        revert_person_from_version_data(
+            primary_person,
+            primary_person_extra,
+            merged_person_version_data
+        )
         # Make sure the secondary person's version history is appended, so it
         # isn't lost.
-        primary_person.versions += secondary_person.versions
-        primary_person.record_version(change_metadata)
-        primary_person.save_to_popit(self.api, self.request.user)
+        primary_person_versions = json.loads(primary_person_extra.versions)
+        primary_person_versions += json.loads(secondary_person_extra.versions)
+        primary_person_extra.versions = json.dumps(primary_person_versions)
+        primary_person_extra.record_version(change_metadata)
+        primary_person_extra.save()
         # Now we delete the old person:
-        self.api.persons(secondary_person_id).delete()
+        secondary_person.delete()
         # Create a redirect from the old person to the new person:
         PersonRedirect.objects.create(
             old_person_id=secondary_person_id,
@@ -219,7 +231,7 @@ class MergePeopleView(GroupRequiredMixin, PopItApiMixin, View):
             action_type='person-merge',
             ip_address=get_client_ip(self.request),
             popit_person_new_version=change_metadata['version_id'],
-            popit_person_id=primary_person_id,
+            person=primary_person,
             source=change_metadata['information_source'],
         )
         # And redirect to the primary person with the merged data:
