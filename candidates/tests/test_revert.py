@@ -4,6 +4,7 @@ from mock import patch
 from django.db.models import F
 
 from django_webtest import WebTest
+from popolo.models import Identifier
 
 from candidates.models import MembershipExtra, PersonExtra
 
@@ -66,7 +67,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                       },
                       "homepage_url": "",
                       "birth_date": null,
-                      "wikipedia_url": "",
+                      "wikipedia_url": "https://en.wikipedia.org/wiki/Tessa_Jowell",
                       "party_memberships": {
                         "2010": {
                           "id": "party:53",
@@ -111,6 +112,10 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                   }
                 ]
             ''',
+        )
+        person_extra.base.links.create(
+            url='',
+            note='wikipedia',
         )
         factories.PartyFactory.reset_sequence()
         party_extra = factories.PartyExtraFactory.create()
@@ -203,3 +208,9 @@ class TestRevertPersonView(TestUserMixin, WebTest):
 
         self.assertEqual(len(candidacies), 1)
         self.assertEqual(candidacies[0].election.slug, '2010')
+
+        # The homepage link should have been added and the Wikipedia
+        # one removed:
+        self.assertEqual(1, person_extra.base.links.count())
+        remaining_link = person_extra.base.links.first()
+        self.assertEqual(remaining_link.note, 'homepage')

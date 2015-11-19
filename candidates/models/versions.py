@@ -73,6 +73,13 @@ def revert_person_from_version_data(person, person_extra, version_data):
         else:
             setattr(person, field, null_value)
 
+    # Remove any old values in complex fields:
+    for location in form_complex_fields_locations.values():
+        related_manager = getattr(person, location['sub_array'])
+        type_kwargs = {location['info_type_key']: location['info_type']}
+        related_manager.filter(**type_kwargs).delete()
+
+    # Then recreate any that should be there:
     for field, location in form_complex_fields_locations.items():
         new_value = version_data.get(field, '')
         if new_value:
