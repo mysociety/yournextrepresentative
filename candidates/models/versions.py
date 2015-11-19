@@ -18,13 +18,15 @@ def get_person_as_version_data(person):
         }
         for on in person.other_names.all()
     ]
-    result['identifiers'] = [
-        {
-            'scheme': i.scheme,
-            'identifier': i.identifier,
-        }
-        for i in person.identifiers.all()
-    ]
+    identifiers = list(person.identifiers.all())
+    if identifiers:
+        result['identifiers'] = [
+            {
+                'scheme': i.scheme,
+                'identifier': i.identifier,
+            }
+            for i in identifiers
+        ]
     result['image'] = person.image
     standing_in = {}
     party_memberships = {}
