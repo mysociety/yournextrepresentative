@@ -113,7 +113,7 @@ class PersonExtra(HasImageMixin, models.Model):
             for e in getattr(self.base, loc['sub_array']).all():
                 if getattr(e, loc['info_type_key']) == loc['info_type']:
                     return getattr(e, loc['info_value_key'])
-            return None
+            return ''
         else:
             message = _("'PersonExtra' object has no attribute '{name}'")
             raise AttributeError(message.format(name=name))
