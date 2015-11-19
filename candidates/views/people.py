@@ -36,9 +36,7 @@ from ..models import (
     PopItPerson
 )
 from ..models import PersonExtra
-from ..popit import (
-    merge_popit_people, PopItApiMixin, get_base_url
-)
+from ..popit import merge_popit_people, PopItApiMixin
 from popolo.models import Person, Post
 
 def get_call_to_action_flash_message(person, new_person=False):
