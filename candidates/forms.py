@@ -14,7 +14,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from popolo.models import Post
+from popolo.models import Organization, Post
 from django_date_extensions.fields import ApproximateDateFormField
 
 class AddressForm(forms.Form):

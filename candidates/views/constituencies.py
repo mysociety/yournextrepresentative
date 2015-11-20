@@ -3,7 +3,6 @@ from datetime import timedelta
 from slugify import slugify
 
 from django.views.decorators.cache import cache_control
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -29,7 +28,7 @@ from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra
 )
-from ..popit import PopItApiMixin, popit_unwrap_pagination
+from ..popit import PopItApiMixin
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 

@@ -2,7 +2,6 @@
 
 import re
 
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import TemplateView

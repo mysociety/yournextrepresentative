@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.http import HttpResponseRedirect
 
 from elections.models import Election
