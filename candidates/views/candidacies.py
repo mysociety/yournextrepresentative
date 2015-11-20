@@ -18,7 +18,6 @@ from .helpers import get_redirect_to_post
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
-from ..election_specific import AREA_POST_DATA
 
 
 def raise_if_locked(request, post):

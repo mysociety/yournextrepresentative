@@ -8,7 +8,6 @@ from elections.models import Election
 
 from slugify import slugify
 
-from ..election_specific import AREA_POST_DATA, PARTY_DATA
 from ..models import (
     PopItPerson, membership_covers_date
 )
@@ -16,6 +15,7 @@ from ..models import (
 from popolo.models import Person
 
 def get_redirect_to_post(election, post):
+    from ..election_specific import AREA_POST_DATA
     short_post_label = AREA_POST_DATA.shorten_post_label(post.label)
     return HttpResponseRedirect(
         reverse(

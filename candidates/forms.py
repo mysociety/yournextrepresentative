@@ -4,7 +4,6 @@ import re
 
 from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
 from .popit import create_popit_api_object
-from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
 from elections.models import Election
@@ -162,6 +161,7 @@ class BasePersonForm(forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
+        from .election_specific import PARTY_DATA, AREA_POST_DATA
         for election_data in self.elections_with_fields:
             election = election_data.slug
             election_name = election_data.name
@@ -210,6 +210,7 @@ class BasePersonForm(forms.Form):
 class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
+        from .election_specific import PARTY_DATA, AREA_POST_DATA
         election = kwargs.pop('election', None)
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
@@ -320,6 +321,7 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
+        from .election_specific import PARTY_DATA, AREA_POST_DATA
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
         self.elections_with_fields = Election.objects.current().by_date()

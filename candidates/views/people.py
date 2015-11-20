@@ -26,7 +26,6 @@ from elections.models import Election
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
-from ..election_specific import PARTY_DATA
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
@@ -256,6 +255,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         return initial_data
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import PARTY_DATA
         context = super(UpdatePersonView, self).get_context_data(**kwargs)
 
         person = get_object_or_404(

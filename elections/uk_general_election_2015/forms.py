@@ -3,8 +3,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from candidates.election_specific import AREA_DATA
-
 from candidates.mapit import BaseMapItException
 from .mapit import get_wmc_from_postcode
 
@@ -26,6 +24,7 @@ class PostcodeForm(forms.Form):
         return postcode
 
 class ConstituencyForm(forms.Form):
+    from candidates.election_specific import AREA_DATA
     constituency = forms.ChoiceField(
         label='Select a constituency',
         choices=[('none', '')] + sorted(

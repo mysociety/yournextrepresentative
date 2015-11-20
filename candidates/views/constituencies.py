@@ -30,7 +30,6 @@ from ..models import (
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra
 )
 from ..popit import PopItApiMixin, popit_unwrap_pagination
-from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
@@ -48,6 +47,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import AREA_POST_DATA
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
@@ -454,6 +454,7 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import AREA_POST_DATA, PARTY_DATA
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']

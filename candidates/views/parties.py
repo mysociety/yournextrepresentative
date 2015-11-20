@@ -8,8 +8,6 @@ from popolo.models import Organization, Membership
 from cached_counts.models import CachedCount
 from elections.mixins import ElectionMixin
 
-from ..election_specific import AREA_POST_DATA
-
 
 class PartyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/party-list.html'
@@ -52,6 +50,7 @@ class PartyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/party.html'
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import AREA_POST_DATA
         context = super(PartyDetailView, self).get_context_data(**kwargs)
         party_id = kwargs['organization_id']
         party = get_object_or_404(Organization, extra__slug=party_id)

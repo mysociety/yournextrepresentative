@@ -17,7 +17,6 @@ from candidates.models.auth import get_edits_allowed
 
 from elections.models import Election
 
-from ..election_specific import AREA_POST_DATA, AREA_DATA
 from ..forms import NewPersonForm
 from .helpers import get_people_from_memberships, group_people_by_party
 
@@ -40,6 +39,7 @@ class AreasView(TemplateView):
         return view
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import AREA_POST_DATA, AREA_DATA
         context = super(AreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
@@ -90,6 +90,7 @@ class AreasOfTypeView(TemplateView):
     template_name = 'candidates/areas-of-type.html'
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import AREA_DATA
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
         requested_area_type = kwargs['area_type']
         all_area_tuples = set(
