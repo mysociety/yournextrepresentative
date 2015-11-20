@@ -164,7 +164,12 @@ class YNRPopItImporter(PopItImporter):
 
         # Create the extra organization object:
         OrganizationExtra = self.get_model_class('candidates', 'OrganizationExtra')
-        extra = OrganizationExtra.objects.create(base=org, slug=org_data['id'])
+        register = org_data.get('register') or ''
+        extra = OrganizationExtra.objects.create(
+            base=org,
+            slug=org_data['id'],
+            register=register,
+        )
 
         self.get_images_for_object(org_data['images'], extra)
 
