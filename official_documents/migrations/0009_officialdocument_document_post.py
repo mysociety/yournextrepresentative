@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='officialdocument',
             name='document_post',
-            field=models.ForeignKey(to='popolo.Post', blank=True),
+            field=models.ForeignKey(to='popolo.Post', blank=True, null=True),
             preserve_default=False,
         ),
     ]
