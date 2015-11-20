@@ -2,9 +2,7 @@
 
 from django.utils.text import slugify
 
-from candidates.static_data import (
-    BaseMapItData, BasePartyData, BaseAreaPostData
-)
+from candidates.static_data import BaseMapItData, BaseAreaPostData
 
 
 class AreaData(BaseMapItData):
@@ -83,29 +81,6 @@ AREA_NAME_TO_PARTY_SET_NAME = {
     u"TIERRA DEL FUEGO, ANTARTIDA E ISLAS DEL ATLANTICO SUR": u"Tierra del Fuego",
     u"TUCUMAN": u"Tucumán",
 }
-
-class PartyData(BasePartyData):
-
-    def __init__(self):
-        super(PartyData, self).__init__()
-        self.ALL_PARTY_SETS = tuple(
-            {'slug': k, 'name': v}
-            for k, v in PARTY_SET_SLUG_TO_NAME.items()
-        )
-
-    def party_data_to_party_sets(self, party_data):
-        territory = party_data.get('territory')
-        # If it's a non-territorial party, or a national party, they
-        # should be available in all party sets:
-        if territory is None or territory == 'Nacional':
-            return PARTY_SET_SLUG_TO_NAME.keys()
-        return [PARTY_SET_NAME_TO_SLUG[territory]]
-
-    def sort_parties_in_place(self, parties):
-        parties.sort(key=lambda p: p[1].lower())
-        # Then we need 'unknown' and 'not listed' at the top:
-        move_to_front(parties, lambda x: x[0] == 'not-listed')
-        move_to_front(parties, lambda x: x[0] == 'unknown')
 
 
 class AreaPostData(BaseAreaPostData):

@@ -371,3 +371,8 @@ class PartySet(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def party_choices(self):
+        result = list(self.parties.order_by('name').values_list('id', 'name'))
+        result.insert(0, ('party:none', ''))
+        return result

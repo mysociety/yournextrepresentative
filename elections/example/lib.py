@@ -1,23 +1,10 @@
 import re
 
-from candidates.static_data import (
-    BaseMapItData, BasePartyData, BaseAreaPostData
-)
+from candidates.static_data import BaseMapItData, BaseAreaPostData
 
 
 class AreaData(BaseMapItData):
     pass
-
-
-class PartyData(BasePartyData):
-    def __init__(self):
-        super(PartyData, self).__init__()
-        self.ALL_PARTY_SETS = (
-            {'slug': 'national', 'name': 'National'},
-        )
-
-    def party_data_to_party_sets(self, party_data):
-        return ['national']
 
 
 class AreaPostData(BaseAreaPostData):

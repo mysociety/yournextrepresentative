@@ -1112,7 +1112,7 @@ class PopItPerson(object):
         return self.id
 
     def update_from_form(self, api, form):
-        from ..election_specific import AREA_POST_DATA, PARTY_DATA
+        from ..election_specific import AREA_POST_DATA
 
         form_data = form.cleaned_data.copy()
         # The date is returned as a datetime.date, so if that's set, turn

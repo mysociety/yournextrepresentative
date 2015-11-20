@@ -12,6 +12,7 @@ from popolo_extra import PersonExtra
 from popolo_extra import OrganizationExtra
 from popolo_extra import PostExtra
 from popolo_extra import MembershipExtra
+from popolo_extra import PartySet
 
 from popit import CSV_ROW_FIELDS
 

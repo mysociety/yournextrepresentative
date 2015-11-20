@@ -5,7 +5,7 @@ from slugify import slugify
 from django.views.decorators.cache import cache_control
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
@@ -24,8 +24,8 @@ from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
-    get_post_label_from_post_id, TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
-    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, MembershipExtra
+    TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
+    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, MembershipExtra, OrganizationExtra
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
@@ -474,13 +474,21 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_POST_DATA, PARTY_DATA
+        from ..election_specific import AREA_POST_DATA
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
         mp_post = get_object_or_404(Post, extra__slug=post_id)
 
-        context['party_id'] = party_id = kwargs['organization_id']
+        party_id = kwargs['organization_id']
+        party_extra = OrganizationExtra.objects.get(
+            slug=party_id
+        ).select_related('base')
+        party_name = party_extra.base.name
+        if not party_name:
+            raise Http404(_("Party '{party_id}' not found").format(
+                party_id=party_id)
+            )
 
         party = get_object_or_404(Organization, extra__slug=party_id)
         context['party'] = party

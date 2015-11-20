@@ -78,91 +78,6 @@ class BaseMapItData(object):
             )
 
 
-class BasePartyData(object):
-
-    """You should subclass this in your election application to define the
-    election-specific 'party sets'.
-
-    FIXME: check that these are sensible descriptions
-
-    When instantiated, this gives you helpful access to party data in
-    two attributes:
-
-    'party_choices' is a dictionary where the keys are the names of
-    party sets and the values are lists that can be used as choices in
-    a ChoiceField, e.g.:
-
-        {u'Great Britain': [
-          ('party:none', ''),
-          (u'party:52', u'Conservative Party'),
-          (u'joint-party:53-119', u'Labour and Co-operative Party'),
-          (u'party:53', u'Labour Party'),
-          (u'ynmp-party:2', u'Independent'),
-          (u'ynmp-party:12522', u'Speaker seeking re-election')],
-         u'Northern Ireland': [
-          ('party:none', ''),
-          (u'party:51', u'Conservative and Unionist Party'),
-          (u'party:434', u'Labour Party of Northern Ireland'),
-          (u'ynmp-party:2', u'Independent'),
-          (u'ynmp-party:12522', u'Speaker seeking re-election')]}
-
-    'party_id_to_name' is a dictionary that maps party IDs to party
-    names, e.g.:
-
-        {u'party:434': u'Labour Party of Northern Ireland',
-         u'party:53': u'Labour Party',
-         u'joint-party:53-119': u'Labour and Co-operative Party',
-         u'party:51': u'Conservative and Unionist Party',
-         u'party:52': u'Conservative Party',
-         u'ynmp-party:12522': u'Speaker seeking re-election',
-         u'ynmp-party:2': u'Independent'}
-
-    """
-
-    def party_data_to_party_set(self, party_data):
-        raise NotImplementedError(
-            "You should implement party_data_to_party_set in a subclass"
-        )
-
-    def sort_parties_in_place(self, parties):
-        parties.sort(key=lambda p: p[1].lower())
-
-    def __init__(self):
-
-        self.party_choices = defaultdict(list)
-        self.party_id_to_name = {}
-        self.all_party_data = []
-        party_id_to_party_names = defaultdict(list)
-        duplicate_ids = False
-        for party in Organization.objects.filter(classification='Party'):
-            party_id = party.id
-            party_name = party.name
-            if party_id in party_id_to_party_names:
-                duplicate_ids = True
-            party_id_to_party_names[party_id].append(party.name)
-            self.all_party_data.append(party)
-            for party_set in self.party_data_to_party_sets(party):
-                self.party_choices[party_set].append(
-                    (party_id, party_name)
-                )
-                self.party_id_to_name[party_id] = party_name
-        # Now sort the parties, and an an empty default at the start:
-        for parties in self.party_choices.values():
-            self.sort_parties_in_place(parties)
-            parties.insert(0, ('party:none', ''))
-        # Check that no ID maps to multiple parties; if there are any,
-        # warn about them on standard error:
-        if duplicate_ids:
-            print >> sys.stderr, "Duplicate IDs for parties were found:"
-            for party_id, party_names in party_id_to_party_names.items():
-                if len(party_names) == 1:
-                    continue
-                message = "  The party ID {0} was used for all of:"
-                print >> sys.stderr, message.format(party_id)
-                for party_name in party_names:
-                    print >> sys.stderr, "   ", party_name
-
-
 class BaseAreaPostData(object):
 
     """Instantiate this class to provide mappings between areas and posts
@@ -188,9 +103,8 @@ class BaseAreaPostData(object):
             area_id=area_id
         )
 
-    def __init__(self, area_data, party_data):
+    def __init__(self, area_data):
         self.area_data = area_data
-        self.party_data = party_data
         self.areas_by_post_id = {}
         self.area_ids_and_names_by_post_group = {}
 

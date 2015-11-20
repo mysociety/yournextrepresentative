@@ -1,34 +1,9 @@
 import re
 
-from candidates.static_data import (
-    BaseMapItData, BasePartyData, BaseAreaPostData
-)
+from candidates.static_data import BaseMapItData, BaseAreaPostData
 
 class AreaData(BaseMapItData):
     pass
-
-
-class PartyData(BasePartyData):
-
-    def __init__(self):
-        super(PartyData, self).__init__()
-        self.ALL_PARTY_SETS = (
-            {'slug': 'gb', 'name': 'Great Britain'},
-            {'slug': 'ni', 'name': 'Northern Ireland'},
-        )
-
-    def party_data_to_party_sets(self, party_data):
-        register = {
-            'Great Britain': 'gb',
-            'Northern Ireland': 'ni',
-        }.get(party_data.extra.register)
-        if register:
-            return [register]
-        else:
-            # There are some pseudo-parties, like 'Independent' or
-            # 'Speaker seeking re-election' which won't have a register,
-            # so we add them to all party sets.
-            return ['gb', 'ni']
 
 
 class AreaPostData(BaseAreaPostData):

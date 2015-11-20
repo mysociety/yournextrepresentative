@@ -36,7 +36,7 @@ from ..models import (
 from ..models.versions import (
     revert_person_from_version_data, get_person_as_version_data
 )
-from ..models import PersonExtra
+from ..models import PersonExtra, PartySet
 from ..popit import merge_popit_people
 from popolo.models import Person, Post
 
@@ -255,7 +255,6 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         return initial_data
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import PARTY_DATA
         context = super(UpdatePersonView, self).get_context_data(**kwargs)
 
         person = get_object_or_404(
@@ -283,8 +282,8 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
                 'constituency': kwargs['form']['constituency_' + election_data.slug],
             }
             party_fields = []
-            for ps in PARTY_DATA.ALL_PARTY_SETS:
-                key_suffix = ps['slug'] + '_' + election_data.slug
+            for ps in PartySet.objects.all():
+                key_suffix = ps.slug + '_' + election_data.slug
                 position_field = None
                 if election_data.party_lists_in_use:
                     position_field = kwargs['form']['party_list_position_' + key_suffix]

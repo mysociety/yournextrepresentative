@@ -12,6 +12,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from candidates.models import PartySet
 from popolo.models import Organization, Post
 from django_date_extensions.fields import ApproximateDateFormField
 
@@ -159,7 +160,7 @@ class BasePersonForm(forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
-        from .election_specific import PARTY_DATA, AREA_POST_DATA
+        from .election_specific import AREA_POST_DATA
         for election_data in self.elections_with_fields:
             election = election_data.slug
             election_name = election_data.name
@@ -199,7 +200,8 @@ class BasePersonForm(forms.Form):
                 party_id = int(cleaned_data[party_field], 10)
             except ValueError:
                 party_id = ''
-            if party_id not in PARTY_DATA.party_id_to_name:
+            if not Organization.objects.filter(
+                    classification='Party', id=party_id).exists():
                 message = _("You must specify a party for the {election}")
                 raise forms.ValidationError(message.format(election=election_name))
         return cleaned_data
@@ -208,7 +210,7 @@ class BasePersonForm(forms.Form):
 class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import PARTY_DATA, AREA_POST_DATA
+        from .election_specific import AREA_POST_DATA
         election = kwargs.pop('election', None)
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
@@ -278,16 +280,16 @@ class NewPersonForm(BasePersonForm):
             specific_party_set_slug = \
                 AREA_POST_DATA.post_id_to_party_set(post_id)
 
-        for party_set in PARTY_DATA.ALL_PARTY_SETS:
-            if specific_party_set_slug and (party_set['slug'] != specific_party_set_slug):
+        for party_set in PartySet.objects.all():
+            if specific_party_set_slug and (party_set.slug != specific_party_set_slug):
                 continue
-            self.fields['party_' + party_set['slug'] + '_' + election] = \
+            self.fields['party_' + party_set.slug + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
                         election=election_data.name,
-                        party_set_name=party_set['name'],
+                        party_set_name=party_set.name,
                     ),
-                    choices=PARTY_DATA.party_choices[party_set['slug']],
+                    choices=party_set.party_choices(),
                     required=False,
                     widget=forms.Select(
                         attrs={
@@ -319,7 +321,7 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import PARTY_DATA, AREA_POST_DATA
+        from .election_specific import AREA_POST_DATA
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
         self.elections_with_fields = Election.objects.current().by_date()
@@ -352,14 +354,14 @@ class UpdatePersonForm(BasePersonForm):
                     ),
                     widget=forms.Select(attrs={'class': 'post-select'}),
                 )
-            for party_set in PARTY_DATA.ALL_PARTY_SETS:
-                self.fields['party_' + party_set['slug'] + '_' + election] = \
+            for party_set in PartySet.objects.all():
+                self.fields['party_' + party_set.slug + '_' + election] = \
                     forms.ChoiceField(
                         label=_("Party in {election} ({party_set_name})").format(
                             election=election_data.name,
-                            party_set_name=party_set['name'],
+                            party_set_name=party_set.name,
                         ),
-                        choices=PARTY_DATA.party_choices[party_set['slug']],
+                        choices=party_set.party_choices(),
                         required=False,
                         widget=forms.Select(
                             attrs={
@@ -370,7 +372,7 @@ class UpdatePersonForm(BasePersonForm):
                 if election_data.party_lists_in_use:
                     # Then add a field to enter the position on the party list
                     # as an integer:
-                    field_name = 'party_list_position_' + party_set['slug'] + \
+                    field_name = 'party_list_position_' + party_set.slug + \
                         '_' + election
                     self.fields[field_name] = forms.IntegerField(
                         label=_("Position in party list ('1' for first, '2' for second, etc.)"),
