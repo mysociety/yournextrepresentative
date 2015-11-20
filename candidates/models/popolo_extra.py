@@ -1,6 +1,5 @@
 from datetime import date
 import json
-import sys
 
 from slugify import slugify
 
