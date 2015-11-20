@@ -78,7 +78,7 @@
   {% endif %}
 
   {% if user_can_record_results and show_retract_result %}
-    <form action="{% url 'retract-winner' election=election post_id=post_data.extra.slug %}" method="post">
+    <form action="{% url 'retract-winner' election=election post_id=post_id %}" method="post">
       {% csrf_token %}
       <input type="submit" class="button alert" value="{% trans "Unset the current winner, if incorrect" %}">
     </form>

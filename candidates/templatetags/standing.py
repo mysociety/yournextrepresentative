@@ -14,7 +14,10 @@ def post_in_election(person, election):
     # FIXME: this is inefficient, but similar to the previous
     # implementation.
     try:
-        candidacy = person.memberships.get(extra__election=election)
+        candidacy = person.memberships.get(
+            role=election.candidate_membership_role,
+            extra__election=election
+        )
     except Membership.DoesNotExist:
         candidacy = None
 

@@ -213,6 +213,11 @@ class MembershipFactory(factory.DjangoModelFactory):
         model = 'popolo.Membership'
 
 
+class MembershipExtraFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'candidates.MembershipExtra'
+
+
 class CandidacyFactory(MembershipFactory):
 
     role = 'Candidate'

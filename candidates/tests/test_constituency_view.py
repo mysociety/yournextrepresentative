@@ -5,7 +5,7 @@ from .factories import (
     AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
     PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
     PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, MembershipFactory
+    PartyFactory, MembershipFactory, MembershipExtraFactory
 )
 
 
@@ -80,11 +80,17 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             person=edinburgh_winner.base,
             organization=party_extra.base
         )
-        MembershipFactory.create(
+        winner_mem = MembershipFactory.create(
             person=edinburgh_winner.base,
             post=winner_post_extra.base,
-            organization=commons
+            organization=commons,
         )
+        MembershipExtraFactory.create(
+            base=winner_mem,
+            elected=True,
+            election=election
+        )
+
 
 
 

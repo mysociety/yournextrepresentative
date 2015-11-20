@@ -221,7 +221,9 @@ class PersonExtra(HasImageMixin, models.Model):
             role = ''
         return self.base.memberships.filter(
             role=role,
-            organization=election.organization
+            organization=election.organization,
+            extra__election=election,
+            extra__elected=True
         ).exists()
 
     def last_party(self):
