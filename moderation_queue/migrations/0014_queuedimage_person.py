@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='queuedimage',
             name='person',
-            field=models.ForeignKey(default=1, to='popolo.Person'),
+            field=models.ForeignKey(blank=True, null=True, to='popolo.Person'),
             preserve_default=False,
         ),
     ]

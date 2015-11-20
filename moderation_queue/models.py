@@ -59,7 +59,7 @@ class QueuedImage(models.Model):
         upload_to='queued-images/%Y/%m/%d',
         max_length=512,
     )
-    person = models.ForeignKey(Person)
+    person = models.ForeignKey(Person, blank=True, null=True)
     user = models.ForeignKey(User, blank=True, null=True)
 
     crop_min_x = models.IntegerField(blank=True, null=True)
