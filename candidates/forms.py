@@ -2,8 +2,6 @@
 
 import re
 
-from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
-from .popit import create_popit_api_object
 from .models.address import check_address
 
 from elections.models import Election
