@@ -284,13 +284,55 @@ class YNRPopItImporter(PopItImporter):
         return super(YNRPopItImporter, self).make_link_dict(new_link_data)
 
 
+PARTY_SETS_BY_ELECTION_APP = {
+    'uk_general_election_2015': [
+        {'slug': 'gb', 'name': 'Great Britain'},
+        {'slug': 'ni', 'name': 'Northern Ireland'},
+    ],
+    'st_paul_municipal_2015': [
+        {'slug': 'st-paul', 'name': 'Saint Paul, Minnesota'},
+    ],
+    'ar_elections_2015': [
+        {'slug': u'jujuy', 'name': u'Jujuy'},
+        {'slug': u'la-rioja', 'name': u'La Rioja'},
+        {'slug': u'catamarca', 'name': u'Catamarca'},
+        {'slug': u'salta', 'name': u'Salta'},
+        {'slug': u'nacional', 'name': u'Nacional'},
+        {'slug': u'chaco', 'name': u'Chaco'},
+        {'slug': u'mendoza', 'name': u'Mendoza'},
+        {'slug': u'chubut', 'name': u'Chubut'},
+        {'slug': u'capital-federal', 'name': u'Capital Federal'},
+        {'slug': u'neuquen', 'name': u'Neuqu\xe9n'},
+        {'slug': u'san-juan', 'name': u'San Juan'},
+        {'slug': u'corrientes', 'name': u'Corrientes'},
+        {'slug': u'la-pampa', 'name': u'La Pampa'},
+        {'slug': u'formosa', 'name': u'Formosa'},
+        {'slug': u'misiones', 'name': u'Misiones'},
+        {'slug': u'cordoba', 'name': u'C\xf3rdoba'},
+        {'slug': u'santiago-del-estero', 'name': u'Santiago Del Estero'},
+        {'slug': u'san-luis', 'name': u'San Luis'},
+        {'slug': u'buenos-aires', 'name': u'Buenos Aires'},
+        {'slug': u'santa-cruz', 'name': u'Santa Cruz'},
+        {'slug': u'rio-negro', 'name': u'R\xedo Negro'},
+        {'slug': u'santa-fe', 'name': u'Santa Fe'},
+        {'slug': u'tucuman', 'name': u'Tucum\xe1n'},
+        {'slug': u'tierra-del-fuego', 'name': u'Tierra del Fuego'},
+        {'slug': u'entre-rios', 'name': u'Entre R\xedos'}
+    ],
+    'bf_elections_2015': [
+        {'slug': 'national', 'name': 'National'},
+    ],
+}
+
+ELECTION_APPS_WITH_EXISTING_DATA = (
+    'ar_elections_2015',
+    'bf_elections_2015',
+    'st_paul_municipal_2015',
+    'uk_general_election_2015',
+)
+
 def import_from_popit(apps, schema_editor):
-    if settings.ELECTION_APP not in (
-            'ar_elections_2015',
-            'bf_elections_2015',
-            'st_paul_municipal_2015',
-            'uk_general_election_2015',
-    ):
+    if settings.ELECTION_APP not in ELECTION_APPS_WITH_EXISTING_DATA:
         return
     importer = YNRPopItImporter(apps, schema_editor)
     url = 'http://{instance}.{hostname}:{port}/api/v0.1/export.json'.format(
@@ -311,6 +353,56 @@ def import_from_popit(apps, schema_editor):
         for reset_sql in reset_sql_list:
             print "Running reset SQL:", reset_sql
             cursor.execute(reset_sql)
+    # Now create the party sets for this country:
+    party_set_from_slug = {}
+    party_set_from_name = {}
+    for party_set_data in PARTY_SETS_BY_ELECTION_APP.get(
+            settings.ELECTION_APP, []
+    ):
+        PartySet = apps.get_model('candidates', 'partyset')
+        party_set = PartySet.objects.create(**party_set_data)
+        party_set_from_slug[party_set_data['slug']] = party_set
+        party_set_from_name[party_set_data['name']] = party_set
+    # For Argentina, we need the original party JSON to decide on the
+    # party sets.
+    if settings.ELECTION_APP == 'ar_elections_2015':
+        ar_party_id_to_party_sets = {}
+        ar_filename = join(
+            dirname(__file__), '..', '..', 'elections', 'ar_elections_2015',
+            'data', 'all-parties-from-popit.json'
+        )
+        with open(ar_filename) as f:
+            ar_all_party_data = json.load(f)
+            for party_data in ar_all_party_data:
+                territory = party_data.get('territory')
+                if territory:
+                    party_set = party_set_from_name[territory]
+                    ar_party_id_to_party_sets[party_data['id']] = \
+                        [party_set]
+                else:
+                    ar_party_id_to_party_sets[party_data['id']] = \
+                        party_set_from_name.values()
+
+    # And add each party to a party set:
+    Organization = apps.get_model('popolo', 'organization')
+    for party in Organization.objects.filter(
+            classification='Party',
+    ).prefetch_related('extra'):
+        if settings.ELECTION_APP == 'bf_elections_2015':
+            party.party_sets.add(party_set_from_slug['national'])
+        elif settings.ELECTION_APP == 'st_paul_municipal_2015':
+            party.party_sets.add(party_set_from_slug['st-paul'])
+        elif settings.ELECTION_APP == 'uk_general_election_2015':
+            register = party.extra.register
+            if register == 'Great Britain':
+                party.party_sets.add(party_set_from_slug['gb'])
+            elif register == 'Northern Ireland':
+                party.party_sets.add(party_set_from_slug['ni'])
+            elif register:
+                raise Exception("Unknown register {0}".format(register))
+        elif settings.ELECTION_APP == 'ar_elections_2015':
+            party_sets = ar_party_id_to_party_sets[party.extra.slug]
+            party.party_sets.add(*party_sets)
 
 
 class Migration(migrations.Migration):
