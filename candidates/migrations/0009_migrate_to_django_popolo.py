@@ -418,8 +418,8 @@ def import_from_popit(apps, schema_editor):
                 party.party_sets.add(party_set_from_slug['gb'])
             elif register == 'Northern Ireland':
                 party.party_sets.add(party_set_from_slug['ni'])
-            elif register:
-                raise Exception("Unknown register {0}".format(register))
+            else:
+                party.party_sets.add(*PartySet.objects.all())
         elif settings.ELECTION_APP == 'ar_elections_2015':
             party_sets = ar_party_id_to_party_sets[party.extra.slug]
             party.party_sets.add(*party_sets)
