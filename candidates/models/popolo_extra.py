@@ -359,3 +359,12 @@ class MembershipExtra(models.Model):
     election = models.ForeignKey(
         Election, blank=True, null=True, related_name='candidacies'
     )
+
+
+class PartySet(models.Model):
+    slug = models.CharField(max_length=256)
+    name = models.CharField(max_length=1024)
+    parties = models.ManyToManyField(Organization, related_name='party_sets')
+
+    def __unicode__(self):
+        return self.name
