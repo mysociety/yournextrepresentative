@@ -112,20 +112,21 @@ class PartyCountsView(ElectionMixin, TemplateView):
         context = super(PartyCountsView, self).get_context_data(**kwargs)
         cursor = connection.cursor()
         cursor.execute('''
-SELECT o.id, o.name, count(m.id) AS count
+SELECT oe.slug, o.name, count(m.id) AS count
   FROM popolo_organization o
+    INNER JOIN candidates_organizationextra oe ON o.id = oe.base_id
     LEFT OUTER JOIN
       (popolo_membership m
         INNER JOIN candidates_membershipextra me ON me.base_id = m.id
         INNER JOIN elections_election ee ON me.election_id = ee.id AND ee.id = %s)
       ON o.id = m.on_behalf_of_id
   WHERE o.classification = 'Party'
-  GROUP BY o.id
+  GROUP BY oe.slug, o.name
   ORDER BY count DESC, o.name;
         ''', [self.election_data.id])
         context['party_counts'] = [
             {
-                'party_id': row[0],
+                'party_slug': row[0],
                 'party_name': row[1],
                 'count': row[2],
             }
@@ -142,7 +143,7 @@ class ConstituencyCountsView(ElectionMixin, TemplateView):
         context = super(ConstituencyCountsView, self).get_context_data(**kwargs)
         cursor = connection.cursor()
         cursor.execute('''
-SELECT p.id, p.label, count(m.id) as count
+SELECT pe.slug, p.label, count(m.id) as count
   FROM popolo_post p
     INNER JOIN candidates_postextra pe ON pe.base_id = p.id
     INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
@@ -153,12 +154,12 @@ SELECT p.id, p.label, count(m.id) as count
         ON me.base_id = m.id)
       ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
          me.election_id = ee.id
-  GROUP BY p.id
+  GROUP BY pe.slug, p.label
   ORDER BY count DESC;
         ''', [self.election_data.id])
         context['post_counts'] = [
             {
-                'post_id': row[0],
+                'post_slug': row[0],
                 'post_label': row[1],
                 'count': row[2],
                 'post_short_label': AREA_POST_DATA.shorten_post_label(row[1]),
@@ -178,7 +179,7 @@ class AttentionNeededView(TemplateView):
         # except it's not specific to a particular election and the
         # results are ordered with fewest candidates first:
         cursor.execute('''
-SELECT p.id, p.label, ee.name, ee.slug, count(m.id) as count
+SELECT pe.slug, p.label, ee.name, ee.slug, count(m.id) as count
   FROM popolo_post p
     INNER JOIN candidates_postextra pe ON pe.base_id = p.id
     INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
@@ -189,12 +190,12 @@ SELECT p.id, p.label, ee.name, ee.slug, count(m.id) as count
         ON me.base_id = m.id)
       ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
          me.election_id = ee.id
-  GROUP BY p.id, ee.slug, ee.name
+  GROUP BY pe.slug, p.label, ee.slug, ee.name
   ORDER BY count, ee.name, p.label;
         ''')
         context['post_counts'] = [
             {
-                'post_id': row[0],
+                'post_slug': row[0],
                 'post_label': row[1],
                 'election_name': row[2],
                 'election_slug': row[3],

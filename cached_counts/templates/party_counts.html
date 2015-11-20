@@ -16,7 +16,7 @@
               {% if pc.count == 0 %}
                 <td>{{ pc.party_name }}</td>
               {% else %}
-                <td><a href="{% url 'party' election=election organization_id=pc.party_id ignored_slug=pc.party_name|slugify %}">{{ pc.party_name }}</a></td>
+                <td><a href="{% url 'party' election=election organization_id=pc.party_slug ignored_slug=pc.party_name|slugify %}">{{ pc.party_name }}</a></td>
               {% endif %}
               <td>{{ pc.count}}</td>
             </tr>

@@ -13,7 +13,7 @@
         {% for pc in post_counts %}
             <tr {% if pc.count == 0 %}class="no_known"{% endif%}>
                 <td>{{ pc.election_name }}</td>
-                <td><a href="{% url 'constituency' election=pc.election_slug post_id=pc.post_id ignored_slug=pc.post_short_label|slugify %}">{{ pc.post_label }}</a></td>
+                <td><a href="{% url 'constituency' election=pc.election_slug post_id=pc.post_slug ignored_slug=pc.post_short_label|slugify %}">{{ pc.post_label }}</a></td>
                 <td>{{ pc.count }}</td>
             </tr>
         {% endfor %}

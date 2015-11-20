@@ -15,6 +15,7 @@ class CachedCountTestCase(WebTest):
         election = factories.ElectionFactory.create()
         earlier_election = factories.EarlierElectionFactory.create()
         factories.PostFactory.reset_sequence()
+        factories.PostExtraFactory.reset_sequence()
         posts_extra = [
             factories.PostExtraFactory.create(
                 elections=(election, earlier_election),
@@ -23,6 +24,7 @@ class CachedCountTestCase(WebTest):
             for i in range(4)
         ]
         factories.PartyFactory.reset_sequence()
+        factories.PartyExtraFactory.reset_sequence()
         parties_extra = [
             factories.PartyExtraFactory.create()
             for i in range(7)
@@ -35,7 +37,7 @@ class CachedCountTestCase(WebTest):
             '65913': 0,
         }
         for post_extra in posts_extra:
-            candidacy_count = candidacy_counts[post_extra.base.id]
+            candidacy_count = candidacy_counts[post_extra.slug]
             for n in range(candidacy_count):
                 person_extra = factories.PersonExtraFactory.create(
                     base__id=str(7000 + i),
