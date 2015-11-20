@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('base', models.OneToOneField(related_name='extra', to='popolo.Membership')),
                 ('election', models.ForeignKey(related_name='candidacies', blank=True, to='elections.Election', null=True)),
                 ('party_list_position', models.IntegerField(null=True)),
+                ('elected', models.NullBooleanField()),
             ],
         ),
         migrations.CreateModel(

@@ -355,6 +355,7 @@ class PostExtra(HasImageMixin, models.Model):
 class MembershipExtra(models.Model):
     base = models.OneToOneField(Membership, related_name='extra')
 
+    elected = models.NullBooleanField()
     party_list_position = models.IntegerField(null=True)
     election = models.ForeignKey(
         Election, blank=True, null=True, related_name='candidacies'
