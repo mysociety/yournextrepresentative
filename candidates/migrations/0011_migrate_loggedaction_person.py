@@ -7,13 +7,19 @@ def popit_to_db(apps, schema_editor):
     Person = apps.get_model('popolo', 'person')
     LoggedAction = apps.get_model('candidates', 'loggedaction')
     for la in LoggedAction.objects.all():
-        la.person = Person.objects.get(pk=la.popit_person_id)
+        if la.popit_person_id:
+            la.person = Person.objects.get(pk=la.popit_person_id)
+        else:
+            la.person = None
         la.save()
 
 def db_to_popit(apps, schema_editor):
     LoggedAction = apps.get_model('candidates', 'loggedaction')
     for la in LoggedAction.objects.all():
-        la.popit_person_id = la.person.id
+        if la.person:
+            la.popit_person_id = la.person.id
+        else:
+            la.popit_person_id = ''
         la.save()
 
 
