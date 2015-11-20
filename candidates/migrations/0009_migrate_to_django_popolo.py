@@ -239,7 +239,8 @@ class YNRPopItImporter(PopItImporter):
         if election_slug is not None:
             election = Election.objects.get(slug=election_slug)
 
-            if membership.role == election.candidate_membership_role:
+            if membership.role == election.candidate_membership_role or \
+                membership.organization == election.organization:
                 MembershipExtra = self.get_model_class('candidates', 'MembershipExtra')
                 me, created = MembershipExtra.objects.get_or_create(
                     base=membership,
@@ -257,6 +258,13 @@ class YNRPopItImporter(PopItImporter):
                     if me:
                         me.party_list_position = party_list_position
                         me.save()
+
+                if membership.organization == election.organization:
+                    if me:
+                        me.elected = True
+                        me.save()
+
+
 
         start_date = membership_data.get('start_date', None)
         end_date = membership_data.get('end_date', None)
