@@ -11,7 +11,6 @@ from ..models import LoggedAction
 from .factories import (
     AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
     PartyFactory, PartyExtraFactory, PostExtraFactory,
-    ParliamentaryChamberExtraFactory
 )
 
 
