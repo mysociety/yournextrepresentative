@@ -9,30 +9,27 @@ from candidates.tests.factories import (
 
 class TestFieldView(TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestFieldView, cls).setUpClass()
+    def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
-        cls.election = ElectionFactory.create(
+        self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,)
         )
         commons = ParliamentaryChamberFactory.create()
-        cls.post_extra = PostExtraFactory.create(
-            elections=(cls.election,),
+        self.post_extra = PostExtraFactory.create(
+            elections=(self.election,),
             base__organization=commons,
             slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood'
         )
         PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
-        cls.parties = {}
+        self.parties = {}
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
-            cls.parties[party_extra.slug] = party_extra
+            self.parties[party_extra.slug] = party_extra
 
-    def setUp(self):
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
