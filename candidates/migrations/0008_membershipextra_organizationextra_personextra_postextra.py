@@ -61,4 +61,12 @@ class Migration(migrations.Migration):
                 ('parties', models.ManyToManyField(related_name='party_sets', to='popolo.Organization')),
             ],
         ),
+        migrations.CreateModel(
+            name='AreaExtra',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('base', models.OneToOneField(related_name='extra', to='popolo.Area')),
+                ('type', models.ForeignKey(related_name='areas', blank=True, to='elections.AreaType', null=True)),
+            ],
+        ),
     ]

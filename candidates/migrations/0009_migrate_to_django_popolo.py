@@ -177,6 +177,15 @@ class YNRPopItImporter(PopItImporter):
 
         return org_id, org
 
+    def update_area(self, area_data):
+        area_id, area = super(YNRPopItImporter, self).update_area(area_data)
+
+        # Create the extra area object:
+        AreaExtra = self.get_model_class('candidates', 'AreaExtra')
+        AreaExtra.objects.create(base=area)
+
+        return area_id, area
+
     def update_post(self, post_data, area, org_id_to_django_object):
         post_id, post = super(YNRPopItImporter, self).update_post(post_data, area, org_id_to_django_object)
 
@@ -185,8 +194,23 @@ class YNRPopItImporter(PopItImporter):
         post_extra.candidates_locked = post_data.get('candidates_locked', False)
         post_extra.save()
 
+        area_types = set()
         for election_slug in post_data['elections']:
-            post_extra.elections.add(self.election_cache[election_slug])
+            election = self.election_cache[election_slug]
+            post_extra.elections.add(election)
+            for area_type in election.area_types.all():
+                area_types.add(area_type)
+
+        if len(area_types) > 1:
+            message = "Only one area type is allowed per election in this " \
+                "migration, but for post ({post_id}) found {area_types}".format(
+                    post_id=post_data['id'], area_types=area_types
+            )
+            raise Exception(message)
+
+        only_area_type = next(iter(area_types))
+        area.extra.type = only_area_type
+        area.extra.save()
 
         return post_id, post
 

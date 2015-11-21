@@ -10,8 +10,8 @@ from django.db import connection
 from django.db import models
 from django.utils.translation import ugettext as _
 
-from elections.models import Election
-from popolo.models import Person, Organization, Post, Membership
+from elections.models import Election, AreaType
+from popolo.models import Person, Organization, Post, Membership, Area
 from ..diffs import get_version_diffs
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
@@ -361,6 +361,11 @@ class MembershipExtra(models.Model):
     election = models.ForeignKey(
         Election, blank=True, null=True, related_name='candidacies'
     )
+
+class AreaExtra(models.Model):
+    base = models.OneToOneField(Area, related_name='extra')
+
+    type = models.ForeignKey(AreaType, blank=True, null=True, related_name='areas')
 
 
 class PartySet(models.Model):
