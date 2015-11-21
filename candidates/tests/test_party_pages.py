@@ -3,8 +3,6 @@ import re
 
 from django_webtest import WebTest
 
-from cached_counts.models import CachedCount
-
 from .factories import (
     AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
     CandidacyExtraFactory, ParliamentaryChamberFactory,
@@ -13,26 +11,6 @@ from .factories import (
 )
 
 class TestPartyPages(WebTest):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.cached_counts = [
-            CachedCount.objects.create(
-                count_type='party',
-                name='',
-                count=count,
-                object_id=object_id
-            ) for object_id, count in (
-                ('party:52', 4),
-                ('party:63', 0),
-                ('party:53', 5),
-            )
-        ]
-
-    @classmethod
-    def tearDownClass(cls):
-        for cc in cls.cached_counts:
-            cc.delete()
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
