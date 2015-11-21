@@ -3,8 +3,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
+from django.shortcuts import get_object_or_404
 
-from popolo.models import Post
+from popolo.models import Area, Post
 
 from candidates.cache import get_post_cached
 from candidates.views.helpers import get_redirect_to_post
@@ -60,8 +61,11 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
         return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        post_id = form.cleaned_data['constituency']
-        post = Post.objects.get(extra__slug=post_id)
+        area = get_object_or_404(
+            Area.objects.prefetch_related('posts'),
+            pk=form.cleaned_data['constituency']
+        )
+        post = area.posts.get()
         return get_redirect_to_post(get_current_election().slug, post)
 
     def get_context_data(self, **kwargs):

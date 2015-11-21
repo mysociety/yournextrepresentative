@@ -34,6 +34,11 @@ class AreaType(models.Model):
     def __unicode__(self):
         return self.name
 
+    def area_choices(self):
+        return self.areas.all() \
+            .order_by('base__name') \
+            .values_list('id', 'base__name')
+
 
 class Election(models.Model):
     slug = models.CharField(max_length=128)
