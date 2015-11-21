@@ -15,7 +15,6 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 
 from candidates.cache import get_post_cached
-from candidates.election_specific import AREA_DATA, PARTY_DATA, AREA_POST_DATA
 from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
@@ -32,6 +31,7 @@ USER_AGENT = (
 )
 
 def get_post_data(api, json_election_id, json_election_id_to_name):
+    from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     json_election_name = json_election_id_to_name[json_election_id]
     ynr_election_id = {
         u'Pre-candidatos a Presidente':
@@ -118,6 +118,7 @@ class Command(BaseCommand):
     help = "Import inital candidate data"
 
     def handle(self, username=None, **options):
+        from candidates.election_specific import PARTY_DATA, AREA_POST_DATA
 
         if username is None:
             message = "You must supply the name of a user to be associated with the image uploads."

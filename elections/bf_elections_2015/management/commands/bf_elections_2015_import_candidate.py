@@ -18,7 +18,6 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 
 from candidates.cache import get_post_cached
-from candidates.election_specific import AREA_DATA, PARTY_DATA, AREA_POST_DATA
 from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
@@ -35,6 +34,7 @@ USER_AGENT = (
 
 
 def get_post_data(api, election_id, province):
+    from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     ynr_election_data = Election.objects.get_by_slug(election_id)
     area_key = (ynr_election_data.area_types.first().name,
                  ynr_election_data.area_generation)
@@ -120,6 +120,7 @@ class Command(BaseCommand):
     help = "Import inital candidate data"
 
     def handle(self, username=None, **options):
+        from candidates.election_specific import PARTY_DATA, AREA_POST_DATA
 
         election_data = {
             'prv-2015': 'listedescandidatsauxelectionslegislativeslisteprovincialeanptic.csv',

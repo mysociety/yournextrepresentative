@@ -22,7 +22,6 @@ from django.conf import settings
 import requests
 
 from candidates.models import PopItPerson
-from candidates.election_specific import AREA_DATA
 from candidates.views.version_data import get_change_metadata
 from candidates.popit import PopItApiMixin, get_search_url
 
@@ -71,15 +70,11 @@ constituency_corrections = {
 def cons_key(s):
     return re.sub(r',', '', s).lower()
 
-constituency_lookup = {
-    cons_key(k): v for k, v in
-    AREA_DATA.areas_by_name[(u'WMC', u'22')].items()
-}
 
 class UnknownConstituencyException(Exception):
     pass
 
-def get_constituency_from_name(constituency_name):
+def get_constituency_from_name(constituency_name, constituency_lookup):
     name = re.sub(r'\xA0', ' ', constituency_name)
     name = re.sub(r' & ', ' and ', name)
     name = re.sub(r'(?i)candidate for ', '', name)
@@ -438,6 +433,12 @@ class Command(PopItApiMixin, BaseCommand):
             print "  Added them as a new person ({0})".format(new_person_id)
 
     def handle(self, **options):
+        from candidates.election_specific import AREA_DATA
+
+        constituency_lookup = {
+            cons_key(k): v for k, v in
+            AREA_DATA.areas_by_name[(u'WMC', u'22')].items()
+        }
 
         for party_slug in sorted(os.listdir(ppc_data_directory)):
             json_directory = join(
@@ -458,7 +459,8 @@ class Command(PopItApiMixin, BaseCommand):
                 ppc_data['party_slug'] = party_slug
                 ppc_data['party_object'] = party_slug_to_popit_party[party_slug]
                 ppc_data['constituency_object'] = get_constituency_from_name(
-                    ppc_data['constituency']
+                    ppc_data['constituency'],
+                    constituency_lookup
                 )
                 if options['check']:
                     continue

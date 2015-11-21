@@ -10,7 +10,6 @@ import requests
 from django.core.management.base import BaseCommand
 from django.core.files.storage import FileSystemStorage 
 
-from candidates.election_specific import AREA_DATA
 from official_documents.models import OfficialDocument
 
 CSV_URL = 'https://docs.google.com/a/mysociety.org/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/export?format=csv&id=1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8&gid=0'
@@ -41,6 +40,8 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         
+        from candidates.election_specific import AREA_DATA
+
         mime_type_magic = magic.Magic(mime=True)
         storage = FileSystemStorage()
 
