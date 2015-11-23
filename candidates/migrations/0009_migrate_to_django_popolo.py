@@ -9,6 +9,8 @@ from os.path import join, exists, dirname
 import re
 import requests
 import shutil
+from datetime import date, timedelta
+from dateutil.parser import parse
 
 from PIL import Image as PillowImage
 
@@ -236,11 +238,20 @@ class YNRPopItImporter(PopItImporter):
                     election_slug = 'parlamentarios-mercosur-regional-paso-2015'
             else:
                 raise Exception("Election missing on membership, and no unique matching election found")
+        elif not election_slug and membership.post is not None:
+            day_before_membership = parse(membership.start_date) - timedelta(days=1)
+            matching_elections = list(Election.objects.filter(
+                for_post_role=membership.post.role,
+                organization_name=membership.organization.name,
+                election_date=day_before_membership,
+            ))
+            if len(matching_elections) == 1:
+                election_slug = matching_elections[0].slug
         if election_slug is not None:
             election = Election.objects.get(slug=election_slug)
 
             if membership.role == election.candidate_membership_role or \
-                membership.organization == election.organization:
+                membership.organization.name == election.organization_name:
                 MembershipExtra = self.get_model_class('candidates', 'MembershipExtra')
                 me, created = MembershipExtra.objects.get_or_create(
                     base=membership,
@@ -259,7 +270,8 @@ class YNRPopItImporter(PopItImporter):
                         me.party_list_position = party_list_position
                         me.save()
 
-                if membership.organization == election.organization:
+                if membership.organization is not None and \
+                    membership.organization.name == election.organization_name:
                     if me:
                         me.elected = True
                         me.save()
