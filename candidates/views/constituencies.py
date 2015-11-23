@@ -26,7 +26,8 @@ from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
-    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, MembershipExtra, OrganizationExtra
+    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
+    MembershipExtra, PartySet
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
@@ -477,7 +478,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_POST_DATA, shorten_post_label
+        from ..election_specific import shorten_post_label
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
@@ -526,14 +527,14 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
                 self.election, party.id, mp_post.memberships
             )
 
-        party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+        party_set = PartySet.objects.get(postextra__base__id=post_id)
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
             initial={
                 ('constituency_' + self.election): post_id,
                 ('standing_' + self.election): 'standing',
-                ('party_' + party_set + '_' + self.election): party_id,
+                ('party_' + party_set.slug + '_' + self.election): party_id,
             },
             hidden_post_widget=True,
         )

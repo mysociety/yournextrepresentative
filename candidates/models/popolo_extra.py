@@ -32,7 +32,6 @@ want a join or not.
 """
 
 def update_person_from_form(person, person_extra, form):
-    from ..election_specific import AREA_POST_DATA
     form_data = form.cleaned_data.copy()
     # The date is returned as a datetime.date, so if that's set, turn
     # it into a string:
@@ -53,10 +52,10 @@ def update_person_from_form(person, person_extra, form):
         post_id = form_data.get('constituency_' + election_data.slug)
         standing = form_data.pop('standing_' + election_data.slug, 'standing')
         if post_id:
-            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-            party_key = 'party_' + party_set + '_' + election_data.slug
+            party_set = PartySet.objects.get(postextra__slug=post_id)
+            party_key = 'party_' + party_set.slug + '_' + election_data.slug
             position_key = \
-                'party_list_position_' + party_set + '_' + election_data.slug
+                'party_list_position_' + party_set.slug + '_' + election_data.slug
             party = Organization.objects.get(pk=form_data[party_key])
             party_list_position = form_data.get(position_key) or None
             post = Post.objects.get(extra__slug=post_id)
@@ -278,7 +277,6 @@ class PersonExtra(HasImageMixin, models.Model):
             related_manager.create(**kwargs)
 
     def get_initial_form_data(self):
-        from ..election_specific import AREA_POST_DATA
         initial_data = {}
         fields_on_base = form_simple_fields.keys()
         fields_on_extra = settings.EXTRA_SIMPLE_FIELDS.keys()
@@ -301,12 +299,12 @@ class PersonExtra(HasImageMixin, models.Model):
                 initial_data[standing_key] = 'standing'
                 post_id = candidacy.base.post.extra.slug
                 initial_data[constituency_key] = post_id
-                party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+                party_set = PartySet.objects.get(postextra__slug=post_id)
                 party = candidacy.base.on_behalf_of
-                party_key = 'party_' + party_set + '_' + election_data.slug
+                party_key = 'party_' + party_set.slug + '_' + election_data.slug
                 initial_data[party_key] = party.id
                 position = candidacy.party_list_position
-                position_key = 'party_list_position_' + party_set + '_' + election_data.slug
+                position_key = 'party_list_position_' + party_set.slug + '_' + election_data.slug
                 if position:
                     initial_data[position_key] = position
             else:

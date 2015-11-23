@@ -31,13 +31,22 @@ class TestPartyPages(WebTest):
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
             parties[party_extra.slug] = party_extra
-
-        post_extra = PostExtraFactory.create(
-            elections=(election, earlier_election,),
-            base__organization=commons,
-            slug='65672',
-            base__label='Member of Parliament for Doncaster North'
-        )
+        constituencies = {}
+        for slug, cons_name, country in [
+                ('66090', 'Cardiff Central', 'Wales'),
+                ('14421', 'Edinburgh South', 'Scotland'),
+                ('65672', 'Doncaster North', 'England'),
+                ('65719', 'South Shields', 'England'),
+                ('65808', 'Dulwich and West Norwood', 'England'),
+                ('65913', 'Camberwell and Peckham', 'England'),
+        ]:
+            constituencies[cons_name] = PostExtraFactory.create(
+                elections=(election, earlier_election,),
+                base__organization=commons,
+                slug=slug,
+                base__label='Member of Parliament for {0}'.format(cons_name),
+                group=country,
+            )
         person_extra = PersonExtraFactory.create(
             base__id='3056',
             base__name='Ed Miliband'
@@ -45,15 +54,8 @@ class TestPartyPages(WebTest):
         CandidacyExtraFactory.create(
             election=election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
+            base__post=constituencies['Doncaster North'].base,
             base__on_behalf_of=parties['party:53'].base
-        )
-
-        post_extra = PostExtraFactory.create(
-            elections=(election, earlier_election,),
-            base__organization=commons,
-            slug='65719',
-            base__label='Member of Parliament for South Shields'
         )
         person_extra = PersonExtraFactory.create(
             base__id='3814',
@@ -62,8 +64,18 @@ class TestPartyPages(WebTest):
         CandidacyExtraFactory.create(
             election=earlier_election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
+            base__post=constituencies['South Shields'].base,
             base__on_behalf_of=parties['party:53'].base
+        )
+        conservative_opponent_extra = PersonExtraFactory.create(
+            base__id='6648',
+            base__name='Mark Fletcher'
+        )
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=conservative_opponent_extra.base,
+            base__post=constituencies['South Shields'].base,
+            base__on_behalf_of=parties['party:52'].base
         )
 
     def test_parties_page(self):
@@ -108,7 +120,7 @@ class TestPartyPages(WebTest):
         )
         # But there is an Ed Miliband:
         self.assertTrue(re.search(
-            r'(?ms)<a href="/person/3056">Ed Miliband</a>.*is standing in.*' +
-            r'<a href="/election/2015/post/65672/doncaster-north">Doncaster North</a></li>',
+            r'(?ms)<a href="/person/3056">Ed Miliband</a>\s*is standing in\s*' +
+            r'<a href="/election/2015/post/65672/doncaster-north">Doncaster North</a>\s*</li>',
             unicode(response)
         ))

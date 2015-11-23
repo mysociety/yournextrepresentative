@@ -173,6 +173,11 @@ patterns_to_format = [
         'view': views.AskForCopyrightAssigment.as_view(),
         'name': 'ask-for-copyright-assignment'
     },
+    {
+        'pattern': r'^post-id-to-party-set.json',
+        'view': views.PostIDToPartySetView.as_view(),
+        'name': 'post-id-to-party-set'
+    },
 ]
 
 urlpatterns += [

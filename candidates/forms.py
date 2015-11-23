@@ -160,7 +160,6 @@ class BasePersonForm(forms.Form):
     def check_party_and_constituency_are_selected(self, cleaned_data):
         '''This is called by the clean method of subclasses'''
 
-        from .election_specific import AREA_POST_DATA
         for election_data in self.elections_with_fields:
             election = election_data.slug
             election_name = election_data.name
@@ -188,14 +187,15 @@ class BasePersonForm(forms.Form):
                 raise forms.ValidationError(
                     message.format(post_id=post_id)
                 )
-            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-            if not party_set:
+            try:
+                party_set = PartySet.objects.get(postextra__slug=post_id)
+            except PartySet.DoesNotExist:
                 message = _("Could not find parties for the post with ID "
                             "'{post_id}' in the {election}")
                 raise forms.ValidationError(
                     message.format(post_id=post_id, election=election_name)
                 )
-            party_field = 'party_' + party_set + '_' + election
+            party_field = 'party_' + party_set.slug + '_' + election
             try:
                 party_id = int(cleaned_data[party_field], 10)
             except ValueError:
@@ -210,7 +210,7 @@ class BasePersonForm(forms.Form):
 class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import AREA_POST_DATA, shorten_post_label
+        from .election_specific import shorten_post_label
         election = kwargs.pop('election', None)
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
@@ -270,16 +270,17 @@ class NewPersonForm(BasePersonForm):
         # choice field for each such "party set" and make sure only
         # the appropriate one is shown, depending on the election and
         # selected constituency, using Javascript.
-        specific_party_set_slug = None
+        specific_party_set = None
         if hidden_post_widget:
             # Then the post can't be changed, so only add the
             # particular party set relevant for that post:
             post_id = kwargs['initial']['constituency_' + election]
-            specific_party_set_slug = \
-                AREA_POST_DATA.post_id_to_party_set(post_id)
+            specific_party_set = PartySet.objects.get(
+                postextra__slug=post_id
+            )
 
         for party_set in PartySet.objects.all():
-            if specific_party_set_slug and (party_set.slug != specific_party_set_slug):
+            if specific_party_set and (party_set.slug != specific_party_set.slug):
                 continue
             self.fields['party_' + party_set.slug + '_' + election] = \
                 forms.ChoiceField(

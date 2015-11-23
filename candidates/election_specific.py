@@ -6,7 +6,6 @@ from django.conf import settings
 # candidates.election_specific
 
 imports_and_defaults = (
-    ('AreaPostData', None),
     ('EXTRA_CSV_ROW_FIELDS', []),
     ('shorten_post_label', lambda post_label: post_label),
     ('get_extra_csv_values', lambda person, election: {}),
@@ -35,5 +34,3 @@ for name_to_import, default_value in imports_and_defaults:
         except (ImportError, AttributeError):
             pass
     globals()[name_to_import] = value
-
-AREA_POST_DATA = AreaPostData()
