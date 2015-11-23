@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('elections', '0004_election_new_organization'),
+        ('candidates', '0008_membershipextra_organizationextra_personextra_postextra'),
     ]
 
     operations = [
