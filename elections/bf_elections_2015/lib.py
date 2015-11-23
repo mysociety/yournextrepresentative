@@ -1,9 +1,6 @@
 from candidates.static_data import  BaseMapItData, BaseAreaPostData
 
 
-class AreaData(BaseMapItData):
-    pass
-
 
 class AreaPostData(BaseAreaPostData):
 

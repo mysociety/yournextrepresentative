@@ -2,11 +2,7 @@
 
 from django.utils.text import slugify
 
-from candidates.static_data import BaseMapItData, BaseAreaPostData
-
-
-class AreaData(BaseMapItData):
-    pass
+from candidates.static_data import BaseAreaPostData
 
 
 def index_lambda(sequence, predicate):

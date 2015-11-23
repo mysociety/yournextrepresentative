@@ -2,11 +2,9 @@ import re
 import os
 import json
 
-from candidates.static_data import BaseMapItData, BaseAreaPostData
+from candidates.static_data import BaseAreaPostData
 
 
-class AreaData(BaseMapItData):
-    pass
 
 
 class AreaPostData(BaseAreaPostData):
