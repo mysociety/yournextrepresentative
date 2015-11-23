@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('slug', models.CharField(max_length=256, blank=True)),
                 ('candidates_locked', models.BooleanField(default=False)),
                 ('elections', models.ManyToManyField(related_name='posts', to='elections.Election')),
+                ('group', models.CharField(max_length=1024, blank=True)),
             ],
         ),
         migrations.CreateModel(

@@ -62,6 +62,7 @@ class YNRPopItImporter(PopItImporter):
         self.election_cache = {
             e.slug: e for e in Election.objects.all()
         }
+        self.uk_mapit_data = {}
 
     def get_model_class(self, app_label, model_name):
         return self.apps.get_model(app_label, model_name)
@@ -218,6 +219,7 @@ class YNRPopItImporter(PopItImporter):
             mapit_filename = get_url_cached(mapit_area_url)
             with open(mapit_filename) as f:
                 mapit_area_data = json.load(f)
+            self.uk_mapit_data[str(mapit_area_data['id'])] = mapit_area_data
             gss_code = mapit_area_data.get('codes', {}).get('gss')
             if gss_code:
                 Identifier.objects.create(
@@ -264,6 +266,12 @@ class YNRPopItImporter(PopItImporter):
         only_area_type = next(iter(area_types))
         area.extra.type = only_area_type
         area.extra.save()
+
+        # Set the post group; these are only actually needed for the UK:
+        if settings.ELECTION_APP == 'uk_general_election_2015':
+            mapit_area_data = self.uk_mapit_data[area.identifier]
+            post_extra.group = mapit_area_data['country_name']
+            post_extra.save()
 
         return post_id, post
 
