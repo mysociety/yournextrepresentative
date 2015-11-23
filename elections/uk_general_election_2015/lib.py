@@ -6,6 +6,8 @@ from candidates.models import MembershipExtra
 from candidates.static_data import BaseMapItData, BaseAreaPostData
 
 
+def shorten_post_label(self, post_label):
+    return re.sub(r'^Member of Parliament for ', '', post_label)
 
 
 class AreaPostData(BaseAreaPostData):
@@ -35,9 +37,6 @@ class AreaPostData(BaseAreaPostData):
         areas_by_id = self.area_data.areas_by_id[(u'WMC', u'22')]
         area = areas_by_id.get(post_id)
         return area['country_name']
-
-    def shorten_post_label(self, post_label):
-        return re.sub(r'^Member of Parliament for ', '', post_label)
 
     def party_to_possible_post_groups(self, party_data):
         register = party_data.extra.register

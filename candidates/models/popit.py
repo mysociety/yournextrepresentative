@@ -1112,7 +1112,7 @@ class PopItPerson(object):
         return self.id
 
     def update_from_form(self, api, form):
-        from ..election_specific import AREA_POST_DATA
+        from ..election_specific import AREA_POST_DATA, shorten_post_label
 
         form_data = form.cleaned_data.copy()
         # The date is returned as a datetime.date, so if that's set, turn
@@ -1154,7 +1154,7 @@ class PopItPerson(object):
                 post_label = post_data['label']
                 new_standing_in[election_data.slug] = {
                     'post_id': post_data['id'],
-                    'name': AREA_POST_DATA.shorten_post_label(post_label),
+                    'name': shorten_post_label(post_label),
                     'mapit_url': post_data['area']['identifier'],
                 }
                 if party_list_position:

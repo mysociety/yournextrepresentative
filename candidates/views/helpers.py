@@ -14,8 +14,8 @@ from ..models import (
 from popolo.models import Person
 
 def get_redirect_to_post(election, post):
-    from ..election_specific import AREA_POST_DATA
-    short_post_label = AREA_POST_DATA.shorten_post_label(post.label)
+    from ..election_specific import shorten_post_label
+    short_post_label = shorten_post_label(post.label)
     return HttpResponseRedirect(
         reverse(
             'constituency',

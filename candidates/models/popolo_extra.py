@@ -349,8 +349,8 @@ class PostExtra(HasImageMixin, models.Model):
 
     @property
     def short_label(self):
-        from candidates.election_specific import AREA_POST_DATA
-        return AREA_POST_DATA.shorten_post_label(self.base.label)
+        from candidates.election_specific import shorten_post_label
+        return shorten_post_label(self.base.label)
 
 
 class MembershipExtra(models.Model):

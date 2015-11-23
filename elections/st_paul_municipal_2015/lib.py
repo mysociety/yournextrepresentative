@@ -5,6 +5,8 @@ import json
 from candidates.static_data import BaseAreaPostData
 
 
+def shorten_post_label(self, post_label):
+    return re.sub(r'^Council Member for ', '', post_label)
 
 
 class AreaPostData(BaseAreaPostData):

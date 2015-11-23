@@ -8,7 +8,7 @@ from django.db.models import F
 # FIXME: make sure the 'elected' boolean is stored and retrieved
 
 def get_person_as_version_data(person):
-    from candidates.election_specific import AREA_POST_DATA
+    from candidates.election_specific import shorten_post_label
     result = {}
     person_extra = person.extra
     result['id'] = str(person.id)
@@ -47,7 +47,7 @@ def get_person_as_version_data(person):
         election = membership_extra.election
         standing_in[election.slug] = {
             'post_id': post.extra.slug,
-            'name': AREA_POST_DATA.shorten_post_label(post.label)
+            'name': shorten_post_label(post.label)
         }
         if person_extra.get_elected(election.slug):
             standing_in[election.slug]['elected'] = True

@@ -43,7 +43,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_POST_DATA
+        from ..election_specific import shorten_post_label
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
@@ -62,9 +62,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context['some_official_documents'] = documents_for_post.count()
 
         context['post_label'] = mp_post.label
-        context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            context['post_label']
-        )
+        context['post_label_shorter'] = shorten_post_label(context['post_label'])
 
         context['redirect_after_login'] = \
             urlquote(reverse('constituency', kwargs={
@@ -479,7 +477,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_POST_DATA
+        from ..election_specific import AREA_POST_DATA, shorten_post_label
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
@@ -499,9 +497,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         context['party'] = party
 
         context['post_label'] = mp_post.label
-        context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            context['post_label']
-        )
+        context['post_label_shorter'] = shorten_post_label(context['post_label'])
 
         context['redirect_after_login'] = \
             urlquote(reverse('party-for-post', kwargs={

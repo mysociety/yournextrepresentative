@@ -47,7 +47,7 @@ class Command(BaseCommand):
     help = "Load or update St. Paul candidates from Google docs"
 
     def handle(self, **options):
-        from candidates.election_specific import PARTY_DATA, AREA_POST_DATA
+        from candidates.election_specific import PARTY_DATA, shorten_post_label
 
         spreadsheet_url = 'https://docs.google.com/spreadsheets/d/{0}/pub?output=csv'\
                               .format(GOOGLE_DOC_ID)
@@ -104,9 +104,7 @@ class Command(BaseCommand):
 
             standing_in_election = {
                 'post_id': post_data['id'],
-                'name': AREA_POST_DATA.shorten_post_label(
-                    post_data['label'],
-                ),
+                'name': shorten_post_label(post_data['label']),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']

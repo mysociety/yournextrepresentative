@@ -139,7 +139,7 @@ class ConstituencyCountsView(ElectionMixin, TemplateView):
     template_name = "constituency_counts.html"
 
     def get_context_data(self, **kwargs):
-        from candidates.election_specific import AREA_POST_DATA
+        from candidates.election_specific import shorten_post_label
         context = super(ConstituencyCountsView, self).get_context_data(**kwargs)
         cursor = connection.cursor()
         cursor.execute('''
@@ -162,7 +162,7 @@ SELECT pe.slug, p.label, count(m.id) as count
                 'post_slug': row[0],
                 'post_label': row[1],
                 'count': row[2],
-                'post_short_label': AREA_POST_DATA.shorten_post_label(row[1]),
+                'post_short_label': shorten_post_label(row[1]),
             }
             for row in cursor.fetchall()
         ]
@@ -173,7 +173,7 @@ class AttentionNeededView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AttentionNeededView, self).get_context_data(**kwargs)
-        from candidates.election_specific import AREA_POST_DATA
+        from candidates.election_specific import shorten_post_label
         cursor = connection.cursor()
         # This is similar to the query in ConstituencyCountsView,
         # except it's not specific to a particular election and the
@@ -200,7 +200,7 @@ SELECT pe.slug, p.label, ee.name, ee.slug, count(m.id) as count
                 'election_name': row[2],
                 'election_slug': row[3],
                 'count': row[4],
-                'post_short_label': AREA_POST_DATA.shorten_post_label(row[1]),
+                'post_short_label': shorten_post_label(row[1]),
             }
             for row in cursor.fetchall()
         ]

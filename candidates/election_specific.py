@@ -8,6 +8,7 @@ from django.conf import settings
 imports_and_defaults = (
     ('AreaPostData', None),
     ('EXTRA_CSV_ROW_FIELDS', []),
+    ('shorten_post_label', lambda post_label: post_label),
     ('get_extra_csv_values', lambda person, election: {}),
 )
 

@@ -128,7 +128,7 @@ class Command(BaseCommand):
     help = "Import inital candidate data"
 
     def handle(self, **options):
-        from candidates.election_specific import AREA_POST_DATA, PARTY_DATA
+        from candidates.election_specific import PARTY_DATA, shorten_post_label
 
         api = create_popit_api_object()
 
@@ -169,9 +169,7 @@ class Command(BaseCommand):
                     person.birth_date = None
                 standing_in_election = {
                     'post_id': post_data['id'],
-                    'name': AREA_POST_DATA.shorten_post_label(
-                        post_data['label']
-                    ),
+                    'name': shorten_post_label(post_data['label']),
                     'party_list_position': candidate['Posicion'],
                 }
                 if 'area' in post_data:

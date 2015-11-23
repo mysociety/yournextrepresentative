@@ -210,7 +210,7 @@ class BasePersonForm(forms.Form):
 class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import AREA_POST_DATA
+        from .election_specific import AREA_POST_DATA, shorten_post_label
         election = kwargs.pop('election', None)
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
@@ -251,9 +251,7 @@ class NewPersonForm(BasePersonForm):
                     choices=[('', '')] + sorted(
                         [
                             (post.extra.slug,
-                             AREA_POST_DATA.shorten_post_label(
-                                 post.label
-                             ))
+                             shorten_post_label(post.label))
                             for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
@@ -321,7 +319,7 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import AREA_POST_DATA
+        from .election_specific import shorten_post_label
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
         self.elections_with_fields = Election.objects.current().by_date()
@@ -345,9 +343,7 @@ class UpdatePersonForm(BasePersonForm):
                     choices=[('', '')] + sorted(
                         [
                             (post.extra.slug,
-                             AREA_POST_DATA.shorten_post_label(
-                                 post.label
-                             ))
+                             shorten_post_label(post.label))
                             for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
