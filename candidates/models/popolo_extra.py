@@ -347,6 +347,7 @@ class PostExtra(HasImageMixin, models.Model):
     candidates_locked = models.BooleanField(default=False)
     elections = models.ManyToManyField(Election, related_name='posts')
     group = models.CharField(max_length=1024, blank=True)
+    party_set = models.ForeignKey('PartySet', blank=True, null=True)
 
     @property
     def short_label(self):

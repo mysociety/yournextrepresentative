@@ -43,6 +43,15 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='PartySet',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('slug', models.CharField(max_length=256)),
+                ('name', models.CharField(max_length=1024)),
+                ('parties', models.ManyToManyField(related_name='party_sets', to='popolo.Organization')),
+            ],
+        ),
+        migrations.CreateModel(
             name='PostExtra',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -51,15 +60,7 @@ class Migration(migrations.Migration):
                 ('candidates_locked', models.BooleanField(default=False)),
                 ('elections', models.ManyToManyField(related_name='posts', to='elections.Election')),
                 ('group', models.CharField(max_length=1024, blank=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='PartySet',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('slug', models.CharField(max_length=256)),
-                ('name', models.CharField(max_length=1024)),
-                ('parties', models.ManyToManyField(related_name='party_sets', to='popolo.Organization')),
+                ('party_set', models.ForeignKey(related_name='posts', blank=True, to='candidates.PartySet', null=True)),
             ],
         ),
         migrations.CreateModel(

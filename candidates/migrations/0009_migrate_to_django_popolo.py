@@ -267,11 +267,29 @@ class YNRPopItImporter(PopItImporter):
         area.extra.type = only_area_type
         area.extra.save()
 
-        # Set the post group; these are only actually needed for the UK:
+        PartySet = self.get_model_class('candidates', 'partyset')
+        # Set the post group (which is only actually needed for the
+        # UK) and party set for each post.
         if settings.ELECTION_APP == 'uk_general_election_2015':
             mapit_area_data = self.uk_mapit_data[area.identifier]
-            post_extra.group = mapit_area_data['country_name']
-            post_extra.save()
+            country_name = mapit_area_data['country_name']
+            post_extra.group = country_name
+            if country_name == 'Northern Ireland':
+                post_extra.party_set = PartySet.objects.get(slug='ni')
+            elif country_name in ('England', 'Scotland', 'Wales'):
+                post_extra.party_set = PartySet.objects.get(slug='gb')
+        elif settings.ELECTION_APP == 'bf_elections_2015':
+            post_extra.party_set = PartySet.objects.get(slug='national')
+        elif settings.ELECTION_APP == 'st_paul_municipal_2015':
+            post_extra.party_set = PartySet.objects.get(slug='st-paul')
+        elif settings.ELECTION_APP == 'ar_elections_2015':
+            party_set_name = AR_AREA_NAME_TO_PARTY_SET_NAME.get(area.name)
+            if party_set_name:
+                post_extra.party_set = PartySet.objects.get(name=party_set_name)
+            else:
+                print "Couldn't find party set from name {0}".format(area.name)
+                post_extra.party_set = PartySet.objects.get(slug='nacional')
+        post_extra.save()
 
         return post_id, post
 
@@ -442,9 +460,48 @@ ELECTION_APPS_WITH_EXISTING_DATA = (
     'uk_general_election_2015',
 )
 
+AR_AREA_NAME_TO_PARTY_SET_NAME = {
+    u"BUENOS AIRES": u"Buenos Aires",
+    u"CIUDAD AUTONOMA DE BUENOS AIRES": u"Capital Federal",
+    u"CATAMARCA": u"Catamarca",
+    u"CHACO": u"Chaco",
+    u"CHUBUT": u"Chubut",
+    u"CORDOBA": u"Córdoba",
+    u"CORRIENTES": u"Corrientes",
+    u"ENTRE RIOS": u"Entre Ríos",
+    u"FORMOSA": u"Formosa",
+    u"JUJUY": u"Jujuy",
+    u"LA PAMPA": u"La Pampa",
+    u"LA RIOJA": u"La Rioja",
+    u"MENDOZA": u"Mendoza",
+    u"MISIONES": u"Misiones",
+    u"Argentina": u"Nacional",
+    u"NEUQUEN": u"Neuquén",
+    u"RIO NEGRO": u"Río Negro",
+    u"SALTA": u"Salta",
+    u"SAN JUAN": u"San Juan",
+    u"SAN LUIS": u"San Luis",
+    u"SANTA CRUZ": u"Santa Cruz",
+    u"SANTA FE": u"Santa Fe",
+    u"SANTIAGO DEL ESTERO": u"Santiago Del Estero",
+    u"TIERRA DEL FUEGO, ANTARTIDA E ISLAS DEL ATLANTICO SUR": u"Tierra del Fuego",
+    u"TUCUMAN": u"Tucumán",
+}
+
 def import_from_popit(apps, schema_editor):
     if settings.ELECTION_APP not in ELECTION_APPS_WITH_EXISTING_DATA:
         return
+    # Create the party sets for this country:
+    party_set_from_slug = {}
+    party_set_from_name = {}
+    for party_set_data in PARTY_SETS_BY_ELECTION_APP.get(
+            settings.ELECTION_APP, []
+    ):
+        PartySet = apps.get_model('candidates', 'partyset')
+        party_set = PartySet.objects.create(**party_set_data)
+        party_set_from_slug[party_set_data['slug']] = party_set
+        party_set_from_name[party_set_data['name']] = party_set
+    # Now run the standard import:
     importer = YNRPopItImporter(apps, schema_editor)
     url = 'http://{instance}.{hostname}:{port}/api/v0.1/export.json'.format(
         instance=settings.POPIT_INSTANCE,
@@ -464,16 +521,6 @@ def import_from_popit(apps, schema_editor):
         for reset_sql in reset_sql_list:
             print "Running reset SQL:", reset_sql
             cursor.execute(reset_sql)
-    # Now create the party sets for this country:
-    party_set_from_slug = {}
-    party_set_from_name = {}
-    for party_set_data in PARTY_SETS_BY_ELECTION_APP.get(
-            settings.ELECTION_APP, []
-    ):
-        PartySet = apps.get_model('candidates', 'partyset')
-        party_set = PartySet.objects.create(**party_set_data)
-        party_set_from_slug[party_set_data['slug']] = party_set
-        party_set_from_name[party_set_data['name']] = party_set
     # For Argentina, we need the original party JSON to decide on the
     # party sets.
     if settings.ELECTION_APP == 'ar_elections_2015':
