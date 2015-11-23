@@ -9,8 +9,9 @@ from os.path import join, exists, dirname
 import re
 import requests
 import shutil
-from datetime import date, timedelta
+from datetime import timedelta
 from dateutil.parser import parse
+from urlparse import urlsplit
 
 from PIL import Image as PillowImage
 
@@ -44,6 +45,7 @@ def get_url_cached(url):
         with open(filename, 'wb') as f:
             r = requests.get(url, stream=True)
             r.raise_for_status()
+            r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
         print "done"
     return filename
@@ -178,8 +180,59 @@ class YNRPopItImporter(PopItImporter):
         return org_id, org
 
     def update_area(self, area_data):
-        area_id, area = super(YNRPopItImporter, self).update_area(area_data)
+        new_area_data = area_data.copy()
+        if settings.ELECTION_APP == 'uk_general_election_2015':
+            identifier = new_area_data['identifier']
+            split_url = urlsplit(identifier)
+            if not split_url.netloc == 'mapit.mysociety.org':
+                raise Exception("UK Area identifers are expected to be MapIt (UK) area URLs")
+            mapit_area_url = identifier
+            m = re.search(r'^/area/(\d+)$', split_url.path)
+            if not m:
+                message = "The format of the MapIt URL was unexpected: {0}"
+                raise Exception(message.format(mapit_area_url))
+            mapit_area_id = m.group(1)
+            # Make the Area.identifier for UK areas just the integer
+            # MapIt Area ID to make it easy to keep area URLs the same:
+            new_area_data['identifier'] = mapit_area_id
+        elif settings.ELECTION_APP == 'st_paul_municipal_2015':
+            old_identifier = new_area_data['identifier']
+            if old_identifier == '/area/0':
+                new_area_data['identifier'] = 'ocd-division/country:us/state:mn/place:st_paul'
+            else:
+                m = re.search(r'^/area/([1-7])', old_identifier)
+                if m:
+                    new_area_data['identifier'] = \
+                        'ocd-division/country:us/state:mn/place:st_paul/ward:' + m.group(1)
+                else:
+                    message = "The format of the St Paul area ID was unexpected: {0}"
+                    raise Exception(message.format(old_identifier))
 
+        area_id, area = super(YNRPopItImporter, self).update_area(new_area_data)
+
+        if settings.ELECTION_APP == 'uk_general_election_2015':
+            ContentType = self.get_model_class('contenttypes', 'ContentType')
+            area_content_type = ContentType.objects.get_for_model(area)
+            Identifier = self.get_model_class('popolo', 'Identifier')
+            # For the UK, we need to add the GSS code for each area:
+            mapit_filename = get_url_cached(mapit_area_url)
+            with open(mapit_filename) as f:
+                mapit_area_data = json.load(f)
+            gss_code = mapit_area_data.get('codes', {}).get('gss')
+            if gss_code:
+                Identifier.objects.create(
+                    scheme='gss',
+                    identifier=gss_code,
+                    object_id=area.id,
+                    content_type_id=area_content_type.id,
+                )
+            # Also preserve the complete MapIt URL:
+            Identifier.objects.create(
+                scheme='mapit-area-url',
+                identifier=mapit_area_url,
+                object_id=area.id,
+                content_type_id=area_content_type.id
+            )
         # Create the extra area object:
         AreaExtra = self.get_model_class('candidates', 'AreaExtra')
         AreaExtra.objects.create(base=area)
@@ -222,8 +275,16 @@ class YNRPopItImporter(PopItImporter):
         post_id_to_django_object,
         person_id_to_django_object,
     ):
+        new_membership_data = membership_data.copy()
+        if settings.ELECTION_APP == 'st_paul_municipal_2015':
+            # For some reason some posts in the St Paul PopIt have an
+            # organization_id of 'commons' although that organization
+            # doesn't exist. (sigh that PopIt allowed that...)
+            if new_membership_data.get('organization_id') == 'commons':
+                new_membership_data['organization_id'] = 'saint-paul-city-council'
+
         membership_id, membership = super(YNRPopItImporter, self).update_membership(
-            membership_data,
+            new_membership_data,
             area,
             org_id_to_django_object,
             post_id_to_django_object,
@@ -231,7 +292,7 @@ class YNRPopItImporter(PopItImporter):
         )
         Election = self.get_model_class('elections', 'Election')
 
-        election_slug = membership_data.get('election', None)
+        election_slug = new_membership_data.get('election', None)
         # This is an unfortunate fixup to have to do. It seems that
         # the scripts that we used to make sure that all memberships
         # representing candidacies had an 'election' property didn't
@@ -282,13 +343,13 @@ class YNRPopItImporter(PopItImporter):
                     election=election
                 )
 
-                person_data = self.person_id_to_json_data[membership_data['person_id']]
+                person_data = self.person_id_to_json_data[new_membership_data['person_id']]
                 party = person_data['party_memberships'].get(election.slug)
                 if party is not None:
                     membership.on_behalf_of = org_id_to_django_object[party['id']]
                     membership.save()
 
-                party_list_position = membership_data.get('party_list_position', None)
+                party_list_position = new_membership_data.get('party_list_position', None)
                 if party_list_position is not None:
                     if me:
                         me.party_list_position = party_list_position
@@ -300,10 +361,8 @@ class YNRPopItImporter(PopItImporter):
                         me.elected = True
                         me.save()
 
-
-
-        start_date = membership_data.get('start_date', None)
-        end_date = membership_data.get('end_date', None)
+        start_date = new_membership_data.get('start_date', None)
+        end_date = new_membership_data.get('end_date', None)
 
         if start_date is not None:
             membership.start_date = start_date

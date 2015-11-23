@@ -2,6 +2,7 @@
 
 import re
 
+from django.db.models import Prefetch
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseBadRequest
 from django.views.generic import TemplateView
@@ -9,15 +10,14 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 
-from popolo.models import Post
-
 from candidates.cache import UnknownPostException
+from candidates.models import AreaExtra, MembershipExtra
 from candidates.models.auth import get_edits_allowed
 
-from elections.models import Election
+from elections.models import AreaType, Election
 
 from ..forms import NewPersonForm
-from .helpers import get_people_from_memberships, group_people_by_party
+from .helpers import split_candidacies, group_candidates_by_party
 
 class AreasView(TemplateView):
     template_name = 'candidates/areas.html'
@@ -38,49 +38,55 @@ class AreasView(TemplateView):
         return view
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_POST_DATA, AREA_DATA
         context = super(AreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
-        for area_type, area_id in self.types_and_areas:
-            # Show candidates from the current elections:
-            for election_data in Election.objects.current().by_date():
-                area_generation = election_data.area_generation
-                if area_type in [area.name for area in election_data.area_types.all()]:
-                    area_tuple = (area_type, area_generation)
-                    post_id = AREA_POST_DATA.get_post_id(election_data.slug, area_type, area_id)
-                    post_data = get_object_or_404(Post, extra__slug=post_id)
-                    area_name = AREA_DATA.areas_by_id[area_tuple][area_id]['name']
-                    all_area_names.add(area_name)
-                    locked = post_data.extra.candidates_locked
-                    current_candidates, _ = get_people_from_memberships(
-                        election_data,
-                        post_data.memberships.all()
-                    )
-
-                    current_candidates = group_people_by_party(
-                        election_data.slug,
-                        current_candidates,
-                        party_list=election_data.party_lists_in_use,
-                        max_people=election_data.default_party_list_members_to_show
-                    )
-                    context['posts'].append({
-                        'election': election_data.slug,
-                        'election_data': election_data,
-                        'post_data': post_data,
-                        'candidates_locked': locked,
-                        'candidate_list_edits_allowed':
-                        get_edits_allowed(self.request.user, locked),
-                        'candidates': current_candidates,
-                        'add_candidate_form': NewPersonForm(
-                            election=election_data.slug,
-                            initial={
-                                ('constituency_' + election_data.slug): post_id,
-                                ('standing_' + election_data.slug): 'standing',
-                            },
-                            hidden_post_widget=True,
-                        ),
-                    })
+        for area_type_code, area_id in self.types_and_areas:
+            # FIXME: check that we're doing enough prefetch_related
+            # and select_related
+            area_extra = get_object_or_404(
+                AreaExtra.objects \
+                    .select_related('base', 'type') \
+                    .prefetch_related('base__posts'),
+                base__identifier=area_id,
+                base__posts__extra__elections__current=True
+            )
+            area = area_extra.base
+            all_area_names.add(area.name)
+            for post in area.posts.all():
+                post_extra = post.extra
+                election = post_extra.elections.get(current=True)
+                locked = post_extra.candidates_locked
+                extra_qs = MembershipExtra.objects.select_related('election')
+                current_candidacies, _ = split_candidacies(
+                    election,
+                    post.memberships.prefetch_related(
+                        Prefetch('extra', queryset=extra_qs)
+                    ).select_related('person', 'on_behalf_of', 'organization').all()
+                )
+                current_candidacies = group_candidates_by_party(
+                    election,
+                    current_candidacies,
+                    party_list=election.party_lists_in_use,
+                    max_people=election.default_party_list_members_to_show
+                )
+                context['posts'].append({
+                    'election': election.slug,
+                    'election_data': election,
+                    'post_data': post,
+                    'candidates_locked': locked,
+                    'candidate_list_edits_allowed':
+                    get_edits_allowed(self.request.user, locked),
+                    'candidacies': current_candidacies,
+                    'add_candidate_form': NewPersonForm(
+                        election=election.slug,
+                        initial={
+                            ('constituency_' + election.slug): post_extra.slug,
+                            ('standing_' + election.slug): 'standing',
+                        },
+                        hidden_post_widget=True,
+                    ),
+                })
         context['all_area_names'] = u' — '.join(all_area_names)
         context['suppress_official_documents'] = True
         return context
@@ -89,7 +95,6 @@ class AreasOfTypeView(TemplateView):
     template_name = 'candidates/areas-of-type.html'
 
     def get_context_data(self, **kwargs):
-        from ..election_specific import AREA_DATA
         context = super(AreasOfTypeView, self).get_context_data(**kwargs)
         requested_area_type = kwargs['area_type']
         all_area_tuples = set(
@@ -103,27 +108,23 @@ class AreasOfTypeView(TemplateView):
         if len(all_area_tuples) > 1:
             message = _("Multiple Area generations for type {area_type} found")
             raise Exception(message.format(area_type=requested_area_type))
-        area_tuple = list(all_area_tuples)[0]
+        prefetch_qs = AreaExtra.objects.select_related('base').order_by('base__name')
+        area_type = get_object_or_404(
+            AreaType.objects \
+                .prefetch_related(Prefetch('areas', queryset=prefetch_qs)),
+            name=requested_area_type
+        )
         areas = [
             (
                 reverse(
-                    'areas-view',
-                    kwargs={
-                        'type_and_area_ids': '{type}-{area_id}'.format(
-                            type=requested_area_type,
-                            area_id=area['id']
-                        ),
-                        'ignored_slug': slugify(area['name'])
-                    }
+                    'st-paul-areas-view',
+                    kwargs={'area_ids': area.base.identifier}
                 ),
-                area['name'],
-                area['type_name'],
+                area.base.name,
+                requested_area_type,
             )
-            for area in AREA_DATA.areas_by_id[area_tuple].values()
+            for area in area_type.areas.all()
         ]
-        areas.sort(key=lambda a: a[1])
         context['areas'] = areas
-        context['area_type_name'] = _('[No areas found]')
-        if areas:
-            context['area_type_name'] = areas[0][2]
+        context['area_type'] = area_type
         return context

@@ -12,13 +12,14 @@ from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, FormView, View
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.db.models import Prefetch
 
 from elections.mixins import ElectionMixin
 from auth_helpers.views import GroupRequiredMixin
 from .helpers import (
     get_party_people_for_election_from_memberships,
-    get_people_from_memberships, get_redirect_to_post,
-    group_people_by_party
+    split_candidacies, get_redirect_to_post,
+    group_candidates_by_party
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
@@ -90,16 +91,24 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context['candidate_list_edits_allowed'] = \
             get_edits_allowed(self.request.user, context['candidates_locked'])
 
-        current_candidates, past_candidates = \
-            get_people_from_memberships(
+        extra_qs = MembershipExtra.objects.select_related('election')
+        current_candidacies, past_candidacies = \
+            split_candidacies(
                 self.election_data,
-                mp_post.memberships.all()
+                mp_post.memberships.prefetch_related(
+                    Prefetch('extra', queryset=extra_qs)
+                ).select_related('person', 'on_behalf_of', 'organization').all()
             )
 
+        current_candidates = set(c.person for c in current_candidacies)
+        past_candidates = set(c.person for c in past_candidacies)
+
         other_candidates = past_candidates - current_candidates
+        other_candidacies = [c for c in past_candidacies
+                             if c.person in other_candidates]
 
         # Now split those candidates into those that we know aren't
-        # standing again, and those that we just don't know about:
+        # standing again, and those that we just don't know about.
         """ need to create some sort of anti candidate for this to work
         context['candidates_not_standing_again'] = \
             group_people_by_party(
@@ -115,21 +124,17 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             )
             """
 
-        context['candidates_might_stand_again'] = \
-            group_people_by_party(
-                self.election,
-                set(p for p in other_candidates if
-                    p.memberships
-                    .exclude(extra__election__slug=self.election)
-                    .filter(role=self.election_data.candidate_membership_role)
-                    .count() != 0),
+        context['candidacies_might_stand_again'] = \
+            group_candidates_by_party(
+                self.election_data,
+                other_candidacies,
                 party_list=self.election_data.party_lists_in_use,
                 max_people=self.election_data.default_party_list_members_to_show
             )
 
-        context['candidates'] = group_people_by_party(
-            self.election,
-            current_candidates,
+        context['candidacies'] = group_candidates_by_party(
+            self.election_data,
+            current_candidacies,
             party_list=self.election_data.party_lists_in_use,
             max_people=self.election_data.default_party_list_members_to_show
         )

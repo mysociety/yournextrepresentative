@@ -26,6 +26,9 @@ class ElectionManager(models.Manager):
         return generations
 
 
+# FIXME: shouldn't AreaType also have the MapIt generation?
+# FIXME: at the moment name is a code (like WMC); ideally that would
+# be a code field and the name field would be "Westminster Consituency"
 class AreaType(models.Model):
     name = models.CharField(max_length=128)
     source = models.CharField(max_length=128, blank=True,

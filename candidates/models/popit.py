@@ -808,8 +808,8 @@ class PopItPerson(object):
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
         }
-        from ..election_specific import AREA_DATA, get_extra_csv_values
-        extra_csv_data = get_extra_csv_values(self, election, AREA_DATA)
+        from ..election_specific import get_extra_csv_values
+        extra_csv_data = get_extra_csv_values(self, election)
         row.update(extra_csv_data)
 
         return row
