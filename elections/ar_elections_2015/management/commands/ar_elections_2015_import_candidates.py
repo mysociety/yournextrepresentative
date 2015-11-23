@@ -9,7 +9,6 @@ import re
 import requests
 from slumber.exceptions import HttpClientError
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
