@@ -9,7 +9,7 @@ from popolo.models import Person
 from .factories import (
     AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
     ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
-    PersonExtraFactory, PostExtraFactory
+    PersonExtraFactory, PostExtraFactory, PartySetFactory
 )
 
 
@@ -17,6 +17,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -27,13 +28,15 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
             elections=(self.election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
         self.parties = {}
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
+            gb_parties.parties.add(party_extra.base)
             self.parties[party_extra.slug] = party_extra
         person_extra = PersonExtraFactory.create(
             base__id='2009',
