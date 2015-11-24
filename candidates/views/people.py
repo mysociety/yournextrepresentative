@@ -64,7 +64,8 @@ def get_call_to_action_flash_message(person, new_person=False):
                     election_data.name
                 )
                 for election_data in Election.objects.filter(
-                        candidacies__base__person=person
+                        candidacies__base__person=person,
+                        current=True
                 )
             ]
         }
