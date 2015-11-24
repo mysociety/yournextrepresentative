@@ -74,7 +74,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/2009/update', user=self.user)
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_national_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.parties['party:53'].base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit(user=self.user_refused)
         split_location = urlsplit(submission_response.location)
@@ -88,7 +88,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_national_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.parties['party:53'].base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit()
 
