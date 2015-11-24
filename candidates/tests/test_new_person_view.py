@@ -10,7 +10,7 @@ from ..models import LoggedAction
 
 from .factories import (
     AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PostExtraFactory,
+    PartyFactory, PartyExtraFactory, PostExtraFactory, PartySetFactory
 )
 
 
@@ -18,6 +18,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -28,13 +29,15 @@ class TestNewPersonView(TestUserMixin, WebTest):
             elections=(self.election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
         self.parties = {}
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
+            gb_parties.parties.add(party_extra.base)
             self.parties[party_extra.slug] = party_extra
 
     def test_new_person_submission_refused_copyright(self):
@@ -61,7 +64,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
         form = response.forms['new-candidate-form']
         form['name'] = 'Elizabeth Bennet'
         form['email'] = 'lizzie@example.com'
-        form['party_national_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.parties['party:53'].base_id
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Lizzie_Bennet'
         submission_response = form.submit()
 
