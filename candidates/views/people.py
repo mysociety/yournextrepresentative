@@ -33,6 +33,7 @@ from ..models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
     TRUSTED_TO_LOCK_GROUP_NAME,
 )
+from ..models.auth import check_creation_allowed, check_update_allowed
 from ..models.versions import (
     revert_person_from_version_data, get_person_as_version_data
 )
@@ -302,17 +303,6 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
-        # FIXME: not at all sure this is the right thing to do
-        for election_data in form.elections_with_fields:
-            form_data = form.cleaned_data.copy()
-            post_id = form_data.get('constituency_' + election_data.slug)
-            post = get_object_or_404(Post, extra__slug=post_id)
-            if post.extra.candidates_locked and \
-                not user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME):
-                resp = HttpResponse()
-                resp.status_code = 403
-                return resp
-
         with transaction.atomic():
 
             # FIXME: need to check that if we are changing the post then it's
@@ -321,8 +311,17 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
                 Person.objects.select_related('extra'),
                 id=self.kwargs['person_id']
             )
+            old_name = person.name
             person_extra = person.extra
+            old_candidacies = person_extra.current_candidacies
             person_extra.update_from_form(form)
+            new_name = person_extra.base.name
+            new_candidacies = person_extra.current_candidacies
+            check_update_allowed(
+                self.request.user,
+                old_name, old_candidacies,
+                new_name, new_candidacies
+            )
             change_metadata = get_change_metadata(
                 self.request, form.cleaned_data.pop('source')
             )
@@ -364,24 +363,13 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
 
-        if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
-            return HttpResponseRedirect(reverse('all-edits-disallowed'))
-
-        # FIXME: not at all sure this is the right thing to do
-        for election_data in form.elections_with_fields:
-            form_data = form.cleaned_data.copy()
-            post_id = form_data.get('constituency_' + election_data.slug)
-            post = get_object_or_404(Post, extra__slug=post_id)
-            if post.extra.candidates_locked and \
-                not user_in_group(self.request.user, TRUSTED_TO_LOCK_GROUP_NAME):
-                resp = HttpResponse()
-                resp.status_code = 403
-                return resp
-
         with transaction.atomic():
 
             person_extra = PersonExtra.create_from_form(form)
             person = person_extra.base
+            check_creation_allowed(
+                self.request.user, person_extra.current_candidacies
+            )
             change_metadata = get_change_metadata(
                 self.request, form.cleaned_data['source']
             )

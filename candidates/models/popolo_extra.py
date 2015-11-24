@@ -132,6 +132,15 @@ class PersonExtra(HasImageMixin, models.Model):
         return request.build_absolute_uri(path)
 
     @property
+    def current_candidacies(self):
+        result = self.base.memberships.filter(
+            extra__election__current=True,
+            role=models.F('extra__election__candidate_membership_role')
+        ).select_related('person', 'on_behalf_of', 'post') \
+            .prefetch_related('post__extra')
+        return list(result)
+
+    @property
     def last_candidacy(self):
         ordered_candidacies = Membership.objects. \
             filter(person=self.base, extra__election__isnull=False). \

@@ -195,7 +195,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
             {
                 'csrfmiddlewaretoken': csrftoken,
                 'name': 'Imaginary Candidate',
-                'party_national_2015': self.parties['party:63'].base_id,
+                'party_gb_2015': self.parties['party:63'].base_id,
                 'constituency_2015': '65913',
                 'standing_2015': 'standing',
                 'source': 'Testing adding a new candidate to a locked constituency',
@@ -211,7 +211,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['new-candidate-form']
         form['name'] = "Imaginary Candidate"
-        form['party_national_2015'] = self.parties['party:63'].base_id
+        form['party_gb_2015'] = self.parties['party:63'].base_id
         form['source'] = 'Testing adding a new candidate to a locked constituency'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
@@ -282,7 +282,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_national_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.parties['party:52'].base_id
         submission_response = form.submit(expect_errors=True)
         self.assertEqual(submission_response.status_code, 403)
 
@@ -293,7 +293,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_national_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.parties['party:52'].base_id
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
@@ -308,7 +308,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in an unlocked constituency'
-        form['party_national_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.parties['party:52'].base_id
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
