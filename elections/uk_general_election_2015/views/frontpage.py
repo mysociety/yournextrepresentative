@@ -61,10 +61,7 @@ class ConstituencyNameFinderView(ContributorsMixin, FormView):
         return super(ConstituencyNameFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        area = get_object_or_404(
-            Area.objects.prefetch_related('posts'),
-            pk=form.cleaned_data['constituency']
-        )
+        area = form.cleaned_data['constituency']
         post = area.posts.get()
         return get_redirect_to_post(get_current_election().slug, post)
 

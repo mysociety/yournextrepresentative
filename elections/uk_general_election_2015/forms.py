@@ -4,9 +4,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from candidates.mapit import BaseMapItException
-from elections.models import AreaType
-from .mapit import get_wmc_from_postcode
+from popolo.models import Area
 
+from .mapit import get_wmc_from_postcode
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
@@ -27,10 +27,10 @@ class PostcodeForm(forms.Form):
 
 
 class ConstituencyForm(forms.Form):
-    constituency = forms.ChoiceField(
+    constituency = forms.ModelChoiceField(
         label='Select a constituency',
-        choices=[('none', '')] + \
-            list(AreaType.objects.get(name='WMC').area_choices()),
+        queryset=Area.objects.filter(extra__type__name='WMC').order_by('name'),
+        empty_label='',
     )
 
     def clean_constituency(self):
