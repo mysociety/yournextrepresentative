@@ -199,7 +199,7 @@ class BasePersonForm(forms.Form):
             try:
                 party_id = int(cleaned_data[party_field], 10)
             except ValueError:
-                party_id = ''
+                party_id = None
             if not Organization.objects.filter(
                     classification='Party', id=party_id).exists():
                 message = _("You must specify a party for the {election}")
