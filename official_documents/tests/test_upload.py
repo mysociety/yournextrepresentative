@@ -11,7 +11,7 @@ from official_documents.models import OfficialDocument
 
 from candidates.tests.factories import (
     AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PostExtraFactory
+    PostExtraFactory, PartySetFactory
 )
 
 TEST_MEDIA_ROOT=realpath(
@@ -32,6 +32,7 @@ class TestModels(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -42,7 +43,8 @@ class TestModels(TestUserMixin, WebTest):
             elections=(election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
 
     def test_upload_unauthorized(self):
