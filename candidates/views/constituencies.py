@@ -322,9 +322,12 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
 
                 old_winner.delete()
 
+            role = self.election_data.winner_membership_role
+            if role is None:
+                role=''
             membership, _ = Membership.objects.get_or_create(
                 organization=self.election_data.organization,
-                role=self.election_data.winner_membership_role,
+                role=role,
                 post=self.post_data,
                 person=self.person,
                 on_behalf_of=self.person.extra.last_party(),
