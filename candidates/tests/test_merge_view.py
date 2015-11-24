@@ -20,6 +20,9 @@ class TestMergePeopleView(TestUserMixin, WebTest):
         # FIXME: essentially repeated from test_revert.py, should
         # factor out this duplication.
         wmc_area_type = factories.AreaTypeFactory.create()
+        gb_parties = factories.PartySetFactory.create(
+            slug='gb', name='Great Britain'
+        )
         election = factories.ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -35,7 +38,8 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             elections=(election, earlier_election),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         # Create Tessa Jowell (the primary person)
         person_extra = factories.PersonExtraFactory.create(
@@ -123,6 +127,8 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             factories.PartyExtraFactory.create()
             for i in range(4)
         ]
+        for party_extra in parties_extra:
+            gb_parties.parties.add(party_extra.base)
         labour_party_extra = parties_extra[0]
         green_party_extra = parties_extra[2]
         factories.CandidacyExtraFactory.create(
