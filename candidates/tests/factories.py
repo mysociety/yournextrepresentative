@@ -16,6 +16,12 @@ class AreaTypeFactory(factory.DjangoModelFactory):
     source = 'MapIt'
 
 
+class PartySetFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.PartySet'
+
+
 class ParliamentaryChamberFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'popolo.Organization'
@@ -124,6 +130,20 @@ def get_post_label(n):
     return 'Member of Parliament for {constituency_name}'.format(
         constituency_name=constituency_name
     )
+
+
+class AreaFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'popolo.Area'
+
+
+class AreaExtraFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.AreaExtra'
+
+    base = factory.SubFactory(AreaFactory)
 
 
 class PostFactory(factory.DjangoModelFactory):
