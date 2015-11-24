@@ -5,7 +5,7 @@ from .factories import (
     AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
     PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
     PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, MembershipFactory, MembershipExtraFactory
+    PartyFactory, MembershipFactory, MembershipExtraFactory, PartySetFactory
 )
 
 
@@ -13,6 +13,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         commons = ParliamentaryChamberFactory.create()
         election = ElectionFactory.create(
             slug='2015',
@@ -24,7 +25,8 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             elections=(election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         person_extra = PersonExtraFactory.create(
             base__id='2009',
@@ -32,6 +34,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         )
         PartyFactory.reset_sequence()
         party_extra = PartyExtraFactory.create()
+        gb_parties.parties.add(party_extra.base)
         CandidacyExtraFactory.create(
             election=election,
             base__person=person_extra.base,
@@ -47,7 +50,8 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             elections=(election,),
             base__organization=commons,
             slug='14419',
-            base__label='Member of Parliament for Edinburgh East'
+            base__label='Member of Parliament for Edinburgh East',
+            party_set=gb_parties,
         )
 
         edinburgh_candidate = PersonExtraFactory.create(
