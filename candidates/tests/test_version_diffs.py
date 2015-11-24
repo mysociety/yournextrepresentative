@@ -1,8 +1,22 @@
 from django.test import TestCase
 
 from candidates.diffs import get_version_diffs
+from . import factories
 
 class TestVersionDiffs(TestCase):
+
+    def setUp(self):
+        wmc_area_type = factories.AreaTypeFactory.create()
+        factories.ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,),
+        )
+        factories.EarlierElectionFactory.create(
+            slug='2010',
+            name='2010 General Election',
+            area_types=(wmc_area_type,)
+        )
 
     def test_get_version_diffs(self):
         versions = [
