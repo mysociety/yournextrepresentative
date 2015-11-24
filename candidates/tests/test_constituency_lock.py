@@ -10,13 +10,14 @@ from .factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
     ParliamentaryChamberFactory, PersonExtraFactory,
     CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory
+    PartyFactory, PartySetFactory
 )
 
 class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -28,14 +29,16 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
             elections=(election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         PostExtraFactory.create(
             candidates_locked=True,
             elections=(election,),
             base__organization=commons,
             slug='65913',
-            base__label='Member of Parliament for Camberwell and Peckham'
+            base__label='Member of Parliament for Camberwell and Peckham',
+            party_set=gb_parties,
         )
         self.post_extra_id = post_extra.id
 
@@ -124,6 +127,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
@@ -135,20 +139,23 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         self.parties = {}
         for i in xrange(0, 4):
             party_extra = PartyExtraFactory.create()
+            gb_parties.parties.add(party_extra.base)
             self.parties[party_extra.slug] = party_extra
         post_extra = PostExtraFactory.create(
             candidates_locked=False,
             elections=(self.election,),
             base__organization=self.commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         post_extra_locked = PostExtraFactory.create(
             candidates_locked=True,
             elections=(self.election,),
             base__organization=self.commons,
             slug='65913',
-            base__label='Member of Parliament for Camberwell and Peckham'
+            base__label='Member of Parliament for Camberwell and Peckham',
+            party_set=gb_parties,
         )
         self.post_extra_id = post_extra.id
         person_extra = PersonExtraFactory.create(
