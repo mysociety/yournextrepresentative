@@ -14,8 +14,8 @@
 <h2>{% blocktrans with election_name=election_data.name %}All parties with any candidates standing in {{ election_name }}{% endblocktrans %}</h2>
 
 <ul class="party-list">
-  {% for p in parties %}
-    <li><a href="{% url 'party' election=election organization_id=p.1 ignored_slug=p.0|slugify %}">{{ p.0 }}</a></li>
+  {% for party_extra in parties_extra %}
+    <li><a href="{% url 'party' election=election organization_id=party_extra.slug ignored_slug=party_extra.base.name|slugify %}">{{ party_extra.base.name }}</a></li>
   {% endfor %}
 </ul>
 

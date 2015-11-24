@@ -1,14 +1,11 @@
 from collections import defaultdict
 
-from django.http import Http404
 from django.views.generic import TemplateView
-from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 
 from popolo.models import Organization, Membership
 
-from cached_counts.models import CachedCount
-from candidates.models import PostExtra
+from candidates.models import OrganizationExtra, PostExtra
 from elections.mixins import ElectionMixin
 
 
@@ -17,16 +14,11 @@ class PartyListView(ElectionMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PartyListView, self).get_context_data(**kwargs)
-        party_ids_with_any_candidates = set(
-            CachedCount.objects.filter(count_type='party', count__gt=0). \
-                values_list('object_id', flat=True)
-        )
-        parties = []
-        for party in Organization.objects.filter(classification='Party'):
-            if party.id in party_ids_with_any_candidates:
-                parties.append((party.name, party.id))
-        parties.sort()
-        context['parties'] = parties
+        context['parties_extra'] = OrganizationExtra.objects \
+            .filter(
+                base__memberships_on_behalf_of__extra__election=self.election_data,
+                base__classification='Party'
+            ).distinct().select_related('base').order_by('base__name')
         return context
 
 
