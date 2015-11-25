@@ -67,7 +67,8 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             election=election,
             base__person=edinburgh_winner.base,
             base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__on_behalf_of=party_extra.base,
+            elected=True,
             )
 
         CandidacyExtraFactory.create(
@@ -84,19 +85,6 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             person=edinburgh_winner.base,
             organization=party_extra.base
         )
-        winner_mem = MembershipFactory.create(
-            person=edinburgh_winner.base,
-            post=winner_post_extra.base,
-            organization=commons,
-        )
-        MembershipExtraFactory.create(
-            base=winner_mem,
-            elected=True,
-            election=election
-        )
-
-
-
 
     def test_any_constituency_page_without_login(self):
         # Just a smoke test for the moment:
