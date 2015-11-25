@@ -222,14 +222,11 @@ class PersonExtra(HasImageMixin, models.Model):
         return "{0} or {1}".format(min_age, max_age)
 
     def get_elected(self, election):
-        # FIXME: change this to use the MembershipExtra elected
-        # property...
-        role = election.winner_membership_role
+        role = election.candidate_membership_role
         if role is None:
             role = ''
         return self.base.memberships.filter(
             role=role,
-            organization=election.organization,
             extra__election=election,
             extra__elected=True
         ).exists()
