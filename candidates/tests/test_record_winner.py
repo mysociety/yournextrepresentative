@@ -8,7 +8,7 @@ from .factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
     ParliamentaryChamberFactory, PersonExtraFactory,
     CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
-    MembershipFactory
+    MembershipFactory, PartySetFactory
 )
 
 
@@ -16,18 +16,20 @@ class TestRecordWinner(TestUserMixin, WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         commons = ParliamentaryChamberFactory.create()
-        election = ElectionFactory.create(
+        self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,),
             organization=commons
         )
         post_extra = PostExtraFactory.create(
-            elections=(election,),
+            elections=(self.election,),
             base__organization=commons,
             slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
         )
         person_extra = PersonExtraFactory.create(
             base__id='2009',
@@ -36,7 +38,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         PartyFactory.reset_sequence()
         party_extra = PartyExtraFactory.create()
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
             base__post=post_extra.base,
             base__on_behalf_of=party_extra.base
@@ -52,7 +54,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=winner.base,
             base__post=post_extra.base,
             base__on_behalf_of=party_extra.base
@@ -148,4 +150,4 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
 
         person = Person.objects.get(id=4322)
-        self.assertTrue(person.extra.get_elected('2015'))
+        self.assertTrue(person.extra.get_elected(self.election))
