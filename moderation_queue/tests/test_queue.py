@@ -23,7 +23,7 @@ from candidates.tests.factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
     ParliamentaryChamberFactory, PersonExtraFactory,
     CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory
+    PartyFactory, PartySetFactory, AreaFactory
 )
 
 TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
@@ -43,17 +43,25 @@ class PhotoReviewTests(WebTest):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
+        commons = ParliamentaryChamberFactory.create()
+        area = AreaFactory.create(
+            name="Dulwich and West Norwood",
+        )
+
         election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
-            area_types=(wmc_area_type,)
+            area_types=(wmc_area_type,),
+            organization=commons
         )
-        commons = ParliamentaryChamberFactory.create()
         post_extra = PostExtraFactory.create(
             elections=(election,),
             base__organization=commons,
             base__id='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
+            base__area=area,
         )
         person_2009 = PersonExtraFactory.create(
             base__id='2009',
