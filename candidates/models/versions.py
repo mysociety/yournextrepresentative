@@ -49,7 +49,7 @@ def get_person_as_version_data(person):
             'post_id': post.extra.slug,
             'name': shorten_post_label(post.label)
         }
-        if person_extra.get_elected(election.slug):
+        if person_extra.get_elected(election):
             standing_in[election.slug]['elected'] = True
         party = membership.on_behalf_of
         party_memberships[election.slug] = {

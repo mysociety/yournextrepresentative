@@ -47,9 +47,9 @@ def post_in_election(person, election):
     return mark_safe(result)
 
 @register.filter
-def election_decision_known(person, election_slug):
-    return person.extra.get_elected(election_slug) is not None
+def election_decision_known(person, election):
+    return person.extra.get_elected(election) is not None
 
 @register.filter
-def was_elected(person, election_slug):
-    return bool(person.extra.get_elected(election_slug))
+def was_elected(person, election):
+    return bool(person.extra.get_elected(election))

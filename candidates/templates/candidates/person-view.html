@@ -81,14 +81,16 @@
 
 {% block content %}
 
-{% if person|election_decision_known:"2015" %}
-  <div class="person__details__result">
-  {% if person|was_elected:"2015" %}
-    <h3>{% blocktrans with name=person.name %}{{ name }} was elected{% endblocktrans %}</h3>
-  {% else %}
-    <h3>{% blocktrans with name=person.name %}{{ name }} was not elected{% endblocktrans %}</h3>
+{% if election_to_show %}
+  {% if person|election_decision_known:election_to_show %}
+    <div class="person__details__result">
+    {% if person|was_elected:election_to_show %}
+      <h3>{% blocktrans with name=person.name %}{{ name }} was elected{% endblocktrans %}</h3>
+    {% else %}
+      <h3>{% blocktrans with name=person.name %}{{ name }} was not elected{% endblocktrans %}</h3>
+    {% endif %}
+    </div>
   {% endif %}
-  </div>
 {% endif %}
 
 <div class="person__details">

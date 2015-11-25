@@ -50,8 +50,8 @@
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="candidates-list__person{% if c|was_elected:election %} candidates-list__person__winner{% endif %}">
-          {% if c|was_elected:election %}
+        <li class="candidates-list__person{% if c|was_elected:election_data %} candidates-list__person__winner{% endif %}">
+          {% if c|was_elected:election_data %}
             <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
           {% endif %}
 

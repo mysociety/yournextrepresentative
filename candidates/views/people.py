@@ -89,6 +89,9 @@ class PersonView(TemplateView):
         context['person'] = self.person
         context['elections_by_date'] = Election.objects.by_date()
         context['last_candidacy'] = self.person.extra.last_candidacy
+        context['election_to_show'] = None
+        if settings.ELECTION_APP == 'uk_general_election_2015':
+            context['election_to_show'] = Election.objects.get(slug='2015')
         return context
 
     def get(self, request, *args, **kwargs):
