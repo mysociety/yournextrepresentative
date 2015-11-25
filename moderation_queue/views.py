@@ -220,7 +220,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
         cropped.save(ntf.name, 'PNG')
-        filename = person_id + '.png'
+        filename = str(person_id) + '.png'
         storage_filename = image_storage.get_available_name(filename)
         storage_path = join('images', storage_filename)
         with open(ntf.name, 'rb') as f:
