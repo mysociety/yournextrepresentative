@@ -42,10 +42,14 @@ class CSVTests(TestCase):
         self.gb_person_extra = factories.PersonExtraFactory.create(
             base__id=2009,
             base__name='Tessa Jowell',
+            base__honorific_suffix='DBE',
+            base__honorific_prefix='Ms',
+            base__email='jowell@example.com',
         )
         self.ni_person_extra = factories.PersonExtraFactory.create(
             base__id=1953,
-            base__name=u'Daithí McKay'
+            base__name=u'Daithí McKay',
+            base__gender='male',
         )
         camberwell_area_extra = factories.AreaExtraFactory.create(
             base__identifier='65913',
@@ -108,19 +112,19 @@ class CSVTests(TestCase):
 
     def test_as_dict(self):
         person_dict = self.gb_person_extra.as_dict(self.election)
-        self.assertEqual(len(person_dict), 30)
+        self.assertEqual(len(person_dict), 26)
         self.assertEqual(person_dict['id'], 2009)
 
     def test_as_dict_2010(self):
         # Could do with a person example who changes constituency
         person_dict = self.gb_person_extra.as_dict(self.earlier_election)
-        self.assertEqual(len(person_dict), 30)
+        self.assertEqual(len(person_dict), 26)
         self.assertEqual(person_dict['id'], 2009)
 
     def test_csv_output(self):
         example_output = \
-            'id,name,honorific_prefix,honorific_suffix,gender,birth_date,election,party_id,party_name,post_id,post_label,mapit_url,elected,email,twitter_username,facebook_page_url,party_ppc_page_url,facebook_personal_url,homepage_url,wikipedia_url,linkedin_url,image_url,proxy_image_url_template,image_copyright,image_uploading_user,image_uploading_user_notes,gss_code,parlparse_id,theyworkforyou_url,party_ec_id\r\n' \
-            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65808,Dulwich and West Norwood,http://mapit.mysociety.org/area/65808,,jowell@example.com,,,,,,,,,,,,,E14000673,uk.org.publicwhip/person/10326,http://www.theyworkforyou.com/mp/10326,\r\n' \
+            'id,name,honorific_prefix,honorific_suffix,gender,birth_date,election,party_id,party_name,post_id,post_label,mapit_url,elected,email,twitter_username,facebook_page_url,party_ppc_page_url,facebook_personal_url,homepage_url,wikipedia_url,linkedin_url,image_url,proxy_image_url_template,image_copyright,image_uploading_user,image_uploading_user_notes\r\n' \
+            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65808,Dulwich and West Norwood,http://mapit.mysociety.org/area/65808,,jowell@example.com\r\n' \
             '1953,Daith\xc3\xad McKay,,,male,,2015,party:39,Sinn F\xc3\xa9in,66135,North Antrim,http://mapit.mysociety.org/area/66135,,,,,,,,,,,,,,,N06000012,,,PP39\r\n'
         self.assertEqual(
             list_to_csv(
