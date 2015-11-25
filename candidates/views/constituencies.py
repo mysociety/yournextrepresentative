@@ -302,10 +302,10 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
 
         with transaction.atomic():
             existing_winner = self.post_data.memberships.filter(
-                organization=self.election_data.organization,
                 extra__elected=True,
                 extra__election=self.election_data
             )
+            # FIXME: need to fix for elections with multiple winners
             if existing_winner.exists():
                 old_winner = existing_winner.first()
                 old_winner.person.extra.record_version(change_metadata)
@@ -320,27 +320,31 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                     source=change_metadata['information_source'],
                 )
 
-                old_winner.delete()
+                old_winner.extra.elected = False
+                old_winner.save()
 
-            role = self.election_data.winner_membership_role
-            if role is None:
-                role=''
-            membership, _ = Membership.objects.get_or_create(
-                organization=self.election_data.organization,
+            role = self.election_data.candidate_membership_role
+            membership = Membership.objects.get(
                 role=role,
                 post=self.post_data,
                 person=self.person,
-                on_behalf_of=self.person.extra.last_party(),
                 extra__election=self.election_data,
+            )
+
+            membership.extra.elected = True
+            membership.extra.save()
+
+            all_candidates = self.post_data.memberships.filter(
+                role=self.election_data.candidate_membership_role,
+                extra__election=self.election_data,
+            ).exclude(
                 extra__elected=True
             )
 
-            extra, _ = MembershipExtra.objects.get_or_create(
-                base=membership,
-            )
-            extra.election = self.election_data
-            extra.elected = True
-            extra.save()
+            for candidate in all_candidates.all():
+                candidate.extra.elected = False
+                candidate.extra.save()
+
 
             """
             TODO: test, convert this to models, add parlparse id
@@ -386,7 +390,6 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
 
         with transaction.atomic():
             existing_winner = post.memberships.filter(
-                organization=self.election_data.organization,
                 extra__elected=True,
                 extra__election=self.election_data
             )
@@ -410,7 +413,13 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
                     source=change_metadata['information_source'],
                 )
 
-                membership.delete()
+            all_candidates = self.post_data.memberships.filter(
+                role=self.election_data.candidate_membership_role,
+                extra__election=self.election_data,
+            )
+            for candidate in all_candidates.all():
+                candidate.extra.elected = None
+                candidate.extra.save()
 
         return HttpResponseRedirect(
             reverse(
