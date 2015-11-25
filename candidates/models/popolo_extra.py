@@ -337,6 +337,72 @@ class PersonExtra(HasImageMixin, models.Model):
         update_person_from_form(person, person_extra, form)
         return person_extra
 
+    def as_dict(self, election):
+        candidacy_extra = MembershipExtra.objects \
+            .select_related('base', 'base__post__area') \
+            .prefetch_related(
+                'base__post__extra',
+                'base__on_behalf_of__extra',
+                'base__post__area__other_identifiers',
+            ) \
+            .get(
+                election=election,
+                base__person=self.base,
+                base__role=election.candidate_membership_role,
+            )
+        party = candidacy_extra.base.on_behalf_of
+        post = candidacy_extra.base.post
+        elected = self.get_elected(election)
+        elected_for_csv = ''
+        if elected is not None:
+            elected_for_csv = str(elected)
+        primary_image_url = ''
+        primary_image = self.primary_image()
+        if primary_image:
+            primary_image_url = primary_image.url()
+
+        row = {
+            'id': self.base.id,
+            'name': self.base.name,
+            'honorific_prefix': self.base.honorific_prefix,
+            'honorific_suffix': self.base.honorific_suffix,
+            'gender': self.base.gender,
+            'birth_date': self.base.birth_date,
+            'election': election.slug,
+            'party_id': party.extra.slug,
+            'party_name': party.name,
+            'post_id': post.extra.slug,
+            'post_label': post.extra.short_label,
+            'mapit_url': post.area.other_identifiers \
+                .get(scheme='mapit-area-url').identifier,
+            'elected': elected_for_csv,
+            'email': self.base.email,
+            'twitter_username': self.twitter_username,
+            'facebook_page_url': self.facebook_page_url,
+            'linkedin_url': self.linkedin_url,
+            'party_ppc_page_url': self.party_ppc_page_url,
+            'facebook_personal_url': self.facebook_personal_url,
+            'homepage_url': self.homepage_url,
+            'wikipedia_url': self.wikipedia_url,
+            'image_url': primary_image_url,
+            # FIXME: we need to find an alternative to the PopIt image
+            # proxy:
+            'proxy_image_url_template': '',
+            # FIXME: add these extra image properties
+            # 'image_copyright': image_copyright,
+            # 'image_uploading_user': image_uploading_user,
+            # 'image_uploading_user_notes': image_uploading_user_notes,
+            'image_copyright': '',
+            'image_uploading_user': '',
+            'image_uploading_user_notes': '',
+        }
+        from ..election_specific import get_extra_csv_values
+        extra_csv_data = get_extra_csv_values(self.base, election)
+        row.update(extra_csv_data)
+
+        return row
+
+
 
 class OrganizationExtra(models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
