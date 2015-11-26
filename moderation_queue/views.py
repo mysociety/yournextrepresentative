@@ -25,7 +25,7 @@ from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
-from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
+from .models import QueuedImage, ImageExtra, PHOTO_REVIEWERS_GROUP_NAME
 
 from candidates.models import LoggedAction
 from candidates.views.version_data import get_client_ip, get_change_metadata
@@ -236,12 +236,19 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 uploaded_by=self.queued_image.user.username,
             )
 
-        Image.objects.create(
+        image = Image.objects.create(
             image=storage_filename,
             source=source,
             is_primary=make_primary,
             object_id=person.extra.id,
             content_type_id=person_extra_content_type.id
+        )
+
+        extra = ImageExtra.objects.create(
+            base=image,
+            uploading_user=self.queued_image.user,
+            user_notes=self.queued_image.justification_for_use,
+            copyright=self.queued_image.why_allowed
         )
 
         data = {
