@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import QueuedImage
+from .models import QueuedImage, CopyrightOptions
 
 class UploadPersonPhotoForm(forms.ModelForm):
 
@@ -57,5 +57,5 @@ class PhotoReviewForm(forms.Form):
         required=False
     )
     moderator_why_allowed = forms.ChoiceField(
-        choices=QueuedImage.WHY_ALLOWED_CHOICES
+        choices=CopyrightOptions.WHY_ALLOWED_CHOICES
     )
