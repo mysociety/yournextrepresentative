@@ -221,15 +221,30 @@ class PersonExtra(HasImageMixin, models.Model):
             return str(min_age)
         return "{0} or {1}".format(min_age, max_age)
 
+    """
+    Return the elected state for a person in an election.
+    Takes the election object as an arg.
+    Returns True if they were elected, False if not and None if
+    the results have not been set.
+    This assumes that someone can only be elected in a single
+    post in any election.
+    """
     def get_elected(self, election):
         role = election.candidate_membership_role
         if role is None:
             role = ''
-        return self.base.memberships.filter(
-            role=role,
-            extra__election=election,
-            extra__elected=True
-        ).exists()
+        membership = self.base.memberships \
+            .select_related('extra') \
+            .filter(
+                role=role,
+                extra__election=election,
+            )
+
+        result = membership.first()
+        if result:
+            return result.extra.elected
+
+        return None
 
     def last_party(self):
         party = self.base.memberships.filter(
