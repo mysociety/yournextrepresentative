@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from popolo.models import Person
 from candidates.models import OrganizationExtra
 
 class ResultEvent(models.Model):
@@ -10,7 +11,7 @@ class ResultEvent(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     election = models.CharField(blank=True, null=True, max_length=512)
-    winner_popit_person_id = models.CharField(blank=False, max_length=256)
+    winner = models.ForeignKey(Person)
     winner_person_name = models.CharField(blank=False, max_length=1024)
     post_id = models.CharField(blank=False, max_length=256)
     post_name = models.CharField(blank=True, null=True, max_length=1024)
@@ -31,7 +32,7 @@ class ResultEvent(models.Model):
     def create_from_popit_person(cls, popit_person, election, source, user):
         kwargs = {
             'election': election,
-            'winner_popit_person_id': popit_person.id,
+            'winner': popit_person.id,
             'winner_person_name': popit_person.name,
             'post_id': popit_person.standing_in[election]['post_id'],
             'post_name': popit_person.standing_in[election]['name'],
