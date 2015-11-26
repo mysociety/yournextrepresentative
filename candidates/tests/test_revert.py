@@ -1,5 +1,6 @@
 import json
 from mock import patch
+from string import Template
 
 from django.db.models import F
 
@@ -17,6 +18,77 @@ example_version_id = '5aa6418325c1a0bb'
 # FIXME: add a test to check that unauthorized people can't revert
 
 class TestRevertPersonView(TestUserMixin, WebTest):
+
+    version_template = Template('''[
+          {
+            "username": "symroe",
+            "information_source": "Just adding example data",
+            "ip": "127.0.0.1",
+            "version_id": "35ec2d5821176ccc",
+            "timestamp": "2014-10-28T14:32:36.835429",
+            "data": {
+              "name": "Tessa Jowell",
+              "id": "2009",
+              "twitter_username": "",
+              "standing_in": {
+                "2010": {
+                  "post_id": "65808",
+                  "name": "Dulwich and West Norwood",
+                  "mapit_url": "http://mapit.mysociety.org/area/65808"
+                },
+                "2015": {
+                  "post_id": "65808",
+                  "name": "Dulwich and West Norwood",
+                  "mapit_url": "http://mapit.mysociety.org/area/65808"
+                }
+              },
+              "homepage_url": "",
+              "birth_date": null,
+              "wikipedia_url": "https://en.wikipedia.org/wiki/Tessa_Jowell",
+              "party_memberships": {
+                "2010": {
+                  "id": "$slug",
+                  "name": "Labour Party"
+                },
+                "2015": {
+                  "id": "$slug",
+                  "name": "Labour Party"
+                }
+              },
+              "email": "jowell@example.com"
+            }
+          },
+          {
+            "username": "mark",
+            "information_source": "An initial version",
+            "ip": "127.0.0.1",
+            "version_id": "5469de7db0cbd155",
+            "timestamp": "2014-10-01T15:12:34.732426",
+            "data": {
+              "name": "Tessa Jowell",
+              "id": "2009",
+              "twitter_username": "",
+              "standing_in": {
+                "2010": {
+                  "post_id": "65808",
+                  "name": "Dulwich and West Norwood",
+                  "mapit_url": "http://mapit.mysociety.org/area/65808"
+                }
+              },
+              "homepage_url": "http://example.org/tessajowell",
+              "birth_date": "1947-09-17",
+              "wikipedia_url": "",
+              "party_memberships": {
+                "2010": {
+                  "id": "$slug",
+                  "name": "Labour Party"
+                }
+              },
+              "email": "tessa.jowell@example.com"
+            }
+          }
+        ]
+    ''')
 
     def setUp(self):
         wmc_area_type = factories.AreaTypeFactory.create()
@@ -41,88 +113,19 @@ class TestRevertPersonView(TestUserMixin, WebTest):
             base__label='Member of Parliament for Dulwich and West Norwood',
             party_set=gb_parties,
         )
+        factories.PartyFactory.reset_sequence()
+        party_extra = factories.PartyExtraFactory.create()
+        self.party_slug = party_extra.slug
         person_extra = factories.PersonExtraFactory.create(
             base__id=2009,
             base__name='Tessa Jowell',
             base__email='jowell@example.com',
-            versions='''
-                [
-                  {
-                    "username": "symroe",
-                    "information_source": "Just adding example data",
-                    "ip": "127.0.0.1",
-                    "version_id": "35ec2d5821176ccc",
-                    "timestamp": "2014-10-28T14:32:36.835429",
-                    "data": {
-                      "name": "Tessa Jowell",
-                      "id": "2009",
-                      "twitter_username": "",
-                      "standing_in": {
-                        "2010": {
-                          "post_id": "65808",
-                          "name": "Dulwich and West Norwood",
-                          "mapit_url": "http://mapit.mysociety.org/area/65808"
-                        },
-                        "2015": {
-                          "post_id": "65808",
-                          "name": "Dulwich and West Norwood",
-                          "mapit_url": "http://mapit.mysociety.org/area/65808"
-                        }
-                      },
-                      "homepage_url": "",
-                      "birth_date": null,
-                      "wikipedia_url": "https://en.wikipedia.org/wiki/Tessa_Jowell",
-                      "party_memberships": {
-                        "2010": {
-                          "id": "party:53",
-                          "name": "Labour Party"
-                        },
-                        "2015": {
-                          "id": "party:53",
-                          "name": "Labour Party"
-                        }
-                      },
-                      "email": "jowell@example.com"
-                    }
-                  },
-                  {
-                    "username": "mark",
-                    "information_source": "An initial version",
-                    "ip": "127.0.0.1",
-                    "version_id": "5469de7db0cbd155",
-                    "timestamp": "2014-10-01T15:12:34.732426",
-                    "data": {
-                      "name": "Tessa Jowell",
-                      "id": "2009",
-                      "twitter_username": "",
-                      "standing_in": {
-                        "2010": {
-                          "post_id": "65808",
-                          "name": "Dulwich and West Norwood",
-                          "mapit_url": "http://mapit.mysociety.org/area/65808"
-                        }
-                      },
-                      "homepage_url": "http://example.org/tessajowell",
-                      "birth_date": "1947-09-17",
-                      "wikipedia_url": "",
-                      "party_memberships": {
-                        "2010": {
-                          "id": "party:53",
-                          "name": "Labour Party"
-                        }
-                      },
-                      "email": "tessa.jowell@example.com"
-                    }
-                  }
-                ]
-            ''',
+            versions=self.version_template.substitute(slug=self.party_slug)
         )
         person_extra.base.links.create(
             url='',
             note='wikipedia',
         )
-        factories.PartyFactory.reset_sequence()
-        party_extra = factories.PartyExtraFactory.create()
         gb_parties.parties.add(party_extra.base)
         factories.CandidacyExtraFactory.create(
             election=election,
@@ -163,6 +166,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
         # First check that a new version has been created:
         new_versions = json.loads(person_extra.versions)
 
+        self.maxDiff = None
         expected_new_version = {
             'data': {
                 'facebook_page_url': '',
@@ -188,7 +192,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                 'wikipedia_url': '',
                 'party_memberships': {
                     u'2010': {
-                        u'id': u'party:53',
+                        u'id': unicode(self.party_slug),
                         u'name': u'Labour Party'
                     }
                 },
