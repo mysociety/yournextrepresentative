@@ -45,6 +45,7 @@ class CSVTests(TestCase):
             base__honorific_suffix='DBE',
             base__honorific_prefix='Ms',
             base__email='jowell@example.com',
+            base__gender='female',
         )
         self.ni_person_extra = factories.PersonExtraFactory.create(
             base__id=1953,
@@ -124,8 +125,8 @@ class CSVTests(TestCase):
     def test_csv_output(self):
         example_output = \
             'id,name,honorific_prefix,honorific_suffix,gender,birth_date,election,party_id,party_name,post_id,post_label,mapit_url,elected,email,twitter_username,facebook_page_url,party_ppc_page_url,facebook_personal_url,homepage_url,wikipedia_url,linkedin_url,image_url,proxy_image_url_template,image_copyright,image_uploading_user,image_uploading_user_notes\r\n' \
-            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65808,Dulwich and West Norwood,http://mapit.mysociety.org/area/65808,,jowell@example.com\r\n' \
-            '1953,Daith\xc3\xad McKay,,,male,,2015,party:39,Sinn F\xc3\xa9in,66135,North Antrim,http://mapit.mysociety.org/area/66135,,,,,,,,,,,,,,,N06000012,,,PP39\r\n'
+            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65913,Camberwell and Peckham,http://mapit.mysociety.org/area/65913,,jowell@example.com,,,,,,,,,,,,\r\n' \
+            '1953,Daith\xc3\xad McKay,,,male,,2015,party:39,Sinn F\xc3\xa9in,66135,North Antrim,http://mapit.mysociety.org/area/66135,,,,,,,,,,,,,,\r\n'
         self.assertEqual(
             list_to_csv(
                 [
