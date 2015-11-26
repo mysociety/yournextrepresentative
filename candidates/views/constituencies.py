@@ -346,11 +346,9 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                 candidate.extra.save()
 
 
-            """
-            TODO: test, convert this to models, add parlparse id
             ResultEvent.objects.create(
                 election=self.election_data,
-                winner_popit_person_id=self.person.extra.slug,
+                winner=self.person,
                 winner_person_name=self.person.name,
                 post_id=self.post_data.extra.slug,
                 post_name=self.post_data.label,
@@ -358,7 +356,6 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                 source=form.cleaned_data['source'],
                 user=self.request.user,
             )
-            """
 
             self.person.extra.record_version(change_metadata)
             self.person.save()
