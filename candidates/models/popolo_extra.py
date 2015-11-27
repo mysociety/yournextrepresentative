@@ -368,10 +368,11 @@ class PersonExtra(HasImageMixin, models.Model):
         elected_for_csv = ''
         if elected is not None:
             elected_for_csv = str(elected)
-        primary_image_url = ''
         primary_image = self.primary_image()
         if primary_image:
-            primary_image_url = primary_image.url()
+            primary_image_url = primary_image.url
+        else:
+            primary_image_url = ''
 
         row = {
             'id': self.base.id,
