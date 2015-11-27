@@ -113,20 +113,20 @@ class CSVTests(TestCase):
 
     def test_as_dict(self):
         person_dict = self.gb_person_extra.as_dict(self.election)
-        self.assertEqual(len(person_dict), 26)
+        self.assertEqual(len(person_dict), 27)
         self.assertEqual(person_dict['id'], 2009)
 
     def test_as_dict_2010(self):
         # Could do with a person example who changes constituency
         person_dict = self.gb_person_extra.as_dict(self.earlier_election)
-        self.assertEqual(len(person_dict), 26)
+        self.assertEqual(len(person_dict), 27)
         self.assertEqual(person_dict['id'], 2009)
 
     def test_csv_output(self):
         example_output = \
-            'id,name,honorific_prefix,honorific_suffix,gender,birth_date,election,party_id,party_name,post_id,post_label,mapit_url,elected,email,twitter_username,facebook_page_url,party_ppc_page_url,facebook_personal_url,homepage_url,wikipedia_url,linkedin_url,image_url,proxy_image_url_template,image_copyright,image_uploading_user,image_uploading_user_notes\r\n' \
-            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65913,Camberwell and Peckham,http://mapit.mysociety.org/area/65913,,jowell@example.com,,,,,,,,,,,,\r\n' \
-            '1953,Daith\xc3\xad McKay,,,male,,2015,party:39,Sinn F\xc3\xa9in,66135,North Antrim,http://mapit.mysociety.org/area/66135,,,,,,,,,,,,,,\r\n'
+            'id,name,honorific_prefix,honorific_suffix,gender,birth_date,election,party_id,party_name,post_id,post_label,mapit_url,elected,email,twitter_username,facebook_page_url,party_ppc_page_url,facebook_personal_url,homepage_url,wikipedia_url,linkedin_url,image_url,proxy,proxy_image_url_template,image_copyright,image_uploading_user,image_uploading_user_notes\r\n' \
+            '2009,Tessa Jowell,Ms,DBE,female,,2015,party:53,Labour Party,65913,Camberwell and Peckham,http://mapit.mysociety.org/area/65913,,jowell@example.com,,,,,,,,,,,,,\r\n' \
+            '1953,Daith\xc3\xad McKay,,,male,,2015,party:39,Sinn F\xc3\xa9in,66135,North Antrim,http://mapit.mysociety.org/area/66135,,,,,,,,,,,,,,,\r\n'
         self.assertEqual(
             list_to_csv(
                 [

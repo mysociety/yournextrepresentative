@@ -402,7 +402,7 @@ class PersonExtra(HasImageMixin, models.Model):
             'wikipedia_url': self.wikipedia_url,
             'image_url': primary_image_url,
             # FIXME: we need to find an alternative to the PopIt image
-            # proxy:
+            'proxy': settings.IMAGE_PROXY_URL,
             'proxy_image_url_template': '',
             # FIXME: add these extra image properties
             # 'image_copyright': image_copyright,

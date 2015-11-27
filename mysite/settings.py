@@ -439,6 +439,11 @@ except AttributeError:
 
 ELECTION_RE = elections_module.ELECTION_RE
 
+try:
+    IMAGE_PROXY_URL = elections_module.IMAGE_PROXY_URL
+except AttributeError:
+    IMAGE_PROXY_URL = ''
+
 # Make sure there's a trailing slash at the end of base MapIt URL:
 MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
 

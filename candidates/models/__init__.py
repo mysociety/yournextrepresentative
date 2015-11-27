@@ -15,7 +15,7 @@ from popolo_extra import PostExtra
 from popolo_extra import MembershipExtra
 from popolo_extra import PartySet
 
-from popit import CSV_ROW_FIELDS
+from field_mappings import CSV_ROW_FIELDS
 
 from popit import person_added
 

@@ -52,3 +52,33 @@ form_complex_fields_locations = {
         'old_info_type': 'party PPC page',
     }
 }
+
+CSV_ROW_FIELDS = [
+    'id',
+    'name',
+    'honorific_prefix',
+    'honorific_suffix',
+    'gender',
+    'birth_date',
+    'election',
+    'party_id',
+    'party_name',
+    'post_id',
+    'post_label',
+    'mapit_url',
+    'elected',
+    'email',
+    'twitter_username',
+    'facebook_page_url',
+    'party_ppc_page_url',
+    'facebook_personal_url',
+    'homepage_url',
+    'wikipedia_url',
+    'linkedin_url',
+    'image_url',
+    'proxy',
+    'proxy_image_url_template',
+    'image_copyright',
+    'image_uploading_user',
+    'image_uploading_user_notes',
+]
