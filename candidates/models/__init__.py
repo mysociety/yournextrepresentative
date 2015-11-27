@@ -21,7 +21,6 @@ from popit import person_added
 
 from popit import fix_dates
 
-from db import MaxPopItIds
 from db import LoggedAction
 from db import PersonRedirect
 from db import UserTermsAgreement

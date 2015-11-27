@@ -1,35 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import post_save
-from django.utils.translation import ugettext as _
 
 from popolo.models import Person
-
-
-class MaxPopItIds(models.Model):
-    popit_collection_name = models.CharField(max_length=255)
-    max_id = models.IntegerField(default=0)
-
-    @classmethod
-    def get_max_persons_id(cls):
-        try:
-            return cls.objects.get(popit_collection_name="persons").max_id
-        except ObjectDoesNotExist:
-            persons_max = cls(popit_collection_name="persons")
-            persons_max.save()
-            return persons_max.max_id
-
-    @classmethod
-    def update_max_persons_id(cls, max_id):
-        max_persons, created = cls.objects.get_or_create(
-            popit_collection_name="persons")
-        if max_id > max_persons.max_id:
-            max_persons.max_id = max_id
-            max_persons.save()
-        else:
-            raise ValueError(_('given max_id is lower than the previous one ({'
-                             '0} vs {1})').format(max_id, max_persons.max_id))
 
 
 class LoggedAction(models.Model):
