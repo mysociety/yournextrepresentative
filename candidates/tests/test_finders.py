@@ -214,6 +214,7 @@ class TestConstituencyNameFinderView(WebTest):
             base__area=area,
         )
 
+    @skip('need to add uk specific testing')
     def test_pick_constituency_name(self, mock_requests):
         response = self.app.get('/')
         form = response.forms['form-address']
