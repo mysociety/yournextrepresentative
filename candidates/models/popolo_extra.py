@@ -1,5 +1,6 @@
 from datetime import date
 import json
+from urlparse import urljoin
 
 from slugify import slugify
 
@@ -349,7 +350,9 @@ class PersonExtra(HasImageMixin, models.Model):
         update_person_from_form(person, person_extra, form)
         return person_extra
 
-    def as_dict(self, election):
+    def as_dict(self, election, base_url=None):
+        if not base_url:
+            base_url = ''
         candidacy_extra = MembershipExtra.objects \
             .select_related('base', 'base__post__area') \
             .prefetch_related(
@@ -370,7 +373,7 @@ class PersonExtra(HasImageMixin, models.Model):
             elected_for_csv = str(elected)
         primary_image = self.primary_image()
         if primary_image:
-            primary_image_url = primary_image.url
+            primary_image_url = urljoin(base_url, primary_image.url)
         else:
             primary_image_url = ''
 

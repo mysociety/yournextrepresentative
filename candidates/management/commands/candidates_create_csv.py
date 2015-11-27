@@ -1,10 +1,9 @@
 from collections import defaultdict
-from optparse import make_option
 from os import chmod, rename
 from os.path import dirname
 from tempfile import NamedTemporaryFile
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import F
 
 from candidates.csv_helpers import list_to_csv
@@ -15,24 +14,18 @@ from elections.models import Election
 class Command(BaseCommand):
 
     help = "Output CSV files for all elections"
-    args = "<BASE-OUTPUT-FILENAME>"
 
-    option_list = BaseCommand.option_list + (
-        make_option('-o', '--output',
-                    dest='output_filename',
-                    help='The filename to write CSV to'),
-        make_option('-e', '--election',
-                    dest='election',
-                    help='The election identifier',
-                    default='2015'),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'OUTPUT-PREFIX',
+            help='The prefix for output filenames'
+        )
+        parser.add_argument(
+            '--site-base-url',
+            help='The base URL of the site (for full image URLs)'
+        )
 
     def handle(self, *args, **options):
-        if len(args) != 1:
-            msg = "You must supply the prefix for output filenames"
-            raise CommandError(msg)
-        output_prefix = args[0]
-
         all_elections = list(Election.objects.all())
         people_by_election = defaultdict(list)
 
@@ -43,7 +36,10 @@ class Command(BaseCommand):
                     base__memberships__role=election.candidate_membership_role
             ).select_related('base'):
                 people_by_election[election.slug].append(
-                    person_extra.as_dict(election)
+                    person_extra.as_dict(
+                        election,
+                        base_url=options['site_base_url']
+                    )
                 )
         # And then get the candidates for all elections, where we show
         # information about the most recent election.  Unfortunately
@@ -61,14 +57,19 @@ class Command(BaseCommand):
                 continue
             election = elections[-1]
             people_by_election[None].append(
-                person_extra.as_dict(election)
+                person_extra.as_dict(
+                    election,
+                    base_url=options['site_base_url']
+                )
             )
         for election in all_elections + [None]:
             if election is None:
-                output_filename = output_prefix + '-all.csv'
+                output_filename = \
+                    options['OUTPUT-PREFIX'] + '-all.csv'
                 election_slug = None
             else:
-                output_filename = output_prefix + '-' + election.slug + '.csv'
+                output_filename = \
+                    options['OUTPUT-PREFIX'] + '-' + election.slug + '.csv'
                 election_slug = election.slug
             people_data = people_by_election[election_slug]
             csv = list_to_csv(people_data)
