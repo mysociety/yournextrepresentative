@@ -69,11 +69,13 @@ class YNRPopItImporter(PopItImporter):
         return self.apps.get_model(app_label, model_name)
 
     def get_images_for_object(self, images_data, django_extra_object):
+        User = self.get_model_class('auth', 'User')
         ContentType = self.get_model_class('contenttypes', 'ContentType')
         person_extra_content_type = ContentType.objects.get_for_model(django_extra_object)
 
         # Now download and import all the images:
         Image = self.get_model_class('images', 'Image')
+        ImageExtra = self.get_model_class('moderation_queue', 'ImageExtra')
         first_image = True
         for image_data in images_data:
             with show_data_on_error('image_data', image_data):
@@ -106,18 +108,33 @@ class YNRPopItImporter(PopItImporter):
                         suggested_filename, f
                     )
                 image_uploaded_by = image_data.get('uploaded_by_user', '')
+                image_copyright = image_data.get('moderator_why_allowed', '')
+                image_justification = image_data.get('user_justification_for_use', '')
                 image_notes = image_data.get('notes', '')
                 source = 'Uploaded by {uploaded_by}: {notes}'.format(
                     uploaded_by=image_uploaded_by,
                     notes=image_notes,
                 )
-                Image.objects.create(
+                image = Image.objects.create(
                     image=storage_filename,
                     source=source,
                     is_primary=first_image,
                     object_id=django_extra_object.id,
                     content_type_id=person_extra_content_type.id
                 )
+
+                try:
+                    uploading_user = User.objects.get(username=image_uploaded_by)
+                except User.DoesNotExist:
+                    uploading_user = None
+
+                ImageExtra.objects.create(
+                    base=image,
+                    copyright=image_copyright,
+                    user_notes=image_justification,
+                    uploading_user=uploading_user
+                )
+
             if first_image:
                 first_image = False
 
@@ -579,6 +596,7 @@ class Migration(migrations.Migration):
         ('candidates', '0008_membershipextra_organizationextra_personextra_postextra'),
         ('images', '0001_initial'),
         ('popolo', '0001_initial'),
+        ('moderation_queue', '0017_imageextra'),
     ]
 
     operations = [
