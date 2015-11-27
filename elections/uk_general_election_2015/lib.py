@@ -39,7 +39,10 @@ def get_extra_csv_values(person, election):
     ).select_relate('base', 'base__post', 'base__post__area')
     post = candidacy.base.post
     party = candidacy.base.on_behalf_of
-    party_ec_id = party.identifiers.get(scheme='electoral-commission').identifier
+    try:
+        party_ec_id = party.identifiers.get(scheme='electoral-commission').identifier
+    except Identifier.DoesNotExist:
+        party_ec_id = ''
     return {
         'gss_code': post.area.other_identifiers.get(scheme='gss'),
         'parlparse_id': parlparse_id,
