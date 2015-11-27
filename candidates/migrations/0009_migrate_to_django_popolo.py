@@ -19,6 +19,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.management.color import no_style
 from django.db import connection, migrations
+from django.db.models import Count
 
 from popolo.importers.popit import PopItImporter, show_data_on_error
 
@@ -551,6 +552,25 @@ def import_from_popit(apps, schema_editor):
         elif settings.ELECTION_APP == 'ar_elections_2015':
             party_sets = ar_party_id_to_party_sets[party.extra.slug]
             party.party_sets.add(*party_sets)
+    # It turns out that there were quite a lot of duplicate
+    # memberships in the old YNR PopIt instances, so try to remove any
+    # duplicates:
+    Membership = apps.get_model('popolo', 'membership')
+    for duplicate in Membership.objects.values(
+            'label',
+            'role',
+            'person_id',
+            'organization_id',
+            'on_behalf_of',
+            'post_id',
+            'start_date',
+            'end_date',
+            'role',
+            'extra__election__slug') \
+        .annotate(Count('id')).filter(id__count__gt=1):
+        del duplicate['id__count']
+        for membership in Membership.objects.filter(**duplicate)[1:]:
+            membership.delete()
 
 
 class Migration(migrations.Migration):
