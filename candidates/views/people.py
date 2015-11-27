@@ -8,8 +8,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.http import (
-    HttpResponseRedirect, HttpResponsePermanentRedirect, Http404,
-    HttpResponse
+    HttpResponseRedirect, HttpResponsePermanentRedirect, Http404
 )
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
@@ -29,9 +28,7 @@ from ..diffs import get_version_diffs
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm
 from ..models import (
-    LoggedAction, PersonRedirect,
-    TRUSTED_TO_MERGE_GROUP_NAME,
-    TRUSTED_TO_LOCK_GROUP_NAME,
+    LoggedAction, PersonRedirect, TRUSTED_TO_MERGE_GROUP_NAME
 )
 from ..models.auth import check_creation_allowed, check_update_allowed
 from ..models.versions import (
@@ -39,7 +36,7 @@ from ..models.versions import (
 )
 from ..models import PersonExtra, PartySet
 from ..popit import merge_popit_people
-from popolo.models import Person, Post
+from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):
     """Get HTML for a flash message after a person has been created or updated"""
