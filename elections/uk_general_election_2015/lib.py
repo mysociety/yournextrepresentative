@@ -31,12 +31,13 @@ def get_extra_csv_values(person, election):
         )
     except Identifier.DoesNotExist:
         pass
-    party_ec_id = person.parties[election].get('electoral_commission_id', '')
-    candidacy = MembershipExtra.objects.get(
-        election=election,
-        base__person=person,
-        base__role=election.candidate_membership_role,
-    ).select_relate('base', 'base__post', 'base__post__area')
+    candidacy = MembershipExtra.objects \
+        .select_related('base', 'base__post', 'base__post__area') \
+        .get(
+            election=election,
+            base__person=person,
+            base__role=election.candidate_membership_role,
+        )
     post = candidacy.base.post
     party = candidacy.base.on_behalf_of
     try:
