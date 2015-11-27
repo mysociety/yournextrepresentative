@@ -369,11 +369,24 @@ class PersonExtra(HasImageMixin, models.Model):
         post = candidacy_extra.base.post
         elected = self.get_elected(election)
         elected_for_csv = ''
+        image_copyright = ''
+        image_uploading_user = ''
+        image_uploading_user_notes = ''
         if elected is not None:
             elected_for_csv = str(elected)
-        primary_image = self.primary_image()
+        primary_image = self.images \
+            .select_related('extra') \
+            .filter(
+                is_primary=True
+            ).first()
         if primary_image:
-            primary_image_url = urljoin(base_url, primary_image.url)
+            primary_image_url = urljoin(base_url, primary_image.image.url)
+            if primary_image.extra:
+                image_copyright = primary_image.extra.copyright
+                user = primary_image.extra.uploading_user
+                if user is not None:
+                    image_uploading_user = primary_image.extra.user.username
+                image_uploading_user_notes = primary_image.extra.user_notes
         else:
             primary_image_url = ''
 
@@ -404,13 +417,9 @@ class PersonExtra(HasImageMixin, models.Model):
             # FIXME: we need to find an alternative to the PopIt image
             'proxy': settings.IMAGE_PROXY_URL,
             'proxy_image_url_template': '',
-            # FIXME: add these extra image properties
-            # 'image_copyright': image_copyright,
-            # 'image_uploading_user': image_uploading_user,
-            # 'image_uploading_user_notes': image_uploading_user_notes,
-            'image_copyright': '',
-            'image_uploading_user': '',
-            'image_uploading_user_notes': '',
+            'image_copyright': image_copyright,
+            'image_uploading_user': image_uploading_user,
+            'image_uploading_user_notes': image_uploading_user_notes,
         }
         from ..election_specific import get_extra_csv_values
         extra_csv_data = get_extra_csv_values(self.base, election)
