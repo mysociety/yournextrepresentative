@@ -1,4 +1,5 @@
 from datetime import datetime
+import hashlib
 from os.path import join
 import re
 from shutil import move
@@ -21,10 +22,12 @@ import dateutil.parser
 
 from candidates.models import OrganizationExtra, PartySet, ImageExtra
 
-from ..images import get_file_md5sum
-
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
 base_emblem_url = 'http://search.electoralcommission.org.uk/Api/Registrations/Emblems/'
+
+def get_file_md5sum(filename):
+    with open(filename, 'rb') as f:
+        return hashlib.md5(f.read()).hexdigest()
 
 def find_index(l, predicate):
     for i, e in enumerate(l):
