@@ -1,27 +1,27 @@
 from datetime import datetime
-import os
 from os.path import join
 import re
-import json
 from shutil import move
-from slugify import slugify
 from tempfile import NamedTemporaryFile
 from urllib import urlencode
 from urlparse import urljoin
 
+from django.contrib.contenttypes.models import ContentType
+from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.db import transaction
 
+from images.models import Image
 import magic
 import mimetypes
+from popolo.models import Organization
 import requests
-from slumber.exceptions import HttpServerError
 import dateutil.parser
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
+from candidates.models import OrganizationExtra, PartySet, ImageExtra
 
-from ..images import get_file_md5sum, image_uploaded_already
+from ..images import get_file_md5sum
 
 emblem_directory = join(settings.BASE_DIR, 'data', 'party-emblems')
 base_emblem_url = 'http://search.electoralcommission.org.uk/Api/Registrations/Emblems/'
@@ -69,7 +69,8 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         self.mime_type_magic = magic.Magic(mime=True)
-        self.api = create_popit_api_object()
+        self.gb_parties = PartySet.objects.get(slug='gb')
+        self.ni_parties = PartySet.objects.get(slug='ni')
         start = 0
         per_page = 50
         url = 'http://pefonline.electoralcommission.org.uk/api/search/Registrations'
@@ -79,74 +80,70 @@ class Command(BaseCommand):
             'register': ["gb", "ni"],
             'regStatus': ["registered", "deregistered", "lapsed"],
         }
-        total = None
-        while total is None or start <= total:
-            ntf = NamedTemporaryFile(delete=False)
-            params['start'] = start
-            try:
+        with transaction.atomic():
+            total = None
+            while total is None or start <= total:
+                params['start'] = start
                 resp = requests.get(url + '?' + urlencode(params, doseq=True)).json()
                 if total is None:
                     total = resp['Total']
-                with open(ntf.name, 'w') as f:
-                    json.dump(resp['Result'], f)
-                self.parse_data(ntf.name)
-            finally:
-                os.remove(ntf.name)
-            start += per_page
+                self.parse_data(resp['Result'])
+                start += per_page
 
-    def parse_data(self, json_file):
-        with open(json_file) as f:
-            for ec_party in json.load(f):
-                ec_party_id = ec_party['ECRef'].strip()
-                # We're only interested in political parties:
-                if not ec_party_id.startswith('PP'):
-                    continue
-                party_id = self.clean_id(ec_party_id)
-                if ec_party['RegulatedEntityTypeName'] == 'Minor Party':
-                    register = ec_party['RegisterNameMinorParty'].replace(
-                        ' (minor party)', ''
-                    )
-                else:
-                    register = ec_party['RegisterName']
-                party_name, party_dissolved = self.clean_name(ec_party['RegulatedEntityName'])
-                party_founded = self.clean_date(ec_party['ApprovedDate'])
-                party_data = {
-                    'id': party_id,
-                    'name': party_name,
-                    'slug': slugify(party_name),
-                    'classification': 'Party',
-                    'descriptions': get_descriptions(ec_party),
-                    'founding_date': party_founded,
-                    'dissolution_date': party_dissolved,
-                    'register': register,
-                    'identifiers': [
-                        {
-                            'identifier': ec_party_id,
-                            'scheme': 'electoral-commission',
-                        }
-                    ]
-                }
-                try:
-                    self.api.organizations.post(party_data)
-                    self.upload_images(ec_party['PartyEmblems'], party_id)
-                except HttpServerError as e:
-                    if 'E11000' in e.content:
-                        # Duplicate Party Found
-                        self.api.organizations(party_id).put(party_data)
-                        self.upload_images(ec_party['PartyEmblems'], party_id)
-                    else:
-                        raise
-                organization_with_memberships = \
-                    self.api.organizations(party_id).get(embed='membership.person')['result']
-                # Make sure any members of these parties are
-                # invalidated from the cache so that the embedded
-                # party information when getting posts and persons is
-                # up-to-date:
-                for membership in organization_with_memberships.get(
-                        'memberships', []
-                ):
-                    person = PopItPerson.create_from_dict(membership['person_id'])
-                    person.invalidate_cache_entries()
+    def parse_data(self, ec_parties_data):
+        for ec_party in ec_parties_data:
+            ec_party_id = ec_party['ECRef'].strip()
+            # We're only interested in political parties:
+            if not ec_party_id.startswith('PP'):
+                continue
+            party_id = self.clean_id(ec_party_id)
+            if ec_party['RegulatedEntityTypeName'] == 'Minor Party':
+                register = ec_party['RegisterNameMinorParty'].replace(
+                    ' (minor party)', ''
+                )
+            else:
+                register = ec_party['RegisterName']
+            party_name, party_dissolved = self.clean_name(ec_party['RegulatedEntityName'])
+            party_founded = self.clean_date(ec_party['ApprovedDate'])
+            # Does this party already exist?  If not, create a new one.
+            try:
+                party_extra = OrganizationExtra.objects \
+                    .select_related('base') \
+                    .get(slug=party_id)
+                party = party_extra.base
+                print "Got the existing party:", party.name.encode('utf-8')
+            except OrganizationExtra.DoesNotExist:
+                party = Organization.objects.create(name=party_name)
+                party_extra = OrganizationExtra.objects.create(
+                    base=party, slug=party_id
+                )
+                print "Couldn't find {0}, creating a new party {1}".format(
+                    party_id, party_name.encode('utf-8')
+                )
+
+            party.name = party_name
+            party.classification = 'Party'
+            party.founding_date = party_founded
+            party.party_dissolved = party_dissolved
+            party_extra.register = register
+            {
+                'Great Britain': self.gb_parties,
+                'Northern Ireland': self.ni_parties,
+            }[register].parties.add(party)
+            party.identifiers.update_or_create(
+                scheme='electoral-commission',
+                defaults={'identifier': ec_party_id}
+            )
+            party.other_names.filter(note='registered-description').delete()
+            for d in get_descriptions(ec_party):
+                value = d['description']
+                translation = d['translation']
+                if translation:
+                    value = u"{0} | {1}".format(value, translation)
+                party.other_names.create(name=value, note='')
+            self.upload_images(ec_party['PartyEmblems'], party_extra)
+            party.save()
+            party_extra.save()
 
     def clean_date(self, date):
         timestamp = re.match(
@@ -168,11 +165,10 @@ class Command(BaseCommand):
 
         return name.strip(), deregistered_date
 
-    def upload_images(self, emblems, party_id):
-        image_upload_url = "{0}/{1}/organizations/{2}/image".format(
-            self.api.get_url(), self.api.get_api_version(), party_id
-        )
-        sort_emblems(emblems, party_id)
+    def upload_images(self, emblems, party_extra):
+        content_type = ContentType.objects.get_for_model(party_extra)
+        sort_emblems(emblems, party_extra.slug)
+        primary = True
         for emblem in emblems:
             emblem_id = str(emblem['Id'])
             ntf = NamedTemporaryFile(delete=False)
@@ -182,32 +178,32 @@ class Command(BaseCommand):
                 f.write(r.content)
             mime_type = self.mime_type_magic.from_file(ntf.name)
             extension = mimetypes.guess_extension(mime_type)
-            fname = join(emblem_directory, 'Emblem_{0}{1}'.format(emblem_id, extension))
+            leafname = 'Emblem_{0}{1}'.format(emblem_id, extension)
+            fname = join(emblem_directory, leafname)
             move(ntf.name, fname)
-            if not image_uploaded_already(
-                self.api.organizations,
-                party_id,
-                fname
-            ):
-                md5sum = get_file_md5sum(fname)
+            md5sum = get_file_md5sum(fname)
+            if not ImageExtra.objects.filter(md5sum=md5sum).exists():
+                # Create the image file in the media root:
+                image_storage = FileSystemStorage()
+                desired_storage_path = join('images', leafname)
                 with open(fname, 'rb') as f:
-                    requests.post(
-                        image_upload_url,
-                        headers={
-                            'Apikey': self.api.api_key
-                        },
-                        files={
-                            'image': f
-                        },
-                        data={
-                            'notes': emblem['MonochromeDescription'],
-                            'source': 'The Electoral Commission',
-                            'id': emblem_id,
-                            'md5sum': md5sum,
-                            'mime_type': mime_type,
-                            'created': None,
-                        }
+                    storage_filename = image_storage.save(
+                        desired_storage_path, f
                     )
+                image = Image.objects.create(
+                    image=storage_filename,
+                    source='The Electoral Commission',
+                    is_primary=primary,
+                    object_id=party_extra.id,
+                    content_type_id=content_type.id,
+                )
+                ImageExtra.objects.create(
+                    base=image,
+                    uploading_user=None,
+                    md5sum=md5sum,
+                    user_notes=emblem['MonochromeDescription'],
+                )
+            primary = False
 
     def clean_id(self, party_id):
         party_id = re.sub(r'^PPm?\s*', '', party_id).strip()

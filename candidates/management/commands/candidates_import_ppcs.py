@@ -25,7 +25,7 @@ from candidates.models import PopItPerson
 from candidates.views.version_data import get_change_metadata
 from candidates.popit import PopItApiMixin, get_search_url
 
-from ..images import image_uploaded_already, get_file_md5sum
+from ..images import get_file_md5sum
 
 party_slug_to_popit_party = {
     'labour': {
@@ -222,6 +222,7 @@ class Command(PopItApiMixin, BaseCommand):
             )
 
     def update_popit_person(self, popit_person_id, ppc_data, image_filename):
+        from ..images import image_uploaded_already
         # Get the existing data first:
         person_data, _ = self.get_person(popit_person_id)
         previous_versions = person_data.pop('versions')
