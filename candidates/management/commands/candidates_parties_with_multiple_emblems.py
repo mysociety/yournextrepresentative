@@ -1,24 +1,23 @@
 from django.core.management.base import BaseCommand
 
-from candidates.popit import create_popit_api_object, popit_unwrap_pagination
+from candidates.models import OrganizationExtra
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        api = create_popit_api_object()
 
-        for org in popit_unwrap_pagination(
-            api.organizations,
-            per_page=100
-        ):
-            org.pop('versions', None)
-            org.pop('memberships', None)
-            images = org.get('images', [])
+        for party_extra in OrganizationExtra.objects \
+                .filter(base__classification='Party') \
+                .select_related('base') \
+                .prefetch_related('images'):
+            images = list(party_extra.images.all())
             if len(images) < 2:
                 continue
             print "====================================================="
-            print len(images), org['id'], org['name'].encode('utf-8')
+            party = party_extra.base
+            print len(images), party_extra.slug, party.name.encode('utf-8')
             for image in images:
                 print '  --'
-                print '   ' + image['notes'].encode('utf-8')
-                print '   ' + image['url']
+                print '   ' + image.source.encode('utf-8')
+                print '   ' + image.image.url
