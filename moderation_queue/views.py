@@ -25,9 +25,9 @@ from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
-from .models import QueuedImage, ImageExtra, PHOTO_REVIEWERS_GROUP_NAME
+from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, ImageExtra
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 from popolo.models import Person

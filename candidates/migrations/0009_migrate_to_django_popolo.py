@@ -75,7 +75,7 @@ class YNRPopItImporter(PopItImporter):
 
         # Now download and import all the images:
         Image = self.get_model_class('images', 'Image')
-        ImageExtra = self.get_model_class('moderation_queue', 'ImageExtra')
+        ImageExtra = self.get_model_class('candidates', 'ImageExtra')
         first_image = True
         for image_data in images_data:
             with show_data_on_error('image_data', image_data):
@@ -89,6 +89,8 @@ class YNRPopItImporter(PopItImporter):
                         status=e.response.status_code
                     )
                     continue
+                with open(image_filename, 'rb') as f:
+                    md5sum = hashlib.md5(f.read()).hexdigest()
                 with open(image_filename, 'rb') as f:
                     try:
                         pillow_image = PillowImage.open(f)
@@ -132,7 +134,8 @@ class YNRPopItImporter(PopItImporter):
                     base=image,
                     copyright=image_copyright,
                     user_notes=image_justification,
-                    uploading_user=uploading_user
+                    uploading_user=uploading_user,
+                    md5sum=md5sum,
                 )
 
             if first_image:
@@ -596,7 +599,6 @@ class Migration(migrations.Migration):
         ('candidates', '0008_membershipextra_organizationextra_personextra_postextra'),
         ('images', '0001_initial'),
         ('popolo', '0001_initial'),
-        ('moderation_queue', '0017_imageextra'),
     ]
 
     operations = [

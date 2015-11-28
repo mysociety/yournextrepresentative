@@ -5,7 +5,6 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from images.models import Image
 from popolo.models import Person
 
 PHOTO_REVIEWERS_GROUP_NAME = 'Photo Reviewers'
@@ -31,18 +30,6 @@ class CopyrightOptions:
         (OTHER,
          _("Other")),
     )
-
-
-class ImageExtra(models.Model):
-    base = models.OneToOneField(Image, related_name='extra')
-
-    copyright = models.CharField(
-        max_length=64,
-        choices=CopyrightOptions.WHY_ALLOWED_CHOICES,
-        default=CopyrightOptions.OTHER,
-    )
-    uploading_user = models.ForeignKey(User, blank=True, null=True)
-    user_notes = models.TextField(blank=True)
 
 
 class QueuedImage(models.Model):

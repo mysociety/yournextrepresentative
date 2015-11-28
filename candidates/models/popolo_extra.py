@@ -5,6 +5,7 @@ from urlparse import urljoin
 from slugify import slugify
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import connection
@@ -481,3 +482,11 @@ class PartySet(models.Model):
         result = list(self.parties.order_by('name').values_list('id', 'name'))
         result.insert(0, ('party:none', ''))
         return result
+
+class ImageExtra(models.Model):
+    base = models.OneToOneField(Image, related_name='extra')
+
+    copyright = models.CharField(max_length=64, default='other')
+    uploading_user = models.ForeignKey(User, blank=True, null=True)
+    user_notes = models.TextField(blank=True)
+    md5sum = models.CharField(max_length=32, blank=True)
