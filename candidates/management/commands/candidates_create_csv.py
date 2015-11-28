@@ -30,7 +30,7 @@ class Command(BaseCommand):
             help='Only output CSV for the election with this slug'
         )
 
-    def handle(self, *args, **options):
+    def handle(self, **options):
         if options['election']:
             try:
                 all_elections = [Election.objects.get(slug=options['election'])]
