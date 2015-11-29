@@ -143,7 +143,7 @@ class Command(BaseCommand):
                 translation = d['translation']
                 if translation:
                     value = u"{0} | {1}".format(value, translation)
-                party.other_names.create(name=value, note='')
+                party.other_names.create(name=value, note='registered-description')
             self.upload_images(ec_party['PartyEmblems'], party_extra)
             party.save()
             party_extra.save()
