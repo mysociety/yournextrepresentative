@@ -435,7 +435,6 @@ class PersonExtra(HasImageMixin, models.Model):
         return row
 
 
-
 class OrganizationExtra(models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
     slug = models.CharField(max_length=256, blank=True)
@@ -507,6 +506,7 @@ class PartySet(models.Model):
         result = list(self.parties.order_by('name').values_list('id', 'name'))
         result.insert(0, ('party:none', ''))
         return result
+
 
 class ImageExtra(models.Model):
     base = models.OneToOneField(Image, related_name='extra')
