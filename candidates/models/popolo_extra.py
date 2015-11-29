@@ -104,6 +104,12 @@ class PersonExtra(HasImageMixin, models.Model):
 
     images = GenericRelation(Image)
 
+    def __unicode__(self):
+        # WARNING: This will cause an extra query when getting the
+        # repr() or unicode() of this object unless the base object
+        # has been select_related.
+        return self.base.name
+
     def __getattr__(self, name):
         if name in form_complex_fields_locations:
             loc = form_complex_fields_locations[name]
@@ -439,6 +445,12 @@ class OrganizationExtra(models.Model):
 
     images = GenericRelation(Image)
 
+    def __unicode__(self):
+        # WARNING: This will cause an extra query when getting the
+        # repr() or unicode() of this object unless the base object
+        # has been select_related.
+        return self.base.name
+
 
 class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
@@ -448,6 +460,12 @@ class PostExtra(HasImageMixin, models.Model):
     elections = models.ManyToManyField(Election, related_name='posts')
     group = models.CharField(max_length=1024, blank=True)
     party_set = models.ForeignKey('PartySet', blank=True, null=True)
+
+    def __unicode__(self):
+        # WARNING: This will cause an extra query when getting the
+        # repr() or unicode() of this object unless the base object
+        # has been select_related.
+        return self.base.label
 
     @property
     def short_label(self):
@@ -464,10 +482,17 @@ class MembershipExtra(models.Model):
         Election, blank=True, null=True, related_name='candidacies'
     )
 
+
 class AreaExtra(models.Model):
     base = models.OneToOneField(Area, related_name='extra')
 
     type = models.ForeignKey(AreaType, blank=True, null=True, related_name='areas')
+
+    def __unicode__(self):
+        # WARNING: This will cause an extra query when getting the
+        # repr() or unicode() of this object unless the base object
+        # has been select_related.
+        return self.base.name
 
 
 class PartySet(models.Model):
