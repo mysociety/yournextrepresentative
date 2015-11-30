@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load pipeline %}
 {% load imagefixes %}
+{% load thumbnail %}
 
 {% block extra_css %}
 {% stylesheet 'image-review' %}
@@ -166,13 +167,15 @@
 
   <h4>{% trans "Existing candidate images" %}</h4>
 
-  {% with images=person.images %}
+  {% with images=person.extra.images.all %}
 
     {% if images %}
       {% for image in images %}
-        <img class="photo-review__existing-image" src="{{ image.proxy_url|fixproxyurl }}/0/200"
-          alt="{{ image.notes }}" title="{{ image.notes }}">
-        <p class="photo-credit">{% include 'candidates/_photo-credit.html' %}</p>
+        {% thumbnail image.image "x200" as im %}
+          <img class="photo-review__existing-image" src="{{ im.url }}"
+            alt="{{ image.extra.notes }}" title="{{ image.extra.notes }}">
+          <p class="photo-credit">{% include 'candidates/_photo-credit.html' %}</p>
+        {% endthumbnail %}
       {% endfor %}
     {% else %}
       <p>{% trans "There were no existing images for this candidate." %}</p>
