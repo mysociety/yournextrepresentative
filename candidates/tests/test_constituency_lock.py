@@ -1,6 +1,7 @@
 from mock import patch
 
 from django_webtest import WebTest
+from popolo.models import Person
 
 from candidates.models import PostExtra
 
@@ -215,9 +216,11 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         form['source'] = 'Testing adding a new candidate to a locked constituency'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
+        # Find the person this should have redirected to:
+        expected_person = Person.objects.get(name='Imaginary Candidate')
         self.assertEqual(
             submission_response.location,
-            'http://localhost:80/person/4323'
+            'http://localhost:80/person/{0}'.format(expected_person.id)
         )
 
     def test_move_into_locked_unprivileged_disallowed(self):

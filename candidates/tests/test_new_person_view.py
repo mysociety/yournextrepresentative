@@ -80,13 +80,14 @@ class TestNewPersonView(TestUserMixin, WebTest):
         form['source'] = 'Testing adding a new person to a post'
         submission_response = form.submit()
 
+        person = Person.objects.get(name='Elizabeth Bennet')
+
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
-            'http://localhost:80/person/1'
+            'http://localhost:80/person/{0}'.format(person.id)
         )
 
-        person = Person.objects.get(id=1)
         self.assertEqual(person.name, 'Elizabeth Bennet')
         self.assertEqual(person.email, 'lizzie@example.com')
 
@@ -113,7 +114,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
         last_logged_action = LoggedAction.objects.all().order_by('-created')[0]
         self.assertEqual(
             last_logged_action.person_id,
-            1,
+            person.id,
         )
         self.assertEqual(
             last_logged_action.action_type,
