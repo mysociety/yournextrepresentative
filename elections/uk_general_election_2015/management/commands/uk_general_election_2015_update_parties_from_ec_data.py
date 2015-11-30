@@ -182,30 +182,24 @@ class Command(BaseCommand):
             mime_type = self.mime_type_magic.from_file(ntf.name)
             extension = mimetypes.guess_extension(mime_type)
             leafname = 'Emblem_{0}{1}'.format(emblem_id, extension)
+            desired_storage_path = join('images', leafname)
             fname = join(emblem_directory, leafname)
             move(ntf.name, fname)
             md5sum = get_file_md5sum(fname)
-            if not ImageExtra.objects.filter(md5sum=md5sum).exists():
-                # Create the image file in the media root:
-                image_storage = FileSystemStorage()
-                desired_storage_path = join('images', leafname)
-                with open(fname, 'rb') as f:
-                    storage_filename = image_storage.save(
-                        desired_storage_path, f
-                    )
-                image = Image.objects.create(
-                    image=storage_filename,
-                    source='The Electoral Commission',
-                    is_primary=primary,
-                    object_id=party_extra.id,
-                    content_type_id=content_type.id,
-                )
-                ImageExtra.objects.create(
-                    base=image,
-                    uploading_user=None,
-                    md5sum=md5sum,
-                    user_notes=emblem['MonochromeDescription'],
-                )
+            ImageExtra.objects.update_or_create_from_file(
+                fname,
+                desired_storage_path,
+                md5sum=md5sum,
+                defaults={
+                    'uploading_user':None,
+                    'md5sum': md5sum,
+                    'notes': emblem['MonochromeDescription'],
+                    'base__source': 'The Electoral Commission',
+                    'base__is_primary': primary,
+                    'base__object_id': party_extra.id,
+                    'base__content_type_id': content_type.id,
+                }
+            )
             primary = False
 
     def clean_id(self, party_id):

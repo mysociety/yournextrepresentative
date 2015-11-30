@@ -1,5 +1,4 @@
 import bleach
-import os
 import re
 from os.path import join
 from tempfile import NamedTemporaryFile
@@ -16,8 +15,6 @@ from django.template.loader import render_to_string
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, TemplateView
-from django.contrib.contenttypes.models import ContentType
-from django.core.files.storage import FileSystemStorage
 
 from PIL import Image as PillowImage
 
@@ -27,7 +24,7 @@ from candidates.management.images import get_file_md5sum
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
-from candidates.models import LoggedAction, ImageExtra
+from candidates.models import LoggedAction, ImageExtra, PersonExtra
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 from popolo.models import Person
@@ -209,59 +206,40 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         )
 
     def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed, make_primary):
-        image_storage = FileSystemStorage()
         original = PillowImage.open(image_filename)
         # Some uploaded images are CYMK, which gives you an error when
         # you try to write them as PNG, so convert to RGBA (this is
         # RGBA rather than RGB so that any alpha channel (transparency)
         # is preserved).
         person_id = self.queued_image.person.id
+        person_extra = PersonExtra.objects.get(base__id=person_id)
         original = original.convert('RGBA')
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
         cropped.save(ntf.name, 'PNG')
+        md5sum = get_file_md5sum(ntf.name)
         filename = str(person_id) + '.png'
-        storage_filename = image_storage.get_available_name(filename)
-        storage_path = join('images', storage_filename)
-        with open(ntf.name, 'rb') as f:
-            storage_filename = image_storage.save(
-                storage_path, f
-            )
-        # Upload the image to PopIt...
-        person = Person.objects.get(id=person_id)
-        person_extra_content_type = ContentType.objects.get_for_model(person.extra)
+        source = _(
+            'Uploaded by {uploaded_by}: Approved from photo moderation queue'
+        ).format(uploaded_by=self.queued_image.user.username)
 
-        source = _('Uploaded by {uploaded_by}: Approved from photo moderation queue') \
-            .format(
-                uploaded_by=self.queued_image.user.username,
-            )
-
-        image = Image.objects.create(
-            image=storage_filename,
-            source=source,
-            is_primary=make_primary,
-            object_id=person.extra.id,
-            content_type_id=person_extra_content_type.id
+        ImageExtra.objects.create_from_file(
+            ntf.name,
+            join('images', filename),
+            base_kwargs={
+                'source': source,
+                'is_primary': make_primary,
+                'content_object': person_extra,
+            },
+            extra_kwargs={
+                'md5sum': md5sum,
+                'uploading_user': self.queued_image.user,
+                'user_notes': self.queued_image.justification_for_use,
+                'copyright': moderator_why_allowed,
+                'user_copyright': self.queued_image.why_allowed,
+                'notes': _('Approved from photo moderation queue'),
+            },
         )
-
-        extra = ImageExtra.objects.create(
-            base=image,
-            uploading_user=self.queued_image.user,
-            user_notes=self.queued_image.justification_for_use,
-            copyright=self.queued_image.why_allowed
-        )
-
-        data = {
-            'md5sum': get_file_md5sum(ntf.name),
-            'user_why_allowed': self.queued_image.why_allowed,
-            'user_justification_for_use': self.queued_image.justification_for_use,
-            'moderator_why_allowed': moderator_why_allowed,
-            'mime_type': 'image/png',
-            'notes': _('Approved from photo moderation queue'),
-            'uploaded_by_user': self.queued_image.user.username,
-            'created': None,
-        }
-        os.remove(ntf.name)
 
     def form_valid(self, form):
         decision = form.cleaned_data['decision']
