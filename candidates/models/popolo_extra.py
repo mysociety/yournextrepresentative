@@ -274,15 +274,6 @@ class PersonExtra(HasImageMixin, models.Model):
             versions = []
         return get_version_diffs(json.loads(versions))
 
-    @classmethod
-    def get_max_person_id(cls):
-        cursor = connection.cursor()
-        cursor.execute('SELECT MAX(CAST (id AS int)) FROM popolo_person')
-        max_id = cursor.fetchone()[0]
-        if max_id is None:
-            return 0
-        return max_id
-
     def record_version(self, change_metadata):
         versions = []
         if self.versions:
@@ -351,7 +342,6 @@ class PersonExtra(HasImageMixin, models.Model):
     @classmethod
     def create_from_form(cls, form):
         person = Person.objects.create(
-            id=(cls.get_max_person_id() + 1),
             name=form.cleaned_data['name'],
         )
         person_extra = PersonExtra.objects.create(
