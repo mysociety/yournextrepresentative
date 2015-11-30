@@ -424,7 +424,7 @@ class PersonExtra(HasImageMixin, models.Model):
         return row
 
 
-class OrganizationExtra(models.Model):
+class OrganizationExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
     slug = models.CharField(max_length=256, blank=True)
 
