@@ -155,7 +155,7 @@ class PersonExtra(HasImageMixin, models.Model):
     def last_candidacy(self):
         ordered_candidacies = Membership.objects. \
             filter(person=self.base, extra__election__isnull=False). \
-            order_by('extra__election__election_date')
+            order_by('extra__election__current', 'extra__election__election_date')
         return ordered_candidacies.last()
 
     def standing_in(self, election_slug):
