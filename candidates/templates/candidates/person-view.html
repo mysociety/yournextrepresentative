@@ -196,10 +196,10 @@
   {% endif %}
 
 
-  {% if person.image %}
+  {% if person.extra.primary_image %}
   <h2>{% trans "Photo Credit:" %}</h2>
   <p class="person__photo-credit">
-    {% include 'candidates/_photo-credit.html' with image=person.images.0 %}
+    {% include 'candidates/_photo-credit.html' with image=person.extra.primary_image_model %}
   </p>
   {% endif %}
 
