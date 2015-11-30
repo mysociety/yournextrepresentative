@@ -83,6 +83,8 @@ class Migration(migrations.Migration):
                 ('base', models.OneToOneField(related_name='extra', to='images.Image')),
                 ('md5sum', models.CharField(max_length=32, blank=True)),
                 ('uploading_user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user_copyright', models.CharField(max_length=128, blank=True)),
+                ('notes', models.TextField(blank=True)),
             ],
         ),
     ]

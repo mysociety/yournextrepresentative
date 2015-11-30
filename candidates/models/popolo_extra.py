@@ -570,5 +570,7 @@ class ImageExtra(models.Model):
     uploading_user = models.ForeignKey(User, blank=True, null=True)
     user_notes = models.TextField(blank=True)
     md5sum = models.CharField(max_length=32, blank=True)
+    user_copyright = models.CharField(max_length=128, blank=True)
+    notes = models.TextField(blank=True)
 
     objects = ImageExtraManager()
