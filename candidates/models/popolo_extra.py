@@ -158,6 +158,12 @@ class PersonExtra(HasImageMixin, models.Model):
             order_by('extra__election__current', 'extra__election__election_date')
         return ordered_candidacies.last()
 
+    def last_party(self):
+        last_candidacy = self.last_candidacy
+        if last_candidacy is None:
+            return None
+        return last_candidacy.on_behalf_of
+
     def standing_in(self, election_slug):
         election = Election.objects.get_by_slug(election_slug)
         membership = self.base.memberships.filter(
@@ -254,16 +260,6 @@ class PersonExtra(HasImageMixin, models.Model):
         result = membership.first()
         if result:
             return result.extra.elected
-
-        return None
-
-    def last_party(self):
-        party = self.base.memberships.filter(
-            organization__classification='Party'
-        ).order_by('start_date').last()
-
-        if party is not None:
-            return party.organization
 
         return None
 
