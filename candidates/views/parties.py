@@ -49,8 +49,11 @@ class PartyDetailView(ElectionMixin, TemplateView):
         party = get_object_or_404(Organization, extra__slug=party_id)
 
         # Make the party emblems conveniently available in the context too:
-        context['emblems'] = \
-            [image for image in party.extra.images.order_by('-is_primary')]
+        context['emblems'] = [
+            image for image in
+            party.extra.images \
+                .prefetch_related('extra').order_by('-is_primary')
+        ]
         all_post_groups = PostExtra.objects.values_list('group', flat=True).distinct()
         by_post_group = {
             pg: {

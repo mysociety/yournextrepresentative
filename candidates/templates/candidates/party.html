@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load imagefixes %}
+{% load thumbnail %}
 
 {% block body_class %}party{% endblock %}
 
@@ -78,7 +79,10 @@
 
 <div class="party__secondary">
   {% for image in emblems %}
-    <img class="party-detail__image" src="{{ image.image.url }}">
+    {% thumbnail image.image "240" as im %}
+      <img class="party-detail__image" src="{{ im.url }}"
+           title="{{ image.extra.notes }}" alt="{{ image.extra.notes }}">
+    {% endthumbnail %}
   {% endfor %}
 </div>
 
