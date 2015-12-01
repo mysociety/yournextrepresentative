@@ -3,6 +3,7 @@ import json
 from os.path import join
 import re
 from urlparse import urljoin
+from urllib import quote_plus
 
 from slugify import slugify
 
@@ -368,6 +369,7 @@ class PersonExtra(HasImageMixin, models.Model):
         image_copyright = ''
         image_uploading_user = ''
         image_uploading_user_notes = ''
+        proxy_image_url_template = ''
         if elected is not None:
             elected_for_csv = str(elected)
         primary_image = self.images \
@@ -377,6 +379,11 @@ class PersonExtra(HasImageMixin, models.Model):
             ).first()
         if primary_image:
             primary_image_url = urljoin(base_url, primary_image.image.url)
+            if settings.IMAGE_PROXY_URL and base_url:
+                encoded_url = quote_plus(primary_image_url)
+                proxy_image_url_template = settings.IMAGE_PROXY_URL + \
+                    encoded_url + '/{height}/{width}.{extension}'
+
             if primary_image.extra:
                 image_copyright = primary_image.extra.copyright
                 user = primary_image.extra.uploading_user
@@ -410,9 +417,8 @@ class PersonExtra(HasImageMixin, models.Model):
             'homepage_url': self.homepage_url,
             'wikipedia_url': self.wikipedia_url,
             'image_url': primary_image_url,
-            # FIXME: we need to find an alternative to the PopIt image
             'proxy': settings.IMAGE_PROXY_URL,
-            'proxy_image_url_template': '',
+            'proxy_image_url_template': proxy_image_url_template,
             'image_copyright': image_copyright,
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
