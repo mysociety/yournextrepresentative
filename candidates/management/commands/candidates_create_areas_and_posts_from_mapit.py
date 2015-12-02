@@ -9,9 +9,22 @@ from popolo.models import Post, Area
 from candidates.models import PostExtra, AreaExtra
 from elections.models import Election, AreaType
 
+
+"""
+This assumes that all the elections in the instance are the same as
+far as posts and organization are concerned. It will not work for
+instances with different types of election - e.g. Presidential and
+parliamentary.
+"""
 class Command(BaseCommand):
     args = "<MAPIT-URL> <AREA_TYPE> <POST_ID_FORMAT>"
-    help = "Create areas and posts based on a mapit area type"
+    help = """Create areas and posts based on a mapit area type
+
+MAPIT-URL should be something that returns a set of JSON results
+containing areas of type AREA_TYPE. An Area and Post will be created
+for each area found using the post and organization information
+in the Election objects in the app.
+    """
 
     option_list = BaseCommand.option_list + (
         make_option(
