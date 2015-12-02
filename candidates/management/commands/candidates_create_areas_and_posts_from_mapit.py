@@ -31,62 +31,66 @@ class Command(BaseCommand):
 
         mapit_url, area_type, post_id_format = args
 
-        all_areas_url = mapit_url + '/covers' + '?type=' + area_type
-        mapit_result = requests.get(all_areas_url)
-        mapit_json = mapit_result.json()
-
         elections = Election.objects.all()
 
-        election = elections.first()
-
-        if election is None:
+        if elections.count() == 0:
             raise CommandError("There must be at least one election")
 
-        for_post_role = election.for_post_role
-        org = election.organization
+        for election in elections:
+            all_areas_url = mapit_url + '/covers' + '?type=' + area_type
+            if election.area_generation:
+                all_areas_url = all_areas_url + '&generation=' + election.area_generation
 
-        for item in mapit_json.items():
-            area_json = item[1]
+            mapit_result = requests.get(all_areas_url)
+            mapit_json = mapit_result.json()
 
-            area_url = urljoin(mapit_url, '/area/' + str(area_json['id']))
+            for_post_role = election.for_post_role
+            org = election.organization
 
-            area, area_created = Area.objects.get_or_create(
-                name=area_json['name'],
-                identifier=area_url,
-                classification=area_json['type_name']
-            )
+            if org is None:
+                raise CommandError("Election {0} requires an organization".format(election.slug))
 
-            area_type, created = AreaType.objects.get_or_create(
-                name=area_json['type'],
-                source='MapIt'
-            )
+            for item in mapit_json.items():
+                area_json = item[1]
 
-            if area_created:
-                area_extra, area_extra_created = AreaExtra.objects.get_or_create(
-                    base=area
+                area_url = urljoin(mapit_url, '/area/' + str(area_json['id']))
+
+                area, area_created = Area.objects.get_or_create(
+                    name=area_json['name'],
+                    identifier=area_url,
+                    classification=area_json['type_name']
                 )
 
-            if area_created and area_extra_created:
-                area_extra.type = area_type
-                area_extra.save()
+                area_type, created = AreaType.objects.get_or_create(
+                    name=area_json['type'],
+                    source='MapIt'
+                )
 
-            post_id = post_id_format.format(area_id=area_json['id'])
-            post_name = post_label_format.format(
-                area_name=area_json['name'],
-                post_role=for_post_role
-            )
+                if area_created:
+                    area_extra, area_extra_created = AreaExtra.objects.get_or_create(
+                        base=area
+                    )
 
-            post, created = Post.objects.get_or_create(
-                label=post_name,
-                area=area,
-                organization=org
-            )
+                if area_created and area_extra_created:
+                    area_extra.type = area_type
+                    area_extra.save()
 
-            post_extra, created = PostExtra.objects.get_or_create(
-                base=post,
-                slug=post_id
-            )
+                post_id = post_id_format.format(area_id=area_json['id'])
+                post_name = post_label_format.format(
+                    area_name=area_json['name'],
+                    post_role=for_post_role
+                )
 
-            for election in elections:
+                post, created = Post.objects.get_or_create(
+                    label=post_name,
+                    area=area,
+                    organization=org
+                )
+
+                post_extra, created = PostExtra.objects.get_or_create(
+                    base=post,
+                    slug=post_id
+                )
+
                 post_extra.elections.add(election)
 
