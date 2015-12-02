@@ -76,7 +76,6 @@ CSV_ROW_FIELDS = [
     'wikipedia_url',
     'linkedin_url',
     'image_url',
-    'proxy',
     'proxy_image_url_template',
     'image_copyright',
     'image_uploading_user',

@@ -417,7 +417,6 @@ class PersonExtra(HasImageMixin, models.Model):
             'homepage_url': self.homepage_url,
             'wikipedia_url': self.wikipedia_url,
             'image_url': primary_image_url,
-            'proxy': settings.IMAGE_PROXY_URL,
             'proxy_image_url_template': proxy_image_url_template,
             'image_copyright': image_copyright,
             'image_uploading_user': image_uploading_user,
