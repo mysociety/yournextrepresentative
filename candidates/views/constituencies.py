@@ -519,7 +519,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            'id': mp_post.id,
+            'id': mp_post.extra.slug,
             'label': mp_post.label
         }
 
