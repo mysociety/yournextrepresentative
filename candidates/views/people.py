@@ -307,8 +307,6 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
 
         with transaction.atomic():
 
-            # FIXME: need to check that if we are changing the post then it's
-            # not a locked post
             person = get_object_or_404(
                 Person.objects.select_related('extra'),
                 id=self.kwargs['person_id']
