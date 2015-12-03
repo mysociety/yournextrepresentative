@@ -18,7 +18,7 @@ for that constituency:{% endblocktrans %}</p>
 <ul>
   {% for post_extra in all_constituencies %}
     <li>
-     <a href="{% url 'constituency' election=election post_id=post_extra.base.id ignored_slug=post_extra.base.label|slugify %}">{{ post_extra.base.label }}</a>
+     <a href="{% url 'constituency' election=election post_id=post_extra.slug ignored_slug=post_extra.base.label|slugify %}">{{ post_extra.base.label }}</a>
     </li>
   {% endfor %}
 </ul>
