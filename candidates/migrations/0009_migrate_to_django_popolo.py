@@ -592,6 +592,13 @@ def import_from_popit(apps, schema_editor):
         for membership in Membership.objects.filter(**duplicate)[1:]:
             membership.delete()
 
+    # Also remove any old-style party memberships - these are now
+    # represented by the on_behalf_of property of candidacy memberships:
+    Membership.objects.filter(
+        post__isnull=True,
+        organization__classification='Party'
+    ).delete()
+
 
 class Migration(migrations.Migration):
 
