@@ -91,9 +91,9 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     party_truncated = dict()
     for candidacy in candidacies:
         party = candidacy.on_behalf_of
-        party_id_to_name[party.id] = party.name
+        party_id_to_name[party.extra.slug] = party.name
         position = candidacy.extra.party_list_position
-        party_id_to_people[party.id].append((position, candidacy.person))
+        party_id_to_people[party.extra.slug].append((position, candidacy.person))
     for party_id, people_list in party_id_to_people.items():
         if election_data.party_lists_in_use:
             # sort by party list position
