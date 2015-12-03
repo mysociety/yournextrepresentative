@@ -496,9 +496,9 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         mp_post = get_object_or_404(post_qs, extra__slug=post_id)
 
         party_id = kwargs['organization_id']
-        party_extra = OrganizationExtra.objects.select_related('base').get(
-            slug=party_id
-        )
+        party_extra = OrganizationExtra.objects \
+            .select_related('base') \
+            .get(slug=party_id)
         party_name = party_extra.base.name
         if not party_name:
             raise Http404(_("Party '{party_id}' not found").format(
