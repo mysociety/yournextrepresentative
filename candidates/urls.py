@@ -3,12 +3,23 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
+from rest_framework import routers
+
 import candidates.views as views
 
 from .feeds import RecentChangesFeed
 
+api_router = routers.DefaultRouter()
+api_router.register(r'persons', views.PersonViewSet)
+api_router.register(r'organizations', views.OrganizationViewSet)
+api_router.register(r'posts', views.PostViewSet)
+api_router.register(r'areas', views.AreaViewSet)
+api_router.register(r'elections', views.ElectionViewSet)
+
 urlpatterns = \
     patterns('',
+        (r'^api/(?P<version>v0.9)/', include(api_router.urls)),
+        (r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
         (r'^', include(settings.ELECTION_APP_FULLY_QUALIFIED + '.urls')),
     )
 

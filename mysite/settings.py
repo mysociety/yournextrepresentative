@@ -108,9 +108,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_nose',
+    'django_extensions',
     'pipeline',
     'statici18n',
     'sorl.thumbnail',
+    'rest_framework',
+    'rest_framework.authtoken',
     'images',
     'elections',
     'popolo',
@@ -446,6 +449,12 @@ except AttributeError:
 
 # Make sure there's a trailing slash at the end of base MapIt URL:
 MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('candidates.api_permissions.ReadOnly',),
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    'PAGE_SIZE': 10,
+}
 
 # Use Matthew's suggestion for allowing local settings overrides with
 # both Python 2 and Python 3; this uses exec rather than import so

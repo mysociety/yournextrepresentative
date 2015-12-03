@@ -1,4 +1,4 @@
-from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView
 
 from elections.models import Election
@@ -20,8 +20,9 @@ class HelpApiView(TemplateView):
                 context['historic_csv_list'].append(
                     {'slug': election_data.slug, 'name': election_data.name})
 
-        #FIXME
-        context['popit_url'] = ''
+        context['base_api_url'] = self.request.build_absolute_uri(
+            reverse('api-root', kwargs={'version': 'v0.9'})
+        )
         return context
 
 
