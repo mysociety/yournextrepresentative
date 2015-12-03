@@ -491,12 +491,13 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        mp_post = get_object_or_404(Post, extra__slug=post_id)
+        post_qs = Post.objects.select_related('extra')
+        mp_post = get_object_or_404(post_qs, extra__slug=post_id)
 
         party_id = kwargs['organization_id']
-        party_extra = OrganizationExtra.objects.get(
+        party_extra = OrganizationExtra.objects.select_related('base').get(
             slug=party_id
-        ).select_related('base')
+        )
         party_name = party_extra.base.name
         if not party_name:
             raise Http404(_("Party '{party_id}' not found").format(
@@ -536,7 +537,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
                 self.election, party.id, mp_post.memberships
             )
 
-        party_set = PartySet.objects.get(postextra__base__id=post_id)
+        party_set = PartySet.objects.get(postextra__base__id=mp_post.id)
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
