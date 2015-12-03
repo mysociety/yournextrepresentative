@@ -27,7 +27,7 @@ def post_in_election(person, election):
                 'constituency',
                 kwargs={
                     'election': election.slug,
-                    'post_id': candidacy.post.id,
+                    'post_id': candidacy.post.extra.slug,
                     'ignored_slug': slugify(candidacy.post.extra.short_label),
                 }
             ),
