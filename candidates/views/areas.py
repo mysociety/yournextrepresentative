@@ -117,8 +117,14 @@ class AreasOfTypeView(TemplateView):
         areas = [
             (
                 reverse(
-                    'st-paul-areas-view',
-                    kwargs={'area_ids': area.base.identifier}
+                    'areas-view',
+                    kwargs={
+                        'type_and_area_ids': '{type}-{area_id}'.format(
+                            type=requested_area_type,
+                            area_id=area.base.identifier
+                        ),
+                        'ignored_slug': slugify(area.base.name)
+                    }
                 ),
                 area.base.name,
                 requested_area_type,
