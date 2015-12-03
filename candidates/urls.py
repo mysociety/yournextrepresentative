@@ -144,37 +144,37 @@ patterns_to_format = [
         'name': 'leaderboard'
     },
     {
-        'pattern': r'^leaderboard/contributions.csv',
+        'pattern': r'^leaderboard/contributions.csv$',
         'view': views.UserContributions.as_view(),
         'name': 'user-contributions'
     },
     {
-        'pattern': r'^feeds/changes.xml',
+        'pattern': r'^feeds/changes.xml$',
         'view': RecentChangesFeed(),
         'name': 'changes_feed'
     },
     {
-        'pattern': r'^help/api',
+        'pattern': r'^help/api$',
         'view': views.HelpApiView.as_view(),
         'name': 'help-api'
     },
     {
-        'pattern': r'^help/about',
+        'pattern': r'^help/about$',
         'view': views.HelpAboutView.as_view(),
         'name': 'help-about'
     },
     {
-        'pattern': r'^help/privacy',
+        'pattern': r'^help/privacy$',
         'view': TemplateView.as_view(template_name="candidates/privacy.html"),
         'name': 'help-privacy'
     },
     {
-        'pattern': r'^copyright-question',
+        'pattern': r'^copyright-question$',
         'view': views.AskForCopyrightAssigment.as_view(),
         'name': 'ask-for-copyright-assignment'
     },
     {
-        'pattern': r'^post-id-to-party-set.json',
+        'pattern': r'^post-id-to-party-set.json$',
         'view': views.PostIDToPartySetView.as_view(),
         'name': 'post-id-to-party-set'
     },
