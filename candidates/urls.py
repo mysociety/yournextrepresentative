@@ -70,7 +70,7 @@ patterns_to_format = [
         'name': 'constituency'
     },
     {
-        'pattern': r'^election/{election}/party-list/{post}/(?P<organization_id>[a-z-]+(:[-\d]+)?)$',
+        'pattern': r'^election/{election}/party-list/{post}/(?P<organization_id>[^/]+)$',
         'view': views.OrderedPartyListView.as_view(),
         'name': 'party-for-post'
     },
@@ -135,7 +135,7 @@ patterns_to_format = [
         'name': 'areas-of-type-view',
     },
     {
-        'pattern': r'^election/{election}/party/(?P<organization_id>[a-z-]+(:[-\d]+)?)/(?P<ignored_slug>.*)$',
+        'pattern': r'^election/{election}/party/(?P<organization_id>[^/]+)/(?P<ignored_slug>.*)$',
         'view': views.PartyDetailView.as_view(),
         'name': 'party'
     },
