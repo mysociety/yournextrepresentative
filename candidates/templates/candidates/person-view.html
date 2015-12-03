@@ -239,8 +239,8 @@
   <div class="person__actions__action person__actions__data">
     <h2>{% trans "Use this data!" %}</h2>
     <p>{% trans "Open data JSON API:" %}</p>
-    <p><strong>FIXME</strong></p>
-    <p><input type="text" value="{{ popit_api_url }}persons/{{ person.id }}" onclick="this.select();"></p>
+    {% url 'person-detail' version='v0.9' pk=person.id format='json' as person_json_api_url %}
+    <p><input type="text" value="{{ person_json_api_url|absolute_url:request }}" onclick="this.select();"></p>
     {% url 'help-api' as api_url %}
     {% url 'help-about' as about_url %}
     <p>{% blocktrans trimmed %}
