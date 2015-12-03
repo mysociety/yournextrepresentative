@@ -70,8 +70,8 @@ def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidac
     old_posts = set(c.post for c in old_candidacies)
     new_posts = set(c.post for c in new_candidacies)
     for post in old_posts ^ new_posts:
-        cons_locked, dummy = get_constituency_lock(user, post)
-        if cons_locked:
+        dummy, edits_allowed = get_constituency_lock(user, post)
+        if not edits_allowed:
             raise ChangeToLockedConstituencyDisallowedException(
                 _("That update isn't allowed because candidates for a locked "
                   "post ({post_label}) would be changed").format(
@@ -83,8 +83,8 @@ def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidac
     for post in old_posts & new_posts:
         old_party = next(c.on_behalf_of for c in old_candidacies if c.post == post)
         new_party = next(c.on_behalf_of for c in new_candidacies if c.post == post)
-        cons_locked, dummy = get_constituency_lock(user, post)
-        if cons_locked and (old_party != new_party):
+        dummy, edits_allowed = get_constituency_lock(user, post)
+        if not edits_allowed and (old_party != new_party):
             raise ChangeToLockedConstituencyDisallowedException(
                 _("That update isn't allowed because you can't change the party "
                   "(in this case from {old_party} to {new_party}) for a candidate "
