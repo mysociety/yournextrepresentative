@@ -252,7 +252,7 @@ class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
                 context_field = 'unlocked'
             context[context_field].append(
                 {
-                    'id': post.id,
+                    'id': post.extra.slug,
                     'name': post.extra.short_label,
                 }
             )
