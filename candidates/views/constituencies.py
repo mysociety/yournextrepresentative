@@ -451,16 +451,16 @@ class ConstituenciesDeclaredListView(ElectionMixin, TemplateView):
         constituency_seen = {}
         constituencies = []
         total_constituencies = Post.objects.all().count()
-        for membership in Membership.objects.select_related('post', 'post__area').filter(
+        for membership in Membership.objects.select_related('post', 'post__area', 'post__extra').filter(
             post__isnull=False,
-            organization_id=self.election_data.organization_id,
             extra__election_id=self.election_data.id,
-            role=''
+            role=self.election_data.candidate_membership_role,
+            extra__elected=True
         ):
             constituency_declared.append(membership.post.id)
             total_declared += 1
             constituencies.append((membership.post, True))
-        for membership in Membership.objects.select_related('post', 'post__area').filter(
+        for membership in Membership.objects.select_related('post', 'post__area', 'post__extra').filter(
             post__isnull=False,
             extra__election=self.election_data,
             role=self.election_data.candidate_membership_role
