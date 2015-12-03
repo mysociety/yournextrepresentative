@@ -49,7 +49,6 @@ class AreasView(TemplateView):
                     .select_related('base', 'type') \
                     .prefetch_related('base__posts'),
                 base__identifier=area_id,
-                base__posts__extra__elections__current=True
             )
             area = area_extra.base
             all_area_names.add(area.name)
