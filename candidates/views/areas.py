@@ -72,7 +72,10 @@ class AreasView(TemplateView):
                 context['posts'].append({
                     'election': election.slug,
                     'election_data': election,
-                    'post_data': post,
+                    'post_data': {
+                        'id': post.extra.slug,
+                        'label': post.label,
+                    },
                     'candidates_locked': locked,
                     'candidate_list_edits_allowed':
                     get_edits_allowed(self.request.user, locked),
