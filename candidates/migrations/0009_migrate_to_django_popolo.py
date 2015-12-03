@@ -258,7 +258,7 @@ class YNRPopItImporter(PopItImporter):
             )
         # Create the extra area object:
         AreaExtra = self.get_model_class('candidates', 'AreaExtra')
-        AreaExtra.objects.create(base=area)
+        AreaExtra.objects.get_or_create(base=area)
 
         return area_id, area
 
