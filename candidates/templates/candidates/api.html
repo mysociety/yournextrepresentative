@@ -52,30 +52,32 @@ out more about PopIt here</a>.)
 {% endif %}
 
 
-<h3>{% trans "All elections" %}</h3>
-
-<p>
-  <ul>
-    <li><a href="{{ MEDIA_URL }}candidates-all.csv">{% trans "Download of the candidates for all elections" %}</a></li>
-  </ul>
-</p>
-
-
 <h2>{% trans "API" %}</h2>
 
+<h3>{% trans "This API is a work in progress" %}</h3>
+
 <p>
-{% trans "The base API URL for the data is:" %}
+  {% blocktrans trimmed %}
+    This is an alpha version of the YourNextRepresentative API,
+    which is likely to change in the near future.
+  {% endblocktrans %}
 </p>
 
-<pre class="code-sample"><a href="{{ popit_url }}">{{ popit_url }}</a></pre>
+<h3>Browseable API root</h3>
 
-<p>{% blocktrans trimmed %}
-You can read <a href="http://popit.poplus.org/docs/api/">more
-generic documentation for the PopIt API</a> or just follow the
-simple examples that follow.
-{% endblocktrans %}</p>
+<p>
+{% blocktrans trimmed %}
+  The browsable base URL of the site's read-only API is: <a href="{{ base_api_url }}">{{ base_api_url }}</a>
+{% endblocktrans %}
+</p>
 
-<h2>{% trans "Find a Constituency ID" %}</h2>
+<p>
+{% blocktrans trimmed %}
+  The following sections give examples of how to use the API.
+{% endblocktrans %}
+</p>
+
+<h3>{% trans "Find a Constituency ID" %}</h3>
 
 <p>{% blocktrans trimmed %}
 In order to look up candidates for a constituency, you have
@@ -85,7 +87,7 @@ in another web
 service, <a href="http://mapit.mysociety.org">MapIt</a>.
 {% endblocktrans %}</p>
 
-<h3>{% trans "... from a postcode" %}</h3>
+<h4>{% trans "... from a postcode" %}</h4>
 
 <p>{% blocktrans trimmed %}
 Suppose you want to find the constituency for the postcode
@@ -109,7 +111,7 @@ on <a href="http://mapit.mysociety.org/#api-by_postcode">postcode
 lookups on the MapIt front-page</a>.
 {% endblocktrans %}</p>
 
-<h3>{% trans "... from a latitude / longitude or other coordinate" %}</h3>
+<h4>{% trans "... from a latitude / longitude or other coordinate" %}</h4>
 
 <p>{% blocktrans trimmed %}
 You can look up constituencies in MapIt using a variety of
@@ -135,7 +137,7 @@ on <a href="http://mapit.mysociety.org/#api-by_point">point
 lookups on the MapIt front-page</a>.
 {% endblocktrans %}</p>
 
-<h3>{% trans "... by selecting it from its name" %}</h3>
+<h4>{% trans "... by selecting it from its name" %}</h4>
 
 {% blocktrans trimmed %}
 If you need to produce a list of all constituencies (e.g. for a
@@ -155,178 +157,25 @@ a <tt>name</tt> element that gives you the official name of the
 constituency.
 {% endblocktrans %}</p>
 
-<h2>{% trans "Find Candidates for a Constituency" %}</h2>
+<h3>{% trans "Find Candidates for a Constituency" %}</h3>
 
-<p>{% blocktrans trimmed %}
-There are broadly two ways you can approach getting candidate
-data for a constituency; one is slightly simpler, and just gives
-you the basic candidate and party information, while the second
-gives you the full data in Popolo format, which is more complex
-but useful if you're using tools that generically process Popolo
-data.
-{% endblocktrans %}</p>
-
-<h3>{% trans "Simpler (Basic candidate information)" %}</h3>
-
-<p>{% blocktrans trimmed %}
-You can get all the candidates for a constituency, both in
-2010 and 2015 by a query like:
-{% endblocktrans %}
-
-<pre class="code-sample">
-{{ popit_url }}posts/CONSTITUENCY_ID?embed=membership.person
-</pre>
-
-<p>{% blocktrans trimmed %}
-For example, for Dulwich and West Norwood,
-<a href="{{ popit_url }}posts/65808?embed=membership.person">these
-would be the results</a>.
-{% endblocktrans %}</p>
-
-<p>{% blocktrans trimmed %}
-If you iterate over the <tt>memberships</tt> in that result,
-each person will look something like:
-{% endblocktrans %}</p>
-
-<pre>
-"person_id": {
-  "id": "2009",
-  "birth_date": null,
-  "email": "....@example.org",
-  "gender": "female",
-  "name": "Tessa Jowell",
-  "party_memberships": {
-    "2010": {
-      "id": "party:53",
-      "name": "Labour Party"
-    }
-  },
-  "standing_in": {
-    "2010": {
-      "mapit_url": "http://mapit.mysociety.org/area/65808",
-      "name": "Dulwich and West Norwood",
-      "post_id": "65808"
-    },
-    "2015": null
-  },
-</pre>
-
-<p>{% blocktrans trimmed %}
-(I've removed some fields there to keep the example simpler.)
-The two fields of particular interest are
-probably <tt>standing_in</tt> and <tt>party_memberships</tt>.
-{% endblocktrans %}</p>
-
-<h4>standing_in</h4>
-
-<p>{% blocktrans trimmed %}
-This object will only have keys '2010' or '2015'. If one of
-these keys is present then we have known information about the
-candidate for the UK general election in that year.  If the
-value is <tt>null</tt> then we know that they're <em>not</em>
-standing. If they are (or were) standing in the general election
-in that year then there will be a dictionary giving you details
-of the constituency they were standing in. So, in the example
-above we can see that Tessa Jowell stood in 2010 in Dulwich and
-West Norwood, but we know isn't standing in any consituency
-in 2015.{% endblocktrans %}</p>
-
-<h4>party_memberships</h4>
-
-<p>{% blocktrans trimmed %}
-This object will similarly only have keys '2010' or '2015'
-and tells you what party the candidate is / was standing for in
-the general election of that year.  So in the example above, you
-can see that Tessa Jowell stood for the Labour Party in 2010,
-but has no entry for 2015 (because, as the <tt>standing_in</tt>
-tells us) she's not standing in 2015.
-{% endblocktrans %}</p>
-
-<h3>{% trans "More complex (Full Popolo information)" %}</h3>
-
-<p>{% blocktrans trimmed %}
-All the candidates we know about for a constituency can be
-returned by making a GET request to a URL of this form, where
-you should substitute in the constituency ID for
-CONSTITUENCY_ID:
-{% endblocktrans %}</p>
-
-<pre class="code-sample">
-{{ popit_url }}posts/CONSTITUENCY_ID?embed=membership.person.membership.organization
-</pre>
-
-<p>{% blocktrans trimmed %}
-For example, for Dulwich and West Norwood,
-<a href="{{ popit_url }}posts/65808?embed=membership.person.membership.organization">these
-would be the results</a>. To explain further, that's showing information about the <em>post</em>
-"MP for Dulwich and West Norwood". Under the <tt>memberships</tt> key of the
-<tt>result</tt> dictionary you can find all memberships of this
-post - those that have the <tt>role</tt> "Candidate" were
-candidates at one point.
-{% endblocktrans %}</p>
-
-<p>{% blocktrans trimmed %}
-You should then look at the start and end dates of that
-membership, which will tell you whether they're a candidate for
-the 2015 election or were a past candidate for the 2010
-election:
-{% endblocktrans %}</p>
-
-<table>
-<tr><td>Election</td><td>start_date</td><td>end_date</td></tr>
-<tr><td>2015</td><td>2010-05-07</td><td>9999-12-31</td></tr>
-<tr><td>2010</td><td>2005-05-06</td><td>2010-05-06</td></tr>
-</table>
-
-{% blocktrans trimmed %}
-Under <tt>person_id</tt> attribute of each of those membership
-you can find information about that candidate, like their name,
-contact details and (in another nested <tt>memberships</tt>
-object) their memberships of political parties. The party
-memberships use the same date values as above to indicate
-whether it's their party membership at the 2010 or 2015 election.
-{% endblocktrans %}
+<p>
+  {% blocktrans trimmed %}
+    You can request all the candidates in that constituency by
+    querying posts with the <tt>extra_slug</tt> filter
+    parameter.  For example, for Dulwich and West Norwood, which
+    has the ID <tt>65808</tt>, you would make the request:
+    <a href="{{ base_api_url }}posts/?extra__slug=65808">{{ base_api_url }}posts/?extra__slug=65808</a>
+  {% endblocktrans %}
 </p>
 
-</div>
-
-<h2>{% trans "Find a candidate by name" %}</h2>
-
-{% blocktrans trimmed %}
-You can use the <tt>search/persons</tt> endpoint with a query
-paramter like <tt>q=name:"John Doe"</tt>.
-{% endblocktrans %}
-
-<pre class="code-sample">
-{{ popit_url }}search/persons?q=name:%22FULL%20NAME%22
-</pre>
-
-<p>{% blocktrans trimmed %}
-For example, you can find every David Jones in the database
-with <a href="{{ popit_url }}search/persons?q=name:%22david%20jones%22">this
-query</a>. As above, the <tt>standing_in</tt>
-and <tt>party_memberships</tt> elements will give you details
-about which constituencies they are / were standing in, and for which
-parties.
-{% endblocktrans %}</p>
-
-<h2>{% trans "Get all known 2015 candidates" %}</h2>
-
-<p>{% blocktrans trimmed %}
-You can also use the <tt>search/persons</tt> endpoint to find
-all the candidates that we think are standing in 2015,
-with <a href="{{ popit_url }}search/persons?q=_exists_:standing_in.2015.post_id ">this
-query</a>:
-{% endblocktrans %}</p>
-
-<pre class="code-sample">
-{{ popit_url }}search/persons?q=_exists_:standing_in.2015.post_id
-</pre>
-
-<p>{% blocktrans trimmed with url="https://groups.google.com/d/msg/democracy-club/D0A3ZG4x9pw/8IVlFDzNFPYJ" %}
-(This question was raised on the <a href="{{ url }}">Democracy
-Club Google Group</a>, which may be of interest if you're developing
-software that uses the {{ site.name }} data.)
-{% endblocktrans %}</p>
+<p>
+  {% blocktrans trimmed %}
+    Each of the <tt>memberships</tt> in that reponse links to a
+    person who is a candidate in that constituency for any known
+    election.  The <tt>election</tt> property of each membership
+    tells you which election that candidacy is for.
+  {% endblocktrans %}
+</p>
 
 {% endblock %}
