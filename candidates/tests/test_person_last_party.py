@@ -38,7 +38,7 @@ class TestPersonLastParty(TestCase):
     def test_both_elections(self):
         person_extra = factories.PersonExtraFactory.create(
             base__id=1234,
-            base__name='John Doe',            
+            base__name='John Doe',
         )
         factories.CandidacyExtraFactory.create(
             election=self.election,
@@ -60,7 +60,7 @@ class TestPersonLastParty(TestCase):
     def test_only_earlier(self):
         person_extra = factories.PersonExtraFactory.create(
             base__id=1234,
-            base__name='John Doe',            
+            base__name='John Doe',
         )
         factories.CandidacyExtraFactory.create(
             election=self.earlier_election,
@@ -76,7 +76,7 @@ class TestPersonLastParty(TestCase):
     def test_only_later(self):
         person_extra = factories.PersonExtraFactory.create(
             base__id=1234,
-            base__name='John Doe',            
+            base__name='John Doe',
         )
         factories.CandidacyExtraFactory.create(
             election=self.election,
