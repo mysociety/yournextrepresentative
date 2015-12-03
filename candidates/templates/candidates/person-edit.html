@@ -29,7 +29,7 @@
   {% with last_candidacy=person.extra.last_candidacy %}
     {% if last_candidacy %}
       {% with post=last_candidacy.post %}
-        {% url 'constituency' election=last_candidacy.extra.election post_id=post.id ignored_slug=post.extra.short_label|slugify as url %}
+        {% url 'constituency' election=last_candidacy.extra.election.slug post_id=post.extra.slug ignored_slug=post.extra.short_label|slugify as url %}
           <p>{% blocktrans with election=last_candidacy.extra.election.name post_name=post.extra.short_label %}Candidate for <a href="{{ url }}">{{ post_name }}</a> in {{ election }}{% endblocktrans %}</p>
       {% endwith %}
     {% endif %}
