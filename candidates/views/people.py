@@ -95,6 +95,7 @@ class PersonView(TemplateView):
         person_id = self.kwargs['person_id']
         try:
             self.person = Person.objects.select_related('extra'). \
+                prefetch_related('links', 'contact_details'). \
                 get(pk=person_id)
         except Person.DoesNotExist:
             raise Http404(_("No person found with ID {person_id}").format(
