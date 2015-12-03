@@ -229,6 +229,20 @@ class YNRPopItImporter(PopItImporter):
                 else:
                     message = "The format of the St Paul area ID was unexpected: {0}"
                     raise Exception(message.format(old_identifier))
+        elif settings.ELECTION_APP == 'ar_elections_2015':
+            identifier = new_area_data['identifier']
+            split_url = urlsplit(identifier)
+            if not split_url.netloc == 'argentina.mapit.staging.mysociety.org':
+                raise Exception("Argentina Area identifiers are expected to be MapIt (Argentina) area URLs")
+            mapit_area_id = identifier
+            m = re.search(r'^/area/(\d+)$', split_url.path)
+            if not m:
+                message = "The format of the MapIt URL was unexpected: {0}"
+                raise Exception(message.format(mapit_area_url))
+            mapit_area_id = m.group(1)
+            # Make the Area.identifier for UK areas just the integer
+            # MapIt Area ID to make it easy to keep area URLs the same:
+            new_area_data['identifier'] = mapit_area_id
 
         area_id, area = super(YNRPopItImporter, self).update_area(new_area_data)
 
