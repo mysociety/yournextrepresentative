@@ -12,7 +12,7 @@
 {% block content %}
 
 <p>
-{% url 'constituency' election=object.election post_id=object.post_id ignored_slug=post_label|slugify as url %}
+{% url 'constituency' election=object.election.slug post_id=object.post.extra.slug ignored_slug=post_label|slugify as url %}
 {% blocktrans trimmed with type=object.document_type %}
 {{ type }} for <a href="{{ url }}">{{ post_label }}</a>.
 {% endblocktrans %}
