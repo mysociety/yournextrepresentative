@@ -33,7 +33,7 @@ class TestPersonView(WebTest):
         post_extra = PostExtraFactory.create(
             elections=(election,),
             base__organization=commons,
-            base__id='65808',
+            slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood'
         )
         person_extra = PersonExtraFactory.create(
