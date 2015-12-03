@@ -538,7 +538,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
                 self.election, party.id, mp_post.memberships
             )
 
-        party_set = PartySet.objects.get(postextra__base__id=mp_post.id)
+        party_set = PartySet.objects.get(postextra__slug=post_id)
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
