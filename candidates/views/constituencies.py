@@ -266,6 +266,7 @@ class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
 class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
 
     form_class = ConstituencyRecordWinnerForm
+    # TODO: is this template ever used?
     template_name = 'candidates/record-winner.html'
     required_group_name = RESULT_RECORDERS_GROUP_NAME
 
