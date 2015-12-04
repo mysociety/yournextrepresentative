@@ -1,10 +1,7 @@
-import requests
-
 from django.views.generic import TemplateView
 
 from popolo.models import Membership, ContactDetail
 
-from cached_counts.models import CachedCount
 
 class TaskHomeView(TemplateView):
     template_name = "tasks/tasks_home.html"

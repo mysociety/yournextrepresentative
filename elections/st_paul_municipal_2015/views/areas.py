@@ -12,14 +12,13 @@ from django.utils.translation import ugettext as _
 
 from candidates.models import AreaExtra, MembershipExtra
 from candidates.models.auth import get_edits_allowed
-from candidates.popit import PopItApiMixin
 from candidates.forms import NewPersonForm
 from candidates.views.helpers import split_candidacies, group_candidates_by_party
 
 from elections.models import AreaType, Election
 
 
-class StPaulAreasView(PopItApiMixin, TemplateView):
+class StPaulAreasView(TemplateView):
     template_name = 'candidates/areas.html'
 
     def get(self, request, *args, **kwargs):
@@ -93,7 +92,7 @@ class StPaulAreasView(PopItApiMixin, TemplateView):
         return context
 
 
-class StPaulAreasOfTypeView(PopItApiMixin, TemplateView):
+class StPaulAreasOfTypeView(TemplateView):
     template_name = 'candidates/areas-of-type.html'
 
     def get_context_data(self, **kwargs):

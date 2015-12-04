@@ -21,9 +21,7 @@ from django.conf import settings
 
 import requests
 
-from candidates.models import PopItPerson
 from candidates.views.version_data import get_change_metadata
-from candidates.popit import PopItApiMixin, get_search_url
 
 from ..images import get_file_md5sum
 
@@ -161,7 +159,7 @@ def key_value_appeared_in_previous_version(key, value, versions):
         return False
 
 
-class Command(PopItApiMixin, BaseCommand):
+class Command(BaseCommand):
     help = "Import scraped PPC data"
 
     option_list = BaseCommand.option_list + (
@@ -222,6 +220,7 @@ class Command(PopItApiMixin, BaseCommand):
             )
 
     def update_popit_person(self, popit_person_id, ppc_data, image_filename):
+        from candidates.models import PopItPerson
         from ..images import image_uploaded_already
         # Get the existing data first:
         person_data, _ = self.get_person(popit_person_id)
@@ -281,6 +280,7 @@ class Command(PopItApiMixin, BaseCommand):
         return person_id
 
     def add_popit_person(self, ppc_data, image_filename):
+        from candidates.models import PopItPerson
         change_metadata = get_change_metadata(
             None,
             'Created new candidate from official PPC data ({0})'.format(ppc_data['party_slug']),
@@ -364,6 +364,7 @@ class Command(PopItApiMixin, BaseCommand):
                 return False
 
     def handle_person(self, ppc_data, image_filename):
+        from candidates.popit import get_search_url
         print u"PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8')
         # Search PopIt for anyone with the same name. (FIXME: we
         # should make this a bit fuzzier when the PopIt API

@@ -7,11 +7,7 @@ from elections.models import Election
 
 from slugify import slugify
 
-from ..models import (
-    PopItPerson, membership_covers_date, MembershipExtra
-)
-
-from popolo.models import Person
+from ..models import MembershipExtra
 
 def get_redirect_to_post(election, post):
     from ..election_specific import shorten_post_label

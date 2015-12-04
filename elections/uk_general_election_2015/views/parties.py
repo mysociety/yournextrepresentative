@@ -1,4 +1,3 @@
-from candidates.models import get_identifier
 from candidates.views import PartyDetailView
 
 class UKPartyDetailView(PartyDetailView):

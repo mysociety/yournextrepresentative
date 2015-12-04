@@ -1,82 +1,43 @@
-from django.conf import settings
-from django.db import models
-from django.dispatch import receiver
-from django.core.urlresolvers import reverse
-from django.template.defaultfilters import slugify
+# There a no models needed by this application any more.
 
-from candidates.models import PopItPerson, person_added
-from elections.models import Election
+from django.db import connection
 
-class CachedCount(models.Model):
-    """
-    Fairly generic model for storing counts of various sorts.
 
-    The object_id is used for linking through to the relevant URL.
-    """
-
-    count_type = models.CharField(blank=False, max_length=100, db_index=True)
-    name = models.CharField(blank=False, max_length=100)
-    count = models.IntegerField(blank=False, null=False)
-    object_id = models.CharField(blank=True, max_length=100)
-    election = models.CharField(blank=True, null=True, max_length=512)
-
-    class Meta:
-        ordering = ['-count', 'name']
-
-    def __repr__(self):
-        fmt = '<CachedCount: election={e} count_type={ct}, name={n}, count={c}, object_id={o}>'
-        return fmt.format(
-            e=repr(self.election),
-            ct=repr(self.count_type),
-            n=repr(self.name),
-            c=repr(self.count),
-            o=repr(self.object_id),
-        )
-
-    def __unicode__(self):
-        return repr(self)
-
-    @classmethod
-    def increment_count(cls, election, count_type, object_id):
-        """
-        Increments the count of the object with the type of `count_type` and
-        the id of `object_id`.  If this object does not exist, do nothing.
-        """
-        filters = {
-            'election': election,
-            'count_type': count_type,
-            'object_id': object_id,
+def get_attention_needed_posts(max_results=None, random=False):
+    from candidates.election_specific import shorten_post_label
+    cursor = connection.cursor()
+    # This is similar to the query in ConstituencyCountsView,
+    # except it's not specific to a particular election and the
+    # results are ordered with fewest candidates first:
+    query = '''
+SELECT pe.slug, p.label, ee.name, ee.slug, count(m.id) as count
+  FROM popolo_post p
+    INNER JOIN candidates_postextra pe ON pe.base_id = p.id
+    INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
+    INNER JOIN elections_election ee ON cppee.election_id = ee.id
+    LEFT OUTER JOIN
+      (popolo_membership m
+        INNER JOIN candidates_membershipextra me
+        ON me.base_id = m.id)
+      ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
+         me.election_id = ee.id
+  GROUP BY pe.slug, p.label, ee.slug, ee.name
+  ORDER BY'''
+    if random:
+        query += ' count, random()'
+    else:
+        query += ' count, ee.name, p.label'
+    if max_results is not None:
+        query += ' LIMIT {limit}'.format(limit=max_results)
+    cursor.execute(query)
+    return [
+        {
+            'post_slug': row[0],
+            'post_label': row[1],
+            'election_name': row[2],
+            'election_slug': row[3],
+            'count': row[4],
+            'post_short_label': shorten_post_label(row[1]),
         }
-
-        cls.objects.filter(**filters).update(count=models.F('count') + 1)
-
-    @classmethod
-    def get_attention_needed_queryset(cls):
-        # FIXME: this should probably be a queryset method instead.
-        current_election_slugs = [t.slug for t in Election.objects.current().by_date()]
-        return cls.objects.filter(
-            count_type='post',
-            election__in=current_election_slugs
-        ).order_by('count', '?')
-
-
-@receiver(person_added, sender=PopItPerson)
-def person_added_handler(sender, **kwargs):
-    """
-    Called when the `person_added` signal is sent, mainly from
-    `candidates.update.create_person`.
-    """
-
-    data = kwargs['data']
-
-    # constituency
-    for election, standing_in_data in data['standing_in'].items():
-        if standing_in_data:
-            post_id = standing_in_data.get('post_id')
-            CachedCount.increment_count(election, 'post', post_id)
-
-    # party
-    for election, party_membership_data in data['party_memberships'].items():
-        if party_membership_data:
-            party_id = party_membership_data['id']
-            CachedCount.increment_count(election, 'party', party_id)
+        for row in cursor.fetchall()
+    ]
