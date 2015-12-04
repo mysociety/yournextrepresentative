@@ -4,9 +4,3 @@
 [submodule "candidates/static/select2"]
 	path = candidates/static/select2
 	url = https://github.com/ivaynberg/select2.git
-[submodule "UK-Political-Parties"]
-	path = data/UK-Political-Parties
-	url = https://github.com/mhl/UK-Political-Parties.git
-[submodule "data/parlparse"]
-	path = data/parlparse
-	url = https://github.com/mysociety/parlparse.git
