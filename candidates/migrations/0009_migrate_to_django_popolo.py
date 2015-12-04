@@ -526,10 +526,14 @@ def import_from_popit(apps, schema_editor):
         party_set_from_name[party_set_data['name']] = party_set
     # Now run the standard import:
     importer = YNRPopItImporter(apps, schema_editor)
-    url = 'http://{instance}.{hostname}:{port}/api/v0.1/export.json'.format(
-        instance=settings.POPIT_INSTANCE,
-        hostname=settings.POPIT_HOSTNAME,
-        port=settings.POPIT_PORT,
+    host_and_port = {
+        'uk_general_election_2015': 'yournextmp.popit.mysociety.org:80',
+        'ar_elections_2015': 'ynr-argentina.popit.mysociety.org:80',
+        'bf_elections_2015': 'burkina-faso.popit.mysociety.org:80',
+        'st_paul_municipal_2015': 'twincities.popit.mysociety.org:80',
+    }[settings.ELECTION_APP]
+    url = 'http://{host_and_port}/api/v0.1/export.json'.format(
+        host_and_port=host_and_port
     )
     export_filename = get_url_cached(url)
     importer.import_from_export_json(export_filename)
