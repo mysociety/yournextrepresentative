@@ -1,3 +1,5 @@
+import json
+
 from django.core.urlresolvers import reverse
 
 from rest_framework import serializers
@@ -158,6 +160,11 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
     images = ImageSerializer(many=True, read_only=True, source='extra.images')
 
 
+class JSONSerializerField(serializers.Field):
+    def to_representation(self, value):
+        return json.loads(value)
+
+
 class PersonSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Person
@@ -187,7 +194,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     other_names = OtherNameSerializer(many=True, read_only=True)
     images = ImageSerializer(many=True, read_only=True, source='extra.images')
 
-    versions = serializers.ReadOnlyField(source='extra.versions')
+    versions = JSONSerializerField(source='extra.versions', read_only=True)
 
     memberships = FlatMembershipSerialzier(many=True, read_only=True)
 
