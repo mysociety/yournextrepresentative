@@ -73,10 +73,10 @@ class QueuedImage(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        message = _(u'Image uploaded by {user} of candidate {popit_person_id}')
+        message = _(u'Image uploaded by {user} of candidate {person_id}')
         return message.format(
             user=self.user,
-            popit_person_id=self.popit_person_id
+            person_id=self.person.id
         )
 
     def get_absolute_url(self):
