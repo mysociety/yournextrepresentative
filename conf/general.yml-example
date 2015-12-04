@@ -69,6 +69,12 @@ DEFAULT_FROM_EMAIL: webmaster@localhost
 # analytics tracking ID:
 GOOGLE_ANALYTICS_ACCOUNT: ''
 
+# You should set this to the name of a Twitter account associated with
+# the site; this will be used in the Twitter metadata for various
+# pages. This should just be the name of that account (not a URL), and
+# shouldn't include the @.
+TWITTER_USERNAME: ''
+
 # If you set this to true then the protocol of image URLs will be set
 # rewritten from http to https.
 FORCE_HTTPS_IMAGES: false

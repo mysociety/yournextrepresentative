@@ -9,12 +9,18 @@
 
 {% block extra_head %}
     <link rel="canonical" href="{{ canonical_url }}" />
-    <!-- Open Graph data -->
-    <meta property="og:title" content="{{ person.name }}{% if last_candidacy %} - {% blocktrans with post=last_candidacy.post.extra.short_label election=last_candidacy.extra.election.name %}Candidate for {{ post }} in {{ election }}{% endblocktrans %}{% endif %}" />
+
+    <!-- Open Graph and Twitter card data -->
+    <meta property="og:url" name="twitter:url" content="{{ canonical_url }}" />
+    <meta property="og:title" name="twitter:title" content="{{ person.name }}{% if last_candidacy %} - {% blocktrans with post=last_candidacy.post.extra.short_label election=last_candidacy.extra.election.name %}Candidate for {{ post }} in {{ election }}{% endblocktrans %}{% endif %}" />
+    <meta property="og:description" name="twitter:description" content="{% metadescription person last_candidacy DATE_TODAY %}">
+
+    <!-- Just Open Graph metadata -->
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="{{ canonical_url }}" />
     {% if person.image %}
-      <meta property="og:image" content="{{ person.extra.proxy_image|fixproxyurl }}/0/80" />
+      {% thumbnail person.extra.primary_image "x80" as im %}
+        <meta property="og:image" content="{{ im.url }}" />
+      {% endthumbnail %}
     {% elif person.gender|lower == 'female' %}
       <meta property="og:image" content="{{ 'candidates/img/blank-woman.png'|static_image_path:request }}"/>
     {% else %}
@@ -23,15 +29,15 @@
     <meta property="og:image:height" content="80" />
     <meta property="og:image:width" content="80" />
     <meta property="og:site_name" content="{{ site.name }}" />
-    <meta property="og:description" content="{% metadescription person person.last_candidacy DATE_TODAY %}">
     <meta property="og:locale" content="{{ LOCALE }}" />
 
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="{% trans "@yournextmp" %}" />
-    <meta name="twitter:title" content="{{ person.name }}{% if last_candidacy %} - {% blocktrans with post=last_candidacy.post.extra.short_label election=last_candidacy.extra.election.name %}Candidate for {{ post }} in {{ election }}{% endblocktrans %}{% endif %}" />
+    {% if settings.TWITTER_USERNAME %}
+      <meta name="twitter:site" content="@{{ settings.TWITTER_USERNAME }}" />
+    {% endif %}
     {% if person.image %}
-      <meta property="twitter:image" content="{{ person.image }}" />
+      <meta property="twitter:image" content="{{ person.extra.primary_image.url }}" />
     {% elif person.gender|lower == 'female' %}
       <meta property="twitter:image" content="{{ 'candidates/img/blank-woman-160.png'|static_image_path:request }}"/>
     {% else %}
@@ -39,8 +45,6 @@
     {% endif %}
     <meta property="twitter:image:width" content="160" />
     <meta property="twitter:image:height" content="160" />
-    <meta name="twitter:url" content="{{ canonical_url }}" />
-    <meta name="twitter:description" content="{% metadescription person person.last_candidacy DATE_TODAY %}" />
 {% endblock %}
 
 {% block body_class %}person{% endblock %}

@@ -47,6 +47,8 @@ POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 GOOGLE_ANALYTICS_ACCOUNT = conf.get('GOOGLE_ANALYTICS_ACCOUNT')
 USE_UNIVERSAL_ANALYTICS = conf.get('USE_UNIVERSAL_ANALYTICS', True)
 
+TWITTER_USERNAME = conf.get('TWITTER_USERNAME', '')
+
 # The email address which is made public on the site for sending
 # support email to:
 SUPPORT_EMAIL = conf['SUPPORT_EMAIL']

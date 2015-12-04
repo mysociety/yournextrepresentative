@@ -5,26 +5,27 @@
 {% load exists %}
 
 {% block extra_head %}
+    <!-- Open Graph and Twitter card data -->
+    <meta property="og:url" name="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:title" name="twitter:title" content="{% blocktrans with election_name=election_data.name party_name=party.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election_name }}{% endblocktrans %}" />
+    <meta property="og:description" name="twitter:description" content="{% blocktrans with election=election_data.name post=constituency_name party_name=party.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %} - {% blocktrans with site_name=site.name %}find out more on {{ site_name }}{% endblocktrans %}">
+
     <!-- Open Graph data -->
-    <meta property="og:title" content="{% blocktrans with election_name=election_data.name party_name=party.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election_name }}{% endblocktrans %}" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="og:image:height" content="80" />
     <meta property="og:image:width" content="80" />
     <meta property="og:site_name" content="{{ site.name }}" />
-    <meta property="og:description" content="{% blocktrans with election=election_data.name post=constituency_name party_name=party.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %} - {% blocktrans with site_name=site.name %}find out more on {{ site_name }}{% endblocktrans %}">
     <meta property="og:locale" content="{{ LOCALE }}" />
 
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="{% trans "@yournextmp" %}" />
-    <meta name="twitter:title" content="{% blocktrans with election=election_data.name post=constituency_name party_name=party.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %}" />
+    {% if settings.TWITTER_USERNAME %}
+      <meta name="twitter:site" content="@{{ settings.TWITTER_USERNAME }}" />
+    {% endif %}
     <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="twitter:image:height" content="120" />
     <meta property="twitter:image:width" content="120" />
-    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-    <meta name="twitter:description" content="{% blocktrans with election=election_data.name %}Party list of {{ party_name }} for {{ post_label_shorter }} in the {{ election }}{% endblocktrans %} - {% blocktrans with site_name=site.name %}find out more on {{ site_name }}{% endblocktrans %}"  />
 {% endblock %}
 
 {% block body_class %}constituency{% endblock %}
