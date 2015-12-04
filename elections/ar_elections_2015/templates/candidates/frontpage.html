@@ -68,8 +68,8 @@
 
             <h2>¿Conocés los candidatos en estas elecciones?</h2>
             <ul class="finder__getting-started__priorities">
-              {% for cc in needing_attention %}
-                <li><a href="{% url 'constituency' election=cc.election post_id=cc.object_id ignored_slug=cc.name|slugify %}">{{ cc.name }}</a></li>
+              {% for row in needing_attention %}
+                <li><a href="{% url 'constituency' election=row.election_slug post_id=row.post_slug ignored_slug=row.post_short_label|slugify %}">{{ row.post_label }}</a></li>
               {% endfor %}
             </ul>
         </div>
