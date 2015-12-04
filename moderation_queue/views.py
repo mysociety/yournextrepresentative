@@ -246,7 +246,8 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         person = Person.objects.get(
             id=self.queued_image.person.id
         )
-        candidate_path = person.extra.get_absolute_url()
+        person_extra = person.extra
+        candidate_path = person_extra.get_absolute_url()
         candidate_name = person.name
         candidate_link = u'<a href="{url}">{name}</a>'.format(
             url=candidate_path,
@@ -290,7 +291,8 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 self.request,
                 update_message
             )
-            person.extra.record_version(change_metadata)
+            person_extra.record_version(change_metadata)
+            person_extra.save()
             person.save()
             LoggedAction.objects.create(
                 user=self.request.user,
@@ -300,7 +302,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 person=person,
                 source=update_message,
             )
-            candidate_full_url = person.extra.get_absolute_url(self.request)
+            candidate_full_url = person_extra.get_absolute_url(self.request)
             self.send_mail(
                 _('{site_name} image upload approved').format(
                     site_name=site_name
