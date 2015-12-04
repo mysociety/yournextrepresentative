@@ -57,8 +57,8 @@ class AreasView(TemplateView):
                     post.memberships.prefetch_related(
                         Prefetch('extra', queryset=extra_qs)
                     ).select_related(
-                        'person', 'on_behalf_of', 'on_behalf_of__extra',
-                        'organization'
+                        'person', 'person__extra', 'on_behalf_of',
+                        'on_behalf_of__extra', 'organization'
                     ).all()
                 )
                 current_candidacies = group_candidates_by_party(
