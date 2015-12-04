@@ -61,7 +61,7 @@ class ResultEventsAtomFeedGenerator(Atom1Feed):
             add_item_elements(handler, item)
         keys = [
             'post_id',
-            'winner_popit_person_id',
+            'winner_person_id',
             'winner_person_name',
             'winner_party_id',
             'winner_party_name',
@@ -89,7 +89,7 @@ class ResultEventsFeed(BasicResultEventsFeed):
     def item_extra_kwargs(self, o):
         return {
             'post_id': o.post_id,
-            'winner_popit_person_id': o.winner_popit_person_id,
+            'winner_person_id': o.winner_person_id,
             'winner_person_name': o.winner_person_name,
             'winner_party_id': o.winner_party_id,
             'winner_party_name': o.winner_party_name,

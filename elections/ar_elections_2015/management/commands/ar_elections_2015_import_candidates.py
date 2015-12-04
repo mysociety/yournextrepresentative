@@ -81,7 +81,7 @@ def enqueue_image(person, user, image_url):
         justification_for_use="Downloaded from {0}".format(image_url),
         decision=QueuedImage.UNDECIDED,
         image=storage_filename,
-        popit_person_id=person.id,
+        person_id=person.id,
         user=user
     )
 

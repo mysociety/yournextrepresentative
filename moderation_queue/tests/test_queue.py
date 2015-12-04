@@ -144,7 +144,7 @@ class PhotoReviewTests(WebTest):
         initial_count = queued_images.count()
         upload_form_url = reverse(
             'photo-upload',
-            kwargs={'popit_person_id': '2009'}
+            kwargs={'person_id': '2009'}
         )
         form_page_response = self.app.get(
             upload_form_url,

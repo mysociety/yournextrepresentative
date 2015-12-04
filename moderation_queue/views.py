@@ -31,8 +31,8 @@ from popolo.models import Person
 from images.models import Image
 
 @login_required
-def upload_photo(request, popit_person_id):
-    person = get_object_or_404(Person, id=popit_person_id)
+def upload_photo(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
     if request.method == 'POST':
         form = UploadPersonPhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -52,7 +52,7 @@ def upload_photo(request, popit_person_id):
             return HttpResponseRedirect(reverse(
                 'photo-upload-success',
                 kwargs={
-                    'popit_person_id': person.id
+                    'person_id': person.id
                 }
             ))
     else:
@@ -79,7 +79,7 @@ class PhotoUploadSuccess(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PhotoUploadSuccess, self).get_context_data(**kwargs)
         context['person'] = Person.objects.get(
-            id=kwargs['popit_person_id']
+            id=kwargs['person_id']
         )
         return context
 
@@ -343,7 +343,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             retry_upload_link = self.request.build_absolute_uri(
                 reverse(
                     'photo-upload',
-                    kwargs={'popit_person_id': self.queued_image.person.id}
+                    kwargs={'person_id': self.queued_image.person.id}
                 )
             )
             self.send_mail(
