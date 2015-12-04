@@ -46,13 +46,13 @@
     <h3>{% blocktrans with post_label=post_data.label party_name=party.name %}{{ party_name }} candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
     </h3>
 
-    {% for position_in_list, c in positions_and_people %}
+    {% for position_in_list, c, candidate_elected in positions_and_people %}
       {% if forloop.first %}
         <ul class="candidate-list">
       {% endif %}
 
-        <li class="candidates-list__person{% if c|was_elected:election_data %} candidates-list__person__winner{% endif %}">
-          {% if c|was_elected:election_data %}
+        <li class="candidates-list__person{% if candidate_elected %} candidates-list__person__winner{% endif %}">
+          {% if candidate_elected %}
             <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
           {% endif %}
 

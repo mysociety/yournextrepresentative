@@ -37,7 +37,10 @@ def get_party_people_for_election_from_memberships(
 
     people = []
     for membership in memberships.all():
-        people.append((membership.extra.party_list_position, membership.person))
+        people.append((
+            membership.extra.party_list_position, membership.person,
+            membership.extra.elected
+        ))
 
     return people
 
