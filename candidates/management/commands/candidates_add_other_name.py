@@ -2,9 +2,6 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
-
 class Command(BaseCommand):
     args = "<PERSON-ID> <OTHER-NAME>"
     help = "Add an alternative name to a particular person"
@@ -16,6 +13,9 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
+        from candidates.models import PopItPerson
+        from candidates.popit import create_popit_api_object
+
         self.verbosity = int(options.get('verbosity', 1))
         api = create_popit_api_object()
         if len(args) != 2:

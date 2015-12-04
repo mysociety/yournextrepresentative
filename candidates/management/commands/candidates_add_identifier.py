@@ -1,13 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
-
 class Command(BaseCommand):
     args = "<PERSON-ID> <SCHEME> <IDENTIFIER>"
     help = "Add an identifier to a particular person"
 
     def handle(self, *args, **options):
+        from candidates.models import PopItPerson
+        from candidates.popit import create_popit_api_object
+
         self.verbosity = int(options.get('verbosity', 1))
         api = create_popit_api_object()
         if len(args) != 3:

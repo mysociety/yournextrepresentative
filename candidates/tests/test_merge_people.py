@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..popit import merge_popit_people
+from ..models import merge_popit_people
 
 class TestMergePeople(TestCase):
 

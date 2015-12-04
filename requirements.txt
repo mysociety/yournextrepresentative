@@ -42,7 +42,6 @@ path.py==8.1.1
 pexpect==3.3
 pickleshare==0.5
 Pillow==2.7.0
-PopIt-Python==0.1.10
 psycopg2==2.5.4
 pyasn1==0.1.7
 pycparser==2.10
@@ -58,7 +57,6 @@ requests==2.7.0
 requests-oauthlib==0.5.0
 simplegeneric==0.8.1
 six==1.7.3
-slumber==0.6.0
 sorl-thumbnail==12.3
 sqlparse==0.1.15
 traitlets==4.0.0

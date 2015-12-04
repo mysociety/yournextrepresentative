@@ -12,17 +12,16 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
-from django.db import connection
 from django.db import models
 from django.utils.translation import ugettext as _
 
+from django_date_extensions.fields import ApproximateDate
 from elections.models import Election, AreaType
 from popolo.models import Person, Organization, Post, Membership, Area
 from ..diffs import get_version_diffs
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
-from .popit import parse_approximate_date
 from .versions import get_person_as_version_data
 
 from images.models import Image, HasImageMixin
@@ -91,6 +90,35 @@ def update_person_from_form(person, person_extra, form):
                 party_list_position=party_list_position,
                 election=election_data
             )
+
+
+def parse_approximate_date(s):
+    """Take a partial ISO 8601 date, and return an ApproximateDate for it
+
+    >>> ad = parse_approximate_date('2014-02-17')
+    >>> type(ad)
+    <class 'django_date_extensions.fields.ApproximateDate'>
+    >>> ad
+    2014-02-17
+    >>> parse_approximate_date('2014-02')
+    2014-02-00
+    >>> parse_approximate_date('2014')
+    2014-00-00
+    >>> parse_approximate_date('future')
+    future
+    """
+
+    for regexp in [
+        r'^(\d{4})-(\d{2})-(\d{2})$',
+        r'^(\d{4})-(\d{2})$',
+        r'^(\d{4})$'
+    ]:
+        m = re.search(regexp, s)
+        if m:
+            return ApproximateDate(*(int(g, 10) for g in m.groups()))
+    if s == 'future':
+        return ApproximateDate(future=True)
+    raise Exception, _("Couldn't parse '{0}' as an ApproximateDate").format(s)
 
 
 class PersonExtra(HasImageMixin, models.Model):

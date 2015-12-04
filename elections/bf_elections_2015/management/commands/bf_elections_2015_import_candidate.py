@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from datetime import date
 import dateutil.parser
 import csv
 from os.path import dirname, join
 import re
 import string
-import urllib
 import codecs
 
 import requests
 from slumber.exceptions import HttpClientError
 
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.core.files.storage import FileSystemStorage
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from candidates.cache import get_post_cached
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
 from candidates.views.version_data import get_change_metadata
 
@@ -34,6 +26,7 @@ USER_AGENT = (
 
 
 def get_post_data(api, election_id, province):
+    from candidates.cache import get_post_cached
     from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     ynr_election_data = Election.objects.get_by_slug(election_id)
     area_key = (ynr_election_data.area_types.first().name,
@@ -50,6 +43,8 @@ def get_post_data(api, election_id, province):
 
 
 def get_existing_popit_person(vi_person_id):
+    from candidates.models import PopItPerson
+    from candidates.popit import get_search_url
     # See if this person already exists by searching for the
     # ID they were imported with:
     query_format = \
@@ -74,6 +69,7 @@ def get_existing_popit_person(vi_person_id):
 
 
 def get_party_data(party_name):
+    from candidates.popit import get_search_url
     # See if this person already exists by searching for the
     # ID they were imported with:
     party_name = party_name.replace('/', '')
@@ -121,6 +117,8 @@ class Command(BaseCommand):
 
     def handle(self, username=None, **options):
         from candidates.election_specific import PARTY_DATA, shorten_post_label
+        from candidates.models import PopItPerson
+        from candidates.popit import create_popit_api_object
 
         election_data = {
             'prv-2015': 'listedescandidatsauxelectionslegislativeslisteprovincialeanptic.csv',

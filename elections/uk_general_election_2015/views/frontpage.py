@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 
 from popolo.models import Area, Post
 
-from candidates.cache import get_post_cached
 from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
 

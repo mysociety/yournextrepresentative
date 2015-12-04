@@ -2,8 +2,6 @@ import requests
 
 from django.core.management.base import BaseCommand, CommandError
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
 from candidates.views.version_data import get_change_metadata
 
 class Command(BaseCommand):
@@ -11,6 +9,9 @@ class Command(BaseCommand):
     help = "Find any new parlparse IDs from parlparse and add them"
 
     def handle(self, *args, **options):
+        from candidates.models import PopItPerson
+        from candidates.popit import create_popit_api_object
+
         self.verbosity = int(options.get('verbosity', 1))
         api = create_popit_api_object()
         if len(args) != 1:

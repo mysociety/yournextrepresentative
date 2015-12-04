@@ -3,16 +3,12 @@ import csv
 
 from io import StringIO
 
-from slumber.exceptions import HttpServerError, HttpClientError
+from slumber.exceptions import HttpClientError
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object, get_search_url
 from candidates.views.version_data import get_change_metadata
-from candidates.cache import get_post_cached, UnknownPostException
 from elections.models import Election
 
 import memcache
@@ -21,6 +17,8 @@ UNKNOWN_PARTY_ID = 'unknown'
 GOOGLE_DOC_ID = '1yme9Y9Vt876-cVR9bose3QDqF7j8hqLnWYEjO3HUqXs'
 
 def get_existing_popit_person(person_id):
+    from candidates.models import PopItPerson
+    from candidates.popit import get_search_url
     # See if this person already exists by searching for the
     # ID they were imported with:
     query_format = \
@@ -47,7 +45,10 @@ class Command(BaseCommand):
     help = "Load or update St. Paul candidates from Google docs"
 
     def handle(self, **options):
+        from candidates.cache import get_post_cached, UnknownPostException
         from candidates.election_specific import PARTY_DATA, shorten_post_label
+        from candidates.models import PopItPerson
+        from candidates.popit import create_popit_api_object
 
         spreadsheet_url = 'https://docs.google.com/spreadsheets/d/{0}/pub?output=csv'\
                               .format(GOOGLE_DOC_ID)
