@@ -9,8 +9,6 @@ from os.path import join, exists, dirname
 import re
 import requests
 import shutil
-from datetime import timedelta
-from dateutil.parser import parse
 from urlparse import urlsplit
 
 from PIL import Image as PillowImage
