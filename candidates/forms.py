@@ -2,9 +2,6 @@
 
 import re
 
-from .cache import get_post_cached, get_all_posts_cached, UnknownPostException
-from .popit import create_popit_api_object, PopItApiMixin
-from .election_specific import PARTY_DATA, AREA_POST_DATA
 from .models.address import check_address
 
 from elections.models import Election
@@ -15,6 +12,8 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from candidates.models import PartySet
+from popolo.models import Organization, Post
 from django_date_extensions.fields import ApproximateDateFormField
 
 class AddressForm(forms.Form):
@@ -59,7 +58,7 @@ class CandidacyDeleteForm(BaseCandidacyForm):
         max_length=512,
     )
 
-class BasePersonForm(PopItApiMixin, forms.Form):
+class BasePersonForm(forms.Form):
 
     STANDING_CHOICES = (
         ('not-sure', _(u"Don’t Know")),
@@ -183,23 +182,26 @@ class BasePersonForm(PopItApiMixin, forms.Form):
                     election=election_name
                 ))
             # Check that that post actually exists:
-            try:
-                get_post_cached(self.api, post_id)
-            except UnknownPostException:
+            if not Post.objects.filter(extra__slug=post_id).exists():
                 message = _("An unknown post ID '{post_id}' was specified")
                 raise forms.ValidationError(
                     message.format(post_id=post_id)
                 )
-            party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
-            if not party_set:
+            try:
+                party_set = PartySet.objects.get(postextra__slug=post_id)
+            except PartySet.DoesNotExist:
                 message = _("Could not find parties for the post with ID "
                             "'{post_id}' in the {election}")
                 raise forms.ValidationError(
                     message.format(post_id=post_id, election=election_name)
                 )
-            party_field = 'party_' + party_set + '_' + election
-            party_id = cleaned_data[party_field]
-            if party_id not in PARTY_DATA.party_id_to_name:
+            party_field = 'party_' + party_set.slug + '_' + election
+            try:
+                party_id = int(cleaned_data[party_field], 10)
+            except ValueError:
+                party_id = None
+            if not Organization.objects.filter(
+                    classification='Party', id=party_id).exists():
                 message = _("You must specify a party for the {election}")
                 raise forms.ValidationError(message.format(election=election_name))
         return cleaned_data
@@ -208,12 +210,12 @@ class BasePersonForm(PopItApiMixin, forms.Form):
 class NewPersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
+        from .election_specific import shorten_post_label
         election = kwargs.pop('election', None)
         hidden_post_widget = kwargs.pop('hidden_post_widget', None)
         super(NewPersonForm, self).__init__(*args, **kwargs)
 
         election_data = Election.objects.get_by_slug(election)
-        role = election_data.for_post_role
 
         standing_field_kwargs = {
             'label': _('Standing in %s') % election_data.name,
@@ -248,12 +250,9 @@ class NewPersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post['id'],
-                             AREA_POST_DATA.shorten_post_label(
-                                 election,
-                                 post['label']
-                             ))
-                            for post in get_all_posts_cached(self.api, election, role)
+                            (post.extra.slug,
+                             shorten_post_label(post.label))
+                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),
@@ -271,24 +270,25 @@ class NewPersonForm(BasePersonForm):
         # choice field for each such "party set" and make sure only
         # the appropriate one is shown, depending on the election and
         # selected constituency, using Javascript.
-        specific_party_set_slug = None
+        specific_party_set = None
         if hidden_post_widget:
             # Then the post can't be changed, so only add the
             # particular party set relevant for that post:
             post_id = kwargs['initial']['constituency_' + election]
-            specific_party_set_slug = \
-                AREA_POST_DATA.post_id_to_party_set(post_id)
+            specific_party_set = PartySet.objects.get(
+                postextra__slug=post_id
+            )
 
-        for party_set in PARTY_DATA.ALL_PARTY_SETS:
-            if specific_party_set_slug and (party_set['slug'] != specific_party_set_slug):
+        for party_set in PartySet.objects.all():
+            if specific_party_set and (party_set.slug != specific_party_set.slug):
                 continue
-            self.fields['party_' + party_set['slug'] + '_' + election] = \
+            self.fields['party_' + party_set.slug + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
                         election=election_data.name,
-                        party_set_name=party_set['name'],
+                        party_set_name=party_set.name,
                     ),
-                    choices=PARTY_DATA.party_choices[party_set['slug']],
+                    choices=party_set.party_choices(),
                     required=False,
                     widget=forms.Select(
                         attrs={
@@ -320,12 +320,8 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
+        from .election_specific import shorten_post_label
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
-
-        # We should only need to actually go to the API for the first
-        # time this form is loaded; it'll be cached indefinitely after
-        # that, but still need the API object for the first time.
-        api = create_popit_api_object()
 
         self.elections_with_fields = Election.objects.current().by_date()
 
@@ -335,7 +331,6 @@ class UpdatePersonForm(BasePersonForm):
 
         for election_data in self.elections_with_fields:
             election = election_data.slug
-            role = election_data.for_post_role
             self.fields['standing_' + election] = \
                 forms.ChoiceField(
                     label=_('Standing in %s') % election_data.name,
@@ -348,25 +343,22 @@ class UpdatePersonForm(BasePersonForm):
                     required=False,
                     choices=[('', '')] + sorted(
                         [
-                            (post['id'],
-                             AREA_POST_DATA.shorten_post_label(
-                                 election,
-                                 post['label']
-                             ))
-                            for post in get_all_posts_cached(api, election, role)
+                            (post.extra.slug,
+                             shorten_post_label(post.label))
+                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
                         ],
                         key=lambda t: t[1]
                     ),
                     widget=forms.Select(attrs={'class': 'post-select'}),
                 )
-            for party_set in PARTY_DATA.ALL_PARTY_SETS:
-                self.fields['party_' + party_set['slug'] + '_' + election] = \
+            for party_set in PartySet.objects.all():
+                self.fields['party_' + party_set.slug + '_' + election] = \
                     forms.ChoiceField(
                         label=_("Party in {election} ({party_set_name})").format(
                             election=election_data.name,
-                            party_set_name=party_set['name'],
+                            party_set_name=party_set.name,
                         ),
-                        choices=PARTY_DATA.party_choices[party_set['slug']],
+                        choices=party_set.party_choices(),
                         required=False,
                         widget=forms.Select(
                             attrs={
@@ -377,7 +369,7 @@ class UpdatePersonForm(BasePersonForm):
                 if election_data.party_lists_in_use:
                     # Then add a field to enter the position on the party list
                     # as an integer:
-                    field_name = 'party_list_position_' + party_set['slug'] + \
+                    field_name = 'party_list_position_' + party_set.slug + \
                         '_' + election
                     self.fields[field_name] = forms.IntegerField(
                         label=_("Position in party list ('1' for first, '2' for second, etc.)"),
@@ -439,18 +431,6 @@ class ToggleLockForm(forms.Form):
         max_length=256,
         widget=forms.HiddenInput()
     )
-
-    def clean_post_id(self):
-        post_id = self.cleaned_data['post_id']
-        # Use get_post_cached to check if this is a real post:
-        try:
-            api = create_popit_api_object()
-            get_post_cached(api, post_id)
-        except UnknownPostException:
-            message = _('{0} was not a known post ID')
-            raise ValidationError(message.format(post_id))
-        return post_id
-
 
 class ConstituencyRecordWinnerForm(forms.Form):
     person_id = forms.CharField(

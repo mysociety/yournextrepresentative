@@ -1,22 +1,28 @@
-from django.conf import settings
+from django.db.models import Prefetch
 from django.views.generic import TemplateView
 
-from ..cache import get_all_posts_cached
-from ..popit import PopItApiMixin
+from candidates.models import PostExtra
 from elections.models import Election
 
-class PostListView(PopItApiMixin, TemplateView):
+class PostListView(TemplateView):
     template_name = 'candidates/posts.html'
 
     def get_context_data(self, **kwargs):
         context = super(PostListView, self).get_context_data(**kwargs)
 
-        all_posts = {}
-        for election_data in Election.objects.current().by_date():
-            role = election_data.for_post_role
-            all_posts[election_data.slug] = {
-                'posts': get_all_posts_cached(self.api, election_data.slug, role),
-                'election_data': election_data,
-            }
-        context['all_posts'] = all_posts
+        prefetch_qs = \
+            PostExtra.objects.order_by('base__label').select_related('base')
+
+        context['all_posts'] = \
+            [
+                {
+                    'election': election,
+                    'posts': election.posts.all()
+                }
+                for election in
+                Election.objects.current().order_by('-election_date'). \
+                    prefetch_related(
+                        Prefetch('posts', queryset=prefetch_qs)
+                    )
+            ]
         return context

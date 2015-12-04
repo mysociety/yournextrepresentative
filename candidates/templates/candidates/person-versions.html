@@ -3,7 +3,7 @@
 
 <div class="person__versions">
     <h2>{% trans "All versions" %}</h2>
-    {% for version in person.version_diffs %}
+    {% for version in person.extra.version_diffs %}
       <div class="version">
         <dl>
           <dt>{% trans "Version" %}</dt>

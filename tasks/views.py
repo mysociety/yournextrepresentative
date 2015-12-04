@@ -1,15 +1,15 @@
-import json
 import requests
 
 from django.views.generic import TemplateView
 
-from candidates.popit import PopItApiMixin, get_search_url
+from popolo.models import Membership, ContactDetail
+
 from cached_counts.models import CachedCount
 
 class TaskHomeView(TemplateView):
     template_name = "tasks/tasks_home.html"
 
-class IncompleteFieldView(PopItApiMixin, TemplateView):
+class IncompleteFieldView(TemplateView):
     page_kwarg = 'page'
     template_name = 'tasks/field.html'
 
@@ -19,45 +19,64 @@ class IncompleteFieldView(PopItApiMixin, TemplateView):
             'tasks/field.html'
         ]
 
-    def _objects_from_popit_search(self):
-        self.page = int(self.request.GET.get(self.page_kwarg) or 1)
-        url = get_search_url(
-            'persons',
-            "_missing_:%s AND _exists_:standing_in.2015.post_id" %
-                self.get_field(),
-            page=self.page,
-            per_page=20
-        )
-        page_result = requests.get(url).json()
-        return page_result
-
     def get_context_data(self, **kwargs):
         context = super(IncompleteFieldView,
             self).get_context_data(**kwargs)
-        all_results = self._objects_from_popit_search()
-        context['results'] = all_results['result']
-        context['results_count'] = all_results['total']
+        all_results = Membership.objects \
+            .select_related('person', 'post', 'person__extra', 'post__extra', 'on_behalf_of') \
+            .filter(
+                role='Candidate',
+                extra__election__slug='2015',
+            )
 
-        if 'next_url' in all_results.keys():
-            context['next'] = self.page + 1
-        if 'prev_url' in all_results:
-            context['previous'] = self.page -1
-        try:
-            context['candidates_2015'] = CachedCount.objects.get(
-                object_id='candidates_2015').count
-            context['percent_empty'] = \
-                (100 * context['results_count'] \
-                / float(context['candidates_2015']))
-        except CachedCount.DoesNotExist:
-            pass
+        filtered_results = self.get_results(all_results)
+
+        twitter_names = ContactDetail.objects.filter(contact_type='twitter').all()
+        person_to_twitter = {}
+        for twitter in twitter_names:
+            person_to_twitter[twitter.object_id] = twitter.value
+
+        """
+        This is required as there's not a sensible way to include the
+        twitter details in the query so we need to do two queries and then
+        merge the results here.
+        """
+        result_context = []
+        for result in filtered_results.all():
+            details = {
+                'person': {
+                    'id': result.person_id,
+                    'name': result.person.name
+                },
+                'party': {
+                    'name': result.on_behalf_of.name
+                },
+                'post': {
+                    'name': result.post.extra.short_label
+                }
+            }
+            if person_to_twitter.get(result.person_id, None) is not None:
+                details['twitter'] = person_to_twitter[result.person_id]
+            result_context.append(details)
+
+        context['results'] = result_context
+        context['results_count'] = filtered_results.count()
+
+        context['candidates_2015'] = all_results.count()
+        context['percent_empty'] = \
+            (100 * context['results_count'] \
+            / float(context['candidates_2015']))
 
         return context
 
-    def get_field(self):
+    def get_results(self, results):
         field = self.kwargs.get('field')
-        internal_field = field
-        if field == "birth_date":
-            internal_field = "versions.data.birth_date"
-        if field == "twitter":
-            internal_field = "versions.data.twitter_username"
-        return internal_field
+
+        if field == "twitter" or field == 'facebook' or field == 'phone':
+            filtered_results = results.exclude(person__contact_details__contact_type=field)
+        else:
+            field_spec = "person__{0}__isnull".format(field)
+            args = {field_spec: True}
+            filtered_results = results.filter(**args)
+
+        return filtered_results

@@ -26,7 +26,7 @@
         <tr>
           <td>{{ queued_image.created }}</td>
           <td>{{ queued_image.user.username }}</td>
-          <td>{{ queued_image.popit_person_id }}</td>
+          <td>{{ queued_image.person.id }}</td>
           <td><a href="{% url 'photo-review' queued_image_id=queued_image.id %}">{% trans "Review" %}</a></td>
         </tr>
       {% endfor %}

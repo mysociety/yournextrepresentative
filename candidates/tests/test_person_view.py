@@ -1,29 +1,55 @@
 # Smoke tests for viewing a candidate's page
 
-from datetime import date
+from datetime import date, timedelta
 import re
-
-from mock import patch
 
 from django.conf import settings
 from django.test.utils import override_settings
 from django_webtest import WebTest
 
-from .fake_popit import FakePersonCollection
+from .factories import (
+    AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
+    ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
+    PersonExtraFactory, PostExtraFactory
+)
 
-
-election_date_before = lambda r: {'DATE_TODAY': date(2015, 5, 1)}
-election_date_after = lambda r: {'DATE_TODAY': date(2015, 6, 1)}
+election_date_before = lambda r: {'DATE_TODAY': date.today()}
+election_date_after = lambda r: {'DATE_TODAY': date.today() + timedelta(days=28)}
 processors = settings.TEMPLATE_CONTEXT_PROCESSORS
 processors_before = processors + ("candidates.tests.test_person_view.election_date_before",)
 processors_after = processors + ("candidates.tests.test_person_view.election_date_after",)
 
 
-@patch('candidates.popit.PopIt')
 class TestPersonView(WebTest):
 
-    def test_get_tessa_jowell(self, mock_popit):
-        mock_popit.return_value.persons = FakePersonCollection
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            slug='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood'
+        )
+        person_extra = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+        PartyFactory.reset_sequence()
+        party_extra = PartyExtraFactory.create()
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=party_extra.base
+        )
+
+    def test_get_tessa_jowell(self):
         response = self.app.get('/person/2009/tessa-jowell')
         self.assertTrue(
             re.search(
@@ -37,19 +63,16 @@ class TestPersonView(WebTest):
         )
 
     @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_before)
-    def test_get_tessa_jowell_before_election(self, mock_popit):
-        mock_popit.return_value.persons = FakePersonCollection
+    def test_get_tessa_jowell_before_election(self):
         response = self.app.get('/person/2009/tessa-jowell')
         self.assertContains(response, 'Contesting in the 2015 General Election')
 
     @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_after)
-    def test_get_tessa_jowell_after_election(self, mock_popit):
-        mock_popit.return_value.persons = FakePersonCollection
+    def test_get_tessa_jowell_after_election(self):
         response = self.app.get('/person/2009/tessa-jowell')
         self.assertContains(response, 'Contested in the 2015 General Election')
 
-    def test_get_non_existent(self, mock_popit):
-        mock_popit.return_value.persons = FakePersonCollection
+    def test_get_non_existent(self):
         response = self.app.get(
             '/person/987654/imaginary-person',
             expect_errors=True

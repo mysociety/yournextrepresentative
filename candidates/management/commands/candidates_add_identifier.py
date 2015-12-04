@@ -1,35 +1,44 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
+from popolo.models import Person
+
+from candidates.views.version_data import get_change_metadata
 
 class Command(BaseCommand):
-    args = "<PERSON-ID> <SCHEME> <IDENTIFIER>"
+
     help = "Add an identifier to a particular person"
 
-    def handle(self, *args, **options):
-        self.verbosity = int(options.get('verbosity', 1))
-        api = create_popit_api_object()
-        if len(args) != 3:
-            raise CommandError("You must provide all three arguments")
-
-        person_id, scheme, identifier = args
-
-        person = PopItPerson.create_from_popit(api, person_id)
-
-        person.identifiers.append(
-            {
-                'scheme': scheme,
-                'identifier': identifier,
-            }
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'PERSON-ID',
+            help='The ID of the person to add a new identifer for'
+        )
+        parser.add_argument(
+            'SCHEME',
+            help='The scheme of the new identifier'
+        )
+        parser.add_argument(
+            'IDENTIFIER',
+            help='The identifier to add'
+        )
+        parser.add_argument(
+            '--source', help='The source of information for this new identifier'
         )
 
-        person.save_to_popit(api)
-        person.invalidate_cache_entries()
+    def handle(self, *args, **options):
+        person = Person.objects.get(pk=options['PERSON-ID'])
+        person.identifiers.create(
+            scheme=options['SCHEME'],
+            identifier=options['IDENTIFIER'],
+        )
 
-        # FIXME: this should create a new version in the versions
-        # array too, otherwise you manually have to edit on the
-        # YourNextRepresentative site too to create a new version with
-        # a change message.
+        if options['source']:
+            source = options['source']
+        else:
+            source = "Added from the command-line with no source supplied"
 
-        print "Successfully updated {0}".format(person_id)
+        change_metadata = get_change_metadata(None, source)
+        person.extra.record_version(change_metadata)
+        person.extra.save()
+
+        print "Successfully updated {0}".format(person.name)

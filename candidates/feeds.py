@@ -30,7 +30,7 @@ class RecentChangesFeed(Feed):
             )
         else:
             return u"{0} - {1}".format(
-                item.popit_person_id,
+                item.person_id,
                 item.action_type
             )
 
@@ -50,7 +50,7 @@ class RecentChangesFeed(Feed):
                 'ignored_slug': slugify(m.group(1))
             })
         else:
-            if item.popit_person_id:
-                return reverse('person-view', args=[item.popit_person_id])
+            if item.person_id:
+                return reverse('person-view', args=[item.person_id])
             else:
                 return '/'

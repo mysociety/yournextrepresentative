@@ -3,7 +3,6 @@ from datetime import timedelta
 from slugify import slugify
 
 from django.views.decorators.cache import cache_control
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -11,30 +10,31 @@ from django.utils.decorators import method_decorator
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import TemplateView, FormView, View
+from django.shortcuts import get_object_or_404
+from django.db import transaction
+from django.db.models import Prefetch
 
 from elections.mixins import ElectionMixin
 from auth_helpers.views import GroupRequiredMixin
 from .helpers import (
     get_party_people_for_election_from_memberships,
-    get_people_from_memberships, get_redirect_to_post,
-    group_people_by_party
+    split_candidacies, get_redirect_to_post,
+    group_candidates_by_party
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
-    get_post_label_from_post_id, PopItPerson, membership_covers_date,
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
-    RESULT_RECORDERS_GROUP_NAME, LoggedAction
+    RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
+    MembershipExtra, PartySet
 )
-from ..popit import PopItApiMixin, popit_unwrap_pagination
-from ..election_specific import AREA_DATA, AREA_POST_DATA, PARTY_DATA
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
-from ..cache import get_post_cached, invalidate_posts, UnknownPostException
+from popolo.models import Membership, Post, Organization, Person
 
-class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituencyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituency.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
@@ -44,13 +44,11 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import shorten_post_label
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        try:
-            mp_post = get_post_cached(self.api, post_id)
-        except UnknownPostException:
-            raise Http404()
+        mp_post = Post.objects.get(extra__slug=post_id)
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
@@ -58,16 +56,14 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         doc_lookup = {t[0]: (t[1], t[2]) for t in OfficialDocument.DOCUMENT_TYPES}
         for t in doc_lookup.values():
             documents_by_type[t] = []
-        documents_for_post = OfficialDocument.objects.filter(post_id=post_id)
+        documents_for_post = OfficialDocument.objects.filter(post_id=mp_post.id)
         for od in documents_for_post:
             documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
         context['some_official_documents'] = documents_for_post.count()
 
-        context['post_label'] = mp_post['result']['label']
-        context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            self.election, context['post_label']
-        )
+        context['post_label'] = mp_post.label
+        context['post_label_shorter'] = shorten_post_label(context['post_label'])
 
         context['redirect_after_login'] = \
             urlquote(reverse('constituency', kwargs={
@@ -77,13 +73,14 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            k: v for k, v in mp_post['result'].items()
-            if k in ('id', 'label')
+            'id': mp_post.extra.slug,
+            'label': mp_post.label
         }
 
-        context['candidates_locked'] = mp_post['result'].get(
-            'candidates_locked', False
-        )
+        context['candidates_locked'] = False
+        if hasattr(mp_post, 'extra'):
+            context['candidates_locked'] = mp_post.extra.candidates_locked
+
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,
@@ -93,48 +90,68 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         context['candidate_list_edits_allowed'] = \
             get_edits_allowed(self.request.user, context['candidates_locked'])
 
-        current_candidates, past_candidates = \
-            get_people_from_memberships(
+        extra_qs = MembershipExtra.objects.select_related('election')
+        current_candidacies, past_candidacies = \
+            split_candidacies(
                 self.election_data,
-                mp_post['result']['memberships']
+                mp_post.memberships.prefetch_related(
+                    Prefetch('extra', queryset=extra_qs)
+                ).select_related(
+                    'person', 'person__extra', 'on_behalf_of',
+                    'on_behalf_of__extra', 'organization'
+                ).all()
             )
+
+        current_candidates = set(c.person for c in current_candidacies)
+        past_candidates = set(c.person for c in past_candidacies)
 
         other_candidates = past_candidates - current_candidates
 
         # Now split those candidates into those that we know aren't
-        # standing again, and those that we just don't know about:
-        context['candidates_not_standing_again'] = \
-            group_people_by_party(
-                self.election,
-                set(p for p in other_candidates if p.not_standing_in_election(self.election)),
+        # standing again, and those that we just don't know about.
+        not_standing_candidates = set(
+            p for p in other_candidates
+            if self.election_data in p.extra.not_standing.all()
+        )
+        might_stand_candidates = set(
+            p for p in other_candidates
+            if self.election_data not in p.extra.not_standing.all()
+        )
+
+        not_standing_candidacies = [c for c in past_candidacies
+                                    if c.person in not_standing_candidates]
+        might_stand_candidacies = [c for c in past_candidacies
+                                   if c.person in might_stand_candidates]
+
+        context['candidacies_not_standing_again'] = \
+            group_candidates_by_party(
+                self.election_data,
+                not_standing_candidacies,
                 party_list=self.election_data.party_lists_in_use,
                 max_people=self.election_data.default_party_list_members_to_show
             )
 
-        context['candidates_might_stand_again'] = \
-            group_people_by_party(
-                self.election,
-                set(p for p in other_candidates if not p.known_status_in_election(self.election)),
+        context['candidacies_might_stand_again'] = \
+            group_candidates_by_party(
+                self.election_data,
+                might_stand_candidacies,
                 party_list=self.election_data.party_lists_in_use,
                 max_people=self.election_data.default_party_list_members_to_show
             )
 
-        context['candidates'] = group_people_by_party(
-            self.election,
-            current_candidates,
+        context['candidacies'] = group_candidates_by_party(
+            self.election_data,
+            current_candidacies,
             party_list=self.election_data.party_lists_in_use,
             max_people=self.election_data.default_party_list_members_to_show
         )
 
-        just_people = sum((t[1] for t in context['candidates']['parties_and_people']), [])
+        context['show_retract_result'] = False
+        for c in current_candidacies:
+            if c.extra.elected is not None:
+                context['show_retract_result'] = True
 
-        context['show_retract_result'] = any(
-            c.get_elected(self.election) is not None for c in just_people
-        )
-
-        context['show_confirm_result'] = any(
-            c.get_elected(self.election) is None for c in just_people
-        )
+        context['show_confirm_result'] = not context['show_retract_result']
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
@@ -148,15 +165,29 @@ class ConstituencyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
         return context
 
 
-class ConstituencyDetailCSVView(ConstituencyDetailView):
-    def render_to_response(self, context, **response_kwargs):
+class ConstituencyDetailCSVView(ElectionMixin, View):
+
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+        post = Post.objects \
+            .select_related('extra') \
+            .get(extra__slug=kwargs['post_id'])
         all_people = [
-            person.as_dict(self.election)
-            for person in context['candidates']
+            me.base.person.extra.as_dict(self.election_data)
+            for me in
+            MembershipExtra.objects \
+                .filter(
+                    election=self.election_data,
+                    base__post=post
+                ) \
+                .select_related('base__person') \
+                .prefetch_related('base__person__extra')
         ]
+
         filename = "{election}-{constituency_slug}.csv".format(
             election=self.election,
-            constituency_slug=slugify(context['constituency_name']),
+            constituency_slug=slugify(post.extra.short_label),
         )
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="%s"' % filename
@@ -164,17 +195,20 @@ class ConstituencyDetailCSVView(ConstituencyDetailView):
         return response
 
 
-class ConstituencyListView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituencyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituencies.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['all_constituencies'] = \
-            AREA_DATA.areas_list_sorted_by_name[(u'WMC', u'22')]
+            PostExtra.objects.filter(
+                elections__slug=self.election
+            ).order_by('base__label').select_related('base')
+
         return context
 
 
-class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, View):
+class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
     required_group_name = TRUSTED_TO_LOCK_GROUP_NAME
 
     http_method_names = ['post']
@@ -183,34 +217,33 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, Vie
         form = ToggleLockForm(data=self.request.POST)
         if form.is_valid():
             post_id = form.cleaned_data['post_id']
-            data = self.api.posts(post_id). \
-                get(embed='')['result']
-            lock = form.cleaned_data['lock']
-            data['candidates_locked'] = lock
-            if lock:
-                suffix = '-lock'
-                pp = 'Locked'
-            else:
-                suffix = '-unlock'
-                pp = 'Unlocked'
-            message = pp + u' constituency {0} ({1})'.format(
-                data['area']['name'], data['id']
-            )
-            self.api.posts(post_id).put(data)
-            invalidate_posts([post_id])
-            LoggedAction.objects.create(
-                user=self.request.user,
-                action_type=('constituency' + suffix),
-                ip_address=get_client_ip(self.request),
-                popit_person_new_version='',
-                popit_person_id='',
-                source=message,
-            )
+            with transaction.atomic():
+                post = get_object_or_404(Post, extra__slug=post_id)
+                lock = form.cleaned_data['lock']
+                post.extra.candidates_locked = lock
+                post.extra.save()
+                post_name = post.extra.short_label
+                if lock:
+                    suffix = '-lock'
+                    pp = 'Locked'
+                else:
+                    suffix = '-unlock'
+                    pp = 'Unlocked'
+                message = pp + u' constituency {0} ({1})'.format(
+                    post_name, post.id
+                )
+
+                LoggedAction.objects.create(
+                    user=self.request.user,
+                    action_type=('constituency' + suffix),
+                    ip_address=get_client_ip(self.request),
+                    source=message,
+                )
             return HttpResponseRedirect(
                 reverse('constituency', kwargs={
                     'election': self.election,
                     'post_id': post_id,
-                    'ignored_slug': slugify(data['area']['name']),
+                    'ignored_slug': slugify(post_name),
                 })
             )
         else:
@@ -218,7 +251,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, Vie
             raise ValidationError(message)
 
 
-class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituencies-unlocked.html'
 
     def get_context_data(self, **kwargs):
@@ -228,21 +261,18 @@ class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView)
         keys = ('locked', 'unlocked')
         for k in keys:
             context[k] = []
-        for post in popit_unwrap_pagination(
-                self.api.posts,
-                embed='',
-                per_page=100,
-        ):
+        posts = Post.objects.select_related('extra').all()
+        for post in posts:
             total_constituencies += 1
-            if post.get('candidates_locked'):
+            if post.extra.candidates_locked:
                 context_field = 'locked'
                 total_locked += 1
             else:
                 context_field = 'unlocked'
             context[context_field].append(
                 {
-                    'id': post['id'],
-                    'name': post['area']['name'],
+                    'id': post.extra.slug,
+                    'name': post.extra.short_label,
                 }
             )
         for k in keys:
@@ -252,9 +282,10 @@ class ConstituenciesUnlockedListView(ElectionMixin, PopItApiMixin, TemplateView)
         context['percent_done'] = (100 * total_locked) / total_constituencies
         return context
 
-class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, FormView):
+class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
 
     form_class = ConstituencyRecordWinnerForm
+    # TODO: is this template ever used?
     template_name = 'candidates/record-winner.html'
     required_group_name = RESULT_RECORDERS_GROUP_NAME
 
@@ -263,8 +294,9 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
             'person_id',
             self.request.GET.get('person', '')
         )
-        self.person = PopItPerson.create_from_popit(self.api, person_id)
-        self.post_data = get_post_cached(self.api, self.kwargs['post_id'])['result']
+        self.person = get_object_or_404(Person, id=person_id)
+        self.post_data = get_object_or_404(Post, extra__slug=self.kwargs['post_id'])
+
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
 
@@ -278,101 +310,134 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMi
         context = super(ConstituencyRecordWinnerView, self). \
             get_context_data(**kwargs)
         context['post_id'] = self.kwargs['post_id']
-        context['constituency_name'] = self.post_data['label']
+        context['constituency_name'] = self.post_data.label
         context['person'] = self.person
         return context
 
     def form_valid(self, form):
-        winner = self.person
-        people_for_invalidation = set()
-        for membership in self.post_data.get('memberships', []):
-            candidate_role = self.election_data.candidate_membership_role
-            if membership.get('role') != candidate_role:
-                continue
-            if not membership_covers_date(
-                    membership,
-                    self.election_data.election_date
-            ):
-                continue
-            candidate = PopItPerson.create_from_popit(
-                self.api, membership['person_id']['id']
+        change_metadata = get_change_metadata(
+            self.request,
+            form.cleaned_data['source']
+        )
+
+        with transaction.atomic():
+            existing_winner = self.post_data.memberships.filter(
+                extra__elected=True,
+                extra__election=self.election_data
             )
-            elected = (candidate == winner)
-            candidate.set_elected(elected, self.election)
-            if elected:
-                ResultEvent.create_from_popit_person(
-                    candidate,
-                    self.election,
-                    form.cleaned_data['source'],
-                    self.request.user,
+            # FIXME: need to fix for elections with multiple winners
+            if existing_winner.exists():
+                old_winner = existing_winner.first()
+                old_winner.person.extra.record_version(change_metadata)
+                old_winner.person.save()
+
+                LoggedAction.objects.create(
+                    user=self.request.user,
+                    action_type='set-candidate-not-elected',
+                    ip_address=get_client_ip(self.request),
+                    popit_person_new_version=change_metadata['version_id'],
+                    person=old_winner.person,
+                    source=change_metadata['information_source'],
                 )
-            change_metadata = get_change_metadata(
-                self.request,
-                form.cleaned_data['source']
+
+                old_winner.extra.elected = False
+                old_winner.save()
+
+            role = self.election_data.candidate_membership_role
+            membership = Membership.objects.get(
+                role=role,
+                post=self.post_data,
+                person=self.person,
+                extra__election=self.election_data,
             )
-            candidate.record_version(change_metadata)
-            candidate.save_to_popit(self.api)
-            candidate.invalidate_cache_entries()
+
+            membership.extra.elected = True
+            membership.extra.save()
+
+            all_candidates = self.post_data.memberships.filter(
+                role=self.election_data.candidate_membership_role,
+                extra__election=self.election_data,
+            ).exclude(
+                extra__elected=True
+            )
+
+            for candidate in all_candidates.all():
+                candidate.extra.elected = False
+                candidate.extra.save()
+
+
+            ResultEvent.objects.create(
+                election=self.election_data,
+                winner=self.person,
+                winner_person_name=self.person.name,
+                post_id=self.post_data.extra.slug,
+                post_name=self.post_data.label,
+                winner_party_id=membership.on_behalf_of.extra.slug,
+                source=form.cleaned_data['source'],
+                user=self.request.user,
+            )
+
+            self.person.extra.record_version(change_metadata)
+            self.person.save()
+
             LoggedAction.objects.create(
                 user=self.request.user,
-                action_type='set-candidate-' + \
-                    ('elected' if elected else 'not-elected'),
+                action_type='set-candidate-elected',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version=change_metadata['version_id'],
-                popit_person_id=candidate.id,
+                person=self.person,
                 source=change_metadata['information_source'],
             )
-            people_for_invalidation.add(candidate)
-        for person_for_invalidation in people_for_invalidation:
-            person_for_invalidation.invalidate_cache_entries()
-        # This shouldn't be necessary since invalidating the people
-        # will invalidate the post
-        invalidate_posts([self.kwargs['post_id']])
+
         return get_redirect_to_post(
             self.election,
             self.post_data,
         )
 
 
-class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiMixin, View):
+class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
 
     required_group_name = RESULT_RECORDERS_GROUP_NAME
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
         post_id = self.kwargs['post_id']
-        constituency_name = get_post_label_from_post_id(post_id)
-        post = get_post_cached(self.api, post_id)['result']
-        for membership in post.get('memberships', []):
-            if membership.get('role') != self.election_data.candidate_membership_role:
-                continue
-            if not membership_covers_date(
-                    membership,
-                    self.election_data.election_date
-            ):
-                continue
-            candidate = PopItPerson.create_from_popit(
-                self.api, membership['person_id']['id']
+        post = get_object_or_404(Post, extra__slug=post_id)
+        constituency_name = post.extra.short_label
+
+        with transaction.atomic():
+            existing_winner = post.memberships.filter(
+                extra__elected=True,
+                extra__election=self.election_data
             )
-            candidate.set_elected(None, self.election)
-            change_metadata = get_change_metadata(
-                self.request,
-                _('Result recorded in error, retracting')
+
+            if existing_winner.exists():
+                membership = existing_winner.first()
+                candidate = membership.person
+
+                change_metadata = get_change_metadata(
+                    self.request,
+                    _('Result recorded in error, retracting')
+                )
+                candidate.extra.record_version(change_metadata)
+                candidate.save()
+                LoggedAction.objects.create(
+                    user=self.request.user,
+                    action_type='retract-result',
+                    ip_address=get_client_ip(self.request),
+                    popit_person_new_version=change_metadata['version_id'],
+                    person=candidate,
+                    source=change_metadata['information_source'],
+                )
+
+            all_candidates = post.memberships.filter(
+                role=self.election_data.candidate_membership_role,
+                extra__election=self.election_data,
             )
-            candidate.record_version(change_metadata)
-            candidate.save_to_popit(self.api)
-            candidate.invalidate_cache_entries()
-            LoggedAction.objects.create(
-                user=self.request.user,
-                action_type='retract-result',
-                ip_address=get_client_ip(self.request),
-                popit_person_new_version=change_metadata['version_id'],
-                popit_person_id=candidate.id,
-                source=change_metadata['information_source'],
-            )
-        # This shouldn't be necessary since invalidating the people
-        # will invalidate the post
-        invalidate_posts([post_id])
+            for candidate in all_candidates.all():
+                candidate.extra.elected = None
+                candidate.extra.save()
+
         return HttpResponseRedirect(
             reverse(
                 'constituency',
@@ -385,38 +450,36 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, PopItApiM
         )
 
 
-def memberships_contain_winner(memberships, election_data):
-    for m in memberships:
-        correct_org = m.get('organization_id') == election_data.organization_id
-        day_after_election = election_data.election_date + timedelta(days=1)
-        correct_start_date = m['start_date'] == str(day_after_election)
-        if correct_org and correct_start_date:
-            return True
-    return False
-
-
-class ConstituenciesDeclaredListView(ElectionMixin, PopItApiMixin, TemplateView):
+class ConstituenciesDeclaredListView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituencies-declared.html'
 
     def get_context_data(self, **kwargs):
         context = super(ConstituenciesDeclaredListView, self).get_context_data(**kwargs)
         total_constituencies = 0
         total_declared = 0
+        constituency_declared = []
+        constituency_seen = {}
         constituencies = []
-        for post in popit_unwrap_pagination(
-                self.api.posts,
-                embed='membership',
-                per_page=100,
+        total_constituencies = Post.objects.all().count()
+        for membership in Membership.objects.select_related('post', 'post__area', 'post__extra').filter(
+            post__isnull=False,
+            extra__election_id=self.election_data.id,
+            role=self.election_data.candidate_membership_role,
+            extra__elected=True
         ):
-            total_constituencies += 1
-            declared = memberships_contain_winner(
-                post['memberships'],
-                self.election_data
-            )
-            if declared:
-                total_declared += 1
-            constituencies.append((post, declared))
-        constituencies.sort(key=lambda c: c[0]['area']['name'])
+            constituency_declared.append(membership.post.id)
+            total_declared += 1
+            constituencies.append((membership.post, True))
+        for membership in Membership.objects.select_related('post', 'post__area', 'post__extra').filter(
+            post__isnull=False,
+            extra__election=self.election_data,
+            role=self.election_data.candidate_membership_role
+        ).exclude(post_id__in=constituency_declared):
+            if constituency_seen.get(membership.post.id, False):
+                continue
+            constituency_seen[membership.post.id] = True
+            constituencies.append((membership.post, False))
+        constituencies.sort(key=lambda c: c[0].area.name)
         context['constituencies'] = constituencies
         context['total_constituencies'] = total_constituencies
         context['total_left'] = total_constituencies - total_declared
@@ -424,7 +487,7 @@ class ConstituenciesDeclaredListView(ElectionMixin, PopItApiMixin, TemplateView)
         return context
 
 
-class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
+class OrderedPartyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/ordered-party-list.html'
 
     @method_decorator(cache_control(max_age=(60 * 20)))
@@ -434,33 +497,20 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
         )
 
     def get_context_data(self, **kwargs):
+        from ..election_specific import shorten_post_label
         context = super(OrderedPartyListView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        try:
-            mp_post = get_post_cached(self.api, post_id)
-        except UnknownPostException:
-            raise Http404(
-                _("Post '{post_id}' not found").format(
-                    post_id=post_id
-                )
-            )
+        post_qs = Post.objects.select_related('extra')
+        mp_post = get_object_or_404(post_qs, extra__slug=post_id)
 
-        context['party_id'] = party_id = kwargs['organization_id']
         party_id = kwargs['organization_id']
-        party_name = PARTY_DATA.party_id_to_name.get(party_id)
-        if not party_name:
-            raise Http404(_("Party '{party_id}' not found").format(
-                party_id=party_id)
-            )
+        party = get_object_or_404(Organization, extra__slug=party_id)
 
-        context['party'] = self.api.organizations(party_id). \
-            get(embed='')['result']
+        context['party'] = party
 
-        context['post_label'] = mp_post['result']['label']
-        context['post_label_shorter'] = AREA_POST_DATA.shorten_post_label(
-            self.election, context['post_label']
-        )
+        context['post_label'] = mp_post.label
+        context['post_label_shorter'] = shorten_post_label(context['post_label'])
 
         context['redirect_after_login'] = \
             urlquote(reverse('party-for-post', kwargs={
@@ -470,13 +520,11 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
             }))
 
         context['post_data'] = {
-            k: v for k, v in mp_post['result'].items()
-            if k in ('id', 'label')
+            'id': mp_post.extra.slug,
+            'label': mp_post.label
         }
 
-        context['candidates_locked'] = mp_post['result'].get(
-            'candidates_locked', False
-        )
+        context['candidates_locked'] = mp_post.extra.candidates_locked
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,
@@ -488,17 +536,17 @@ class OrderedPartyListView(ElectionMixin, PopItApiMixin, TemplateView):
 
         context['positions_and_people'] = \
             get_party_people_for_election_from_memberships(
-                self.election, party_id, mp_post['result']['memberships']
+                self.election, party.id, mp_post.memberships
             )
 
-        party_set = AREA_POST_DATA.post_id_to_party_set(post_id)
+        party_set = PartySet.objects.get(postextra__slug=post_id)
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
             initial={
                 ('constituency_' + self.election): post_id,
                 ('standing_' + self.election): 'standing',
-                ('party_' + party_set + '_' + self.election): party_id,
+                ('party_' + party_set.slug + '_' + self.election): party_id,
             },
             hidden_post_widget=True,
         )

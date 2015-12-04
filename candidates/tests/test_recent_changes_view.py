@@ -1,16 +1,26 @@
 from django_webtest import WebTest
 
+from candidates.tests import factories
+
 from .auth import TestUserMixin
 from ..models import LoggedAction
 
 class TestRecentChangesView(TestUserMixin, WebTest):
 
     def setUp(self):
+        test_person_1 = factories.PersonExtraFactory.create(
+            base__id=9876,
+            base__name='Test Candidate for Recent Changes',
+        )
+        test_person_2 = factories.PersonExtraFactory.create(
+            base__id=1234,
+            base__name='Another Test Candidate for Recent Changes',
+        )
         self.action1 = LoggedAction.objects.create(
             user=self.user,
             action_type='person-create',
             ip_address='127.0.0.1',
-            popit_person_id='9876',
+            person=test_person_1.base,
             popit_person_new_version='1234567890abcdef',
             source='Just for tests...',
         )
@@ -18,7 +28,7 @@ class TestRecentChangesView(TestUserMixin, WebTest):
             user=self.user,
             action_type='candidacy-delete',
             ip_address='127.0.0.1',
-            popit_person_id='1234',
+            person=test_person_2.base,
             popit_person_new_version='987654321',
             source='Also just for testing',
         )

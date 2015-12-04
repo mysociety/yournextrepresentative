@@ -1,7 +1,6 @@
 import bleach
-import os
 import re
-import requests
+from os.path import join
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
@@ -17,21 +16,23 @@ from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, TemplateView
 
-from PIL import Image
+from PIL import Image as PillowImage
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
-from candidates.popit import PopItApiMixin, get_base_url
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 
-from candidates.popit import create_popit_api_object
-from candidates.models import PopItPerson, LoggedAction
+from candidates.models import LoggedAction, ImageExtra, PersonExtra
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
+from popolo.models import Person
+from images.models import Image
+
 @login_required
-def upload_photo(request, popit_person_id):
+def upload_photo(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
     if request.method == 'POST':
         form = UploadPersonPhotoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -45,42 +46,40 @@ def upload_photo(request, popit_person_id):
                 action_type='photo-upload',
                 ip_address=get_client_ip(request),
                 popit_person_new_version='',
-                popit_person_id=popit_person_id,
+                person=person,
                 source=form.cleaned_data['justification_for_use'],
             )
             return HttpResponseRedirect(reverse(
                 'photo-upload-success',
                 kwargs={
-                    'popit_person_id': form.cleaned_data['popit_person_id']
+                    'person_id': person.id
                 }
             ))
     else:
         form = UploadPersonPhotoForm(
             initial={
-                'popit_person_id': popit_person_id
+                'person': person
             }
         )
-    api = create_popit_api_object()
     return render(
         request,
         'moderation_queue/photo-upload-new.html',
         {'form': form,
          'queued_images': QueuedImage.objects.filter(
-             popit_person_id=popit_person_id,
+             person=person,
              decision='undecided',
          ).order_by('created'),
-         'person': PopItPerson.create_from_popit(api, popit_person_id)}
+         'person': person}
     )
 
 
-class PhotoUploadSuccess(PopItApiMixin, TemplateView):
+class PhotoUploadSuccess(TemplateView):
     template_name = 'moderation_queue/photo-upload-success.html'
 
     def get_context_data(self, **kwargs):
         context = super(PhotoUploadSuccess, self).get_context_data(**kwargs)
-        context['person'] = PopItPerson.create_from_popit(
-            self.api,
-            kwargs['popit_person_id']
+        context['person'] = Person.objects.get(
+            id=kwargs['person_id']
         )
         return context
 
@@ -113,7 +112,7 @@ def value_if_none(v, default):
     return default if v is None else v
 
 
-class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
+class PhotoReview(GroupRequiredMixin, TemplateView):
     """The class-based view for approving or rejecting a particular photo"""
 
     template_name = 'moderation_queue/photo-review.html'
@@ -122,13 +121,16 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
 
     def get_google_image_search_url(self, person):
         image_search_query = u'"{0}"'.format(person.name)
-        if person.last_party:
-            image_search_query += u' "{0}"'.format(
-                tidy_party_name(person.last_party['name'])
-            )
-        cons_2015 = person.standing_in.get('2015')
-        if cons_2015:
-            image_search_query += u' "{0}"'.format(cons_2015['name'])
+        last_candidacy = person.extra.last_candidacy
+        if last_candidacy:
+            party = last_candidacy.on_behalf_of
+            if party:
+                image_search_query += u' "{0}"'.format(
+                    tidy_party_name(party.name)
+                )
+            post = last_candidacy.post
+            if post is not None:
+                image_search_query += u' "{0}"'.format(post.area.name)
         return u'https://www.google.co.uk/search?tbm=isch&q={0}'.format(
             urlquote(image_search_query)
         )
@@ -145,9 +147,8 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
             pk=kwargs['queued_image_id']
         )
         context['queued_image'] = self.queued_image
-        person = PopItPerson.create_from_popit(
-            self.api,
-            self.queued_image.popit_person_id,
+        person = Person.objects.get(
+            id=self.queued_image.person.id,
         )
         context['has_crop_bounds'] = int(self.queued_image.has_crop_bounds)
         max_x = self.queued_image.image.width - 1
@@ -208,52 +209,48 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
         )
 
     def crop_and_upload_image_to_popit(self, image_filename, crop_bounds, moderator_why_allowed, make_primary):
-        original = Image.open(image_filename)
+        original = PillowImage.open(image_filename)
         # Some uploaded images are CYMK, which gives you an error when
         # you try to write them as PNG, so convert to RGBA (this is
         # RGBA rather than RGB so that any alpha channel (transparency)
         # is preserved).
+        person_id = self.queued_image.person.id
+        person_extra = PersonExtra.objects.get(base__id=person_id)
         original = original.convert('RGBA')
         cropped = original.crop(crop_bounds)
         ntf = NamedTemporaryFile(delete=False)
         cropped.save(ntf.name, 'PNG')
-        # Upload the image to PopIt...
-        person_id = self.queued_image.popit_person_id
-        person = PopItPerson.create_from_popit(self.api, person_id)
-        image_upload_url = '{base}persons/{person_id}/image'.format(
-            base=get_base_url(),
-            person_id=person_id
+        md5sum = get_file_md5sum(ntf.name)
+        filename = str(person_id) + '.png'
+        source = _(
+            'Uploaded by {uploaded_by}: Approved from photo moderation queue'
+        ).format(uploaded_by=self.queued_image.user.username)
+
+        ImageExtra.objects.create_from_file(
+            ntf.name,
+            join('images', filename),
+            base_kwargs={
+                'source': source,
+                'is_primary': make_primary,
+                'content_object': person_extra,
+            },
+            extra_kwargs={
+                'md5sum': md5sum,
+                'uploading_user': self.queued_image.user,
+                'user_notes': self.queued_image.justification_for_use,
+                'copyright': moderator_why_allowed,
+                'user_copyright': self.queued_image.why_allowed,
+                'notes': _('Approved from photo moderation queue'),
+            },
         )
-        data = {
-            'md5sum': get_file_md5sum(ntf.name),
-            'user_why_allowed': self.queued_image.why_allowed,
-            'user_justification_for_use': self.queued_image.justification_for_use,
-            'moderator_why_allowed': moderator_why_allowed,
-            'mime_type': 'image/png',
-            'notes': _('Approved from photo moderation queue'),
-            'uploaded_by_user': self.queued_image.user.username,
-            'created': None,
-        }
-        if make_primary:
-            data['index'] = 'first'
-        with open(ntf.name) as f:
-            requests.post(
-                image_upload_url,
-                data=data,
-                files={'image': f.read()},
-                headers={'APIKey': self.api.api_key}
-            )
-        person.invalidate_cache_entries()
-        # Remove the cropped temporary image file:
-        os.remove(ntf.name)
 
     def form_valid(self, form):
         decision = form.cleaned_data['decision']
-        person = PopItPerson.create_from_popit(
-            self.api,
-            self.queued_image.popit_person_id
+        person = Person.objects.get(
+            id=self.queued_image.person.id
         )
-        candidate_path = person.get_absolute_url()
+        person_extra = person.extra
+        candidate_path = person_extra.get_absolute_url()
         candidate_name = person.name
         candidate_link = u'<a href="{url}">{name}</a>'.format(
             url=candidate_path,
@@ -297,21 +294,18 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
                 self.request,
                 update_message
             )
-            # We have to refetch the person from PopIt, otherwise
-            # saving the new version will write back the images array
-            # from before we uploaded the image:
-            person = PopItPerson.create_from_popit(self.api, person.id)
-            person.record_version(change_metadata)
-            person.save_to_popit(self.api, self.request.user)
+            person_extra.record_version(change_metadata)
+            person_extra.save()
+            person.save()
             LoggedAction.objects.create(
                 user=self.request.user,
                 action_type='photo-approve',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version=change_metadata['version_id'],
-                popit_person_id=self.queued_image.popit_person_id,
+                person=person,
                 source=update_message,
             )
-            candidate_full_url = person.get_absolute_url(self.request)
+            candidate_full_url = person_extra.get_absolute_url(self.request)
             self.send_mail(
                 _('{site_name} image upload approved').format(
                     site_name=site_name
@@ -348,13 +342,13 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
                 action_type='photo-reject',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version='',
-                popit_person_id=self.queued_image.popit_person_id,
+                person=person,
                 source=update_message,
             )
             retry_upload_link = self.request.build_absolute_uri(
                 reverse(
                     'photo-upload',
-                    kwargs={'popit_person_id': self.queued_image.popit_person_id}
+                    kwargs={'person_id': self.queued_image.person.id}
                 )
             )
             self.send_mail(
@@ -412,7 +406,7 @@ class PhotoReview(GroupRequiredMixin, PopItApiMixin, TemplateView):
                 action_type='photo-ignore',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version='',
-                popit_person_id=self.queued_image.popit_person_id,
+                person=person,
                 source=update_message,
             )
             flash(

@@ -1,45 +1,51 @@
-from optparse import make_option
+from django.core.management.base import BaseCommand
 
-from django.core.management.base import BaseCommand, CommandError
+from popolo.models import Person
 
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object
+from candidates.views.version_data import get_change_metadata
+
 
 class Command(BaseCommand):
-    args = "<PERSON-ID> <OTHER-NAME>"
+
     help = "Add an alternative name to a particular person"
 
-    option_list = BaseCommand.option_list + (
-        make_option('--note', dest='note', help='A note about this other name'),
-        make_option('--start-date', help='When this alternative name began being used'),
-        make_option('--end-date', help='When this alternative name stopped being used'),
-    )
-
-    def handle(self, *args, **options):
-        self.verbosity = int(options.get('verbosity', 1))
-        api = create_popit_api_object()
-        if len(args) != 2:
-            raise CommandError("You must provide all two arguments")
-
-        person_id, other_name = args
-
-        person = PopItPerson.create_from_popit(api, person_id)
-
-        person.other_names.append(
-            {
-                'name': other_name,
-                'note': options['note'],
-                'start_date': options['start_date'],
-                'end_date': options['end_date']
-            }
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'PERSON-ID', help='The ID of the person to add a new name for'
+        )
+        parser.add_argument(
+            'OTHER-NAME', help='The new name to add for the person'
+        )
+        parser.add_argument(
+            '--note', help='A note about this alternative name'
+        )
+        parser.add_argument(
+            '--start-date', help='When this other name began being used'
+        )
+        parser.add_argument(
+            '--end-date', help='When this other name stopped being used'
+        )
+        parser.add_argument(
+            '--source', help='The source of information for this other name'
         )
 
-        person.save_to_popit(api)
-        person.invalidate_cache_entries()
+    def handle(self, *args, **options):
+        person = Person.objects.get(pk=options['PERSON-ID'])
+        kwargs = {
+            'name': options['OTHER-NAME'],
+        }
+        for k in ('note', 'start_date', 'end_date'):
+            if options[k]:
+                kwargs[k] = options[k]
+        person.other_names.create(**kwargs)
 
-        # FIXME: this should create a new version in the versions
-        # array too, otherwise you manually have to edit on the
-        # YourNextRepresentative site too to create a new version with
-        # a change message.
+        if options['source']:
+            source = options['source']
+        else:
+            source = "Added from the command-line with no source supplied"
 
-        print "Successfully updated {0}".format(person_id)
+        change_metadata = get_change_metadata(None, source)
+        person.extra.record_version(change_metadata)
+        person.extra.save()
+
+        print "Successfully updated {0}".format(person.name)

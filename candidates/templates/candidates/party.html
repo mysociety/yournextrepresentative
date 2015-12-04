@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load imagefixes %}
+{% load thumbnail %}
 
 {% block body_class %}party{% endblock %}
 
@@ -38,51 +39,52 @@
 
   {% endif %}
 
-  {% for country, country_data in candidates_by_post_group %}
-    {% if country %}
-      <h3>{{ country }}</h3>
-    {% endif %}
-    {% if country_data.constituencies %}
-      <ul>
-        {% for post_id, constituency_name, candidate in country_data.constituencies %}
-          {% url 'constituency' election=election post_id=post_id ignored_slug=constituency_name|slugify as post_url %}
-          {% if candidate %}
-            {% url 'person-view' person_id=candidate.person_id as person_url %}
-            <li>{% blocktrans trimmed with name=candidate.person_name post=candidate.constituency_name %}
-              <a href="{{ person_url }}">{{ name }}</a> is standing in
-              <a href="{{ post_url }}">{{ post }}</a>{% endblocktrans %}</li>
-          {% elif country_data.stats.show_all %}
-            <li>{% blocktrans trimmed %}
-              No candidate in <a href="{{ post_url }}">{{ constituency_name }}</a>
-              {% endblocktrans %}</li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-      {% if not country_data.stats.show_all %}
-        {% if country %}
-          <p>{% blocktrans trimmed with missing=country_data.stats.missing %}
-            There were also {{ missing }} posts in
-            {{ country }} that {{ party_name }} aren't standing a candidate for.{% endblocktrans %}
-          </p>
-        {% else %}
-          <p>{% blocktrans trimmed with missing=country_data.stats.missing %}
-            There were also {{ missing }} posts
-            that {{ party_name }} aren't standing a candidate for.{% endblocktrans %}
-          </p>
-        {% endif %}
+  {% for post_group, post_group_data in candidates_by_post_group %}
+    {% with stats=post_group_data.stats posts_with_memberships=post_group_data.posts_with_memberships %}
+      {% if post_group %}
+        <h3>{{ post_group }}</h3>
       {% endif %}
-    {% else %}
-      <p>{% blocktrans %}We don't know of any {{ party_name }} candidates in {{ country }} so far.{% endblocktrans %}</p>
-    {% endif %}
-
+      {% if stats.candidates > 0 %}
+        <ul>
+          {% for post, post_members in posts_with_memberships %}
+              {% url 'constituency' election=election post_id=post.extra.slug ignored_slug=post.extra.short_label|slugify as post_url %}
+              {% if post_members %}
+                <li>
+                <ul>
+                  {% for member_data in post_members %}
+                    {% url 'person-view' person_id=member_data.person.id as person_url %}
+                      <li>{% blocktrans trimmed with name=member_data.person.name post_short_label=post.extra.short_label %}
+                        <a href="{{ person_url }}">{{ name }}</a> is standing in
+                        <a href="{{ post_url }}">{{ post_short_label }}</a>{% endblocktrans %}
+                      </li>
+                  {% endfor %}
+                </ul>
+                </li>
+              {% else %}
+                {% if stats.show_all %}
+                  <li>
+                    {% blocktrans trimmed with post_short_label=post.extra.short_label %}
+                      No candidate in <a href="{{ post_url }}">{{ post_short_label }}</a>
+                    {% endblocktrans %}
+                  </li>
+                {% endif %}
+              {% endif %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>{% blocktrans %}We don't know of any {{ party_name }} candidates in {{ post_group }} so far.{% endblocktrans %}</p>
+      {% endif %}
+    {% endwith %}
   {% endfor %}
 
 </div>
 
 <div class="party__secondary">
-  {% for image_notes, image_url in emblems %}
-    <img class="party-detail__image" src="{{ image_url|fixproxyurl }}"
-      alt="{{ image_notes }}" title="{{ image_notes }}">
+  {% for image in emblems %}
+    {% thumbnail image.image "240" as im %}
+      <img class="party-detail__image" src="{{ im.url }}"
+           title="{{ image.extra.notes }}" alt="{{ image.extra.notes }}">
+    {% endthumbnail %}
   {% endfor %}
 </div>
 

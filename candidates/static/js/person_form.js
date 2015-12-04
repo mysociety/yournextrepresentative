@@ -135,8 +135,11 @@ function updateFields() {
 }
 
 $(document).ready(function() {
-  setUpPartySelect2s();
-  setUpPostSelect2s();
-  setUpStandingCheckbox();
-  updateFields();
+  $.getJSON('/post-id-to-party-set.json', function(data) {
+      window.postIDToPartySet = data;
+      setUpPartySelect2s();
+      setUpPostSelect2s();
+      setUpStandingCheckbox();
+      updateFields();
+  });
 });

@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load imagefixes %}
+{% load thumbnail %}
 
 {% block body_class %}person{% endblock %}
 
@@ -11,8 +12,10 @@
 {% block hero %}
 <div class="person__hero">
   <div class="person__photo">
-    {% if person.image %}
-      <img class="person-avatar" src="{{ person.proxy_image|fixproxyurl }}/0/80"/>
+    {% if person.extra.primary_image %}
+      {% thumbnail person.extra.primary_image "x80" as im %}
+        <img class="person-avatar" src="{{ im.url }}"/>
+      {% endthumbnail %}
     {% elif person.gender|lower == 'female' %}
       <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
     {% else %}
@@ -23,10 +26,12 @@
     </a>
   </div>
   <h1>{% blocktrans with name=person.name %}Editing: {{ name }}{% endblocktrans %}</h1>
-  {% with last_cons=person.last_cons %}
-    {% if last_cons %}
-    {% url 'constituency' election=last_cons.0 post_id=last_cons.1.post_id ignored_slug=last_cons.1.name|slugify as url %}
-      <p>{% blocktrans with election=last_cons.2 post_name=last_cons.1.name %}Candidate for <a href="{{ url }}">{{ post_name }}</a> in {{ election }}{% endblocktrans %}</p>
+  {% with last_candidacy=person.extra.last_candidacy %}
+    {% if last_candidacy %}
+      {% with post=last_candidacy.post %}
+        {% url 'constituency' election=last_candidacy.extra.election.slug post_id=post.extra.slug ignored_slug=post.extra.short_label|slugify as url %}
+          <p>{% blocktrans with election=last_candidacy.extra.election.name post_name=post.extra.short_label %}Candidate for <a href="{{ url }}">{{ post_name }}</a> in {{ election }}{% endblocktrans %}</p>
+      {% endwith %}
     {% endif %}
   {% endwith %}
 </div>

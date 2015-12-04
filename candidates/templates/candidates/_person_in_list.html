@@ -1,12 +1,15 @@
 {% load staticfiles %}
 {% load imagefixes %}
+{% load thumbnail %}
 
 {% if position_in_list %}
   <span class="person-position">{{ position_in_list }}</span>
 {% endif %}
 {% if c.image %}
   <a href="{% url 'person-view' c.id c.name|slugify %}">
-    <img class="person-avatar" src="{{ c.popit_data.proxy_image|fixproxyurl }}/0/64"/>
+    {% thumbnail c.extra.primary_image "x64" as im %}
+      <img class="person-avatar" src="{{ im.url }}"/>
+    {% endthumbnail %}
   </a>
 {% elif c.popit_data.gender|lower == 'female' %}
   <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
@@ -15,5 +18,5 @@
 {% endif %}
 <div class="person-name-and-party">
   <a href="{% url 'person-view' c.id c.name|slugify %}" class="candidate-name">{{ c.name }}</a>
-  <span class="party">{{ c.last_party.name }}</span>
+  <span class="party">{{ party.name }}</span>
 </div>

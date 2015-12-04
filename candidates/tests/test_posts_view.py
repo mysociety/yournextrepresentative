@@ -1,41 +1,33 @@
-from mock import patch,  MagicMock
-from datetime import date
-
-import re
-
 from django_webtest import WebTest
 
-from elections.models import Election
+from .factories import (
+    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
+    PostFactory, PostExtraFactory, ParliamentaryChamberFactory
+)
 
-from .fake_popit import get_example_popit_json, FakePostCollection
-
-def fake_election_search_results(url, **kwargs):
-    mock_requests_response = MagicMock()
-    page = "1"
-    m = re.search(r'[^_]page=(\d+)', url)
-    if m:
-        page = m.group(1)
-    mock_requests_response.json.return_value = get_example_popit_json(
-        'generic_posts_embed={0}.json'.format(page)
-    )
-    return mock_requests_response
-
-
-def fake_post_search_results(url, **kwargs):
-    mock_requests_response = MagicMock()
-    mock_requests_response.json.return_value = get_example_popit_json(
-        'generic_posts_embed=.json'
-    )
-    return mock_requests_response
-
-
-@patch('candidates.popit.PopIt')
 class TestPostsView(WebTest):
 
-    @patch('candidates.popit.requests')
-    def test_single_election_posts_page(self, mock_requests, mock_popit):
-        mock_requests.get.side_effect = fake_post_search_results
-        mock_popit.return_value.posts = FakePostCollection
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        self.election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        self.earlier_election = EarlierElectionFactory.create(
+            slug='2010',
+            name='2010 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        PostFactory.reset_sequence()
+        for i in range(4):
+            PostExtraFactory.create(
+                elections=(self.election, self.earlier_election),
+                base__organization=commons
+            )
+
+    def test_single_election_posts_page(self):
 
         response = self.app.get('/posts')
 
@@ -51,13 +43,10 @@ class TestPostsView(WebTest):
             )
         )
 
+    def test_two_elections_posts_page(self):
 
-    @patch('candidates.popit.requests')
-    @patch('candidates.views.posts.Election.objects.current')
-    def test_two_elections_posts_page(self, mock_current, mock_requests, mock_popit):
-        mock_requests.get.side_effect = fake_post_search_results
-        mock_popit.return_value.posts = FakePostCollection
-        mock_current.return_value = Election.objects.all()
+        self.earlier_election.current = True
+        self.earlier_election.save()
 
         response = self.app.get('/posts')
 

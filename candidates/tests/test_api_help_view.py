@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from mock import patch
-
 from django_webtest import WebTest
+from unittest import skip
 
-@patch('candidates.popit.PopIt')
+
+@skip('Need to write replacement API using popolo-django')
 class TestApiHelpView(WebTest):
-      def test_api_help(self, mock_popit):
+      def test_api_help(self):
           response = self.app.get('/help/api')
           self.assertEqual(response.status_code, 200)
 

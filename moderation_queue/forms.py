@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import QueuedImage
+from .models import QueuedImage, CopyrightOptions
 
 class UploadPersonPhotoForm(forms.ModelForm):
 
@@ -12,22 +12,16 @@ class UploadPersonPhotoForm(forms.ModelForm):
         model = QueuedImage
         fields = [
             'image', 'why_allowed',
-            'justification_for_use', 'popit_person_id', 'decision'
+            'justification_for_use', 'person', 'decision'
         ]
         widgets = {
-            'popit_person_id': forms.HiddenInput(),
+            'person': forms.HiddenInput(),
             'decision': forms.HiddenInput(),
             'why_allowed': forms.RadioSelect(),
             'justification_for_use': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
             )
         }
-
-    def clean_popit_person_id(self):
-        popit_person_id = self.cleaned_data['popit_person_id']
-        if not re.search(r'^\d+$', popit_person_id):
-            raise ValidationError(_("The popit_person_id must be all digits"))
-        return popit_person_id
 
     def clean(self):
         cleaned_data = super(UploadPersonPhotoForm, self).clean()
@@ -63,5 +57,5 @@ class PhotoReviewForm(forms.Form):
         required=False
     )
     moderator_why_allowed = forms.ChoiceField(
-        choices=QueuedImage.WHY_ALLOWED_CHOICES
+        choices=CopyrightOptions.WHY_ALLOWED_CHOICES
     )
