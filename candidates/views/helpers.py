@@ -89,7 +89,9 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
         party = candidacy.on_behalf_of
         party_id_to_name[party.extra.slug] = party.name
         position = candidacy.extra.party_list_position
-        party_id_to_people[party.extra.slug].append((position, candidacy.person))
+        party_id_to_people[party.extra.slug].append(
+            (position, candidacy.person, candidacy.extra.elected)
+        )
     for party_id, people_list in party_id_to_people.items():
         if election_data.party_lists_in_use:
             # sort by party list position
@@ -112,7 +114,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
                 },
                 # throw away the party list position data we
                 # were only using for sorting
-                [p[1] for p in v]
+                [(p[1], p[2]) for p in v]
             )
             for k, v in party_id_to_people.items()
         ]
@@ -121,7 +123,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     if party_list:
         result.sort(key=lambda t: t[0]['name'])
     else:
-        result.sort(key=lambda t: t[1][0].family_name)
+        result.sort(key=lambda t: t[1][0][0].family_name)
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result

@@ -105,12 +105,11 @@
               {% endif %}
           {% endif %}
 
-          {% for c in people %}
+          {% for c, candidate_elected in people %}
             {% if forloop.first %}
               <ul class="candidate-list">
             {% endif %}
 
-              {% with candidate_elected=c|was_elected:election_data %}
               <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if candidate_elected %} candidates-list__person__winner{% endif %}">
                 {% if candidate_elected %}
                   <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
@@ -137,7 +136,6 @@
                   </form>
                 {% endif %}
               </li>
-              {% endwith %}
 
             {% if forloop.last %}
               </ul>
