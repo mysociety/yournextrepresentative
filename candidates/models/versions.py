@@ -4,7 +4,6 @@ from django.db.models import F
 
 # FIXME: handle the extra fields (e.g. cv & program for BF)
 # FIXME: check all the preserve_fields are dealt with
-# FIXME: make sure party list positions are stored and retrieved
 
 def get_person_as_version_data(person):
     from candidates.election_specific import shorten_post_label
@@ -50,6 +49,9 @@ def get_person_as_version_data(person):
         }
         if membership_extra.elected is not None:
             standing_in[election.slug]['elected'] = membership_extra.elected
+        if membership_extra.party_list_position is not None:
+            standing_in[election.slug]['party_list_position'] = \
+                membership_extra.party_list_position
         party = membership.on_behalf_of
         party_memberships[election.slug] = {
             'id': party.extra.slug,
@@ -127,6 +129,7 @@ def revert_person_from_version_data(person, person_extra, version_data):
             base=membership,
             election=election,
             elected=standing_in.get('elected'),
+            party_list_position=standing_in.get('party_list_position'),
         )
     person.save()
     person_extra.save()
