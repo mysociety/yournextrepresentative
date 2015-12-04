@@ -149,7 +149,9 @@ class PersonExtra(HasImageMixin, models.Model):
             # cause an extra query when the relation has already been
             # populated via select_related:
             for e in getattr(self.base, loc['sub_array']).all():
-                if getattr(e, loc['info_type_key']) == loc['info_type']:
+                info_type_key = getattr(e, loc['info_type_key'])
+                if (info_type_key == loc['info_type']) or \
+                   (info_type_key == loc.get('old_info_type')):
                     return getattr(e, loc['info_value_key'])
             return ''
         else:
