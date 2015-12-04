@@ -34,8 +34,7 @@ from ..models.auth import check_creation_allowed, check_update_allowed
 from ..models.versions import (
     revert_person_from_version_data, get_person_as_version_data
 )
-from ..models import PersonExtra, PartySet
-from ..popit import merge_popit_people
+from ..models import PersonExtra, PartySet, merge_popit_people
 from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):

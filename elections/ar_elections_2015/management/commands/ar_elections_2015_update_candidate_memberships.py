@@ -1,18 +1,15 @@
 import json
 
-from slumber.exceptions import HttpServerError, HttpClientError
-
-from django.conf import settings
 from django.core.management.base import BaseCommand
-
-from candidates.popit import PopItApiMixin, popit_unwrap_pagination
 
 from elections.models import Election
 
-class Command(PopItApiMixin, BaseCommand):
+class Command(BaseCommand):
     help = "Fix all memberships that represent candidacies"
 
     def handle(self, **options):
+        from slumber.exceptions import HttpServerError, HttpClientError
+        from candidates.popit import popit_unwrap_pagination
 
         for membership in popit_unwrap_pagination(
                 self.api.memberships, embed='', per_page=100

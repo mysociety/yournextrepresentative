@@ -21,9 +21,6 @@ install:
   # Create a basic general.yml file:
   - sed -r
     -e "s,(YNMP_DB_USER:) .*,\\1 'postgres',"
-    -e "s,(POPIT_INSTANCE:) 'yournextmp',\\1 'not-a-real-instance',"
-    -e "s,(POPIT_HOSTNAME:) 'popit.mysociety.org',\\1 'popit.example.org',"
-    -e "s,(POPIT_API_KEY:) .*,\\1 'notarealapikey',"
     -e "s,(SECRET_KEY:) '',\\1 'notatallsecret',"
     conf/general.yml-example > conf/general.yml
 

@@ -1,6 +1,6 @@
 from candidates.views import AddressFinderView
 
-from cached_counts.models import CachedCount
+from cached_counts.models import get_attention_needed_posts
 
 class ArgentineAddressFinder(AddressFinderView):
 
@@ -8,6 +8,5 @@ class ArgentineAddressFinder(AddressFinderView):
 
     def get_context_data(self, **kwargs):
         context = super(ArgentineAddressFinder, self).get_context_data(**kwargs)
-        context['needing_attention'] = \
-            CachedCount.get_attention_needed_queryset()[:5]
+        context['needing_attention'] = get_attention_needed_posts(5, random=True)
         return context

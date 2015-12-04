@@ -1,7 +1,6 @@
 import re
 
 from requests.adapters import ConnectionError
-from slumber.exceptions import HttpServerError, HttpClientError
 
 from django.conf import settings
 from django.contrib.sites.models import Site

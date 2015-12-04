@@ -10,7 +10,6 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 
-from candidates.cache import UnknownPostException
 from candidates.models import AreaExtra, MembershipExtra
 from candidates.models.auth import get_edits_allowed
 
@@ -30,12 +29,8 @@ class AreasView(TemplateView):
                 message = _("Malformed type and area: '{0}'")
                 return HttpResponseBadRequest(message.format(type_and_area))
             self.types_and_areas.append(m.groups())
-        try:
-            view = super(AreasView, self).get(request, *args, **kwargs)
-        except UnknownPostException:
-            message = _("Unknown post for types and areas: '{0}'")
-            return HttpResponseBadRequest(message.format(kwargs['type_and_area_ids']))
-        return view
+        response = super(AreasView, self).get(request, *args, **kwargs)
+        return response
 
     def get_context_data(self, **kwargs):
         context = super(AreasView, self).get_context_data(**kwargs)

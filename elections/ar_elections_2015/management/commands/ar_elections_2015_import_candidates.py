@@ -7,15 +7,11 @@ from os.path import dirname, join
 import re
 
 import requests
-from slumber.exceptions import HttpClientError
 
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 
-from candidates.cache import get_post_cached
-from candidates.models import PopItPerson
-from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
 from candidates.views.version_data import get_change_metadata
 from moderation_queue.models import QueuedImage
@@ -30,6 +26,7 @@ USER_AGENT = (
 )
 
 def get_post_data(api, json_election_id, json_election_id_to_name):
+    from candidates.cache import get_post_cached
     from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     json_election_name = json_election_id_to_name[json_election_id]
     ynr_election_id = {
@@ -88,6 +85,8 @@ def enqueue_image(person, user, image_url):
     )
 
 def get_existing_popit_person(vi_person_id):
+    from candidates.models import PopItPerson
+    from candidates.popit import get_search_url
     # See if this person already exists by searching for the
     # ID they were imported with:
     query_format = \
@@ -117,7 +116,10 @@ class Command(BaseCommand):
     help = "Import inital candidate data"
 
     def handle(self, username=None, **options):
+        from slumber.exceptions import HttpClientError
+        from candidates.popit import create_popit_api_object
         from candidates.election_specific import PARTY_DATA, shorten_post_label
+        from candidates.models import PopItPerson
 
         if username is None:
             message = "You must supply the name of a user to be associated with the image uploads."
