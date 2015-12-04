@@ -3,9 +3,7 @@ from django.views.generic import TemplateView
 
 from elections.models import Election
 
-from ..popit import PopItApiMixin, get_base_url
-
-class HelpApiView(PopItApiMixin, TemplateView):
+class HelpApiView(TemplateView):
     template_name = 'candidates/api.html'
 
     def get_context_data(self, **kwargs):
@@ -22,7 +20,8 @@ class HelpApiView(PopItApiMixin, TemplateView):
                 context['historic_csv_list'].append(
                     {'slug': election_data.slug, 'name': election_data.name})
 
-        context['popit_url'] = get_base_url()
+        #FIXME
+        context['popit_url'] = ''
         return context
 
 

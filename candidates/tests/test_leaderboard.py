@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .factories import PersonExtraFactory
 from ..models import LoggedAction
 
 class TestLeaderboardView(TestUserMixin, WebTest):
@@ -13,11 +14,20 @@ class TestLeaderboardView(TestUserMixin, WebTest):
             'jane@example.com',
             'notagoodpassword',
         )
+        test_person_9876 = PersonExtraFactory.create(
+            base__id=9876,
+            base__name='Test Candidate for the Leaderboard',
+        )
+        test_person_1234 = PersonExtraFactory.create(
+            base__id=1234,
+            base__name='Another Test Candidate for the Leaderboard',
+        )
+
         self.action1 = LoggedAction.objects.create(
             user=self.user,
             action_type='person-create',
             ip_address='127.0.0.1',
-            popit_person_id='9876',
+            person=test_person_9876.base,
             popit_person_new_version='1234567890abcdef',
             source='Just for tests...',
         )
@@ -25,7 +35,7 @@ class TestLeaderboardView(TestUserMixin, WebTest):
             user=self.user2,
             action_type='candidacy-delete',
             ip_address='127.0.0.1',
-            popit_person_id='1234',
+            person=test_person_1234.base,
             popit_person_new_version='987654321',
             source='Also just for testing',
         )
@@ -33,7 +43,7 @@ class TestLeaderboardView(TestUserMixin, WebTest):
             user=self.user2,
             action_type='candidacy-delete',
             ip_address='127.0.0.1',
-            popit_person_id='1234',
+            person=test_person_1234.base,
             popit_person_new_version='987654321',
             source='Also just for testing',
         )

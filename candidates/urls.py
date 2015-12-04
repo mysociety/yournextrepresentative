@@ -49,11 +49,6 @@ patterns_to_format = [
         'name': 'retract-winner'
     },
     {
-        'pattern': r'^election/{election}/post/invalidate$',
-        'view': views.InvalidatePostView.as_view(),
-        'name': 'post-cache-invalidate'
-    },
-    {
         'pattern': r'^election/{election}/post/{post}/(?P<ignored_slug>.*).csv$',
         'view': views.ConstituencyDetailCSVView.as_view(),
         'name': 'constituency_csv'
@@ -64,7 +59,7 @@ patterns_to_format = [
         'name': 'constituency'
     },
     {
-        'pattern': r'^election/{election}/party-list/{post}/(?P<organization_id>[a-z-]+(:[-\d]+)?)$',
+        'pattern': r'^election/{election}/party-list/{post}/(?P<organization_id>[^/]+)$',
         'view': views.OrderedPartyListView.as_view(),
         'name': 'party-for-post'
     },
@@ -129,7 +124,7 @@ patterns_to_format = [
         'name': 'areas-of-type-view',
     },
     {
-        'pattern': r'^election/{election}/party/(?P<organization_id>[a-z-]+(:[-\d]+)?)/(?P<ignored_slug>.*)$',
+        'pattern': r'^election/{election}/party/(?P<organization_id>[^/]+)/(?P<ignored_slug>.*)$',
         'view': views.PartyDetailView.as_view(),
         'name': 'party'
     },
@@ -149,39 +144,39 @@ patterns_to_format = [
         'name': 'leaderboard'
     },
     {
-        'pattern': r'^leaderboard/contributions.csv',
+        'pattern': r'^leaderboard/contributions.csv$',
         'view': views.UserContributions.as_view(),
         'name': 'user-contributions'
     },
     {
-        'pattern': r'^feeds/changes.xml',
+        'pattern': r'^feeds/changes.xml$',
         'view': RecentChangesFeed(),
         'name': 'changes_feed'
     },
     {
-        'pattern': r'^help/api',
+        'pattern': r'^help/api$',
         'view': views.HelpApiView.as_view(),
         'name': 'help-api'
     },
     {
-        'pattern': r'^help/about',
+        'pattern': r'^help/about$',
         'view': views.HelpAboutView.as_view(),
         'name': 'help-about'
     },
     {
-        'pattern': r'^help/privacy',
+        'pattern': r'^help/privacy$',
         'view': TemplateView.as_view(template_name="candidates/privacy.html"),
         'name': 'help-privacy'
     },
     {
-        'pattern': r'^copyright-question',
+        'pattern': r'^copyright-question$',
         'view': views.AskForCopyrightAssigment.as_view(),
         'name': 'ask-for-copyright-assignment'
     },
     {
-        'pattern': r'^person/invalidate$',
-        'view': views.InvalidatePersonView.as_view(),
-        'name': 'person-cache-invalidate'
+        'pattern': r'^post-id-to-party-set.json$',
+        'view': views.PostIDToPartySetView.as_view(),
+        'name': 'post-id-to-party-set'
     },
 ]
 

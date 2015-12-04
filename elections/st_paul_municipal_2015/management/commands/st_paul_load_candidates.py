@@ -13,7 +13,6 @@ from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.views.version_data import get_change_metadata
 from candidates.cache import get_post_cached, UnknownPostException
-from candidates.election_specific import PARTY_DATA, AREA_POST_DATA
 from elections.models import Election
 
 import memcache
@@ -48,6 +47,7 @@ class Command(BaseCommand):
     help = "Load or update St. Paul candidates from Google docs"
 
     def handle(self, **options):
+        from candidates.election_specific import PARTY_DATA, shorten_post_label
 
         spreadsheet_url = 'https://docs.google.com/spreadsheets/d/{0}/pub?output=csv'\
                               .format(GOOGLE_DOC_ID)
@@ -104,10 +104,7 @@ class Command(BaseCommand):
 
             standing_in_election = {
                 'post_id': post_data['id'],
-                'name': AREA_POST_DATA.shorten_post_label(
-                    election_data.slug,
-                    post_data['label'],
-                ),
+                'name': shorten_post_label(post_data['label']),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']

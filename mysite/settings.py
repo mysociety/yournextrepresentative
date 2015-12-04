@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, LANGUAGES
 from django.utils.translation import to_locale, ugettext_lazy as _
-from collections import defaultdict
 import importlib
 from os.path import dirname, exists, join, realpath
 import re
@@ -48,6 +47,8 @@ POPIT_API_KEY = conf.get('POPIT_API_KEY', '')
 GOOGLE_ANALYTICS_ACCOUNT = conf.get('GOOGLE_ANALYTICS_ACCOUNT')
 USE_UNIVERSAL_ANALYTICS = conf.get('USE_UNIVERSAL_ANALYTICS', True)
 
+TWITTER_USERNAME = conf.get('TWITTER_USERNAME', '')
+
 # The email address which is made public on the site for sending
 # support email to:
 SUPPORT_EMAIL = conf['SUPPORT_EMAIL']
@@ -71,6 +72,9 @@ SECRET_KEY = conf['SECRET_KEY']
 DEBUG = bool(int(conf.get('STAGING')))
 
 TEMPLATE_DEBUG = True
+
+if DEBUG:
+    THUMBNAIL_DEBUG = True
 
 TEMPLATE_DIRS = (
     join(BASE_DIR, 'mysite', 'templates'),
@@ -108,6 +112,7 @@ INSTALLED_APPS = (
     'django_nose',
     'pipeline',
     'statici18n',
+    'sorl.thumbnail',
     'images',
     'elections',
     'popolo',
@@ -133,7 +138,6 @@ SITE_ID = 1
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'candidates.middleware.PopItDownMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -384,6 +388,7 @@ if conf.get('NGINX_SSL'):
 
 if DEBUG:
     cache = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
+    cache_thumbnails = {'BACKEND': 'django.core.cache.backends.dummy.DummyCache'}
 else:
     cache = {
         'TIMEOUT': None, # cache keys never expire; we invalidate them
@@ -391,10 +396,18 @@ else:
         'LOCATION': '127.0.0.1:11211',
         'KEY_PREFIX': DATABASES['default']['NAME'],
     }
-
+    cache_thumbnails = {
+        'TIMEOUT': 60 * 60 * 24 * 2, # expire after two days
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'KEY_PREFIX': DATABASES['default']['NAME'] + "-thumbnails",
+    }
 CACHES = {
-    'default': cache
+    'default': cache,
+    'thumbnails': cache_thumbnails,
 }
+
+THUMBNAIL_CACHE = 'thumbnails'
 
 RESTRICT_RENAMES = conf.get('RESTRICT_RENAMES')
 
@@ -427,6 +440,11 @@ except AttributeError:
     EXTRA_SIMPLE_FIELDS = {}
 
 ELECTION_RE = elections_module.ELECTION_RE
+
+try:
+    IMAGE_PROXY_URL = elections_module.IMAGE_PROXY_URL
+except AttributeError:
+    IMAGE_PROXY_URL = ''
 
 # Make sure there's a trailing slash at the end of base MapIt URL:
 MAPIT_BASE_URL = re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)

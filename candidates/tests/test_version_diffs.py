@@ -1,8 +1,22 @@
 from django.test import TestCase
 
 from candidates.diffs import get_version_diffs
+from . import factories
 
 class TestVersionDiffs(TestCase):
+
+    def setUp(self):
+        wmc_area_type = factories.AreaTypeFactory.create()
+        factories.ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,),
+        )
+        factories.EarlierElectionFactory.create(
+            slug='2010',
+            name='2010 General Election',
+            area_types=(wmc_area_type,)
+        )
 
     def test_get_version_diffs(self):
         versions = [
@@ -160,12 +174,10 @@ class TestVersionDiffs(TestCase):
                         '2010': {
                             'name': 'South Cambridgeshire',
                             'post_id': '65922',
-                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
                         },
                         '2015': {
                             'name': 'Edinburgh North and Leith',
                             'post_id': '14420',
-                            'mapit_url': 'http://mapit.mysociety.org/area/14420',
                         },
                     }
                 },
@@ -184,7 +196,6 @@ class TestVersionDiffs(TestCase):
                         '2010': {
                             'name': 'South Cambridgeshire',
                             'post_id': '65922',
-                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
                         },
                     }
                 },
@@ -239,7 +250,6 @@ class TestVersionDiffs(TestCase):
                         '2010': {
                             'name': 'South Cambridgeshire',
                             'post_id': '65922',
-                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
                         },
                         '2015': None,
                     }
@@ -259,7 +269,6 @@ class TestVersionDiffs(TestCase):
                         '2010': {
                             'name': 'South Cambridgeshire',
                             'post_id': '65922',
-                            'mapit_url': 'http://mapit.mysociety.org/area/65922',
                         },
                     }
                 },
@@ -400,18 +409,11 @@ class TestVersionDiffs(TestCase):
                 'information_source': 'After clicking "Not standing again"',
                 'data': {
                     'standing_in': {
-                        '2015': {'mapit_url': 'http://mapit.mysociety.org/area/65659',
-                                 'name': 'Truro and Falmouth',
+                        '2015': {'name': 'Truro and Falmouth',
                                  'post_id': '65659'}
                     },
                 },
                 'diff': [
-                    {
-                        'op': 'replace',
-                        'path': 'standing_in/2015/mapit_url',
-                        'previous_value': 'is known to be standing in the constituency with MapIt URL http://mapit.mysociety.org/area/65808 in the 2015 General Election',
-                        'value': 'is known to be standing in the constituency with MapIt URL http://mapit.mysociety.org/area/65659 in the 2015 General Election',
-                    },
                     {
                         'op': 'replace',
                         'path': 'standing_in/2015/name',
@@ -433,7 +435,6 @@ class TestVersionDiffs(TestCase):
                         "2015": {
                             "post_id": "65808",
                             "name": "Dulwich and West Norwood",
-                            "mapit_url": "http://mapit.mysociety.org/area/65808"
                         },
                     },
                 },

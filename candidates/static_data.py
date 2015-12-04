@@ -1,167 +1,8 @@
 from collections import defaultdict
-import json
-from os.path import abspath, dirname, join, exists
-import sys
 
-import requests
-
-from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from elections.models import Election
-
-data_directory = abspath(join(
-    dirname(__file__), '..', 'elections', settings.ELECTION_APP, 'data'
-))
-
-def get_mapit_areas(area_type, generation):
-    expected_filename = join(
-        data_directory,
-        'mapit-{area_type}-generation-{generation}.json'.format(
-            area_type=area_type,
-            generation=generation,
-        )
-    )
-    if exists(expected_filename):
-        with open(expected_filename) as f:
-            return json.load(f)
-    else:
-        mapit_url_format = '{base_url}areas/{area_type}?generation={generation}'
-        mapit_url = mapit_url_format.format(
-            base_url=settings.MAPIT_BASE_URL,
-            area_type=area_type,
-            generation=generation
-        )
-        message = "WARNING: failed to find {filename} so loading from MapIt\n"
-        message += "This will make start-up slow and less reliable, so consider\n"
-        message += "committing a copy of: {url}"
-        print message.format(filename=expected_filename, url=mapit_url)
-        r = requests.get(mapit_url)
-        return r.json()
-
-
-class BaseMapItData(object):
-
-    """Load MapIt data and make it availale in helpful data structures
-
-    FIXME: check that these are sensible descriptions
-
-    On instantiation, the following attributes are created:
-
-        'areas_by_id', a dictionary that maps from a MapIt ID to full
-        area data
-
-        'areas_by_name', a dictionary that maps an area name and typ
-        to full area data
-
-        'areas_list_sorted_by_name', a list of all areas of a
-        particular type
-
-    """
-
-    def __init__(self):
-
-        self.areas_by_id = {}
-        self.areas_by_name = {}
-        self.areas_list_sorted_by_name = {}
-
-        for t, election_tuples in Election.objects.elections_for_area_generations().items():
-            mapit_type, mapit_generation = t
-            self.areas_by_id[t] = get_mapit_areas(mapit_type, mapit_generation)
-            for area in self.areas_by_id[t].values():
-                self.areas_by_name.setdefault(t, {})
-                self.areas_by_name[t][area['name']] = area
-            self.areas_list_sorted_by_name[t] = sorted(
-                self.areas_by_id[t].items(),
-                key=lambda c: c[1]['name']
-            )
-
-
-class BasePartyData(object):
-
-    """You should subclass this in your election application to define the
-    election-specific 'party sets'.
-
-    FIXME: check that these are sensible descriptions
-
-    When instantiated, this gives you helpful access to party data in
-    two attributes:
-
-    'party_choices' is a dictionary where the keys are the names of
-    party sets and the values are lists that can be used as choices in
-    a ChoiceField, e.g.:
-
-        {u'Great Britain': [
-          ('party:none', ''),
-          (u'party:52', u'Conservative Party'),
-          (u'joint-party:53-119', u'Labour and Co-operative Party'),
-          (u'party:53', u'Labour Party'),
-          (u'ynmp-party:2', u'Independent'),
-          (u'ynmp-party:12522', u'Speaker seeking re-election')],
-         u'Northern Ireland': [
-          ('party:none', ''),
-          (u'party:51', u'Conservative and Unionist Party'),
-          (u'party:434', u'Labour Party of Northern Ireland'),
-          (u'ynmp-party:2', u'Independent'),
-          (u'ynmp-party:12522', u'Speaker seeking re-election')]}
-
-    'party_id_to_name' is a dictionary that maps party IDs to party
-    names, e.g.:
-
-        {u'party:434': u'Labour Party of Northern Ireland',
-         u'party:53': u'Labour Party',
-         u'joint-party:53-119': u'Labour and Co-operative Party',
-         u'party:51': u'Conservative and Unionist Party',
-         u'party:52': u'Conservative Party',
-         u'ynmp-party:12522': u'Speaker seeking re-election',
-         u'ynmp-party:2': u'Independent'}
-
-    """
-
-    def party_data_to_party_set(self, party_data):
-        raise NotImplementedError(
-            "You should implement party_data_to_party_set in a subclass"
-        )
-
-    def sort_parties_in_place(self, parties):
-        parties.sort(key=lambda p: p[1].lower())
-
-    def __init__(self):
-
-        self.party_choices = defaultdict(list)
-        self.party_id_to_name = {}
-        self.all_party_data = []
-        party_id_to_party_names = defaultdict(list)
-        duplicate_ids = False
-        parties_filename = join(data_directory, 'all-parties-from-popit.json')
-        with open(parties_filename) as f:
-            for party in json.load(f):
-                party_id = party['id']
-                party_name = party['name']
-                if party_id in party_id_to_party_names:
-                    duplicate_ids = True
-                party_id_to_party_names[party_id].append(party['name'])
-                self.all_party_data.append(party)
-                for party_set in self.party_data_to_party_sets(party):
-                    self.party_choices[party_set].append(
-                        (party_id, party_name)
-                    )
-                    self.party_id_to_name[party_id] = party_name
-            # Now sort the parties, and an an empty default at the start:
-            for parties in self.party_choices.values():
-                self.sort_parties_in_place(parties)
-                parties.insert(0, ('party:none', ''))
-        # Check that no ID maps to multiple parties; if there are any,
-        # warn about them on standard error:
-        if duplicate_ids:
-            print >> sys.stderr, "Duplicate IDs for parties were found:"
-            for party_id, party_names in party_id_to_party_names.items():
-                if len(party_names) == 1:
-                    continue
-                message = "  The party ID {0} was used for all of:"
-                print >> sys.stderr, message.format(party_id)
-                for party_name in party_names:
-                    print >> sys.stderr, "   ", party_name
 
 
 class BaseAreaPostData(object):
@@ -189,9 +30,8 @@ class BaseAreaPostData(object):
             area_id=area_id
         )
 
-    def __init__(self, area_data, party_data):
+    def __init__(self, area_data):
         self.area_data = area_data
-        self.party_data = party_data
         self.areas_by_post_id = {}
         self.area_ids_and_names_by_post_group = {}
 

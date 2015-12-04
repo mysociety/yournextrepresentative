@@ -16,7 +16,7 @@
 <ul>
   {% for c, declared in constituencies %}
     <li>
-     {% if declared %}<del>{% endif %}<a href="{% url 'constituency' election=election post_id=c.id ignored_slug=c.area.name|slugify %}" style="{% if not declared %}color: red{% endif %}">{{ c.area.name }}</a>{% if declared %}<del>{% endif %}
+     {% if declared %}<del>{% endif %}<a href="{% url 'constituency' election=election post_id=c.extra.slug ignored_slug=c.area.name|slugify %}" style="{% if not declared %}color: red{% endif %}">{{ c.area.name }}</a>{% if declared %}<del>{% endif %}
     </li>
   {% endfor %}
 </ul>

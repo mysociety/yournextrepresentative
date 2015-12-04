@@ -15,6 +15,7 @@ from django.utils.translation import to_locale, get_language
 SETTINGS_TO_ADD = (
     'GOOGLE_ANALYTICS_ACCOUNT',
     'USE_UNIVERSAL_ANALYTICS',
+    'TWITTER_USERNAME',
     'SOURCE_HINTS',
     'MEDIA_URL',
     'SUPPORT_EMAIL',

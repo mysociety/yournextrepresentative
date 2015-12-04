@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 from popolo.models import Person
+from candidates.models import OrganizationExtra
 
 class ResultEvent(models.Model):
 
@@ -23,8 +24,9 @@ class ResultEvent(models.Model):
 
     @property
     def winner_party_name(self):
-        from candidates.election_specific import PARTY_DATA
-        return PARTY_DATA.party_id_to_name.get(self.winner_party_id)
+        return OrganizationExtra.objects.get(
+            slug=self.winner_party_id
+        ).select_related('base').name
 
     @classmethod
     def create_from_popit_person(cls, popit_person, election, source, user):

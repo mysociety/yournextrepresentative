@@ -46,36 +46,6 @@ other_fields_to_proxy = [
     'id', 'image', 'proxy_image', 'versions', 'other_names', 'identifiers'
 ]
 
-CSV_ROW_FIELDS = [
-    'id',
-    'name',
-    'honorific_prefix',
-    'honorific_suffix',
-    'gender',
-    'birth_date',
-    'election',
-    'party_id',
-    'party_name',
-    'post_id',
-    'post_label',
-    'mapit_url',
-    'elected',
-    'email',
-    'twitter_username',
-    'facebook_page_url',
-    'party_ppc_page_url',
-    'facebook_personal_url',
-    'homepage_url',
-    'wikipedia_url',
-    'linkedin_url',
-    'image_url',
-    'proxy_image_url_template',
-    'image_copyright',
-    'image_uploading_user',
-    'image_uploading_user_notes',
-]
-
-
 form_complex_fields_locations = {
     'wikipedia_url': {
         'sub_array': 'links',
@@ -195,39 +165,14 @@ def complete_partial_date(iso_8601_date_partial, start=True):
 def membership_covers_date(membership, date):
     """See if the dates in a membership cover a particular date
 
-    For example:
-
-    >>> membership_covers_date({
-    ...     'start_date': '2010',
-    ...     'end_date': '2015-01-01',
-    ... }, date(2010, 5, 6))
-    True
-
-    >>> membership_covers_date({
-    ...     'start_date': '2010-08',
-    ...     'end_date': '2015',
-    ... }, date(2010, 5, 6))
-    False
-
     If a start date is missing, assume it's 'since forever' and if an
-    end date is missing, assume it's 'until forever':
-
-    >>> membership_covers_date({'end_date': '2014'}, date(2010, 5, 6))
-    True
-    >>> membership_covers_date({'end_date': '2010-03'}, date(2010, 5, 6))
-    False
-    >>> membership_covers_date({'start_date': '2014'}, date(2010, 5, 6))
-    False
-    >>> membership_covers_date({'start_date': '1976'}, date(2010, 5, 6))
-    True
-    >>> membership_covers_date({}, date(2010, 5, 6))
-    True
+    end date is missing, assume it's 'until forever'.
     """
 
-    start_date = membership.get('start_date')
+    start_date = membership.start_date
     if not start_date:
         start_date = '0001-01-01'
-    end_date = membership.get('end_date')
+    end_date = membership.end_date
     if not end_date:
         end_date = '9999-12-31'
     start_date = complete_partial_date(start_date)
@@ -832,8 +777,8 @@ class PopItPerson(object):
             'image_uploading_user': image_uploading_user,
             'image_uploading_user_notes': image_uploading_user_notes,
         }
-        from ..election_specific import AREA_DATA, get_extra_csv_values
-        extra_csv_data = get_extra_csv_values(self, election, AREA_DATA)
+        from ..election_specific import get_extra_csv_values
+        extra_csv_data = get_extra_csv_values(self, election)
         row.update(extra_csv_data)
 
         return row
@@ -1136,7 +1081,7 @@ class PopItPerson(object):
         return self.id
 
     def update_from_form(self, api, form):
-        from ..election_specific import AREA_POST_DATA, PARTY_DATA
+        from ..election_specific import AREA_POST_DATA, shorten_post_label
 
         form_data = form.cleaned_data.copy()
         # The date is returned as a datetime.date, so if that's set, turn
@@ -1178,7 +1123,7 @@ class PopItPerson(object):
                 post_label = post_data['label']
                 new_standing_in[election_data.slug] = {
                     'post_id': post_data['id'],
-                    'name': AREA_POST_DATA.shorten_post_label(election_data.slug, post_label),
+                    'name': shorten_post_label(post_label),
                     'mapit_url': post_data['area']['identifier'],
                 }
                 if party_list_position:

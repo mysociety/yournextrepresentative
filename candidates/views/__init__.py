@@ -1,6 +1,6 @@
 from .agreement import *
+from .api import *
 from .areas import *
-from .cache import *
 from .candidacies import *
 from .constituencies import *
 from .frontpage import *

@@ -169,6 +169,9 @@ def get_version_diff(from_data, to_data):
     return result
 
 def clean_version_data(data):
+    for election_slug, standing_in in data.get('standing_in', {}).items():
+        if standing_in:
+            standing_in.pop('mapit_url', None)
     # We're not interested in changes of these IDs:
     for i in data.get('identifiers', []):
         i.pop('id', None)

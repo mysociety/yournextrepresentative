@@ -18,16 +18,16 @@ urlpatterns = [
         name='st-paul-areas-view'
     ),
     url(
-        r'^areas/(?P<type_and_area_ids>.*?)(?:/(?P<ignored_slug>.*))?$',
+        r'^areas-of-type/(?P<area_type>.*?)(?:/(?P<ignored_slug>.*))?$',
         views.StPaulAreasOfTypeView.as_view(),
-        name='st-paul-areas-of-type-view'
+        name='areas-of-type-view'
     ),
     url(
         r'^election/{election}/post/(?P<post_id>.*)/(?P<ignored_slug>{ignore_pattern})$'.format(
             election=settings.ELECTION_RE,
             ignore_pattern=post_ignored_slug_re,
         ),
-        views.ConstituencyDetailView.as_view(),
+        ConstituencyDetailView.as_view(),
         name='constituency'
     ),
 ]

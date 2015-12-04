@@ -1,48 +1,36 @@
-from django.http import Http404
+from collections import defaultdict
+
 from django.views.generic import TemplateView
-from django.utils.translation import ugettext as _
+from django.shortcuts import get_object_or_404
 
-import requests
+from popolo.models import Organization, Membership
 
-from cached_counts.models import CachedCount
+from candidates.models import OrganizationExtra, PostExtra
 from elections.mixins import ElectionMixin
 
-from ..popit import PopItApiMixin, popit_unwrap_pagination, get_search_url
-from ..election_specific import PARTY_DATA, AREA_POST_DATA
 
-
-class PartyListView(ElectionMixin, PopItApiMixin, TemplateView):
+class PartyListView(ElectionMixin, TemplateView):
     template_name = 'candidates/party-list.html'
 
     def get_context_data(self, **kwargs):
         context = super(PartyListView, self).get_context_data(**kwargs)
-        party_ids_with_any_candidates = set(
-            CachedCount.objects.filter(count_type='party', count__gt=0). \
-                values_list('object_id', flat=True)
-        )
-        parties = []
-        for party in popit_unwrap_pagination(
-            self.api.organizations,
-            embed='',
-            per_page=100
-        ):
-            if party.get('classification') != 'Party':
-                continue
-            if party['id'] in party_ids_with_any_candidates:
-                parties.append((party['name'], party['id']))
-        parties.sort()
-        context['parties'] = parties
+        context['parties_extra'] = OrganizationExtra.objects \
+            .filter(
+                base__memberships_on_behalf_of__extra__election=self.election_data,
+                base__classification='Party'
+            ).distinct().select_related('base').order_by('base__name')
         return context
 
 
 def get_post_group_stats(posts):
     total = 0
     candidates = 0
-    for t in posts:
+    proportion = 0
+    for post, members in posts.items():
         total += 1
-        if t[2]:
-            candidates += 1
-    proportion = candidates / float(total)
+        candidates += len(members)
+    if total > 0:
+        proportion = candidates / float(total)
     return {
         'proportion': proportion,
         'total': total,
@@ -52,74 +40,66 @@ def get_post_group_stats(posts):
     }
 
 
-class PartyDetailView(ElectionMixin, PopItApiMixin, TemplateView):
+class PartyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/party.html'
 
     def get_context_data(self, **kwargs):
         context = super(PartyDetailView, self).get_context_data(**kwargs)
         party_id = kwargs['organization_id']
-        party_name = PARTY_DATA.party_id_to_name.get(party_id)
-        if not party_name:
-            raise Http404(_("Party not found"))
-        party = self.api.organizations(party_id).get(embed='')['result']
+        party = get_object_or_404(Organization, extra__slug=party_id)
 
         # Make the party emblems conveniently available in the context too:
         context['emblems'] = [
-            (i.get('notes', ''), i['proxy_url'] + '/240/0')
-            for i in party.get('images', [])
+            image for image in
+            party.extra.images \
+                .prefetch_related('extra').order_by('-is_primary')
         ]
+        all_post_groups = PostExtra.objects.values_list('group', flat=True).distinct()
         by_post_group = {
-            pg: {} for pg in AREA_POST_DATA.ALL_POSSIBLE_POST_GROUPS
+            pg: {
+                'stats': None,
+                'posts_with_memberships': defaultdict(list)
+            }
+            for pg in all_post_groups
         }
-        url = get_search_url(
-            'persons',
-            'party_memberships.{0}.id:"{1}"'.format(
-                self.election,
-                party_id,
-            ),
-            per_page=100
-        )
-        while url:
-            page_result = requests.get(url).json()
-            next_url = page_result.get('next_url')
-            url = next_url if next_url else None
-            for person in page_result['result']:
-                standing_in = person.get('standing_in')
-                if not (standing_in and standing_in.get(self.election)):
-                    continue
-                post_id = standing_in[self.election].get('post_id')
-                post_name = standing_in[self.election].get('name')
-                post_group = AREA_POST_DATA.post_id_to_post_group(
-                    kwargs['election'], post_id
-                )
-                by_post_group[post_group][post_id] = {
-                    'person_id': person['id'],
-                    'person_name': person['name'],
-                    'post_id': post_id,
-                    'constituency_name': post_name,
-                }
+        for membership in Membership.objects.filter(
+            on_behalf_of=party,
+            extra__election=self.election_data,
+            role=self.election_data.candidate_membership_role
+        ).select_related().prefetch_related('post__extra', 'person__extra'):
+            person = membership.person
+            post = membership.post
+            post_group = post.extra.group
+            by_post_group[post_group]['posts_with_memberships'][post].append({
+                'membership': membership,
+                'person': person,
+                'post': post,
+            })
+        # That'll only find the posts that someone from the party is
+        # actually standing for, so add any other posts...
+        for post_extra in self.election_data.posts.select_related('base').all():
+            post = post_extra.base
+            post_group = post_extra.group
+            post_group_data = by_post_group[post_group]
+            posts_with_memberships = post_group_data['posts_with_memberships']
+            posts_with_memberships.setdefault(post, [])
         context['party'] = party
-        context['party_name'] = party_name
-        relevant_post_groups = AREA_POST_DATA.party_to_possible_post_groups(party)
-        candidates_by_post_group = {}
-        for post_group in relevant_post_groups:
-            candidates_by_post_group[post_group] = None
-            if by_post_group[post_group]:
-                posts = [
-                    (c[0], c[1], by_post_group[post_group].get(
-                        AREA_POST_DATA.get_post_id(self.election, area_type.name, c[0])
-                    ))
-                    for area_type in self.election_data.area_types.all()
-                    for c in AREA_POST_DATA.area_ids_and_names_by_post_group[
-                        (area_type.name, self.election_data.area_generation)
-                    ][post_group]
-                ]
-                candidates_by_post_group[post_group] = {
-                    'constituencies': posts,
-                    'stats': get_post_group_stats(posts),
-                }
+        context['party_name'] = party.name
+        for post_group, data in by_post_group.items():
+            posts_with_memberships = data['posts_with_memberships']
+            by_post_group[post_group]['stats'] = get_post_group_stats(
+                posts_with_memberships
+            )
+            data['posts_with_memberships'] = sorted(
+                posts_with_memberships.items(),
+                key=lambda t: t[0].label,
+            )
         context['candidates_by_post_group'] = sorted(
-            candidates_by_post_group.items(),
+            [
+                (pg, data) for pg, data
+                in by_post_group.items()
+                if pg in all_post_groups
+            ],
             key=lambda k: k[0]
         )
         return context

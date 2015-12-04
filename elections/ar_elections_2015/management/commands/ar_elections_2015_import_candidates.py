@@ -9,13 +9,11 @@ import re
 import requests
 from slumber.exceptions import HttpClientError
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 
 from candidates.cache import get_post_cached
-from candidates.election_specific import AREA_DATA, PARTY_DATA, AREA_POST_DATA
 from candidates.models import PopItPerson
 from candidates.popit import create_popit_api_object, get_search_url
 from candidates.utils import strip_accents
@@ -32,6 +30,7 @@ USER_AGENT = (
 )
 
 def get_post_data(api, json_election_id, json_election_id_to_name):
+    from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     json_election_name = json_election_id_to_name[json_election_id]
     ynr_election_id = {
         u'Pre-candidatos a Presidente':
@@ -84,7 +83,7 @@ def enqueue_image(person, user, image_url):
         justification_for_use="Downloaded from {0}".format(image_url),
         decision=QueuedImage.UNDECIDED,
         image=storage_filename,
-        popit_person_id=person.id,
+        person_id=person.id,
         user=user
     )
 
@@ -118,6 +117,7 @@ class Command(BaseCommand):
     help = "Import inital candidate data"
 
     def handle(self, username=None, **options):
+        from candidates.election_specific import PARTY_DATA, shorten_post_label
 
         if username is None:
             message = "You must supply the name of a user to be associated with the image uploads."
@@ -184,10 +184,7 @@ class Command(BaseCommand):
                 person.birth_date = None
             standing_in_election = {
                 'post_id': post_data['id'],
-                'name': AREA_POST_DATA.shorten_post_label(
-                    election_data.slug,
-                    post_data['label'],
-                ),
+                'name': shorten_post_label(post_data['label']),
             }
             if 'area' in post_data:
                 standing_in_election['mapit_url'] = post_data['area']['identifier']

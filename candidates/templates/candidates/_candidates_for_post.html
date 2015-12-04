@@ -12,9 +12,9 @@
     post_data.label
     post_label_shorter
 
-    candidates
-    candidates_might_stand_again
-    candidates_not_standing_again
+    candidacies
+    candidacies_might_stand_again
+    candidacies_not_standing_again
 
     candidates_locked
     show_confirm_result
@@ -36,7 +36,7 @@
 
     candidates/_person_in_list.html
 
-      c (a candidate from candidates, candidates_might_stand_again, etc.)
+      c (a candidacy from candidacies, candidacies_might_stand_again, etc.)
 
     candidates/_source_confirmation.html
 
@@ -78,7 +78,7 @@
   {% endif %}
 
   {% if user_can_record_results and show_retract_result %}
-    <form action="{% url 'retract-winner' election=election post_id=post_data.id %}" method="post">
+    <form action="{% url 'retract-winner' election=election post_id=post_id %}" method="post">
       {% csrf_token %}
       <input type="submit" class="button alert" value="{% trans "Unset the current winner, if incorrect" %}">
     </form>
@@ -91,7 +91,7 @@
     <h3>{% blocktrans with post_label=post_data.label %}Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
     </h3>
 
-    {% with party_lists_in_use=candidates.party_lists_in_use parties_and_people=candidates.parties_and_people %}
+    {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}
 
       {% for party, people in parties_and_people %}
 
@@ -105,13 +105,13 @@
               {% endif %}
           {% endif %}
 
-          {% for c in people %}
+          {% for c, candidate_elected in people %}
             {% if forloop.first %}
               <ul class="candidate-list">
             {% endif %}
 
-              <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if c|was_elected:election %} candidates-list__person__winner{% endif %}">
-                {% if c|was_elected:election %}
+              <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if candidate_elected %} candidates-list__person__winner{% endif %}">
+                {% if candidate_elected %}
                   <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
                 {% endif %}
 
@@ -141,7 +141,7 @@
               </ul>
             {% endif %}
 
-          {% endfor %} {# end of 'for c in people' #}
+          {% endfor %} {# end of 'for c, candidate_elected in people' #}
 
         </div>
 
@@ -160,7 +160,7 @@
 
     {% endwith %}
 
-    {% if candidates and candidate_list_edits_allowed %}
+    {% if candidacies and candidate_list_edits_allowed %}
         <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
     {% endif %}
 
@@ -191,7 +191,7 @@
 
   {% if not candidates_locked %}
 
-    {% if candidates_might_stand_again.parties_and_people %}
+    {% if candidacies_might_stand_again.parties_and_people %}
       <div class="candidates__previous">
 
         {% if user.is_authenticated %}
@@ -200,7 +200,7 @@
         <h3>{% trans "We don't know if these candidates from earlier elections are standing again" %}</h3>
         {% endif %}
 
-        {% with party_lists_in_use=candidates_might_stand_again.party_lists_in_use parties_and_people=candidates_might_stand_again.parties_and_people %}
+        {% with party_lists_in_use=candidacies_might_stand_again.party_lists_in_use parties_and_people=candidacies_might_stand_again.parties_and_people %}
 
           {% for party, people in parties_and_people %}
 
@@ -211,7 +211,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c in people %}
+                {% for c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -229,7 +229,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c in people' #}
+                {% endfor %} {# end of 'for c, candidate_elected in people' #}
               </ul>
 
             </div>
@@ -241,12 +241,12 @@
       </div>
     {% endif %}
 
-    {% if candidates_not_standing_again.parties_and_people %}
+    {% if candidacies_not_standing_again.parties_and_people %}
       <div class="candidates__not-standing">
 
         <h3>{% trans "These candidates from earlier elections are known not to be standing again" %}</h3>
 
-        {% with party_lists_in_use=candidates_not_standing_again.party_lists_in_use parties_and_people=candidates_not_standing_again.parties_and_people %}
+        {% with party_lists_in_use=candidacies_not_standing_again.party_lists_in_use parties_and_people=candidacies_not_standing_again.parties_and_people %}
 
           {% for party, people in parties_and_people %}
 
@@ -257,7 +257,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c in people %}
+                {% for c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -273,7 +273,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c in people' #}
+                {% endfor %} {# end of 'for c, candidate_elected in people' #}
               </ul>
 
             </div>

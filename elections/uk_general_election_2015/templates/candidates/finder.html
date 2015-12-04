@@ -3,26 +3,27 @@
 {% load metadescription %}
 
 {% block extra_head %}
+    <!-- Open Graph and Twitter card data -->
+    <meta property="og:url" name="twitter:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:title" name="twitter:title" content="{{ site.name }}" />
+    <meta property="og:description" name="twitter:description" content="{% blocktrans with election_name=election_data.name site_name=site.name %}{{ site_name }} - {{ election_name }} candidates{% endblocktrans %}">
+
     <!-- Open Graph data -->
-    <meta property="og:title" content="{{ site.name }}" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="og:image:height" content="80" />
     <meta property="og:image:width" content="80" />
     <meta property="og:site_name" content="{{ site.name }}" />
-    <meta property="og:description" content="{% blocktrans with election_name=election_data.name site_name=site.name %}{{ site_name }} - {{ election_name }} candidates{% endblocktrans %}">
     <meta property="og:locale" content="{{ LOCALE }}" />
 
     <!-- Twitter card data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="{% trans "@yournextmp" %}" />
-    <meta name="twitter:title" content="{{ site.name }}" />
+    {% if settings.TWITTER_USERNAME %}
+      <meta name="twitter:site" content="@{{ settings.TWITTER_USERNAME }}" />
+    {% endif %}
     <meta property="twitter:image" content="{{ 'img/logo.png'|static_image_path:request }}" />
     <meta property="twitter:image:height" content="120" />
     <meta property="twitter:image:width" content="120" />
-    <meta name="twitter:url" content="{{ request.build_absolute_uri }}" />
-    <meta name="twitter:description" content="{% blocktrans with election_name=election_data.name site_name=site.name %}{{ site_name }} - {{ election_name }} candidates{% endblocktrans %}" />
 {% endblock %}
 
 {% block body_class %}finder{% endblock %}
@@ -99,33 +100,33 @@ it’s a waste of money.</p>
       {% for action in recent_actions %}
         <li>User <strong>{{ action.user.username }}</strong>
           {% if action.action_type == 'person-create' %}
-            {% if action.popit_person_id %}
-              created <a href="{% url 'person-view' person_id=action.popit_person_id %}">a new candidate</a>
+            {% if action.person.id %}
+              created <a href="{% url 'person-view' person_id=action.person.id %}">a new candidate</a>
             {% else %}
               is creating a new candidate
             {% endif %}
           {% elif action.action_type == 'person-merge' %}
-            merged another candidate into <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            merged another candidate into <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'photo-upload' %}
-            uploaded a photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> for moderation
+            uploaded a photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a> for moderation
           {% elif action.action_type == 'photo-approve' %}
-            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            approved an uploaded photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'photo-reject' %}
-            rejected an uploaded photo of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            rejected an uploaded photo of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'person-revert' %}
-            reverted to an earlier version of <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            reverted to an earlier version of <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'candidacy-create' %}
-            confirmed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            confirmed candidacy for <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'candidacy-delete' %}
-            removed candidacy for <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            removed candidacy for <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% elif action.action_type == 'constituency-lock' %}
             locked a constituency
           {% elif action.action_type == 'constituency-unlock' %}
             unlocked a constituency
           {% elif action.action_type == 'set-candidate-elected' %}
-            marked <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a> as the winner
+            marked <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a> as the winner
           {% else %}
-            updated <a href="{% url 'person-view' person_id=action.popit_person_id %}">candidate #{{ action.popit_person_id }}</a>
+            updated <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a>
           {% endif %}
         <span class="when">{{ action.created|timesince }} ago</span></li>
       {% endfor %}

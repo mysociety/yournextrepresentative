@@ -4,10 +4,8 @@ from collections import defaultdict
 from popolo.models import Organization
 
 class ElectionQuerySet(models.QuerySet):
-    def current(self):
-        return self.filter(
-            current=True
-        )
+    def current(self, current=True):
+        return self.filter(current=current)
 
     def get_by_slug(self, election):
         return get_object_or_404(self, slug=election)
@@ -28,6 +26,9 @@ class ElectionManager(models.Manager):
         return generations
 
 
+# FIXME: shouldn't AreaType also have the MapIt generation?
+# FIXME: at the moment name is a code (like WMC); ideally that would
+# be a code field and the name field would be "Westminster Consituency"
 class AreaType(models.Model):
     name = models.CharField(max_length=128)
     source = models.CharField(max_length=128, blank=True,
@@ -35,6 +36,11 @@ class AreaType(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def area_choices(self):
+        return self.areas.all() \
+            .order_by('base__name') \
+            .values_list('id', 'base__name')
 
 
 class Election(models.Model):

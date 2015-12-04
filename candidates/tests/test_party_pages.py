@@ -3,56 +3,83 @@ import re
 
 from django_webtest import WebTest
 
-from .fake_popit import get_example_popit_json, FakeOrganizationCollection
-
-from cached_counts.models import CachedCount
-
-def fake_api_party_list(*args, **kwargs):
-    page = kwargs.get('page')
-    return get_example_popit_json(
-        'organizations_embed=&page={0}&per_page=2.json'.format(page)
-    )
-
-def fake_party_person_search_results(url, **kwargs):
-    mock_requests_response = MagicMock()
-    page = "1"
-    m = re.search(r'[^_]page=(\d+)', url)
-    if m:
-        page = m.group(1)
-    mock_requests_response.json.return_value = get_example_popit_json(
-        'search_labour_page={0}.json'.format(page)
-    )
-    return mock_requests_response
-
+from .factories import (
+    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
+    CandidacyExtraFactory, ParliamentaryChamberFactory,
+    PartyFactory, PartyExtraFactory, PersonExtraFactory,
+    PostExtraFactory
+)
 
 class TestPartyPages(WebTest):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.cached_counts = [
-            CachedCount.objects.create(
-                count_type='party',
-                name='',
-                count=count,
-                object_id=object_id
-            ) for object_id, count in (
-                ('party:52', 4),
-                ('party:63', 0),
-                ('party:53', 5),
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,)
+        )
+        earlier_election = EarlierElectionFactory.create(
+            slug='2010',
+            name='2010 General Election',
+            area_types=(wmc_area_type,)
+        )
+        commons = ParliamentaryChamberFactory.create()
+        PartyExtraFactory.reset_sequence()
+        PartyFactory.reset_sequence()
+        parties = {}
+        for i in xrange(0, 4):
+            party_extra = PartyExtraFactory.create()
+            parties[party_extra.slug] = party_extra
+        constituencies = {}
+        for slug, cons_name, country in [
+                ('66090', 'Cardiff Central', 'Wales'),
+                ('14421', 'Edinburgh South', 'Scotland'),
+                ('65672', 'Doncaster North', 'England'),
+                ('65719', 'South Shields', 'England'),
+                ('65808', 'Dulwich and West Norwood', 'England'),
+                ('65913', 'Camberwell and Peckham', 'England'),
+        ]:
+            constituencies[cons_name] = PostExtraFactory.create(
+                elections=(election, earlier_election,),
+                base__organization=commons,
+                slug=slug,
+                base__label='Member of Parliament for {0}'.format(cons_name),
+                group=country,
             )
-        ]
+        person_extra = PersonExtraFactory.create(
+            base__id='3056',
+            base__name='Ed Miliband'
+        )
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=constituencies['Doncaster North'].base,
+            base__on_behalf_of=parties['party:53'].base
+        )
+        person_extra = PersonExtraFactory.create(
+            base__id='3814',
+            base__name='David Miliband'
+        )
+        CandidacyExtraFactory.create(
+            election=earlier_election,
+            base__person=person_extra.base,
+            base__post=constituencies['South Shields'].base,
+            base__on_behalf_of=parties['party:53'].base
+        )
+        conservative_opponent_extra = PersonExtraFactory.create(
+            base__id='6648',
+            base__name='Mark Fletcher'
+        )
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=conservative_opponent_extra.base,
+            base__post=constituencies['South Shields'].base,
+            base__on_behalf_of=parties['party:52'].base
+        )
 
-    @classmethod
-    def tearDownClass(cls):
-        for cc in cls.cached_counts:
-            cc.delete()
-
-    @patch('candidates.popit.PopIt')
-    def test_parties_page(self, mock_popit):
-        mock_api = MagicMock()
-        mock_api.organizations.get.side_effect = fake_api_party_list
-        mock_popit.return_value = mock_api
-        response = self.app.get('/election/2015/parties')
+    def test_parties_page(self):
+        response = self.app.get('/election/2015/parties/')
         ul = response.html.find('ul', {'class': 'party-list'})
         lis = ul.find_all('li')
         self.assertEqual(len(lis), 2)
@@ -65,11 +92,7 @@ class TestPartyPages(WebTest):
             self.assertEqual(lis[i].find('a')['href'], expected_url)
             self.assertEqual(lis[i].find('a').text, expected_text)
 
-    @patch('candidates.views.parties.requests')
-    @patch('candidates.popit.PopIt')
-    def test_single_party_page(self, mock_popit, mock_requests):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_requests.get.side_effect = fake_party_person_search_results
+    def test_single_party_page(self):
         response = self.app.get('/election/2015/party/party%3A53/labour-party')
         # There are no candidates in Scotland or Wales in our test data:
         self.assertIn(
@@ -97,7 +120,7 @@ class TestPartyPages(WebTest):
         )
         # But there is an Ed Miliband:
         self.assertTrue(re.search(
-            r'(?ms)<a href="/person/3056">Ed Miliband</a>.*is standing in.*' +
-            r'<a href="/election/2015/post/65672/doncaster-north">Doncaster North</a></li>',
+            r'(?ms)<a href="/person/3056">Ed Miliband</a>\s*is standing in\s*' +
+            r'<a href="/election/2015/post/65672/doncaster-north">Doncaster North</a>\s*</li>',
             unicode(response)
         ))

@@ -11,7 +11,7 @@ class TestFeeds(TestUserMixin, WebTest):
             user=self.user,
             action_type='person-create',
             ip_address='127.0.0.1',
-            popit_person_id='9876',
+            person_id='9876',
             popit_person_new_version='1234567890abcdef',
             source='Just for tests...',
         )
@@ -19,7 +19,7 @@ class TestFeeds(TestUserMixin, WebTest):
             user=self.user,
             action_type='candidacy-delete',
             ip_address='127.0.0.1',
-            popit_person_id='1234',
+            person_id='1234',
             popit_person_new_version='987654321',
             source='Something with unicode in it…',
         )

@@ -1,23 +1,85 @@
 # -*- coding: utf-8 -*-
 
-from mock import patch
 import re
 
 from django_webtest import WebTest
 
+from candidates.models import PartySet
 from .auth import TestUserMixin
-from .fake_popit import (FakePersonCollection, FakeOrganizationCollection,
-                         FakePostCollection)
 
+from .factories import (
+    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
+    PostFactory, PostExtraFactory, ParliamentaryChamberFactory,
+    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
+    PartyFactory, MembershipFactory, AreaExtraFactory, PartySetFactory
+)
 
-@patch('candidates.popit.PopIt')
 class TestAreasView(TestUserMixin, WebTest):
 
-    def test_any_area_page_without_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
+    def setUp(self):
+        wmc_area_type = AreaTypeFactory.create()
+        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
+        commons = ParliamentaryChamberFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,),
+            organization=commons
+        )
+        dulwich_area_extra = AreaExtraFactory.create(
+            base__identifier='65808',
+            base__name='Dulwich and West Norwood',
+            type=wmc_area_type,
+        )
+        post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons,
+            base__area=dulwich_area_extra.base,
+            slug='65808',
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
+        )
+        person_extra = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+        PartyFactory.reset_sequence()
+        party_extra = PartyExtraFactory.create()
+        gb_parties.parties.add(party_extra.base)
+        CandidacyExtraFactory.create(
+            election=election,
+            base__person=person_extra.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
 
+        aldershot_area_extra = AreaExtraFactory.create(
+            base__identifier='65730',
+            type=wmc_area_type,
+        )
+        PostExtraFactory.create(
+            elections=(election,),
+            base__area=aldershot_area_extra.base,
+            base__organization=commons,
+            slug='65730',
+            base__label='Member of Parliament for Aldershot',
+            party_set=gb_parties,
+        )
+        camberwell_area_extra = AreaExtraFactory.create(
+            base__identifier='65913',
+            type=wmc_area_type,
+        )
+        PostExtraFactory.create(
+            elections=(election,),
+            base__area=camberwell_area_extra.base,
+            base__organization=commons,
+            slug='65913',
+            candidates_locked=True,
+            base__label='Member of Parliament for Camberwell and Peckham',
+            party_set=gb_parties,
+        )
+
+    def test_any_area_page_without_login(self):
         response = self.app.get('/areas/WMC-65808/dulwich-and-west-norwood')
         self.assertEqual(response.status_code, 200)
 
@@ -42,11 +104,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_unlocked_area_without_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_unlocked_area_without_login(self):
         response = self.app.get('/areas/WMC-65808/dulwich-and-west-norwood')
 
         # no editing functions should be visible
@@ -66,11 +124,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_locked_area_without_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_locked_area_without_login(self):
         response = self.app.get('/areas/WMC-65913/camberwell-and-peckham')
 
         # no editing functions should be visible
@@ -87,11 +141,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_unlocked_area_unauthorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_unlocked_area_unauthorized(self):
         response = self.app.get(
             '/areas/WMC-65808/dulwich-and-west-norwood',
             user=self.user_refused
@@ -114,11 +164,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_locked_area_unauthorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_locked_area_unauthorized(self):
         response = self.app.get(
             '/areas/WMC-65913/camberwell-and-peckham',
             user=self.user_refused
@@ -141,11 +187,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_unlocked_area_edit_authorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_unlocked_area_edit_authorized(self):
         response = self.app.get(
             '/areas/WMC-65808/dulwich-and-west-norwood',
             user=self.user
@@ -175,11 +217,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_locked_area_edit_authorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_locked_area_edit_authorized(self):
         response = self.app.get(
             '/areas/WMC-65913/camberwell-and-peckham',
             user=self.user
@@ -210,11 +248,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_unlocked_area_lock_authorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_unlocked_area_lock_authorized(self):
         response = self.app.get(
             '/areas/WMC-65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock
@@ -244,11 +278,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_locked_area_lock_authorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_locked_area_lock_authorized(self):
         response = self.app.get(
             '/areas/WMC-65913/camberwell-and-peckham',
             user=self.user_who_can_lock
@@ -278,11 +308,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_area_without_winner_record_result_authorized(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_area_without_winner_record_result_authorized(self):
         response = self.app.get(
             '/areas/WMC-65913/camberwell-and-peckham',
             user=self.user_who_can_record_results
@@ -292,11 +318,7 @@ class TestAreasView(TestUserMixin, WebTest):
         self.assertNotIn('This candidate won!', response)
 
 
-    def test_no_candidates_without_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_no_candidates_without_login(self):
         response = self.app.get('/areas/WMC-65730/aldershot')
 
         # should see the no candidates message
@@ -310,11 +332,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_no_candidates_with_login(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.persons = FakePersonCollection
-        mock_popit.return_value.posts = FakePostCollection
-
+    def test_no_candidates_with_login(self):
         response = self.app.get(
             '/areas/WMC-65730/aldershot',
             user=self.user
@@ -331,7 +349,7 @@ class TestAreasView(TestUserMixin, WebTest):
         )
 
 
-    def test_get_malformed_url(self, mock_popit):
+    def test_get_malformed_url(self):
         response = self.app.get(
             '/areas/3243452345/invalid',
             expect_errors=True
@@ -339,11 +357,9 @@ class TestAreasView(TestUserMixin, WebTest):
         self.assertEqual(response.status_code, 400)
 
 
-    def test_get_non_existent(self, mock_popit):
-        mock_popit.return_value.organizations = FakeOrganizationCollection
-        mock_popit.return_value.posts = FakePostCollection
+    def test_get_non_existent(self):
         response = self.app.get(
             '/areas/WMC-11111111/imaginary-constituency',
             expect_errors=True
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
