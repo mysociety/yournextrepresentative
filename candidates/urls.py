@@ -189,6 +189,11 @@ patterns_to_format = [
         'view': views.PostIDToPartySetView.as_view(),
         'name': 'post-id-to-party-set'
     },
+    {
+        'pattern': r'^version.json',
+        'view': views.VersionView.as_view(),
+        'name': 'version'
+    }
 ]
 
 urlpatterns += [
