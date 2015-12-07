@@ -14,3 +14,4 @@
 /conf/httpd.conf.deployed
 /mysite/local_settings.py
 /mysite/static/jsi18n
+/web/down.html
