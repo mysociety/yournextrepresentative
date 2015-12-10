@@ -61,6 +61,27 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
         )
         self.assertEqual(response.status_code, 403)
 
+    def test_constituency_lock_bad_submission(self):
+        post_extra = PostExtra.objects.get(id=self.post_extra_id)
+        post_extra.candidates_locked = False
+        post_extra.save()
+        self.app.get(
+            '/election/2015/post/65808/dulwich-and-west-norwood',
+            user=self.user_who_can_lock,
+        )
+        csrftoken = self.app.cookies['csrftoken']
+        with self.assertRaises(Exception) as context:
+            response = self.app.post(
+                '/election/2015/post/lock',
+                {
+                    'csrfmiddlewaretoken': csrftoken,
+                },
+                user=self.user_who_can_lock,
+                expect_errors=True,
+            )
+
+            self.assertTrue('Invalid data POSTed' in context.exception)
+
     def test_constituency_lock(self):
         post_extra = PostExtra.objects.get(id=self.post_extra_id)
         post_extra.candidates_locked = False
