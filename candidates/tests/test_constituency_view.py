@@ -24,6 +24,12 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             area_types=(wmc_area_type,),
             organization=commons
         )
+        old_election = ElectionFactory.create(
+            slug='2010',
+            name='2010 General Election',
+            area_types=(wmc_area_type,),
+            organization=commons
+        )
         dulwich_area_extra = AreaExtraFactory.create(
             base__identifier='65808',
             base__name='Dulwich and West Norwood',
@@ -40,6 +46,10 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
+        )
+        dulwich_not_stand = PersonExtraFactory.create(
+            base__id='4322',
+            base__name='Helen Hayes'
         )
         PartyFactory.reset_sequence()
         PartyExtraFactory.reset_sequence()
@@ -72,6 +82,18 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             base__id='5795',
             base__name='Tommy Sheppard'
         )
+        edinburgh_may_stand = PersonExtraFactory.create(
+            base__id='5163',
+            base__name='Peter McColl'
+        )
+
+        CandidacyExtraFactory.create(
+            election=old_election,
+            base__person=dulwich_not_stand.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=party_extra.base,
+            )
+        dulwich_not_stand.not_standing.add(election)
 
         CandidacyExtraFactory.create(
             election=election,
@@ -95,6 +117,12 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             person=edinburgh_winner.base,
             organization=party_extra.base
         )
+        CandidacyExtraFactory.create(
+            election=old_election,
+            base__person=edinburgh_may_stand.base,
+            base__post=winner_post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
 
     def test_any_constituency_page_without_login(self):
         # Just a smoke test for the moment:
@@ -162,4 +190,14 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
     def test_constituency_with_winner(self):
         response = self.app.get('/election/2015/post/14419/edinburgh-east')
         response.mustcontain('<li class="candidates-list__person candidates-list__person__winner">')
+
+    def test_constituency_with_may_be_standing(self):
+        response = self.app.get('/election/2015/post/14419/edinburgh-east')
+        response.mustcontain('if these candidates from earlier elections are standing')
+        response.mustcontain(no='These candidates from earlier elections are known not to be standing again')
+
+    def test_constituency_with_not_standing(self):
+        response = self.app.get('/election/2015/post/65808/dulwich-and-west-norwood')
+        response.mustcontain('These candidates from earlier elections are known not to be standing again')
+        response.mustcontain(no='if these candidates from earlier elections are standing')
 
