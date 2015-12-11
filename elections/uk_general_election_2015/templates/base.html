@@ -20,6 +20,14 @@
   {% endif %}
 {% endblock %}
 
+{% block menu_bar_links %}
+  <a href="/" class="header__nav__logo">{{ site.name }}</a>
+  <a href="{% url 'help-about' %}" class="header__nav__logo">{% trans "About" %}</a>
+  <a href="{% url 'posts' %}" class="header__nav__logo">{% trans "Elections" %}</a>
+  <a href="{% url 'reports_home' %}" class="header__nav__logo">{% trans "Numbers" %}</a>
+{% endblock %}
+
+
 {% block footer_bylines %}
   <p>{% blocktrans trimmed %}
     Supported by <a href="https://fullfact.org">Full Fact</a>,
