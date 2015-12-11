@@ -2,7 +2,6 @@ import re
 
 from django import template
 from django.contrib.sites.models import Site
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.utils.translation import ugettext as _
 from django.utils.translation import get_language
 
@@ -51,8 +50,3 @@ def format_party_name(party_name):
             if party_words[0] != "the":
                 return "the %s" % party_name
     return party_name
-
-@register.filter
-def static_image_path(image_name, request):
-    abs_path = static(image_name)
-    return request.build_absolute_uri(abs_path)
