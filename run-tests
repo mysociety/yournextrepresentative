@@ -1,0 +1,61 @@
+#!/bin/bash
+
+EXIT_CODE=0
+
+cd $(dirname "$BASH_SOURCE")
+
+if ! ( [ -z "$1" ] || [ "$1" = "--coverage" ] )
+then
+    echo "Usage: ./run-tests [ --coverage ]"
+    exit 1
+fi
+
+if [ "$1" = "--coverage" ]
+then
+    coverage erase
+fi
+
+update_exit_code() {
+    LAST_EXIT_CODE=$?
+    if [ $LAST_EXIT_CODE != 0 ]
+    then
+        EXIT_CODE=$LAST_EXIT_CODE
+    fi
+}
+
+TEST_SETTINGS_MODULES=(
+    'mysite.settings.tests'
+    'mysite.settings.tests_uk'
+)
+
+for TEST_SETTINGS_MODULE in "${TEST_SETTINGS_MODULES[@]}"
+do
+    if [ "$1" = "--coverage" ]
+    then
+        COMMAND="coverage run -a --source=candidates,cached_counts,tasks,moderation_queue,elections --branch manage.py test  --settings=$TEST_SETTINGS_MODULE"
+    else
+        COMMAND="./manage.py test --settings=$TEST_SETTINGS_MODULE"
+    fi
+    echo Running: $COMMAND
+    $COMMAND
+    update_exit_code
+done
+
+if [ "$1" = "--coverage" ]
+then
+    coverage html
+fi
+
+# If any test failed, make sure we output an error message in red at
+# the end of the test run, just in case the test failures from the
+# core tests went off the top of the terminal:
+
+if [ $EXIT_CODE != 0 ]
+then
+    echo "$(tput setaf 1)Tests failed.$(tput sgr0)"
+fi
+
+# And now exit with 0 if all tests succeeded, or otherwise with the
+# last non-zero exit code:
+
+exit $EXIT_CODE
