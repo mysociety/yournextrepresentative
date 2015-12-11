@@ -510,6 +510,8 @@ AR_AREA_NAME_TO_PARTY_SET_NAME = {
 def import_from_popit(apps, schema_editor):
     if settings.ELECTION_APP not in ELECTION_APPS_WITH_EXISTING_DATA:
         return
+    if settings.RUNNING_TESTS:
+        return
     # Create the party sets for this country:
     party_set_from_slug = {}
     party_set_from_name = {}
