@@ -36,7 +36,7 @@ if int(config.get('STAGING')) and sys.argv[1:2] != ['runserver']:
     mysite.wsgi_monitor.start(interval=1.0)
     mysite.wsgi_monitor.track(config_path)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.base")
 
 gems_directory = config.get('GEMS_DIRECTORY')
 if gems_directory:
