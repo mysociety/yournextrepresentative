@@ -24,7 +24,7 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
     )
 
-if settings.DEBUG or ('test' in sys.argv):
+if settings.DEBUG or settings.RUNNING_TESTS:
     urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
