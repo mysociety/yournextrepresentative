@@ -76,7 +76,7 @@ class QueuedImage(models.Model):
         message = _(u'Image uploaded by {user} of candidate {person_id}')
         return message.format(
             user=self.user,
-            person_id=self.person.id
+            person_id=(self.person.id if self.person else None)
         )
 
     def get_absolute_url(self):
