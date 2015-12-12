@@ -40,15 +40,13 @@ class StPaulAreasView(TemplateView):
             ocd_division = area_id.replace(',', '/')
             # FIXME: there's quite a bit of repetition from
             # candidates/views/areas.py; do some DRY refactoring:
-            area_extra = AreaExtra.objects \
-                .select_related('base', 'type') \
-                .prefetch_related(
-                    'base__posts'
-                ) \
-                .get(
-                    base__identifier=ocd_division,
-                    base__posts__extra__elections__current=True
-                )
+            area_extra = get_object_or_404(
+                AreaExtra.objects \
+                    .select_related('base', 'type') \
+                    .prefetch_related('base__posts'),
+                base__identifier=ocd_division,
+                base__posts__extra__elections__current=True
+            )
             area = area_extra.base
             all_area_names.add(area.name)
             for post in area.posts.all():
@@ -56,11 +54,14 @@ class StPaulAreasView(TemplateView):
                 election = post_extra.elections.get(current=True)
                 locked = post_extra.candidates_locked
                 extra_qs = MembershipExtra.objects.select_related('election')
-                current_candidacies, _ = split_candidacies(
+                current_candidacies, created = split_candidacies(
                     election,
                     post.memberships.prefetch_related(
                         Prefetch('extra', queryset=extra_qs)
-                    ).select_related('person', 'on_behalf_of', 'organization').all()
+                    ).select_related(
+                        'person', 'person__extra', 'on_behalf_of',
+                        'on_behalf_of__extra', 'organization'
+                    ).all()
                 )
                 current_candidacies = group_candidates_by_party(
                     election,
@@ -71,7 +72,10 @@ class StPaulAreasView(TemplateView):
                 context['posts'].append({
                     'election': election.slug,
                     'election_data': election,
-                    'post_data': post,
+                    'post_data': {
+                        'id': post.extra.slug,
+                        'label': post.label,
+                    },
                     'candidates_locked': locked,
                     'candidate_list_edits_allowed':
                     get_edits_allowed(self.request.user, locked),
@@ -79,7 +83,7 @@ class StPaulAreasView(TemplateView):
                     'add_candidate_form': NewPersonForm(
                         election=election.slug,
                         initial={
-                            ('constituency_' + election.slug): post.id,
+                            ('constituency_' + election.slug): post_extra.slug,
                             ('standing_' + election.slug): 'standing',
                         },
                         hidden_post_widget=True,

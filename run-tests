@@ -26,6 +26,7 @@ update_exit_code() {
 TEST_SETTINGS_MODULES=(
     'mysite.settings.tests'
     'mysite.settings.tests_uk'
+    'mysite.settings.tests_st_paul'
 )
 
 for TEST_SETTINGS_MODULE in "${TEST_SETTINGS_MODULES[@]}"
