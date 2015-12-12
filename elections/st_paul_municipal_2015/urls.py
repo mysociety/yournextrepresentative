@@ -24,7 +24,7 @@ urlpatterns = [
     ),
     url(
         r'^election/{election}/post/(?P<post_id>.*)/(?P<ignored_slug>{ignore_pattern})$'.format(
-            election=settings.ELECTION_RE,
+            election=r'(?P<election>[^/]+)',
             ignore_pattern=post_ignored_slug_re,
         ),
         ConstituencyDetailView.as_view(),

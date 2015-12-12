@@ -396,7 +396,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     for required_election_app_setting in (
             'SITE_OWNER',
             'COPYRIGHT_HOLDER',
-            'ELECTION_RE',
     ):
         result[required_election_app_setting] = \
             getattr(elections_module, required_election_app_setting)
