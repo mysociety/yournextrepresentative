@@ -199,7 +199,7 @@ patterns_to_format = [
 urlpatterns += [
     url(
         p['pattern'].format(
-            election=settings.ELECTION_RE,
+            election=r'(?P<election>[^/]+)',
             post=r'(?P<post_id>[-\w]+)',
         ),
         p['view'],

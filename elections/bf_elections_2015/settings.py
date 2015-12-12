@@ -3,7 +3,6 @@
 from datetime import date
 
 MAPIT_BASE_URL = 'http://international.mapit.mysociety.org/'
-ELECTION_RE = '(?P<election>prv-2015|pres-2015|nat-2015)'
 
 AREAS_TO_ALWAYS_RETURN = [
     {
