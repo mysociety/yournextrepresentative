@@ -64,7 +64,6 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
                     post=post,
                     role=self.election_data.candidate_membership_role,
                     on_behalf_of=person.extra.last_party(),
-                    start_date=self.election_data.candidacy_start_date,
                 )
                 MembershipExtra.objects.create(
                     base=membership,

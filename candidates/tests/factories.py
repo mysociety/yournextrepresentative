@@ -49,14 +49,9 @@ class BaseElectionFactory(factory.DjangoModelFactory):
     winner_membership_role = None
     candidate_membership_role = 'Candidate'
     election_date = date_in_near_future
-    candidacy_start_date = \
-        date_in_near_future - timedelta(days=(FOUR_YEARS_IN_DAYS - 1))
     name = 'General Election'
     current = True
     use_for_candidate_suggestions = False
-    party_membership_start_date = \
-        date_in_near_future - timedelta(days=(FOUR_YEARS_IN_DAYS - 1))
-    party_membership_end_date = date(9999, 12, 31)
     area_generation = 22
     post_id_format = '{area_id}'
     party_lists_in_use = False
@@ -89,12 +84,6 @@ class EarlierElectionFactory(BaseElectionFactory):
     slug = 'earlier-general-election'
     name = 'Earlier General Election'
     election_date = \
-        date_in_near_future - timedelta(days=FOUR_YEARS_IN_DAYS)
-    candidacy_start_date = \
-        date_in_near_future - timedelta(days=(FOUR_YEARS_IN_DAYS*2))
-    party_membership_start_date = \
-        date_in_near_future - timedelta(days=(FOUR_YEARS_IN_DAYS*2))
-    party_membership_end_date = \
         date_in_near_future - timedelta(days=FOUR_YEARS_IN_DAYS)
     current = False
     use_for_candidate_suggestions = True
