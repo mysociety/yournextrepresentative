@@ -6,7 +6,11 @@ from candidates.models import MembershipExtra
 
 
 def shorten_post_label(post_label):
-    return re.sub(r'^Member of Parliament for ', '', post_label)
+    result = re.sub(r'^Member of Parliament for ', '', post_label)
+    result = re.sub(r'^Member of the Scottish Parliament for ', '', result)
+    result = re.sub(r'^Assembly Member for ', '', result)
+    result = re.sub(r'^Member of the Legislative Assembly for ', '', result)
+    return result
 
 
 EXTRA_CSV_ROW_FIELDS = [
