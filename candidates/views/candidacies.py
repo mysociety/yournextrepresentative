@@ -111,6 +111,8 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
                 extra__election=self.election_data,
             ).delete()
 
+            person.extra.not_standing.add(self.election_data)
+
             person.extra.record_version(change_metadata)
             person.extra.save()
         return get_redirect_to_post(self.election, post)
