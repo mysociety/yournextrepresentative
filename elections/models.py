@@ -44,7 +44,7 @@ class AreaType(models.Model):
 
 
 class Election(models.Model):
-    slug = models.CharField(max_length=128)
+    slug = models.CharField(max_length=128, unique=True)
     for_post_role = models.CharField(max_length=128)
     winner_membership_role = \
         models.CharField(max_length=128, null=True, blank=True)

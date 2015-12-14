@@ -465,7 +465,7 @@ class PersonExtra(HasImageMixin, models.Model):
 
 class OrganizationExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
-    slug = models.CharField(max_length=256, blank=True)
+    slug = models.CharField(max_length=256, blank=True, unique=True)
 
     # For parties, which party register is it on:
     register = models.CharField(blank=True, max_length=512)
@@ -481,7 +481,7 @@ class OrganizationExtra(HasImageMixin, models.Model):
 
 class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
-    slug = models.CharField(max_length=256, blank=True)
+    slug = models.CharField(max_length=256, blank=True, unique=True)
 
     candidates_locked = models.BooleanField(default=False)
     elections = models.ManyToManyField(Election, related_name='posts')
@@ -523,7 +523,7 @@ class AreaExtra(models.Model):
 
 
 class PartySet(models.Model):
-    slug = models.CharField(max_length=256)
+    slug = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=1024)
     parties = models.ManyToManyField(Organization, related_name='party_sets')
 
