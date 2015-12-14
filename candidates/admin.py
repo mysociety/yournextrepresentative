@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 
-from .models import LoggedAction
+from .models import LoggedAction, PartySet
 # Register your models here.
 
 class LoggedActionAdminForm(ModelForm):
@@ -29,4 +29,11 @@ class LoggedActionAdmin(admin.ModelAdmin):
         )
     person_link.allow_tags = True
 
+class PartySetAdminForm(ModelForm):
+    pass
+
+class PartySetAdmin(admin.ModelAdmin):
+    form = PartySetAdminForm
+
 admin.site.register(LoggedAction, LoggedActionAdmin)
+admin.site.register(PartySet, PartySetAdmin)
