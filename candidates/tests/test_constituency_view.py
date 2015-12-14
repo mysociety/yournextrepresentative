@@ -11,6 +11,8 @@ from .factories import (
     PartyFactory, MembershipFactory, PartySetFactory
 )
 
+from ..models import MembershipExtra, PersonExtra
+
 
 class TestConstituencyDetailView(TestUserMixin, WebTest):
 
@@ -18,7 +20,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         commons = ParliamentaryChamberFactory.create()
-        election = ElectionFactory.create(
+        self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,),
@@ -36,7 +38,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             type=wmc_area_type,
         )
         post_extra = PostExtraFactory.create(
-            elections=(election,),
+            elections=(self.election,),
             base__organization=commons,
             base__area=dulwich_area_extra.base,
             slug='65808',
@@ -56,7 +58,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         party_extra = PartyExtraFactory.create()
         gb_parties.parties.add(party_extra.base)
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
             base__post=post_extra.base,
             base__on_behalf_of=party_extra.base
@@ -67,7 +69,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         )
 
         winner_post_extra = PostExtraFactory.create(
-            elections=(election,),
+            elections=(self.election,),
             base__organization=commons,
             slug='14419',
             base__label='Member of Parliament for Edinburgh East',
@@ -93,10 +95,10 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             base__post=post_extra.base,
             base__on_behalf_of=party_extra.base,
             )
-        dulwich_not_stand.not_standing.add(election)
+        dulwich_not_stand.not_standing.add(self.election)
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=edinburgh_winner.base,
             base__post=winner_post_extra.base,
             base__on_behalf_of=party_extra.base,
@@ -104,7 +106,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             )
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=edinburgh_candidate.base,
             base__post=winner_post_extra.base,
             base__on_behalf_of=party_extra.base
@@ -188,13 +190,6 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             }
         )
 
-    def test_constituency_with_no_winner_record_results_user(self):
-        response = self.app.get(
-            '/election/2015/post/65808/dulwich-and-west-norwood',
-            user=self.user_who_can_record_results
-        )
-        response.mustcontain(no='Unset the current winner')
-
     def test_constituency_with_winner(self):
         response = self.app.get('/election/2015/post/14419/edinburgh-east')
         response.mustcontain('<li class="candidates-list__person candidates-list__person__winner">')
@@ -218,3 +213,220 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         response.mustcontain('These candidates from earlier elections are known not to be standing again')
         response.mustcontain(no='if these candidates from earlier elections are standing')
 
+    def test_mark_not_standing_no_candidate(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy/delete',
+            {
+                'person_id': '9999',
+                'post_id': '14419',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_mark_not_standing_no_post(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy/delete',
+            {
+                'person_id': '181',
+                'post_id': '9999',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_mark_standing_no_candidate(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy',
+            {
+                'person_id': '9999',
+                'post_id': '14419',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_mark_standing_no_post(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy',
+            {
+                'person_id': '5163',
+                'post_id': '9999',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        self.assertEquals(response.status_code, 404)
+
+    def test_mark_candidate_not_standing(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy/delete',
+            {
+                'person_id': '818',
+                'post_id': '14419',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        membership = MembershipExtra.objects.filter(
+            base__person_id=818,
+            base__post__extra__slug='14419',
+            election__slug='2015'
+        )
+        self.assertFalse(membership.exists())
+
+        person_extra = PersonExtra.objects.get(
+            base__id=818
+        )
+        not_standing = person_extra.not_standing.all()
+        self.assertTrue(self.election in not_standing)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            "http://localhost:80/election/2015/post/14419/edinburgh-east"
+        )
+
+    def test_mark_may_stand_actually_standing(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy',
+            {
+                'person_id': '5163',
+                'post_id': '14419',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        membership = MembershipExtra.objects.filter(
+            base__person_id=5163,
+            base__post__extra__slug='14419',
+            election__slug='2015'
+        )
+
+        self.assertTrue(membership.exists())
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            "http://localhost:80/election/2015/post/14419/edinburgh-east"
+        )
+
+    def test_mark_may_stand_not_standing_again(self):
+        response = self.app.get(
+            '/election/2015/post/14419/edinburgh-east',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy/delete',
+            {
+                'person_id': '5163',
+                'post_id': '14419',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        membership = MembershipExtra.objects.filter(
+            base__person_id=5163,
+            base__post__extra__slug='14419',
+            election__slug='2015'
+        )
+        self.assertFalse(membership.exists())
+
+        person_extra = PersonExtra.objects.get(
+            base__id=5163
+        )
+        not_standing = person_extra.not_standing.all()
+        self.assertTrue(self.election in not_standing)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            "http://localhost:80/election/2015/post/14419/edinburgh-east"
+        )
+
+    def test_mark_not_standing_standing_again(self):
+        response = self.app.get(
+            '/election/2015/post/65808/dulwich-and-west-norwood',
+            user=self.user,
+        )
+
+        csrftoken = self.app.cookies['csrftoken']
+        response = self.app.post(
+            '/election/2015/candidacy',
+            {
+                'person_id': '4322',
+                'post_id': '65808',
+                'source': 'test data',
+                'csrfmiddlewaretoken': csrftoken,
+            },
+            expect_errors=True,
+        )
+
+        membership = MembershipExtra.objects.filter(
+            base__person_id=4322,
+            base__post__extra__slug='65808',
+            election__slug='2015'
+        )
+
+        self.assertTrue(membership.exists())
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            "http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood"
+        )
