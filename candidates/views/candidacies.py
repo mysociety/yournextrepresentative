@@ -70,6 +70,8 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
                     election=self.election_data
                 )
 
+            person.extra.not_standing.remove(self.election_data)
+
             person.extra.record_version(change_metadata)
             person.extra.save()
         return get_redirect_to_post(self.election, post)
