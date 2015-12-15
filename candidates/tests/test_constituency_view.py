@@ -425,6 +425,12 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
 
         self.assertTrue(membership.exists())
 
+        person_extra = PersonExtra.objects.get(
+            base__id=4322
+        )
+        not_standing = person_extra.not_standing.all()
+        self.assertFalse(self.election in not_standing)
+
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.location,
