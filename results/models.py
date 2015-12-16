@@ -29,23 +29,3 @@ class ResultEvent(models.Model):
             .get(
                 slug=self.winner_party_id
             ).base.name
-
-    @classmethod
-    def create_from_popit_person(cls, popit_person, election, source, user):
-        kwargs = {
-            'election': election,
-            'winner': popit_person.id,
-            'winner_person_name': popit_person.name,
-            'post_id': popit_person.standing_in[election]['post_id'],
-            'post_name': popit_person.standing_in[election]['name'],
-            'winner_party_id': popit_person.party_memberships[election]['id'],
-            'source': source,
-            'user': user,
-            'parlparse_id': popit_person.get_identifier('uk.org.publicwhip')
-        }
-        if popit_person.proxy_image:
-            kwargs['proxy_image_url_template'] = \
-                '{base}/{{width}}/{{height}}.{{extension}}'.format(
-                    base=popit_person.proxy_image
-                )
-        return ResultEvent.objects.create(**kwargs)
