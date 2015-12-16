@@ -54,7 +54,7 @@ class PartyDetailView(ElectionMixin, TemplateView):
             party.extra.images \
                 .prefetch_related('extra').order_by('-is_primary')
         ]
-        all_post_groups = PostExtra.objects.values_list('group', flat=True).distinct()
+        all_post_groups = self.election_data.posts.values_list('group', flat=True).distinct()
         by_post_group = {
             pg: {
                 'stats': None,
