@@ -8,7 +8,7 @@ from .models import ResultEvent
 
 class BasicResultEventsFeed(Feed):
     feed_type = Atom1Feed
-    title = _("Election results from {{ site_name }}").format(
+    title = _("Election results from {site_name}").format(
         site_name=Site.objects.get_current().name
     )
     link = "/"
