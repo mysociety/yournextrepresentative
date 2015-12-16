@@ -197,6 +197,11 @@ patterns_to_format = [
         'pattern': r'^version.json',
         'view': views.VersionView.as_view(),
         'name': 'version'
+    },
+    {
+        'pattern': r'^upcoming-elections',
+        'view': views.UpcomingElectionsView.as_view(),
+        'name': 'upcoming-elections'
     }
 ]
 

@@ -2,6 +2,7 @@ import json
 from os.path import dirname
 import subprocess
 import sys
+from datetime import date
 
 import django
 from django.contrib.auth.models import User
@@ -13,8 +14,70 @@ from images.models import Image
 from candidates import serializers
 from candidates import models as extra_models
 from elections.models import AreaType, Election
-from popolo.models import Area, Membership, Person
+from popolo.models import Area, Membership, Person, Post
 from rest_framework import viewsets
+
+from candidates.mapit import fetch_area_ids
+
+
+class UpcomingElectionsView(View):
+
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+        postcode = request.GET.get('postcode', None)
+        coords = request.GET.get('coords', None)
+
+        errors = None
+        if not postcode and not coords:
+            errors = {
+                'error': 'Postcode or Co-ordinates required'
+            }
+
+        try:
+            areas = fetch_area_ids(postcode=postcode, coords=coords)
+        except Exception, e:
+            errors = {
+                'error': e.message
+            }
+
+        if errors:
+            return HttpResponse(
+                json.dumps(errors), status=400, content_type='application/json'
+            )
+
+        area_ids = [area[1] for area in areas]
+
+        posts = Post.objects.filter(
+            area__identifier__in=area_ids,
+        ).select_related(
+            'area', 'area__extra__type', 'organization'
+        ).prefetch_related(
+            'extra__elections'
+        )
+
+        results = []
+        for post in posts.all():
+            election = post.extra.elections.get(
+                current=True,
+                election_date__gte=date.today()
+            )
+            if election:
+                results.append({
+                    'post_name': post.label,
+                    'organization': post.organization.name,
+                    'area': {
+                        'type': post.area.extra.type.name,
+                        'name': post.area.name,
+                        'identifier': post.area.identifier,
+                    },
+                    'election_date': unicode(election.election_date),
+                    'election_name': election.name
+                })
+
+        return HttpResponse(
+            json.dumps(results), content_type='application/json'
+        )
 
 
 class VersionView(View):
