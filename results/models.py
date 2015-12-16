@@ -24,9 +24,11 @@ class ResultEvent(models.Model):
 
     @property
     def winner_party_name(self):
-        return OrganizationExtra.objects.get(
-            slug=self.winner_party_id
-        ).select_related('base').name
+        return OrganizationExtra.objects \
+            .select_related('base') \
+            .get(
+                slug=self.winner_party_id
+            ).base.name
 
     @classmethod
     def create_from_popit_person(cls, popit_person, election, source, user):
