@@ -5,7 +5,7 @@
 
 {% block body_class %}party{% endblock %}
 
-{% block title %}{% blocktrans %}{{ party_name }} &#8212; Candidates by constituency for the UK 2015 General Election{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans with election_name=election_data.name %}{{ party_name }} &#8212; Candidates by constituency for the {{ election_name }}{% endblocktrans %}{% endblock %}
 
 {% block hero %}
   <h1>{% blocktrans trimmed with election_name=election_data.name %}
@@ -19,8 +19,9 @@
 
   {% if party_name == 'Independent' %}
 
-    <p>{% blocktrans trimmed %}This shows all the constituencies that have independent
-      candidates standing in them at the 2015 general election{% endblocktrans %}</p>
+    <p>{% blocktrans trimmed with election_name=election_data.name %}This shows
+      all the constituencies that have independent candidates standing in them
+      at the {{ election_name }}{% endblocktrans %}</p>
 
   {% elif party_name == 'Speaker seeking re-election' %}
 

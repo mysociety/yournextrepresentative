@@ -3,11 +3,13 @@
 
 {% block body_class %}constituencies{% endblock %}
 
-{% block title %}{% trans "Candidates by constituency for the UK 2015 General Election" %}{% endblock %}
+{% block title %}{% blocktrans trimmed with election_name=election_data.name %}
+  Unlocked constituencies for the {{ election_name }}
+{% endblocktrans %}{% endblock %}
 
-{% block hero %}
-  <h1>{% trans "Unlocked Constituencies for the 2015 General Election" %}</h1>
-{% endblock %}
+{% block hero %}<h1>{% blocktrans trimmed with election_name=election_data.name %}
+  Unlocked Constituencies for the {{ election_name }}
+{% endblocktrans %}</h1>{% endblock %}
 
 {% block content %}
 
