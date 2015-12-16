@@ -8,7 +8,9 @@
 {% block title %}{% blocktrans %}{{ party_name }} &#8212; Candidates by constituency for the UK 2015 General Election{% endblocktrans %}{% endblock %}
 
 {% block hero %}
-  <h1>{{ party_name }}</h1>
+  <h1>{% blocktrans trimmed with election_name=election_data.name %}
+    {{ party_name }} candidates in the {{ election_name }}
+  {% endblocktrans %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -71,7 +73,7 @@
           {% endfor %}
         </ul>
       {% else %}
-        <p>{% blocktrans %}We don't know of any {{ party_name }} candidates in {{ post_group }} so far.{% endblocktrans %}</p>
+        <p>{% blocktrans with election_name=election_data.name %}We don't know of any {{ party_name }} candidates in {{ post_group }} in the {{ election_name }} so far.{% endblocktrans %}</p>
       {% endif %}
     {% endwith %}
   {% endfor %}
