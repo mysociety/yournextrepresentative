@@ -158,11 +158,12 @@
         </div>
       {% endfor %} {# end of 'for party, people in parties_and_people' #}
 
+      {% if parties_and_people and candidate_list_edits_allowed %}
+        <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
+      {% endif %}
+
     {% endwith %}
 
-    {% if candidacies and candidate_list_edits_allowed %}
-        <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
-    {% endif %}
 
   </div>
 
