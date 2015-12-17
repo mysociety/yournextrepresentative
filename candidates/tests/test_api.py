@@ -286,18 +286,17 @@ class TestAPI(WebTest):
         elections_resp = self.app.get('/api/v0.9/elections/')
         elections = elections_resp.json
 
-        election_id = 0
+        election_url = None
         for election in elections['results']:
-            if election['slug'] == '2015':
-                election_id = election['id']
+            if election['id'] == '2015':
+                election_url = election['url']
                 break
 
-        election_url = '/api/v0.9/elections/{0}/'.format(election_id)
         election_resp = self.app.get(election_url)
         self.assertEquals(election_resp.status_code, 200)
 
         election = election_resp.json
-        self.assertEquals(election['slug'], '2015')
+        self.assertEquals(election['id'], '2015')
         self.assertEquals(election['name'], '2015 General Election')
 
     def test_api_posts(self):

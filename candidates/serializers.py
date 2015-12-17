@@ -68,7 +68,6 @@ class ElectionSerializer(serializers.HyperlinkedModelSerializer):
         model = election_models.Election
         fields = (
             'id',
-            'slug',
             'url',
             'name',
             'winner_membership_role',
@@ -83,6 +82,14 @@ class ElectionSerializer(serializers.HyperlinkedModelSerializer):
             'ocd_division',
             'description'
         )
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='election-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+    id = serializers.ReadOnlyField(source='slug')
 
     area_types = AreaTypeSerializer(many=True, read_only=True)
 
@@ -223,7 +230,7 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         return [
             self.context['request'].build_absolute_uri(
                 reverse('election-detail', kwargs={
-                    'pk': election.id,
+                    'slug': election.slug,
                     'version': 'v0.9',
                 })
             )

@@ -97,4 +97,5 @@ class AreaViewSet(viewsets.ModelViewSet):
 
 class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
+    lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
