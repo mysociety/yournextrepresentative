@@ -104,6 +104,12 @@ class MinimalOrganizationExtraSerializer(serializers.HyperlinkedModelSerializer)
     )
 
 
+class PartySetSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PartySet
+        fields = ('id', 'url', 'name')
+
+
 class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
     class Meta:
         model = candidates_models.OrganizationExtra
@@ -122,6 +128,7 @@ class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
             'links',
             'sources',
             'register',
+            'party_sets',
         )
 
     classification = serializers.ReadOnlyField(source='base.classification')
@@ -141,6 +148,9 @@ class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
     sources = SourceSerializer(
         many=True, read_only=True, source='base.sources')
     images = ImageSerializer(many=True, read_only=True)
+
+    party_sets = PartySetSerializer(
+        many=True, read_only=True, source='base.party_sets')
 
 
 class MinimalElectionSerializer(serializers.HyperlinkedModelSerializer):

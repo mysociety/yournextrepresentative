@@ -138,3 +138,8 @@ class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
     lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
+
+
+class PartySetViewSet(viewsets.ModelViewSet):
+    queryset = extra_models.PartySet.objects.all()
+    serializer_class = serializers.PartySetSerializer
