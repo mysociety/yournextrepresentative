@@ -1,11 +1,10 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
-from django.shortcuts import get_object_or_404
-
-from popolo.models import Area, Post
 
 from candidates.views.helpers import get_redirect_to_post
 from candidates.views.mixins import ContributorsMixin
@@ -13,7 +12,7 @@ from candidates.views.mixins import ContributorsMixin
 from elections.models import Election
 
 from ..forms import (PostcodeForm, ConstituencyForm)
-from ..mapit import get_wmc_from_postcode
+from ..mapit import get_areas_from_postcode
 
 def get_current_election():
     current_elections = Election.objects.current().by_date()
@@ -34,9 +33,17 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         return super(ConstituencyPostcodeFinderView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        wmc = get_wmc_from_postcode(form.cleaned_data['postcode'])
-        post = Post.objects.get(extra__slug=wmc)
-        return get_redirect_to_post(get_current_election().slug, post)
+        types_and_areas = get_areas_from_postcode(form.cleaned_data['postcode'])
+        if settings.AREAS_TO_ALWAYS_RETURN:
+            types_and_areas += settings.AREAS_TO_ALWAYS_RETURN
+        types_and_areas_joined = ','.join(
+            '{0}-{1}'.format(*t) for t in types_and_areas
+        )
+        return HttpResponseRedirect(
+            reverse('areas-view', kwargs={
+                'type_and_area_ids': types_and_areas_joined
+            })
+        )
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
