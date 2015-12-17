@@ -143,7 +143,20 @@ class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
     images = ImageSerializer(many=True, read_only=True)
 
 
-class ElectionSerializer(serializers.HyperlinkedModelSerializer):
+class MinimalElectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = election_models.Election
+        fields = ('id', 'url', 'name')
+
+    id = serializers.ReadOnlyField(source='slug')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='election-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class ElectionSerializer(MinimalElectionSerializer):
     class Meta:
         model = election_models.Election
         fields = (
@@ -163,13 +176,7 @@ class ElectionSerializer(serializers.HyperlinkedModelSerializer):
             'description'
         )
 
-    url = serializers.HyperlinkedIdentityField(
-        view_name='election-detail',
-        lookup_field='slug',
-        lookup_url_kwarg='slug',
-    )
 
-    id = serializers.ReadOnlyField(source='slug')
     organization = MinimalOrganizationExtraSerializer(source='organization.extra')
 
     area_types = AreaTypeSerializer(many=True, read_only=True)
@@ -190,7 +197,7 @@ class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
             'election',
         )
 
-    election = ElectionSerializer(source='extra.election')
+    election = MinimalElectionSerializer(source='extra.election')
 
 
 class JSONSerializerField(serializers.Field):
@@ -268,15 +275,4 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
     organization = MinimalOrganizationExtraSerializer(
         source='base.organization.extra')
 
-    elections = serializers.SerializerMethodField()
-
-    def get_elections(self, post_extra):
-        return [
-            self.context['request'].build_absolute_uri(
-                reverse('election-detail', kwargs={
-                    'slug': election.slug,
-                    'version': 'v0.9',
-                })
-            )
-            for election in post_extra.elections.all()
-        ]
+    elections = MinimalElectionSerializer(many=True, read_only=True)
