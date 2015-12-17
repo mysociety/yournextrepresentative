@@ -64,55 +64,6 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
     type = AreaTypeSerializer(source='extra.type')
 
 
-class ElectionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = election_models.Election
-        fields = (
-            'id',
-            'url',
-            'name',
-            'winner_membership_role',
-            'candidate_membership_role',
-            'election_date',
-            'current',
-            'use_for_candidate_suggestions',
-            'area_types',
-            'area_generation',
-            'organization',
-            'party_lists_in_use',
-            'ocd_division',
-            'description'
-        )
-
-    url = serializers.HyperlinkedIdentityField(
-        view_name='election-detail',
-        lookup_field='slug',
-        lookup_url_kwarg='slug',
-    )
-
-    id = serializers.ReadOnlyField(source='slug')
-
-    area_types = AreaTypeSerializer(many=True, read_only=True)
-
-
-class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = popolo_models.Membership
-        fields = (
-            'label',
-            'role',
-            'person',
-            'organization',
-            'on_behalf_of',
-            'post',
-            'start_date',
-            'end_date',
-            'election',
-        )
-
-    election = ElectionSerializer(source='extra.election')
-
-
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
@@ -190,6 +141,57 @@ class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
     sources = SourceSerializer(
         many=True, read_only=True, source='base.sources')
     images = ImageSerializer(many=True, read_only=True)
+
+
+class ElectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = election_models.Election
+        fields = (
+            'id',
+            'url',
+            'name',
+            'winner_membership_role',
+            'candidate_membership_role',
+            'election_date',
+            'current',
+            'use_for_candidate_suggestions',
+            'area_types',
+            'area_generation',
+            'organization',
+            'party_lists_in_use',
+            'ocd_division',
+            'description'
+        )
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='election-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+    id = serializers.ReadOnlyField(source='slug')
+    organization = MinimalOrganizationExtraSerializer(source='organization.extra')
+
+    area_types = AreaTypeSerializer(many=True, read_only=True)
+
+
+class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = popolo_models.Membership
+        fields = (
+            'label',
+            'role',
+            'person',
+            'organization',
+            'on_behalf_of',
+            'post',
+            'start_date',
+            'end_date',
+            'election',
+        )
+
+    election = ElectionSerializer(source='extra.election')
+
 
 class JSONSerializerField(serializers.Field):
     def to_representation(self, value):
