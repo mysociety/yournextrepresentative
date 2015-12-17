@@ -9,13 +9,11 @@ from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.views.generic import View
 
-from candidates.models import LoggedAction, OrganizationExtra
+from candidates import serializers
+from candidates import models as extra_models
 from elections.models import AreaType, Election
 from popolo.models import Area, Membership, Person
 from rest_framework import viewsets
-
-from candidates.models import PostExtra
-from candidates import serializers
 
 
 class VersionView(View):
@@ -26,7 +24,7 @@ class VersionView(View):
         result = {
             'python_version': sys.version,
             'django_version': django.get_version(),
-            'interesting_user_actions': LoggedAction.objects \
+            'interesting_user_actions': extra_models.LoggedAction.objects \
                 .exclude(action_type='set-candidate-not-elected') \
                 .count(),
             'users_who_have_edited': User.objects \
@@ -53,7 +51,7 @@ class PostIDToPartySetView(View):
 
     def get(self, request, *args, **kwargs):
         result = dict(
-            PostExtra.objects.filter(elections__current=True) \
+            extra_models.PostExtra.objects.filter(elections__current=True) \
                .values_list('slug', 'party_set__slug')
         )
         return HttpResponse(
@@ -89,7 +87,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
-    queryset = OrganizationExtra.objects \
+    queryset = extra_models.OrganizationExtra.objects \
         .select_related('base') \
         .prefetch_related(
             'images',
@@ -108,7 +106,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = PostExtra.objects \
+    queryset = extra_models.PostExtra.objects \
         .select_related(
             'base__organization__extra',
             'base__area__extra',
