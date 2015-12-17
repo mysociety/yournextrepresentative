@@ -24,17 +24,3 @@ class PostcodeForm(forms.Form):
         except BaseMapItException as e:
             raise ValidationError(unicode(e))
         return postcode
-
-
-class ConstituencyForm(forms.Form):
-    constituency = forms.ModelChoiceField(
-        label='Select a constituency',
-        queryset=Area.objects.filter(extra__type__name='WMC').order_by('name'),
-        empty_label='',
-    )
-
-    def clean_constituency(self):
-        constituency = self.cleaned_data['constituency']
-        if constituency == 'none':
-            raise ValidationError("You must select a constituency")
-        return constituency

@@ -9,16 +9,6 @@ urlpatterns = [
     url(
         r'^$',
         views.ConstituencyPostcodeFinderView.as_view(),
-        name='lookup-name'
-    ),
-    url(
-        r'^lookup/name$',
-        views.ConstituencyNameFinderView.as_view(),
-        name='lookup-name'
-    ),
-    url(
-        r'^lookup/postcode$',
-        views.ConstituencyPostcodeFinderView.as_view(),
         name='lookup-postcode'
     ),
     url(
