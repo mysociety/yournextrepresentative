@@ -96,11 +96,11 @@ class TestPartyPages(WebTest):
         response = self.app.get('/election/2015/party/party%3A53/labour-party')
         # There are no candidates in Scotland or Wales in our test data:
         self.assertIn(
-            u"We don't know of any Labour Party candidates in Scotland so far.",
+            u"We don't know of any Labour Party candidates in Scotland in the 2015 General Election so far.",
             unicode(response)
         )
         self.assertIn(
-            u"We don't know of any Labour Party candidates in Wales so far.",
+            u"We don't know of any Labour Party candidates in Wales in the 2015 General Election so far.",
             unicode(response)
         )
         # But this should only be showing results from the Great
