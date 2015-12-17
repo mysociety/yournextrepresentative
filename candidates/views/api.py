@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from candidates.models import LoggedAction, OrganizationExtra
-from elections.models import Election
+from elections.models import AreaType, Election
 from popolo.models import Area, Membership, Person
 from rest_framework import viewsets
 
@@ -129,6 +129,11 @@ class AreaViewSet(viewsets.ModelViewSet):
         .prefetch_related('extra') \
         .order_by('name')
     serializer_class = serializers.AreaSerializer
+
+
+class AreaTypeViewSet(viewsets.ModelViewSet):
+    queryset = AreaType.objects.all()
+    serializer_class = serializers.AreaTypeSerializer
 
 
 class ElectionViewSet(viewsets.ModelViewSet):

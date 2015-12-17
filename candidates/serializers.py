@@ -43,7 +43,7 @@ class SourceSerializer(serializers.ModelSerializer):
 class AreaTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = election_models.AreaType
-        fields = ('name', 'source')
+        fields = ('id', 'url',  'name', 'source')
 
 
 class AreaSerializer(serializers.HyperlinkedModelSerializer):
