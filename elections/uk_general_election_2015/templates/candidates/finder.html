@@ -29,25 +29,6 @@
 
 {% block body_class %}finder{% endblock %}
 
-{% block extra_js %}
-  <script>
-    $(function() {
-      /* Turn the constituency <select> into a nice Select2 box */
-      $('#id_constituency').select2({
-        placeholder: 'Constituency',
-        allowClear: true,
-        width: '100%'
-      });
-      /* Swap between the postcode and name select form when clicking on the
-         .show-other-form button */
-      $('.show-other-form').on('click', function(e){
-        $(this).parents('form').hide().siblings('form').show();
-        e.preventDefault();
-      })
-    });
-  </script>
-{% endblock %}
-
 {% block hero %}
 
   <h1><em>The</em> high quality source of free candidate data for the 2015 General Election</h1>
@@ -64,13 +45,7 @@ it’s a waste of money.</p>
   <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
     {{ postcode_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
-    <a class="show-other-form" href="{% url 'lookup-name' %}">Or select a constituency</a>
-  </form>
-
-  <form id="form-name" action="{% url 'lookup-name' %}" method="post" {% if show_postcode_form %}style="display: none"{% endif %}>
-    {{ constituency_form.as_p }}
-    <input type="submit" class="button" value="Show candidates" />
-    <a class="show-other-form" href="{% url 'lookup-postcode' %}">Or search by postcode</a>
+    <a class="select-constituency" href="{% url 'posts' %}">Or select a constituency</a>
   </form>
 
 </div>
