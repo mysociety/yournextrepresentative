@@ -3,6 +3,9 @@ import re
 from popolo.models import Identifier
 
 from candidates.models import MembershipExtra
+from candidates.mapit import get_areas_from_coords
+
+from .mapit import get_areas_from_postcode
 
 
 def shorten_post_label(post_label):
@@ -54,3 +57,13 @@ def get_extra_csv_values(person, election):
         'theyworkforyou_url': theyworkforyou_url,
         'party_ec_id': party_ec_id
     }
+
+
+def fetch_area_ids(**kwargs):
+    if kwargs['postcode']:
+        areas = get_areas_from_postcode(kwargs['postcode'])
+
+    if kwargs['coords']:
+        areas = get_areas_from_coords(kwargs['coords'])
+
+    return areas

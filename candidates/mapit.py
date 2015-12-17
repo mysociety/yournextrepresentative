@@ -1,8 +1,8 @@
 # coding=utf-8
 
-import re
 import requests
 
+from django.conf import settings
 from django.utils.http import urlquote
 from django.core.cache import cache
 from django.utils.translation import ugettext as _
@@ -45,15 +45,9 @@ def get_known_area_types(mapit_result):
         ]
 
 
-def get_areas_from_postcode(original_postcode):
-    postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
-    if re.search(r'[^a-z0-9]', postcode):
-        raise BadPostcodeException(
-            _(u'There were disallowed characters in "{0}"').format(
-                original_postcode
-            )
-        )
-    cached_result = cache.get(postcode)
+def get_areas_from_postcode(postcode):
+    cache_key = 'mapit-postcode:' + postcode
+    cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
     url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
@@ -61,7 +55,7 @@ def get_areas_from_postcode(original_postcode):
     if r.status_code == 200:
         mapit_result = r.json()
         areas = get_known_area_types(mapit_result)
-        cache.set(url, areas, 60 * 60 * 24)
+        cache.set(cache_key, areas, settings.MAPIT_CACHE_SECONDS)
         return areas
     elif r.status_code == 400:
         mapit_result = r.json()
@@ -69,13 +63,13 @@ def get_areas_from_postcode(original_postcode):
     elif r.status_code == 404:
         raise BadPostcodeException(
             _(u'The postcode “{0}” couldn’t be found').format(
-                original_postcode
+                postcode
             )
         )
     else:
         raise UnknownMapitException(
             _(u'Unknown MapIt error for postcode "{0}"').format(
-                original_postcode
+                postcode
             )
         )
 
@@ -84,7 +78,8 @@ def get_areas_from_coords(coords):
     base_url = 'http://mapit.mysociety.org/'
     url = base_url + 'point/4326/' + urlquote(coords)
 
-    cached_result = cache.get(url)
+    cache_key = 'mapit-postcode:' + coords
+    cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
 
@@ -92,7 +87,7 @@ def get_areas_from_coords(coords):
     if r.status_code == 200:
         mapit_result = r.json()
         areas = get_known_area_types(mapit_result)
-        cache.set(url, areas, 60 * 60 * 24)
+        cache.set(url, areas, settings.MAPIT_CACHE_SECONDS)
         return areas
     elif r.status_code == 400:
         mapit_result = r.json()

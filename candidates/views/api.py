@@ -17,7 +17,7 @@ from elections.models import AreaType, Election
 from popolo.models import Area, Membership, Person, Post
 from rest_framework import viewsets
 
-from candidates.mapit import fetch_area_ids
+from ..election_specific import fetch_area_ids
 
 
 class UpcomingElectionsView(View):
@@ -28,6 +28,7 @@ class UpcomingElectionsView(View):
         postcode = request.GET.get('postcode', None)
         coords = request.GET.get('coords', None)
 
+        # TODO: postcode may not make sense everywhere
         errors = None
         if not postcode and not coords:
             errors = {

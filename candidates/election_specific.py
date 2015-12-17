@@ -1,4 +1,12 @@
 from django.conf import settings
+from candidates.mapit import get_areas_from_coords
+
+
+def default_fetch_area_ids(**kwargs):
+    if kwargs['coords']:
+        areas = get_areas_from_coords(kwargs['coords'])
+
+    return areas
 
 # This is actually taken from Pombola's country-specific code package
 # in pombola/country/__init__.py. You should add to this list anything
@@ -9,6 +17,7 @@ imports_and_defaults = (
     ('EXTRA_CSV_ROW_FIELDS', []),
     ('shorten_post_label', lambda post_label: post_label),
     ('get_extra_csv_values', lambda person, election: {}),
+    ('fetch_area_ids', default_fetch_area_ids),
 )
 
 # Note that one could do this without the dynamic import and use of
