@@ -25,6 +25,6 @@ install:
     conf/general.yml-example > conf/general.yml
 
 script:
-  - ./run-tests
+  - ./run-tests --coverage
 after_success:
   - coveralls
