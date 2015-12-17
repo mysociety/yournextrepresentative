@@ -9,9 +9,9 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.views.generic import View
 
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, OrganizationExtra
 from elections.models import Election
-from popolo.models import Area, Organization, Person, Post
+from popolo.models import Area, Person, Post
 from rest_framework import filters, viewsets
 
 from candidates.models import PostExtra
@@ -71,12 +71,22 @@ class PersonViewSet(viewsets.ModelViewSet):
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
-    queryset = Organization.objects \
-        .prefetch_related('extra') \
-        .order_by('name')
-    serializer_class = serializers.OrganizationSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('extra__slug',)
+    queryset = OrganizationExtra.objects \
+        .select_related('base') \
+        .prefetch_related(
+            'images',
+            'images__extra',
+            'base__contact_details',
+            'base__other_names',
+            'base__sources',
+            'base__links',
+            'base__identifiers',
+            'base__parent',
+            'base__parent__extra',
+        ) \
+        .order_by('base__name')
+    lookup_field = 'slug'
+    serializer_class = serializers.OrganizationExtraSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):

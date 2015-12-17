@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import serializers
 
+from candidates import models as candidates_models
 from images.models import Image
 from elections import models as election_models
 from popolo import models as popolo_models
@@ -138,12 +139,25 @@ class ImageSerializer(serializers.ModelSerializer):
     def get_image_url(self, i):
         return i.image.url
 
-class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
+class MinimalOrganizationExtraSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = popolo_models.Organization
+        model = candidates_models.OrganizationExtra
+        fields = ('id', 'url', 'name')
+
+    id = serializers.ReadOnlyField(source='slug')
+    name = serializers.ReadOnlyField(source='base.name')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='organizationextra-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
+    class Meta:
+        model = candidates_models.OrganizationExtra
         fields = (
             'id',
-            'slug',
             'url',
             'name',
             'other_names',
@@ -156,16 +170,26 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
             'images',
             'links',
             'sources',
+            'register',
         )
 
-    slug = serializers.ReadOnlyField(source='extra.slug')
-    contact_details = ContactDetailSerializer(many=True, read_only=True)
-    identifiers = IdentifierSerializer(many=True, read_only=True)
-    links = LinkSerializer(many=True, read_only=True)
-    other_names = OtherNameSerializer(many=True, read_only=True)
-    sources = SourceSerializer(many=True, read_only=True)
-    images = ImageSerializer(many=True, read_only=True, source='extra.images')
+    classification = serializers.ReadOnlyField(source='base.classification')
+    founding_date = serializers.ReadOnlyField(source='base.founding_date')
+    dissolution_date = serializers.ReadOnlyField(source='base.dissolution_date')
 
+    parent = MinimalOrganizationExtraSerializer(source='base.parent.extra')
+
+    contact_details = ContactDetailSerializer(
+        many=True, read_only=True, source='base.contact_details')
+    identifiers = IdentifierSerializer(
+        many=True, read_only=True, source='base.identifiers')
+    links = LinkSerializer(
+        many=True, read_only=True, source='base.links')
+    other_names = OtherNameSerializer(
+        many=True, read_only=True, source='base.other_names')
+    sources = SourceSerializer(
+        many=True, read_only=True, source='base.sources')
+    images = ImageSerializer(many=True, read_only=True)
 
 class JSONSerializerField(serializers.Field):
     def to_representation(self, value):
@@ -223,6 +247,9 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
 
     slug = serializers.ReadOnlyField(source='extra.slug')
     memberships = FlatMembershipSerialzier(many=True, read_only=True)
+
+    organization = MinimalOrganizationExtraSerializer(
+        source='organization.extra')
 
     elections = serializers.SerializerMethodField()
 

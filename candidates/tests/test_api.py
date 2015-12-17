@@ -259,19 +259,17 @@ class TestAPI(WebTest):
         organizations_resp = self.app.get('/api/v0.9/organizations/')
         organizations = organizations_resp.json
 
-        organization_id = 0
+        organization_url = None
         for organization in organizations['results']:
-            if organization['slug'] == 'party:53':
-                organization_id = organization['id']
+            if organization['id'] == 'party:53':
+                organization_url = organization['url']
                 break
 
-        organization_url = \
-            '/api/v0.9/organizations/{0}/'.format(organization_id)
         organization_resp = self.app.get(organization_url)
         self.assertEquals(organization_resp.status_code, 200)
 
         organization = organization_resp.json
-        self.assertEquals(organization['slug'], 'party:53')
+        self.assertEquals(organization['id'], 'party:53')
         self.assertEquals(organization['name'], 'Labour Party')
 
     def test_api_elections(self):
