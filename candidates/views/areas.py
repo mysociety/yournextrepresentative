@@ -49,7 +49,10 @@ class AreasView(TemplateView):
             all_area_names.add(area.name)
             for post in area.posts.all():
                 post_extra = post.extra
-                election = post_extra.elections.get(current=True)
+                try:
+                    election = post_extra.elections.get(current=True)
+                except Election.DoesNotExist:
+                    continue
                 locked = post_extra.candidates_locked
                 extra_qs = MembershipExtra.objects.select_related('election')
                 current_candidacies, _ = split_candidacies(
