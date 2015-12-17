@@ -48,7 +48,10 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
         context['post_id'] = post_id = kwargs['post_id']
-        mp_post = Post.objects.get(extra__slug=post_id)
+        mp_post = get_object_or_404(
+            Post.objects.select_related('extra'),
+            extra__slug=post_id
+        )
 
         documents_by_type = {}
         # Make sure that every available document type has a key in
