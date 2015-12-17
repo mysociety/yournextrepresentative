@@ -139,7 +139,7 @@ class Command(BaseCommand):
             election_defaults['current'] = True
             election_defaults['candidate_membership_role'] = 'Candidate'
             print 'Creating:', election_defaults['name'], '...',
-            election, created = Election.objects.get_or_create(
+            election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_defaults
             )
@@ -148,19 +148,19 @@ class Command(BaseCommand):
             else:
                 print '[already existed]'
 
-            area_type, _ = AreaType.objects.get_or_create(
+            area_type, _ = AreaType.objects.update_or_create(
                 name=data['mapit_code'], defaults={'source': 'MapIt'}
             )
             url_path = '/areas/' + data['mapit_code']
             url = urljoin(mapit_url, url_path)
             r = requests.get(url)
             for mapit_area_id, mapit_area_data in r.json().items():
-                area, _ = Area.objects.get_or_create(
+                area, _ = Area.objects.update_or_create(
                     identifier=str(mapit_area_id),
                     defaults={'name': mapit_area_data['name']}
                 )
                 AreaExtra.objects.get_or_create(base=area, type=area_type)
-                post, _ = Post.objects.get_or_create(
+                post, _ = Post.objects.update_or_create(
                     organization=organization,
                     area=area,
                     role='Member of the Scottish Parliament',
@@ -170,7 +170,7 @@ class Command(BaseCommand):
                         )
                     }
                 )
-                post_extra, _ = PostExtra.objects.get_or_create(
+                post_extra, _ = PostExtra.objects.update_or_create(
                     base=post,
                     defaults={
                         'slug': str(mapit_area_id),
