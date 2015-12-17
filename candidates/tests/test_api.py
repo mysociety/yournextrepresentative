@@ -309,19 +309,19 @@ class TestAPI(WebTest):
         posts_resp = self.app.get('/api/v0.9/posts/')
         posts = posts_resp.json
 
-        post_id = 0
+        post_url = None
         for post in posts['results']:
-            if post['slug'] == '65808':
-                post_id = post['id']
+            if post['id'] == '65808':
+                post_url = post['url']
                 break
 
-        self.assertNotEqual(post_id, 0)
-        post_resp = self.app.get('/api/v0.9/posts/{0}/'.format(post_id))
+        self.assertTrue(post_url)
+        post_resp = self.app.get(post_url)
         self.assertEqual(post_resp.status_code, 200)
 
         post = post_resp.json
 
-        self.assertEqual(post['slug'], '65808')
+        self.assertEqual(post['id'], '65808')
         self.assertEqual(
             post['label'],
             'Member of Parliament for Dulwich and West Norwood'

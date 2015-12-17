@@ -230,13 +230,26 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
     memberships = FlatMembershipSerialzier(many=True, read_only=True)
 
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
+class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = popolo_models.Post
+        model = candidates_models.PostExtra
+        fields = ('id', 'url', 'label')
+
+    id = serializers.ReadOnlyField(source='slug')
+    label = serializers.ReadOnlyField(source='base.label')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='postextra-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class PostExtraSerializer(MinimalPostExtraSerializer):
+    class Meta:
+        model = candidates_models.PostExtra
         fields = (
             'id',
             'url',
-            'slug',
             'label',
             'role',
             'organization',
@@ -245,15 +258,17 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'memberships',
         )
 
-    slug = serializers.ReadOnlyField(source='extra.slug')
+    role = serializers.ReadOnlyField(source='base.role')
+    area = AreaSerializer(source='base.area')
+
     memberships = FlatMembershipSerialzier(many=True, read_only=True)
 
     organization = MinimalOrganizationExtraSerializer(
-        source='organization.extra')
+        source='base.organization.extra')
 
     elections = serializers.SerializerMethodField()
 
-    def get_elections(self, post):
+    def get_elections(self, post_extra):
         return [
             self.context['request'].build_absolute_uri(
                 reverse('election-detail', kwargs={
@@ -261,5 +276,5 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
                     'version': 'v0.9',
                 })
             )
-            for election in post.extra.elections.all()
+            for election in post_extra.elections.all()
         ]

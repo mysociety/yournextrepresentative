@@ -11,8 +11,8 @@ from django.views.generic import View
 
 from candidates.models import LoggedAction, OrganizationExtra
 from elections.models import Election
-from popolo.models import Area, Person, Post
-from rest_framework import filters, viewsets
+from popolo.models import Area, Membership, Person
+from rest_framework import viewsets
 
 from candidates.models import PostExtra
 from candidates import serializers
@@ -90,12 +90,20 @@ class OrganizationViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects \
-        .prefetch_related('extra', 'extra__elections') \
-        .order_by('label')
-    serializer_class = serializers.PostSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('extra__slug',)
+    queryset = PostExtra.objects \
+        .select_related(
+            'base__organization__extra',
+            'base__area__extra',
+        ) \
+        .prefetch_related(
+            'elections',
+            'elections__area_types',
+            'base__area__other_identifiers',
+            'base__memberships',
+        ) \
+        .order_by('base__label')
+    lookup_field = 'slug'
+    serializer_class = serializers.PostExtraSerializer
 
 
 class AreaViewSet(viewsets.ModelViewSet):
