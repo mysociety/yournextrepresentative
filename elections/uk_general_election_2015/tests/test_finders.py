@@ -6,30 +6,23 @@ from urlparse import urlsplit
 
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
-from django.test.utils import override_settings
 
 from candidates.tests.factories import (
-    PostExtraFactory,
-    ParliamentaryChamberFactory, PartySetFactory, AreaExtraFactory
+    AreaTypeFactory, ElectionFactory, PostExtraFactory,
+    ParliamentaryChamberFactory, ParliamentaryChamberExtraFactory,
+    PartySetFactory, AreaExtraFactory
 )
 from elections.models import Election
+from .mapit_postcode_results import se240ag_result, sw1a1aa_result
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
     if url == 'http://mapit.mysociety.org/postcode/sw1a1aa':
         status_code = 200
-        json_result = {
-            "shortcuts": {
-                "WMC": 65759,
-            },
-        }
+        json_result = sw1a1aa_result
     elif url == 'http://mapit.mysociety.org/postcode/se240ag':
         status_code = 200
-        json_result = {
-            "shortcuts": {
-                "WMC": "65808",
-            },
-        }
+        json_result = se240ag_result
     elif url == 'http://mapit.mysociety.org/postcode/cb28rq':
         status_code = 404
         json_result = {
@@ -75,7 +68,6 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = self.app.get('/')
         # Check that there is a form on that page
         response.forms['form-postcode']
-        response.forms['form-name']
 
     def test_valid_postcode_redirects_to_constituency(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
@@ -87,7 +79,63 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/election/2015/post/65808/dulwich-and-west-norwood',
+            '/areas/WMC-65808',
+        )
+
+    def test_valid_postcode_redirects_to_multiple_areas(self, mock_requests):
+        mock_requests.get.side_effect = fake_requests_for_mapit
+        # Create some extra posts and areas:
+        london_assembly = ParliamentaryChamberExtraFactory.create(
+            slug='london-assembly', base__name='London Assembly'
+        )
+        lac_area_type = AreaTypeFactory.create(name='LAC')
+        gla_area_type = AreaTypeFactory.create(name='GLA')
+        area_extra_lac = AreaExtraFactory.create(
+            base__identifier='11822',
+            base__name="Dulwich and West Norwood",
+            type=lac_area_type,
+        )
+        area_extra_gla = AreaExtraFactory.create(
+            base__identifier='2247',
+            base__name='Greater London Authority',
+            type=gla_area_type,
+        )
+        election_lac = ElectionFactory.create(
+            slug='gb-gla-2016-05-05-c',
+            organization=london_assembly.base,
+            name='2016 London Assembly Election (Constituencies)',
+            area_types=(lac_area_type,),
+        )
+        election_gla = ElectionFactory.create(
+            slug='gb-gla-2016-05-05-a',
+            organization=london_assembly.base,
+            name='2016 London Assembly Election (Additional)',
+            area_types=(gla_area_type,),
+        )
+        PostExtraFactory.create(
+            elections=(election_lac,),
+            base__area=area_extra_lac.base,
+            base__organization=london_assembly.base,
+            slug='11822',
+            base__label='Assembly Member for Lambeth and Southwark',
+        )
+        PostExtraFactory.create(
+            elections=(election_gla,),
+            base__area=area_extra_gla.base,
+            base__organization=london_assembly.base,
+            slug='2247',
+            base__label='2016 London Assembly Election (Additional)',
+        )
+        # ----------------------------
+        response = self.app.get('/')
+        form = response.forms['form-postcode']
+        form['postcode'] = 'SE24 0AG'
+        response = form.submit()
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual(
+            split_location.path,
+            '/areas/LAC-11822,GLA-2247,WMC-65808',
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):
@@ -123,96 +171,4 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertIn(
             u'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
             response
-        )
-
-
-@attr(country='uk')
-class TestConstituencyNameListFinderView(WebTest):
-    def setUp(self):
-        election = Election.objects.get(slug='2015')
-        wmc_area_type = election.area_types.get(name='WMC')
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        area_extra = AreaExtraFactory.create(
-            base__name="Dulwich and West Norwood",
-            type=wmc_area_type,
-        )
-        self.area = area_extra.base
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-            base__area=self.area,
-        )
-
-    def test_pick_constituency_name(self):
-        response = self.app.get('/')
-        form = response.forms['form-name']
-        form['constituency'] = self.area.id
-        response = form.submit()
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(
-            split_location.path,
-            '/election/2015/post/65808/dulwich-and-west-norwood'
-        )
-
-    def test_post_no_constituency_selected(self):
-        response = self.app.get('/')
-        form = response.forms['form-name']
-        form['constituency'] = ''
-        response = form.submit()
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('This field is required', response)
-
-    def test_post_invalid_constituency_id(self):
-        response = self.app.post(
-            '/lookup/name',
-            {
-                'constituency': 'made-up-555',
-            }
-        )
-        self.assertIn(
-            'Select a valid choice. That choice is not one of the available choices.',
-            response
-        )
-
-
-@attr(country='uk')
-@override_settings(MAPIT_TYPES=['WMC'])
-@override_settings(MAPIT_CURRENT_GENERATION='22')
-@patch('elections.uk_general_election_2015.mapit.requests')
-class TestConstituencyNameFinderView(WebTest):
-    def setUp(self):
-        election = Election.objects.get(slug='2015')
-        wmc_area_type = election.area_types.get(name='WMC')
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        area_extra = AreaExtraFactory.create(
-            base__name="Dulwich and West Norwood",
-            type=wmc_area_type,
-        )
-        self.area = area_extra.base
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-            base__area=self.area,
-        )
-
-    def test_pick_constituency_name(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
-        response = self.app.get('/')
-        form = response.forms['form-postcode']
-        form['postcode'] = 'SE24 0AG'
-        response = form.submit()
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(
-            split_location.path,
-            '/election/2015/post/65808/dulwich-and-west-norwood'
         )
