@@ -182,7 +182,21 @@ class ElectionSerializer(MinimalElectionSerializer):
     area_types = AreaTypeSerializer(many=True, read_only=True)
 
 
-class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
+class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PostExtra
+        fields = ('id', 'url', 'label')
+
+    id = serializers.ReadOnlyField(source='slug')
+    label = serializers.ReadOnlyField(source='base.label')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='postextra-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class MinimalMembershipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Membership
         fields = (
@@ -196,6 +210,13 @@ class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
             'end_date',
             'election',
         )
+
+    organization = MinimalOrganizationExtraSerializer(
+        read_only=True, source='organization.extra')
+    on_behalf_of = MinimalOrganizationExtraSerializer(
+        read_only=True, source='on_behalf_of.extra')
+    post = MinimalPostExtraSerializer(
+        read_only=True, source='post.extra')
 
     election = MinimalElectionSerializer(source='extra.election')
 
@@ -236,21 +257,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     versions = JSONSerializerField(source='extra.versions', read_only=True)
 
-    memberships = FlatMembershipSerialzier(many=True, read_only=True)
-
-
-class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = candidates_models.PostExtra
-        fields = ('id', 'url', 'label')
-
-    id = serializers.ReadOnlyField(source='slug')
-    label = serializers.ReadOnlyField(source='base.label')
-    url = serializers.HyperlinkedIdentityField(
-        view_name='postextra-detail',
-        lookup_field='slug',
-        lookup_url_kwarg='slug',
-    )
+    memberships = MinimalMembershipSerializer(many=True, read_only=True)
 
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
@@ -270,7 +277,8 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
     role = serializers.ReadOnlyField(source='base.role')
     area = AreaSerializer(source='base.area')
 
-    memberships = FlatMembershipSerialzier(many=True, read_only=True)
+    memberships = MinimalMembershipSerializer(
+        many=True, read_only=True, source='base.memberships')
 
     organization = MinimalOrganizationExtraSerializer(
         source='base.organization.extra')

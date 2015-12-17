@@ -5,7 +5,7 @@ import sys
 
 import django
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.views.generic import View
 
@@ -65,7 +65,25 @@ class PostIDToPartySetView(View):
 
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects \
-        .prefetch_related('extra') \
+        .select_related('extra') \
+        .prefetch_related(
+            Prefetch(
+                'memberships',
+                Membership.objects.select_related(
+                    'on_behalf_of__extra',
+                    'organization__extra',
+                    'post__extra',
+                    'extra',
+                )
+            ),
+            'memberships__extra__election',
+            'memberships__organization__extra',
+            'extra__images',
+            'other_names',
+            'contact_details',
+            'links',
+            'identifiers',
+        ) \
         .order_by('sort_name')
     serializer_class = serializers.PersonSerializer
 
