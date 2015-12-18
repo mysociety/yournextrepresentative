@@ -2,7 +2,7 @@ from django_webtest import WebTest
 
 from .factories import (
     AreaExtraFactory, AreaTypeFactory, ElectionFactory,
-    PostExtraFactory, ParliamentaryChamberFactory,
+    PostExtraFactory, ParliamentaryChamberExtraFactory,
     PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
     PartyFactory, MembershipFactory, PartySetFactory
 )
@@ -15,19 +15,19 @@ class TestAPI(WebTest):
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
+        commons = ParliamentaryChamberExtraFactory.create()
 
         self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,),
-            organization=commons
+            organization=commons.base
         )
         old_election = ElectionFactory.create(
             slug='2010',
             name='2010 General Election',
             area_types=(wmc_area_type,),
-            organization=commons
+            organization=commons.base
         )
 
         PartyFactory.reset_sequence()
@@ -43,7 +43,7 @@ class TestAPI(WebTest):
 
         post_extra = PostExtraFactory.create(
             elections=(self.election,),
-            base__organization=commons,
+            base__organization=commons.base,
             base__area=dulwich_area_extra.base,
             slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood',
@@ -51,7 +51,7 @@ class TestAPI(WebTest):
         )
         winner_post_extra = PostExtraFactory.create(
             elections=(self.election,),
-            base__organization=commons,
+            base__organization=commons.base,
             slug='14419',
             base__label='Member of Parliament for Edinburgh East',
             party_set=gb_parties,
