@@ -9,6 +9,7 @@ from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.views.generic import View
 
+from images.models import Image
 from candidates import serializers
 from candidates import models as extra_models
 from elections.models import AreaType, Election
@@ -143,3 +144,8 @@ class ElectionViewSet(viewsets.ModelViewSet):
 class PartySetViewSet(viewsets.ModelViewSet):
     queryset = extra_models.PartySet.objects.all()
     serializer_class = serializers.PartySetSerializer
+
+
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = serializers.ImageSerializer

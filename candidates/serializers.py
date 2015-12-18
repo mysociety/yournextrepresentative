@@ -1,8 +1,7 @@
 import json
 
-from django.core.urlresolvers import reverse
-
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from candidates import models as candidates_models
 from images.models import Image
@@ -64,10 +63,31 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
     type = AreaTypeSerializer(source='extra.type')
 
 
-class ImageSerializer(serializers.ModelSerializer):
+class ObjectWithImageField(serializers.RelatedField):
+
+    def to_representation(self, value):
+        kwargs = {'version': 'v0.9'}
+        request = self.context['request']
+        if isinstance(value, candidates_models.PersonExtra):
+            kwargs.update({'pk': value.base.id})
+            return reverse('person-detail', kwargs=kwargs, request=request)
+        elif isinstance(value, candidates_models.OrganizationExtra):
+            kwargs.update({'slug': value.slug})
+            return reverse(
+                'organizationextra-detail', kwargs=kwargs, request=request)
+        elif isinstance(value, candidates_models.PostExtra):
+            kwargs.update({'slug': value.slug})
+            return reverse('postextra-detail', kwargs=kwargs, request=request)
+        else:
+            raise Exception("Unexpected type of object with an Image")
+
+
+class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
         fields = (
+            'id',
+            'url',
             'source',
             'is_primary',
             'md5sum',
@@ -77,6 +97,7 @@ class ImageSerializer(serializers.ModelSerializer):
             'user_copyright',
             'notes',
             'image_url',
+            'content_object',
         )
 
     md5sum = serializers.ReadOnlyField(source='extra.md5sum')
@@ -86,6 +107,7 @@ class ImageSerializer(serializers.ModelSerializer):
     user_copyright = serializers.ReadOnlyField(source='extra.user_copyright')
     notes = serializers.ReadOnlyField(source='extra.notes')
     image_url = serializers.SerializerMethodField()
+    content_object = ObjectWithImageField(read_only=True)
 
     def get_image_url(self, i):
         return i.image.url
