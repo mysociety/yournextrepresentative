@@ -155,10 +155,18 @@ class Command(BaseCommand):
             url = urljoin(mapit_url, url_path)
             r = requests.get(url)
             for mapit_area_id, mapit_area_data in r.json().items():
+
                 area, _ = Area.objects.update_or_create(
                     identifier=str(mapit_area_id),
                     defaults={'name': mapit_area_data['name']}
                 )
+                # Now make sure that the MapIt codes are present as identifiers:
+                for scheme, identifier in mapit_area_data['codes'].items():
+                    area.other_identifiers.update_or_create(
+                        scheme=scheme,
+                        defaults={'identifier': identifier},
+                    )
+
                 AreaExtra.objects.get_or_create(base=area, type=area_type)
                 post, _ = Post.objects.update_or_create(
                     organization=organization,
