@@ -149,3 +149,8 @@ class PartySetViewSet(viewsets.ModelViewSet):
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = serializers.ImageSerializer
+
+
+class MembershipViewSet(viewsets.ModelViewSet):
+    queryset = Membership.objects.all()
+    serializer_class = serializers.MinimalMembershipSerializer

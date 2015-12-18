@@ -232,6 +232,8 @@ class MinimalMembershipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Membership
         fields = (
+            'id',
+            'url',
             'label',
             'role',
             'person',

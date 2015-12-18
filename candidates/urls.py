@@ -18,6 +18,7 @@ api_router.register(r'area_types', views.AreaTypeViewSet)
 api_router.register(r'elections', views.ElectionViewSet)
 api_router.register(r'party_sets', views.PartySetViewSet)
 api_router.register(r'images', views.ImageViewSet)
+api_router.register(r'memberships', views.MembershipViewSet)
 
 urlpatterns = \
     patterns('',
