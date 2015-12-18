@@ -5,17 +5,16 @@ import sys
 
 import django
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.http import HttpResponse
 from django.views.generic import View
 
-from candidates.models import LoggedAction
-from elections.models import Election
-from popolo.models import Area, Organization, Person, Post
-from rest_framework import filters, viewsets
-
-from candidates.models import PostExtra
+from images.models import Image
 from candidates import serializers
+from candidates import models as extra_models
+from elections.models import AreaType, Election
+from popolo.models import Area, Membership, Person
+from rest_framework import viewsets
 
 
 class VersionView(View):
@@ -26,7 +25,7 @@ class VersionView(View):
         result = {
             'python_version': sys.version,
             'django_version': django.get_version(),
-            'interesting_user_actions': LoggedAction.objects \
+            'interesting_user_actions': extra_models.LoggedAction.objects \
                 .exclude(action_type='set-candidate-not-elected') \
                 .count(),
             'users_who_have_edited': User.objects \
@@ -53,7 +52,7 @@ class PostIDToPartySetView(View):
 
     def get(self, request, *args, **kwargs):
         result = dict(
-            PostExtra.objects.filter(elections__current=True) \
+            extra_models.PostExtra.objects.filter(elections__current=True) \
                .values_list('slug', 'party_set__slug')
         )
         return HttpResponse(
@@ -65,27 +64,63 @@ class PostIDToPartySetView(View):
 
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects \
-        .prefetch_related('extra') \
+        .select_related('extra') \
+        .prefetch_related(
+            Prefetch(
+                'memberships',
+                Membership.objects.select_related(
+                    'on_behalf_of__extra',
+                    'organization__extra',
+                    'post__extra',
+                    'extra',
+                )
+            ),
+            'memberships__extra__election',
+            'memberships__organization__extra',
+            'extra__images',
+            'other_names',
+            'contact_details',
+            'links',
+            'identifiers',
+        ) \
         .order_by('sort_name')
     serializer_class = serializers.PersonSerializer
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
-    queryset = Organization.objects \
-        .prefetch_related('extra') \
-        .order_by('name')
-    serializer_class = serializers.OrganizationSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('extra__slug',)
+    queryset = extra_models.OrganizationExtra.objects \
+        .select_related('base') \
+        .prefetch_related(
+            'images',
+            'images__extra',
+            'base__contact_details',
+            'base__other_names',
+            'base__sources',
+            'base__links',
+            'base__identifiers',
+            'base__parent',
+            'base__parent__extra',
+        ) \
+        .order_by('base__name')
+    lookup_field = 'slug'
+    serializer_class = serializers.OrganizationExtraSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects \
-        .prefetch_related('extra', 'extra__elections') \
-        .order_by('label')
-    serializer_class = serializers.PostSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('extra__slug',)
+    queryset = extra_models.PostExtra.objects \
+        .select_related(
+            'base__organization__extra',
+            'base__area__extra',
+        ) \
+        .prefetch_related(
+            'elections',
+            'elections__area_types',
+            'base__area__other_identifiers',
+            'base__memberships',
+        ) \
+        .order_by('base__label')
+    lookup_field = 'slug'
+    serializer_class = serializers.PostExtraSerializer
 
 
 class AreaViewSet(viewsets.ModelViewSet):
@@ -95,6 +130,27 @@ class AreaViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AreaSerializer
 
 
+class AreaTypeViewSet(viewsets.ModelViewSet):
+    queryset = AreaType.objects.all()
+    serializer_class = serializers.AreaTypeSerializer
+
+
 class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.all()
+    lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
+
+
+class PartySetViewSet(viewsets.ModelViewSet):
+    queryset = extra_models.PartySet.objects.all()
+    serializer_class = serializers.PartySetSerializer
+
+
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = serializers.ImageSerializer
+
+
+class MembershipViewSet(viewsets.ModelViewSet):
+    queryset = Membership.objects.all()
+    serializer_class = serializers.MinimalMembershipSerializer

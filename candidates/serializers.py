@@ -1,13 +1,29 @@
 import json
 
-from django.core.urlresolvers import reverse
-
 from rest_framework import serializers
+from rest_framework.reverse import reverse
 
+from candidates import models as candidates_models
 from images.models import Image
 from elections import models as election_models
 from popolo import models as popolo_models
 
+# These are serializer classes from the Django-REST-framework API
+#
+# For most objects there are two serializers - a full one and a
+# minimal one.  The minimal ones (whose class names begin 'Minimal')
+# are used for serializing the objects when they're just being
+# included as related objects, rather than the resource that
+# information is being requested about.
+#
+# e.g. if you request information about a Post via the 'posts'
+# endpoint, it's pretty useful to have the ID, URL and name of the
+# elections that the Post is part of, but you probably don't need
+# every bit of election metadata.  A request to the 'elections'
+# endpoint, however, would include full metadata about the elections.
+#
+# This reduces the bloat of API responses, at the cost of some users
+# having to make extra queries.
 
 class OtherNameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,7 +58,7 @@ class SourceSerializer(serializers.ModelSerializer):
 class AreaTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = election_models.AreaType
-        fields = ('name', 'source')
+        fields = ('id', 'url',  'name', 'source')
 
 
 class AreaSerializer(serializers.HyperlinkedModelSerializer):
@@ -63,12 +79,136 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
     type = AreaTypeSerializer(source='extra.type')
 
 
-class ElectionSerializer(serializers.HyperlinkedModelSerializer):
+class ObjectWithImageField(serializers.RelatedField):
+
+    def to_representation(self, value):
+        kwargs = {'version': 'v0.9'}
+        request = self.context['request']
+        if isinstance(value, candidates_models.PersonExtra):
+            kwargs.update({'pk': value.base.id})
+            return reverse('person-detail', kwargs=kwargs, request=request)
+        elif isinstance(value, candidates_models.OrganizationExtra):
+            kwargs.update({'slug': value.slug})
+            return reverse(
+                'organizationextra-detail', kwargs=kwargs, request=request)
+        elif isinstance(value, candidates_models.PostExtra):
+            kwargs.update({'slug': value.slug})
+            return reverse('postextra-detail', kwargs=kwargs, request=request)
+        else:
+            raise Exception("Unexpected type of object with an Image")
+
+
+class ImageSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Image
+        fields = (
+            'id',
+            'url',
+            'source',
+            'is_primary',
+            'md5sum',
+            'copyright',
+            'uploading_user',
+            'user_notes',
+            'user_copyright',
+            'notes',
+            'image_url',
+            'content_object',
+        )
+
+    md5sum = serializers.ReadOnlyField(source='extra.md5sum')
+    copyright = serializers.ReadOnlyField(source='extra.copyright')
+    uploading_user = serializers.ReadOnlyField(source='extra.uploading_user.username')
+    user_notes = serializers.ReadOnlyField(source='extra.user_notes')
+    user_copyright = serializers.ReadOnlyField(source='extra.user_copyright')
+    notes = serializers.ReadOnlyField(source='extra.notes')
+    image_url = serializers.SerializerMethodField()
+    content_object = ObjectWithImageField(read_only=True)
+
+    def get_image_url(self, i):
+        return i.image.url
+
+class MinimalOrganizationExtraSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.OrganizationExtra
+        fields = ('id', 'url', 'name')
+
+    id = serializers.ReadOnlyField(source='slug')
+    name = serializers.ReadOnlyField(source='base.name')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='organizationextra-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class PartySetSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PartySet
+        fields = ('id', 'url', 'name')
+
+
+class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
+    class Meta:
+        model = candidates_models.OrganizationExtra
+        fields = (
+            'id',
+            'url',
+            'name',
+            'other_names',
+            'identifiers',
+            'classification',
+            'parent',
+            'founding_date',
+            'dissolution_date',
+            'contact_details',
+            'images',
+            'links',
+            'sources',
+            'register',
+            'party_sets',
+        )
+
+    classification = serializers.ReadOnlyField(source='base.classification')
+    founding_date = serializers.ReadOnlyField(source='base.founding_date')
+    dissolution_date = serializers.ReadOnlyField(source='base.dissolution_date')
+
+    parent = MinimalOrganizationExtraSerializer(source='base.parent.extra')
+
+    contact_details = ContactDetailSerializer(
+        many=True, read_only=True, source='base.contact_details')
+    identifiers = IdentifierSerializer(
+        many=True, read_only=True, source='base.identifiers')
+    links = LinkSerializer(
+        many=True, read_only=True, source='base.links')
+    other_names = OtherNameSerializer(
+        many=True, read_only=True, source='base.other_names')
+    sources = SourceSerializer(
+        many=True, read_only=True, source='base.sources')
+    images = ImageSerializer(many=True, read_only=True)
+
+    party_sets = PartySetSerializer(
+        many=True, read_only=True, source='base.party_sets')
+
+
+class MinimalElectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = election_models.Election
+        fields = ('id', 'url', 'name')
+
+    id = serializers.ReadOnlyField(source='slug')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='election-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class ElectionSerializer(MinimalElectionSerializer):
     class Meta:
         model = election_models.Election
         fields = (
             'id',
-            'slug',
             'url',
             'name',
             'winner_membership_role',
@@ -84,13 +224,32 @@ class ElectionSerializer(serializers.HyperlinkedModelSerializer):
             'description'
         )
 
+
+    organization = MinimalOrganizationExtraSerializer(source='organization.extra')
+
     area_types = AreaTypeSerializer(many=True, read_only=True)
 
 
-class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
+class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PostExtra
+        fields = ('id', 'url', 'label')
+
+    id = serializers.ReadOnlyField(source='slug')
+    label = serializers.ReadOnlyField(source='base.label')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='postextra-detail',
+        lookup_field='slug',
+        lookup_url_kwarg='slug',
+    )
+
+
+class MinimalMembershipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Membership
         fields = (
+            'id',
+            'url',
             'label',
             'role',
             'person',
@@ -102,62 +261,14 @@ class FlatMembershipSerialzier(serializers.HyperlinkedModelSerializer):
             'election',
         )
 
-    election = ElectionSerializer(source='extra.election')
+    organization = MinimalOrganizationExtraSerializer(
+        read_only=True, source='organization.extra')
+    on_behalf_of = MinimalOrganizationExtraSerializer(
+        read_only=True, source='on_behalf_of.extra')
+    post = MinimalPostExtraSerializer(
+        read_only=True, source='post.extra')
 
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = (
-            'source',
-            'is_primary',
-            'md5sum',
-            'copyright',
-            'uploading_user',
-            'user_notes',
-            'user_copyright',
-            'notes',
-            'image_url',
-        )
-
-    md5sum = serializers.ReadOnlyField(source='extra.md5sum')
-    copyright = serializers.ReadOnlyField(source='extra.copyright')
-    uploading_user = serializers.ReadOnlyField(source='extra.uploading_user.username')
-    user_notes = serializers.ReadOnlyField(source='extra.user_notes')
-    user_copyright = serializers.ReadOnlyField(source='extra.user_copyright')
-    notes = serializers.ReadOnlyField(source='extra.notes')
-    image_url = serializers.SerializerMethodField()
-
-    def get_image_url(self, i):
-        return i.image.url
-
-class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = popolo_models.Organization
-        fields = (
-            'id',
-            'slug',
-            'url',
-            'name',
-            'other_names',
-            'identifiers',
-            'classification',
-            'parent',
-            'founding_date',
-            'dissolution_date',
-            'contact_details',
-            'images',
-            'links',
-            'sources',
-        )
-
-    slug = serializers.ReadOnlyField(source='extra.slug')
-    contact_details = ContactDetailSerializer(many=True, read_only=True)
-    identifiers = IdentifierSerializer(many=True, read_only=True)
-    links = LinkSerializer(many=True, read_only=True)
-    other_names = OtherNameSerializer(many=True, read_only=True)
-    sources = SourceSerializer(many=True, read_only=True)
-    images = ImageSerializer(many=True, read_only=True, source='extra.images')
+    election = MinimalElectionSerializer(source='extra.election')
 
 
 class JSONSerializerField(serializers.Field):
@@ -196,16 +307,15 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     versions = JSONSerializerField(source='extra.versions', read_only=True)
 
-    memberships = FlatMembershipSerialzier(many=True, read_only=True)
+    memberships = MinimalMembershipSerializer(many=True, read_only=True)
 
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
+class PostExtraSerializer(MinimalPostExtraSerializer):
     class Meta:
-        model = popolo_models.Post
+        model = candidates_models.PostExtra
         fields = (
             'id',
             'url',
-            'slug',
             'label',
             'role',
             'organization',
@@ -214,18 +324,13 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
             'memberships',
         )
 
-    slug = serializers.ReadOnlyField(source='extra.slug')
-    memberships = FlatMembershipSerialzier(many=True, read_only=True)
+    role = serializers.ReadOnlyField(source='base.role')
+    area = AreaSerializer(source='base.area')
 
-    elections = serializers.SerializerMethodField()
+    memberships = MinimalMembershipSerializer(
+        many=True, read_only=True, source='base.memberships')
 
-    def get_elections(self, post):
-        return [
-            self.context['request'].build_absolute_uri(
-                reverse('election-detail', kwargs={
-                    'pk': election.id,
-                    'version': 'v0.9',
-                })
-            )
-            for election in post.extra.elections.all()
-        ]
+    organization = MinimalOrganizationExtraSerializer(
+        source='base.organization.extra')
+
+    elections = MinimalElectionSerializer(many=True, read_only=True)

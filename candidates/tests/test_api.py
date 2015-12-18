@@ -2,7 +2,7 @@ from django_webtest import WebTest
 
 from .factories import (
     AreaExtraFactory, AreaTypeFactory, ElectionFactory,
-    PostExtraFactory, ParliamentaryChamberFactory,
+    PostExtraFactory, ParliamentaryChamberExtraFactory,
     PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
     PartyFactory, MembershipFactory, PartySetFactory
 )
@@ -15,19 +15,19 @@ class TestAPI(WebTest):
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
+        commons = ParliamentaryChamberExtraFactory.create()
 
         self.election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
             area_types=(wmc_area_type,),
-            organization=commons
+            organization=commons.base
         )
         old_election = ElectionFactory.create(
             slug='2010',
             name='2010 General Election',
             area_types=(wmc_area_type,),
-            organization=commons
+            organization=commons.base
         )
 
         PartyFactory.reset_sequence()
@@ -43,7 +43,7 @@ class TestAPI(WebTest):
 
         post_extra = PostExtraFactory.create(
             elections=(self.election,),
-            base__organization=commons,
+            base__organization=commons.base,
             base__area=dulwich_area_extra.base,
             slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood',
@@ -51,7 +51,7 @@ class TestAPI(WebTest):
         )
         winner_post_extra = PostExtraFactory.create(
             elections=(self.election,),
-            base__organization=commons,
+            base__organization=commons.base,
             slug='14419',
             base__label='Member of Parliament for Edinburgh East',
             party_set=gb_parties,
@@ -259,19 +259,17 @@ class TestAPI(WebTest):
         organizations_resp = self.app.get('/api/v0.9/organizations/')
         organizations = organizations_resp.json
 
-        organization_id = 0
+        organization_url = None
         for organization in organizations['results']:
-            if organization['slug'] == 'party:53':
-                organization_id = organization['id']
+            if organization['id'] == 'party:53':
+                organization_url = organization['url']
                 break
 
-        organization_url = \
-            '/api/v0.9/organizations/{0}/'.format(organization_id)
         organization_resp = self.app.get(organization_url)
         self.assertEquals(organization_resp.status_code, 200)
 
         organization = organization_resp.json
-        self.assertEquals(organization['slug'], 'party:53')
+        self.assertEquals(organization['id'], 'party:53')
         self.assertEquals(organization['name'], 'Labour Party')
 
     def test_api_elections(self):
@@ -286,18 +284,17 @@ class TestAPI(WebTest):
         elections_resp = self.app.get('/api/v0.9/elections/')
         elections = elections_resp.json
 
-        election_id = 0
+        election_url = None
         for election in elections['results']:
-            if election['slug'] == '2015':
-                election_id = election['id']
+            if election['id'] == '2015':
+                election_url = election['url']
                 break
 
-        election_url = '/api/v0.9/elections/{0}/'.format(election_id)
         election_resp = self.app.get(election_url)
         self.assertEquals(election_resp.status_code, 200)
 
         election = election_resp.json
-        self.assertEquals(election['slug'], '2015')
+        self.assertEquals(election['id'], '2015')
         self.assertEquals(election['name'], '2015 General Election')
 
     def test_api_posts(self):
@@ -312,19 +309,19 @@ class TestAPI(WebTest):
         posts_resp = self.app.get('/api/v0.9/posts/')
         posts = posts_resp.json
 
-        post_id = 0
+        post_url = None
         for post in posts['results']:
-            if post['slug'] == '65808':
-                post_id = post['id']
+            if post['id'] == '65808':
+                post_url = post['url']
                 break
 
-        self.assertNotEqual(post_id, 0)
-        post_resp = self.app.get('/api/v0.9/posts/{0}/'.format(post_id))
+        self.assertTrue(post_url)
+        post_resp = self.app.get(post_url)
         self.assertEqual(post_resp.status_code, 200)
 
         post = post_resp.json
 
-        self.assertEqual(post['slug'], '65808')
+        self.assertEqual(post['id'], '65808')
         self.assertEqual(
             post['label'],
             'Member of Parliament for Dulwich and West Norwood'
