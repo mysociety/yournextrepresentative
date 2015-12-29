@@ -56,7 +56,7 @@ class Election(models.Model):
     area_types = models.ManyToManyField(AreaType)
     area_generation = models.CharField(max_length=128, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True)
-    post_id_format = models.CharField(max_length=128)
+    post_id_format = models.CharField(max_length=128, blank=True)
     party_lists_in_use = models.BooleanField(default=False)
     default_party_list_members_to_show = models.IntegerField(default=0)
     show_official_documents = models.BooleanField(default=False)
