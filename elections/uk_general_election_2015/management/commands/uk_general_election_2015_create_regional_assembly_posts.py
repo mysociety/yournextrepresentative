@@ -151,6 +151,8 @@ class Command(BaseCommand):
             area_type, _ = AreaType.objects.update_or_create(
                 name=data['mapit_code'], defaults={'source': 'MapIt'}
             )
+            if not election.area_types.filter(name=area_type.name).exists():
+                election.area_types.add(area_type)
             url_path = '/areas/' + data['mapit_code']
             url = urljoin(mapit_url, url_path)
             r = requests.get(url)
