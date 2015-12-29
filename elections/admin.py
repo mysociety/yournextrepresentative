@@ -4,6 +4,7 @@ from .models import AreaType, Election
 class ElectionAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'current')
     search_fields = ('name', 'slug')
+    ordering = ('election_date', 'name')
 
 class AreaTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'source')
