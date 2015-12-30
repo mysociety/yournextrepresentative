@@ -145,7 +145,7 @@ class MinimalOrganizationExtraSerializer(serializers.HyperlinkedModelSerializer)
 class PartySetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = candidates_models.PartySet
-        fields = ('id', 'url', 'name')
+        fields = ('id', 'url', 'name', 'slug')
 
 
 class OrganizationExtraSerializer(MinimalOrganizationExtraSerializer):
