@@ -147,7 +147,7 @@ class PersonViewSet(viewsets.ModelViewSet):
             'links',
             'identifiers',
         ) \
-        .order_by('sort_name')
+        .order_by('id')
     serializer_class = serializers.PersonSerializer
 
 
@@ -165,7 +165,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
             'base__parent',
             'base__parent__extra',
         ) \
-        .order_by('base__name')
+        .order_by('base__id')
     lookup_field = 'slug'
     serializer_class = serializers.OrganizationExtraSerializer
 
@@ -182,7 +182,7 @@ class PostViewSet(viewsets.ModelViewSet):
             'base__area__other_identifiers',
             'base__memberships',
         ) \
-        .order_by('base__label')
+        .order_by('base__id')
     lookup_field = 'slug'
     serializer_class = serializers.PostExtraSerializer
 
@@ -190,31 +190,31 @@ class PostViewSet(viewsets.ModelViewSet):
 class AreaViewSet(viewsets.ModelViewSet):
     queryset = Area.objects \
         .prefetch_related('extra') \
-        .order_by('name')
+        .order_by('id')
     serializer_class = serializers.AreaSerializer
 
 
 class AreaTypeViewSet(viewsets.ModelViewSet):
-    queryset = AreaType.objects.all()
+    queryset = AreaType.objects.order_by('id')
     serializer_class = serializers.AreaTypeSerializer
 
 
 class ElectionViewSet(viewsets.ModelViewSet):
-    queryset = Election.objects.all()
+    queryset = Election.objects.order_by('id')
     lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
 
 
 class PartySetViewSet(viewsets.ModelViewSet):
-    queryset = extra_models.PartySet.objects.all()
+    queryset = extra_models.PartySet.objects.order_by('id')
     serializer_class = serializers.PartySetSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
+    queryset = Image.objects.order_by('id')
     serializer_class = serializers.ImageSerializer
 
 
 class MembershipViewSet(viewsets.ModelViewSet):
-    queryset = Membership.objects.all()
+    queryset = Membership.objects.order_by('id')
     serializer_class = serializers.MinimalMembershipSerializer
