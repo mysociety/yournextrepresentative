@@ -217,4 +217,4 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 class MembershipViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.order_by('id')
-    serializer_class = serializers.MinimalMembershipSerializer
+    serializer_class = serializers.MembershipSerializer

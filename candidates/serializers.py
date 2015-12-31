@@ -245,7 +245,7 @@ class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
     )
 
 
-class MinimalMembershipSerializer(serializers.HyperlinkedModelSerializer):
+class MembershipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Membership
         fields = (
@@ -308,7 +308,7 @@ class PersonSerializer(serializers.HyperlinkedModelSerializer):
 
     versions = JSONSerializerField(source='extra.versions', read_only=True)
 
-    memberships = MinimalMembershipSerializer(many=True, read_only=True)
+    memberships = MembershipSerializer(many=True, read_only=True)
 
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
@@ -332,7 +332,7 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
     party_set = PartySetSerializer(read_only=True)
     area = AreaSerializer(source='base.area')
 
-    memberships = MinimalMembershipSerializer(
+    memberships = MembershipSerializer(
         many=True, read_only=True, source='base.memberships')
 
     organization = MinimalOrganizationExtraSerializer(
