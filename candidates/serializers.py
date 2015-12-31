@@ -128,6 +128,7 @@ class ImageSerializer(serializers.HyperlinkedModelSerializer):
     def get_image_url(self, i):
         return i.image.url
 
+
 class MinimalOrganizationExtraSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = candidates_models.OrganizationExtra
