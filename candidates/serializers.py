@@ -259,6 +259,8 @@ class MembershipSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'label',
             'role',
+            'elected',
+            'party_list_position',
             'person',
             'organization',
             'on_behalf_of',
@@ -268,6 +270,9 @@ class MembershipSerializer(serializers.HyperlinkedModelSerializer):
             'election',
         )
 
+    elected = serializers.ReadOnlyField(source='extra.elected')
+    party_list_position = serializers.ReadOnlyField(
+        source='extra.party_list_position')
     person = MinimalPersonSerializer(read_only=True)
     organization = MinimalOrganizationExtraSerializer(
         read_only=True, source='organization.extra')
