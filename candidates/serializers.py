@@ -245,6 +245,12 @@ class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
     )
 
 
+class MinimalPersonSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = popolo_models.Person
+        fields = ('id', 'url', 'name')
+
+
 class MembershipSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = popolo_models.Membership
@@ -262,6 +268,7 @@ class MembershipSerializer(serializers.HyperlinkedModelSerializer):
             'election',
         )
 
+    person = MinimalPersonSerializer(read_only=True)
     organization = MinimalOrganizationExtraSerializer(
         read_only=True, source='organization.extra')
     on_behalf_of = MinimalOrganizationExtraSerializer(
@@ -277,7 +284,7 @@ class JSONSerializerField(serializers.Field):
         return json.loads(value)
 
 
-class PersonSerializer(serializers.HyperlinkedModelSerializer):
+class PersonSerializer(MinimalPersonSerializer):
     class Meta:
         model = popolo_models.Person
         fields = (
