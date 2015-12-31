@@ -218,3 +218,8 @@ class ImageViewSet(viewsets.ModelViewSet):
 class MembershipViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.order_by('id')
     serializer_class = serializers.MembershipSerializer
+
+
+class LoggedActionViewSet(viewsets.ModelViewSet):
+    queryset = extra_models.LoggedAction.objects.order_by('id')
+    serializer_class = serializers.LoggedActionSerializer

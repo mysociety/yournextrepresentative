@@ -351,3 +351,24 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
         source='base.organization.extra')
 
     elections = MinimalElectionSerializer(many=True, read_only=True)
+
+
+class LoggedActionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.LoggedAction
+        fields = (
+            'id',
+            'url',
+            'user',
+            'person',
+            'action_type',
+            'person_new_version',
+            'created',
+            'updated',
+            'source'
+        )
+
+    person_new_version = serializers.ReadOnlyField(
+        source='popit_person_new_version')
+    user = serializers.ReadOnlyField(source='user.username')
+    person = MinimalPersonSerializer(read_only=True)
