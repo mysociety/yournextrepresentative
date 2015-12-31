@@ -318,6 +318,9 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
             'url',
             'label',
             'role',
+            'group',
+            'candidates_locked',
+            'party_set',
             'organization',
             'area',
             'elections',
@@ -325,6 +328,7 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
         )
 
     role = serializers.ReadOnlyField(source='base.role')
+    party_set = PartySetSerializer(read_only=True)
     area = AreaSerializer(source='base.area')
 
     memberships = MinimalMembershipSerializer(
