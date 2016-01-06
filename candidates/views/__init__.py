@@ -8,4 +8,5 @@ from .help import *
 from .parties import *
 from .people import *
 from .posts import *
+from .search import *
 from .users import *

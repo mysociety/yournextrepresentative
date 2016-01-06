@@ -1,0 +1,7 @@
+{{ object.name }}
+{{ object.given_name }}
+{{ object.family_name }}
+{{ object.additional_name }}
+{% for name in object.other_names.all %}
+{{ name.name }}
+{% endfor %}

@@ -6,6 +6,9 @@ notifications:
     use_notice: true
     skip_join: true
 
+services:
+  - elasticsearch
+
 language: python
 addons:
   postgresql: "9.1"
