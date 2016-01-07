@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 11:32+0000\n"
+"POT-Creation-Date: 2016-01-07 06:08-0600\n"
 "PO-Revision-Date: 2015-12-18 11:35+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/mysociety/yournextmp/language/en_US/)\n"
@@ -453,6 +453,18 @@ msgstr ""
 #: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:38
 #, python-brace-format
 msgid "{post_role} for {area_name}"
+msgstr ""
+
+#: candidates/mapit.py:65 elections/uk_general_election_2015/mapit.py:62
+#: elections/uk_general_election_2015/mapit.py:100
+#, python-brace-format
+msgid "The postcode “{0}” couldn’t be found"
+msgstr ""
+
+#: candidates/mapit.py:71 elections/uk_general_election_2015/mapit.py:66
+#: elections/uk_general_election_2015/mapit.py:104
+#, python-brace-format
+msgid "Unknown MapIt error for postcode \"{0}\""
 msgstr ""
 
 #: candidates/middleware.py:25
@@ -2121,7 +2133,7 @@ msgid "Upload a %(type)s"
 msgstr ""
 
 #: elections/bf_elections_2015/templates/base.html:8
-#: elections/example/templates/base.html:8
+#: elections/cr/templates/base.html:8 elections/example/templates/base.html:8
 #: elections/st_paul_municipal_2015/templates/base.html:8
 #, python-format
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
@@ -2140,18 +2152,6 @@ msgstr ""
 #: elections/uk_general_election_2015/mapit.py:77
 #, python-brace-format
 msgid "There were disallowed characters in \"{0}\""
-msgstr ""
-
-#: elections/uk_general_election_2015/mapit.py:62
-#: elections/uk_general_election_2015/mapit.py:100
-#, python-brace-format
-msgid "The postcode “{0}” couldn’t be found"
-msgstr ""
-
-#: elections/uk_general_election_2015/mapit.py:66
-#: elections/uk_general_election_2015/mapit.py:104
-#, python-brace-format
-msgid "Unknown MapIt error for postcode \"{0}\""
 msgstr ""
 
 #: elections/uk_general_election_2015/mapit.py:89

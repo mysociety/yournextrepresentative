@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 11:32+0000\n"
+"POT-Creation-Date: 2016-01-07 06:08-0600\n"
 "PO-Revision-Date: 2016-01-05 01:02+0000\n"
 "Last-Translator: Manfred Vargas <manfred.vargas@gmail.com>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
@@ -458,6 +458,18 @@ msgstr "Fuente de información de que ganaron"
 #, python-brace-format
 msgid "{post_role} for {area_name}"
 msgstr "{post_role} para {area_name}"
+
+#: candidates/mapit.py:65 elections/uk_general_election_2015/mapit.py:62
+#: elections/uk_general_election_2015/mapit.py:100
+#, python-brace-format
+msgid "The postcode “{0}” couldn’t be found"
+msgstr "Disculpas, el código postal \"{0}\" no pudo ser encontrado"
+
+#: candidates/mapit.py:71 elections/uk_general_election_2015/mapit.py:66
+#: elections/uk_general_election_2015/mapit.py:104
+#, python-brace-format
+msgid "Unknown MapIt error for postcode \"{0}\""
+msgstr "Disculpas, ocurrió un error desconocido de MapIt para el código postal \"{0}\""
 
 #: candidates/middleware.py:25
 msgid "As a precaution, an update was blocked:"
@@ -2125,7 +2137,7 @@ msgid "Upload a %(type)s"
 msgstr "Subir un %(type)s"
 
 #: elections/bf_elections_2015/templates/base.html:8
-#: elections/example/templates/base.html:8
+#: elections/cr/templates/base.html:8 elections/example/templates/base.html:8
 #: elections/st_paul_municipal_2015/templates/base.html:8
 #, python-format
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
@@ -2145,18 +2157,6 @@ msgstr "No fue posible encontrar circunscripción para '{0}'"
 #, python-brace-format
 msgid "There were disallowed characters in \"{0}\""
 msgstr "Disculpas, pero hay caracteres no permitidos en \"{0}\""
-
-#: elections/uk_general_election_2015/mapit.py:62
-#: elections/uk_general_election_2015/mapit.py:100
-#, python-brace-format
-msgid "The postcode “{0}” couldn’t be found"
-msgstr "Disculpas, el código postal \"{0}\" no pudo ser encontrado"
-
-#: elections/uk_general_election_2015/mapit.py:66
-#: elections/uk_general_election_2015/mapit.py:104
-#, python-brace-format
-msgid "Unknown MapIt error for postcode \"{0}\""
-msgstr "Disculpas, ocurrió un error desconocido de MapIt para el código postal \"{0}\""
 
 #: elections/uk_general_election_2015/mapit.py:89
 #, python-brace-format
