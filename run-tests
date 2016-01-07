@@ -25,6 +25,7 @@ update_exit_code() {
 
 TEST_SETTINGS_MODULES=(
     'mysite.settings.tests'
+    'mysite.settings.tests_cr'
     'mysite.settings.tests_uk'
     'mysite.settings.tests_st_paul'
 )
