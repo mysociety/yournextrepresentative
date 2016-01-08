@@ -92,7 +92,7 @@ class Command(BaseCommand):
         except OrganizationExtra.DoesNotExist:
             org = popolo_models.Organization.objects.create(
                 name=name,
-                classification='party'
+                classification='Party'
             )
 
             OrganizationExtra.objects.create(

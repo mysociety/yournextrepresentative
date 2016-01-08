@@ -29,7 +29,7 @@ You can find a link for this on the main country page.
         orgs = ep_json['organizations']
 
         for json_org in orgs:
-            if json_org['classification'] != 'party':
+            if json_org['classification'] != 'Party':
                 continue
 
             name = json_org['name']
@@ -38,7 +38,7 @@ You can find a link for this on the main country page.
 
             org, created = Organization.objects.get_or_create(
                 name=name,
-                classification='party'
+                classification='Party'
             )
 
             content_type = ContentType.objects.get_for_model(org)
