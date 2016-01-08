@@ -130,5 +130,5 @@ class Command(BaseCommand):
                     post.save()
                     post_extra.party_set = party_set
                     post_extra.save()
-                    post_extra.elections.all().delete()
+                    post_extra.elections.clear()
                     post_extra.elections.add(election)
