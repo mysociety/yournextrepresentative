@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-07 06:08-0600\n"
-"PO-Revision-Date: 2015-12-18 11:35+0000\n"
+"POT-Creation-Date: 2016-01-08 11:09-0600\n"
+"PO-Revision-Date: 2016-01-08 17:10+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -1221,16 +1221,17 @@ msgid ""
 "money."
 msgstr "Peidiwch dalu am fas ddata o ymgeiswyr gan werthwyr data - mae'n wastraff arian."
 
-#: candidates/templates/candidates/frontpage.html:46
+#: candidates/templates/candidates/frontpage.html:47
 #: elections/ar_elections_2015/templates/candidates/frontpage.html:48
+#: elections/cr/templates/cr/frontpage.html:22
 msgid "Show candidates"
 msgstr "Dangos ymgeiswyr"
 
-#: candidates/templates/candidates/frontpage.html:55
+#: candidates/templates/candidates/frontpage.html:57
 msgid "This is a crowd-sourced database of election candidates."
 msgstr "Dyma gronfa ddata sydd wedi ei dorfoli o ymgeiswyr yn yr etholiad."
 
-#: candidates/templates/candidates/frontpage.html:59
+#: candidates/templates/candidates/frontpage.html:61
 #, python-format
 msgid ""
 "The database is transparently sourced and available as structured data, "
@@ -1239,25 +1240,25 @@ msgid ""
 "candidate details.</a>"
 msgstr "Mae ffynonellau data'r gronfa ddata mor dryloyw â phosib ac mae o ar gael fel data strwythuredig, yn addas ar gyfer creu gwefannau etholiad eraill.  <a href=\"%(api_url)s\">Mynnwch gopi o'r data</a>, neu <a href=\"%(tasks_url)s\">gallwch ein helpu drwy gyfrannu manylion ymgeiswyr newydd.</a>"
 
-#: candidates/templates/candidates/frontpage.html:72
+#: candidates/templates/candidates/frontpage.html:74
 msgid "Recent changes"
 msgstr "Newidiadau diweddar"
 
-#: candidates/templates/candidates/frontpage.html:79
+#: candidates/templates/candidates/frontpage.html:81
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> created <a href=\"%(person_url)s\">a new "
 "candidate</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "Ychwanegodd y defnyddiwr <strong>%(username)s</strong> <a href=\"%(person_url)s\">ymgeisydd newydd</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:85
+#: candidates/templates/candidates/frontpage.html:87
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> is creating a new candidate <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Mae <strong>%(username)s</strong> wrthi'n ychwanegu ymgeisydd newydd ers <span class=\"when\">%(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:91
+#: candidates/templates/candidates/frontpage.html:93
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> merged another candidate into <a "
@@ -1265,7 +1266,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Cyfunodd defnyddiwr  <strong>%(username)s</strong> manylion ymgeisydd arall gyda  <a href=\"%(person_url)s\">candidate #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:97
+#: candidates/templates/candidates/frontpage.html:99
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> uploaded a photo of <a "
@@ -1273,7 +1274,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Llwythodd <strong>%(username)s</strong> llun o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> i'w gymedroli <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:103
+#: candidates/templates/candidates/frontpage.html:105
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> approved an uploaded photo of <a "
@@ -1281,7 +1282,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Cymeradwyodd defnyddiwr <strong>%(username)s</strong> llun a oedd wedi ei lwytho o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:109
+#: candidates/templates/candidates/frontpage.html:111
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> rejected an uploaded photo of <a "
@@ -1289,7 +1290,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Gwrthododd defnyddiwr <strong>%(username)s</strong> llun a oedd wedi ei lwytho o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:115
+#: candidates/templates/candidates/frontpage.html:117
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> reverted to an earlier version of <a "
@@ -1297,7 +1298,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Penderfynodd defnyddiwr <strong>%(username)s</strong> mynd yn ôl at fersiwn cynharach o lun o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:121
+#: candidates/templates/candidates/frontpage.html:123
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> confirmed candidacy for <a "
@@ -1305,7 +1306,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Cadarnhaodd <strong>%(username)s</strong> ymgeisyddiaeth  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> ers <span class=\"when\">%(when)s </span>"
 
-#: candidates/templates/candidates/frontpage.html:127
+#: candidates/templates/candidates/frontpage.html:129
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> removed candidacy for <a "
@@ -1313,21 +1314,21 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Tynnodd neu negyddodd <strong>%(username)s</strong> ymgeisyddiaeth  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:133
+#: candidates/templates/candidates/frontpage.html:135
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> locked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Gwnaeth <strong>%(username)s</strong> gloi etholaeth  <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:137
+#: candidates/templates/candidates/frontpage.html:139
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> unlocked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Gwnaeth <strong>%(username)s</strong> dad-gloi etholaeth  <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:141
+#: candidates/templates/candidates/frontpage.html:143
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> marked <a "
@@ -1335,7 +1336,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Nododd <strong>%(username)s</strong> fod <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> wedi ennill  <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:147
+#: candidates/templates/candidates/frontpage.html:149
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> updated <a "
@@ -1343,15 +1344,15 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr "Diweddarodd <strong>%(username)s</strong>  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:156
+#: candidates/templates/candidates/frontpage.html:158
 msgid "Show more changes…"
 msgstr "Dangos rhagor o newidiadau..."
 
-#: candidates/templates/candidates/frontpage.html:159
+#: candidates/templates/candidates/frontpage.html:161
 msgid "Top users this week"
 msgstr "Prif ddefnyddwyr yr wythnos hon"
 
-#: candidates/templates/candidates/frontpage.html:163
+#: candidates/templates/candidates/frontpage.html:165
 #, python-format
 msgid "%(count)s edit"
 msgid_plural "%(count)s edits"
@@ -1360,7 +1361,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: candidates/templates/candidates/frontpage.html:168
+#: candidates/templates/candidates/frontpage.html:170
 msgid "Show full leaderboard…"
 msgstr "Dangos y rhestr gyflawn o bwy sydd ar y brig..."
 
@@ -2142,6 +2143,10 @@ msgstr "Lanlwytho %(type)s"
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
 msgstr ""
 
+#: elections/cr/forms.py:13
+msgid "Select your canton"
+msgstr ""
+
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:6
 msgid "Candidates by post for the St Paul municipal elections 2015"
 msgstr ""
@@ -2597,7 +2602,7 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
 
-#: mysite/settings/conf.py:349
+#: mysite/settings/conf.py:350
 msgid ""
 "Please don't quote third-party candidate sites — we prefer URLs of news "
 "stories or official candidate pages."
