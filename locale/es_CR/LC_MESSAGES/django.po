@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-07 06:08-0600\n"
-"PO-Revision-Date: 2016-01-05 01:02+0000\n"
+"PO-Revision-Date: 2016-01-08 08:08+0000\n"
 "Last-Translator: Manfred Vargas <manfred.vargas@gmail.com>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
@@ -1216,7 +1216,7 @@ msgstr "Candidatos a %(election_name)s"
 
 #: candidates/templates/candidates/frontpage.html:34
 msgid "Find candidates to be your next representative"
-msgstr "Encontrá candidatos"
+msgstr "Encontrá tus candidatos locales"
 
 #: candidates/templates/candidates/frontpage.html:36
 msgid ""
