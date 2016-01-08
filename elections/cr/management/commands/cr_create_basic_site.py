@@ -123,6 +123,7 @@ class Command(BaseCommand):
                             base=post,
                             slug=post_slug,
                         )
+                    post.area = area
                     post.role = post_role
                     post.label = post_label
                     post.organization = organization
