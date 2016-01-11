@@ -74,7 +74,7 @@
     <h2><a href="{% url 'recent-changes' %}">{% trans "Recent changes" %}</a></h2>
     <ol>
       {% for action in recent_actions %}
-        <li>{% with username=action.user.username when=action.created|timesince person_id=action.person.id %}
+        <li>{% with username=action.user.username when=action.created|timesince person_id=action.person.id person_name=action.person.name %}
           {% url 'person-view' person_id=person_id as person_url %}
           {% if action.action_type == 'person-create' %}
             {% if person_id %}
@@ -92,43 +92,43 @@
           {% elif action.action_type == 'person-merge' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            merged another candidate into <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            merged another candidate into <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'photo-upload' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            uploaded a photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a> for moderation
+            uploaded a photo of <a href="{{ person_url }}">{{ person_name }}</a> for moderation
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'photo-approve' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            approved an uploaded photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            approved an uploaded photo of <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'photo-reject' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            rejected an uploaded photo of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            rejected an uploaded photo of <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'person-revert' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            reverted to an earlier version of <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            reverted to an earlier version of <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'candidacy-create' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            confirmed candidacy for <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            confirmed candidacy for <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'candidacy-delete' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            removed candidacy for <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            removed candidacy for <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% elif action.action_type == 'constituency-lock' %}
@@ -142,13 +142,13 @@
           {% elif action.action_type == 'set-candidate-elected' %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            marked <a href="{{ person_url }}">candidate #{{ person_id }}</a> as the winner
+            marked <a href="{{ person_url }}">{{ person_name }}</a> as the winner
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% else %}
             {% blocktrans trimmed %}
             User <strong>{{ username }}</strong>
-            updated <a href="{{ person_url }}">candidate #{{ person_id }}</a>
+            updated <a href="{{ person_url }}">{{ person_name }}</a>
             <span class="when">{{ when }} ago</span>
             {% endblocktrans %}
           {% endif %}
