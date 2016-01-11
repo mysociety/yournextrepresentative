@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import importlib
 from os.path import dirname, exists, join, realpath
 import re
@@ -28,6 +30,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     election_settings_module = election_app_fully_qualified + '.settings'
     elections_module = importlib.import_module(election_settings_module)
 
+    language_code = conf.get('LANGUAGE_CODE', 'en-gb')
+
     # Internationalization
     # https://docs.djangoproject.com/en/1.6/topics/i18n/
     locale_paths = [
@@ -52,6 +56,28 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     ]
     languages.append(('cy-gb', 'Welsh'))
     languages.append(('es-cr', 'Costa Rican Spanish'))
+
+    # The language selection has been slightly complicated now that we
+    # have two es- languages: es-ar and es-cr.  Chrome doesn't offer
+    # Costa Rican Spanish as one of its language choices, so the best
+    # you can do is choose 'Spanish - español'. (This might well be
+    # the case in other browsers too.)  Since 'es-ar' comes first in
+    # 'languages' after the preceding code, this means that someone
+    # viewing the Costa Rica site with Chrome's preferred language set
+    # to Spanish (i.e. with 'es' first in Accept-Language) will get
+    # the Argentinian Spanish translations instead of Costa Rican
+    # Spanish.  To get around this, look for the default language code
+    # for the site, and if that's present, move it to the front of
+    # 'languages'.  This should be generally helpful behaviour: the
+    # default language code of the site should take precedence over
+    # another language that happens to match based on the generic part
+    # of the language code.
+    language_code_index = next(
+        (i for i, l in enumerate(languages) if l[0] == language_code),
+        None
+    )
+    if language_code_index is not None:
+        languages.insert(0, languages.pop(language_code_index))
 
     # Make sure the MEDIA_ROOT directory actually exists:
     media_root = conf.get('MEDIA_ROOT') or join(BASE_DIR, 'media')
@@ -246,7 +272,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         # Language settings (calculated above):
         'LOCALE_PATHS': locale_paths,
         'LANGUAGES': languages,
-        'LANGUAGE_CODE': conf.get('LANGUAGE_CODE', 'en-gb'),
+        'LANGUAGE_CODE': language_code,
         'TIME_ZONE': conf.get('TIME_ZONE', 'Europe/London'),
         'USE_I18N': True,
         'USE_L10N': True,
