@@ -23,6 +23,7 @@ SETTINGS_TO_ADD = (
     'SITE_OWNER',
     'COPYRIGHT_HOLDER',
     'RUNNING_TESTS',
+    'DATE_FORMAT',
 )
 
 

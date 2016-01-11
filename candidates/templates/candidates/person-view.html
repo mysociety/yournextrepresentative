@@ -175,7 +175,7 @@
             <small class="dob">({% blocktrans %}Year of birth: {{ dob }}{% endblocktrans %})</small>
         {% else %}
           <dd>{{ person.extra.age }}
-            <small class="dob">({% blocktrans with dob=person.extra.dob_as_date|date:"jS F Y" %}Date of birth: {{ dob }}{% endblocktrans %})</small>
+            <small class="dob">({% blocktrans with dob=person.extra.dob_as_date|date:settings.DATE_FORMAT %}Date of birth: {{ dob }}{% endblocktrans %})</small>
         {% endif %}
       {% else %}
         <dd>{% trans "Unknown" %}

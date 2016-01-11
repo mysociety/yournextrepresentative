@@ -23,6 +23,12 @@ ELECTION_APP: 'example'
 LANGUAGE_CODE: 'en-gb'
 TIME_ZONE: 'Europe/London'
 
+# This is the date format to use for formatting a candidate's date of
+# birth. It should be constructed using the format specifiers listed here:
+# https://docs.djangoproject.com/es/1.9/ref/templates/builtins/#date
+# If not specified the default is: 'j F Y'.
+DATE_FORMAT: 'j F Y'
+
 # The path to the gems directory:
 GEMS_DIRECTORY: ''
 

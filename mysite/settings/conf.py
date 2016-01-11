@@ -251,6 +251,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'USE_I18N': True,
         'USE_L10N': True,
         'USE_TZ': True,
+        'DATE_FORMAT': conf.get('DATE_FORMAT', 'j F Y'),
 
         # The media and static file settings:
         'MEDIA_ROOT': media_root,
