@@ -23,7 +23,7 @@ class IncompleteFieldView(TemplateView):
             .select_related('person', 'post', 'person__extra', 'post__extra', 'on_behalf_of') \
             .filter(
                 role='Candidate',
-                extra__election__slug='2015',
+                extra__election__current=True,
             )
 
         filtered_results = self.get_results(all_results)
@@ -59,10 +59,10 @@ class IncompleteFieldView(TemplateView):
         context['results'] = result_context
         context['results_count'] = filtered_results.count()
 
-        context['candidates_2015'] = all_results.count()
+        context['candidates_count'] = all_results.count()
         context['percent_empty'] = \
             (100 * context['results_count'] \
-            / float(context['candidates_2015']))
+            / float(context['candidates_count']))
 
         return context
 

@@ -60,7 +60,7 @@ class TestFieldView(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.context['field'], 'email')
-        self.assertEqual(response.context['candidates_2015'], 2)
+        self.assertEqual(response.context['candidates_count'], 2)
         self.assertEqual(response.context['results_count'], 1)
 
         self.assertContains(response, 'Tessa Jowell')

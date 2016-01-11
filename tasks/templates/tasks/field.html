@@ -11,8 +11,8 @@
 {{ pretty_count }} candidates missing {{ field }} field</h2>
 {% endblocktrans %}
 
-<h3>{% blocktrans trimmed with num_candidates_2015=candidates_2015|intcomma percent_empty=percent_empty|floatformat %}
-Of {{ num_candidates_2015 }} candidates in total ({{ percent_empty }}% blank)
+<h3>{% blocktrans trimmed with num_candidates=candidates_count|intcomma percent_empty=percent_empty|floatformat %}
+Of {{ num_candidates }} candidates in total ({{ percent_empty }}% blank)
 {% endblocktrans %}</h3>
 
 {% block advise %}
