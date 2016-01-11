@@ -4,10 +4,9 @@
 {% load staticfiles %}
 
 {% block footer_bylines %}
-  {% static "img/logo-with-text.png" as logo_url %}
   <p>{% blocktrans with site_managers='ACCESA' trimmed %}
     Run by
-    <img src="{{ logo_url }}" %} alt="{{ site_managers }}" class="dc-logo">
+    <a href="http://accesa.org/">{{ site_managers }}</a>
     {% endblocktrans %}
   </p>
 {% endblock %}

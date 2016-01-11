@@ -37,7 +37,7 @@ $body-background-color: $color-orange-50;
 $footer-text-color: $color-orange-700;
 $content-background-color: #fff;
 
-$muted-text-color: $color-gold-700;
+$muted-text-color: #999;
 
 $message-background-color: $color-gold-100;
 $message-border-color: $color-gold-300;
@@ -108,4 +108,42 @@ $high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi
     &:focus {
         text-decoration: none;
     }
+}
+
+.finder__forms {
+  background-color: $color-orange;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  label {
+    color: #fff;
+    text-shadow: 0 1px 1px $color-orange-700;
+  }
+
+  .button {
+    @include button-style($bg: #fff, $bg-hover: mix(#fff, $color-orange-100, 50%));
+  }
+
+  input,
+  .button {
+    box-shadow: 0 1px 1px $color-orange-700;
+  }
+}
+
+.finder__forms {
+  background-color: $color-orange;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  label {
+    color: #fff;
+    text-shadow: 0 1px 1px $color-orange-700;
+  }
+
+  .button {
+    @include button-style($bg: #fff, $bg-hover: mix(#fff, $color-orange-100, 50%));
+  }
+
+  input,
+  .button {
+    box-shadow: 0 1px 1px $color-orange-700;
+  }
 }

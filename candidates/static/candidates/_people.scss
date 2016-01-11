@@ -222,6 +222,12 @@
   margin-bottom: 1.6em;
 }
 
+// Success message shown above personal details and
+// sidebar when a new candidate is created.
+.do-something-else ul {
+  margin-bottom: 0;
+}
+
 .person__hero {
   .person__photo {
     position: relative;
