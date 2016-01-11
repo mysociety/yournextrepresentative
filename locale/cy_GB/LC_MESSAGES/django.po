@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-08 11:09-0600\n"
-"PO-Revision-Date: 2016-01-08 17:10+0000\n"
+"POT-Creation-Date: 2016-01-11 21:34+0000\n"
+"PO-Revision-Date: 2016-01-11 21:35+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -272,181 +272,181 @@ msgstr ""
 msgid "Updated at {0}"
 msgstr "Diweddarwyd ar {0}"
 
-#: candidates/forms.py:21
+#: candidates/forms.py:20
 msgid "Enter your address or town"
 msgstr "Rhowch eich cyfeiriad neu dref"
 
-#: candidates/forms.py:37 candidates/forms.py:437
+#: candidates/forms.py:36 candidates/forms.py:441
 msgid "Person ID"
 msgstr "Person ID"
 
-#: candidates/forms.py:41
+#: candidates/forms.py:40
 msgid "Post ID"
 msgstr "Cyfeirnod (ID) Etholaeth"
 
-#: candidates/forms.py:47
+#: candidates/forms.py:46
 #, python-brace-format
 msgid "Source of information that they're standing ({0})"
 msgstr "Ffynhonnell y wybodaeth eu bod yn sefyll ({0})"
 
-#: candidates/forms.py:55
+#: candidates/forms.py:54
 #, python-brace-format
 msgid "Information source for this change ({0})"
 msgstr "Ffynhonnell wybodaeth ar gyfer y newid hwn ({0})"
 
-#: candidates/forms.py:64
+#: candidates/forms.py:63
 msgid "Don’t Know"
 msgstr "Dim yn gwybod"
 
-#: candidates/forms.py:65
+#: candidates/forms.py:64
 msgid "Yes"
 msgstr "Ie / Oes / Ydy "
 
-#: candidates/forms.py:66
+#: candidates/forms.py:65
 msgid "No"
 msgstr "Na"
 
-#: candidates/forms.py:70
+#: candidates/forms.py:69
 msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
 msgstr "Teitl / swyddogaeth (e.e. Dr, Syr, ac ati.)"
 
-#: candidates/forms.py:75
+#: candidates/forms.py:74
 msgid "Full name"
 msgstr "Enw llawn"
 
-#: candidates/forms.py:79
+#: candidates/forms.py:78
 msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
 msgstr "Llythyrau ôl-enwol (e.e. CBE, DSO, ac ati.)"
 
-#: candidates/forms.py:84 candidates/templates/candidates/person-view.html:121
+#: candidates/forms.py:83 candidates/templates/candidates/person-view.html:121
 msgid "Email"
 msgstr "Ebost"
 
-#: candidates/forms.py:89
+#: candidates/forms.py:88
 msgid "Gender (e.g. “male”, “female”)"
 msgstr "Rhyw (e.e. \"gwryw\", \"benyw\")"
 
-#: candidates/forms.py:94
+#: candidates/forms.py:93
 msgid "Date of birth (as YYYY-MM-DD or YYYY)"
 msgstr "Dyddiad geni (fel BBBB-MM-DD neu BBBB)"
 
-#: candidates/forms.py:98
+#: candidates/forms.py:97
 msgid "Wikipedia URL"
 msgstr "Gwegyfeiriad Wicipedia"
 
-#: candidates/forms.py:103
+#: candidates/forms.py:102
 msgid "Homepage URL"
 msgstr "Gwegyfeiriad yr Hafan"
 
-#: candidates/forms.py:108
+#: candidates/forms.py:107
 msgid "Twitter username (e.g. “democlub”)"
 msgstr "Enw defnyddiwr (e.e. “democlub”)"
 
-#: candidates/forms.py:113
+#: candidates/forms.py:112
 msgid "Facebook profile URL"
 msgstr "Gwegyfeiriad proffil Facebook"
 
-#: candidates/forms.py:118
+#: candidates/forms.py:117
 msgid "Facebook page (e.g. for their campaign)"
 msgstr "Tudalen Facebook (e.e. ar gyfer eu hymgyrch)"
 
-#: candidates/forms.py:123
+#: candidates/forms.py:122
 msgid "LinkedIn URL"
 msgstr "Gwegyfeiriad LinkedIn"
 
-#: candidates/forms.py:128
+#: candidates/forms.py:127
 msgid "The party’s candidate page for this person"
 msgstr "Tudalen ymgeisydd y blaid ar gyfer person hwn"
 
-#: candidates/forms.py:136
-#: candidates/templates/candidates/person-view.html:190
+#: candidates/forms.py:135
+#: candidates/templates/candidates/person-view.html:203
 msgid "CV or Résumé"
 msgstr ""
 
-#: candidates/forms.py:143
-#: candidates/templates/candidates/person-view.html:195
+#: candidates/forms.py:142
+#: candidates/templates/candidates/person-view.html:208
 msgid "Program"
 msgstr ""
 
-#: candidates/forms.py:156
+#: candidates/forms.py:160
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr "Rhaid i'r enw defnyddiwr Twitter cynnwys llythrennau, rhifau a thanlinelliad yn unig"
 
-#: candidates/forms.py:179
+#: candidates/forms.py:183
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
 msgstr "Wrth nodi bod yr ymgeisydd yn sefyll yn {election}, rhaid i chi ddewis etholaeth"
 
-#: candidates/forms.py:186
+#: candidates/forms.py:190
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
 msgstr "Nodwyd cyfeirnod etholaeth '{post_id}' sy'n anhysbys i ni"
 
-#: candidates/forms.py:193
+#: candidates/forms.py:197
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr "Methu canfod pleidiau am yr etholaeth gyda'r cyfeirnod '{post_id}' yn {election}"
 
-#: candidates/forms.py:205
+#: candidates/forms.py:209
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr "Rhaid i chi nodi plaid ar gyfer  {election}"
 
-#: candidates/forms.py:221 candidates/forms.py:336
+#: candidates/forms.py:225 candidates/forms.py:340
 #, python-format
 msgid "Standing in %s"
 msgstr "Sefyll yn %s"
 
-#: candidates/forms.py:236 candidates/forms.py:247
+#: candidates/forms.py:240 candidates/forms.py:251
 #, python-brace-format
 msgid "Post in the {election}"
 msgstr "Etholaeth yn {election}"
 
-#: candidates/forms.py:287 candidates/forms.py:357
+#: candidates/forms.py:291 candidates/forms.py:361
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr "Plaid yn {election} ({party_set_name})"
 
-#: candidates/forms.py:301
+#: candidates/forms.py:305
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr "Ffynhonnell o wybodaeth  ({0})"
 
-#: candidates/forms.py:306 candidates/forms.py:391
+#: candidates/forms.py:310 candidates/forms.py:395
 msgid "You must indicate how you know about this candidate"
 msgstr "Rhaid i chi nodi sut y gwyddoch chi am ymgeisydd hwn"
 
-#: candidates/forms.py:311 candidates/forms.py:396
+#: candidates/forms.py:315 candidates/forms.py:400
 msgid "How you know about this candidate"
 msgstr "Sut y gwyddoch chi am ymgeisydd hwn"
 
-#: candidates/forms.py:342
+#: candidates/forms.py:346
 #, python-format
 msgid "Constituency in %s"
 msgstr "Etholaeth yn %s"
 
-#: candidates/forms.py:375
+#: candidates/forms.py:379
 msgid "Position in party list ('1' for first, '2' for second, etc.)"
 msgstr ""
 
-#: candidates/forms.py:386
+#: candidates/forms.py:390
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr "Ffynhonnell wybodaeth ar gyfer y newid hwn ({0})"
 
-#: candidates/forms.py:418
+#: candidates/forms.py:422
 #, python-brace-format
 msgid ""
 "You can only edit data on {site_name} if you agree to this copyright "
 "assignment."
 msgstr ""
 
-#: candidates/forms.py:442
+#: candidates/forms.py:446
 msgid "Source of information that they won"
 msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 
@@ -1262,57 +1262,57 @@ msgstr "Mae <strong>%(username)s</strong> wrthi'n ychwanegu ymgeisydd newydd ers
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> merged another candidate into <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Cyfunodd defnyddiwr  <strong>%(username)s</strong> manylion ymgeisydd arall gyda  <a href=\"%(person_url)s\">candidate #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:99
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> uploaded a photo of <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> for moderation <span "
+"href=\"%(person_url)s\">%(person_name)s</a> for moderation <span "
 "class=\"when\">%(when)s ago</span>"
-msgstr "Llwythodd <strong>%(username)s</strong> llun o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> i'w gymedroli <span class=\"when\">%(when)s yn ôl</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:105
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> approved an uploaded photo of <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Cymeradwyodd defnyddiwr <strong>%(username)s</strong> llun a oedd wedi ei lwytho o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:111
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> rejected an uploaded photo of <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Gwrthododd defnyddiwr <strong>%(username)s</strong> llun a oedd wedi ei lwytho o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:117
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> reverted to an earlier version of <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Penderfynodd defnyddiwr <strong>%(username)s</strong> mynd yn ôl at fersiwn cynharach o lun o <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:123
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> confirmed candidacy for <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Cadarnhaodd <strong>%(username)s</strong> ymgeisyddiaeth  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> ers <span class=\"when\">%(when)s </span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:129
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> removed candidacy for <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Tynnodd neu negyddodd <strong>%(username)s</strong> ymgeisyddiaeth  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:135
 #, python-format
@@ -1332,17 +1332,17 @@ msgstr "Gwnaeth <strong>%(username)s</strong> dad-gloi etholaeth  <span class=\"
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> marked <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> as the winner <span "
+"href=\"%(person_url)s\">%(person_name)s</a> as the winner <span "
 "class=\"when\">%(when)s ago</span>"
-msgstr "Nododd <strong>%(username)s</strong> fod <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> wedi ennill  <span class=\"when\">%(when)s yn ôl</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:149
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> updated <a "
-"href=\"%(person_url)s\">candidate #%(person_id)s</a> <span "
-"class=\"when\">%(when)s ago</span>"
-msgstr "Diweddarodd <strong>%(username)s</strong>  <a href=\"%(person_url)s\">ymgeisydd #%(person_id)s</a> <span class=\"when\">%(when)s yn ôl</span>"
+"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
+"ago</span>"
+msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:158
 msgid "Show more changes…"
@@ -1532,7 +1532,7 @@ msgid "Demographics:"
 msgstr "Demograffeg:"
 
 #: candidates/templates/candidates/person-edit.html:224
-#: candidates/templates/candidates/person-view.html:187
+#: candidates/templates/candidates/person-view.html:200
 msgid "Additional information:"
 msgstr ""
 
@@ -1726,7 +1726,7 @@ msgid "Gender"
 msgstr "Rhyw"
 
 #: candidates/templates/candidates/person-view.html:169
-#: candidates/templates/candidates/person-view.html:181
+#: candidates/templates/candidates/person-view.html:194
 msgid "Unknown"
 msgstr "Anhysbys"
 
@@ -1739,45 +1739,48 @@ msgstr "Oed"
 msgid "Year of birth: %(dob)s"
 msgstr "Blwyddyn geni: %(dob)s"
 
-#: candidates/templates/candidates/person-view.html:178
+#: candidates/templates/candidates/person-view.html:185
+#: candidates/templates/candidates/person-view.html:188
 #, python-format
-msgid "Date of birth: %(dob)s"
-msgstr "Dyddiad geni: %(dob)s"
+msgid ""
+"Date of birth: %(dob)s\n"
+"                 "
+msgstr ""
 
-#: candidates/templates/candidates/person-view.html:204
+#: candidates/templates/candidates/person-view.html:217
 msgid "Photo Credit:"
 msgstr "Credyd Llun:"
 
-#: candidates/templates/candidates/person-view.html:223
+#: candidates/templates/candidates/person-view.html:236
 msgid "Improve this data!"
 msgstr "Gwella'r data hwn!"
 
-#: candidates/templates/candidates/person-view.html:225
+#: candidates/templates/candidates/person-view.html:238
 msgid "Our database is built by people like you."
 msgstr "Mae ein cronfa ddata wedi'i hadeiladu gan bobl fel chi."
 
-#: candidates/templates/candidates/person-view.html:226
+#: candidates/templates/candidates/person-view.html:239
 msgid ""
 "Please do add extra details about this candidate – it only takes a moment."
 msgstr "Ychwanegwch fanylion am yr ymgeisydd - jobyn dau funud."
 
-#: candidates/templates/candidates/person-view.html:229
+#: candidates/templates/candidates/person-view.html:241
 msgid "Edit candidate"
 msgstr "Golygu ymgeisydd"
 
-#: candidates/templates/candidates/person-view.html:232
+#: candidates/templates/candidates/person-view.html:243
 msgid "Log in to edit"
 msgstr "Mewngofnodi er mwyn golygu"
 
-#: candidates/templates/candidates/person-view.html:240
+#: candidates/templates/candidates/person-view.html:251
 msgid "Use this data!"
 msgstr "Defnyddio'r ddata!"
 
-#: candidates/templates/candidates/person-view.html:241
+#: candidates/templates/candidates/person-view.html:252
 msgid "Open data JSON API:"
 msgstr "Data agored API JSON:"
 
-#: candidates/templates/candidates/person-view.html:246
+#: candidates/templates/candidates/person-view.html:257
 #, python-format
 msgid ""
 "More details about getting <a href=\"%(api_url)s\">the data</a> and <a "
@@ -2137,7 +2140,7 @@ msgid "Upload a %(type)s"
 msgstr "Lanlwytho %(type)s"
 
 #: elections/bf_elections_2015/templates/base.html:8
-#: elections/cr/templates/base.html:8 elections/example/templates/base.html:8
+#: elections/example/templates/base.html:8
 #: elections/st_paul_municipal_2015/templates/base.html:8
 #, python-format
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
@@ -2145,6 +2148,11 @@ msgstr ""
 
 #: elections/cr/forms.py:13
 msgid "Select your canton"
+msgstr ""
+
+#: elections/cr/templates/base.html:7
+#, python-format
+msgid "Run by <a href=\"http://accesa.org/\">%(site_managers)s</a>"
 msgstr ""
 
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:6
@@ -2602,7 +2610,7 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
 
-#: mysite/settings/conf.py:350
+#: mysite/settings/conf.py:376
 msgid ""
 "Please don't quote third-party candidate sites — we prefer URLs of news "
 "stories or official candidate pages."
@@ -2766,9 +2774,8 @@ msgstr[3] ""
 
 #: tasks/templates/tasks/field.html:14
 #, python-format
-msgid ""
-"Of %(num_candidates_2015)s candidates in total (%(percent_empty)s%% blank)"
-msgstr "Allan o %(num_candidates_2015)s ymgeisydd,  mae  (%(percent_empty)s%% blank) ar goll"
+msgid "Of %(num_candidates)s candidates in total (%(percent_empty)s%% blank)"
+msgstr ""
 
 #: tasks/templates/tasks/field.html:21
 #, python-format
