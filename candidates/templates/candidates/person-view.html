@@ -175,7 +175,19 @@
             <small class="dob">({% blocktrans %}Year of birth: {{ dob }}{% endblocktrans %})</small>
         {% else %}
           <dd>{{ person.extra.age }}
-            <small class="dob">({% blocktrans with dob=person.extra.dob_as_date|date:"jS F Y" %}Date of birth: {{ dob }}{% endblocktrans %})</small>
+            <small class="dob">
+              {% comment %}
+                The 'S' format only gives an English ordinal suffix, so only
+                use it if the LANGUAGE is English.
+              {% endcomment %}
+              {% if LANGUAGE_CODE|slice:":2" == 'en' %}
+                ({% blocktrans with dob=person.extra.dob_as_date|date:"jS F Y" %}Date of birth: {{ dob }}
+                 {% endblocktrans %})
+              {% else %}
+                ({% blocktrans with dob=person.extra.dob_as_date|date:"j F Y" %}Date of birth: {{ dob }}
+                 {% endblocktrans %})
+              {% endif %}
+            </small>
         {% endif %}
       {% else %}
         <dd>{% trans "Unknown" %}
