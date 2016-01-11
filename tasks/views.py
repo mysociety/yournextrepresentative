@@ -59,10 +59,13 @@ class IncompleteFieldView(TemplateView):
         context['results'] = result_context
         context['results_count'] = filtered_results.count()
 
-        context['candidates_count'] = all_results.count()
-        context['percent_empty'] = \
-            (100 * context['results_count'] \
-            / float(context['candidates_count']))
+        candidates_count = all_results.count()
+        if candidates_count == 0:
+            context['percent_empty'] = 0
+        else:
+            context['percent_empty'] = \
+                (100 * context['results_count'] / float(candidates_count))
+        context['candidates_count'] = candidates_count
 
         return context
 
