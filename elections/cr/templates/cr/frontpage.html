@@ -15,6 +15,14 @@
   </script>
 {% endblock %}
 
+{% block hero %}
+
+  <h1>{% trans "Find candidates to be your next representative" %}</h1>
+
+  <p class="lead">{% trans "Find or add information about the candidates for the upcoming municipal elections on February 7" %}</p>
+
+{% endblock %}
+
 {% block finder_forms %}
   <form id="canton-selector" action="{% url 'canton-frontpage' %}" method="post">
     {% csrf_token %}
