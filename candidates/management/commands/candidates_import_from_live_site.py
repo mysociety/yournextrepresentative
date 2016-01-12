@@ -326,10 +326,6 @@ class Command(BaseCommand):
                     'base': p,
                     'versions': json.dumps(person_data['versions'])
                 }
-                if person_data.get('cv'):
-                    kwargs['cv'] = person_data['cv']
-                if person_data.get('program'):
-                    kwargs['program'] = person_data['program']
                 pe = models.PersonExtra.objects.create(**kwargs)
         for m_data in self.get_api_results('memberships'):
             with show_data_on_error('m_data', m_data):

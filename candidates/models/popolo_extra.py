@@ -49,8 +49,6 @@ def update_person_from_form(person, person_extra, form):
         form_data['birth_date'] = ''
     for field_name in form_simple_fields.keys():
         setattr(person, field_name, form_data[field_name])
-    for field_name in settings.EXTRA_SIMPLE_FIELDS.keys():
-        setattr(person_extra, field_name, form_data[field_name])
     for field_name, location in form_complex_fields_locations.items():
         person_extra.update_complex_field(location, form_data[field_name])
     for extra_field in ExtraField.objects.all():
@@ -145,12 +143,6 @@ def parse_approximate_date(s):
 
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
-
-    # These two fields are added just for Burkina Faso - we should
-    # have a better way of adding arbitrary fields which are only
-    # needed for one site.
-    cv = models.TextField(blank=True)
-    program = models.TextField(blank=True)
 
     # This field stores JSON data with previous version information
     # (as it did in PopIt).
@@ -326,12 +318,9 @@ class PersonExtra(HasImageMixin, models.Model):
 
     def get_initial_form_data(self):
         initial_data = {}
-        fields_on_base = form_simple_fields.keys()
-        fields_on_extra = settings.EXTRA_SIMPLE_FIELDS.keys()
-        fields_on_extra += form_complex_fields_locations.keys()
-        for field_name in fields_on_base:
+        for field_name in form_simple_fields.keys():
             initial_data[field_name] = getattr(self.base, field_name)
-        for field_name in fields_on_extra:
+        for field_name in form_complex_fields_locations.keys():
             initial_data[field_name] = getattr(self, field_name)
         for extra_field_value in PersonExtraFieldValue.objects.filter(
                 person=self.base

@@ -159,20 +159,6 @@ class BasePersonForm(forms.Form):
         required=False,
     )
 
-    if 'cv' in settings.EXTRA_SIMPLE_FIELDS:
-        cv = forms.CharField(
-            required=False,
-            label=_(u"CV or Résumé"),
-            widget=forms.Textarea
-        )
-
-    if 'program' in settings.EXTRA_SIMPLE_FIELDS:
-        program = forms.CharField(
-            required=False,
-            label=_(u"Program"),
-            widget=forms.Textarea
-        )
-
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         if not birth_date:
