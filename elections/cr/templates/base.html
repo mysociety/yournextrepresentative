@@ -4,9 +4,11 @@
 {% load staticfiles %}
 
 {% block footer_bylines %}
+  {% static "img/accesa-logo.png" as logo_url %}
+  {% static "img/accesa-logo@2x.png" as logo_url_2 %}
   <p>{% blocktrans with site_managers='ACCESA' trimmed %}
-    Run by
-    <a href="http://accesa.org/">{{ site_managers }}</a>
+      Run by <a href="http://accesa.org/">
+      <img src="{{ logo_url }}" %} srcset="{{ logo_url }} 1x, {{ logo_url_2 }} 2x" alt="{{ site_managers }}" class="accesa-logo"></a>
     {% endblocktrans %}
   </p>
 {% endblock %}

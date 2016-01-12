@@ -147,3 +147,11 @@ $high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi
     box-shadow: 0 1px 1px $color-orange-700;
   }
 }
+
+// In the footer
+.accesa-logo {
+  width: 128px;
+  height: 32px;
+  vertical-align: -10px;
+  margin-left: 0.4em;
+}
