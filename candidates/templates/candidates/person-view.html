@@ -109,7 +109,7 @@
     {% endif %}
   <h2>{% trans "Personal details:" %}</h2>
 
-  <dl class="key-value-list">
+  <dl>
     <dt>{% trans "Name" %}</dt>
     <dd>{{ person.extra.name_with_honorifics }}</dd>
     {% if person.other_names.exists %}
@@ -139,7 +139,7 @@
 
   <h2>{% trans "Links and social media:" %}</h2>
 
-  <dl class="key-value-list">
+  <dl>
     <dt>Twitter</dt>
     <dd>{% if person.extra.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.extra.twitter_username }}">@{{ person.extra.twitter_username }}</a>{% endif %}</dd>
     <dt>Facebook</dt>
@@ -164,7 +164,7 @@
 
   <h2>{% trans "Demographics:" %}</h2>
 
-  <dl class="key-value-list">
+  <dl>
     <dt>{% trans "Gender" %}</dt>
     <dd>{% if person.gender %}{{ person.gender|title }}{% else %}{% trans "Unknown" %}{% endif %}</dd>
     <dt>{% trans "Age" %}</dt>
