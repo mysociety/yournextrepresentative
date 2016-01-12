@@ -59,6 +59,9 @@
 
       <h2>{% trans "Personal details:" %}</h2>
 
+      {% if settings.ELECTION_APP == 'cr' %}
+      <input id="id_honorific_prefix" maxlength="256" name="honorific_prefix" type="hidden" value="">
+      {% else %}
       <div class="form-item {% if form.honorific_prefix.errors %}form-item--errors{% endif %}">
         <p>
           {{ form.honorific_prefix.label_tag }}
@@ -66,6 +69,7 @@
         </p>
         {{ form.honorific_prefix.errors }}
       </div>
+      {% endif %}
 
       <div class="form-item {% if form.name.errors %}form-item--errors{% endif %}">
         <p>
@@ -75,6 +79,9 @@
         {{ form.name.errors }}
       </div>
 
+      {% if settings.ELECTION_APP == 'cr' %}
+      <input id="id_honorific_suffix" maxlength="256" name="honorific_suffix" type="hidden" value="">
+      {% else %}
       <div class="form-item {% if form.honorific_suffix.errors %}form-item--errors{% endif %}">
         <p>
           {{ form.honorific_suffix.label_tag }}
@@ -82,6 +89,7 @@
         </p>
         {{ form.honorific_suffix.errors }}
       </div>
+      {% endif %}
 
       <div class="form-item {% if form.email.errors %}form-item--errors{% endif %}">
         <p>

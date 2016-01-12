@@ -13,6 +13,7 @@ from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
 from django.utils.translation import to_locale, get_language
 
 SETTINGS_TO_ADD = (
+    'ELECTION_APP',
     'GOOGLE_ANALYTICS_ACCOUNT',
     'USE_UNIVERSAL_ANALYTICS',
     'TWITTER_USERNAME',
