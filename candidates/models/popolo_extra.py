@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext as _
 
+from dateutil import parser
 from slugify import slugify
 from django_date_extensions.fields import ApproximateDate
 
@@ -104,7 +105,7 @@ def update_person_from_form(person, person_extra, form):
 
 
 def parse_approximate_date(s):
-    """Take a partial ISO 8601 date, and return an ApproximateDate for it
+    """Take any reasonable date string, and return an ApproximateDate for it
 
     >>> ad = parse_approximate_date('2014-02-17')
     >>> type(ad)
@@ -129,7 +130,9 @@ def parse_approximate_date(s):
             return ApproximateDate(*(int(g, 10) for g in m.groups()))
     if s == 'future':
         return ApproximateDate(future=True)
-    raise Exception, _("Couldn't parse '{0}' as an ApproximateDate").format(s)
+    dt = parser.parse(s, dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED)
+    return ApproximateDate(dt.year, dt.month, dt.day)
+    raise ValueError(u"Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 
 class PersonExtra(HasImageMixin, models.Model):

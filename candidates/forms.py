@@ -12,9 +12,8 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from candidates.models import PartySet
+from candidates.models import PartySet, parse_approximate_date
 from popolo.models import Organization, Post
-from django_date_extensions.fields import ApproximateDateFormField
 
 class AddressForm(forms.Form):
     address = forms.CharField(
@@ -90,8 +89,8 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
-    birth_date = ApproximateDateFormField(
-        label=_("Date of birth (as YYYY-MM-DD or YYYY)"),
+    birth_date = forms.CharField(
+        label=_("Date of birth (a four digit year or a full date)"),
         required=False,
     )
     wikipedia_url = forms.URLField(
@@ -143,6 +142,11 @@ class BasePersonForm(forms.Form):
             label=_(u"Program"),
             widget=forms.Textarea
         )
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        parsed_date = parse_approximate_date(birth_date)
+        return parsed_date
 
     def clean_twitter_username(self):
         # Remove any URL bits around it:

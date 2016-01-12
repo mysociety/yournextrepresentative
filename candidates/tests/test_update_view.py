@@ -108,3 +108,20 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
             '/person/2009',
             split_location.path
         )
+
+    def test_update_dd_mm_yyyy_birth_date(self):
+        response = self.app.get(
+            '/person/2009/update',
+            user=self.user_who_can_lock,
+        )
+        form = response.forms['person-details']
+        form['birth_date'] = '1/4/1875'
+        form['source'] = "An update for testing purposes"
+        response = form.submit()
+
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual('/person/2009', split_location.path)
+
+        person = Person.objects.get(id='2009')
+        self.assertEqual(person.birth_date, '1875-04-01')
