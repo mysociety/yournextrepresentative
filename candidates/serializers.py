@@ -372,3 +372,9 @@ class LoggedActionSerializer(serializers.HyperlinkedModelSerializer):
         source='popit_person_new_version')
     user = serializers.ReadOnlyField(source='user.username')
     person = MinimalPersonSerializer(read_only=True)
+
+
+class ExtraFieldSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.ExtraField
+        fields = ('id', 'url',  'key', 'type', 'label')
