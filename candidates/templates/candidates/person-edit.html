@@ -229,26 +229,20 @@
         {{ form.birth_date.errors }}
       </div>
 
-      <h2>{% trans "Additional information:" %}</h2>
+      {% if extra_fields %}
 
-      {% if form.cv %}
-        <div class="form-item {% if form.cv.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.cv.label_tag }}
-            {{ form.cv }}
-          </p>
-          {{ form.cv.errors }}
-        </div>
-      {% endif %}
+        <h2>{% trans "Additional information:" %}</h2>
 
-      {% if form.program %}
-        <div class="form-item {% if form.program.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ form.program.label_tag }}
-            {{ form.program }}
-          </p>
-          {{ form.program.errors }}
-        </div>
+        {% for extra_field_key, extra_field in extra_fields.items %}
+          <div class="form-item {% if extra_field.form_field.errors %}form-item--errors{% endif %}">
+            <p>
+              {{ extra_field.form_field.label_tag }}
+              {{ extra_field.form_field }}
+            </p>
+            {{ extra_field.form_field.errors }}
+          </div>
+        {% endfor %}
+
       {% endif %}
 
       <div class="source-confirmation {% if form.source.errors %}source-confirmation--errors{% endif %}">

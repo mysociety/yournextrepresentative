@@ -24,6 +24,7 @@ from images.models import Image, HasImageMixin
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
+from .fields import ExtraField, PersonExtraFieldValue
 from ..diffs import get_version_diffs
 from .versions import get_person_as_version_data
 
@@ -52,6 +53,12 @@ def update_person_from_form(person, person_extra, form):
         setattr(person_extra, field_name, form_data[field_name])
     for field_name, location in form_complex_fields_locations.items():
         person_extra.update_complex_field(location, form_data[field_name])
+    for extra_field in ExtraField.objects.all():
+        if extra_field.key in form_data:
+            PersonExtraFieldValue.objects.update_or_create(
+                person=person, field=extra_field,
+                defaults={'value': form_data[extra_field.key]}
+            )
     person.save()
     person_extra.save()
     for election_data in form.elections_with_fields:
@@ -326,6 +333,10 @@ class PersonExtra(HasImageMixin, models.Model):
             initial_data[field_name] = getattr(self.base, field_name)
         for field_name in fields_on_extra:
             initial_data[field_name] = getattr(self, field_name)
+        for extra_field_value in PersonExtraFieldValue.objects.filter(
+                person=self.base
+        ).select_related('field'):
+            initial_data[extra_field_value.field.key] = extra_field_value.value
         not_standing_elections = list(self.not_standing.all())
         for election_data in Election.objects.current().by_date():
             constituency_key = 'constituency_' + election_data.slug
