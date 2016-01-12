@@ -54,6 +54,7 @@
 
 <div class="finder__description">
   <div class="container">
+    {% block description %}
     <p>{% trans "This is a crowd-sourced database of election candidates." %}
     </p>
     {% url 'help-api' as api_url %}
@@ -64,6 +65,7 @@
       <a href="{{ tasks_url }}">help by contributing new candidate details.</a>
       {% endblocktrans %}
     </p>
+    {% endblock %}
   </div>
 </div>
 

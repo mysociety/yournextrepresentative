@@ -15,6 +15,24 @@
   </script>
 {% endblock %}
 
+{% block description %}
+  {% url 'help-api' as api_url %}
+  {% url "tasks_home" as tasks_url %}
+  <p>
+    {% blocktrans trimmed %}The database is transparently sourced and
+    available as structured data, suitable for building other election
+    websites. <a href="{{ api_url }}">Get the data now</a>, or
+    <a href="{{ tasks_url }}">help by contributing new candidate details.</a>
+    {% endblocktrans %}
+  </p>
+  <p>
+  {% blocktrans trimmed %}
+  For optimal use of site, we recommend setting your Browser language to
+  "Spanish" in the settings.
+  {% endblocktrans %}
+  </p>
+{% endblock %}
+
 {% block finder_forms %}
   <form id="canton-selector" action="{% url 'canton-frontpage' %}" method="post">
     {% csrf_token %}
