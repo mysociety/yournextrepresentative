@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-11 21:34+0000\n"
-"PO-Revision-Date: 2016-01-11 21:35+0000\n"
+"POT-Creation-Date: 2016-01-12 15:42+0000\n"
+"PO-Revision-Date: 2016-01-12 16:27+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
@@ -330,8 +330,8 @@ msgid "Gender (e.g. “male”, “female”)"
 msgstr "Género (masculino, femenino, etc..)"
 
 #: candidates/forms.py:93
-msgid "Date of birth (as YYYY-MM-DD or YYYY)"
-msgstr "Fecha de nacimiento (día-mes-año o año en 4 dígitos)"
+msgid "Date of birth (a four digit year or a full date)"
+msgstr ""
 
 #: candidates/forms.py:97
 msgid "Wikipedia URL"
@@ -524,12 +524,7 @@ msgid ""
 "({post_label})"
 msgstr "Esa actualización no es permitida porque no puede cambiar el partido (en este caso de  {old_party} a {new_party}) para un candidato en un cargo bloqueado ({post_label})"
 
-#: candidates/models/popolo_extra.py:132
-#, python-brace-format
-msgid "Couldn't parse '{0}' as an ApproximateDate"
-msgstr "No se pudo procesar '{0}' como una fecha aproximada"
-
-#: candidates/models/popolo_extra.py:163
+#: candidates/models/popolo_extra.py:166
 #, python-brace-format
 msgid "'PersonExtra' object has no attribute '{name}'"
 msgstr "El objeto 'PersonExtra' no tiene atributo '{name}'"
@@ -676,6 +671,10 @@ msgstr "Gracias por agregar a <a href=\"%(person_url)s\">%(person_name)s</a>!"
 #, python-format
 msgid "Thank-you for updating <a href=\"%(person_url)s\">%(person_name)s</a>!"
 msgstr "Gracias por actualizar a <a href=\"%(person_url)s\">%(person_name)s</a>!"
+
+#: candidates/templates/candidates/_person_update_call_to_action.html:13
+msgid "Now you can carry on to:"
+msgstr ""
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:17
 #, python-format
@@ -1215,6 +1214,7 @@ msgid "%(election_name)s candidates"
 msgstr "Candidatos a %(election_name)s"
 
 #: candidates/templates/candidates/frontpage.html:34
+#: elections/cr/templates/cr/frontpage.html:38
 msgid "Find candidates to be your next representative"
 msgstr "Encontrá tus candidatos locales"
 
@@ -1226,15 +1226,17 @@ msgstr "No le pagues a un proveedor de bases de datos -- es un desperdicio de di
 
 #: candidates/templates/candidates/frontpage.html:47
 #: elections/ar_elections_2015/templates/candidates/frontpage.html:48
-#: elections/cr/templates/cr/frontpage.html:22
+#: elections/cr/templates/cr/frontpage.html:48
 msgid "Show candidates"
 msgstr "Mostrar candidatos"
 
-#: candidates/templates/candidates/frontpage.html:57
+#: candidates/templates/candidates/frontpage.html:58
+#: elections/cr/templates/cr/frontpage.html:21
 msgid "This is a crowd-sourced database of election candidates."
 msgstr "Esta base de datos de candidatos es producto de una investigación colectiva y está disponible como datos estructurados, lo que permite hacer otras aplicaciones con esta información. <a href=\"%(api_url)s\">Obtené los datos ahora</a>, o <a href=\"%(tasks_url)s\">colaborá con más detalles de los candidatos.</a>"
 
-#: candidates/templates/candidates/frontpage.html:61
+#: candidates/templates/candidates/frontpage.html:62
+#: elections/cr/templates/cr/frontpage.html:22
 #, python-format
 msgid ""
 "The database is transparently sourced and available as structured data, "
@@ -1243,25 +1245,25 @@ msgid ""
 "candidate details.</a>"
 msgstr "Esta base de datos tiene fuentes transparentes y está disponible como datos estructurados, lo que permite hacer otras aplicaciones con esta información. <a href=\"%(api_url)s\">Obtené los datos ahora</a>, o <a href=\"%(tasks_url)s\">colaborá con más detalles de los candidatos.</a>"
 
-#: candidates/templates/candidates/frontpage.html:74
+#: candidates/templates/candidates/frontpage.html:76
 msgid "Recent changes"
 msgstr "Cambios recientes"
 
-#: candidates/templates/candidates/frontpage.html:81
+#: candidates/templates/candidates/frontpage.html:83
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> created <a href=\"%(person_url)s\">a new "
 "candidate</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> agregó <a href=\"%(person_url)s\">un nuevo candidato</a>, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:87
+#: candidates/templates/candidates/frontpage.html:89
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> is creating a new candidate <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> está agregando un nuevo candidato, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:93
+#: candidates/templates/candidates/frontpage.html:95
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> merged another candidate into <a "
@@ -1269,7 +1271,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:99
+#: candidates/templates/candidates/frontpage.html:101
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> uploaded a photo of <a "
@@ -1277,7 +1279,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:105
+#: candidates/templates/candidates/frontpage.html:107
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> approved an uploaded photo of <a "
@@ -1285,7 +1287,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:111
+#: candidates/templates/candidates/frontpage.html:113
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> rejected an uploaded photo of <a "
@@ -1293,7 +1295,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:117
+#: candidates/templates/candidates/frontpage.html:119
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> reverted to an earlier version of <a "
@@ -1301,7 +1303,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:123
+#: candidates/templates/candidates/frontpage.html:125
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> confirmed candidacy for <a "
@@ -1309,7 +1311,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:129
+#: candidates/templates/candidates/frontpage.html:131
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> removed candidacy for <a "
@@ -1317,21 +1319,21 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:135
+#: candidates/templates/candidates/frontpage.html:137
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> locked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> cerró una circunscripción, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:139
+#: candidates/templates/candidates/frontpage.html:141
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> unlocked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong>abrió una circunscripción, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:143
+#: candidates/templates/candidates/frontpage.html:145
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> marked <a "
@@ -1339,7 +1341,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:149
+#: candidates/templates/candidates/frontpage.html:151
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> updated <a "
@@ -1347,22 +1349,22 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:158
+#: candidates/templates/candidates/frontpage.html:160
 msgid "Show more changes…"
 msgstr "Ver más cambios..."
 
-#: candidates/templates/candidates/frontpage.html:161
+#: candidates/templates/candidates/frontpage.html:163
 msgid "Top users this week"
 msgstr "TOP de contribuidores semanal"
 
-#: candidates/templates/candidates/frontpage.html:165
+#: candidates/templates/candidates/frontpage.html:167
 #, python-format
 msgid "%(count)s edit"
 msgid_plural "%(count)s edits"
 msgstr[0] "%(count)s edición"
 msgstr[1] "%(count)s ediciones"
 
-#: candidates/templates/candidates/frontpage.html:170
+#: candidates/templates/candidates/frontpage.html:172
 msgid "Show full leaderboard…"
 msgstr "Mostrar a los mayores contribuidores..."
 
@@ -2156,6 +2158,18 @@ msgstr "Ingresá tu cantón"
 msgid "Run by <a href=\"http://accesa.org/\">%(site_managers)s</a>"
 msgstr ""
 
+#: elections/cr/templates/cr/frontpage.html:29
+msgid ""
+"For optimal use of site, we recommend setting your Browser language to "
+"\"Spanish\" in the settings."
+msgstr "Para un uso óptimo del sitio, recomendamos seleccionar \"Español\" en la configuración de lenguajes de tu browser"
+
+#: elections/cr/templates/cr/frontpage.html:40
+msgid ""
+"Find or add information about the candidates for the upcoming municipal "
+"elections on February 7"
+msgstr "Buscá o agregá información sobre los candidatos para las próximas Elecciones Municipales del 7 de febrero"
+
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:6
 msgid "Candidates by post for the St Paul municipal elections 2015"
 msgstr "Candidatos por cargo para las elecciones municipales de 2015"
@@ -2609,7 +2623,7 @@ msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
 
-#: mysite/settings/conf.py:376
+#: mysite/settings/conf.py:377
 msgid ""
 "Please don't quote third-party candidate sites — we prefer URLs of news "
 "stories or official candidate pages."
