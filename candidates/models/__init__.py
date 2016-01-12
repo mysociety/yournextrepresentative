@@ -15,6 +15,9 @@ from popolo_extra import parse_approximate_date
 
 from field_mappings import CSV_ROW_FIELDS
 
+from fields import ExtraField
+from fields import PersonExtraFieldValue
+
 from db import LoggedAction
 from db import PersonRedirect
 from db import UserTermsAgreement
