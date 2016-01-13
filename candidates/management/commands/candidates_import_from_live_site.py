@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 pmodels.Identifier, pmodels.Link, pmodels.Area,
                 # Additional models:
                 models.PartySet, models.ImageExtra, models.LoggedAction,
-                models.PersonRedirect, emodels.Election,
+                models.PersonRedirect, emodels.Election, models.ExtraField
         ):
             if model_class.objects.exists():
                 non_empty_models.append(model_class)
@@ -155,6 +155,10 @@ class Command(BaseCommand):
             return PILLOW_FORMAT_EXTENSIONS[pillow_image.format]
 
     def mirror_from_api(self):
+        for extra_field in self.get_api_results('extra_fields'):
+            with show_data_on_error('extra_field', extra_field):
+                del extra_field['url']
+                models.ExtraField.objects.create(**extra_field)
         for area_type_data in self.get_api_results('area_types'):
             with show_data_on_error('area_type_data', area_type_data):
                 del area_type_data['url']
@@ -293,6 +297,9 @@ class Command(BaseCommand):
                     election = \
                         emodels.Election.objects.get(slug=election_data['id'])
                     pe.elections.add(election)
+        extra_fields = {
+            ef.key: ef for ef in models.ExtraField.objects.all()
+        }
         for person_data in self.get_api_results('persons'):
             with show_data_on_error('person_data', person_data):
                 kwargs = {
@@ -326,11 +333,14 @@ class Command(BaseCommand):
                     'base': p,
                     'versions': json.dumps(person_data['versions'])
                 }
-                if person_data.get('cv'):
-                    kwargs['cv'] = person_data['cv']
-                if person_data.get('program'):
-                    kwargs['program'] = person_data['program']
                 pe = models.PersonExtra.objects.create(**kwargs)
+                # Look for any data in ExtraFields
+                for extra_field_data in person_data['extra_fields']:
+                    p.extra_field_values.create(
+                        field=extra_fields[extra_field_data['key']],
+                        value=extra_field_data['value'],
+                    )
+
         for m_data in self.get_api_results('memberships'):
             with show_data_on_error('m_data', m_data):
                 kwargs = {
@@ -411,7 +421,7 @@ class Command(BaseCommand):
         reset_sql_list = connection.ops.sequence_reset_sql(
             no_style(), [
                 emodels.AreaType, models.PartySet, pmodels.Area,
-                emodels.Election, Image
+                emodels.Election, Image, models.ExtraField
             ]
         )
         if reset_sql_list:

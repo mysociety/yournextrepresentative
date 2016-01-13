@@ -289,6 +289,15 @@ class JSONSerializerField(serializers.Field):
         return json.loads(value)
 
 
+class PersonExtraFieldSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PersonExtraFieldValue
+        fields = ('key', 'value', 'type')
+
+    key = serializers.ReadOnlyField(source='field.key')
+    type = serializers.ReadOnlyField(source='field.type')
+
+
 class PersonSerializer(MinimalPersonSerializer):
     class Meta:
         model = popolo_models.Person
@@ -310,6 +319,7 @@ class PersonSerializer(MinimalPersonSerializer):
             'links',
             'memberships',
             'images',
+            'extra_fields',
         )
 
     contact_details = ContactDetailSerializer(many=True, read_only=True)
@@ -322,6 +332,8 @@ class PersonSerializer(MinimalPersonSerializer):
 
     memberships = MembershipSerializer(many=True, read_only=True)
 
+    extra_fields = PersonExtraFieldSerializer(
+        many=True, read_only=True, source='extra_field_values')
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
     class Meta:
@@ -372,3 +384,9 @@ class LoggedActionSerializer(serializers.HyperlinkedModelSerializer):
         source='popit_person_new_version')
     user = serializers.ReadOnlyField(source='user.username')
     person = MinimalPersonSerializer(read_only=True)
+
+
+class ExtraFieldSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.ExtraField
+        fields = ('id', 'url',  'key', 'type', 'label')

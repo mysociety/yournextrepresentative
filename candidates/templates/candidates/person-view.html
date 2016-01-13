@@ -195,22 +195,21 @@
     {% endwith %}
   </dl>
 
-  {% if person.extra.cv or person.extra.program %}
+  {% if extra_fields %}
     <h2>{% trans "Additional information:" %}</h2>
     <dl>
-      {% if person.extra.cv %}
-        <dt>{% trans "CV or Résumé" %}</dt>
-        <dd>{{ person.extra.cv|linebreaks }}
+      {% for extra_field_key, extra_field in extra_fields.items %}
+        <dt>{{ extra_field.label }}</dt>
+        <dd>
+          {% if extra_field.type == 'url' %}
+            <a href="{{ extra_field.value }}" rel="nofollow">{{ extra_field.value }}</a>
+          {% else %}
+            {{ extra_field.value }}
+          {% endif %}
         </dd>
-      {% endif %}
-      {% if person.extra.program %}
-        <dt>{% trans "Program" %}</dt>
-        <dd>{{ person.extra.program|linebreaks }}
-        </dd>
-      {% endif %}
+      {% endfor %}
     </dl>
   {% endif %}
-
 
   {% if person.extra.primary_image %}
   <h2>{% trans "Photo Credit:" %}</h2>

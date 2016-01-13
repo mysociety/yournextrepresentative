@@ -430,7 +430,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     for optional_election_app_setting, default in (
             ('SITE_OWNER_URL', ''),
             ('AREAS_TO_ALWAYS_RETURN', []),
-            ('EXTRA_SIMPLE_FIELDS', {}),
             ('IMAGE_PROXY_URL', ''),
     ):
         try:

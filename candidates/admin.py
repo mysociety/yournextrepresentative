@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 
-from .models import LoggedAction, PartySet
+from .models import LoggedAction, PartySet, ExtraField, PersonExtraFieldValue
 # Register your models here.
 
 
@@ -40,5 +40,23 @@ class PartySetAdmin(admin.ModelAdmin):
     form = PartySetAdminForm
 
 
+class ExtraFieldAdminForm(ModelForm):
+    pass
+
+
+class ExtraFieldAdmin(admin.ModelAdmin):
+    form = ExtraFieldAdminForm
+
+
+class PersonExtraFieldValueAdminForm(ModelForm):
+    pass
+
+
+class PersonExtraFieldValueAdmin(admin.ModelAdmin):
+    form = PersonExtraFieldValueAdminForm
+
+
 admin.site.register(LoggedAction, LoggedActionAdmin)
 admin.site.register(PartySet, PartySetAdmin)
+admin.site.register(ExtraField, ExtraFieldAdmin)
+admin.site.register(PersonExtraFieldValue, PersonExtraFieldValueAdmin)

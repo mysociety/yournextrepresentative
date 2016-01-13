@@ -24,6 +24,7 @@ from images.models import Image, HasImageMixin
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
+from .fields import ExtraField, PersonExtraFieldValue
 from ..diffs import get_version_diffs
 from .versions import get_person_as_version_data
 
@@ -48,10 +49,14 @@ def update_person_from_form(person, person_extra, form):
         form_data['birth_date'] = ''
     for field_name in form_simple_fields.keys():
         setattr(person, field_name, form_data[field_name])
-    for field_name in settings.EXTRA_SIMPLE_FIELDS.keys():
-        setattr(person_extra, field_name, form_data[field_name])
     for field_name, location in form_complex_fields_locations.items():
         person_extra.update_complex_field(location, form_data[field_name])
+    for extra_field in ExtraField.objects.all():
+        if extra_field.key in form_data:
+            PersonExtraFieldValue.objects.update_or_create(
+                person=person, field=extra_field,
+                defaults={'value': form_data[extra_field.key]}
+            )
     person.save()
     person_extra.save()
     for election_data in form.elections_with_fields:
@@ -138,12 +143,6 @@ def parse_approximate_date(s):
 
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
-
-    # These two fields are added just for Burkina Faso - we should
-    # have a better way of adding arbitrary fields which are only
-    # needed for one site.
-    cv = models.TextField(blank=True)
-    program = models.TextField(blank=True)
 
     # This field stores JSON data with previous version information
     # (as it did in PopIt).
@@ -319,13 +318,14 @@ class PersonExtra(HasImageMixin, models.Model):
 
     def get_initial_form_data(self):
         initial_data = {}
-        fields_on_base = form_simple_fields.keys()
-        fields_on_extra = settings.EXTRA_SIMPLE_FIELDS.keys()
-        fields_on_extra += form_complex_fields_locations.keys()
-        for field_name in fields_on_base:
+        for field_name in form_simple_fields.keys():
             initial_data[field_name] = getattr(self.base, field_name)
-        for field_name in fields_on_extra:
+        for field_name in form_complex_fields_locations.keys():
             initial_data[field_name] = getattr(self, field_name)
+        for extra_field_value in PersonExtraFieldValue.objects.filter(
+                person=self.base
+        ).select_related('field'):
+            initial_data[extra_field_value.field.key] = extra_field_value.value
         not_standing_elections = list(self.not_standing.all())
         for election_data in Election.objects.current().by_date():
             constituency_key = 'constituency_' + election_data.slug

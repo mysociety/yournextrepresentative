@@ -34,7 +34,9 @@ from ..models.auth import check_creation_allowed, check_update_allowed
 from ..models.versions import (
     revert_person_from_version_data, get_person_as_version_data
 )
-from ..models import PersonExtra, PartySet, merge_popit_people
+from ..models import (
+    PersonExtra, PartySet, merge_popit_people, ExtraField, PersonExtraFieldValue
+)
 from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):
@@ -67,6 +69,23 @@ def get_call_to_action_flash_message(person, new_person=False):
         }
     )
 
+def get_extra_fields(person):
+    """Get all the additional fields and their values for a person"""
+
+    extra_values = {
+        extra_value.field.key: extra_value.value
+        for extra_value
+        in PersonExtraFieldValue.objects.filter(person=person)
+    }
+    return {
+        extra_field.key: {
+            'value': extra_values.get(extra_field.key, ''),
+            'label': _(extra_field.label),
+            'type': extra_field.type,
+        }
+        for extra_field in ExtraField.objects.all()
+    }
+
 
 class PersonView(TemplateView):
     template_name = 'candidates/person-view.html'
@@ -88,6 +107,7 @@ class PersonView(TemplateView):
         context['election_to_show'] = None
         if settings.ELECTION_APP == 'uk_general_election_2015':
             context['election_to_show'] = Election.objects.get(slug='2015')
+        context['extra_fields'] = get_extra_fields(self.person)
         return context
 
     def get(self, request, *args, **kwargs):
@@ -273,6 +293,10 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         context['versions'] = get_version_diffs(
             json.loads(person.extra.versions)
         )
+
+        context['extra_fields'] = get_extra_fields(person)
+        for k, v in context['extra_fields'].items():
+            v['form_field'] = kwargs['form'][k]
 
         context['constituencies_form_fields'] = []
         for election_data in Election.objects.by_date():

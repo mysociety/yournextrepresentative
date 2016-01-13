@@ -12,7 +12,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from candidates.models import PartySet, parse_approximate_date
+from candidates.models import PartySet, parse_approximate_date, ExtraField
 from popolo.models import Organization, Post
 
 class AddressForm(forms.Form):
@@ -58,6 +58,36 @@ class CandidacyDeleteForm(BaseCandidacyForm):
     )
 
 class BasePersonForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(BasePersonForm, self).__init__(*args, **kwargs)
+        # Add any extra fields to the person form:
+        for field in ExtraField.objects.all():
+            if field.type == 'line':
+                self.fields[field.key] = \
+                    forms.CharField(
+                        label=_(field.label),
+                        max_length=1024,
+                        required=False,
+                    )
+            elif field.type == 'longer-text':
+                self.fields[field.key] = \
+                    forms.CharField(
+                        label=_(field.label),
+                        required=False,
+                        widget=forms.Textarea,
+                    )
+            elif field.type == 'url':
+                self.fields[field.key] = \
+                    forms.URLField(
+                        label=_(field.label),
+                        max_length=256,
+                        required=False,
+                    )
+            else:
+                raise Exception(
+                    u"Unknown field type: {0}".format(field.type)
+                )
 
     STANDING_CHOICES = (
         ('not-sure', _(u"Don’t Know")),
@@ -128,20 +158,6 @@ class BasePersonForm(forms.Form):
         max_length=256,
         required=False,
     )
-
-    if 'cv' in settings.EXTRA_SIMPLE_FIELDS:
-        cv = forms.CharField(
-            required=False,
-            label=_(u"CV or Résumé"),
-            widget=forms.Textarea
-        )
-
-    if 'program' in settings.EXTRA_SIMPLE_FIELDS:
-        program = forms.CharField(
-            required=False,
-            label=_(u"Program"),
-            widget=forms.Textarea
-        )
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
