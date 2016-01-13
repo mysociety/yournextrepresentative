@@ -17,7 +17,7 @@
 
     <!-- Just Open Graph metadata -->
     <meta property="og:type" content="article" />
-    {% if person.image %}
+    {% if person.extra.primary_image %}
       {% thumbnail person.extra.primary_image "x80" as im %}
         <meta property="og:image" content="{{ im.url }}" />
       {% endthumbnail %}
@@ -36,7 +36,7 @@
     {% if settings.TWITTER_USERNAME %}
       <meta name="twitter:site" content="@{{ settings.TWITTER_USERNAME }}" />
     {% endif %}
-    {% if person.image %}
+    {% if person.extra.primary_image %}
       <meta property="twitter:image" content="{{ person.extra.primary_image.url }}" />
     {% elif person.gender|lower == 'female' %}
       <meta property="twitter:image" content="{{ 'candidates/img/blank-woman-160.png'|static_image_path:request }}"/>
@@ -222,7 +222,7 @@
 
 <div class="person__actions">
 
-  {% if last_candidacy.on_behalf_of.image %}
+  {% if last_candidacy.on_behalf_of.extra.primary_image %}
     <div class="person__party_emblem">
       {% thumbnail last_candidacy.on_behalf_of.extra.primary_image "240" as im %}
         <img src="{{ im.url }}"/>
