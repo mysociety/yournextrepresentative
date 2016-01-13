@@ -311,16 +311,16 @@ class Command(BaseCommand):
                 }
                 p = pmodels.Person.objects.create(**kwargs)
                 self.add_related(
-                    p, pmodels.Identifier, organization_data['identifiers']
+                    p, pmodels.Identifier, person_data['identifiers']
                 )
                 self.add_related(
-                    p, pmodels.ContactDetail, organization_data['contact_details']
+                    p, pmodels.ContactDetail, person_data['contact_details']
                 )
                 self.add_related(
-                    p, pmodels.OtherName, organization_data['other_names']
+                    p, pmodels.OtherName, person_data['other_names']
                 )
                 self.add_related(
-                    p, pmodels.Link, organization_data['links']
+                    p, pmodels.Link, person_data['links']
                 )
                 kwargs = {
                     'base': p,
