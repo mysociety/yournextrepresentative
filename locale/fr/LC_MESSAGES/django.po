@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 15:42+0000\n"
-"PO-Revision-Date: 2016-01-12 16:03+0000\n"
+"POT-Creation-Date: 2016-01-13 18:00+0000\n"
+"PO-Revision-Date: 2016-01-13 18:00+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +275,7 @@ msgstr "Mise à jour à {0}"
 msgid "Enter your address or town"
 msgstr "Entrez votre adresse ou ville"
 
-#: candidates/forms.py:36 candidates/forms.py:441
+#: candidates/forms.py:36 candidates/forms.py:458
 msgid "Person ID"
 msgstr "ID de personne "
 
@@ -293,159 +293,155 @@ msgstr "Source de l'information qu'ils sont candidats ({0})"
 msgid "Information source for this change ({0})"
 msgstr "Source de l'information pour ce changement ({0})"
 
-#: candidates/forms.py:63
+#: candidates/forms.py:93
 msgid "Don’t Know"
 msgstr "Ne sais pas"
 
-#: candidates/forms.py:64
+#: candidates/forms.py:94
 msgid "Yes"
 msgstr "Oui"
 
-#: candidates/forms.py:65
+#: candidates/forms.py:95
 msgid "No"
 msgstr "Non"
 
-#: candidates/forms.py:69
+#: candidates/forms.py:99
 msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
 msgstr "Titre / pré-nominal honorifique (e.g. Dr, Sir, etc.)"
 
-#: candidates/forms.py:74
+#: candidates/forms.py:104
 msgid "Full name"
 msgstr "Nom complet"
 
-#: candidates/forms.py:78
+#: candidates/forms.py:108
 msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
 msgstr "Lettres post-nominales (e.g. CBS, DSA, etc.)"
 
-#: candidates/forms.py:83 candidates/templates/candidates/person-view.html:121
+#: candidates/forms.py:113
+#: candidates/templates/candidates/person-view.html:121
 msgid "Email"
 msgstr "Email"
 
-#: candidates/forms.py:88
+#: candidates/forms.py:118
 msgid "Gender (e.g. “male”, “female”)"
 msgstr "Genre (e.g. \"homme\", \"femme\")"
 
-#: candidates/forms.py:93
+#: candidates/forms.py:123
 msgid "Date of birth (a four digit year or a full date)"
 msgstr ""
 
-#: candidates/forms.py:97
+#: candidates/forms.py:127
 msgid "Wikipedia URL"
 msgstr "URL Wikipedia"
 
-#: candidates/forms.py:102
+#: candidates/forms.py:132
 msgid "Homepage URL"
 msgstr "URL page personnelle"
 
-#: candidates/forms.py:107
+#: candidates/forms.py:137
 msgid "Twitter username (e.g. “democlub”)"
 msgstr "Nom d'utilisateur twitter (e.g. \"democlud\")"
 
-#: candidates/forms.py:112
+#: candidates/forms.py:142
 msgid "Facebook profile URL"
 msgstr "URL du profil Facebook"
 
-#: candidates/forms.py:117
+#: candidates/forms.py:147
 msgid "Facebook page (e.g. for their campaign)"
 msgstr "Page Facebook (e.g. pour la campagne)"
 
-#: candidates/forms.py:122
+#: candidates/forms.py:152
 msgid "LinkedIn URL"
 msgstr "URL LinkedIn"
 
-#: candidates/forms.py:127
+#: candidates/forms.py:157
 msgid "The party’s candidate page for this person"
 msgstr "La page de candidat du parti pour cette personne"
 
-#: candidates/forms.py:135
-#: candidates/templates/candidates/person-view.html:203
-msgid "CV or Résumé"
-msgstr "CV"
-
-#: candidates/forms.py:142
-#: candidates/templates/candidates/person-view.html:208
-msgid "Program"
-msgstr "Programme"
-
-#: candidates/forms.py:160
+#: candidates/forms.py:178
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr "Le nom d'utilisateur Twitter doit contenir seulement des caractères alphanumériques ou des underscore"
 
-#: candidates/forms.py:183
+#: candidates/forms.py:201
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
 msgstr "Si vous marquez le candidat comme participant aux  {election}, vous devez sélectionner un poste"
 
-#: candidates/forms.py:190
+#: candidates/forms.py:208
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
 msgstr "Un ID de post inconnu  '{post_id}' a été spécifié"
 
-#: candidates/forms.py:197
+#: candidates/forms.py:215
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr "Impossible de trouver des partis pour le poste avec l'ID  '{post_id}' aux {election}"
 
-#: candidates/forms.py:209
+#: candidates/forms.py:227
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr "Vous devez spécifier un parti pour {election}"
 
-#: candidates/forms.py:225 candidates/forms.py:340
+#: candidates/forms.py:243 candidates/forms.py:357
 #, python-format
 msgid "Standing in %s"
 msgstr "Candidats à %s"
 
-#: candidates/forms.py:240 candidates/forms.py:251
+#: candidates/forms.py:258 candidates/forms.py:269
 #, python-brace-format
 msgid "Post in the {election}"
 msgstr "Poste aux  {election}"
 
-#: candidates/forms.py:291 candidates/forms.py:361
+#: candidates/forms.py:309
 #, python-brace-format
-msgid "Party in {election} ({party_set_name})"
-msgstr "Parti aux {election} ({party_set_name})"
+msgid "Party in {election}"
+msgstr ""
 
-#: candidates/forms.py:305
+#: candidates/forms.py:322
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr "Source d'information ({0})"
 
-#: candidates/forms.py:310 candidates/forms.py:395
+#: candidates/forms.py:327 candidates/forms.py:412
 msgid "You must indicate how you know about this candidate"
 msgstr "Vous devez indiquez comment vous savez à propos de ce candidat"
 
-#: candidates/forms.py:315 candidates/forms.py:400
+#: candidates/forms.py:332 candidates/forms.py:417
 msgid "How you know about this candidate"
 msgstr "Comment savez-vous à propos de ce candidat"
 
-#: candidates/forms.py:346
+#: candidates/forms.py:363
 #, python-format
 msgid "Constituency in %s"
 msgstr "cisconscription électorale dans %s"
 
-#: candidates/forms.py:379
+#: candidates/forms.py:378
+#, python-brace-format
+msgid "Party in {election} ({party_set_name})"
+msgstr "Parti aux {election} ({party_set_name})"
+
+#: candidates/forms.py:396
 msgid "Position in party list ('1' for first, '2' for second, etc.)"
 msgstr "Position sur la liste du parti ('1' pour le premier, '2' pour le second, etc.)"
 
-#: candidates/forms.py:390
+#: candidates/forms.py:407
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr "Source d'information pour ce changement ({0})"
 
-#: candidates/forms.py:422
+#: candidates/forms.py:439
 #, python-brace-format
 msgid ""
 "You can only edit data on {site_name} if you agree to this copyright "
 "assignment."
 msgstr "Vous pouvez seulement modifier les données sur {site_name} si vous êtes d'accord avec cette cession de droit d'auteur."
 
-#: candidates/forms.py:446
+#: candidates/forms.py:463
 msgid "Source of information that they won"
 msgstr "Source d'information qu'ils ont gagné"
 
@@ -751,7 +747,7 @@ msgstr "S'il vous plaît, indiquez votre source pour cette information dans l'en
 #: candidates/templates/candidates/_source-plain.html:12
 #: candidates/templates/candidates/_source_confirmation.html:13
 #: candidates/templates/candidates/person-create.html:14
-#: candidates/templates/candidates/person-edit.html:260
+#: candidates/templates/candidates/person-edit.html:262
 msgid "Save changes"
 msgstr "Sauvegarder les modifications"
 
@@ -1227,7 +1223,6 @@ msgid "Show candidates"
 msgstr "Montrer les candidats"
 
 #: candidates/templates/candidates/frontpage.html:58
-#: elections/cr/templates/cr/frontpage.html:21
 msgid "This is a crowd-sourced database of election candidates."
 msgstr "Ceci est une base de données crowd-sourcée de candidats aux élections."
 
@@ -1515,71 +1510,71 @@ msgstr "S'il vous plaît vérifier que vos informations correspondent à nos exi
 msgid "Personal details:"
 msgstr "Informations personnelle:"
 
-#: candidates/templates/candidates/person-edit.html:95
+#: candidates/templates/candidates/person-edit.html:103
 #: candidates/templates/candidates/person-view.html:127
 msgid "Constituencies:"
 msgstr "Circonscriptions: "
 
-#: candidates/templates/candidates/person-edit.html:143
+#: candidates/templates/candidates/person-edit.html:151
 #: candidates/templates/candidates/person-view.html:140
 msgid "Links and social media:"
 msgstr "Liens et média sociaux:"
 
-#: candidates/templates/candidates/person-edit.html:206
+#: candidates/templates/candidates/person-edit.html:214
 #: candidates/templates/candidates/person-view.html:165
 msgid "Demographics:"
 msgstr "Démographies:"
 
-#: candidates/templates/candidates/person-edit.html:224
+#: candidates/templates/candidates/person-edit.html:234
 #: candidates/templates/candidates/person-view.html:200
 msgid "Additional information:"
 msgstr "information additionnelle:"
 
-#: candidates/templates/candidates/person-edit.html:250
+#: candidates/templates/candidates/person-edit.html:252
 msgid ""
 "<strong>You forgot to reference a source!</strong> Can you show us "
 "<em>where</em> you got this information?"
 msgstr "<strong>Vous avez oublié de référencer les sources!</strong> Pouvez vous nous montrer <em>où</em> vous avez trouvé ces informations?"
 
-#: candidates/templates/candidates/person-edit.html:252
+#: candidates/templates/candidates/person-edit.html:254
 msgid "What’s your <strong>source of information</strong> for this change?"
 msgstr "Quelle est votre <strong>source d'information</strong> pour ces modifications?"
 
-#: candidates/templates/candidates/person-edit.html:268
+#: candidates/templates/candidates/person-edit.html:270
 msgid "Thanks for helping out!"
 msgstr "Merci pour l'aide!"
 
-#: candidates/templates/candidates/person-edit.html:269
+#: candidates/templates/candidates/person-edit.html:271
 msgid ""
 "Please make sure you read our <a href=\"https://docs.google.com/document/d"
 "/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing "
 "fields</a>."
 msgstr "Assurez vous d'avoir lu notre <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guide sur le sourçage des champs</a>."
 
-#: candidates/templates/candidates/person-edit.html:275
+#: candidates/templates/candidates/person-edit.html:277
 msgid "Trying to upload a photo?"
 msgstr "Télécharger une photo?"
 
-#: candidates/templates/candidates/person-edit.html:277
+#: candidates/templates/candidates/person-edit.html:279
 #, python-format
 msgid ""
 "There’s a separate page for <a href=\"%(url)s\">uploading a photo of "
 "%(name)s</a>."
 msgstr "Il y a une page séparée pour <a href=\"%(url)s\">télécharger une photo de %(name)s</a>."
 
-#: candidates/templates/candidates/person-edit.html:285
+#: candidates/templates/candidates/person-edit.html:287
 msgid "Is this a duplicate person?"
 msgstr "Cette personne est-elle une duplication?"
 
-#: candidates/templates/candidates/person-edit.html:287
+#: candidates/templates/candidates/person-edit.html:289
 msgid "Merge another person into this one:"
 msgstr "Fusionner une autre personne avec celle-ci:"
 
-#: candidates/templates/candidates/person-edit.html:288
+#: candidates/templates/candidates/person-edit.html:290
 msgid "Other person ID"
 msgstr "L'ID de l'autre personne"
 
-#: candidates/templates/candidates/person-edit.html:290
+#: candidates/templates/candidates/person-edit.html:292
 msgid "Merge people"
 msgstr "Fusionner des gens"
 
@@ -1746,40 +1741,40 @@ msgid ""
 "                 "
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:217
+#: candidates/templates/candidates/person-view.html:216
 msgid "Photo Credit:"
 msgstr "Crédit photo:"
 
-#: candidates/templates/candidates/person-view.html:236
+#: candidates/templates/candidates/person-view.html:235
 msgid "Improve this data!"
 msgstr "Améliorer cette données!"
 
-#: candidates/templates/candidates/person-view.html:238
+#: candidates/templates/candidates/person-view.html:237
 msgid "Our database is built by people like you."
 msgstr "Notre base de données est construite par des gens comme vous."
 
-#: candidates/templates/candidates/person-view.html:239
+#: candidates/templates/candidates/person-view.html:238
 msgid ""
 "Please do add extra details about this candidate – it only takes a moment."
 msgstr "S'il vous plais, ajoutez des détails supplémentaires sur ce candidat - ça prend juste un instant."
 
-#: candidates/templates/candidates/person-view.html:241
+#: candidates/templates/candidates/person-view.html:240
 msgid "Edit candidate"
 msgstr "Modifier le candidat"
 
-#: candidates/templates/candidates/person-view.html:243
+#: candidates/templates/candidates/person-view.html:242
 msgid "Log in to edit"
 msgstr "Connectez vous pour modifier"
 
-#: candidates/templates/candidates/person-view.html:251
+#: candidates/templates/candidates/person-view.html:250
 msgid "Use this data!"
 msgstr "Utiliser cette donnée!"
 
-#: candidates/templates/candidates/person-view.html:252
+#: candidates/templates/candidates/person-view.html:251
 msgid "Open data JSON API:"
 msgstr "API JSON pour open data:"
 
-#: candidates/templates/candidates/person-view.html:257
+#: candidates/templates/candidates/person-view.html:256
 #, python-format
 msgid ""
 "More details about getting <a href=\"%(api_url)s\">the data</a> and <a "
@@ -2037,27 +2032,27 @@ msgstr "Tout le temps"
 msgid "In the last week"
 msgstr "Dans la semaine passée"
 
-#: candidates/views/people.py:100
+#: candidates/views/people.py:120
 #, python-brace-format
 msgid "No person found with ID {person_id}"
 msgstr ""
 
-#: candidates/views/people.py:143
+#: candidates/views/people.py:163
 #, python-brace-format
 msgid "Couldn't find the version {0} of person {1}"
 msgstr "Impossible de trouver la version {0} de personne {1}"
 
-#: candidates/views/people.py:184
+#: candidates/views/people.py:204
 #, python-brace-format
 msgid "Malformed person ID '{0}'"
 msgstr "ID '{0}' de personne mal formé"
 
-#: candidates/views/people.py:187
+#: candidates/views/people.py:207
 #, python-brace-format
 msgid "You can't merge a person ({0}) with themself ({1})"
 msgstr "Vous ne pouvez pas fusionner une personne ({0}) avec lui-même ({1})"
 
-#: candidates/views/people.py:207
+#: candidates/views/people.py:227
 #, python-brace-format
 msgid "After merging person {0}"
 msgstr "Après avoir fusionner la personne {0}"
@@ -2149,9 +2144,12 @@ msgstr "Mis en place par <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\"
 msgid "Select your canton"
 msgstr ""
 
-#: elections/cr/templates/base.html:7
+#: elections/cr/templates/base.html:9
 #, python-format
-msgid "Run by <a href=\"http://accesa.org/\">%(site_managers)s</a>"
+msgid ""
+"Run by <a href=\"http://accesa.org/\"> <img src=\"%(logo_url)s\" %%} "
+"srcset=\"%(logo_url)s 1x, %(logo_url_2)s 2x\" alt=\"%(site_managers)s\" "
+"class=\"accesa-logo\"></a>"
 msgstr ""
 
 #: elections/cr/templates/cr/frontpage.html:29
