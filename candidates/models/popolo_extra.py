@@ -130,8 +130,9 @@ def parse_approximate_date(s):
             return ApproximateDate(*(int(g, 10) for g in m.groups()))
     if s == 'future':
         return ApproximateDate(future=True)
-    dt = parser.parse(s, dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED)
-    return ApproximateDate(dt.year, dt.month, dt.day)
+    if s:
+        dt = parser.parse(s, dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED)
+        return ApproximateDate(dt.year, dt.month, dt.day)
     raise ValueError(u"Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 

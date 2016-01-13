@@ -45,3 +45,7 @@ class DateParsingTests(TestCase):
         parsed = parse_approximate_date('31st December 1999')
         self.assertEqual(type(parsed), ApproximateDate)
         self.assertEqual(repr(parsed), '1999-12-31')
+
+    def test_empty_string(self):
+        with self.assertRaises(ValueError):
+            parse_approximate_date('')

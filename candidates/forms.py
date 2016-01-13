@@ -145,6 +145,8 @@ class BasePersonForm(forms.Form):
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
+        if not birth_date:
+            return ''
         parsed_date = parse_approximate_date(birth_date)
         return parsed_date
 

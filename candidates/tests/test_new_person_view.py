@@ -82,6 +82,8 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
         person = Person.objects.get(name='Elizabeth Bennet')
 
+        self.assertEqual(person.birth_date, '')
+
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
             submission_response.location,
