@@ -44,6 +44,15 @@ done
 # make sure that there is no old code (the .py files may have been git deleted)
 find . -name '*.pyc' -delete
 
+# Compile the allauth messages files - see
+# https://github.com/pennersr/django-allauth/issues/1032
+if [ -d "$VIRTUALENV_DIR" ]
+then
+    find "$VIRTUALENV_DIR/lib/python2.7/site-packages/allauth/locale/" \
+        -name django.po \
+        -execdir msgfmt django.po -o django.mo \;
+fi
+
 # get the database up to speed
 ./manage.py migrate --noinput
 

@@ -9,3 +9,4 @@ libxslt-dev
 libffi-dev
 libssl-dev
 memcached
+gettext
