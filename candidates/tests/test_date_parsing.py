@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.test.utils import override_settings
 
+from django.utils.translation import override
+
 from django_date_extensions.fields import ApproximateDate
 
 from candidates.models import parse_approximate_date
@@ -49,3 +51,20 @@ class DateParsingTests(TestCase):
     def test_empty_string(self):
         with self.assertRaises(ValueError):
             parse_approximate_date('')
+
+    def test_expanded_natural_date_string(self):
+        parsed = parse_approximate_date('31st of December 1999')
+        self.assertEqual(type(parsed), ApproximateDate)
+        self.assertEqual(repr(parsed), '1999-12-31')
+
+    def test_nonsense_string(self):
+        with self.assertRaises(ValueError):
+            parse_approximate_date('this is not a date')
+
+    def test_spanish_date_string(self):
+        with self.assertRaises(ValueError):
+            parsed = parse_approximate_date('20 febrero 1954 ')
+        with override('es'):
+            parsed = parse_approximate_date('20 febrero 1954 ')
+            self.assertEqual(type(parsed), ApproximateDate)
+            self.assertEqual(repr(parsed), '1954-02-20')
