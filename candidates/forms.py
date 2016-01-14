@@ -163,7 +163,14 @@ class BasePersonForm(forms.Form):
         birth_date = self.cleaned_data['birth_date']
         if not birth_date:
             return ''
-        parsed_date = parse_approximate_date(birth_date)
+        try:
+            parsed_date = parse_approximate_date(birth_date)
+        except ValueError:
+            if settings.DD_MM_DATE_FORMAT_PREFERRED:
+                message = _("That date of birth could not be understood. Try using DD/MM/YYYY instead")
+            else:
+                message = _("That date of birth could not be understood. Try using MM/DD/YYYY instead")
+            raise ValidationError(message)
         return parsed_date
 
     def clean_twitter_username(self):
