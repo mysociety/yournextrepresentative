@@ -12,6 +12,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _l
 
 from dateutil import parser
 from slugify import slugify
@@ -109,6 +110,25 @@ def update_person_from_form(person, person_extra, form):
             person_extra.not_standing.add(election_data)
 
 
+class localparserinfo(parser.parserinfo):
+    MONTHS = [
+        (u'Jan', _l(u'Jan'), u'January', _l(u'January')),
+        (u'Feb', _l(u'Feb'), u'February', _l(u'February')),
+        (u'Mar', _l(u'Mar'), u'March', _l(u'March')),
+        (u'Apr', _l(u'Apr'), u'April', _l(u'April')),
+        (u'May', _l(u'May'), u'May', _l(u'May')),
+        (u'Jun', _l(u'Jun'), u'June', _l(u'June')),
+        (u'Jul', _l(u'Jul'), u'July', _l(u'July')),
+        (u'Aug', _l(u'Aug'), u'August', _l(u'August')),
+        (u'Sep', _l(u'Sep'), u'Sept', u'September', _l(u'September')),
+        (u'Oct', _l(u'Oct'), u'October', _l(u'October')),
+        (u'Nov', _l(u'Nov'), u'November', _l(u'November')),
+        (u'Dec', _l(u'Dec'), u'December', _l(u'December'))
+    ]
+
+    PERTAIN = [u'of', _l(u'of')]
+
+
 def parse_approximate_date(s):
     """Take any reasonable date string, and return an ApproximateDate for it
 
@@ -136,7 +156,11 @@ def parse_approximate_date(s):
     if s == 'future':
         return ApproximateDate(future=True)
     if s:
-        dt = parser.parse(s, dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED)
+        dt = parser.parse(
+            s,
+            parserinfo=localparserinfo(),
+            dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED
+        )
         return ApproximateDate(dt.year, dt.month, dt.day)
     raise ValueError(u"Couldn't parse '{0}' as an ApproximateDate".format(s))
 
