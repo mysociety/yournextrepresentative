@@ -116,7 +116,7 @@ def revert_person_from_version_data(person, person_extra, version_data):
     ).delete()
     # Also remove the indications of elections that this person is
     # known not to be standing in:
-    person_extra.not_standing.all().delete()
+    person_extra.not_standing.clear()
     for election_slug, standing_in in version_data['standing_in'].items():
         election = Election.objects.get(slug=election_slug)
         # If the value for that election slug is None, then that means
