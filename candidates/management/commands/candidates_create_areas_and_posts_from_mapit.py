@@ -2,8 +2,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
+from django.utils.six.moves.urllib_parse import urljoin
 
-from urlparse import urljoin
+from optparse import make_option
 import requests
 
 from popolo.models import Post, Area

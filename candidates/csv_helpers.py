@@ -1,5 +1,5 @@
 import csv
-import StringIO
+from io import StringIO
 
 from .models import CSV_ROW_FIELDS
 
@@ -15,7 +15,7 @@ def candidate_sort_key(row):
 def list_to_csv(candidates_list):
     from .election_specific import EXTRA_CSV_ROW_FIELDS
     csv_fields = CSV_ROW_FIELDS + EXTRA_CSV_ROW_FIELDS
-    output = StringIO.StringIO()
+    output = StringIO()
     writer = csv.DictWriter(
         output,
         fieldnames=csv_fields,

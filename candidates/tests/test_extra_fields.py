@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import re
-from urlparse import urlsplit
+
+from django.utils.six.moves.urllib_parse import urlsplit
 
 from django_webtest import WebTest
+
 from popolo.models import Person
 
 from candidates.models import ExtraField, PersonExtraFieldValue, PersonExtra

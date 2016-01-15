@@ -1,10 +1,10 @@
 from __future__ import print_function
 
 from datetime import date
-from urlparse import urljoin
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils.six.moves.urllib_parse import urljoin
 
 import requests
 

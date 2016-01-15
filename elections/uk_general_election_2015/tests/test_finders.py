@@ -2,7 +2,7 @@
 
 from mock import patch, Mock
 
-from urlparse import urlsplit
+from django.utils.six.moves.urllib_parse import urlsplit
 
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
