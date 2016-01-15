@@ -221,6 +221,8 @@ class ElectionSerializer(MinimalElectionSerializer):
             'area_generation',
             'organization',
             'party_lists_in_use',
+            'default_party_list_members_to_show',
+            'show_official_documents',
             'ocd_division',
             'description'
         )
