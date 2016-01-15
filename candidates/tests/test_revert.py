@@ -57,6 +57,16 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                   "name": "Labour Party"
                 }
               },
+              "identifiers": [
+                {
+                  "identifier": "uk.org.publicwhip/person/10326",
+                  "scheme": "uk.org.publicwhip"
+                },
+                {
+                  "identifier": "2959",
+                  "scheme": "yournextmp-candidate"
+                }
+              ],
               "email": "jowell@example.com",
               "extra_fields": {
                 "cv": "http://example.org/cv.doc",
@@ -90,6 +100,16 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                   "name": "Labour Party"
                 }
               },
+              "identifiers": [
+                {
+                  "identifier": "uk.org.publicwhip/person/10326",
+                  "scheme": "uk.org.publicwhip"
+                },
+                {
+                  "identifier": "2959",
+                  "scheme": "yournextmp-candidate"
+                }
+              ],
               "email": "tessa.jowell@example.com",
               "extra_fields": {
                 "cv": "",
@@ -215,6 +235,16 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                     }
                 },
                 'birth_date': '1947-09-17',
+                'identifiers': [
+                    {
+                        'identifier': '2959',
+                        'scheme': 'yournextmp-candidate'
+                    },
+                    {
+                        'identifier': 'uk.org.publicwhip/person/10326',
+                        'scheme': 'uk.org.publicwhip'
+                    },
+                ],
                 'email': u'tessa.jowell@example.com',
                 'extra_fields': {
                     'cv': '',

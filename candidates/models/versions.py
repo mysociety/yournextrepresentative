@@ -126,7 +126,7 @@ def revert_person_from_version_data(person, person_extra, version_data):
     # Remove all identifiers, and recreate:
     person.identifiers.all().delete()
     for i in version_data.get('identifiers', []):
-        person.identifiers.objects.create(
+        person.identifiers.create(
             scheme=i['scheme'],
             identifier=i['identifier'],
         )
