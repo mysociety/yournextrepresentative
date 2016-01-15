@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 from mock import patch
 from string import Template
@@ -7,7 +9,7 @@ from django.db.models import F
 from django_webtest import WebTest
 from popolo.models import Identifier
 
-from candidates.models import MembershipExtra, PersonExtra
+from candidates.models import MembershipExtra, PersonExtra, ExtraField
 
 from .auth import TestUserMixin
 from . import factories
@@ -55,7 +57,11 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                   "name": "Labour Party"
                 }
               },
-              "email": "jowell@example.com"
+              "email": "jowell@example.com",
+              "extra_fields": {
+                "cv": "http://example.org/cv.doc",
+                "notes": "Some updated notes here"
+              }
             }
           },
           {
@@ -84,7 +90,11 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                   "name": "Labour Party"
                 }
               },
-              "email": "tessa.jowell@example.com"
+              "email": "tessa.jowell@example.com",
+              "extra_fields": {
+                "cv": "",
+                "notes": "Some original notes here"
+              }
             }
           }
         ]
@@ -139,8 +149,16 @@ class TestRevertPersonView(TestUserMixin, WebTest):
             base__post=post_extra.base,
             base__on_behalf_of=party_extra.base
         )
-
-
+        ExtraField.objects.create(
+            type='url',
+            key='cv',
+            label=u'CV or Resumé',
+        )
+        ExtraField.objects.create(
+            type='longer-text',
+            key='notes',
+            label=u'Notes',
+        )
 
     @patch('candidates.views.version_data.get_current_timestamp')
     @patch('candidates.views.version_data.create_version_id')
@@ -197,7 +215,11 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                     }
                 },
                 'birth_date': '1947-09-17',
-                'email': u'tessa.jowell@example.com'
+                'email': u'tessa.jowell@example.com',
+                'extra_fields': {
+                    'cv': '',
+                    'notes': 'Some original notes here'
+                }
             },
             'information_source': u'Reverting to version 5469de7db0cbd155 for testing purposes',
             'timestamp': '2014-09-29T10:11:59.216159',
@@ -209,6 +231,23 @@ class TestRevertPersonView(TestUserMixin, WebTest):
 
         self.assertEqual(person_extra.base.birth_date, '1947-09-17')
         self.assertEqual(person_extra.homepage_url, 'http://example.org/tessajowell')
+
+        extra_values = list(person_extra.base.extra_field_values \
+            .order_by('field__key') \
+            .values('field__key', 'value'))
+        self.assertEqual(
+            extra_values,
+            [
+                {
+                    'field__key': u'cv',
+                    'value': u''
+                },
+                {
+                    'field__key': u'notes',
+                    'value': u'Some original notes here'
+                },
+            ]
+        )
 
         candidacies = MembershipExtra.objects.filter(
             base__person=person_extra.base,

@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import json
 from urlparse import urlsplit
 
 from django_webtest import WebTest
@@ -6,6 +9,7 @@ from .auth import TestUserMixin
 
 from popolo.models import Person
 
+from candidates.models import ExtraField
 from .factories import (
     AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
     ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
@@ -125,3 +129,39 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
 
         person = Person.objects.get(id='2009')
         self.assertEqual(person.birth_date, '1875-04-01')
+
+    def test_update_person_extra_fields(self):
+        ExtraField.objects.create(
+            type='url',
+            key='cv',
+            label=u'CV or Resumé',
+        )
+        ExtraField.objects.create(
+            type='longer-text',
+            key='notes',
+            label=u'Notes',
+        )
+        response = self.app.get(
+            '/person/2009/update',
+            user=self.user_who_can_lock,
+        )
+        form = response.forms['person-details']
+        form['birth_date'] = '1/4/1875'
+        form['source'] = "An update for testing purposes"
+        form['cv'] = 'http://example.org/cv.pdf'
+        response = form.submit()
+
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual('/person/2009', split_location.path)
+
+        person = Person.objects.get(id='2009')
+        self.assertEqual(person.birth_date, '1875-04-01')
+        versions_data = json.loads(person.extra.versions)
+        self.assertEqual(
+            versions_data[0]['data']['extra_fields'],
+            {
+                'cv': 'http://example.org/cv.pdf',
+                'notes': '',
+            }
+        )

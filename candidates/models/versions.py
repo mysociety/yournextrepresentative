@@ -1,3 +1,4 @@
+from .fields import ExtraField
 from .field_mappings import form_simple_fields, form_complex_fields_locations
 
 from django.db.models import F
@@ -14,6 +15,16 @@ def get_person_as_version_data(person):
         result[field] = getattr(person, field) or null_value
     for field in form_complex_fields_locations:
         result[field] = getattr(person_extra, field)
+    extra_values = {
+        extra_value.field.key: extra_value.value
+        for extra_value in person.extra_field_values.select_related('field')
+    }
+    extra_fields = {
+        extra_field.key: extra_values.get(extra_field.key, '')
+        for extra_field in ExtraField.objects.all()
+    }
+    if extra_fields:
+        result['extra_fields'] = extra_fields
     result['other_names'] = [
         {
             'name': on.name,
@@ -87,6 +98,17 @@ def revert_person_from_version_data(person, person_extra, version_data):
         new_value = version_data.get(field, '')
         if new_value:
             person_extra.update_complex_field(location, version_data[field])
+
+    # Remove any extra field data and create them from the JSON:
+    person.extra_field_values.all().delete()
+    extra_fields_from_version = version_data.get('extra_fields', {})
+    for extra_field in ExtraField.objects.all():
+        value = extra_fields_from_version.get(extra_field.key)
+        if value is not None:
+            person.extra_field_values.create(
+                field=extra_field,
+                value=value,
+            )
 
     # Other fields to preserve:
     person.image = version_data.get('image')
