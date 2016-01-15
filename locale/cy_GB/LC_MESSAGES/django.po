@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 18:00+0000\n"
-"PO-Revision-Date: 2016-01-13 18:00+0000\n"
+"POT-Creation-Date: 2016-01-15 12:37+0000\n"
+"PO-Revision-Date: 2016-01-15 12:39+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -276,7 +276,7 @@ msgstr "Diweddarwyd ar {0}"
 msgid "Enter your address or town"
 msgstr "Rhowch eich cyfeiriad neu dref"
 
-#: candidates/forms.py:36 candidates/forms.py:458
+#: candidates/forms.py:36 candidates/forms.py:465
 msgid "Person ID"
 msgstr "Person ID"
 
@@ -359,90 +359,100 @@ msgstr "Gwegyfeiriad LinkedIn"
 msgid "The party’s candidate page for this person"
 msgstr "Tudalen ymgeisydd y blaid ar gyfer person hwn"
 
-#: candidates/forms.py:178
+#: candidates/forms.py:170
+msgid ""
+"That date of birth could not be understood. Try using DD/MM/YYYY instead"
+msgstr ""
+
+#: candidates/forms.py:172
+msgid ""
+"That date of birth could not be understood. Try using MM/DD/YYYY instead"
+msgstr ""
+
+#: candidates/forms.py:185
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr "Rhaid i'r enw defnyddiwr Twitter cynnwys llythrennau, rhifau a thanlinelliad yn unig"
 
-#: candidates/forms.py:201
+#: candidates/forms.py:208
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
 msgstr "Wrth nodi bod yr ymgeisydd yn sefyll yn {election}, rhaid i chi ddewis etholaeth"
 
-#: candidates/forms.py:208
+#: candidates/forms.py:215
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
 msgstr "Nodwyd cyfeirnod etholaeth '{post_id}' sy'n anhysbys i ni"
 
-#: candidates/forms.py:215
+#: candidates/forms.py:222
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr "Methu canfod pleidiau am yr etholaeth gyda'r cyfeirnod '{post_id}' yn {election}"
 
-#: candidates/forms.py:227
+#: candidates/forms.py:234
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr "Rhaid i chi nodi plaid ar gyfer  {election}"
 
-#: candidates/forms.py:243 candidates/forms.py:357
+#: candidates/forms.py:250 candidates/forms.py:364
 #, python-format
 msgid "Standing in %s"
 msgstr "Sefyll yn %s"
 
-#: candidates/forms.py:258 candidates/forms.py:269
+#: candidates/forms.py:265 candidates/forms.py:276
 #, python-brace-format
 msgid "Post in the {election}"
 msgstr "Etholaeth yn {election}"
 
-#: candidates/forms.py:309
+#: candidates/forms.py:316
 #, python-brace-format
 msgid "Party in {election}"
 msgstr ""
 
-#: candidates/forms.py:322
+#: candidates/forms.py:329
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr "Ffynhonnell o wybodaeth  ({0})"
 
-#: candidates/forms.py:327 candidates/forms.py:412
+#: candidates/forms.py:334 candidates/forms.py:419
 msgid "You must indicate how you know about this candidate"
 msgstr "Rhaid i chi nodi sut y gwyddoch chi am ymgeisydd hwn"
 
-#: candidates/forms.py:332 candidates/forms.py:417
+#: candidates/forms.py:339 candidates/forms.py:424
 msgid "How you know about this candidate"
 msgstr "Sut y gwyddoch chi am ymgeisydd hwn"
 
-#: candidates/forms.py:363
+#: candidates/forms.py:370
 #, python-format
 msgid "Constituency in %s"
 msgstr "Etholaeth yn %s"
 
-#: candidates/forms.py:378
+#: candidates/forms.py:385
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr "Plaid yn {election} ({party_set_name})"
 
-#: candidates/forms.py:396
+#: candidates/forms.py:403
 msgid "Position in party list ('1' for first, '2' for second, etc.)"
 msgstr ""
 
-#: candidates/forms.py:407
+#: candidates/forms.py:414
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr "Ffynhonnell wybodaeth ar gyfer y newid hwn ({0})"
 
-#: candidates/forms.py:439
+#: candidates/forms.py:446
 #, python-brace-format
 msgid ""
 "You can only edit data on {site_name} if you agree to this copyright "
 "assignment."
 msgstr ""
 
-#: candidates/forms.py:463
+#: candidates/forms.py:470
 msgid "Source of information that they won"
 msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 
@@ -517,7 +527,7 @@ msgid ""
 "({post_label})"
 msgstr ""
 
-#: candidates/models/popolo_extra.py:166
+#: candidates/models/popolo_extra.py:190
 #, python-brace-format
 msgid "'PersonExtra' object has no attribute '{name}'"
 msgstr ""
@@ -2621,6 +2631,18 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 #, python-brace-format
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
+
+#: mysite/extra_translations.py:8
+msgid "Profession"
+msgstr ""
+
+#: mysite/extra_translations.py:9
+msgid "Important Roles"
+msgstr ""
+
+#: mysite/extra_translations.py:10
+msgid "Standing for re-election"
+msgstr ""
 
 #: mysite/settings/conf.py:377
 msgid ""

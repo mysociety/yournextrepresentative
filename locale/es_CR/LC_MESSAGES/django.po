@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 18:00+0000\n"
-"PO-Revision-Date: 2016-01-15 08:39+0000\n"
-"Last-Translator: Manfred Vargas <manfred.vargas@gmail.com>\n"
+"POT-Creation-Date: 2016-01-15 12:37+0000\n"
+"PO-Revision-Date: 2016-01-15 12:39+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,7 +279,7 @@ msgstr "Actualizado a las {0}"
 msgid "Enter your address or town"
 msgstr "Ingresá tu cantón"
 
-#: candidates/forms.py:36 candidates/forms.py:458
+#: candidates/forms.py:36 candidates/forms.py:465
 msgid "Person ID"
 msgstr "ID de Persona"
 
@@ -362,90 +362,100 @@ msgstr "Perfil de LinkedIn (URL)"
 msgid "The party’s candidate page for this person"
 msgstr "Página del candidato en el sitio del partido"
 
-#: candidates/forms.py:178
+#: candidates/forms.py:170
+msgid ""
+"That date of birth could not be understood. Try using DD/MM/YYYY instead"
+msgstr ""
+
+#: candidates/forms.py:172
+msgid ""
+"That date of birth could not be understood. Try using MM/DD/YYYY instead"
+msgstr ""
+
+#: candidates/forms.py:185
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr "El usuario de twitter sólo debe contener caracteres alfanuméricos o guión abajo "
 
-#: candidates/forms.py:201
+#: candidates/forms.py:208
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
 msgstr "Si indicás que el candidato se presenta a {election}, debes seleccionar un cargo"
 
-#: candidates/forms.py:208
+#: candidates/forms.py:215
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
 msgstr "Identificador de cargo (post ID {post_id}) desconocido"
 
-#: candidates/forms.py:215
+#: candidates/forms.py:222
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr "No encontramos partidos presentandose para el cargo con ID '{post_id}' en la {election}"
 
-#: candidates/forms.py:227
+#: candidates/forms.py:234
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr "debe especificar un partido para la {election}"
 
-#: candidates/forms.py:243 candidates/forms.py:357
+#: candidates/forms.py:250 candidates/forms.py:364
 #, python-format
 msgid "Standing in %s"
 msgstr "Se presenta en %s"
 
-#: candidates/forms.py:258 candidates/forms.py:269
+#: candidates/forms.py:265 candidates/forms.py:276
 #, python-brace-format
 msgid "Post in the {election}"
 msgstr "Cargo en la elección {election}"
 
-#: candidates/forms.py:309
+#: candidates/forms.py:316
 #, python-brace-format
 msgid "Party in {election}"
 msgstr ""
 
-#: candidates/forms.py:322
+#: candidates/forms.py:329
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr "Fuente de información ({0})"
 
-#: candidates/forms.py:327 candidates/forms.py:412
+#: candidates/forms.py:334 candidates/forms.py:419
 msgid "You must indicate how you know about this candidate"
 msgstr "Debe indicar cómo se enteró de este candidato"
 
-#: candidates/forms.py:332 candidates/forms.py:417
+#: candidates/forms.py:339 candidates/forms.py:424
 msgid "How you know about this candidate"
 msgstr "Cómo se enteró de este candidato"
 
-#: candidates/forms.py:363
+#: candidates/forms.py:370
 #, python-format
 msgid "Constituency in %s"
 msgstr "Circunscripción en %s"
 
-#: candidates/forms.py:378
+#: candidates/forms.py:385
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr "Partido en {election} ({party_set_name})"
 
-#: candidates/forms.py:396
+#: candidates/forms.py:403
 msgid "Position in party list ('1' for first, '2' for second, etc.)"
 msgstr "Posición en lista de partido ('1' si es primero, '2' si es segundo, etc.)"
 
-#: candidates/forms.py:407
+#: candidates/forms.py:414
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr "Fuente de información para este cambio ({0})"
 
-#: candidates/forms.py:439
+#: candidates/forms.py:446
 #, python-brace-format
 msgid ""
 "You can only edit data on {site_name} if you agree to this copyright "
 "assignment."
 msgstr "Solo puede editar datos en {site_name} si está de acuerdo con los términos de derechos de autor"
 
-#: candidates/forms.py:463
+#: candidates/forms.py:470
 msgid "Source of information that they won"
 msgstr "Fuente de información de que ganaron"
 
@@ -520,7 +530,7 @@ msgid ""
 "({post_label})"
 msgstr "Esa actualización no es permitida porque no puede cambiar el partido (en este caso de  {old_party} a {new_party}) para un candidato en un cargo bloqueado ({post_label})"
 
-#: candidates/models/popolo_extra.py:166
+#: candidates/models/popolo_extra.py:190
 #, python-brace-format
 msgid "'PersonExtra' object has no attribute '{name}'"
 msgstr "El objeto 'PersonExtra' no tiene atributo '{name}'"
@@ -2620,6 +2630,18 @@ msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa
 #, python-brace-format
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Indicaste que una foto subida por {0} debe ser ignorada"
+
+#: mysite/extra_translations.py:8
+msgid "Profession"
+msgstr "Profesión"
+
+#: mysite/extra_translations.py:9
+msgid "Important Roles"
+msgstr "Cargos importantes"
+
+#: mysite/extra_translations.py:10
+msgid "Standing for re-election"
+msgstr "Re-elección (si o no)"
 
 #: mysite/settings/conf.py:377
 msgid ""
