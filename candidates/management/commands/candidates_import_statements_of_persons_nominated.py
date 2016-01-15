@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import csv
 import errno
 import hashlib
@@ -63,36 +65,36 @@ class Command(BaseCommand):
             try:
                 area = Area.objects.get(name=name)
             except Area.DoesNotExist:
-                print "Failed to find area for {0}".format(name)
+                print("Failed to find area for {0}".format(name))
 
             try:
                 post = Post.objects.get(area=area)
             except Post.DoesNotExist:
-                print "Failed to find post with for {0}".format(name)
+                print("Failed to find post with for {0}".format(name))
 
             document_url = row['Statement of Persons Nominated (SOPN) URL']
             if not document_url:
-                print u"No URL for {0}".format(name)
+                print(u"No URL for {0}".format(name))
                 continue
             existing_documents = OfficialDocument.objects.filter(
                 post_id=post
             )
             if existing_documents.count() > 0:
-                print u"Skipping {0} since it already had documents".format(name)
+                print(u"Skipping {0} since it already had documents".format(name))
                 continue
             try:
                 downloaded_filename = download_file_cached(document_url)
             except requests.exceptions.ConnectionError:
-                print u"Connection failed for {0}".format(name)
-                print u"The URL was:", document_url
+                print(u"Connection failed for {0}".format(name))
+                print(u"The URL was:", document_url)
                 continue
             mime_type = mime_type_magic.from_file(downloaded_filename)
             extension = mimetypes.guess_extension(mime_type)
             if mime_type not in allowed_mime_types:
-                print "Ignoring unknown MIME type {0} for {1}".format(
+                print("Ignoring unknown MIME type {0} for {1}".format(
                     mime_type,
                     name,
-                )
+                ))
                 continue
             filename = "official_documents/{post_id}/statement-of-persons-nominated{extension}".format(
                 post_id=post.extra.slug,
@@ -109,4 +111,4 @@ class Command(BaseCommand):
                 source_url=document_url
             )
             message = "Successfully added the Statement of Persons Nominated for {0}"
-            print message.format(name)
+            print(message.format(name))

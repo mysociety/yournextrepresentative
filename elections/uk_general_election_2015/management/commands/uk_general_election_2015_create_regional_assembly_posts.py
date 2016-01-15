@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from datetime import date
 from urlparse import urljoin
 
@@ -138,15 +140,15 @@ class Command(BaseCommand):
             }
             election_defaults['current'] = True
             election_defaults['candidate_membership_role'] = 'Candidate'
-            print 'Creating:', election_defaults['name'], '...',
+            print('Creating:', election_defaults['name'], '...',)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_defaults
             )
             if created:
-                print '[created]'
+                print('[created]')
             else:
-                print '[already existed]'
+                print('[already existed]')
 
             area_type, _ = AreaType.objects.update_or_create(
                 name=data['mapit_code'], defaults={'source': 'MapIt'}

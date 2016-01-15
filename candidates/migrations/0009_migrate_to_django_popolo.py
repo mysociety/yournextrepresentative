@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 import errno
 import hashlib
@@ -40,13 +40,13 @@ def get_url_cached(url):
     if exists(filename):
         return filename
     else:
-        print "\nDownloading {0} ...".format(url)
+        print("\nDownloading {0} ...".format(url))
         with open(filename, 'wb') as f:
             r = requests.get(url, stream=True)
             r.raise_for_status()
             r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
-        print "done"
+        print("done")
     return filename
 
 class YNRPopItImporter(PopItImporter):
@@ -82,10 +82,10 @@ class YNRPopItImporter(PopItImporter):
                     image_filename = get_url_cached(url)
                 except requests.exceptions.HTTPError as e:
                     msg = "Ignoring image URL {url}, with status code {status}"
-                    print msg.format(
+                    print(msg.format(
                         url=url,
                         status=e.response.status_code
-                    )
+                    ))
                     continue
                 with open(image_filename, 'rb') as f:
                     md5sum = hashlib.md5(f.read()).hexdigest()
@@ -94,9 +94,9 @@ class YNRPopItImporter(PopItImporter):
                         pillow_image = PillowImage.open(f)
                     except IOError as e:
                         if 'cannot identify image file' in unicode(e):
-                            print "Ignoring a non-image file {0}".format(
+                            print("Ignoring a non-image file {0}".format(
                                 image_filename
-                            )
+                            ))
                             continue
                         raise
                     extension = PILLOW_FORMAT_EXTENSIONS[pillow_image.format]
@@ -316,7 +316,7 @@ class YNRPopItImporter(PopItImporter):
             if party_set_name:
                 post_extra.party_set = PartySet.objects.get(name=party_set_name)
             else:
-                print "Couldn't find party set from name {0}".format(area.name)
+                print("Couldn't find party set from name {0}".format(area.name))
                 post_extra.party_set = PartySet.objects.get(slug='nacional')
         post_extra.save()
 

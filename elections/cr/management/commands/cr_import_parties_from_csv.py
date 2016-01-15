@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 import csv
 import re
 import requests
@@ -88,7 +90,7 @@ class Command(BaseCommand):
                 slug=slug
             )
             org = org_extra.base
-            print u"found existing party {0}".format(name)
+            print(u"found existing party {0}".format(name))
         except OrganizationExtra.DoesNotExist:
             org = popolo_models.Organization.objects.create(
                 name=name,
@@ -98,7 +100,7 @@ class Command(BaseCommand):
             OrganizationExtra.objects.create(
                 base=org, slug=slug
             )
-            print u"created new party {0}".format(name)
+            print(u"created new party {0}".format(name))
 
         if party_id != '':
             self.add_id(org, party_id)
@@ -107,7 +109,7 @@ class Command(BaseCommand):
             canton = canton.decode('utf-8')
             party_set = self.get_party_set(canton)
             if not org.party_sets.filter(slug=party_set.slug):
-                print "adding party set {0}".format(party_set.slug)
+                print("adding party set {0}".format(party_set.slug))
                 org.party_sets.add(party_set)
 
     def get_party_set(self, canton_name):
