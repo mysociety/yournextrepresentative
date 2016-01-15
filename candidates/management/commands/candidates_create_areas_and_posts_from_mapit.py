@@ -2,7 +2,10 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext as _
 
 from optparse import make_option
-from urlparse import urljoin
+try:
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urljoin
 import requests
 
 from popolo.models import Post, Area
@@ -106,4 +109,3 @@ in the Election objects in the app.
                 )
 
                 post_extra.elections.add(election)
-

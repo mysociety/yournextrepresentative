@@ -8,7 +8,10 @@ import time
 import signal
 import threading
 import atexit
-import Queue
+try:
+    import Queue
+except ImportError:
+    import queue as Queue
 
 _interval = 1.0
 _times = {}

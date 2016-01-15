@@ -1,7 +1,10 @@
 from django.views.generic import FormView
 from django.http import HttpResponseRedirect
 from django.utils.http import urlquote
-from urlparse import urlparse
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 from ..forms import UserTermsAgreementForm
 

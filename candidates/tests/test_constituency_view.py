@@ -1,5 +1,5 @@
 import csv
-from StringIO import StringIO
+from io import StringIO
 
 from django_webtest import WebTest
 

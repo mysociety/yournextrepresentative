@@ -2,8 +2,11 @@ from datetime import date
 import json
 from os.path import join
 import re
-from urlparse import urljoin
-from urllib import quote_plus
+try:
+    from urlparse import urljoin
+    from urllib import quote_plus
+except ImportError:
+    from urllib.parse import urljoin, quote_plus
 
 from django.conf import settings
 from django.contrib.auth.models import User

@@ -8,7 +8,10 @@ from os import makedirs
 from os.path import dirname, exists, join
 import re
 import shutil
-from urlparse import urlsplit, urlunsplit
+try:
+    from urlparse import urlsplit, urlunsplit
+except ImportError:
+    from urllib.parse import urlsplit, urlunsplit
 
 from PIL import Image as PillowImage
 

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
-from urlparse import urlsplit
+try:
+    from urlparse import urlsplit
+except ImportError:
+    from urllib.parse import urlsplit
 
 from django_webtest import WebTest
 from popolo.models import Person

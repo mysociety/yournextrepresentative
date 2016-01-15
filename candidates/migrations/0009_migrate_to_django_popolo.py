@@ -9,7 +9,10 @@ from os.path import join, exists, dirname
 import re
 import requests
 import shutil
-from urlparse import urlsplit
+try:
+    from urlparse import urlsplit
+except ImportError:
+    from urllib.parse import urlsplit
 
 from PIL import Image as PillowImage
 

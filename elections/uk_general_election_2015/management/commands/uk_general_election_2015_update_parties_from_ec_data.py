@@ -6,8 +6,11 @@ from os.path import join
 import re
 from shutil import move
 from tempfile import NamedTemporaryFile
-from urllib import urlencode
-from urlparse import urljoin
+try:
+    from urllib import urlencode
+    from urlparse import urljoin
+except ImportError:
+    from urllib.parse import urlencode, urljoin
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import FileSystemStorage
