@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
@@ -51,7 +51,7 @@ def from_generic_fields_to_person_extra(apps, schema_editor):
                 pe.program = pefv.value
                 pe.save()
             else:
-                print "Ignoring field with unknown key:", pefv.field.key
+                print("Ignoring field with unknown key:", pefv.field.key)
     PersonExtraFieldValue.objects.all().delete()
     ExtraField.objects.all().delete()
 

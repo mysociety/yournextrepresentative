@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import requests
 import csv
 
@@ -147,5 +149,5 @@ class Command(BaseCommand):
                 # if image_url:
                 #     enqueue_image(person, user, image_url)
             except HttpClientError as hce:
-                print "Got an HttpClientError:", hce.content
+                print("Got an HttpClientError:", hce.content)
                 raise
