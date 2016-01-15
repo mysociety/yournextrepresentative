@@ -200,13 +200,9 @@
     <dl>
       {% for extra_field_key, extra_field in extra_fields.items %}
         <dt>{{ extra_field.label }}</dt>
-        <dd>
-          {% if extra_field.type == 'url' %}
+        <dd {% if extra_field.type == 'longer-text' %}class="plaintext-with-newlines"{% endif %}>{% if extra_field.type == 'url' %}
             <a href="{{ extra_field.value }}" rel="nofollow">{{ extra_field.value }}</a>
-          {% else %}
-            {{ extra_field.value }}
-          {% endif %}
-        </dd>
+          {% else %}{{ extra_field.value }}{% endif %}</dd>
       {% endfor %}
     </dl>
   {% endif %}
