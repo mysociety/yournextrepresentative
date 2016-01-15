@@ -7,6 +7,10 @@ notifications:
     skip_join: true
 
 language: python
+python:
+  - '2.7'
+  - '3.4'
+  - '3.5'
 addons:
   postgresql: "9.1"
 
