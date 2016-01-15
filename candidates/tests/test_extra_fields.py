@@ -43,6 +43,13 @@ class ExtraFieldTests(TestUserMixin, WebTest):
             label=u'Curriculum Vitae or Resumé',
             type=ExtraField.LINE,
         )
+
+        yn_field = ExtraField.objects.create(
+            key='reelection',
+            label=u'Standing for re-election',
+            type=ExtraField.YESNO
+        )
+
         # Create one person with these fields already present:
         self.person = Person.objects.create(
             name="John the Well-Described"
@@ -59,6 +66,11 @@ class ExtraFieldTests(TestUserMixin, WebTest):
             person=self.person,
             value=u'Tree Surgeon'
         )
+        PersonExtraFieldValue.objects.create(
+            field=yn_field,
+            person=self.person,
+            value='yes'
+        )
 
     def test_create_form_has_fields(self):
         response = self.app.get(
@@ -69,12 +81,16 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         # Look for the extra fields' labels:
         p_label = response.html.find('label', {'for': 'id_profession'})
         c_label = response.html.find('label', {'for': 'id_cv'})
+        yn_label = response.html.find('label', {'for': 'id_reelection'})
         self.assertIsNotNone(p_label)
         self.assertIsNotNone(c_label)
+        self.assertIsNotNone(yn_label)
         p_input = response.html.find('input', {'id': 'id_profession'})
         c_input = response.html.find('input', {'id': 'id_cv'})
+        yn_input = response.html.find('select', {'id': 'id_reelection'})
         self.assertIsNotNone(p_input)
         self.assertIsNotNone(c_input)
+        self.assertIsNotNone(yn_input)
 
     def test_update_form_is_prefilled(self):
         response = self.app.get(
@@ -84,14 +100,20 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         # Look for the extra fields' labels:
         p_label = response.html.find('label', {'for': 'id_profession'})
         c_label = response.html.find('label', {'for': 'id_cv'})
+        yn_label = response.html.find('label', {'for': 'id_reelection'})
         self.assertIsNotNone(p_label)
         self.assertIsNotNone(c_label)
+        self.assertIsNotNone(yn_label)
         p_input = response.html.find('input', {'id': 'id_profession'})
         c_input = response.html.find('input', {'id': 'id_cv'})
+        yn_input = response.html.find('select', {'id': 'id_reelection'})
         self.assertIsNotNone(p_input)
         self.assertIsNotNone(c_input)
+        self.assertIsNotNone(yn_input)
         self.assertEqual(p_input.get('value'), 'Tree Surgeon')
         self.assertEqual(c_input.get('value'), 'http://cv.example.org/john')
+        form = response.forms['person-details']
+        self.assertEqual(form['reelection'].value, 'yes')
 
     def test_fields_are_saved_when_editing(self):
         response = self.app.get(
@@ -101,6 +123,7 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         form = response.forms['person-details']
         form['cv'] = 'http://homepage.example.org/john-the-described'
         form['profession'] = 'Soda Jerk'
+        form['reelection'] = 'no'
         form['source'] = 'Testing setting additional fields'
         submission_response = form.submit()
 
@@ -124,6 +147,12 @@ class ExtraFieldTests(TestUserMixin, WebTest):
             ).value,
             'Soda Jerk'
         )
+        self.assertEqual(
+            PersonExtraFieldValue.objects.get(
+                person=person, field__key='reelection'
+            ).value,
+            'no'
+        )
 
     def test_fields_are_saved_when_creating(self):
         response = self.app.get(
@@ -135,6 +164,7 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         form['cv'] = 'http://example.org/another-cv'
         form['profession'] = 'Longshoreman'
         form['standing_2015'] = 'not-standing'
+        form['reelection'] = 'yes'
         form['source'] = 'Test creating someone with additional fields'
         submission_response = form.submit()
 
@@ -156,6 +186,12 @@ class ExtraFieldTests(TestUserMixin, WebTest):
             ).value,
             'Longshoreman'
         )
+        self.assertEqual(
+            PersonExtraFieldValue.objects.get(
+                person=person, field__key='reelection'
+            ).value,
+            'yes'
+        )
 
     def test_view_additional_fields(self):
         response = self.app.get(
@@ -169,3 +205,7 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         profession_dt = response.html.find('dt', text=u'Profession')
         profession_dd = get_next_dd(profession_dt)
         self.assertEqual(profession_dd.text.strip(), 'Tree Surgeon')
+
+        profession_dt = response.html.find('dt', text=u'Standing for re-election')
+        profession_dd = get_next_dd(profession_dt)
+        self.assertEqual(profession_dd.text.strip(), 'Yes')
