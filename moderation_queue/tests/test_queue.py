@@ -2,15 +2,15 @@
 
 from os.path import join, realpath, dirname
 import re
-from urlparse import urlsplit
 
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
+from django.utils.six.moves.urllib_parse import urlsplit
 
 from PIL import Image
-import StringIO
+from io import BytesIO
 from django_webtest import WebTest
 from webtest import Upload
 from mock import patch
@@ -30,7 +30,7 @@ TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
 
 def get_image_type_and_dimensions(image_data):
-    image = Image.open(StringIO.StringIO(image_data))
+    image = Image.open(BytesIO(image_data))
     return {
         'format': image.format,
         'width': image.size[0],

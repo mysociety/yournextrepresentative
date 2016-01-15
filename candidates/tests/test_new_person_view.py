@@ -1,5 +1,6 @@
 import json
-from urlparse import urlsplit
+
+from django.utils.six.moves.urllib_parse import urlsplit
 
 from django_webtest import WebTest
 
