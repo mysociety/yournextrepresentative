@@ -8,11 +8,13 @@ class ExtraField(models.Model):
     LINE = 'line'
     LONGER_TEXT = 'longer-text'
     URL = 'url'
+    YESNO = 'yesno'
 
     FIELD_TYPES = (
         (LINE, 'A single line of text'),
         (LONGER_TEXT, 'One or more paragraphs of text'),
-        (URL, 'A URL')
+        (URL, 'A URL'),
+        (YESNO, 'A Yes/No/Don\'t know dropdown')
     )
 
     key = models.CharField(max_length=256)

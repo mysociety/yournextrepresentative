@@ -61,6 +61,7 @@ class BasePersonForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(BasePersonForm, self).__init__(*args, **kwargs)
+
         # Add any extra fields to the person form:
         for field in ExtraField.objects.all():
             if field.type == 'line':
@@ -83,6 +84,20 @@ class BasePersonForm(forms.Form):
                         label=_(field.label),
                         max_length=256,
                         required=False,
+                    )
+            elif field.type == 'yesno':
+                self.fields[field.key] = \
+                    forms.ChoiceField(
+                        label=_(field.label),
+                        required=False,
+                        # even though these are the same labels as STANDING_CHOICES
+                        # the values of that are too specific for a generic field
+                        # so we redefine them here.
+                        choices=(
+                            ('not-sure', _(u"Don’t Know")),
+                            ('yes', _(u"Yes")),
+                            ('no', _(u"No")),
+                        )
                     )
             else:
                 raise Exception(
