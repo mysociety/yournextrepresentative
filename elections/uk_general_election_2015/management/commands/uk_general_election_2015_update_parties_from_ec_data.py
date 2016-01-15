@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from datetime import datetime
 import hashlib
 from os.path import join
@@ -114,15 +116,15 @@ class Command(BaseCommand):
                     .select_related('base') \
                     .get(slug=party_id)
                 party = party_extra.base
-                print "Got the existing party:", party.name.encode('utf-8')
+                print("Got the existing party:", party.name.encode('utf-8'))
             except OrganizationExtra.DoesNotExist:
                 party = Organization.objects.create(name=party_name)
                 party_extra = OrganizationExtra.objects.create(
                     base=party, slug=party_id
                 )
-                print "Couldn't find {0}, creating a new party {1}".format(
+                print("Couldn't find {0}, creating a new party {1}".format(
                     party_id, party_name.encode('utf-8')
-                )
+                ))
 
             party.name = party_name
             party.classification = 'Party'

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+
 from datetime import date
 import dateutil.parser
 import json
@@ -172,9 +174,9 @@ class Command(BaseCommand):
 
             person = get_existing_popit_person(vi_person_id)
             if person:
-                print "Found an existing person:", person.get_absolute_url()
+                print("Found an existing person:", person.get_absolute_url())
             else:
-                print "No existing person, creating a new one:", name
+                print("No existing person, creating a new one:", name)
                 person = PopItPerson()
 
             # Now update fields from the imported data:
@@ -211,5 +213,5 @@ class Command(BaseCommand):
                 if image_url:
                     enqueue_image(person, user, image_url)
             except HttpClientError as hce:
-                print "Got an HttpClientError:", hce.content
+                print("Got an HttpClientError:", hce.content)
                 raise
