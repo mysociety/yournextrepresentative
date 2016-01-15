@@ -37,7 +37,7 @@ class UpcomingElectionsView(View):
 
         try:
             areas = fetch_area_ids(postcode=postcode, coords=coords)
-        except Exception, e:
+        except Exception as e:
             errors = {
                 'error': e.message
             }
@@ -103,7 +103,7 @@ class VersionView(View):
                 cwd=dirname(__file__),
             ).strip()
             result['git_version'] = git_version
-        except OSError, subprocess.CalledProcessError:
+        except (OSError, subprocess.CalledProcessError):
             pass
         return HttpResponse(
             json.dumps(result), content_type='application/json'

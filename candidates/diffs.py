@@ -42,9 +42,9 @@ def get_descriptive_value(election, attribute, value, leaf):
                 return message.format(party=value, election=election_name)
             else:
                 message = _(u"Unexpected leaf {0} (attribute: {1}, election: {2}")
-                raise Exception, message.format(
+                raise Exception(message.format(
                     leaf, attribute, election
-                )
+                ))
         else:
             if current_election:
                 message = _(u'is known to be standing for the party "{party}" in the {election}')
@@ -90,9 +90,9 @@ def get_descriptive_value(election, attribute, value, leaf):
                         return _("has no position in their party list in the {election}").format(election=election_name)
                 else:
                     message = _(u"Unexpected leaf {0} (attribute: {1}, election: {2}")
-                    raise Exception, message.format(
+                    raise Exception(message.format(
                         leaf, attribute, election
-                    )
+                    ))
             else:
                 if current_election:
                     message = _(u'is known to be standing in {party} in the {election}')
