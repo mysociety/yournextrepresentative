@@ -68,7 +68,7 @@ def enqueue_image(person, user, image_url):
     )
     if not r.status_code == 200:
         message = "HTTP status code {0} when downloading {1}"
-        raise Exception, message.format(r.status_code, image_url)
+        raise Exception(message.format(r.status_code, image_url))
     storage = FileSystemStorage()
     suggested_filename = \
         'queued_image/{d.year}/{d.month:02x}/{d.day:02x}/ci-upload'.format(

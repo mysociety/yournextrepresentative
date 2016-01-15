@@ -37,11 +37,11 @@ for row in reader:
     elected = row['elected']
     if elected == '':
         msg = "In {cons_name} {person_name} ({person_id}) had no elected status"
-        raise Exception, msg.format(
+        raise Exception(msg.format(
             cons_name=cons_name,
             person_name=row['name'],
             person_id=row['id'],
-        )
+        ))
     if not elected.lower() == 'true':
         continue
     if cons_name < 'South Thanet':
@@ -61,8 +61,8 @@ for row in reader:
     bbc_winner_party_name = m.group(1)
     if bbc_winner_party_name != party_from_ynmp:
         msg = "In {cons_name} YNMP had {ynmp}, the BBC had {bbc}"
-        raise Exception, msg.format(
+        raise Exception(msg.format(
             cons_name=cons_name,
             ynmp=party_from_ynmp,
             bbc=bbc_winner_party_name,
-        )
+        ))
