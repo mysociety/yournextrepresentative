@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 person_extra.record_version(
                     {
                         'information_source': source,
-                        'version_id': "{0:016x}".format(randint(0, sys.maxint)),
+                        'version_id': "{0:016x}".format(randint(0, sys.maxsize)),
                         'timestamp': datetime.utcnow().isoformat(),
                     }
                 )
