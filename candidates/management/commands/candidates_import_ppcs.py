@@ -11,7 +11,6 @@
 # run the script manually to make those decisions.
 
 from __future__ import print_function, unicode_literals
-from __future__ import print_function
 
 from optparse import make_option
 import os
@@ -25,6 +24,8 @@ from django.conf import settings
 import requests
 
 from candidates.views.version_data import get_change_metadata
+
+from compat import input
 
 from ..images import get_file_md5sum
 
@@ -359,7 +360,7 @@ class Command(BaseCommand):
             ))
         response = ''
         while response.lower() not in ('y', 'n'):
-            response = raw_input('Are they the same? (y/Y/n/N) ')
+            response = input('Are they the same? (y/Y/n/N) ')
             response = response.lower().strip()
             if response == 'y':
                 return True
