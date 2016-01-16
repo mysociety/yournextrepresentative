@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import csv
 import re
@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 slug=slug
             )
             org = org_extra.base
-            print(u"found existing party {0}".format(name))
+            print("found existing party {0}".format(name))
         except OrganizationExtra.DoesNotExist:
             org = popolo_models.Organization.objects.create(
                 name=name,
@@ -100,7 +100,7 @@ class Command(BaseCommand):
             OrganizationExtra.objects.create(
                 base=org, slug=slug
             )
-            print(u"created new party {0}".format(name))
+            print("created new party {0}".format(name))
 
         if party_id != '':
             self.add_id(org, party_id)
@@ -115,7 +115,7 @@ class Command(BaseCommand):
     def get_party_set(self, canton_name):
         canton = fix_whitespace(canton_name)
         party_set_slug = "2016_canton_{0}".format(slugify(canton))
-        party_set_name = u"2016 parties in {0} Canton".format(canton)
+        party_set_name = "2016 parties in {0} Canton".format(canton)
         try:
             return PartySet.objects.get(slug=party_set_slug)
         except PartySet.DoesNotExist:

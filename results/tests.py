@@ -1,4 +1,7 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 from datetime import datetime
 
 from django_webtest import WebTest
@@ -85,7 +88,7 @@ class TestResultsFeed(TestUserMixin, WebTest):
     user_id=self.user.id,
 )
         self.assertEqual(expected, xml_pretty)
-        
+
     def test_all_basic_feed_with_one_item(self):
         response = self.app.get('/results/all-basic.atom')
         root = etree.XML(response.content)

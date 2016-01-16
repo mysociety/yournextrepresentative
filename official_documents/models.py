@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import os
 
 from django.db import models
@@ -40,7 +42,7 @@ class OfficialDocument(TimeStampedModel):
     )
 
     def __unicode__(self):
-        return u"{0} ({1})".format(
+        return "{0} ({1})".format(
             self.post.extra.slug,
             self.source_url,
         )

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import json
 
 from django.utils.six.moves.urllib_parse import urlsplit

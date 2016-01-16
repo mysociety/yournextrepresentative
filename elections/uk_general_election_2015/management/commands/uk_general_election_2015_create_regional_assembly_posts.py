@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from datetime import date
 
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             'gb-sp-2016-05-05-r': {
                 'name': '2016 Scottish Parliament Election (Regions)',
                 'for_post_role': 'Member of the Scottish Parliament',
-                'label_format': u'Member of the Scottish Parliament for {area_name}',
+                'label_format': 'Member of the Scottish Parliament for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': True,
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             'gb-sp-2016-05-05-c': {
                 'name': '2016 Scottish Parliament Election (Constituencies)',
                 'for_post_role': 'Member of the Scottish Parliament',
-                'label_format': u'Member of the Scottish Parliament for {area_name}',
+                'label_format': 'Member of the Scottish Parliament for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': False,
@@ -55,7 +55,7 @@ class Command(BaseCommand):
             'gb-naw-2016-05-05-r': {
                 'name': '2016 Welsh Assembly Election (Regions)',
                 'for_post_role': 'Member of the National Assembly for Wales',
-                'label_format': u'Assembly Member for {area_name}',
+                'label_format': 'Assembly Member for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': True,
@@ -67,7 +67,7 @@ class Command(BaseCommand):
             'gb-naw-2016-05-05-c': {
                 'name': '2016 Welsh Assembly Election (Constituencies)',
                 'for_post_role': 'Member of the National Assembly for Wales',
-                'label_format': u'Assembly Member for {area_name}',
+                'label_format': 'Assembly Member for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': False,
@@ -79,7 +79,7 @@ class Command(BaseCommand):
             'gb-nia-2016-05-05': {
                 'name': '2016 Northern Ireland Assembly Election',
                 'for_post_role': 'Member of the Legislative Assembly',
-                'label_format': u'Member of the Legislative Assembly for {area_name}',
+                'label_format': 'Member of the Legislative Assembly for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': False,
@@ -91,7 +91,7 @@ class Command(BaseCommand):
             'gb-gla-2016-05-05-c': {
                 'name': '2016 London Assembly Election (Constituencies)',
                 'for_post_role': 'Member of the London Assembly',
-                'label_format': u'Assembly Member for {area_name}',
+                'label_format': 'Assembly Member for {area_name}',
                 'area_generation': 22,
                 'election_date': date(2016, 5, 5),
                 'party_lists_in_use': False,

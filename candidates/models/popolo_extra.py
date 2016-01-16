@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import date
 import json
 from os.path import join
@@ -111,21 +113,21 @@ def update_person_from_form(person, person_extra, form):
 
 class localparserinfo(parser.parserinfo):
     MONTHS = [
-        (u'Jan', _l(u'Jan'), u'January', _l(u'January')),
-        (u'Feb', _l(u'Feb'), u'February', _l(u'February')),
-        (u'Mar', _l(u'Mar'), u'March', _l(u'March')),
-        (u'Apr', _l(u'Apr'), u'April', _l(u'April')),
-        (u'May', _l(u'May'), u'May', _l(u'May')),
-        (u'Jun', _l(u'Jun'), u'June', _l(u'June')),
-        (u'Jul', _l(u'Jul'), u'July', _l(u'July')),
-        (u'Aug', _l(u'Aug'), u'August', _l(u'August')),
-        (u'Sep', _l(u'Sep'), u'Sept', u'September', _l(u'September')),
-        (u'Oct', _l(u'Oct'), u'October', _l(u'October')),
-        (u'Nov', _l(u'Nov'), u'November', _l(u'November')),
-        (u'Dec', _l(u'Dec'), u'December', _l(u'December'))
+        ('Jan', _l('Jan'), 'January', _l('January')),
+        ('Feb', _l('Feb'), 'February', _l('February')),
+        ('Mar', _l('Mar'), 'March', _l('March')),
+        ('Apr', _l('Apr'), 'April', _l('April')),
+        ('May', _l('May'), 'May', _l('May')),
+        ('Jun', _l('Jun'), 'June', _l('June')),
+        ('Jul', _l('Jul'), 'July', _l('July')),
+        ('Aug', _l('Aug'), 'August', _l('August')),
+        ('Sep', _l('Sep'), 'Sept', 'September', _l('September')),
+        ('Oct', _l('Oct'), 'October', _l('October')),
+        ('Nov', _l('Nov'), 'November', _l('November')),
+        ('Dec', _l('Dec'), 'December', _l('December'))
     ]
 
-    PERTAIN = [u'of', _l(u'of')]
+    PERTAIN = ['of', _l('of')]
 
 
 def parse_approximate_date(s):
@@ -161,7 +163,7 @@ def parse_approximate_date(s):
             dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED
         )
         return ApproximateDate(dt.year, dt.month, dt.day)
-    raise ValueError(u"Couldn't parse '{0}' as an ApproximateDate".format(s))
+    raise ValueError("Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 
 class PersonExtra(HasImageMixin, models.Model):

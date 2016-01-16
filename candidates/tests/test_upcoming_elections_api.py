@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 from mock import patch, Mock
 
 from datetime import date, timedelta
@@ -136,25 +138,25 @@ class TestUpcomingElectionsAPI(WebTest):
         self.maxDiff = None
         expected = [
             {
-                u'organization': u'London Assembly',
-                u'election_date': unicode(future_date.isoformat()),
-                u'election_name': u'2016 London Assembly Election (Constituencies)',
-                u'post_name': u'Assembly Member for Lambeth and Southwark',
-                u'area': {
-                    u'identifier': u'11822',
-                    u'type': u'LAC',
-                    u'name': u'Dulwich and West Norwood'
+                'organization': 'London Assembly',
+                'election_date': unicode(future_date.isoformat()),
+                'election_name': '2016 London Assembly Election (Constituencies)',
+                'post_name': 'Assembly Member for Lambeth and Southwark',
+                'area': {
+                    'identifier': '11822',
+                    'type': 'LAC',
+                    'name': 'Dulwich and West Norwood'
                 }
             },
             {
-                u'organization': u'London Assembly',
-                u'election_date': unicode(future_date.isoformat()),
-                u'election_name': u'2016 London Assembly Election (Additional)',
-                u'post_name': u'Assembly Member',
-                u'area': {
-                    u'identifier': u'2247',
-                    u'type': u'GLA',
-                    u'name': u'Greater London Authority'
+                'organization': 'London Assembly',
+                'election_date': unicode(future_date.isoformat()),
+                'election_name': '2016 London Assembly Election (Additional)',
+                'post_name': 'Assembly Member',
+                'area': {
+                    'identifier': '2247',
+                    'type': 'GLA',
+                    'name': 'Greater London Authority'
                 }
             },
         ]

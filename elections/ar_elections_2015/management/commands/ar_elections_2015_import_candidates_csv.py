@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from datetime import date
 import dateutil.parser
@@ -35,13 +35,13 @@ def get_post_data(api, origin_post,origin_district):
         return False, False;
 
     ynr_election_id = {
-        u'DIPUTADO NACIONAL TITULAR':
+        'DIPUTADO NACIONAL TITULAR':
         'diputados-argentina-paso-2015',
-        u'SENADOR NACIONAL TITULAR':
+        'SENADOR NACIONAL TITULAR':
         'senadores-argentina-paso-2015',
-        u'PARLAMENTARIO MERCOSUR DISTRITO REGIONAL TITULAR':
+        'PARLAMENTARIO MERCOSUR DISTRITO REGIONAL TITULAR':
         'parlamentarios-mercosur-regional-paso-2015',
-        u'PARLAMENTARIO MERCOSUR DISTRITO NACIONAL TITULAR':
+        'PARLAMENTARIO MERCOSUR DISTRITO NACIONAL TITULAR':
         'parlamentarios-mercosur-unico-paso-2015'
 
 
@@ -53,7 +53,7 @@ def get_post_data(api, origin_post,origin_district):
         post_id = 'pmeu'
 
     else:
-        areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
+        areas_by_name = AREA_DATA.areas_by_name[('PRV', '1')]
         area = areas_by_name[origin_district]
         post_id = AREA_POST_DATA.get_post_id(
             ynr_election_id, area['type'], area['id']
