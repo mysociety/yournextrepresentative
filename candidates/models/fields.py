@@ -4,7 +4,10 @@ from django.db import models
 
 from popolo.models import Person
 
+from compat import python_2_unicode_compatible
 
+
+@python_2_unicode_compatible
 class ExtraField(models.Model):
 
     LINE = 'line'
@@ -24,7 +27,7 @@ class ExtraField(models.Model):
     )
     label = models.CharField(max_length=1024)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.key
 
 
