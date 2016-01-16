@@ -1,28 +1,49 @@
 from __future__ import unicode_literals
+import six
 
 import csv
-from io import StringIO
+import io
 
 from .models import CSV_ROW_FIELDS
 
-def encode_row_values(d):
-    return {
-        k: unicode('' if v is None else v).encode('utf-8')
-        for k, v in d.items()
-    }
+
+class StreamDictWriter(object):
+
+    def __init__(self, fieldnames):
+        self.f = io.BytesIO() if six.PY2 else io.StringIO()
+        self.writer = self._DictWriter(self.f, fieldnames, dialect=csv.excel)
+
+        self.writeheader = self.writer.writeheader
+        self.writerow = self.writer.writerow
+        self.writerows = self.writer.writerows
+
+    @property
+    def output(self):
+        output = self.f.getvalue()
+        if six.PY2:
+            output = output.decode('utf-8')
+        return output
+
+    class _DictWriter(csv.DictWriter):
+
+        def _dict_to_list(self, rowdict):
+            # py2 csv uses old-style classes, so we can't do `super()`
+            rowlist = csv.DictWriter._dict_to_list(self, rowdict)
+            if six.PY2:
+                rowlist = [unicode('' if i is None else i).encode('utf-8')
+                           for i in rowlist]
+            return rowlist
+
 
 def candidate_sort_key(row):
     return (row['election'], row['post_label'], row['name'].split()[-1])
 
+
 def list_to_csv(candidates_list):
     from .election_specific import EXTRA_CSV_ROW_FIELDS
     csv_fields = CSV_ROW_FIELDS + EXTRA_CSV_ROW_FIELDS
-    output = StringIO()
-    writer = csv.DictWriter(
-        output,
-        fieldnames=csv_fields,
-        dialect=csv.excel)
+    writer = StreamDictWriter(fieldnames=csv_fields)
     writer.writeheader()
     for row in sorted(candidates_list, key=candidate_sort_key):
-        writer.writerow(encode_row_values(row))
-    return output.getvalue()
+        writer.writerow(row)
+    return writer.output
