@@ -60,7 +60,7 @@ class TestModels(TestUserMixin, WebTest):
             kwargs={'election': '2015', 'post_id': self.post_extra.slug}
         )
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
-        with open(image_filename) as f:
+        with open(image_filename, 'rb') as f:
             response = self.app.post(
                 upload_url,
                 {
@@ -95,7 +95,7 @@ class TestModels(TestUserMixin, WebTest):
         form = response.forms['document-upload-form']
         form['source_url'] = 'http://example.org/foo'
         image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
-        with open(image_filename) as f:
+        with open(image_filename, 'rb') as f:
             form['uploaded_file'] = Upload('pilot.jpg', f.read())
         form.submit()
         self.assertEqual(response.status_code, 200)
