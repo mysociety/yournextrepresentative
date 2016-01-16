@@ -1,24 +1,28 @@
-# A PopIt frontend for sourcing candidate data
+# A website for crowd-sourcing structured election candidate data
 
-The idea of this project is to make a web-based front-end to
-[PopIt](http://popit.poplus.org/) for crowd-sourcing candidates
-for upcoming elections; it was used for
-[YourNextMP](https://yournextmp.com) in the UK for the 2015
-General Election.
+YourNextRepresentative is a open source platform for
+crowd-sourcing information about candidates for political office
+and making it available as open data to anyone.
 
-The PopIt project is now being deprecated, so we will be
-migrating this project (and existing sites) to use PostgreSQL as
-the primary data store. There is a
-[GitHub issue for tracking this work](https://github.com/mysociety/yournextrepresentative/issues/500)
+The core data that YourNextRepresentative collects includes who
+is standing, what party they’re standing for, their contact
+details, their social media accounts etc. The software requires
+that each change is submitted with a source, so that the
+collected information can be independently checked.
 
-Since that migration is still work in progress, if you
-*urgently* need to create a YourNextRepresentative site, for
-the moment it's best to still use PopIt.
+This codebase was used for
+[YourNextMP](https://edit.yournextmp.com) in the UK for the 2015
+General Election, and has also been reused in Argentina, Burkina
+Faso, St Paul (Minnesota) and Costa Rica.
 
-This is alpha software still, so please
+The codebase is internationalized; if you want to help to
+translate the project into a new language, we use
+[Transifex to allow anyone to contribute translations](https://www.transifex.com/mysociety/yournextmp/).
+
+This project is still under active development, so please
 [get in touch with us](mailto:ynr@mysociety.org) to let us know
-of your plans and hopefully we can provide support for your
-project.
+of your plans, and requirements you have and hopefully we can
+provide support for your project.
 
 ## Known Bugs
 
