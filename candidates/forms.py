@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import re
 
 from .models.address import check_address
@@ -43,7 +45,7 @@ class BaseCandidacyForm(forms.Form):
 
 class CandidacyCreateForm(BaseCandidacyForm):
     source = forms.CharField(
-        label=_(u"Source of information that they're standing ({0})").format(
+        label=_("Source of information that they're standing ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -51,7 +53,7 @@ class CandidacyCreateForm(BaseCandidacyForm):
 
 class CandidacyDeleteForm(BaseCandidacyForm):
     source = forms.CharField(
-        label=_(u"Information source for this change ({0})").format(
+        label=_("Information source for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -86,13 +88,13 @@ class BasePersonForm(forms.Form):
                     )
             else:
                 raise Exception(
-                    u"Unknown field type: {0}".format(field.type)
+                    "Unknown field type: {0}".format(field.type)
                 )
 
     STANDING_CHOICES = (
-        ('not-sure', _(u"Don’t Know")),
-        ('standing', _(u"Yes")),
-        ('not-standing', _(u"No")),
+        ('not-sure', _("Don’t Know")),
+        ('standing', _("Yes")),
+        ('not-standing', _("No")),
     )
 
     honorific_prefix = forms.CharField(
@@ -115,7 +117,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     gender = forms.CharField(
-        label=_(u"Gender (e.g. “male”, “female”)"),
+        label=_("Gender (e.g. “male”, “female”)"),
         max_length=256,
         required=False,
     )
@@ -134,7 +136,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     twitter_username = forms.CharField(
-        label=_(u"Twitter username (e.g. “democlub”)"),
+        label=_("Twitter username (e.g. “democlub”)"),
         max_length=256,
         required=False,
     )
@@ -154,7 +156,7 @@ class BasePersonForm(forms.Form):
         required=False,
     )
     party_ppc_page_url = forms.URLField(
-        label=_(u"The party’s candidate page for this person"),
+        label=_("The party’s candidate page for this person"),
         max_length=256,
         required=False,
     )
@@ -326,7 +328,7 @@ class NewPersonForm(BasePersonForm):
                 )
 
     source = forms.CharField(
-        label=_(u"Source of information ({0})").format(
+        label=_("Source of information ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -411,7 +413,7 @@ class UpdatePersonForm(BasePersonForm):
                     )
 
     source = forms.CharField(
-        label=_(u"Source of information for this change ({0})").format(
+        label=_("Source of information for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
@@ -467,6 +469,6 @@ class ConstituencyRecordWinnerForm(forms.Form):
         widget=forms.HiddenInput(),
     )
     source = forms.CharField(
-        label=_(u"Source of information that they won"),
+        label=_("Source of information that they won"),
         max_length=512,
     )

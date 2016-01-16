@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import csv
 import errno
@@ -74,19 +74,19 @@ class Command(BaseCommand):
 
             document_url = row['Statement of Persons Nominated (SOPN) URL']
             if not document_url:
-                print(u"No URL for {0}".format(name))
+                print("No URL for {0}".format(name))
                 continue
             existing_documents = OfficialDocument.objects.filter(
                 post_id=post
             )
             if existing_documents.count() > 0:
-                print(u"Skipping {0} since it already had documents".format(name))
+                print("Skipping {0} since it already had documents".format(name))
                 continue
             try:
                 downloaded_filename = download_file_cached(document_url)
             except requests.exceptions.ConnectionError:
-                print(u"Connection failed for {0}".format(name))
-                print(u"The URL was:", document_url)
+                print("Connection failed for {0}".format(name))
+                print("The URL was:", document_url)
                 continue
             mime_type = mime_type_magic.from_file(downloaded_filename)
             extension = mimetypes.guess_extension(mime_type)

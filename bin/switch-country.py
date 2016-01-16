@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=UTF-8
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import os
 from os.path import dirname, join, normpath, realpath, isdir

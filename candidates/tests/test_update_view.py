@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import json
 try:
     from urlparse import urlsplit
@@ -137,12 +139,12 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         ExtraField.objects.create(
             type='url',
             key='cv',
-            label=u'CV or Resumé',
+            label='CV or Resumé',
         )
         ExtraField.objects.create(
             type='longer-text',
             key='notes',
-            label=u'Notes',
+            label='Notes',
         )
         response = self.app.get(
             '/person/2009/update',

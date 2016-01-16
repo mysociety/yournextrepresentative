@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import timedelta
 
 from slugify import slugify
@@ -232,7 +234,7 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
                 else:
                     suffix = '-unlock'
                     pp = 'Unlocked'
-                message = pp + u' constituency {0} ({1})'.format(
+                message = pp + ' constituency {0} ({1})'.format(
                     post_name, post.id
                 )
 

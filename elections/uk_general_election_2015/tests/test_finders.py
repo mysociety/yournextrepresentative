@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 from mock import patch, Mock
 
 try:
@@ -168,10 +170,10 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # Postcodes with non-ASCII characters should be rejected
-        form['postcode'] = u'SW1A 1ӔA'
+        form['postcode'] = 'SW1A 1ӔA'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            u'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
+            'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
             response
         )

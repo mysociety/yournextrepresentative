@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import json
 
 from django.core.management.base import BaseCommand
@@ -75,7 +76,7 @@ class Command(BaseCommand):
             if PartySet.objects.exists():
                 self.stdout.write("You might have meant one of these:")
                 for other_party_set_slug in all_party_sets:
-                    self.stdout.write(u"  " + other_party_set_slug)
+                    self.stdout.write("  " + other_party_set_slug)
             self.stdout.write(
                 "Create the party set '{0}'? (y/n) ".format(
                     requested_party_set_slug

@@ -10,6 +10,7 @@
 # this job from cron - if you get an email from cron, you'll need to
 # run the script manually to make those decisions.
 
+from __future__ import print_function, unicode_literals
 from __future__ import print_function
 
 from optparse import make_option
@@ -246,9 +247,9 @@ class Command(BaseCommand):
                         new_person_data_value,
                         previous_versions
                     ):
-                        warning_message = u"[{0}] it looks as if a previous "
-                        warning_message += u"version had {1}, so not "
-                        warning_message += u"overwriting the current value {2}"
+                        warning_message = "[{0}] it looks as if a previous "
+                        warning_message += "version had {1}, so not "
+                        warning_message += "overwriting the current value {2}"
                         warnings.append(warning_message.format(
                             key,
                             new_person_data_value,
@@ -256,10 +257,10 @@ class Command(BaseCommand):
                         ))
                         del new_person_data[key]
                     else:
-                        warnings.append(u"[{0}] replacing      {1}".format(key, person_data_value))
-                        warnings.append(u"[{0}] with new value {1}".format(key, new_person_data_value))
+                        warnings.append("[{0}] replacing      {1}".format(key, person_data_value))
+                        warnings.append("[{0}] with new value {1}".format(key, new_person_data_value))
         if warnings:
-            print(u"Warnings for person/{0} {1}".format(
+            print("Warnings for person/{0} {1}".format(
                 popit_person_id, person_data['name']
             ).encode('utf-8'))
             for warning in warnings:
@@ -367,7 +368,7 @@ class Command(BaseCommand):
 
     def handle_person(self, ppc_data, image_filename):
         from candidates.popit import get_search_url
-        print(u"PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8'))
+        print("PPC ({party_slug}): {name}".format(**ppc_data).encode('utf-8'))
         # Search PopIt for anyone with the same name. (FIXME: we
         # should make this a bit fuzzier when the PopIt API
         # supports that.)
@@ -441,7 +442,7 @@ class Command(BaseCommand):
 
         constituency_lookup = {
             cons_key(k): v for k, v in
-            AREA_DATA.areas_by_name[(u'WMC', u'22')].items()
+            AREA_DATA.areas_by_name[('WMC', '22')].items()
         }
 
         for party_slug in sorted(os.listdir(ppc_data_directory)):

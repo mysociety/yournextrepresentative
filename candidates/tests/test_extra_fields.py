@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import re
 try:
     from urlparse import urlsplit
@@ -43,7 +45,7 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         )
         c_field = ExtraField.objects.create(
             key='cv',
-            label=u'Curriculum Vitae or Resumé',
+            label='Curriculum Vitae or Resumé',
             type=ExtraField.LINE,
         )
         # Create one person with these fields already present:
@@ -55,12 +57,12 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         PersonExtraFieldValue.objects.create(
             field=c_field,
             person=self.person,
-            value=u'http://cv.example.org/john'
+            value='http://cv.example.org/john'
         )
         PersonExtraFieldValue.objects.create(
             field=p_field,
             person=self.person,
-            value=u'Tree Surgeon'
+            value='Tree Surgeon'
         )
 
     def test_create_form_has_fields(self):
@@ -165,10 +167,10 @@ class ExtraFieldTests(TestUserMixin, WebTest):
             '/person/{person_id}'.format(person_id=self.person.id)
         )
 
-        cv_dt = response.html.find('dt', text=u'Curriculum Vitae or Resumé')
+        cv_dt = response.html.find('dt', text='Curriculum Vitae or Resumé')
         cv_dd = get_next_dd(cv_dt)
         self.assertEqual(cv_dd.text.strip(), 'http://cv.example.org/john')
 
-        profession_dt = response.html.find('dt', text=u'Profession')
+        profession_dt = response.html.find('dt', text='Profession')
         profession_dd = get_next_dd(profession_dt)
         self.assertEqual(profession_dd.text.strip(), 'Tree Surgeon')
