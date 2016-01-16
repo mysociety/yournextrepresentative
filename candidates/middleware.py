@@ -29,7 +29,7 @@ class DisallowedUpdateMiddleware(object):
             # Then email the support address about the name change...
             message = '{intro}\n\n  {message}\n\n{outro}'.format(
                 intro=intro,
-                message=unicode(exc),
+                message=exc,
                 outro=outro,
             )
             send_mail(
