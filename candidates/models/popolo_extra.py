@@ -23,6 +23,7 @@ from elections.models import Election, AreaType
 from popolo.models import Person, Organization, Post, Membership, Area
 from images.models import Image, HasImageMixin
 
+from compat import python_2_unicode_compatible
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
@@ -166,6 +167,7 @@ def parse_approximate_date(s):
     raise ValueError("Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 
+@python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
 
@@ -485,13 +487,14 @@ class PersonExtra(HasImageMixin, models.Model):
         Election, related_name='persons_not_standing'
     )
 
-    def __unicode__(self):
+    def __str__(self):
         # WARNING: This will cause an extra query when getting the
         # repr() or unicode() of this object unless the base object
         # has been select_related.
         return self.base.name
 
 
+@python_2_unicode_compatible
 class OrganizationExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Organization, related_name='extra')
     slug = models.CharField(max_length=256, blank=True, unique=True)
@@ -501,13 +504,14 @@ class OrganizationExtra(HasImageMixin, models.Model):
 
     images = GenericRelation(Image)
 
-    def __unicode__(self):
+    def __str__(self):
         # WARNING: This will cause an extra query when getting the
         # repr() or unicode() of this object unless the base object
         # has been select_related.
         return self.base.name
 
 
+@python_2_unicode_compatible
 class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
     slug = models.CharField(max_length=256, blank=True, unique=True)
@@ -517,7 +521,7 @@ class PostExtra(HasImageMixin, models.Model):
     group = models.CharField(max_length=1024, blank=True)
     party_set = models.ForeignKey('PartySet', blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         # WARNING: This will cause an extra query when getting the
         # repr() or unicode() of this object unless the base object
         # has been select_related.
@@ -539,24 +543,26 @@ class MembershipExtra(models.Model):
     )
 
 
+@python_2_unicode_compatible
 class AreaExtra(models.Model):
     base = models.OneToOneField(Area, related_name='extra')
 
     type = models.ForeignKey(AreaType, blank=True, null=True, related_name='areas')
 
-    def __unicode__(self):
+    def __str__(self):
         # WARNING: This will cause an extra query when getting the
         # repr() or unicode() of this object unless the base object
         # has been select_related.
         return self.base.name
 
 
+@python_2_unicode_compatible
 class PartySet(models.Model):
     slug = models.CharField(max_length=256, unique=True)
     name = models.CharField(max_length=1024)
     parties = models.ManyToManyField(Organization, related_name='party_sets')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def party_choices(self):

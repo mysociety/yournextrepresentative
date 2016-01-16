@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
+from compat import python_2_unicode_compatible
+
 PHOTO_REVIEWERS_GROUP_NAME = 'Photo Reviewers'
 
 
@@ -32,6 +34,7 @@ class CopyrightOptions:
     )
 
 
+@python_2_unicode_compatible
 class QueuedImage(models.Model):
 
     APPROVED = 'approved'
@@ -74,8 +77,8 @@ class QueuedImage(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        message = _(u'Image uploaded by {user} of candidate {person_id}')
+    def __str__(self):
+        message = _('Image uploaded by {user} of candidate {person_id}')
         return message.format(
             user=self.user,
             person_id=(self.person.id if self.person else None)
