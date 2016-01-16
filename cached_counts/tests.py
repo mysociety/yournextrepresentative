@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import json
 
 from django_webtest import WebTest
@@ -123,30 +125,30 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                (u'<td>Earlier General Election</td>',
-                 u'<td><a href="/election/earlier-general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
-                 u'<td>0</td>'),
-                (u'<td>Earlier General Election</td>',
-                 u'<td><a href="/election/earlier-general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
-                 u'<td>0</td>'),
-                (u'<td>Earlier General Election</td>',
-                 u'<td><a href="/election/earlier-general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
-                 u'<td>0</td>'),
-                (u'<td>General Election</td>',
-                 u'<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
-                 u'<td>0</td>'),
-                (u'<td>Earlier General Election</td>',
-                 u'<td><a href="/election/earlier-general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
-                 u'<td>2</td>'),
-                (u'<td>General Election</td>',
-                 u'<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
-                 u'<td>3</td>'),
-                (u'<td>General Election</td>',
-                 u'<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
-                 u'<td>5</td>'),
-                (u'<td>General Election</td>',
-                 u'<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
-                 u'<td>10</td>')
+                ('<td>Earlier General Election</td>',
+                 '<td><a href="/election/earlier-general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                 '<td>0</td>'),
+                ('<td>Earlier General Election</td>',
+                 '<td><a href="/election/earlier-general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                 '<td>0</td>'),
+                ('<td>Earlier General Election</td>',
+                 '<td><a href="/election/earlier-general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                 '<td>0</td>'),
+                ('<td>General Election</td>',
+                 '<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                 '<td>0</td>'),
+                ('<td>Earlier General Election</td>',
+                 '<td><a href="/election/earlier-general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                 '<td>2</td>'),
+                ('<td>General Election</td>',
+                 '<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                 '<td>3</td>'),
+                ('<td>General Election</td>',
+                 '<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                 '<td>5</td>'),
+                ('<td>General Election</td>',
+                 '<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                 '<td>10</td>')
             ]
         )
 
@@ -160,14 +162,14 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                (u'<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
-                 u'<td>10</td>'),
-                (u'<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
-                 u'<td>5</td>'),
-                (u'<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
-                 u'<td>3</td>'),
-                (u'<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
-                 u'<td>0</td>'),
+                ('<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                 '<td>10</td>'),
+                ('<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                 '<td>5</td>'),
+                ('<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                 '<td>3</td>'),
+                ('<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                 '<td>0</td>'),
             ]
         )
 
@@ -181,19 +183,19 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                (u'<td><a href="/election/general-election/party/party:63/green-party">Green Party</a></td>',
-                 u'<td>4</td>'),
-                (u'<td><a href="/election/general-election/party/party:53/labour-party">Labour Party</a></td>',
-                 u'<td>4</td>'),
-                (u'<td><a href="/election/general-election/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
-                 u'<td>4</td>'),
-                (u'<td><a href="/election/general-election/party/party:52/conservative-party">Conservative Party</a></td>',
-                 u'<td>3</td>'),
-                (u'<td><a href="/election/general-election/party/party:10004/party-4">Party 4</a></td>',
-                 u'<td>3</td>'),
-                (u'<td>Party 5</td>',
-                 u'<td>0</td>'),
-                (u'<td>Party 6</td>',
-                 u'<td>0</td>')
+                ('<td><a href="/election/general-election/party/party:63/green-party">Green Party</a></td>',
+                 '<td>4</td>'),
+                ('<td><a href="/election/general-election/party/party:53/labour-party">Labour Party</a></td>',
+                 '<td>4</td>'),
+                ('<td><a href="/election/general-election/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
+                 '<td>4</td>'),
+                ('<td><a href="/election/general-election/party/party:52/conservative-party">Conservative Party</a></td>',
+                 '<td>3</td>'),
+                ('<td><a href="/election/general-election/party/party:10004/party-4">Party 4</a></td>',
+                 '<td>3</td>'),
+                ('<td>Party 5</td>',
+                 '<td>0</td>'),
+                ('<td>Party 6</td>',
+                 '<td>0</td>')
             ]
         )

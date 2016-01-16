@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from datetime import datetime
 import hashlib
@@ -143,7 +143,7 @@ class Command(BaseCommand):
                 value = d['description']
                 translation = d['translation']
                 if translation:
-                    value = u"{0} | {1}".format(value, translation)
+                    value = "{0} | {1}".format(value, translation)
                 party.other_names.create(name=value, note='registered-description')
             self.upload_images(ec_party['PartyEmblems'], party_extra)
             party.save()

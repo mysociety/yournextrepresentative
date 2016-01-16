@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from mock import patch, MagicMock
 import re
 
@@ -96,18 +98,18 @@ class TestPartyPages(WebTest):
         response = self.app.get('/election/2015/party/party%3A53/labour-party')
         # There are no candidates in Scotland or Wales in our test data:
         self.assertIn(
-            u"We don't know of any Labour Party candidates in Scotland in the 2015 General Election so far.",
+            "We don't know of any Labour Party candidates in Scotland in the 2015 General Election so far.",
             unicode(response)
         )
         self.assertIn(
-            u"We don't know of any Labour Party candidates in Wales in the 2015 General Election so far.",
+            "We don't know of any Labour Party candidates in Wales in the 2015 General Election so far.",
             unicode(response)
         )
         # But this should only be showing results from the Great
         # Britain register, so there shouldn't be a similar message
         # for Northern Ireland:
         self.assertNotIn(
-            u"We don't know of any Labour Party candidates in Northern Ireland so far.",
+            "We don't know of any Labour Party candidates in Northern Ireland so far.",
             unicode(response)
         )
         # Check there's no mention of David Miliband's constituency
@@ -115,7 +117,7 @@ class TestPartyPages(WebTest):
         # example candidates to reach the threshold where all
         # constituencies should be shown:
         self.assertNotIn(
-            u'South Shields',
+            'South Shields',
             unicode(response)
         )
         # But there is an Ed Miliband:

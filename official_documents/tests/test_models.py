@@ -2,6 +2,8 @@
 Basic smoke tests for OfficialDocument model
 """
 
+from __future__ import unicode_literals
+
 from django.test import TestCase
 
 from official_documents.models import OfficialDocument
@@ -35,4 +37,4 @@ class TestModels(TestCase):
             source_url="http://example.com/",
         )
 
-        self.assertEqual(unicode(doc), u"65808 (http://example.com/)")
+        self.assertEqual(unicode(doc), "65808 (http://example.com/)")

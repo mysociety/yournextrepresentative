@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import json
 import requests
 from collections import defaultdict
@@ -42,7 +44,7 @@ class GeoLocatorView(View):
             mapit_result = requests.get(lookup_url)
             mapit_result = mapit_result.json()
         if 'error' in mapit_result:
-            message = _(u"The area lookup returned an error: '{0}'") \
+            message = _("The area lookup returned an error: '{0}'") \
                 .format(mapit_result['error'])
             return HttpResponse(
                 json.dumps({'error': message}),
@@ -51,7 +53,7 @@ class GeoLocatorView(View):
         mapit_json += mapit_result.items()
 
         if len(mapit_json) == 0:
-            message = _(u"Your location does not seem to be covered by this site")
+            message = _("Your location does not seem to be covered by this site")
             return HttpResponse(
                 json.dumps({'error': message}),
                 content_type='application/json',

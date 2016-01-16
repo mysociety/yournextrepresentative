@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 from datetime import date
 import dateutil.parser
@@ -32,15 +32,15 @@ def get_post_data(api, json_election_id, json_election_id_to_name):
     from candidates.election_specific import AREA_DATA, AREA_POST_DATA
     json_election_name = json_election_id_to_name[json_election_id]
     ynr_election_id = {
-        u'Pre-candidatos a Presidente':
+        'Pre-candidatos a Presidente':
         'presidentes-argentina-paso-2015',
-        u'Pre-candidatos a Gobernador de Buenos Aires':
+        'Pre-candidatos a Gobernador de Buenos Aires':
         'gobernadores-argentina-paso-2015',
-        u'Pre-candidatos a Gobernador de Tucumán':
+        'Pre-candidatos a Gobernador de Tucumán':
         'gobernadores-argentina-paso-2015',
-        u'Pre-candidatos a Gobernador de Entre Ríos':
+        'Pre-candidatos a Gobernador de Entre Ríos':
         'gobernadores-argentina-paso-2015',
-        u'Pre-Candidatos a Gobernador de San Juan':
+        'Pre-Candidatos a Gobernador de San Juan':
         'gobernadores-argentina-paso-2015',
     }[json_election_name]
     ynr_election_data = Election.objects.get_by_slug(ynr_election_id)
@@ -48,7 +48,7 @@ def get_post_data(api, json_election_id, json_election_id_to_name):
     m = re.search(r'a Gobernador de (?P<province>.*)', json_election_name)
     if m:
         province = m.group('province')
-        areas_by_name = AREA_DATA.areas_by_name[(u'PRV', u'1')]
+        areas_by_name = AREA_DATA.areas_by_name[('PRV', '1')]
         area = areas_by_name[strip_accents(province).upper()]
         post_id = AREA_POST_DATA.get_post_id(
             ynr_election_id, area['type'], area['id']

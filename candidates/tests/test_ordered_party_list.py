@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import re
 from django_webtest import WebTest
 
@@ -157,6 +159,3 @@ class TestRecordWinner(TestUserMixin, WebTest):
                 unicode(response)
             )
         )
-
-
-

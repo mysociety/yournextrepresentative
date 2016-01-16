@@ -12,18 +12,18 @@ def from_person_extra_to_generic_fields(apps, schema_editor):
         p_field = ExtraField.objects.create(
             key='profession',
             type='line',
-            label=u'Profession',
+            label='Profession',
         )
     elif settings.ELECTION_APP == 'bf_elections_2015':
         c_field = ExtraField.objects.create(
             key='cv',
             type='longer-text',
-            label=u'CV or Résumé',
+            label='CV or Résumé',
         )
         p_field = ExtraField.objects.create(
             key='program',
             type='longer-text',
-            label=u'Program',
+            label='Program',
         )
         for pe in PersonExtra.objects.all():
             person = pe.base

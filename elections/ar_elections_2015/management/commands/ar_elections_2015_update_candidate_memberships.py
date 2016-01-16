@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import json
 
@@ -47,5 +47,5 @@ class Command(BaseCommand):
                     print(e.content)
                 break
             if not election_found:
-                message = u"Warning: no election found for membership ID {0}"
+                message = "Warning: no election found for membership ID {0}"
                 print(message.format(membership['id']))

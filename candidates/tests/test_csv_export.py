@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 from django.test import TestCase
 
 from ..csv_helpers import list_to_csv
@@ -49,7 +51,7 @@ class CSVTests(TestCase):
         )
         self.ni_person_extra = factories.PersonExtraFactory.create(
             base__id=1953,
-            base__name=u'Daithí McKay',
+            base__name='Daithí McKay',
             base__gender='male',
         )
         camberwell_area_extra = factories.AreaExtraFactory.create(

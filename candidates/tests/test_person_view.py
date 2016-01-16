@@ -1,5 +1,7 @@
 # Smoke tests for viewing a candidate's page
 
+from __future__ import unicode_literals
+
 from datetime import date, timedelta
 import re
 
