@@ -8,6 +8,8 @@ from django.core.exceptions import ValidationError
 from candidates.mapit import BaseMapItException
 from popolo.models import Area
 
+from compat import text_type
+
 from .mapit import get_areas_from_postcode
 
 class PostcodeForm(forms.Form):
@@ -24,5 +26,5 @@ class PostcodeForm(forms.Form):
             # result is cached, so this doesn't cause a double lookup.)
             get_areas_from_postcode(postcode)
         except BaseMapItException as e:
-            raise ValidationError(unicode(e))
+            raise ValidationError(text_type(e))
         return postcode

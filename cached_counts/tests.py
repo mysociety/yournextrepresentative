@@ -85,7 +85,7 @@ class CachedCountTestCase(WebTest):
 
     def test_reports_top_page_json(self):
         response = self.app.get('/numbers/?format=json')
-        data = json.loads(str(response.body))
+        data = json.loads(response.body.decode('utf-8'))
         self.assertEqual(
             data,
             {
@@ -119,7 +119,7 @@ class CachedCountTestCase(WebTest):
     def test_attention_needed_page(self):
         response = self.app.get('/numbers/attention-needed')
         rows = [
-            tuple(unicode(td) for td in row.find_all('td'))
+            tuple(td.decode() for td in row.find_all('td'))
             for row in response.html.find_all('tr')
         ]
         self.assertEqual(
@@ -156,7 +156,7 @@ class CachedCountTestCase(WebTest):
         response = self.app.get('/numbers/election/general-election/posts')
         self.assertEqual(response.status_code, 200)
         rows = [
-            tuple(unicode(td) for td in row.find_all('td'))
+            tuple(td.decode() for td in row.find_all('td'))
             for row in response.html.find_all('tr')
         ]
         self.assertEqual(
@@ -177,7 +177,7 @@ class CachedCountTestCase(WebTest):
         response = self.app.get('/numbers/election/general-election/parties')
         self.assertEqual(response.status_code, 200)
         rows = [
-            tuple(unicode(td) for td in row.find_all('td'))
+            tuple(td.decode() for td in row.find_all('td'))
             for row in response.html.find_all('tr')
         ]
         self.assertEqual(

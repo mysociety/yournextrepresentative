@@ -50,14 +50,14 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Elizabeth''',
-                unicode(response)
+                response.text
             )
         )
 
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Mr Darcy''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -88,14 +88,14 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth''',
-                unicode(response)
+                response.text
             )
         )
 
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Mr Darcy''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -114,13 +114,13 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Bennet''',
-                unicode(response)
+                response.text
             )
         )
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Jones''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -138,12 +138,12 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Bennet''',
-                unicode(response)
+                response.text
             )
         )
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Elizabeth Jones''',
-                unicode(response)
+                response.text
             )
         )

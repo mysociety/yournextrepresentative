@@ -13,6 +13,8 @@ from popolo.models import Identifier
 
 from candidates.models import MembershipExtra, PersonExtra, ExtraField
 
+from compat import bytes_to_unicode
+
 from .auth import TestUserMixin
 from . import factories
 
@@ -232,7 +234,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                 'wikipedia_url': '',
                 'party_memberships': {
                     '2010': {
-                        'id': unicode(self.party_slug),
+                        'id': self.party_slug,
                         'name': 'Labour Party'
                     }
                 },

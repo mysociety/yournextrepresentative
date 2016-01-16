@@ -18,6 +18,8 @@ from elections.models import Election
 from elections.uk_general_election_2015.tests.mapit_postcode_results \
     import se240ag_result, sw1a1aa_result
 
+from compat import text_type
+
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
@@ -139,7 +141,7 @@ class TestUpcomingElectionsAPI(WebTest):
         expected = [
             {
                 'organization': 'London Assembly',
-                'election_date': unicode(future_date.isoformat()),
+                'election_date': text_type(future_date.isoformat()),
                 'election_name': '2016 London Assembly Election (Constituencies)',
                 'post_name': 'Assembly Member for Lambeth and Southwark',
                 'area': {
@@ -150,7 +152,7 @@ class TestUpcomingElectionsAPI(WebTest):
             },
             {
                 'organization': 'London Assembly',
-                'election_date': unicode(future_date.isoformat()),
+                'election_date': text_type(future_date.isoformat()),
                 'election_name': '2016 London Assembly Election (Additional)',
                 'post_name': 'Assembly Member',
                 'area': {

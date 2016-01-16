@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
         candidate_list = requests.get(spreadsheet_url)
 
-        content = StringIO(unicode(candidate_list.content))
+        content = StringIO(candidate_list.text)
         reader = csv.DictReader(content)
 
         api = create_popit_api_object()
