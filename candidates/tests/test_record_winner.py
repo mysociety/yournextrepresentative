@@ -74,7 +74,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
         self.assertIn(
             'This candidate won!',
-            unicode(response),
+            response.text,
         )
         record_url = reverse(
             'record-winner',
@@ -85,7 +85,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
         self.assertIn(
             record_url,
-            unicode(response),
+            response.text,
         )
 
     def test_record_winner_link_not_present(self):
@@ -95,7 +95,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
         self.assertNotIn(
             'This candidate won!',
-            unicode(response)
+            response.text
         )
 
     def test_record_winner_not_privileged(self):
@@ -216,7 +216,7 @@ class TestRetractWinner(TestUserMixin, WebTest):
         )
         self.assertIn(
             'Unset the current winner',
-            unicode(response),
+            response.text,
         )
         record_url = reverse(
             'retract-winner',
@@ -227,7 +227,7 @@ class TestRetractWinner(TestUserMixin, WebTest):
         )
         self.assertIn(
             record_url,
-            unicode(response),
+            response.text,
         )
 
     def test_retract_winner_link_not_present(self):
@@ -237,7 +237,7 @@ class TestRetractWinner(TestUserMixin, WebTest):
         )
         self.assertNotIn(
             'Unset the current winner',
-            unicode(response)
+            response.text
         )
 
     def test_retract_winner_not_privileged(self):

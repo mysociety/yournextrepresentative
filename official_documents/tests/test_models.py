@@ -13,6 +13,8 @@ from candidates.tests.factories import (
     PostExtraFactory
 )
 
+from compat import text_type
+
 
 class TestModels(TestCase):
 
@@ -37,4 +39,4 @@ class TestModels(TestCase):
             source_url="http://example.com/",
         )
 
-        self.assertEqual(unicode(doc), "65808 (http://example.com/)")
+        self.assertEqual(text_type(doc), "65808 (http://example.com/)")

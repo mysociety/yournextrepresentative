@@ -143,8 +143,8 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
             '/election/2015/constituencies/unlocked',
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Dulwich', unicode(response))
-        self.assertNotIn('Camberwell', unicode(response))
+        self.assertIn('Dulwich', response.text)
+        self.assertNotIn('Camberwell', response.text)
 
 
 class TestConstituencyLockWorks(TestUserMixin, WebTest):

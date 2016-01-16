@@ -94,7 +94,7 @@ class TestAreasView(TestUserMixin, WebTest):
   member-of-parliament-for-dulwich-and-west-norwood">
   Member\s+of\s+Parliament\s+for\s+Dulwich\s+and\s+West\s+Norwood</a>\s*
   </h3>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -121,7 +121,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -138,7 +138,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -161,7 +161,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -184,7 +184,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -207,7 +207,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -238,7 +238,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     <p>This\s+list\s+of\s+candidates\s+is\s+now\s+
     <strong>locked</strong>''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -268,7 +268,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
             \(This\s+list\s+of\s+candidates\s+is\s+currently\s+
             <strong>unlocked</strong>.\)''',
-                    unicode(response)
+                    response.text
             )
         )
 
@@ -298,7 +298,7 @@ class TestAreasView(TestUserMixin, WebTest):
                 r'''(?msx)
     \(This\s+list\s+of\s+candidates\s+is\s+currently\s+
     <strong>locked</strong>.\)''',
-                unicode(response)
+                response.text
             )
         )
 
