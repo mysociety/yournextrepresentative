@@ -30,7 +30,7 @@ class TestPartyPages(WebTest):
         PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
         parties = {}
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             party_extra = PartyExtraFactory.create()
             parties[party_extra.slug] = party_extra
         constituencies = {}
