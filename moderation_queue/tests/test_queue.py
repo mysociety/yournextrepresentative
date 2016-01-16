@@ -156,7 +156,7 @@ class PhotoReviewTests(WebTest):
             user=self.test_upload_user
         )
         form = form_page_response.forms['person-upload-photo']
-        with open(image_filename) as f:
+        with open(image_filename, 'rb') as f:
             form['image'] = Upload('pilot.jpg', f.read())
         form['why_allowed'] = 'copyright-assigned'
         form['justification_for_use'] = 'I took this photo'
