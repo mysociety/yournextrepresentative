@@ -99,10 +99,10 @@ class PhotoReviewList(GroupRequiredMixin, ListView):
 def tidy_party_name(name):
     """If a party name contains an initialism in brackets, use that instead
 
-    >>> tidy_party_name('Hello World Party (HWP)')
-    'HWP'
-    >>> tidy_party_name('Hello World Party')
-    'Hello World Party'
+    >>> tidy_party_name('Hello World Party (HWP)') == 'HWP'
+    True
+    >>> tidy_party_name('Hello World Party') == 'Hello World Party'
+    True
     """
     m = re.search(r'\(([A-Z]+)\)', name)
     if m:
