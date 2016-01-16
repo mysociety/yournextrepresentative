@@ -76,7 +76,7 @@ class TestModels(TestUserMixin, WebTest):
         self.assertEqual(response.status_code, 403)
         self.assertIn(
             'You must be in the member of a particular group in order to view that page',
-            unicode(response)
+            response.text
         )
 
     def test_upload_authorized(self):
@@ -86,7 +86,7 @@ class TestModels(TestUserMixin, WebTest):
         )
         self.assertIn(
             'As you have permission to upload documents',
-            unicode(response)
+            response.text
         )
         response = self.app.get(
             reverse('upload_document_view', args=('2015', self.post_extra.slug)),

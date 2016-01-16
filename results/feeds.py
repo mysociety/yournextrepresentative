@@ -5,6 +5,8 @@ from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
 from django.utils.translation import ugettext_lazy as _
 
+from compat import text_type
+
 from .models import ResultEvent
 
 
@@ -78,7 +80,7 @@ class ResultEventsAtomFeedGenerator(Atom1Feed):
             if item[k]:
                 keys.append(k)
         for k in keys:
-            handler.addQuickElement(k, unicode(item[k]))
+            handler.addQuickElement(k, text_type(item[k]))
 
 
 class ResultEventsFeed(BasicResultEventsFeed):

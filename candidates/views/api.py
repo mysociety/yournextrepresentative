@@ -19,6 +19,8 @@ from elections.models import AreaType, Election
 from popolo.models import Area, Membership, Person, Post
 from rest_framework import viewsets
 
+from compat import text_type
+
 from ..election_specific import fetch_area_ids
 
 
@@ -74,7 +76,7 @@ class UpcomingElectionsView(View):
                         'name': post.area.name,
                         'identifier': post.area.identifier,
                     },
-                    'election_date': unicode(election.election_date),
+                    'election_date': text_type(election.election_date),
                     'election_name': election.name
                 })
 

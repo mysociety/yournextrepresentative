@@ -148,7 +148,7 @@ class Command(BaseCommand):
             try:
                 pillow_image = PillowImage.open(f)
             except IOError as e:
-                if 'cannot identify image file' in unicode(e):
+                if 'cannot identify image file' in e.args[0]:
                     print("Ignoring a non-image file {0}".format(
                         image_filename
                     ))

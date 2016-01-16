@@ -99,18 +99,18 @@ class TestPartyPages(WebTest):
         # There are no candidates in Scotland or Wales in our test data:
         self.assertIn(
             "We don't know of any Labour Party candidates in Scotland in the 2015 General Election so far.",
-            unicode(response)
+            response.text
         )
         self.assertIn(
             "We don't know of any Labour Party candidates in Wales in the 2015 General Election so far.",
-            unicode(response)
+            response.text
         )
         # But this should only be showing results from the Great
         # Britain register, so there shouldn't be a similar message
         # for Northern Ireland:
         self.assertNotIn(
             "We don't know of any Labour Party candidates in Northern Ireland so far.",
-            unicode(response)
+            response.text
         )
         # Check there's no mention of David Miliband's constituency
         # (since he's not standing in 2015) and we've not added enough
@@ -118,11 +118,11 @@ class TestPartyPages(WebTest):
         # constituencies should be shown:
         self.assertNotIn(
             'South Shields',
-            unicode(response)
+            response.text
         )
         # But there is an Ed Miliband:
         self.assertTrue(re.search(
             r'(?ms)<a href="/person/3056">Ed Miliband</a>\s*is standing in\s*' +
             r'<a href="/election/2015/post/65672/doncaster-north">Doncaster North</a>\s*</li>',
-            unicode(response)
+            response.text
         ))

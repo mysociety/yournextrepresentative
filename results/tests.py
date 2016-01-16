@@ -51,7 +51,7 @@ class TestResultsFeed(TestUserMixin, WebTest):
     def test_all_feed_with_one_item(self):
         response = self.app.get('/results/all.atom')
         root = etree.XML(response.content)
-        xml_pretty = etree.tostring(root, pretty_print=True)
+        xml_pretty = etree.tounicode(root, pretty_print=True)
 
         result_event = ResultEvent.objects.first()
         expected = '''<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-gb">
@@ -92,7 +92,7 @@ class TestResultsFeed(TestUserMixin, WebTest):
     def test_all_basic_feed_with_one_item(self):
         response = self.app.get('/results/all-basic.atom')
         root = etree.XML(response.content)
-        xml_pretty = etree.tostring(root, pretty_print=True)
+        xml_pretty = etree.tounicode(root, pretty_print=True)
 
         result_event = ResultEvent.objects.first()
         expected = '''<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-gb">
