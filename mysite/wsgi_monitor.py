@@ -62,7 +62,7 @@ def _monitor():
     while 1:
         # Check modification times on all files in sys.modules.
 
-        for module in sys.modules.values():
+        for module in tuple(sys.modules.values()):
             if not hasattr(module, '__file__'):
                 continue
             path = getattr(module, '__file__')
