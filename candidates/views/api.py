@@ -105,6 +105,7 @@ class VersionView(View):
             git_version = subprocess.check_output(
                 ['git', 'rev-parse', '--verify', 'HEAD'],
                 cwd=dirname(__file__),
+                universal_newlines=True
             ).strip()
             result['git_version'] = git_version
         except (OSError, subprocess.CalledProcessError):
