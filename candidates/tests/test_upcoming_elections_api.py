@@ -75,14 +75,14 @@ class TestUpcomingElectionsAPI(WebTest):
         response = self.app.get('/upcoming-elections/?postcode=SW1A+1AA')
 
         output = response.json
-        self.assertEquals(output, [])
+        self.assertEqual(output, [])
 
     def test_results_for_past_elections(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/upcoming-elections/?postcode=SE24+0AG')
 
         output = response.json
-        self.assertEquals(output, [])
+        self.assertEqual(output, [])
 
     def test_results_for_upcoming_elections(self, mock_requests):
         one_day = timedelta(days=1)
@@ -135,7 +135,7 @@ class TestUpcomingElectionsAPI(WebTest):
         response = self.app.get('/upcoming-elections/?postcode=SE24+0AG')
 
         output = response.json
-        self.assertEquals(len(output), 2)
+        self.assertEqual(len(output), 2)
 
         self.maxDiff = None
         expected = [
@@ -163,4 +163,4 @@ class TestUpcomingElectionsAPI(WebTest):
             },
         ]
 
-        self.assertEquals(expected, output)
+        self.assertEqual(expected, output)

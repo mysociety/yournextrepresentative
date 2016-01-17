@@ -234,7 +234,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             expect_errors=True,
         )
 
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_mark_not_standing_no_post(self):
         response = self.app.get(
@@ -254,7 +254,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             expect_errors=True,
         )
 
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_mark_standing_no_candidate(self):
         response = self.app.get(
@@ -274,7 +274,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             expect_errors=True,
         )
 
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_mark_standing_no_post(self):
         response = self.app.get(
@@ -294,7 +294,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             expect_errors=True,
         )
 
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_mark_candidate_not_standing(self):
         response = self.app.get(
