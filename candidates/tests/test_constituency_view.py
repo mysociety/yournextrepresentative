@@ -12,7 +12,8 @@ from .factories import (
     PartyFactory, MembershipFactory, PartySetFactory
 )
 
-from ..csv_helpers import StreamDictReader
+from compat import StreamDictReader
+
 from ..models import MembershipExtra, PersonExtra
 
 
