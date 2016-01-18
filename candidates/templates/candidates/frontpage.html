@@ -44,6 +44,7 @@
   {% block finder_forms %}
     <form id="form-address" action="{% url 'lookup-address' %}" method="post">
       {{ form.as_p }}
+      <div class="js-geolocation-link" data-link-text="{% trans 'Use my current location' %}" data-loading-text="{% trans 'Getting location…' %}"></div>
       <input type="submit" class="button" value="{% trans "Show candidates" %}">
     </form>
   {% endblock %}

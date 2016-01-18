@@ -181,6 +181,27 @@
   }
 }
 
+.geolocation-link {
+  display: block;
+  margin-bottom: 1.5em; // lots of space between this link and the submit button
+
+  &:before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 0.4em;
+    vertical-align: -0.1em;
+
+    background: transparent url(img/location-blue.png) 0 0 no-repeat;
+    background-size: 16px 16px;
+    @media($high_dpi_screen){
+      background-image: url(img/location-blue@2x.png);
+    }
+    background-image: url(img/location-blue.svg), none;
+  }
+}
+
 @media #{$large-up} {
   .finder__activity__changes {
     width: 40%;

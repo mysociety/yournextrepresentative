@@ -45,6 +45,7 @@ it’s a waste of money.</p>
   <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
     {{ postcode_form.as_p }}
     <input type="submit" class="button" value="Show candidates" />
+    <div class="js-geolocation-link" data-link-text="{% trans 'Use my current location' %}" data-loading-text="{% trans 'Getting location…' %}"></div>
     <a class="select-constituency" href="{% url 'posts' %}">Or select a constituency</a>
   </form>
 

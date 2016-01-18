@@ -45,6 +45,7 @@
   <form id="canton-selector" action="{% url 'canton-frontpage' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <div class="js-geolocation-link" data-link-text="{% trans 'Use my current location' %}" data-loading-text="{% trans 'Getting location…' %}"></div>
     <input type="submit" class="button" value="{% trans "Show candidates" %}">
   </form>
 {% endblock %}

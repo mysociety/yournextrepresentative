@@ -133,9 +133,10 @@ $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 .finder__forms {
   background-color: $color-orange;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: #fff;
 
   label {
-    color: #fff;
+    color: inherit;
     text-shadow: 0 1px 1px $color-orange-700;
   }
 
@@ -146,6 +147,23 @@ $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
   input,
   .button {
     box-shadow: 0 1px 1px $color-orange-700;
+  }
+}
+
+.geolocation-link {
+  color: inherit;
+
+  &:hover, &:focus {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  &:before {
+    background-image: transparent url(img/location-white.png) 0 0 no-repeat;
+    @media($high_dpi_screen){
+      background-image: url(img/location-white@2x.png);
+    }
+    background-image: url(img/location-white.svg), none;
   }
 }
 

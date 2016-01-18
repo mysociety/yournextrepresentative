@@ -209,6 +209,11 @@ patterns_to_format = [
         'pattern': r'^search$',
         'view': views.PersonSearch.as_view(),
         'name': 'person-search'
+    },
+    {
+        'pattern': r'^geolocator/(?P<latitude>[\d.\-]+),(?P<longitude>[\d.\-]+)',
+        'view': views.GeoLocatorView.as_view(),
+        'name': 'geolocator'
     }
 ]
 
