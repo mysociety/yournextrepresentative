@@ -110,8 +110,6 @@
 
       <h4>{% trans "Add a new candidate" %}</h4>
 
-      <h1>foo</h1>
-
       <form method="post" id="new-candidate-form" action="{% url 'person-create' election=election %}">
         {% csrf_token %}
           {% for field in add_candidate_form.visible_fields %}
