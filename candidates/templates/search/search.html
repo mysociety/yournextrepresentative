@@ -1,31 +1,42 @@
 {% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load thumbnail %}
 
 {% block content %}
-    <h2>Search</h2>
+<h2>{% trans 'Search candidates' %}</h2>
 
-    <form method="get" action="{% url 'person-search' %}">
-        <table>
-            <tr>
-                <td></td>
-                <td><input type="search" placeholder="Search" name="q" value="{{ form.q.value }}"/></td>
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Search">
-                </td>
-            </tr>
-        </table>
+    <form class="search" method="get" action="{% url 'person-search' %}">
+        <input type="search" placeholder="{% trans 'Find a candidate…' %}" name="q" value="{{ form.q.value }}"/>
+        <button type="submit">{% trans "Search" %}</button>
 
         {% if query %}
-            <h3>Results</h3>
+        <h3>{% trans 'Results' %}</h3>
 
+            <ul class="candidate-list">
             {% for result in object_list %}
-                <p>
-                    <a href="{% url 'person-view' person_id=result.object.id %}">{{ result.object.name }}</a>
-                </p>
+
+                <li class="candidates-list__person">
+                    {% if result.object.extra.primary_image %}
+                      <a href="{% url 'person-view' result.object.id result.object.name|slugify %}">
+                        {% thumbnail result.object.extra.primary_image "x64" as im %}
+                          <img class="person-avatar" src="{{ im.url }}"/>
+                        {% endthumbnail %}
+                      </a>
+                    {% elif result.object.popit_data.gender|lower == 'female' %}
+                      <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+                    {% else %}
+                      <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+                    {% endif %}
+                    <div class="person-name-and-party">
+                      <a href="{% url 'person-view' result.object.id result.object.name|slugify %}" class="candidate-name">{{ result.object.name }}</a>
+                      <span class="party">{{ result.object.extra.last_party }}</span>
+                    </div>
+                </li>
             {% empty %}
-                <p>No results found.</p>
+            <p>{% trans 'No results found.' %}</p>
             {% endfor %}
+            </ul>
 
             {% if page.has_previous or page.has_next %}
                 <div>
