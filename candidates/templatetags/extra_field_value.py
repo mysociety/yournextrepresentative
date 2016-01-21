@@ -19,7 +19,7 @@ def extra_field_value(extra_field):
     elif extra_field['type'] == 'yesno':
         if extra_field['value'] == 'yes':
             output = _(u'Yes')
-        elif extra_field['type'] == 'no':
+        elif extra_field['value'] == 'no':
             output = _(u'No')
         else:
             output = _(u"Don't know")
