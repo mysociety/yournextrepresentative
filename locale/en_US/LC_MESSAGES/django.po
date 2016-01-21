@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-21 17:14+0000\n"
-"PO-Revision-Date: 2016-01-21 17:14+0000\n"
+"POT-Creation-Date: 2016-01-21 17:58+0000\n"
+"PO-Revision-Date: 2016-01-21 18:00+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/mysociety/yournextmp/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -2649,29 +2649,40 @@ msgid ""
 msgstr ""
 
 #: mysite/templates/account/email/email_confirmation_message.txt:1
+#: mysite/templates/account/email/password_reset_key_message.txt:1
 #, python-format
-msgid ""
-"Hello from %(site_name)s! You're receiving this e-mail because user "
-"%(user_display)s at %(site_domain)s has given yours as an e-mail address to "
-"connect their account. To confirm this is correct, go to %(activate_url)s"
+msgid "Hello from %(site_name)s!"
 msgstr ""
 
-#: mysite/templates/account/email/email_confirmation_message.txt:7
+#: mysite/templates/account/email/email_confirmation_message.txt:3
 #, python-format
-msgid "Thank you from %(site_name)s! %(site_domain)s"
+msgid ""
+"You're receiving this e-mail because user %(user_display)s at "
+"%(site_domain)s has given yours as an e-mail address to connect their "
+"account."
+msgstr ""
+
+#: mysite/templates/account/email/email_confirmation_message.txt:5
+#, python-format
+msgid "To confirm this is correct, go to %(activate_url)s"
+msgstr ""
+
+#: mysite/templates/account/email/email_confirmation_message.txt:9
+#, python-format
+msgid "Thank you from %(site_name)s!"
 msgstr ""
 
 #: mysite/templates/account/email/email_confirmation_subject.txt:3
 msgid "Please Confirm Your E-mail Address"
 msgstr ""
 
-#: mysite/templates/account/email/password_reset_key_message.txt:1
+#: mysite/templates/account/email/password_reset_key_message.txt:3
 #, python-format
 msgid ""
-"Hello from %(site_name)s!\n"
-"\n"
-"You're receiving this e-mail because you or someone else has requested a password for your user account at %(site_domain)s.\n"
-"It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
+"You're receiving this e-mail because you or someone else has requested a "
+"password for your user account at %(site_domain)s. It can be safely ignored "
+"if you did not request a password reset. Click the link below to reset your "
+"password."
 msgstr ""
 
 #: mysite/templates/account/email/password_reset_key_message.txt:8
@@ -2681,9 +2692,7 @@ msgstr ""
 
 #: mysite/templates/account/email/password_reset_key_message.txt:10
 #, python-format
-msgid ""
-"Thank you for using %(site_name)s!\n"
-"%(site_domain)s"
+msgid "Thank you for using %(site_name)s!"
 msgstr ""
 
 #: mysite/templates/account/email/password_reset_key_subject.txt:3
