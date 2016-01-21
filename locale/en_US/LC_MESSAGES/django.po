@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 12:37+0000\n"
-"PO-Revision-Date: 2016-01-15 12:39+0000\n"
+"POT-Creation-Date: 2016-01-21 17:14+0000\n"
+"PO-Revision-Date: 2016-01-21 17:14+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/mysociety/yournextmp/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -275,7 +275,7 @@ msgstr ""
 msgid "Enter your address or town"
 msgstr ""
 
-#: candidates/forms.py:36 candidates/forms.py:465
+#: candidates/forms.py:36 candidates/forms.py:480
 msgid "Person ID"
 msgstr ""
 
@@ -293,165 +293,168 @@ msgstr ""
 msgid "Information source for this change ({0})"
 msgstr ""
 
-#: candidates/forms.py:93
+#: candidates/forms.py:97 candidates/forms.py:108
+#: candidates/templatetags/extra_field_value.py:27
 msgid "Don’t Know"
 msgstr ""
 
-#: candidates/forms.py:94
+#: candidates/forms.py:98 candidates/forms.py:109
+#: candidates/templatetags/extra_field_value.py:23
 msgid "Yes"
 msgstr ""
 
-#: candidates/forms.py:95
+#: candidates/forms.py:99 candidates/forms.py:110
+#: candidates/templatetags/extra_field_value.py:25
 msgid "No"
 msgstr ""
 
-#: candidates/forms.py:99
+#: candidates/forms.py:114
 msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
 msgstr ""
 
-#: candidates/forms.py:104
+#: candidates/forms.py:119
 msgid "Full name"
 msgstr ""
 
-#: candidates/forms.py:108
+#: candidates/forms.py:123
 msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
 msgstr ""
 
-#: candidates/forms.py:113
-#: candidates/templates/candidates/person-view.html:121
+#: candidates/forms.py:128
+#: candidates/templates/candidates/person-view.html:122
 msgid "Email"
 msgstr ""
 
-#: candidates/forms.py:118
+#: candidates/forms.py:133
 msgid "Gender (e.g. “male”, “female”)"
 msgstr ""
 
-#: candidates/forms.py:123
+#: candidates/forms.py:138
 msgid "Date of birth (a four digit year or a full date)"
 msgstr ""
 
-#: candidates/forms.py:127
+#: candidates/forms.py:142
 msgid "Wikipedia URL"
 msgstr ""
 
-#: candidates/forms.py:132
+#: candidates/forms.py:147
 msgid "Homepage URL"
 msgstr ""
 
-#: candidates/forms.py:137
+#: candidates/forms.py:152
 msgid "Twitter username (e.g. “democlub”)"
 msgstr ""
 
-#: candidates/forms.py:142
+#: candidates/forms.py:157
 msgid "Facebook profile URL"
 msgstr ""
 
-#: candidates/forms.py:147
+#: candidates/forms.py:162
 msgid "Facebook page (e.g. for their campaign)"
 msgstr ""
 
-#: candidates/forms.py:152
+#: candidates/forms.py:167
 msgid "LinkedIn URL"
 msgstr ""
 
-#: candidates/forms.py:157
+#: candidates/forms.py:172
 msgid "The party’s candidate page for this person"
 msgstr ""
 
-#: candidates/forms.py:170
+#: candidates/forms.py:185
 msgid ""
 "That date of birth could not be understood. Try using DD/MM/YYYY instead"
 msgstr ""
 
-#: candidates/forms.py:172
+#: candidates/forms.py:187
 msgid ""
 "That date of birth could not be understood. Try using MM/DD/YYYY instead"
 msgstr ""
 
-#: candidates/forms.py:185
+#: candidates/forms.py:200
 msgid ""
 "The Twitter username must only consist of alphanumeric characters or "
 "underscore"
 msgstr ""
 
-#: candidates/forms.py:208
+#: candidates/forms.py:223
 #, python-brace-format
 msgid ""
 "If you mark the candidate as standing in the {election}, you must select a "
 "post"
 msgstr ""
 
-#: candidates/forms.py:215
+#: candidates/forms.py:230
 #, python-brace-format
 msgid "An unknown post ID '{post_id}' was specified"
 msgstr ""
 
-#: candidates/forms.py:222
+#: candidates/forms.py:237
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr ""
 
-#: candidates/forms.py:234
+#: candidates/forms.py:249
 #, python-brace-format
 msgid "You must specify a party for the {election}"
 msgstr ""
 
-#: candidates/forms.py:250 candidates/forms.py:364
+#: candidates/forms.py:265 candidates/forms.py:379
 #, python-format
 msgid "Standing in %s"
 msgstr ""
 
-#: candidates/forms.py:265 candidates/forms.py:276
+#: candidates/forms.py:280 candidates/forms.py:291
 #, python-brace-format
 msgid "Post in the {election}"
 msgstr ""
 
-#: candidates/forms.py:316
+#: candidates/forms.py:331
 #, python-brace-format
 msgid "Party in {election}"
 msgstr ""
 
-#: candidates/forms.py:329
+#: candidates/forms.py:344
 #, python-brace-format
 msgid "Source of information ({0})"
 msgstr ""
 
-#: candidates/forms.py:334 candidates/forms.py:419
+#: candidates/forms.py:349 candidates/forms.py:434
 msgid "You must indicate how you know about this candidate"
 msgstr ""
 
-#: candidates/forms.py:339 candidates/forms.py:424
+#: candidates/forms.py:354 candidates/forms.py:439
 msgid "How you know about this candidate"
 msgstr ""
 
-#: candidates/forms.py:370
+#: candidates/forms.py:385
 #, python-format
 msgid "Constituency in %s"
 msgstr ""
 
-#: candidates/forms.py:385
+#: candidates/forms.py:400
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
 msgstr ""
 
-#: candidates/forms.py:403
+#: candidates/forms.py:418
 msgid "Position in party list ('1' for first, '2' for second, etc.)"
 msgstr ""
 
-#: candidates/forms.py:414
+#: candidates/forms.py:429
 #, python-brace-format
 msgid "Source of information for this change ({0})"
 msgstr ""
 
-#: candidates/forms.py:446
+#: candidates/forms.py:461
 #, python-brace-format
 msgid ""
 "You can only edit data on {site_name} if you agree to this copyright "
 "assignment."
 msgstr ""
 
-#: candidates/forms.py:470
+#: candidates/forms.py:485
 msgid "Source of information that they won"
 msgstr ""
 
@@ -620,12 +623,12 @@ msgid "Sign in to add a new candidate"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:186
-#: candidates/templates/candidates/ordered-party-list.html:126
+#: candidates/templates/candidates/ordered-party-list.html:124
 msgid "Add new candidate"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:187
-#: candidates/templates/candidates/ordered-party-list.html:127
+#: candidates/templates/candidates/ordered-party-list.html:125
 #: candidates/templates/candidates/record-winner.html:35
 #: moderation_queue/templates/moderation_queue/photo-review.html:160
 msgid "Cancel"
@@ -1516,27 +1519,27 @@ msgid "Please check your information matches our requirements, below."
 msgstr ""
 
 #: candidates/templates/candidates/person-edit.html:60
-#: candidates/templates/candidates/person-view.html:110
+#: candidates/templates/candidates/person-view.html:111
 msgid "Personal details:"
 msgstr ""
 
 #: candidates/templates/candidates/person-edit.html:103
-#: candidates/templates/candidates/person-view.html:127
+#: candidates/templates/candidates/person-view.html:128
 msgid "Constituencies:"
 msgstr ""
 
 #: candidates/templates/candidates/person-edit.html:151
-#: candidates/templates/candidates/person-view.html:140
+#: candidates/templates/candidates/person-view.html:141
 msgid "Links and social media:"
 msgstr ""
 
 #: candidates/templates/candidates/person-edit.html:214
-#: candidates/templates/candidates/person-view.html:165
+#: candidates/templates/candidates/person-view.html:166
 msgid "Demographics:"
 msgstr ""
 
 #: candidates/templates/candidates/person-edit.html:234
-#: candidates/templates/candidates/person-view.html:200
+#: candidates/templates/candidates/person-view.html:201
 msgid "Additional information:"
 msgstr ""
 
@@ -1651,140 +1654,140 @@ msgstr ""
 msgid "Revert"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:15
-#: candidates/templates/candidates/person-view.html:54
+#: candidates/templates/candidates/person-view.html:16
+#: candidates/templates/candidates/person-view.html:55
 #, python-format
 msgid "Candidate for %(post)s in %(election)s"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:77
+#: candidates/templates/candidates/person-view.html:78
 #, python-format
 msgid "Candidate for <a href=\"%(url)s\">%(post)s</a> in %(election)s"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:92
+#: candidates/templates/candidates/person-view.html:93
 #, python-format
 msgid "%(name)s was elected"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:94
+#: candidates/templates/candidates/person-view.html:95
 #, python-format
 msgid "%(name)s was not elected"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:104
+#: candidates/templates/candidates/person-view.html:105
 #, python-format
 msgid ""
 "We don’t have an email address for %(name)s, <a href=\"%(url)s\">help out by"
 " adding one</a>!"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:113
+#: candidates/templates/candidates/person-view.html:114
 msgid "Name"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:116
+#: candidates/templates/candidates/person-view.html:117
 msgid "Also known as"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:123
+#: candidates/templates/candidates/person-view.html:124
 msgid "Party"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:132
+#: candidates/templates/candidates/person-view.html:133
 #, python-format
 msgid "Contested in the %(election_name)s"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:134
+#: candidates/templates/candidates/person-view.html:135
 #, python-format
 msgid "Contesting in the %(election_name)s"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:147
+#: candidates/templates/candidates/person-view.html:148
 msgid "(personal profile)"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:150
+#: candidates/templates/candidates/person-view.html:151
 msgid "(campaign page)"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:155
+#: candidates/templates/candidates/person-view.html:156
 msgid "Homepage"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:157
+#: candidates/templates/candidates/person-view.html:158
 msgid "Wikipedia page"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:159
+#: candidates/templates/candidates/person-view.html:160
 msgid "LinkedIn page"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:161
+#: candidates/templates/candidates/person-view.html:162
 msgid "Party candidate page"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:168
+#: candidates/templates/candidates/person-view.html:169
 msgid "Gender"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:169
-#: candidates/templates/candidates/person-view.html:194
+#: candidates/templates/candidates/person-view.html:170
+#: candidates/templates/candidates/person-view.html:195
 msgid "Unknown"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:170
+#: candidates/templates/candidates/person-view.html:171
 msgid "Age"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:175
+#: candidates/templates/candidates/person-view.html:176
 #, python-format
 msgid "Year of birth: %(dob)s"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:185
-#: candidates/templates/candidates/person-view.html:188
+#: candidates/templates/candidates/person-view.html:186
+#: candidates/templates/candidates/person-view.html:189
 #, python-format
 msgid ""
 "Date of birth: %(dob)s\n"
 "                 "
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:216
+#: candidates/templates/candidates/person-view.html:211
 msgid "Photo Credit:"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:235
+#: candidates/templates/candidates/person-view.html:230
 msgid "Improve this data!"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:237
+#: candidates/templates/candidates/person-view.html:232
 msgid "Our database is built by people like you."
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:238
+#: candidates/templates/candidates/person-view.html:233
 msgid ""
 "Please do add extra details about this candidate – it only takes a moment."
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:240
+#: candidates/templates/candidates/person-view.html:235
 msgid "Edit candidate"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:242
+#: candidates/templates/candidates/person-view.html:237
 msgid "Log in to edit"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:250
+#: candidates/templates/candidates/person-view.html:245
 msgid "Use this data!"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:251
+#: candidates/templates/candidates/person-view.html:246
 msgid "Open data JSON API:"
 msgstr ""
 
-#: candidates/templates/candidates/person-view.html:256
+#: candidates/templates/candidates/person-view.html:251
 #, python-format
 msgid ""
 "More details about getting <a href=\"%(api_url)s\">the data</a> and <a "
@@ -1829,7 +1832,7 @@ msgstr ""
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
 #: elections/ar_elections_2015/templates/base.html:112
-#: mysite/templates/generic_base.html:125
+#: mysite/templates/generic_base.html:126
 msgid "Privacy policy"
 msgstr ""
 
@@ -2076,30 +2079,30 @@ msgid "Provinces"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:60
-#: mysite/templates/generic_base.html:82
+#: mysite/templates/generic_base.html:83
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:62
-#: mysite/templates/generic_base.html:83
+#: mysite/templates/generic_base.html:84
 msgid "Sign out"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:65
-#: mysite/templates/generic_base.html:87
+#: mysite/templates/generic_base.html:88
 msgid "Sign in to edit"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:110
-#: mysite/templates/generic_base.html:122
+#: mysite/templates/generic_base.html:123
 msgid "Open data API"
 msgstr ""
 
 #: elections/ar_elections_2015/templates/base.html:111
 #: elections/uk_general_election_2015/templates/base.html:25
-#: mysite/templates/generic_base.html:73
-#: mysite/templates/generic_base.html:123
+#: mysite/templates/generic_base.html:74
+#: mysite/templates/generic_base.html:124
 msgid "About"
 msgstr ""
 
@@ -2199,7 +2202,7 @@ msgid "Elections"
 msgstr ""
 
 #: elections/uk_general_election_2015/templates/base.html:27
-#: mysite/templates/generic_base.html:75
+#: mysite/templates/generic_base.html:76
 msgid "Numbers"
 msgstr ""
 
@@ -2645,6 +2648,48 @@ msgid ""
 "stories or official candidate pages."
 msgstr ""
 
+#: mysite/templates/account/email/email_confirmation_message.txt:1
+#, python-format
+msgid ""
+"Hello from %(site_name)s! You're receiving this e-mail because user "
+"%(user_display)s at %(site_domain)s has given yours as an e-mail address to "
+"connect their account. To confirm this is correct, go to %(activate_url)s"
+msgstr ""
+
+#: mysite/templates/account/email/email_confirmation_message.txt:7
+#, python-format
+msgid "Thank you from %(site_name)s! %(site_domain)s"
+msgstr ""
+
+#: mysite/templates/account/email/email_confirmation_subject.txt:3
+msgid "Please Confirm Your E-mail Address"
+msgstr ""
+
+#: mysite/templates/account/email/password_reset_key_message.txt:1
+#, python-format
+msgid ""
+"Hello from %(site_name)s!\n"
+"\n"
+"You're receiving this e-mail because you or someone else has requested a password for your user account at %(site_domain)s.\n"
+"It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
+msgstr ""
+
+#: mysite/templates/account/email/password_reset_key_message.txt:8
+#, python-format
+msgid "In case you forgot, your username is %(username)s."
+msgstr ""
+
+#: mysite/templates/account/email/password_reset_key_message.txt:10
+#, python-format
+msgid ""
+"Thank you for using %(site_name)s!\n"
+"%(site_domain)s"
+msgstr ""
+
+#: mysite/templates/account/email/password_reset_key_subject.txt:3
+msgid "Password Reset E-mail"
+msgstr ""
+
 #: mysite/templates/account/login.html:6 mysite/templates/account/login.html:9
 #: mysite/templates/account/login.html:42
 msgid "Sign In"
@@ -2698,11 +2743,11 @@ msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
 msgstr ""
 
-#: mysite/templates/generic_base.html:74
+#: mysite/templates/generic_base.html:75
 msgid "Posts"
 msgstr ""
 
-#: mysite/templates/generic_base.html:124
+#: mysite/templates/generic_base.html:125
 msgid "Issue tracker"
 msgstr ""
 
