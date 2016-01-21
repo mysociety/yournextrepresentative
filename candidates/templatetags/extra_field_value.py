@@ -22,7 +22,7 @@ def extra_field_value(extra_field):
         elif extra_field['value'] == 'no':
             output = _(u'No')
         else:
-            output = _(u"Don't know")
+            output = _(u"Don’t know")
     else:
         output = extra_field['value']
     return output
