@@ -48,6 +48,7 @@
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
             ga('create', '{{ settings.GOOGLE_ANALYTICS_ACCOUNT }}', 'auto');
+            ga('send', 'pageview');
           {% else %}
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', '{{ settings.GOOGLE_ANALYTICS_ACCOUNT }}']);
