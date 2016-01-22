@@ -19,12 +19,10 @@ def extra_field_value(extra_field):
             u'<a href="{0}" rel="nofollow">{0}</a>'.format(url)
         output = mark_safe(output)
     elif extra_field['type'] == 'yesno':
-        if extra_field['value'] == 'yes':
-            output = _(u'Yes')
-        elif extra_field['value'] == 'no':
-            output = _(u'No')
-        else:
-            output = _(u"Don’t Know")
+        output = {
+            'yes': _(u'Yes'),
+            'no': _(u'No'),
+        }.get(extra_field['value'], _(u"Don’t Know"))
     else:
         output = extra_field['value']
     return output
