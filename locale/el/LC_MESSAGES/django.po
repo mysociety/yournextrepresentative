@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-21 17:58+0000\n"
+"POT-Creation-Date: 2016-01-22 12:05-0600\n"
 "PO-Revision-Date: 2016-01-22 13:58+0000\n"
 "Last-Translator: Neophytos Kolokotronis <tetris4@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/mysociety/yournextmp/language/el/)\n"
@@ -296,7 +296,7 @@ msgid "Information source for this change ({0})"
 msgstr "Πηγή πληροφοριών για αυτή την αλλαγή ({0})"
 
 #: candidates/forms.py:97 candidates/forms.py:108
-#: candidates/templatetags/extra_field_value.py:27
+#: candidates/templatetags/extra_field_value.py:25
 msgid "Don’t Know"
 msgstr "Δεν γνωρίζω"
 
@@ -306,7 +306,7 @@ msgid "Yes"
 msgstr "Ναι"
 
 #: candidates/forms.py:99 candidates/forms.py:110
-#: candidates/templatetags/extra_field_value.py:25
+#: candidates/templatetags/extra_field_value.py:24
 msgid "No"
 msgstr "Όχι"
 
@@ -438,7 +438,7 @@ msgstr "Εκλογική περιφέρεια σε %s"
 #: candidates/forms.py:400
 #, python-brace-format
 msgid "Party in {election} ({party_set_name})"
-msgstr "Κόμμα σε "
+msgstr ""
 
 #: candidates/forms.py:418
 msgid "Position in party list ('1' for first, '2' for second, etc.)"

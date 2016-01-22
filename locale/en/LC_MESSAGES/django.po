@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-21 17:58+0000\n"
+"POT-Creation-Date: 2016-01-22 12:05-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -276,7 +276,7 @@ msgid "Information source for this change ({0})"
 msgstr ""
 
 #: candidates/forms.py:97 candidates/forms.py:108
-#: candidates/templatetags/extra_field_value.py:27
+#: candidates/templatetags/extra_field_value.py:25
 msgid "Don’t Know"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgid "Yes"
 msgstr ""
 
 #: candidates/forms.py:99 candidates/forms.py:110
-#: candidates/templatetags/extra_field_value.py:25
+#: candidates/templatetags/extra_field_value.py:24
 msgid "No"
 msgstr ""
 

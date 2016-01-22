@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-21 17:58+0000\n"
+"POT-Creation-Date: 2016-01-22 12:05-0600\n"
 "PO-Revision-Date: 2016-01-21 18:00+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/mysociety/yournextmp/language/es_AR/)\n"
@@ -297,7 +297,7 @@ msgid "Information source for this change ({0})"
 msgstr "Fuente de información para este cambio ({0})"
 
 #: candidates/forms.py:97 candidates/forms.py:108
-#: candidates/templatetags/extra_field_value.py:27
+#: candidates/templatetags/extra_field_value.py:25
 msgid "Don’t Know"
 msgstr "No sé"
 
@@ -307,7 +307,7 @@ msgid "Yes"
 msgstr "Si"
 
 #: candidates/forms.py:99 candidates/forms.py:110
-#: candidates/templatetags/extra_field_value.py:25
+#: candidates/templatetags/extra_field_value.py:24
 msgid "No"
 msgstr "No"
 
