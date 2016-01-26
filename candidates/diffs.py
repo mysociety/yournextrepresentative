@@ -119,7 +119,8 @@ def explain_standing_in_and_party_memberships(operation, attribute, election, le
             )
         else:
             clauses = []
-            for election, value in (operation[key] or {}).items():
+            items = (operation[key] or {}).items()
+            for election, value in sorted(items, reverse=True):
                 clauses.append(get_descriptive_value(
                     election,
                     attribute,
