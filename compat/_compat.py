@@ -22,7 +22,7 @@ class StreamDictReader(csv.DictReader):
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
     objects), Python 3's is limited to Unicode.  ``StreamDictReader``
-    requires the input be and ensures the output is always Unicode.
+    requires both the input and output to be Unicode.
 
     >>> reader = StreamDictReader(u'α,b,c\r\n1,2,\r\n')
     >>> tuple(reader) == ({u'α': u'1', u'b': u'2', u'c': u''},)
@@ -53,7 +53,7 @@ class StreamDictWriter(csv.DictWriter):
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
     objects), Python 3's is limited to Unicode.  ``StreamDictWriter``
-    requires the input be and ensures the output is always Unicode.
+    requires both the input and output to be Unicode.
 
     >>> writer = StreamDictWriter((u'α', u'b', u'c'))
     >>> writer.writeheader()
