@@ -32,8 +32,7 @@ class StreamDictReader(csv.DictReader):
     if six.PY2:
         def __init__(self, s='', fieldnames=None, restkey=None, restval=None,
                      dialect='excel', *_, **kwargs):
-            s = map(unicode_to_bytes, s) if isinstance(s, list) else \
-                io.BytesIO(unicode_to_bytes(s))
+            s = io.BytesIO(unicode_to_bytes(s))
             csv.DictReader.__init__(
                 self, s, fieldnames, restkey, restval, dialect,
                 **_map_dict(unicode_to_bytes, kwargs))
