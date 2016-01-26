@@ -43,8 +43,7 @@ class StreamDictReader(csv.DictReader):
     else:
         def __new__(cls, s='', fieldnames=None, restkey=None, restval=None,
                     dialect='excel', *_, **kwargs):
-            if isinstance(s, str):
-                s = io.StringIO(s)
+            s = io.StringIO(bytes_to_unicode(s))
             return csv.DictReader(s, fieldnames, restkey, restval, dialect,
                                   **kwargs)
 
