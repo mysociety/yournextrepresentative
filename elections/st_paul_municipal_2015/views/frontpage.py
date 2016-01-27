@@ -80,7 +80,7 @@ def check_address(address_string, country=None):
                 areas.add(division_slug)
 
         return {
-            'area_ids': ';'.join(areas),
+            'area_ids': ';'.join(sorted(areas)),
         }
 
     error = _("Unable to find constituency for '{0}'")
