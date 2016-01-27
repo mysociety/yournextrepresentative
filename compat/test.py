@@ -140,7 +140,7 @@ class TestDictFields(unittest.TestCase):
                                          "4": '4', "5": '5', "6": '6'})
 
     def test_read_semi_sep(self):
-        reader = StreamDictReader(["1;2;abc;4;5;6\r\n"],
+        reader = StreamDictReader("1;2;abc;4;5;6\r\n",
                                   fieldnames="1 2 3 4 5 6".split(),
                                   delimiter=';')
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
