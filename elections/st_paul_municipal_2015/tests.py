@@ -205,7 +205,7 @@ class StPaulTests(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/ocd-division,country:us,state:mn,place:st_paul,ward:3;ocd-division,country:us,state:mn,place:st_paul',
+            '/areas/ocd-division,country:us,state:mn,place:st_paul;ocd-division,country:us,state:mn,place:st_paul,ward:3',
         )
 
     @patch.object(pygeocoder.Geocoder, 'geocode', side_effect=fake_geocode)
