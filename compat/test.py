@@ -106,11 +106,14 @@ class TestDictFields(unittest.TestCase):
                                          "6": 'DEFAULT'})
 
     def test_read_multi(self):
-        sample = [
-            '2147483648,43.0e12,17,abc,def\r\n',
-            '147483648,43.0e2,17,abc,def\r\n',
-            '47483648,43.0,170,abc,def\r\n'
+        sample = '\r\n'.join(
+            [
+                '2147483648,43.0e12,17,abc,def',
+                '147483648,43.0e2,17,abc,def',
+                '47483648,43.0,170,abc,def',
+                ''
             ]
+        )
 
         reader = StreamDictReader(sample,
                                   fieldnames="i1 float i2 s1 s2".split())
@@ -121,8 +124,15 @@ class TestDictFields(unittest.TestCase):
                                          "s2": 'def'})
 
     def test_read_with_blanks(self):
-        reader = StreamDictReader(["1,2,abc,4,5,6\r\n","\r\n",
-                                   "1,2,abc,4,5,6\r\n"],
+        sample = '\r\n'.join(
+            [
+                "1,2,abc,4,5,6",
+                "",
+                "1,2,abc,4,5,6"
+                ""
+            ]
+        )
+        reader = StreamDictReader(sample,
                                   fieldnames="1 2 3 4 5 6".split())
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
                                          "4": '4', "5": '5', "6": '6'})
