@@ -97,7 +97,7 @@ class TestDictFields(unittest.TestCase):
 
     def test_read_short(self):
         reader = StreamDictReader("1,2,abc,4,5,6\r\n1,2,abc\r\n",
-                                  fieldnames="1 2 3 4 5 6".split(),
+                                  fieldnames=["1", "2", "3", "4", "5", "6"],
                                   restval="DEFAULT")
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
                                          "4": '4', "5": '5', "6": '6'})
@@ -116,7 +116,7 @@ class TestDictFields(unittest.TestCase):
         )
 
         reader = StreamDictReader(sample,
-                                  fieldnames="i1 float i2 s1 s2".split())
+                                  fieldnames=["i1", "float", "i2", "s1", "s2"])
         self.assertEqual(next(reader), {"i1": '2147483648',
                                          "float": '43.0e12',
                                          "i2": '17',
@@ -133,7 +133,7 @@ class TestDictFields(unittest.TestCase):
             ]
         )
         reader = StreamDictReader(sample,
-                                  fieldnames="1 2 3 4 5 6".split())
+                                  fieldnames=["1", "2", "3", "4", "5", "6"])
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
                                          "4": '4', "5": '5', "6": '6'})
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
@@ -141,7 +141,7 @@ class TestDictFields(unittest.TestCase):
 
     def test_read_semi_sep(self):
         reader = StreamDictReader("1;2;abc;4;5;6\r\n",
-                                  fieldnames="1 2 3 4 5 6".split(),
+                                  fieldnames=["1", "2", "3", "4", "5", "6"],
                                   delimiter=';')
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
                                          "4": '4', "5": '5', "6": '6'})
