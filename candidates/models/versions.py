@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from .fields import ExtraField
+from .fields import ExtraField, SimplePopoloField
 from .field_mappings import form_simple_fields, form_complex_fields_locations
 
 from django.db.models import F
@@ -13,8 +13,8 @@ def get_person_as_version_data(person):
     result = {}
     person_extra = person.extra
     result['id'] = str(person.id)
-    for field, null_value in form_simple_fields.items():
-        result[field] = getattr(person, field) or null_value
+    for field in SimplePopoloField.objects.all():
+        result[field.name] = getattr(person, field.name) or ''
     for field in form_complex_fields_locations:
         result[field] = getattr(person_extra, field)
     extra_values = {
@@ -82,12 +82,12 @@ def revert_person_from_version_data(person, person_extra, version_data):
     from candidates.models import MembershipExtra
     from elections.models import Election
 
-    for field, null_value in form_simple_fields.items():
-        new_value = version_data.get(field)
+    for field in SimplePopoloField.objects.all():
+        new_value = version_data.get(field.name)
         if new_value:
-            setattr(person, field, new_value)
+            setattr(person, field.name, new_value)
         else:
-            setattr(person, field, null_value)
+            setattr(person, field.name, '')
 
     # Remove any old values in complex fields:
     for location in form_complex_fields_locations.values():
