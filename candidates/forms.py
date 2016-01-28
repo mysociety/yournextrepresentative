@@ -14,7 +14,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from candidates.models import PartySet, parse_approximate_date, ExtraField
+from candidates.models import PartySet, parse_approximate_date, ExtraField, SimplePopoloField
 from popolo.models import Organization, Post
 
 class AddressForm(forms.Form):
@@ -106,40 +106,25 @@ class BasePersonForm(forms.Form):
                     "Unknown field type: {0}".format(field.type)
                 )
 
+        for field in SimplePopoloField.objects.all():
+            opts = {
+                'label': _(field.label),
+                'required': field.required
+            }
+
+            if field.info_type_key == 'url':
+                self.fields[field.name] = forms.URLField(**opts)
+            elif field.info_type_key == 'email':
+                self.fields[field.name] = forms.EmailField(**opts)
+            else:
+                self.fields[field.name] = forms.CharField(**opts)
+
     STANDING_CHOICES = (
         ('not-sure', _("Don’t Know")),
         ('standing', _("Yes")),
         ('not-standing', _("No")),
     )
 
-    honorific_prefix = forms.CharField(
-        label=_("Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"),
-        max_length=256,
-        required=False,
-    )
-    name = forms.CharField(
-        label=_("Full name"),
-        max_length=1024,
-    )
-    honorific_suffix = forms.CharField(
-        label=_("Post-nominal letters (e.g. CBE, DSO, etc.)"),
-        max_length=256,
-        required=False,
-    )
-    email = forms.EmailField(
-        label=_("Email"),
-        max_length=256,
-        required=False,
-    )
-    gender = forms.CharField(
-        label=_("Gender (e.g. “male”, “female”)"),
-        max_length=256,
-        required=False,
-    )
-    birth_date = forms.CharField(
-        label=_("Date of birth (a four digit year or a full date)"),
-        required=False,
-    )
     wikipedia_url = forms.URLField(
         label=_("Wikipedia URL"),
         max_length=256,

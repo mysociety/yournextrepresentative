@@ -27,7 +27,7 @@ from compat import python_2_unicode_compatible
 from .field_mappings import (
     form_simple_fields, form_complex_fields_locations
 )
-from .fields import ExtraField, PersonExtraFieldValue
+from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField
 from ..diffs import get_version_diffs
 from .versions import get_person_as_version_data
 
@@ -50,8 +50,8 @@ def update_person_from_form(person, person_extra, form):
         form_data['birth_date'] = repr(birth_date_date).replace("-00-00", "")
     else:
         form_data['birth_date'] = ''
-    for field_name in form_simple_fields.keys():
-        setattr(person, field_name, form_data[field_name])
+    for field in SimplePopoloField.objects.all():
+        setattr(person, field.name, form_data[field.name])
     for field_name, location in form_complex_fields_locations.items():
         person_extra.update_complex_field(location, form_data[field_name])
     for extra_field in ExtraField.objects.all():
@@ -345,8 +345,8 @@ class PersonExtra(HasImageMixin, models.Model):
 
     def get_initial_form_data(self):
         initial_data = {}
-        for field_name in form_simple_fields.keys():
-            initial_data[field_name] = getattr(self.base, field_name)
+        for field in SimplePopoloField.objects.all():
+            initial_data[field.name] = getattr(self.base, field.name)
         for field_name in form_complex_fields_locations.keys():
             initial_data[field_name] = getattr(self, field_name)
         for extra_field_value in PersonExtraFieldValue.objects.filter(

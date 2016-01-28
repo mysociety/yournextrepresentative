@@ -59,45 +59,16 @@
 
       <h2>{% trans "Personal details:" %}</h2>
 
-      {% if settings.ELECTION_APP == 'cr' %}
-      <input id="id_honorific_prefix" maxlength="256" name="honorific_prefix" type="hidden" value="">
-      {% else %}
-      <div class="form-item {% if form.honorific_prefix.errors %}form-item--errors{% endif %}">
+      {% for simple_field in personal_fields %}
+      <div class="form-item {% if simple_field.errors %}form-item--errors{% endif %}">
         <p>
-          {{ form.honorific_prefix.label_tag }}
-          {{ form.honorific_prefix }}
+          {{ simple_field.label_tag }}
+          {{ simple_field }}
         </p>
-        {{ form.honorific_prefix.errors }}
-      </div>
-      {% endif %}
-
-      <div class="form-item {% if form.name.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.name.label_tag }}
-          {{ form.name }}
-        </p>
-        {{ form.name.errors }}
+        {{ simple_field.errors }}
       </div>
 
-      {% if settings.ELECTION_APP == 'cr' %}
-      <input id="id_honorific_suffix" maxlength="256" name="honorific_suffix" type="hidden" value="">
-      {% else %}
-      <div class="form-item {% if form.honorific_suffix.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.honorific_suffix.label_tag }}
-          {{ form.honorific_suffix }}
-        </p>
-        {{ form.honorific_suffix.errors }}
-      </div>
-      {% endif %}
-
-      <div class="form-item {% if form.email.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.email.label_tag }}
-          {{ form.email }}
-        </p>
-        {{ form.email.errors }}
-      </div>
+      {% endfor %}
 
       <div>
         <h2>{% trans "Constituencies:" %}</h2>
@@ -213,21 +184,16 @@
 
       <h2>{% trans "Demographics:" %}</h2>
 
-      <div class="form-item {% if form.gender.errors %}form-item--errors{% endif %}">
+      {% for simple_field in demographic_fields %}
+      <div class="form-item {% if simple_field.errors %}form-item--errors{% endif %}">
         <p>
-          {{ form.gender.label_tag }}
-          {{ form.gender }}
+          {{ simple_field.label_tag }}
+          {{ simple_field }}
         </p>
-        {{ form.gender.errors }}
+        {{ simple_field.errors }}
       </div>
 
-      <div class="form-item {% if form.birth_date.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.birth_date.label_tag }}
-          {{ form.birth_date }}
-        </p>
-        {{ form.birth_date.errors }}
-      </div>
+      {% endfor %}
 
       {% if extra_fields %}
 
