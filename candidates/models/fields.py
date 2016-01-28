@@ -1,10 +1,46 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
 from compat import python_2_unicode_compatible
+
+
+class SimplePopoloField(models.Model):
+    VALID_FIELDS = (
+        ('name', _('Name')),
+        ('family_name', _('Family Name')),
+        ('given_name', _('Given Name')),
+        ('additional_name', _('Additional Name')),
+        ('honorific_prefix', _('Honorific Prefix')),
+        ('honorific_suffix', _('Honorific Suffix')),
+        ('patronymic_name', _('Patronymic Name')),
+        ('sort_name', _('Sort Name')),
+        ('email', _('Email')),
+        ('gender', _('Gender')),
+        ('birth_date', _('Birth Date')),
+        ('death_date', _('Death Date')),
+        ('summary', _('Summary')),
+        ('biography', _('Biography')),
+        ('national_identity', _('National Identity')),
+    )
+
+    name = models.CharField(
+        choices=VALID_FIELDS,
+        max_length=256
+    )
+    label = models.CharField(max_length=256)
+    required = models.BooleanField(default=False)
+    info_type_key = models.CharField(
+        choices=(
+            ('text', _('Text Field')),
+            ('email', _('Email Field')),
+        ),
+        max_length=256
+    )
+    order = models.IntegerField(blank=True)
 
 
 @python_2_unicode_compatible
