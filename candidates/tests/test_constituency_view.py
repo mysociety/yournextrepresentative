@@ -130,9 +130,12 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         # Just a smoke test for the moment:
         response = self.app.get('/election/2015/post/65808/dulwich-and-west-norwood')
         response.mustcontain('<a href="/person/2009/tessa-jowell" class="candidate-name">Tessa Jowell</a> <span class="party">Labour Party</span>')
-        # There should be no forms on the page if you're not logged in:
+        # There should be only one form ( person search ) on the page if you're not logged in:
 
-        self.assertEqual(0, len(response.forms))
+        # even though there is only one form on the page the list has
+        # two entries - one for the numeric identifier and one for the id
+        self.assertEqual(2, len(response.forms))
+        self.assertEqual(response.forms[0].id, 'person_search_header')
 
     def test_any_constituency_page(self):
         # Just a smoke test for the moment:

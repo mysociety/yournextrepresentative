@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<form method="post" action="{% url 'record-winner' election=election post_id=post_id %}">
+<form id="record_winner" method="post" action="{% url 'record-winner' election=election post_id=post_id %}">
 
 {% csrf_token %}
 

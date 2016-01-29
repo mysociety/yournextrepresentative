@@ -31,7 +31,7 @@ or remove copyright restrictions by releasing into the public domain
 {% endblocktrans %}
 </p>
 
-<form method="post" action="">
+<form id="copyright_assignment" method="post" action="">
   {% csrf_token %}
   {{ form.next_path }}
   <p class="agreement">

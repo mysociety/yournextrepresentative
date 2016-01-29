@@ -58,7 +58,7 @@ class TestCopyrightAssignment(TestUserMixin, WebTest):
             auto_follow=True
         )
 
-        form = response.forms[0]
+        form = response.forms['copyright_assignment']
         form['assigned_to_dc'] = True
         form_response = form.submit()
 
@@ -81,7 +81,7 @@ class TestCopyrightAssignment(TestUserMixin, WebTest):
 
         response.mustcontain(no='You can only edit data on example.com')
 
-        form = response.forms[0]
+        form = response.forms['copyright_assignment']
         form['assigned_to_dc'] = False
         form_response = form.submit()
 

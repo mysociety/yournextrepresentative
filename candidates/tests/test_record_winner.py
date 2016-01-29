@@ -139,7 +139,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             user=self.user_who_can_record_results,
             expect_errors=True,
         )
-        form = form_get_response.forms[0]
+        form = form_get_response.forms['record_winner']
         self.assertEqual(form_get_response.status_code, 200)
         form['source'] = 'BBC website'
         submission_response = form.submit()

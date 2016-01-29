@@ -95,7 +95,7 @@
             <li class="nav-links__item"><a href="{% url 'reports_home' %}">{% trans "Numbers" %}</a></li>
           {% endblock %}
         </ul>
-        <form class="header__nav__search" action="{% url 'person-search' %}">
+        <form id="person_search_header" class="header__nav__search" action="{% url 'person-search' %}">
           <input type="text" placeholder="{% trans 'Find a candidate…' %}" name="q">
           <button type="submit">{% trans 'Search' %}</button>
         </form>
