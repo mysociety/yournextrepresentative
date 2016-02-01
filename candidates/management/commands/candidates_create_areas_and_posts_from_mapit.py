@@ -1,12 +1,13 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from urlparse import urljoin
 import requests
 
 from popolo.models import Post, Area
-from candidates.models import PostExtra, AreaExtra
+from candidates.models import PostExtra, AreaExtra, PartySet
 from elections.models import Election, AreaType
 
 
@@ -45,6 +46,12 @@ in the Election objects in the app.
             metavar='POST-LABEL',
             default=_('{post_role} for {area_name}'),
         )
+        parser.add_argument(
+            '--party-set',
+            help='Use a particular party set for all the posts [default: "%(default)s"]',
+            metavar='PARTY-SET-NAME',
+            default='National',
+        )
 
     def handle(self, *args, **options):
         with transaction.atomic():
@@ -58,6 +65,11 @@ in the Election objects in the app.
         mapit_url = options['MAPIT-URL']
         area_type = options['AREA-TYPE']
         post_id_format = options['POST-ID-FORMAT']
+
+        party_set, created = PartySet.objects.get_or_create(
+            slug=slugify(options['party_set']),
+            defaults={'name': options['party_set']}
+        )
 
         elections = Election.objects.all()
 
@@ -117,7 +129,8 @@ in the Election objects in the app.
 
                 post_extra, created = PostExtra.objects.get_or_create(
                     base=post,
-                    slug=post_id
+                    slug=post_id,
+                    defaults={'party_set': party_set},
                 )
 
                 post_extra.elections.add(election)
