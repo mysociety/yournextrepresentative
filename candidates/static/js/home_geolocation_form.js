@@ -5,8 +5,8 @@ var constructGeolocationLink = function constructGeolocationLink($wrapper){
     }
 
     if(geolocationIsSupported) {
-        var t1 = $wrapper.attr('data-link-text') || 'Use my current location';
-        var t2 = $wrapper.attr('data-loading-text') || 'Getting location\u2026';
+        var t1 = $wrapper.attr('data-link-text') || gettext('Use my current location');
+        var t2 = $wrapper.attr('data-loading-text') || gettext('Getting location\u2026');
 
         var $a = $('<a>').text(t1).addClass('geolocation-link');
         $a.on('click', function(){
@@ -21,7 +21,7 @@ var constructGeolocationLink = function constructGeolocationLink($wrapper){
                     } else if ( data['url'] ) {
                         window.location=data['url']
                     } else {
-                      $(that).text(data['error']);
+                      $(that).text(gettext('There was a problem getting your location'));
                     }
                   });
             });
