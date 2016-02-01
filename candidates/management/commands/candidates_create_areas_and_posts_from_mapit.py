@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext as _
 
-from optparse import make_option
 from urlparse import urljoin
 import requests
 
@@ -17,7 +16,6 @@ instances with different types of election - e.g. Presidential and
 parliamentary.
 """
 class Command(BaseCommand):
-    args = "<MAPIT-URL> <AREA_TYPE> <POST_ID_FORMAT>"
     help = """Create areas and posts based on a mapit area type
 
 MAPIT-URL should be something that returns a set of JSON results
@@ -26,23 +24,35 @@ for each area found using the post and organization information
 in the Election objects in the app.
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option(
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'MAPIT-URL',
+            help='The base URL of the MapIt instance, e.g. ' \
+                'http://global.mapit.mysociety.org/'
+        )
+        parser.add_argument(
+            'AREA-TYPE',
+            help='The code of the MapIt area type, e.g. WMC'
+        )
+        parser.add_argument(
+            'POST-ID-FORMAT',
+            help='The format of the corresponding Post ID, e.g. cons-{area_id}'
+        )
+        parser.add_argument(
             '--post-label',
-            help='Override the format string used to construct the post label [default: "%default"]',
+            help='Override the format string used to construct the post label [default: "%(default)s"]',
+            metavar='POST-LABEL',
             default=_('{post_role} for {area_name}'),
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
         post_label_format = _('{post_role} for {area_name}')
         if options['post_label']:
             post_label_format = options['post_label']
 
-        if len(args) != 3:
-            raise CommandError("You must provide all three arguments")
-
-        mapit_url, area_type, post_id_format = args
+        mapit_url = options['MAPIT-URL']
+        area_type = options['AREA-TYPE']
+        post_id_format = options['POST-ID-FORMAT']
 
         elections = Election.objects.all()
 
@@ -106,4 +116,3 @@ in the Election objects in the app.
                 )
 
                 post_extra.elections.add(election)
-
