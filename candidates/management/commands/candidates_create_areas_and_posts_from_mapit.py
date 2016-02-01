@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from django.utils.translation import ugettext as _
 
 from urlparse import urljoin
@@ -46,6 +47,10 @@ in the Election objects in the app.
         )
 
     def handle(self, *args, **options):
+        with transaction.atomic():
+            self.handle_inner(*args, **options)
+
+    def handle_inner(self, *args, **options):
         post_label_format = _('{post_role} for {area_name}')
         if options['post_label']:
             post_label_format = options['post_label']
