@@ -58,9 +58,7 @@ in the Election objects in the app.
             self.handle_inner(*args, **options)
 
     def handle_inner(self, *args, **options):
-        post_label_format = _('{post_role} for {area_name}')
-        if options['post_label']:
-            post_label_format = options['post_label']
+        post_label_format = options['post_label']
 
         mapit_url = options['MAPIT-URL']
         area_type = options['AREA-TYPE']
