@@ -62,11 +62,15 @@ class GeoLocatorView(View):
             for area in mapit_json
         ]
 
-        return HttpResponseRedirect(
-            reverse('areas-view', kwargs={
-                'type_and_area_ids': ','.join(ids_and_areas)
-            })
+        url = reverse('areas-view', kwargs={
+            'type_and_area_ids': ','.join(ids_and_areas)
+        })
+
+        return HttpResponse(
+            json.dumps({'url': url}),
+            content_type='application/json',
         )
+
 
 
 class AddressFinderView(ContributorsMixin, FormView):

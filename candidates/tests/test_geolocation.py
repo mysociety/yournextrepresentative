@@ -102,22 +102,14 @@ class TestGeolocator(WebTest):
     def test_valid_coords_redirects_to_constituency(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.143207,51.5')
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(
-            split_location.path,
-            '/areas/WMC-65759',
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.json, {'url': '/areas/WMC-65759'})
 
     def test_valid_coords_redirects_with_two_elections(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.09153,51.444')
-        self.assertEqual(response.status_code, 302)
-        split_location = urlsplit(response.location)
-        self.assertEqual(
-            split_location.path,
-            '/areas/WMC-65808,LAC-11822',
-        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.json, {'url': '/areas/WMC-65808,LAC-11822'})
 
     def test_invalid_coords_returns_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit

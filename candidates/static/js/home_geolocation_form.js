@@ -18,6 +18,8 @@ var constructGeolocationLink = function constructGeolocationLink($wrapper){
                   function ( data ) {
                     if ( data['error'] ) {
                       $(that).text(data['error']);
+                    } else if ( data['url'] ) {
+                        window.location=data['url']
                     }
                   });
             });
