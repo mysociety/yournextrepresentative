@@ -8,7 +8,6 @@ from popolo.models import Area
 
 class ConstituencySelectorForm(forms.Form):
 
-    # this should just pull things out the DB
     cons_area_id = forms.ModelChoiceField(
         label=_('Select your constituency'),
         empty_label='',
