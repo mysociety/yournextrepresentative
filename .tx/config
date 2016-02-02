@@ -8,3 +8,8 @@ source_file = locale/en/LC_MESSAGES/django.po
 source_lang = en
 type = PO
 
+[yournextmp.javascript]
+file_filter = locale/<lang>/LC_MESSAGE/djangojs.po
+source_file = locale/en/LC_MESSAGES/djangojs.po
+source_lang = en
+type = PO
