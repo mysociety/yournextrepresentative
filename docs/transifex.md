@@ -48,6 +48,16 @@ added to the project with:
     --ignore=data --ignore=candidates/static/foundation
 ```
 
+You also need to update the Javascript translations with:
+
+```
+./manage.py makemessages -a --no-wrap \
+    --ignore=data --ignore=candidates/static/foundation \
+    --ignore=candidates/static/select2 \
+    --ignore=candidates/static/jquery \
+    --ignore=mysite/static/jsi18n -d djangojs
+```
+
 That will add some fuzzily inferred translations to the `.po`
 files, but they won't be added to Transifex when we upload
 (since it doesn't support fuzzy translations) and later we'll
