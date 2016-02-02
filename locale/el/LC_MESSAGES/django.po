@@ -2781,7 +2781,7 @@ msgstr "Τα ακόλουθα επίσημα αρχεία σχετίζονται
 #: official_documents/templates/official_documents/_post.html:24
 #, python-format
 msgid "We don't have any %(type)s for the post %(post_data.label)s."
-msgstr "Δεν έχουμε καθόλου %(type)s για τη θέση "
+msgstr "Δεν έχουμε καθόλου %(type)s για τη θέση %(post_data.label)s."
 
 #: official_documents/templates/official_documents/_post.html:30
 #, python-format
