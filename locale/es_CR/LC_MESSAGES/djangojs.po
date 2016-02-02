@@ -1,26 +1,42 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
+# Carlos Contreras <carlosconval@hotmail.com>, 2015
+# Manfred Vargas <manfred.vargas@gmail.com>, 2016
+# Martín Szyszlican <martinsz@gmail.com>, 2015
+# mySociety <transifex@mysociety.org>, 2015
+# violeta gau <violetagau@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 14:53+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2016-02-02 10:50+0000\n"
+"PO-Revision-Date: 2016-02-02 10:55+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
+"Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_CR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: candidates/static/js/constituency.js:53
 #, javascript-format
 msgid "Are you sure that %s (%s) was the winner in %s?"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:8
+msgid "Use my current location"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:9
+msgid "Getting location…"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:24
+msgid "There was a problem getting your location"
 msgstr ""
 
 #: candidates/static/js/versions.js:4
@@ -29,4 +45,4 @@ msgstr ""
 
 #: candidates/static/js/versions.js:6
 msgid "Hide full version"
-msgstr ""
+msgstr "Ocultar versión completa"

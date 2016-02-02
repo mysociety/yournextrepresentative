@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 # Carlos Contreras <carlosconval@hotmail.com>, 2015
 # Manfred Vargas <manfred.vargas@gmail.com>, 2016
@@ -12,14 +12,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 12:05-0600\n"
+"POT-Creation-Date: 2016-02-02 10:14+0000\n"
 "PO-Revision-Date: 2016-01-22 16:47+0000\n"
 "Last-Translator: Manfred Vargas <manfred.vargas@gmail.com>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
+"Language: es_CR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_CR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:6
@@ -28,10 +28,7 @@ msgid "Permission denied"
 msgstr "No está autorizado para realizar esta acción."
 
 #: auth_helpers/templates/auth_helpers/group_permission_denied.html:14
-msgid ""
-"You must be in the member of a particular group in order to view that page. "
-"Please contact the administrators of the site if you feel that you should "
-"have access to this page."
+msgid "You must be in the member of a particular group in order to view that page. Please contact the administrators of the site if you feel that you should have access to this page."
 msgstr "Debe ser el administrador de un grupo particular para poder acceder a la página. Por favor contacte a los administradores del sitio si siente que debe tener acceso a esta página."
 
 #: cached_counts/templates/attention_needed.html:5
@@ -80,9 +77,7 @@ msgstr "¿Cuales cargos tienen menos candidatos?"
 
 #: cached_counts/templates/reports.html:15
 #, python-format
-msgid ""
-"You can see a list of all the posts in current elections <a "
-"href=\"%(url)s\">ordered starting with those with the fewest candidates</a>."
+msgid "You can see a list of all the posts in current elections <a href=\"%(url)s\">ordered starting with those with the fewest candidates</a>."
 msgstr "Puede ver una lista de todos los cargos a elegir, <a href=\"%(url)s\">empezando por aquellos con menos candidatos</a>."
 
 #: cached_counts/templates/reports.html:26
@@ -137,16 +132,12 @@ msgstr "Candidatos que también se presentaron en %(prior_election_name)s:"
 
 #: cached_counts/templates/reports.html:58
 #, python-format
-msgid ""
-"Candidates standing again from the %(prior_election_name)s for the same "
-"party:"
+msgid "Candidates standing again from the %(prior_election_name)s for the same party:"
 msgstr "Candidatos que también se presentaron en %(prior_election_name)s por el mismo partido:"
 
 #: cached_counts/templates/reports.html:62
 #, python-format
-msgid ""
-"Candidates standing again from the %(prior_election_name)s for a different "
-"party:"
+msgid "Candidates standing again from the %(prior_election_name)s for a different party:"
 msgstr "Candidatos que se habían presentado en %(prior_election_name)s por un partido diferente:"
 
 #: cached_counts/templates/reports.html:74
@@ -165,14 +156,12 @@ msgstr "Supimos que se presentó por el partido '{party}' en las elecciones a {e
 
 #: candidates/diffs.py:39
 #, python-brace-format
-msgid ""
-"is known to be standing for the party with ID {party} in the {election}"
+msgid "is known to be standing for the party with ID {party} in the {election}"
 msgstr "Se sabe que se presenta por el partido con identificación {party} en las elecicones para {election}"
 
 #: candidates/diffs.py:41
 #, python-brace-format
-msgid ""
-"was known to be standing for the party with ID {party} in the {election}"
+msgid "was known to be standing for the party with ID {party} in the {election}"
 msgstr "Supimos que se presentó por el partido con identificación {party} en las {election}"
 
 #: candidates/diffs.py:44 candidates/diffs.py:92
@@ -202,28 +191,22 @@ msgstr "Supimos que no se presentó en las elecciones a {election}"
 
 #: candidates/diffs.py:65
 #, python-brace-format
-msgid ""
-"is known to be standing for the post with ID {post_id} in the {election}"
+msgid "is known to be standing for the post with ID {post_id} in the {election}"
 msgstr "Sebemos que se presenta para el cargo con identificación {post_id} en la  {election}"
 
 #: candidates/diffs.py:67
 #, python-brace-format
-msgid ""
-"was known to be standing for the post with ID {post_id} in the {election}"
+msgid "was known to be standing for the post with ID {post_id} in the {election}"
 msgstr "Sabíamos que se presenta para el cargo con identificación {post_id} en la {election}"
 
 #: candidates/diffs.py:71
 #, python-brace-format
-msgid ""
-"is known to be standing in the constituency with MapIt URL {mapit_url} in "
-"the {election}"
+msgid "is known to be standing in the constituency with MapIt URL {mapit_url} in the {election}"
 msgstr ""
 
 #: candidates/diffs.py:73
 #, python-brace-format
-msgid ""
-"was known to be standing in the constituency with MapIt URL {mapit_url} in "
-"the {election}"
+msgid "was known to be standing in the constituency with MapIt URL {mapit_url} in the {election}"
 msgstr ""
 
 #: candidates/diffs.py:77 candidates/diffs.py:98
@@ -366,26 +349,20 @@ msgid "The party’s candidate page for this person"
 msgstr "Página del candidato en el sitio del partido"
 
 #: candidates/forms.py:185
-msgid ""
-"That date of birth could not be understood. Try using DD/MM/YYYY instead"
+msgid "That date of birth could not be understood. Try using DD/MM/YYYY instead"
 msgstr "Esa fecha de nacimiento no pudo ser entendida. Intente incluirla siguiendo el orden DD/MM/AAAA"
 
 #: candidates/forms.py:187
-msgid ""
-"That date of birth could not be understood. Try using MM/DD/YYYY instead"
+msgid "That date of birth could not be understood. Try using MM/DD/YYYY instead"
 msgstr ""
 
 #: candidates/forms.py:200
-msgid ""
-"The Twitter username must only consist of alphanumeric characters or "
-"underscore"
+msgid "The Twitter username must only consist of alphanumeric characters or underscore"
 msgstr "El usuario de twitter sólo debe contener caracteres alfanuméricos o guión abajo "
 
 #: candidates/forms.py:223
 #, python-brace-format
-msgid ""
-"If you mark the candidate as standing in the {election}, you must select a "
-"post"
+msgid "If you mark the candidate as standing in the {election}, you must select a post"
 msgstr "Si indicás que el candidato se presenta a {election}, debes seleccionar un cargo"
 
 #: candidates/forms.py:230
@@ -395,8 +372,7 @@ msgstr "Identificador de cargo (post ID {post_id}) desconocido"
 
 #: candidates/forms.py:237
 #, python-brace-format
-msgid ""
-"Could not find parties for the post with ID '{post_id}' in the {election}"
+msgid "Could not find parties for the post with ID '{post_id}' in the {election}"
 msgstr "No encontramos partidos presentandose para el cargo con ID '{post_id}' en la {election}"
 
 #: candidates/forms.py:249
@@ -453,9 +429,7 @@ msgstr "Fuente de información para este cambio ({0})"
 
 #: candidates/forms.py:461
 #, python-brace-format
-msgid ""
-"You can only edit data on {site_name} if you agree to this copyright "
-"assignment."
+msgid "You can only edit data on {site_name} if you agree to this copyright assignment."
 msgstr "Solo puede editar datos en {site_name} si está de acuerdo con los términos de derechos de autor"
 
 #: candidates/forms.py:485
@@ -520,17 +494,12 @@ msgstr "Cambio de nombre de '{0}' a '{1}' por el usuario {2} fue rechazado."
 
 #: candidates/models/auth.py:76
 #, python-brace-format
-msgid ""
-"That update isn't allowed because candidates for a locked post "
-"({post_label}) would be changed"
+msgid "That update isn't allowed because candidates for a locked post ({post_label}) would be changed"
 msgstr "Esa actualización no es permitida debido a que los candidatos para un cargo bloqueado ({post_label}) no pueden ser modificados"
 
 #: candidates/models/auth.py:89
 #, python-brace-format
-msgid ""
-"That update isn't allowed because you can't change the party (in this case "
-"from {old_party} to {new_party}) for a candidate in a locked post "
-"({post_label})"
+msgid "That update isn't allowed because you can't change the party (in this case from {old_party} to {new_party}) for a candidate in a locked post ({post_label})"
 msgstr "Esa actualización no es permitida porque no puede cambiar el partido (en este caso de  {old_party} a {new_party}) para un candidato en un cargo bloqueado ({post_label})"
 
 #: candidates/models/popolo_extra.py:190
@@ -552,10 +521,7 @@ msgid "(This list of candidates is currently <strong>unlocked</strong>.)"
 msgstr "(Esta lista de candidatos está <strong>abierta</strong>.)"
 
 #: candidates/templates/candidates/_candidates_for_post.html:74
-msgid ""
-"This list of candidates is now <strong>locked</strong>; you can still update"
-" contact details of candidates, but can't change the people standing in this"
-" constituency."
+msgid "This list of candidates is now <strong>locked</strong>; you can still update contact details of candidates, but can't change the people standing in this constituency."
 msgstr "Esta lista de candidatos está <strong>cerrada</strong>; aún se puede actualizar información de contacto de los candidatos, pero no se puede cambiar la gente que se presenta en esta circunscripción."
 
 #: candidates/templates/candidates/_candidates_for_post.html:83
@@ -605,9 +571,7 @@ msgstr "¡Este candidato ganó!"
 
 #: candidates/templates/candidates/_candidates_for_post.html:150
 #, python-format
-msgid ""
-"<strong>Oh no!</strong> We don’t know of any candidates in %(post_label)s "
-"for the %(election_name)s yet."
+msgid "<strong>Oh no!</strong> We don’t know of any candidates in %(post_label)s for the %(election_name)s yet."
 msgstr "<strong>¡Epa!</strong> Aún no conocemos a ningún candidato a %(post_label)s para la %(election_name)s."
 
 #: candidates/templates/candidates/_candidates_for_post.html:154
@@ -643,8 +607,7 @@ msgid "Is a candidate from an earlier election standing again?"
 msgstr "¿Un candidato de la elección anterior se presenta de nuevo?"
 
 #: candidates/templates/candidates/_candidates_for_post.html:201
-msgid ""
-"We don't know if these candidates from earlier elections are standing again"
+msgid "We don't know if these candidates from earlier elections are standing again"
 msgstr "No sabemos si estos candidatos de elecciones anteriores se presentan de nuevo"
 
 #: candidates/templates/candidates/_candidates_for_post.html:222
@@ -656,8 +619,7 @@ msgid "Not standing again"
 msgstr "No se presenta de nuevo"
 
 #: candidates/templates/candidates/_candidates_for_post.html:248
-msgid ""
-"These candidates from earlier elections are known not to be standing again"
+msgid "These candidates from earlier elections are known not to be standing again"
 msgstr "Estos candidatos de elecciones anteriores no se presentan de nuevo"
 
 #: candidates/templates/candidates/_candidates_for_post.html:268
@@ -666,9 +628,7 @@ msgstr "¡De hecho, sí se presentan!"
 
 #: candidates/templates/candidates/_edits_disallowed_message.html:2
 #, python-format
-msgid ""
-"Editing of data in %(site.name)s is now disabled, but if you have a "
-"correction, please email it to <a href=\"mailto:%(email)s\">%(email)s</a>"
+msgid "Editing of data in %(site.name)s is now disabled, but if you have a correction, please email it to <a href=\"mailto:%(email)s\">%(email)s</a>"
 msgstr "La edición de los datos en %(site.name)s está deshabilitada; si tiene alguna corrección, favor enviarla a <a href=\"mailto:%(email)s\">%(email)s</a>"
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:4
@@ -692,16 +652,12 @@ msgstr "<a href=\"%(person_edit_url)s\">Edite a %(person_name)s de nuevo</a>"
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:22
 #, python-format
-msgid ""
-"Add a candidate for <a href=\"%(needing_attention_url)s\">one of the posts "
-"with fewest candidates</a>"
+msgid "Add a candidate for <a href=\"%(needing_attention_url)s\">one of the posts with fewest candidates</a>"
 msgstr "Agregue un candidato para <a href=\"%(needing_attention_url)s\">uno de los cargos con menos candidatos</a>"
 
 #: candidates/templates/candidates/_person_update_call_to_action.html:29
 #, python-format
-msgid ""
-"<a href=\"%(person_create_url)s\">Add another candidate in the "
-"%(election_name)s</a>"
+msgid "<a href=\"%(person_create_url)s\">Add another candidate in the %(election_name)s</a>"
 msgstr "<a href=\"%(person_create_url)s\">Agregue otro candidato en la %(election_name)s</a>"
 
 #: candidates/templates/candidates/_photo-credit.html:8
@@ -719,9 +675,7 @@ msgid "They commented: “%(user_comment)s”."
 msgstr "El usuario comentó: “%(user_comment)s”."
 
 #: candidates/templates/candidates/_photo-credit.html:18
-msgid ""
-"The volunteer moderator who reviewed this photo picked a different "
-"justification for its use on the site, which was:"
+msgid "The volunteer moderator who reviewed this photo picked a different justification for its use on the site, which was:"
 msgstr "El moderador voluntario que revisó esta foto dió una justificación diferente para usarla en este sitio, la cual fue:"
 
 #: candidates/templates/candidates/_photo-credit.html:27
@@ -735,22 +689,16 @@ msgid "Notes about this image: “%(notes)s”."
 msgstr "Notas sobre esta imágen: “%(notes)s”."
 
 #: candidates/templates/candidates/_photo-expand-reason.html:3
-msgid ""
-"the photo is free of copyright restrictions (i.e. has explictly been placed "
-"in the public domain)"
+msgid "the photo is free of copyright restrictions (i.e. has explictly been placed in the public domain)"
 msgstr "la foto está libre de restricciones de copyright (por ejemplo, fué puesta explícitamente en el dominio público, o está publicada con licencia Creative Commons)"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:8
 #, python-format
-msgid ""
-"they have assigned the copyright of the image to %(site_owner)s so that we "
-"may use it on the site"
+msgid "they have assigned the copyright of the image to %(site_owner)s so that we may use it on the site"
 msgstr "Le han asignado el copyright de la imagen a %(site_owner)s para que podamos usarla en el sitio"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:13
-msgid ""
-"this photo is the candidate's profile on social media, or is used to promote"
-" their candidacy on an official candidate or party website"
+msgid "this photo is the candidate's profile on social media, or is used to promote their candidacy on an official candidate or party website"
 msgstr "Esta foto es del perfil del candidato en redes sociales, o es usada para promover su candidatura en un sitio oficial del candidato o del partido"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:18
@@ -783,37 +731,22 @@ msgstr "Acerca de este sitio"
 
 #: candidates/templates/candidates/about.html:17
 #, python-format
-msgid ""
-"Please email <a href=\"mailto:%(email)s\">%(email)s</a> with any feedback or"
-" bug reports."
+msgid "Please email <a href=\"mailto:%(email)s\">%(email)s</a> with any feedback or bug reports."
 msgstr "Por favor escriba a <a href=\"mailto:%(email)s\">%(email)s</a> con cualquier comentario o reporte de error que quiera realizar."
 
 #: candidates/templates/candidates/about.html:22
 #: elections/uk_general_election_2015/templates/candidates/about.html:26
-msgid ""
-"The source code for this site is <a "
-"href=\"https://github.com/mysociety/yournextrepresentative/\">available on "
-"GitHub</a>, and you can find a <a "
-"href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of "
-"known bugs</a> there as well."
+msgid "The source code for this site is <a href=\"https://github.com/mysociety/yournextrepresentative/\">available on GitHub</a>, and you can find a <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of known bugs</a> there as well."
 msgstr "El código fuente de este sitio está <a href=\"https://github.com/mysociety/yournextrepresentative/\">disponible en GitHub</a>, y podés encontrar la <a href=\"https://github.com/mysociety/yournextrepresentative/issues\">lista de errores conocidos</a> ahí también."
 
 #: candidates/templates/candidates/about.html:30
-msgid ""
-"This site was originally developed by Mark Longair (mySociety), Sym Roe "
-"(Democracy Club) and Zarino Zappia (mySociety), and <a "
-"href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many"
-" other contributors</a>, to whom we owe a debt of gratitude."
+msgid "This site was originally developed by Mark Longair (mySociety), Sym Roe (Democracy Club) and Zarino Zappia (mySociety), and <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many other contributors</a>, to whom we owe a debt of gratitude."
 msgstr "Este sitio fue originalmente desarrollado por Mark Longair (mySociety), Sym Roe (Democracy Club) y Zarino Zappia (mySociety), y  <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">muchos otros voluntarios más</a>, a quienes les debemos nuestra gratitud."
 
 #: candidates/templates/candidates/about.html:38
 #: elections/uk_general_election_2015/templates/candidates/about.html:49
 #, python-format
-msgid ""
-"You can use the data from this site, via the <a href=\"%(api_url)s\">API or "
-"CSV download</a>, under the terms of the Creative Commons license <a "
-"href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Attribution-"
-"ShareAlike (CC-BY-SA)</a> with the exception of:"
+msgid "You can use the data from this site, via the <a href=\"%(api_url)s\">API or CSV download</a>, under the terms of the Creative Commons license <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">Attribution-ShareAlike (CC-BY-SA)</a> with the exception of:"
 msgstr "Podés usar los datos de este sitio, a través de la <a href=\"%(api_url)s\">API o descargándolos en formato CSV</a>, bajo los términos de la licencia Creative Commons <a href=\"https://creativecommons.org/licenses/by-sa/4.0/deed.es\">Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0)</a> con la excepción de:"
 
 #: candidates/templates/candidates/about.html:47
@@ -822,20 +755,13 @@ msgstr "Logos de partidos"
 
 #: candidates/templates/candidates/about.html:48
 #: elections/uk_general_election_2015/templates/candidates/about.html:59
-msgid ""
-"Candidate photos, which are typically either submitted by the candidates "
-"themselves, or from sources where it seems reasonable that we might use them"
-" on this site, such as the party's official page for that candidate, or "
-"their social media profile picture."
+msgid "Candidate photos, which are typically either submitted by the candidates themselves, or from sources where it seems reasonable that we might use them on this site, such as the party's official page for that candidate, or their social media profile picture."
 msgstr "Fotos de los candidatos, las cuales típicamente son enviadas por los propios candidatos, o son recogidas de fuentes donde parece razonable que podamos usarlas, como la página oficial del candidato o su perfil en redes sociales."
 
 #: candidates/templates/candidates/about.html:56
 #: elections/uk_general_election_2015/templates/candidates/about.html:67
 #, python-format
-msgid ""
-"If the CC-BY-SA licence is problematic for you, but you feel that you have a"
-" worthwhile use of the data in mind, please <a "
-"href=\"mailto:%(email)s\">contact us</a> to discuss your situation further."
+msgid "If the CC-BY-SA licence is problematic for you, but you feel that you have a worthwhile use of the data in mind, please <a href=\"mailto:%(email)s\">contact us</a> to discuss your situation further."
 msgstr "Si la licencia CC-BY-SA le resulta problemática, por favor <a href=\"mailto:%(email)s\">contáctenos</a> para charlar sobre su situacion."
 
 #: candidates/templates/candidates/about.html:62
@@ -857,11 +783,7 @@ msgstr "Descargo de responsabilidades"
 #: candidates/templates/candidates/about.html:72
 #: elections/uk_general_election_2015/templates/candidates/about.html:95
 #, python-format
-msgid ""
-"The data on this website is crowd-sourced and may not be complete (or may "
-"contain inaccuracies). If you find an error, please either update the page "
-"yourself, or <a href=\"mailto:%(email)s\">email us</a> to report the "
-"problem."
+msgid "The data on this website is crowd-sourced and may not be complete (or may contain inaccuracies). If you find an error, please either update the page yourself, or <a href=\"mailto:%(email)s\">email us</a> to report the problem."
 msgstr "La información en este sitio es producto de una investigación colectiva (crowd-source) y puede no estar completa o contener inexactitudes. Si encuentra un error, por favor actualice la página usted mismo, o <a href=\"mailto:%(email)s\">envíenos un correo</a> para reportar el problema."
 
 #: candidates/templates/candidates/all-edits-disallowed.html:6
@@ -882,11 +804,7 @@ msgid "Using this data via the API"
 msgstr "Usando estos datos via la API"
 
 #: candidates/templates/candidates/api.html:16
-msgid ""
-"The data that's submitted to this site is available as a CSV/Excel download "
-"and programmatically via a RESTful web service called PopIt, which stores "
-"information about people and their positions in organizations. (You can <a "
-"href=\"http://popit.poplus.org/\">find out more about PopIt here</a>.)"
+msgid "The data that's submitted to this site is available as a CSV/Excel download and programmatically via a RESTful web service called PopIt, which stores information about people and their positions in organizations. (You can <a href=\"http://popit.poplus.org/\">find out more about PopIt here</a>.)"
 msgstr "Los datos enviados a este sitio están disponibles como un archivo CSV (formato Excel) para descargar y para su acceso automatizado mediante una API RESTful, de un webservice llamado PopIt, que almacena información sobre personas y sus posiciones en organizaciones. Podés  <a href=\"http://popit.poplus.org/\">saber más sobre PopIt en su sitio web</a>."
 
 #: candidates/templates/candidates/api.html:24
@@ -916,16 +834,12 @@ msgid "This API is a work in progress"
 msgstr "Esta API es una obra en progreso"
 
 #: candidates/templates/candidates/api.html:60
-msgid ""
-"This is an alpha version of the YourNextRepresentative API, which is likely "
-"to change in the near future."
+msgid "This is an alpha version of the YourNextRepresentative API, which is likely to change in the near future."
 msgstr "Esta es una versión alpha de la API, la cual es probable que cambie en el futuro próximo"
 
 #: candidates/templates/candidates/api.html:69
 #, python-format
-msgid ""
-"The browsable base URL of the site's read-only API is: <a "
-"href=\"%(base_api_url)s\">%(base_api_url)s</a>"
+msgid "The browsable base URL of the site's read-only API is: <a href=\"%(base_api_url)s\">%(base_api_url)s</a>"
 msgstr "La URL base consultable para la API del sitio es: <a href=\"%(base_api_url)s\">%(base_api_url)s</a>"
 
 #: candidates/templates/candidates/api.html:75
@@ -937,11 +851,7 @@ msgid "Find a Constituency ID"
 msgstr "Encontrar el ID de una circunscripción"
 
 #: candidates/templates/candidates/api.html:82
-msgid ""
-"In order to look up candidates for a constituency, you have to find the ID "
-"of that constituency. The IDs that we use for constituencies are the IDs for"
-" Westminster constituencies areas in another web service, <a "
-"href=\"http://mapit.mysociety.org\">MapIt</a>."
+msgid "In order to look up candidates for a constituency, you have to find the ID of that constituency. The IDs that we use for constituencies are the IDs for Westminster constituencies areas in another web service, <a href=\"http://mapit.mysociety.org\">MapIt</a>."
 msgstr "Con el fin de buscar candidatos para una circunscripción, usted tiene que encontrar el ID de ese cantón."
 
 #: candidates/templates/candidates/api.html:90
@@ -949,22 +859,15 @@ msgid "... from a postcode"
 msgstr "... de un código postal"
 
 #: candidates/templates/candidates/api.html:92
-msgid ""
-"Suppose you want to find the constituency for the postcode SW1A&nbsp;1AA, "
-"then you would make a GET request to the following URL:"
+msgid "Suppose you want to find the constituency for the postcode SW1A&nbsp;1AA, then you would make a GET request to the following URL:"
 msgstr "Suponga usted quiere encontrar la circunscripción para el código postal SW1A&nbsp;1AA, después usted podría intentar una búsqueda para el siguiente URL:"
 
 #: candidates/templates/candidates/api.html:102
-msgid ""
-"This <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">returns a JSON "
-"object</a>, wherein the constituency ID can be found at "
-"<tt>.shortcuts.WMC</tt>."
+msgid "This <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">returns a JSON object</a>, wherein the constituency ID can be found at <tt>.shortcuts.WMC</tt>."
 msgstr "Esto <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">regresará un objeto JSON </a>, en donde la identificación de la circunscripción puede ser encontrada como <tt>.shortcuts.WMC</tt>."
 
 #: candidates/templates/candidates/api.html:108
-msgid ""
-"There's more documentation available on <a href=\"http://mapit.mysociety.org"
-"/#api-by_postcode\">postcode lookups on the MapIt front-page</a>."
+msgid "There's more documentation available on <a href=\"http://mapit.mysociety.org/#api-by_postcode\">postcode lookups on the MapIt front-page</a>."
 msgstr "Hay más documentación disponible en <a href=\"http://mapit.mysociety.org/#api-by_postcode\">sobre búsquedas del código postal en la pagina principal de Maplt </a>."
 
 #: candidates/templates/candidates/api.html:114
@@ -972,24 +875,15 @@ msgid "... from a latitude / longitude or other coordinate"
 msgstr "... de una latitud / longitud u otra coordenada"
 
 #: candidates/templates/candidates/api.html:116
-msgid ""
-"You can look up constituencies in MapIt using a variety of coordinate "
-"systems. To give the most common example, you might have a WGS84 coordinate "
-"from a GPS or location API, in which can you should put the SRID 4326 in "
-"your lookup. For example, latitude 52.205083 and longitude 0.115194 could be"
-" looked up with:"
+msgid "You can look up constituencies in MapIt using a variety of coordinate systems. To give the most common example, you might have a WGS84 coordinate from a GPS or location API, in which can you should put the SRID 4326 in your lookup. For example, latitude 52.205083 and longitude 0.115194 could be looked up with:"
 msgstr "Usted puede buscar una circunscripción en Maplt usando una variedad de sistemas de coordenadas. Para dar el ejemplo más común, usted puede tener una coordenada WGS84 de un GPS o una ubicación API, en donde podrá poner la SRID 4326 en su búsqueda. Por ejemplo, latitud 52.205083 y longitud 0.115194  puede ser buscada como: "
 
 #: candidates/templates/candidates/api.html:128
-msgid ""
-"(Note that the longitude comes before the latitude, which might not be what "
-"you expect.) The only key in that object is the constituency ID."
+msgid "(Note that the longitude comes before the latitude, which might not be what you expect.) The only key in that object is the constituency ID."
 msgstr "(Note que la longitud viene después de la latitud, que puede no ser lo que usted espera.) La única clave en ese objeto es la identificación de la circunscripción."
 
 #: candidates/templates/candidates/api.html:134
-msgid ""
-"There's more documentation available on <a href=\"http://mapit.mysociety.org"
-"/#api-by_point\">point lookups on the MapIt front-page</a>."
+msgid "There's more documentation available on <a href=\"http://mapit.mysociety.org/#api-by_point\">point lookups on the MapIt front-page</a>."
 msgstr "Hay más documentación disponible en <a href=\"http://mapit.mysociety.org/#api-by_point\">sobre búsqueda de punto en la pagina principal de Maplt </a>."
 
 #: candidates/templates/candidates/api.html:140
@@ -997,18 +891,11 @@ msgid "... by selecting it from its name"
 msgstr "... seleccionando por su nombre"
 
 #: candidates/templates/candidates/api.html:142
-msgid ""
-"If you need to produce a list of all constituencies (e.g. for a select box) "
-"and allow the user to pick one, you can get a list of all Westminster "
-"constituencies in the UK from this request:"
+msgid "If you need to produce a list of all constituencies (e.g. for a select box) and allow the user to pick one, you can get a list of all Westminster constituencies in the UK from this request:"
 msgstr "Si necesita producir una lista de todas las circunscripciones (por ejemplo para una caja de selección) y permitir a los usuarios elegir uno, puede tomar la lista del distrito electoral de Westminster en el UK para esta solicitud:"
 
 #: candidates/templates/candidates/api.html:152
-msgid ""
-"The <a href=\"http://mapit.mysociety.org/areas/WMC\">returned data from that"
-" request</a> has the constituency ID as its keys; the values are objects "
-"that include (among other things) a <tt>name</tt> element that gives you the"
-" official name of the constituency."
+msgid "The <a href=\"http://mapit.mysociety.org/areas/WMC\">returned data from that request</a> has the constituency ID as its keys; the values are objects that include (among other things) a <tt>name</tt> element that gives you the official name of the constituency."
 msgstr "El <a href=\"http://mapit.mysociety.org/areas/WMC\">dato resultante de esa búsqueda </a> tiene la identificación de la circunscripción como su clave; los valores son objetos que incluyen (entre otras cosas) un <tt>nombre</tt> elemento que te da el nombre oficial de la circunscripción"
 
 #: candidates/templates/candidates/api.html:160
@@ -1017,20 +904,11 @@ msgstr "Encontrar candidatos para una circunscripción"
 
 #: candidates/templates/candidates/api.html:163
 #, python-format
-msgid ""
-"You can request all the candidates in that constituency by querying posts "
-"with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and"
-" West Norwood, which has the ID <tt>65808</tt>, you would make the request: "
-"<a "
-"href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
+msgid "You can request all the candidates in that constituency by querying posts with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and West Norwood, which has the ID <tt>65808</tt>, you would make the request: <a href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
 msgstr "Puede solicitar todos los candidatos en esa circunscripción consultando los cargos con el <tt>extra_slug</tt> parámetro de filtro. Por ejemplo, para Dulwich y West Norwood, que tienen el ID <tt>65808</tt>, harías la solicitud: <a href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
 
 #: candidates/templates/candidates/api.html:173
-msgid ""
-"Each of the <tt>memberships</tt> in that reponse links to a person who is a "
-"candidate in that constituency for any known election.  The "
-"<tt>election</tt> property of each membership tells you which election that "
-"candidacy is for."
+msgid "Each of the <tt>memberships</tt> in that reponse links to a person who is a candidate in that constituency for any known election.  The <tt>election</tt> property of each membership tells you which election that candidacy is for."
 msgstr "Cada una de las <tt>membresías</tt> en esa respuesta enlaza a una persona que es candidata en esa circunscripción para cualquier elección conocida. La propiedad de <tt>elección</tt>  de cada membresía te dice para cuál elección es esa candidatura."
 
 #: candidates/templates/candidates/areas-of-type.html:10
@@ -1065,22 +943,13 @@ msgstr "Acuerdo de usuario de %(site_name)s"
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:22
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:22
 #, python-format
-msgid ""
-"Before you carry on to edit data in %(site_name)s, we need you to agree that"
-" your contributions to this site (with the exception of photo uploads) are "
-"owned by %(copyright_holder)s. In return, we agree to make the complete "
-"database available under an open licence such as <a "
-"href=\"http://creativecommons.org/licenses/by-sa/4.0/\">CC-BY-SA</a> or "
-"remove copyright restrictions by releasing into the public domain (<a "
-"href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>)."
+msgid "Before you carry on to edit data in %(site_name)s, we need you to agree that your contributions to this site (with the exception of photo uploads) are owned by %(copyright_holder)s. In return, we agree to make the complete database available under an open licence such as <a href=\"http://creativecommons.org/licenses/by-sa/4.0/\">CC-BY-SA</a> or remove copyright restrictions by releasing into the public domain (<a href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>)."
 msgstr "Antes de continuar a editar los datos en %(site_name)s, necesitamos que esté de acuerdo a que sus contribuciones al sitio (con la excepción de fotos subidas) sean propiedad de %(copyright_holder)s. A cambio, nosotros acordamos poner la base de datos a disposición bajo una licencia abierta como <a href=\"http://creativecommons.org/licenses/by-sa/4.0/\">CC-BY-SA</a>, o remover las restricciones de copyright liberándola al dominio público (<a href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>)."
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:42
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:42
 #, python-format
-msgid ""
-"I assign the copyright of my contributions to %(site_name)s (apart from "
-"photo uploads) to %(copyright_holder)s."
+msgid "I assign the copyright of my contributions to %(site_name)s (apart from photo uploads) to %(copyright_holder)s."
 msgstr "Asigno los derechos de autor de mis contribuciones a %(site_name)s (aparte de fotos subidas) a %(copyright_holder)s."
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:49
@@ -1091,10 +960,7 @@ msgstr "Continuar"
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:53
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:53
 #, python-format
-msgid ""
-"Otherwise you can <a href=\"%(url)s\">log out</a>. Please do <a "
-"href=\"mailto:%(email)s\">email us</a> if you have any questions about this "
-"agreement."
+msgid "Otherwise you can <a href=\"%(url)s\">log out</a>. Please do <a href=\"mailto:%(email)s\">email us</a> if you have any questions about this agreement."
 msgstr "De lo contrario puede <a href=\"%(url)s\">cerrar sesión</a>. Por favor <a href=\"mailto:%(email)s\">escríbanos</a> si tiene preguntas sobre este acuerdo."
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:61
@@ -1104,12 +970,7 @@ msgstr "¿Por qué le pedimos que acepte esto?"
 
 #: candidates/templates/candidates/ask-for-copyright-assignment.html:63
 #, python-format
-msgid ""
-"This is the simplest way to ensure that we can make this data as widely "
-"available as possible while preventing the hard work of contributors to "
-"%(site_name)s being unfairly co-opted by companies building closed candidate"
-" databases. This also allows us the flexibility to release the data under "
-"different open licenses in the future."
+msgid "This is the simplest way to ensure that we can make this data as widely available as possible while preventing the hard work of contributors to %(site_name)s being unfairly co-opted by companies building closed candidate databases. This also allows us the flexibility to release the data under different open licenses in the future."
 msgstr "Esta es la forma más simple de asegurarnos de que podemos hacer esta información tan ampliamente disponible como sea posible y al mismo tiempo prevenir que el trabajo duro de nuestros voluntarios en %(site_name)s sea injustamente co-optado por compañías construyendo bases de datos cerradas. Esto también nos permite la flexibilidad de lanzar los datos bajo diversas licencias abiertas en el futuro. "
 
 #: candidates/templates/candidates/candidacy-create.html:6
@@ -1120,10 +981,7 @@ msgstr "¿Cómo sabes que %(name)s se presenta?"
 
 #: candidates/templates/candidates/candidacy-create.html:14
 #, python-format
-msgid ""
-"Before updating our records we need to know the source for your information "
-"that %(name)s is standing for election to the post of %(post_label)s in the "
-"%(election_name)s."
+msgid "Before updating our records we need to know the source for your information that %(name)s is standing for election to the post of %(post_label)s in the %(election_name)s."
 msgstr "Antes de actualizar nuestros archivos necesitamos saber la fuente para su información de que %(name)s se está presentando para la elección del cargo %(post_label)s en la %(election_name)s."
 
 #: candidates/templates/candidates/candidacy-delete.html:6
@@ -1134,10 +992,7 @@ msgstr "Cómo sabés que %(name)s no se presenta?"
 
 #: candidates/templates/candidates/candidacy-delete.html:14
 #, python-format
-msgid ""
-"Before updating our records we need to know the source for your information "
-"that %(name)s <strong>isn’t</strong> standing for election to the post of "
-"%(post_label)s in the %(election_name)s."
+msgid "Before updating our records we need to know the source for your information that %(name)s <strong>isn’t</strong> standing for election to the post of %(post_label)s in the %(election_name)s."
 msgstr "Antes de actualizar nuestros archivos necesitamos saber la fuente de su información de que %(name)s <strong>no está</strong> presentándose para la elección del cargo de %(post_label)s en la %(election_name)s."
 
 #: candidates/templates/candidates/constituencies-declared.html:6
@@ -1189,9 +1044,7 @@ msgid "All posts in the %(election_name)s"
 msgstr "Todos los cargos en la %(election_name)s"
 
 #: candidates/templates/candidates/constituencies.html:16
-msgid ""
-"Follow one of the links below to see the known candidates for that "
-"constituency:"
+msgid "Follow one of the links below to see the known candidates for that constituency:"
 msgstr "Sigue uno de los enlaces abajo para ver los candidatos de esa circunscripción:"
 
 #: candidates/templates/candidates/constituency.html:11
@@ -1213,8 +1066,7 @@ msgstr "Encuentre más información en %(site_name)s"
 
 #: candidates/templates/candidates/constituency.html:37
 #, python-format
-msgid ""
-"Candidates for <span id=\"constituency-name\">%(post_label_shorter)s</span>"
+msgid "Candidates for <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 msgstr "Candidatos a <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 
 #: candidates/templates/candidates/frontpage.html:10
@@ -1228,151 +1080,125 @@ msgid "Find candidates to be your next representative"
 msgstr "Encontrá tus candidatos locales"
 
 #: candidates/templates/candidates/frontpage.html:36
-msgid ""
-"Don’t pay for a candidate database sold by a data vendor — it’s a waste of "
-"money."
+msgid "Don’t pay for a candidate database sold by a data vendor — it’s a waste of money."
 msgstr "No le pagues a un proveedor de bases de datos -- es un desperdicio de dinero."
 
 #: candidates/templates/candidates/frontpage.html:47
-#: elections/ar_elections_2015/templates/candidates/frontpage.html:48
 #: elections/cr/templates/cr/frontpage.html:48
+#: elections/uk_general_election_2015/templates/candidates/finder.html:48
+#, fuzzy
+#| msgid "Current Elections"
+msgid "Use my current location"
+msgstr "Elecciones actuales"
+
+#: candidates/templates/candidates/frontpage.html:47
+#: elections/cr/templates/cr/frontpage.html:48
+#: elections/uk_general_election_2015/templates/candidates/finder.html:48
+msgid "Getting location…"
+msgstr ""
+
+#: candidates/templates/candidates/frontpage.html:48
+#: elections/ar_elections_2015/templates/candidates/frontpage.html:48
+#: elections/cr/templates/cr/frontpage.html:49
+#: elections/jamaica/templates/cr/frontpage.html:22
 msgid "Show candidates"
 msgstr "Mostrar candidatos"
 
-#: candidates/templates/candidates/frontpage.html:58
+#: candidates/templates/candidates/frontpage.html:59
 msgid "This is a crowd-sourced database of election candidates."
 msgstr "Esta base de datos de candidatos es producto de una investigación colectiva y está disponible como datos estructurados, lo que permite hacer otras aplicaciones con esta información. <a href=\"%(api_url)s\">Obtené los datos ahora</a>, o <a href=\"%(tasks_url)s\">colaborá con más detalles de los candidatos.</a>"
 
-#: candidates/templates/candidates/frontpage.html:62
+#: candidates/templates/candidates/frontpage.html:63
 #: elections/cr/templates/cr/frontpage.html:22
 #, python-format
-msgid ""
-"The database is transparently sourced and available as structured data, "
-"suitable for building other election websites. <a href=\"%(api_url)s\">Get "
-"the data now</a>, or <a href=\"%(tasks_url)s\">help by contributing new "
-"candidate details.</a>"
+msgid "The database is transparently sourced and available as structured data, suitable for building other election websites. <a href=\"%(api_url)s\">Get the data now</a>, or <a href=\"%(tasks_url)s\">help by contributing new candidate details.</a>"
 msgstr "Esta base de datos tiene fuentes transparentes y está disponible como datos estructurados, lo que permite hacer otras aplicaciones con esta información. <a href=\"%(api_url)s\">Obtené los datos ahora</a>, o <a href=\"%(tasks_url)s\">colaborá con más detalles de los candidatos.</a>"
 
-#: candidates/templates/candidates/frontpage.html:76
+#: candidates/templates/candidates/frontpage.html:77
 msgid "Recent changes"
 msgstr "Cambios recientes"
 
-#: candidates/templates/candidates/frontpage.html:83
+#: candidates/templates/candidates/frontpage.html:84
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> created <a href=\"%(person_url)s\">a new "
-"candidate</a> <span class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> created <a href=\"%(person_url)s\">a new candidate</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> agregó <a href=\"%(person_url)s\">un nuevo candidato</a>, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:89
+#: candidates/templates/candidates/frontpage.html:90
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> is creating a new candidate <span "
-"class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> is creating a new candidate <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> está agregando un nuevo candidato, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:95
+#: candidates/templates/candidates/frontpage.html:96
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> merged another candidate into <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> merged another candidate into <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> unió otro candidato con <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:101
+#: candidates/templates/candidates/frontpage.html:102
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> uploaded a photo of <a "
-"href=\"%(person_url)s\">%(person_name)s</a> for moderation <span "
-"class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> uploaded a photo of <a href=\"%(person_url)s\">%(person_name)s</a> for moderation <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> subió una foto de <a href=\"%(person_url)s\">%(person_name)s</a> para su moderación <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:107
+#: candidates/templates/candidates/frontpage.html:108
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> approved an uploaded photo of <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> approved an uploaded photo of <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> aprobó una foto subida a <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:113
+#: candidates/templates/candidates/frontpage.html:114
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> rejected an uploaded photo of <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> rejected an uploaded photo of <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> rechazó una foto subida de <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:119
+#: candidates/templates/candidates/frontpage.html:120
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> reverted to an earlier version of <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> reverted to an earlier version of <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> revirtió a una versión anterior de <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:125
+#: candidates/templates/candidates/frontpage.html:126
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> confirmed candidacy for <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> confirmed candidacy for <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> confirmó la candidatura de <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:131
+#: candidates/templates/candidates/frontpage.html:132
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> removed candidacy for <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> removed candidacy for <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> removió la candidaura de <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:137
+#: candidates/templates/candidates/frontpage.html:138
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> locked a constituency <span "
-"class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> locked a constituency <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> cerró una circunscripción, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:141
+#: candidates/templates/candidates/frontpage.html:142
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> unlocked a constituency <span "
-"class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> unlocked a constituency <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong>abrió una circunscripción, <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:145
+#: candidates/templates/candidates/frontpage.html:146
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> marked <a "
-"href=\"%(person_url)s\">%(person_name)s</a> as the winner <span "
-"class=\"when\">%(when)s ago</span>"
+msgid "User <strong>%(username)s</strong> marked <a href=\"%(person_url)s\">%(person_name)s</a> as the winner <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> marcó a <a href=\"%(person_url)s\">%(person_name)s</a> como el ganador <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:151
+#: candidates/templates/candidates/frontpage.html:152
 #, python-format
-msgid ""
-"User <strong>%(username)s</strong> updated <a "
-"href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
-"ago</span>"
+msgid "User <strong>%(username)s</strong> updated <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "El usuario <strong>%(username)s</strong> actualizó a <a href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">hace %(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:160
+#: candidates/templates/candidates/frontpage.html:161
 msgid "Show more changes…"
 msgstr "Ver más cambios..."
 
-#: candidates/templates/candidates/frontpage.html:163
+#: candidates/templates/candidates/frontpage.html:164
 msgid "Top users this week"
 msgstr "TOP de contribuidores semanal"
 
-#: candidates/templates/candidates/frontpage.html:167
+#: candidates/templates/candidates/frontpage.html:168
 #, python-format
 msgid "%(count)s edit"
 msgid_plural "%(count)s edits"
 msgstr[0] "%(count)s edición"
 msgstr[1] "%(count)s ediciones"
 
-#: candidates/templates/candidates/frontpage.html:172
+#: candidates/templates/candidates/frontpage.html:173
 msgid "Show full leaderboard…"
 msgstr "Mostrar a los mayores contribuidores..."
 
@@ -1393,22 +1219,17 @@ msgstr "Número de ediciones"
 #: candidates/templates/candidates/ordered-party-list.html:11
 #: candidates/templates/candidates/ordered-party-list.html:34
 #, python-format
-msgid ""
-"Party list of %(party_name)s for %(post_label_shorter)s in the "
-"%(election_name)s"
+msgid "Party list of %(party_name)s for %(post_label_shorter)s in the %(election_name)s"
 msgstr "Lista del partido %(party_name)s para %(post_label_shorter)s en las %(election_name)s"
 
 #: candidates/templates/candidates/ordered-party-list.html:12
 #, python-format
-msgid ""
-"Party list of %(party_name)s for %(post_label_shorter)s in the %(election)s"
+msgid "Party list of %(party_name)s for %(post_label_shorter)s in the %(election)s"
 msgstr "Lista del candidatos de partido %(party_name)s para %(post_label_shorter)s en %(election)s"
 
 #: candidates/templates/candidates/ordered-party-list.html:37
 #, python-format
-msgid ""
-"Party list of %(party_name)s for <span id=\"constituency-"
-"name\">%(post_label_shorter)s</span>"
+msgid "Party list of %(party_name)s for <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 msgstr "Lista del partido %(party_name)s para <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 
 #: candidates/templates/candidates/ordered-party-list.html:47
@@ -1418,9 +1239,7 @@ msgstr "Candidatos de %(party_name)s para <a href=\"%(post_url)s\">%(post_label
 
 #: candidates/templates/candidates/ordered-party-list.html:87
 #, python-format
-msgid ""
-"<strong>Oh no!</strong> We don’t know of any candidates from %(party.name)s "
-"for %(post_label)s for the %(election_name)s yet."
+msgid "<strong>Oh no!</strong> We don’t know of any candidates from %(party.name)s for %(post_label)s for the %(election_name)s yet."
 msgstr "<strong>Oh no!</strong> No tenemos información de ningún candidato de %(party.name)s para %(post_label)s para la %(election_name)s yet."
 
 #: candidates/templates/candidates/party-list.html:6
@@ -1439,8 +1258,7 @@ msgstr "Todos los partidos con candidatos que se presentan en %(election_name)s"
 
 #: candidates/templates/candidates/party.html:8
 #, python-format
-msgid ""
-"%(party_name)s &#8212; Candidates by constituency for the %(election_name)s"
+msgid "%(party_name)s &#8212; Candidates by constituency for the %(election_name)s"
 msgstr "%(party_name)s &#8212;Candidatos por el cantón para la %(election_name)s"
 
 #: candidates/templates/candidates/party.html:11
@@ -1450,37 +1268,26 @@ msgstr "Candidatos de %(party_name)s para %(election_name)s"
 
 #: candidates/templates/candidates/party.html:22
 #, python-format
-msgid ""
-"This shows all the constituencies that have independent candidates standing "
-"in them at the %(election_name)s"
+msgid "This shows all the constituencies that have independent candidates standing in them at the %(election_name)s"
 msgstr "Aquí se muestran todas las circunscripciones en donde se presentan candidatos independientes en la %(election_name)s"
 
 #: candidates/templates/candidates/party.html:28
-msgid ""
-"The Speaker of the House of Commons stands as a \"The Speaker seeking re-"
-"election\" rather than a particular party at a general election; for more "
-"information, please see <a href=\"http://www.parliament.uk/about/faqs/house-"
-"of-commons-faqs/speakers-election/\">Parliament's website</a>."
+msgid "The Speaker of the House of Commons stands as a \"The Speaker seeking re-election\" rather than a particular party at a general election; for more information, please see <a href=\"http://www.parliament.uk/about/faqs/house-of-commons-faqs/speakers-election/\">Parliament's website</a>."
 msgstr "El Portavoz de la Cámara de los Comunes de presenta como un \"Portavoz buscando re elección\" más que un partido particular para la elección general; para más información por favor ver  <a href=\"http://www.parliament.uk/about/faqs/house-of-commons-faqs/speakers-election/\">Parliament's website</a>."
 
 #: candidates/templates/candidates/party.html:36
 #, python-format
-msgid ""
-"%(party_name)s is on the Electoral Commission's register for %(register)s."
+msgid "%(party_name)s is on the Electoral Commission's register for %(register)s."
 msgstr "%(party_name)s está en el registro del Tribunal Supremos de Eleccionesl para %(register)s."
 
 #: candidates/templates/candidates/party.html:38
 #, python-format
-msgid ""
-"You can find more data about the party's registration at the <a "
-"href=\"%(ec_url)s\">Electoral Commission page for %(party_name)s</a>."
+msgid "You can find more data about the party's registration at the <a href=\"%(ec_url)s\">Electoral Commission page for %(party_name)s</a>."
 msgstr "Podés encontrar más información sobre la registración del partido en la <a href=\"%(ec_url)s\">página del Tribunal Supremo de Eleccionesl para %(party_name)s</a>."
 
 #: candidates/templates/candidates/party.html:58
 #, python-format
-msgid ""
-"<a href=\"%(person_url)s\">%(name)s</a> is standing in <a "
-"href=\"%(post_url)s\">%(post_short_label)s</a>"
+msgid "<a href=\"%(person_url)s\">%(name)s</a> is standing in <a href=\"%(post_url)s\">%(post_short_label)s</a>"
 msgstr "<a href=\"%(person_url)s\">%(name)s</a> está compitiendo por <a href=\"%(post_url)s\">%(post_short_label)s</a>"
 
 #: candidates/templates/candidates/party.html:68
@@ -1490,9 +1297,7 @@ msgstr "Sin candidato en:<a href=\"%(post_url)s\">%(post_short_label)s</a>"
 
 #: candidates/templates/candidates/party.html:77
 #, python-format
-msgid ""
-"We don't know of any %(party_name)s candidates in %(post_group)s in the "
-"%(election_name)s so far."
+msgid "We don't know of any %(party_name)s candidates in %(post_group)s in the %(election_name)s so far."
 msgstr "Por el momento, no conocemos ningun candidato del %(party_name)s para %(post_group)s en la %(election_name)s."
 
 #: candidates/templates/candidates/person-edit.html:9
@@ -1548,9 +1353,7 @@ msgid "Additional information:"
 msgstr "Información adicional:"
 
 #: candidates/templates/candidates/person-edit.html:252
-msgid ""
-"<strong>You forgot to reference a source!</strong> Can you show us "
-"<em>where</em> you got this information?"
+msgid "<strong>You forgot to reference a source!</strong> Can you show us <em>where</em> you got this information?"
 msgstr "<strong>¡Te olvidaste de citar una fuente!</strong>¿Nos podés contar <em>dónde</em> obtuviste esta información?"
 
 #: candidates/templates/candidates/person-edit.html:254
@@ -1562,10 +1365,7 @@ msgid "Thanks for helping out!"
 msgstr "¡Gracias por tu colaboración!"
 
 #: candidates/templates/candidates/person-edit.html:271
-msgid ""
-"Please make sure you read our <a href=\"https://docs.google.com/document/d"
-"/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing "
-"fields</a>."
+msgid "Please make sure you read our <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing fields</a>."
 msgstr "Te recomendamos leer nuestra  <a href=\"https://docs.google.com/document/d/18xxDXwRxMB48oq1qOhRjcWnUyRRRdVOyx80q0OAEFLw/edit\">guía para voluntarios y contribuidores.</a>"
 
 #: candidates/templates/candidates/person-edit.html:277
@@ -1574,9 +1374,7 @@ msgstr "¿Intentás subir una foto?"
 
 #: candidates/templates/candidates/person-edit.html:279
 #, python-format
-msgid ""
-"There’s a separate page for <a href=\"%(url)s\">uploading a photo of "
-"%(name)s</a>."
+msgid "There’s a separate page for <a href=\"%(url)s\">uploading a photo of %(name)s</a>."
 msgstr "Hay una página especial para <a href=\"%(url)s\">subir fotos de %(name)s</a>."
 
 #: candidates/templates/candidates/person-edit.html:287
@@ -1681,9 +1479,7 @@ msgstr "%(name)s no fue electo"
 
 #: candidates/templates/candidates/person-view.html:105
 #, python-format
-msgid ""
-"We don’t have an email address for %(name)s, <a href=\"%(url)s\">help out by"
-" adding one</a>!"
+msgid "We don’t have an email address for %(name)s, <a href=\"%(url)s\">help out by adding one</a>!"
 msgstr "No tenemos la dirección de email de %(name)s, ¡<a href=\"%(url)s\">Ayudanos agregándola</a>!"
 
 #: candidates/templates/candidates/person-view.html:114
@@ -1771,8 +1567,7 @@ msgid "Our database is built by people like you."
 msgstr "Nuestra base de datos la construye gente como vos."
 
 #: candidates/templates/candidates/person-view.html:233
-msgid ""
-"Please do add extra details about this candidate – it only takes a moment."
+msgid "Please do add extra details about this candidate – it only takes a moment."
 msgstr "Por favor agregá detalles extra de este candidato - sólo toma un momento."
 
 #: candidates/templates/candidates/person-view.html:235
@@ -1793,9 +1588,7 @@ msgstr "API abierta en JSON:"
 
 #: candidates/templates/candidates/person-view.html:251
 #, python-format
-msgid ""
-"More details about getting <a href=\"%(api_url)s\">the data</a> and <a "
-"href=\"%(about_url)s\">its license</a>."
+msgid "More details about getting <a href=\"%(api_url)s\">the data</a> and <a href=\"%(about_url)s\">its license</a>."
 msgstr "Más detalles sobre obtener <a href=\"%(api_url)s\">los datos</a> y <a href=\"%(about_url)s\">su licencia</a>."
 
 #: candidates/templates/candidates/popit_down.html:7
@@ -1813,9 +1606,7 @@ msgid "Sorry, %(site_name)s is temporarily unavailable"
 msgstr "Disculpas, %(site_name)s no esta disponible temporalmente"
 
 #: candidates/templates/candidates/popit_down.html:26
-msgid ""
-"This usually means that we’re having to do some brief maintenance, and the "
-"site will be back soon."
+msgid "This usually means that we’re having to do some brief maintenance, and the site will be back soon."
 msgstr "Esto normalmente significa que estamos haciendo algo de mantenimiento, y el sitio va a estar disponible de nuevo muy pronto."
 
 #: candidates/templates/candidates/posts.html:6
@@ -1829,14 +1620,13 @@ msgstr "Todos los cargos a elegirse en las elecciones actuales"
 
 #: candidates/templates/candidates/posts.html:14
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:14
-msgid ""
-"Follow one of the links below to see the known candidates for that post:"
+msgid "Follow one of the links below to see the known candidates for that post:"
 msgstr "Sigue uno de los enlaces abajo para ver los candidatos para ese cargo:"
 
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
 #: elections/ar_elections_2015/templates/base.html:112
-#: mysite/templates/generic_base.html:126
+#: mysite/templates/generic_base.html:142
 msgid "Privacy policy"
 msgstr "Política de privacidad"
 
@@ -1855,29 +1645,20 @@ msgid "This site is run by %(site_owner)s."
 msgstr "Este sitio es mantenido por %(site_owner)s."
 
 #: candidates/templates/candidates/privacy.html:28
-msgid ""
-"We make the following promises about your personal information as a user of "
-"the site:"
+msgid "We make the following promises about your personal information as a user of the site:"
 msgstr "Hacemos las siguientes promesas sobre tu información personal como usuario de este sitio:"
 
 #: candidates/templates/candidates/privacy.html:34
-msgid ""
-"We will not sell or distribute your email address or other personal "
-"information."
+msgid "We will not sell or distribute your email address or other personal information."
 msgstr "No venderemos ni distribuiremos tu dirección de correo electrónico u otra información personal."
 
 #: candidates/templates/candidates/privacy.html:38
-msgid ""
-"We will gladly show you the personal data we store about you in order to run"
-" the website."
+msgid "We will gladly show you the personal data we store about you in order to run the website."
 msgstr "Te mostraremos sin problemas los datos que guardamos sobre vos para hacer funcionar el sitio."
 
 #: candidates/templates/candidates/privacy.html:44
 #, python-format
-msgid ""
-"We may use your email address to contact you about your use of the site if "
-"it's problematic (or particularly helpful!), or with occasional "
-"announcements about %(site_name)s and other %(site_owner)s projects."
+msgid "We may use your email address to contact you about your use of the site if it's problematic (or particularly helpful!), or with occasional announcements about %(site_name)s and other %(site_owner)s projects."
 msgstr "Si no te molesta, a lo mejor utilicemos tu correo electrónico para contactarte sobre tu experiencia con el sitio o bien con anuncios ocasionales sobre  %(site_name)s y otros proyectos de %(site_owner)s."
 
 #: candidates/templates/candidates/privacy.html:51
@@ -1885,27 +1666,15 @@ msgid "Details"
 msgstr "Detalles"
 
 #: candidates/templates/candidates/privacy.html:53
-msgid ""
-"As well as your login details, we store your IP address along with any "
-"changes you make to the data on the site.  All this information is "
-"accessible to administrators of the site."
+msgid "As well as your login details, we store your IP address along with any changes you make to the data on the site.  All this information is accessible to administrators of the site."
 msgstr "Además de tu nombre de usuario, almacenamos tu dirección IP junto con cualquier cambio que hacés a los datos en el sitio. Esta información es accesible a los administradores del sitio."
 
 #: candidates/templates/candidates/privacy.html:59
-msgid ""
-"Please note that this policy refers to the personal information arising from"
-" creating a login on the site, not the personal information about candidates"
-" for elections - the reason for the site to exist is to make information "
-"about those candidates available to members of the public and website "
-"developers so that they can find out more about those candidates, their "
-"promises and policy positions."
+msgid "Please note that this policy refers to the personal information arising from creating a login on the site, not the personal information about candidates for elections - the reason for the site to exist is to make information about those candidates available to members of the public and website developers so that they can find out more about those candidates, their promises and policy positions."
 msgstr "Por favor notar que estos términos se refieren a la información personal que surje de crear una cuenta en este sitio, no a la información personal de candidatos a las elecciones - la razón por la cual el sitio existe es para hacer disponible información sobre los candidatos al público y a otros desarrolladores de software para que puedan informarse mejor sobre esos candidatos, sus promesas y sus posiciones políticas."
 
 #: candidates/templates/candidates/privacy.html:69
-msgid ""
-"We also use Google Analytics to aggregate and track data about usage of the "
-"site; you can use <a href=\"https://tools.google.com/dlpage/gaoptout/\">a "
-"browser plugin to opt out of having data collected by Google Analytics</a>."
+msgid "We also use Google Analytics to aggregate and track data about usage of the site; you can use <a href=\"https://tools.google.com/dlpage/gaoptout/\">a browser plugin to opt out of having data collected by Google Analytics</a>."
 msgstr "También usamos Google Analytics para recolectar y registrar datos sobre el uso del sitio; podés usar <a href=\"https://tools.google.com/dlpage/gaoptout/\">una extensión de navegador para evitar que Google Analytics te registre</a>."
 
 #: candidates/templates/candidates/recent-changes.html:6
@@ -1963,12 +1732,36 @@ msgstr "Si,%(name)s  (%(party)s) ganó en %(constituency_name)s"
 
 #: candidates/templates/candidates/update-disallowed.html:16
 #, python-format
-msgid ""
-"As a precaution, this update hasn't been allowed, but details have been "
-"emailed to the team of %(site.name)s volunteers; they will apply the change "
-"after checking it. If you have any questions about this, please email <a "
-"href=\"%(email)s\">%(email)s</a>."
+msgid "As a precaution, this update hasn't been allowed, but details have been emailed to the team of %(site.name)s volunteers; they will apply the change after checking it. If you have any questions about this, please email <a href=\"%(email)s\">%(email)s</a>."
 msgstr "Como precaución, esta actualización no ha sido aprobada y los detalles han sido enviados al equipo de voluntarios de %(site.name)s; ellos aplicarán el cambio después de revisarlo. Si tiene alguna pregunta sobre esto, por favor escriba a <a href=\"%(email)s\">%(email)s</a>."
+
+#: candidates/templates/search/search.html:7
+#, fuzzy
+#| msgid "Show candidates"
+msgid "Search candidates"
+msgstr "Mostrar candidatos"
+
+#: candidates/templates/search/search.html:10
+#: mysite/templates/generic_base.html:99
+#, fuzzy
+#| msgid "Add a new candidate"
+msgid "Find a candidate…"
+msgstr "Agregar un candidato nuevo"
+
+#: candidates/templates/search/search.html:11
+#: mysite/templates/generic_base.html:100 tasks/templates/tasks/field.html:42
+msgid "Search"
+msgstr "Buscar"
+
+#: candidates/templates/search/search.html:14
+msgid "Results"
+msgstr ""
+
+#: candidates/templates/search/search.html:37
+#, fuzzy
+#| msgid "No election data found."
+msgid "No results found."
+msgstr "No hay datos electorales."
 
 #: candidates/templatetags/metadescription.py:22
 #: candidates/templatetags/metadescription.py:27
@@ -1987,8 +1780,7 @@ msgstr "%(name)s se presentó por el partido %(party)s para %(post)s en %(electi
 
 #: candidates/templatetags/metadescription.py:28
 #, python-format
-msgid ""
-"%(name)s is standing as an independent candidate in %(post)s in %(election)s"
+msgid "%(name)s is standing as an independent candidate in %(post)s in %(election)s"
 msgstr "%(name)s se presenta como candidato indpendiente para %(post)s en %(election)s"
 
 #: candidates/templatetags/metadescription.py:30
@@ -2041,6 +1833,16 @@ msgstr "Disculpenos, a ocurrido un error. Invalid data POSTed to ConstituencyLoc
 msgid "Result recorded in error, retracting"
 msgstr "Este resultado fue ingresado por error, retractándose"
 
+#: candidates/views/frontpage.py:45
+#, fuzzy, python-brace-format
+#| msgid "The area lookup returned an error: '{error}'"
+msgid "The area lookup returned an error: '{0}'"
+msgstr "Disculpas, la búsqueda de ubicación dió un error: '{error}'"
+
+#: candidates/views/frontpage.py:54
+msgid "Your location does not seem to be covered by this site"
+msgstr ""
+
 #: candidates/views/mixins.py:16
 msgid "All Time"
 msgstr "Todo el tiempo"
@@ -2083,30 +1885,30 @@ msgid "Provinces"
 msgstr "Candidatos por provincia"
 
 #: elections/ar_elections_2015/templates/base.html:60
-#: mysite/templates/generic_base.html:83
+#: mysite/templates/generic_base.html:77
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr "Sesión iniciada como <strong>%(username)s</strong>"
 
 #: elections/ar_elections_2015/templates/base.html:62
-#: mysite/templates/generic_base.html:84
+#: mysite/templates/generic_base.html:81
 msgid "Sign out"
 msgstr "Cerrar sesión"
 
 #: elections/ar_elections_2015/templates/base.html:65
-#: mysite/templates/generic_base.html:88
+#: mysite/templates/generic_base.html:83
 msgid "Sign in to edit"
 msgstr "Iniciá sesión para editar"
 
 #: elections/ar_elections_2015/templates/base.html:110
-#: mysite/templates/generic_base.html:123
+#: mysite/templates/generic_base.html:139
 msgid "Open data API"
 msgstr "API de datos abiertos"
 
 #: elections/ar_elections_2015/templates/base.html:111
-#: elections/uk_general_election_2015/templates/base.html:25
-#: mysite/templates/generic_base.html:74
-#: mysite/templates/generic_base.html:124
+#: elections/uk_general_election_2015/templates/base.html:24
+#: mysite/templates/generic_base.html:93
+#: mysite/templates/generic_base.html:140
 msgid "About"
 msgstr "Acerca"
 
@@ -2157,29 +1959,26 @@ msgstr "Subir un %(type)s"
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
 msgstr "Implementado por <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
 
-#: elections/cr/forms.py:13
+#: elections/cr/forms.py:13 elections/jamaica/forms.py:13
 msgid "Select your canton"
 msgstr "Ingresá tu cantón"
 
 #: elections/cr/templates/base.html:9
 #, python-format
-msgid ""
-"Run by <a href=\"http://accesa.org/\"> <img src=\"%(logo_url)s\" %%} "
-"srcset=\"%(logo_url)s 1x, %(logo_url_2)s 2x\" alt=\"%(site_managers)s\" "
-"class=\"accesa-logo\"></a>"
+msgid "Run by <a href=\"http://accesa.org/\"> <img src=\"%(logo_url)s\" %%} srcset=\"%(logo_url)s 1x, %(logo_url_2)s 2x\" alt=\"%(site_managers)s\" class=\"accesa-logo\"></a>"
 msgstr "Implementado por <a href=\"http://accesa.org/\"> <img src=\"%(logo_url)s\" %%} srcset=\"%(logo_url)s 1x, %(logo_url_2)s 2x\" alt=\"%(site_managers)s\" class=\"accesa-logo\"></a>"
 
 #: elections/cr/templates/cr/frontpage.html:29
-msgid ""
-"For optimal use of site, we recommend setting your Browser language to "
-"\"Spanish\" in the settings."
+msgid "For optimal use of site, we recommend setting your Browser language to \"Spanish\" in the settings."
 msgstr "Para un uso óptimo del sitio, recomendamos seleccionar \"Español\" en la configuración de lenguajes de tu browser"
 
 #: elections/cr/templates/cr/frontpage.html:40
-msgid ""
-"Find or add information about the candidates for the upcoming municipal "
-"elections on February 7"
+msgid "Find or add information about the candidates for the upcoming municipal elections on February 7"
 msgstr "Buscá o agregá información sobre los candidatos para las próximas Elecciones Municipales del 7 de febrero"
+
+#: elections/jamaica/templates/base.html:7
+msgid "Run by <a href=\"http://slashroots.org/\">SlashRoots Foundation</a>"
+msgstr ""
 
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:6
 msgid "Candidates by post for the St Paul municipal elections 2015"
@@ -2201,85 +2000,49 @@ msgstr "Disculpas, pero hay caracteres no permitidos en \"{0}\""
 msgid "No constituency found for the postcode \"{0}\""
 msgstr "Disculpas, no se encontró la circunscripción correspondiente al código postal \"{0}\""
 
-#: elections/uk_general_election_2015/templates/base.html:26
+#: elections/uk_general_election_2015/templates/base.html:25
 msgid "Elections"
 msgstr "Elecciones"
 
-#: elections/uk_general_election_2015/templates/base.html:27
-#: mysite/templates/generic_base.html:76
+#: elections/uk_general_election_2015/templates/base.html:26
+#: mysite/templates/generic_base.html:95
 msgid "Numbers"
 msgstr "Estadísticas"
 
-#: elections/uk_general_election_2015/templates/base.html:32
-msgid ""
-"Supported by <a href=\"https://fullfact.org\">Full Fact</a>, <a "
-"href=\"http://unlockdemocracy.org.uk\">Unlock Democracy</a>, and <a "
-"href=\"https://mysociety.org\">mySociety</a>."
+#: elections/uk_general_election_2015/templates/base.html:31
+msgid "Supported by <a href=\"https://fullfact.org\">Full Fact</a>, <a href=\"http://unlockdemocracy.org.uk\">Unlock Democracy</a>, and <a href=\"https://mysociety.org\">mySociety</a>."
 msgstr "Apoyado por <a href=\"https://mysociety.org\">mySociety</a>, ACCESA y muchos voluntarios como vos."
 
-#: elections/uk_general_election_2015/templates/base.html:39
+#: elections/uk_general_election_2015/templates/base.html:38
 #, python-format
-msgid ""
-"Built by <a href=\"%(site_managers_url)s\"> <img src=\"%(logo_url)s\" %%} "
-"alt=\"%(site_managers)s\" class=\"dc-logo\"></a>"
+msgid "Built by <a href=\"%(site_managers_url)s\"> <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\"></a>"
 msgstr "Desarrollado por <a href=\"%(site_managers_url)s\"> <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\"></a>"
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:17
 #, python-format
-msgid ""
-"Please email <a href=\"mailto:%(email)s\">%(email)s</a> with any feedback or"
-" bug reports. If you'd like to discuss this site or any other project "
-"relating to elections in the UK, we'd suggest that you post to the <a "
-"href=\"https://groups.google.com/forum/#!forum/democracy-club\">Democracy "
-"Club Google Group</a>."
+msgid "Please email <a href=\"mailto:%(email)s\">%(email)s</a> with any feedback or bug reports. If you'd like to discuss this site or any other project relating to elections in the UK, we'd suggest that you post to the <a href=\"https://groups.google.com/forum/#!forum/democracy-club\">Democracy Club Google Group</a>."
 msgstr "Por favor envíe un correo a <a href=\"mailto:%(email)s\">%(email)s</a> con cualquier retroalimentación o reporte de errores. Para comentarios u otros proyectos relacionados a las elecciones municipales Costa Rica 2016 puede escribir a info@accesa.org"
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:34
-msgid ""
-"This site was originally developed by Mark Longair (mySociety), Sym Roe "
-"(Democracy Club) and Zarino Zappia (mySociety) and <a "
-"href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many"
-" other contributors</a>, to whom we owe a debt of gratitude."
+msgid "This site was originally developed by Mark Longair (mySociety), Sym Roe (Democracy Club) and Zarino Zappia (mySociety) and <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">many other contributors</a>, to whom we owe a debt of gratitude."
 msgstr "Este sitio fue desarrollado originalmente por Mark Longair (mySociety), Sym Roe (Democracy Club) y Zarino Zappia (mySociety), <a href=\"https://github.com/mysociety/yournextrepresentative/graphs/contributors\">así como muchos otros colaboradores </a>, con quienes estamos muy agradecidos."
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:41
-msgid ""
-"The data on candidates from the last UK general election in 2010 is all "
-"taken from Edmund von der Burg's <a "
-"href=\"http://www.yournextmp.com\">YourNextMP.com</a>, with many thanks."
+msgid "The data on candidates from the last UK general election in 2010 is all taken from Edmund von der Burg's <a href=\"http://www.yournextmp.com\">YourNextMP.com</a>, with many thanks."
 msgstr "Los datos de los candidatos de las últimas elecciones de 2011 fueron tomados de YoQuieroSaber 2011"
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:58
-msgid ""
-"The party logos, which are taken from the Electoral Commission's website"
+msgid "The party logos, which are taken from the Electoral Commission's website"
 msgstr "Los logos de los partidos."
 
 #: elections/uk_general_election_2015/templates/candidates/about.html:73
 #, python-format
-msgid ""
-"For complicated reasons relating to database licensing, we have put the data"
-" as of the 4th of March 2015 into the public domain by declaring it to be <a"
-" href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>. This "
-"data is available <a href=\"%(MEDIA_URL)scsv-archives/cc0-snapshot-out-of-"
-"date/\">here</a> but please be warned that this snapshot will become "
-"inaccurate very quickly - please use <a href=\"%(api_url)s\">the up-to-date "
-"data</a> instead."
+msgid "For complicated reasons relating to database licensing, we have put the data as of the 4th of March 2015 into the public domain by declaring it to be <a href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CC0</a>. This data is available <a href=\"%(MEDIA_URL)scsv-archives/cc0-snapshot-out-of-date/\">here</a> but please be warned that this snapshot will become inaccurate very quickly - please use <a href=\"%(api_url)s\">the up-to-date data</a> instead."
 msgstr "Por razones complejas relacionadas a la licencia de la base de datos, hemos puesto los datos a partir del 4 de Marzo de 2015 al domino público declarando será  <a href=\"https://creativecommons.org/publicdomain/zero/1.0/\">CCO</a>. Estos datos están disponibles <a href=\"%(MEDIA_URL)scsv-archives/cc0-snapshot-out-of-date/\"> aquí, pero por favor esté atento que esta imagen puede desactualizarse muy rápidamente - por favor use <a href=\"%(api_url)s\"> los datos actualizados."
 
 #: elections/uk_general_election_2015/templates/candidates/ask-for-copyright-assignment.html:63
 #, python-format
-msgid ""
-"When we originally set up %(site_name)s for the 2015 UK general election we "
-"didn't get legal advice about the best way to deal with copyright and "
-"licensing. It turns out that the way that the user agreement that was worded"
-" on the 'About' page had a few problems, and in particular restricted what "
-"we could do with the data such that we couldn't license the database to some"
-" partners who we thought would make good use of the data but who needed "
-"slightly different licensing. The simplest way to ensure that we can make "
-"the data as widely available as possible while preventing the hard work of "
-"contributors to %(site_name)s being co-opted by companies building closed "
-"candidate databases is to ask you to assign the copyright of your "
-"contributions to %(copyright_holder)s."
+msgid "When we originally set up %(site_name)s for the 2015 UK general election we didn't get legal advice about the best way to deal with copyright and licensing. It turns out that the way that the user agreement that was worded on the 'About' page had a few problems, and in particular restricted what we could do with the data such that we couldn't license the database to some partners who we thought would make good use of the data but who needed slightly different licensing. The simplest way to ensure that we can make the data as widely available as possible while preventing the hard work of contributors to %(site_name)s being co-opted by companies building closed candidate databases is to ask you to assign the copyright of your contributions to %(copyright_holder)s."
 msgstr "Cuando desarrollamos %(site_name)s para las elecciones generales de Reino Unido en el 2015 no recibimos asesoramiento jurídico sobre la mejor manera de cuidar los derechos de autor y licencias. El resultado fue que la forma en que está redactado el acuerdo de usuario en la sección 'Acerca de' tuvo algunos problemas y, en particular limita lo que podemos hacer con los datos de tal manera que no pudimos compartir la base de datos con algunos socios que sabemos darían un uso adecuado a los mismos. La forma más sencilla de garantizar que podamos hacer disponibles los datos tan ampliamente como sea posible y evitando al mismo tiempo que el trabajo duro de los contribuyentes de %(site_name)s sea usado por empresas para construir cerradas bases de datos de candidatos, es pidiéndote asignar el copyright de tus contribuciones en %(copyright_holder)s."
 
 #: elections/uk_general_election_2015/templates/candidates/finder.html:10
@@ -2288,9 +2051,7 @@ msgid "%(site_name)s - %(election_name)s candidates"
 msgstr "%(site_name)s - Candidatos a %(election_name)s"
 
 #: moderation_queue/forms.py:33
-msgid ""
-"If you checked 'Other' then you must provide a justification for why we can "
-"use it."
+msgid "If you checked 'Other' then you must provide a justification for why we can use it."
 msgstr "Si seleccionaste 'otra' entones debes justificar por qué podemos usarla."
 
 #: moderation_queue/models.py:19
@@ -2298,15 +2059,11 @@ msgid "This photograph is free of any copyright restrictions"
 msgstr "Esta foto está libre de cualquier restricción de copyright"
 
 #: moderation_queue/models.py:21
-msgid ""
-"I own copyright of this photo and I assign the copyright to Democracy Club "
-"Limited in return for it being displayed on this site"
+msgid "I own copyright of this photo and I assign the copyright to Democracy Club Limited in return for it being displayed on this site"
 msgstr "Soy dueño de los derechos de autor de esta foto y cedo estos derechos de autor a ACCESA a cambio de que se muestre la foto en este sitio"
 
 #: moderation_queue/models.py:25
-msgid ""
-"This is the candidate's public profile photo from social media (e.g. "
-"Twitter, Facebook) or their official campaign page"
+msgid "This is the candidate's public profile photo from social media (e.g. Twitter, Facebook) or their official campaign page"
 msgstr "Esta es la foto del perfil del candidato en medios sociales (twitter, facebook, etc), o de su sitio oficial de campaña"
 
 #: moderation_queue/models.py:29
@@ -2336,12 +2093,8 @@ msgstr "Imagen cargada por {user} del candidato {person_id}"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:7
 #, python-format
-msgid ""
-"<strong>Warning:</strong> there is already %(queued_images)s photo of "
-"%(name)s in the queue, waiting to be moderated:"
-msgid_plural ""
-"<strong>Warning:</strong> there are already %(queued_images)s photos of "
-"%(name)s in the queue, waiting to be moderated:"
+msgid "<strong>Warning:</strong> there is already %(queued_images)s photo of %(name)s in the queue, waiting to be moderated:"
+msgid_plural "<strong>Warning:</strong> there are already %(queued_images)s photos of %(name)s in the queue, waiting to be moderated:"
 msgstr[0] "<strong>Advertencia:</strong> ya hay %(queued_images)s foto de %(name)s esperando ser aprobada:"
 msgstr[1] "<strong>Advertencia:</strong> ya hay %(queued_images)s fotos de %(name)s esperando ser aprobadas:"
 
@@ -2352,9 +2105,7 @@ msgstr "Foto subida por %(name)s a las %(created)s"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:25
 #, python-format
-msgid ""
-"If you still want to upload another photo of %(name)s, first select an image"
-" from your computer:"
+msgid "If you still want to upload another photo of %(name)s, first select an image from your computer:"
 msgstr "Si aún querés subir otra foto de %(name)s, primero seleccioná una foto de tu computadora:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:29
@@ -2362,15 +2113,11 @@ msgid "First, select an image from your computer:"
 msgstr "Primero, elegí una imágen de tu computadora:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:38
-msgid ""
-"Now let us know about the copyright of this image by selecting one of these "
-"options or explaining why we can use it:"
+msgid "Now let us know about the copyright of this image by selecting one of these options or explaining why we can use it:"
 msgstr "Ahora, contanos sobre los derechos de autor (propiedad intelectual, copyright) de esta imagen seleccionando una de estas opciones, o explicando por qué podemos usarla"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:47
-msgid ""
-"Here is my justification for why this photo may be reasonably used on the "
-"website, including the source URL:"
+msgid "Here is my justification for why this photo may be reasonably used on the website, including the source URL:"
 msgstr "Esta es mi justificación de por qué esta foto puede ser rasonablemente utilizada en este sitio, incluyendo la dirección web (URL) de la fuente:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:54
@@ -2410,19 +2157,12 @@ msgstr "Revisar y recortar la foto"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:30
 #, python-format
-msgid ""
-"Please check that this is really <a href=\"%(url)s\">%(name)s</a> "
-"(%(party)s) before approving the upload. This <a "
-"href=\"%(google_image_search_url)s\">Google Image search for candidate "
-"details</a> may be a good start."
+msgid "Please check that this is really <a href=\"%(url)s\">%(name)s</a> (%(party)s) before approving the upload. This <a href=\"%(google_image_search_url)s\">Google Image search for candidate details</a> may be a good start."
 msgstr "Por favor verificá que este sea realmente <a href=\"%(url)s\">%(name)s</a> (%(party)s) antes de aprobar la subida. Esta búsqueda de <a href=\"%(google_image_search_url)s\">Google Images</a> puede ser un buen comienzo."
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:36
 #, python-format
-msgid ""
-"If you're trying to find the likely <em>source</em> of this image, you can "
-"also do a <a href=\"%(google_reverse_image_search_url)s\">reverse image "
-"search</a> on the uploaded image."
+msgid "If you're trying to find the likely <em>source</em> of this image, you can also do a <a href=\"%(google_reverse_image_search_url)s\">reverse image search</a> on the uploaded image."
 msgstr "Si estás intentando encontrar la posible <em>fuente</em> de esta imágen, podés hacer una <a href=\"%(google_reverse_image_search_url)s\">búsqueda inversa de imágenes</a> con la imágen subida."
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:41
@@ -2430,9 +2170,7 @@ msgid "Click and drag in the image to crop"
 msgstr "Cliqueá y arrastrá en la imágen para recortarla"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:43
-msgid ""
-"Please crop to just around the candidate's head, since they're displayed in "
-"thumbnail form on the site."
+msgid "Please crop to just around the candidate's head, since they're displayed in thumbnail form on the site."
 msgstr "Por favor recortá sólo la cabeza del candidato, porque se muestran en una imágen pequeña en el sitio."
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:68
@@ -2477,16 +2215,12 @@ msgstr "%(username)s cedió los derechos de autor a %(copyright_holder)s"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:113
 #, python-format
-msgid ""
-"%(username)s said that this is the candidate's public profile photo from "
-"social media or their official campaign page"
+msgid "%(username)s said that this is the candidate's public profile photo from social media or their official campaign page"
 msgstr "%(username)s dijo que esta es la foto del perfil de redes sociales del candidato o de su sitio oficial de campaña"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:120
 #, python-format
-msgid ""
-"%(username)s's justification for use of this photo was: "
-"&#8220;%(justification)s&#8221;"
+msgid "%(username)s's justification for use of this photo was: &#8220;%(justification)s&#8221;"
 msgstr "%(username)s's dijo que su justificación para usar esta foto es: &#8220;%(justification)s&#8221;"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:128
@@ -2506,9 +2240,7 @@ msgid "Why <em>you</em> think it's allowed:"
 msgstr "Porqué <em>vos</em> creés que está permitido:"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:151
-msgid ""
-"Reason for rejection (<strong>Warning:</strong> this will be emailed to the "
-"user):"
+msgid "Reason for rejection (<strong>Warning:</strong> this will be emailed to the user):"
 msgstr "Razón para rechazar (<strong>Advertencia:</strong> se enviará por email al usuario):"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:158
@@ -2539,10 +2271,7 @@ msgstr "La foto ahora espera aprobación."
 
 #: moderation_queue/templates/moderation_queue/photo-upload-success.html:15
 #, python-format
-msgid ""
-"Thank-you for uploading a photo - you will receive an email when it is "
-"approved to be added to the site, or an explanation for why it cannot be "
-"used. <a href=\"%(url)s\">Return to %(name)s’s page.</a>"
+msgid "Thank-you for uploading a photo - you will receive an email when it is approved to be added to the site, or an explanation for why it cannot be used. <a href=\"%(url)s\">Return to %(name)s’s page.</a>"
 msgstr "Gracias por subir una foto - recibirás un email cuando esté aprobada para ser agregada al sitio, o una explicación de porqué no puede ser usada. <a href=\"%(url)s\">Volver a la página de %(name)s.</a>"
 
 #: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:12
@@ -2561,9 +2290,7 @@ msgstr "Foto aprobada de la cola de moderación"
 
 #: moderation_queue/views.py:287
 #, python-brace-format
-msgid ""
-"Approved a photo upload from {uploading_user} who provided the message: "
-"\"{message}\""
+msgid "Approved a photo upload from {uploading_user} who provided the message: \"{message}\""
 msgstr "Aprobada la foto subida de  {uploading_user} que ingresó el mensaje: \"{message}\""
 
 #: moderation_queue/views.py:310
@@ -2573,9 +2300,7 @@ msgstr "{site_name} foto aprobada"
 
 #: moderation_queue/views.py:319
 #, python-brace-format
-msgid ""
-"Thank-you for submitting a photo to {site_name}; that's been uploaded now "
-"for the candidate page here:"
+msgid "Thank-you for submitting a photo to {site_name}; that's been uploaded now for the candidate page here:"
 msgstr "Gracias por enviar una foto a {site_name}; la foto ha sido subida a la página del candidato aquí:"
 
 #: moderation_queue/views.py:324 moderation_queue/views.py:379
@@ -2600,16 +2325,11 @@ msgstr "{site_name}  resultados de la moderación de la imagen"
 
 #: moderation_queue/views.py:365
 #, python-brace-format
-msgid ""
-"Thank-you for uploading a photo of {candidate_name} to {site_name}, but "
-"unfortunately we can't use that image because:"
+msgid "Thank-you for uploading a photo of {candidate_name} to {site_name}, but unfortunately we can't use that image because:"
 msgstr "Gracias por subir una foto de {candidate_name} a {site_name}, pero lamentablemente no podemos usar esa imagen porque:"
 
 #: moderation_queue/views.py:373
-msgid ""
-"You can just reply to this email if you want to discuss that further, or you"
-" can try uploading a photo with a different reason or justification for its "
-"use using this link:"
+msgid "You can just reply to this email if you want to discuss that further, or you can try uploading a photo with a different reason or justification for its use using this link:"
 msgstr "Puede responder a este email si quiere discutir más sobre el tema, o puede tratar de subir una foto con una razón o justificación diferente para su uso siguiendo este enlace:"
 
 #: moderation_queue/views.py:387
@@ -2624,9 +2344,7 @@ msgstr "Dejaste una foto subida por {0} en la cola"
 
 #: moderation_queue/views.py:401
 #, python-brace-format
-msgid ""
-"Ignored a photo upload from {uploading_user} (This usually means it was a "
-"duplicate)"
+msgid "Ignored a photo upload from {uploading_user} (This usually means it was a duplicate)"
 msgstr "Ignorada una foto subida por {uploading_user} (Esto usualmente significa que era duplicada)"
 
 #: moderation_queue/views.py:414
@@ -2646,11 +2364,21 @@ msgstr "Cargos importantes"
 msgid "Standing for re-election"
 msgstr "Re-elección (si o no)"
 
-#: mysite/settings/conf.py:377
-msgid ""
-"Please don't quote third-party candidate sites — we prefer URLs of news "
-"stories or official candidate pages."
+#: mysite/settings/conf.py:379
+msgid "Please don't quote third-party candidate sites — we prefer URLs of news stories or official candidate pages."
 msgstr "Preferimos URLs de artículos de prensa o páginas oficiales del candidato."
+
+#: mysite/templates/404.html:5
+msgid "Page Not Found"
+msgstr ""
+
+#: mysite/templates/404.html:9
+msgid "Page Not Found - 404"
+msgstr ""
+
+#: mysite/templates/404.html:12
+msgid "The page you are looking for could not be found - please check the address and try again."
+msgstr ""
 
 #: mysite/templates/account/email/email_confirmation_message.txt:1
 #: mysite/templates/account/email/password_reset_key_message.txt:1
@@ -2660,10 +2388,7 @@ msgstr "Saludos desde %(site_name)s!"
 
 #: mysite/templates/account/email/email_confirmation_message.txt:3
 #, python-format
-msgid ""
-"You're receiving this e-mail because user %(user_display)s at "
-"%(site_domain)s has given yours as an e-mail address to connect their "
-"account."
+msgid "You're receiving this e-mail because user %(user_display)s at %(site_domain)s has given yours as an e-mail address to connect their account."
 msgstr "Estás recibiendo este correo porque el usuario %(user_display)s en %(site_domain)s ha ingresado esta dirección de correo electrónico para conectarse con su cuenta."
 
 #: mysite/templates/account/email/email_confirmation_message.txt:5
@@ -2682,11 +2407,7 @@ msgstr "Por favor confirme su dirección de correo electrónico"
 
 #: mysite/templates/account/email/password_reset_key_message.txt:3
 #, python-format
-msgid ""
-"You're receiving this e-mail because you or someone else has requested a "
-"password for your user account at %(site_domain)s. It can be safely ignored "
-"if you did not request a password reset. Click the link below to reset your "
-"password."
+msgid "You're receiving this e-mail because you or someone else has requested a password for your user account at %(site_domain)s. It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
 msgstr "Estás recibiendo este correo porque vos o alguien más ha solicitado la contraseña para tu cuenta de usuario en %(site_domain)s. Si no solicitaste el restablecimiento de la contraseña, ignorá este mensaje. Dale click al enlace abajo para restablecer tu contraseña."
 
 #: mysite/templates/account/email/password_reset_key_message.txt:8
@@ -2710,10 +2431,7 @@ msgstr "Acceder"
 
 #: mysite/templates/account/login.html:15
 #, python-format
-msgid ""
-"Please sign in with one of your existing third party accounts. Or, <a "
-"href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in "
-"below:"
+msgid "Please sign in with one of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
 msgstr "Por favor ingrese con alguna de sus cuentas de redes sociales. O <a href=\"%(signup_url)s\">regístrese</a> para abrir una cuenta en %(site_name)s e inicie sesión abajo. "
 
 #: mysite/templates/account/login.html:25
@@ -2722,9 +2440,7 @@ msgstr "o"
 
 #: mysite/templates/account/login.html:32
 #, python-format
-msgid ""
-"If you have not created an account yet, then please <a "
-"href=\"%(signup_url)s\">sign up</a> first."
+msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
 msgstr "Si no has creado una cuenta todavía, entonces por favor  <a href=\"%(signup_url)s\">registrate</a> primero."
 
 #: mysite/templates/account/login.html:43
@@ -2752,15 +2468,14 @@ msgstr "Registrarse"
 
 #: mysite/templates/account/signup.html:13
 #, python-format
-msgid ""
-"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgid "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
 msgstr "¿Ya tenés una cuenta? Entonces por favor  <a href=\"%(login_url)s\">iniciá sesión</a>."
 
-#: mysite/templates/generic_base.html:75
+#: mysite/templates/generic_base.html:94
 msgid "Posts"
 msgstr "Cargos"
 
-#: mysite/templates/generic_base.html:125
+#: mysite/templates/generic_base.html:141
 msgid "Issue tracker"
 msgstr "Reportes de errores"
 
@@ -2787,9 +2502,7 @@ msgstr "No tenemos ningún %(type)s para el cargo %(post_data.label)s."
 
 #: official_documents/templates/official_documents/_post.html:30
 #, python-format
-msgid ""
-"As you have permission to upload documents, you can <a "
-"href=\"%(url)s\">upload a %(type)s</a>."
+msgid "As you have permission to upload documents, you can <a href=\"%(url)s\">upload a %(type)s</a>."
 msgstr "Como tenés permiso para subir documentos, podés <a href=\"%(url)s\">subir un %(type)s</a>."
 
 #: official_documents/templates/official_documents/officialdocument_detail.html:16
@@ -2799,16 +2512,12 @@ msgstr "%(type)s para <a href=\"%(url)s\">%(post_label)s</a>."
 
 #: official_documents/templates/official_documents/officialdocument_detail.html:19
 #, python-format
-msgid ""
-"The source URL for this document was: <a "
-"href=\"%(source_url)s\">%(source_url)s</a>"
+msgid "The source URL for this document was: <a href=\"%(source_url)s\">%(source_url)s</a>"
 msgstr "La URL de la fuente para este documento era: <a href=\"%(source_url)s\">%(source_url)s</a>"
 
 #: official_documents/templates/official_documents/officialdocument_detail.html:32
 #, python-format
-msgid ""
-"You can <a href=\"%(url)s\">edit this in the admin interface</a> (e.g. to "
-"delete it)"
+msgid "You can <a href=\"%(url)s\">edit this in the admin interface</a> (e.g. to delete it)"
 msgstr "Podés <a href=\"%(url)s\">editar esto en la sección de administración</a> (por ejemplo para borrarlo, etc)"
 
 #: official_documents/templates/official_documents/upload_document_form.html:5
@@ -2836,9 +2545,7 @@ msgstr "{name} ({party}) ganó en {cons}"
 
 #: results/feeds.py:28
 #, python-brace-format
-msgid ""
-"A {site_name} volunteer recorded at {datetime} that {name} ({party}) won the"
-" ballot in {cons}, quoting the source '{source}')."
+msgid "A {site_name} volunteer recorded at {datetime} that {name} ({party}) won the ballot in {cons}, quoting the source '{source}')."
 msgstr "Un voluntario de {site_name} registró a las {datetime} que {name} ({party}) ganó la elección en {cons}, citando la fuente '{source}')."
 
 #: results/feeds.py:84
@@ -2864,11 +2571,7 @@ msgstr "Del %(num_candidates)s total de candidatos (%(percent_empty)s%% blank)"
 
 #: tasks/templates/tasks/field.html:21
 #, python-format
-msgid ""
-"Please <a href=\"%(url)s\">help out</a> by adding missing information.  Make"
-" sure you read our <a href=\"https://docs.google.com/document/d"
-"/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing "
-"fields.</a>"
+msgid "Please <a href=\"%(url)s\">help out</a> by adding missing information.  Make sure you read our <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing fields.</a>"
 msgstr "Por favor <a href=\"%(url)s\">colaborá</a> agregegando información faltante. Te recomendamos leer nuestra  <a href=\"https://docs.google.com/document/d/18xxDXwRxMB48oq1qOhRjcWnUyRRRdVOyx80q0OAEFLw/edit\">guía para voluntarios y contribuidores.</a> "
 
 #: tasks/templates/tasks/field.html:35
@@ -2877,18 +2580,12 @@ msgstr "editar"
 
 #: tasks/templates/tasks/field.html:38
 #, python-format
-msgid ""
-"Hi @%(username)s could you add your %(field)s to your %(site_name)s page "
-"please? https://yournextmp.com/person/%(id)s/"
+msgid "Hi @%(username)s could you add your %(field)s to your %(site_name)s page please? https://yournextmp.com/person/%(id)s/"
 msgstr ""
 
 #: tasks/templates/tasks/field.html:41
 msgid "Tweet them"
 msgstr "Enviarles un tweet"
-
-#: tasks/templates/tasks/field.html:42
-msgid "Search"
-msgstr "Buscar"
 
 #: tasks/templates/tasks/field.html:48
 msgid "Previous page"
@@ -2909,15 +2606,11 @@ msgstr "¡Nos puedes ayudar a hacer de %(site_name)s un sitio mejor!"
 
 #: tasks/templates/tasks/tasks_home.html:12
 #, python-format
-msgid ""
-"%(site_name)s is a volunteer-sourced database, and that means we constantly "
-"need help in making it better."
+msgid "%(site_name)s is a volunteer-sourced database, and that means we constantly need help in making it better."
 msgstr "%(site_name)s es una base de datos de creación colectiva, y eso significa que necesitamos constantemente ayuda para mejorarla."
 
 #: tasks/templates/tasks/tasks_home.html:17
-msgid ""
-"There is a lot of useful information on candidates out there, so if you find"
-" any please do add it to our site."
+msgid "There is a lot of useful information on candidates out there, so if you find any please do add it to our site."
 msgstr "Hay mucha información útil sobre los candidatos dando vueltas, así que si encontrás algo, por favor agregalo a nuestro sitio. Gracias."
 
 #: tasks/templates/tasks/tasks_home.html:22
@@ -2925,15 +2618,11 @@ msgid "Emails"
 msgstr "Correos electrónicos"
 
 #: tasks/templates/tasks/tasks_home.html:24
-msgid ""
-"At the moment we're trying to get as many email addresses on candidates as "
-"we can."
+msgid "At the moment we're trying to get as many email addresses on candidates as we can."
 msgstr "En este momento estamos intentando obtener todas las direcciones de correo electrónico que podamos de los candidatos."
 
 #: tasks/templates/tasks/tasks_home.html:29
-msgid ""
-"This will allow us to email them directly to ask them to add their own "
-"details."
+msgid "This will allow us to email them directly to ask them to add their own details."
 msgstr "Esto nos permitirá escribirles directamente para pedirles que agreguen su información ellos mismos."
 
 #: tasks/templates/tasks/tasks_home.html:34
@@ -2942,47 +2631,27 @@ msgstr "Cómo colaborar"
 
 #: tasks/templates/tasks/tasks_home.html:37
 #, python-format
-msgid ""
-"First off you'll need to <a href=\"%(url)s\">log in</a> in order to start "
-"making edits."
+msgid "First off you'll need to <a href=\"%(url)s\">log in</a> in order to start making edits."
 msgstr "Primero vas a tener que <a href=\"%(url)s\">iniciar sesión</a> para comenzar a hacer ediciones."
 
 #: tasks/templates/tasks/tasks_home.html:43
 #, python-format
-msgid ""
-"We've added clear banners on the candidate and constituently pages "
-"indicating where we're missing email addresses, so you can start adding "
-"email addresses by <a href=\"%(url)s\">looking up your constituency on the "
-"home page</a>"
+msgid "We've added clear banners on the candidate and constituently pages indicating where we're missing email addresses, so you can start adding email addresses by <a href=\"%(url)s\">looking up your constituency on the home page</a>"
 msgstr "Agregamos destacados en las páginas de los candidatos y los distritos indicando dónde nos faltan direcciones de correo electrónico, así que podés ayudarnos a conseguirlas <a href=\"%(url)s\">buscando tu circunscripción en la página principal</a>"
 
 #: tasks/templates/tasks/tasks_home.html:50
-msgid ""
-"Once you've found a candidate without an email address, you can go searching"
-" for it!"
+msgid "Once you've found a candidate without an email address, you can go searching for it!"
 msgstr "Una vez que hayas encontrado un candidato sin dirección de email, podés comenzar a buscarla."
 
 #: tasks/templates/tasks/tasks_home.html:55
-msgid ""
-"Please make sure you read our <a href=\"https://docs.google.com/document/d"
-"/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX wXspA/edit\">guidance on sourcing "
-"fields</a>, and specifically the part about what sort of email addresses we "
-"accept."
+msgid "Please make sure you read our <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX wXspA/edit\">guidance on sourcing fields</a>, and specifically the part about what sort of email addresses we accept."
 msgstr "Por favor asegurate de leer nuestra <a href=\"https://docs.google.com/document/d/18xxDXwRxMB48oq1qOhRjcWnUyRRRdVOyx80q0OAEFLw/edit\">guía de voluntarios</a>."
 
 #: tasks/templates/tasks/tasks_home.html:62
-msgid ""
-"In short, we only want email addresses could be considered public and "
-"related to the candidate's campaign. <code>@parliament.uk</code> email "
-"addresses will stop working once Parliament is disbanded, so try to find a "
-"different email address for them if you can. If not, we can always email "
-"everyone with a <code>@parliament.uk</code> address asking them for a better"
-" one."
+msgid "In short, we only want email addresses could be considered public and related to the candidate's campaign. <code>@parliament.uk</code> email addresses will stop working once Parliament is disbanded, so try to find a different email address for them if you can. If not, we can always email everyone with a <code>@parliament.uk</code> address asking them for a better one."
 msgstr "Preferimos direcciones de correo que puedan ser consideradas públicas y relacionadas a la campaña del candidato."
 
 #: tasks/templates/tasks/tasks_home.html:72
 #, python-format
-msgid ""
-"Once your constituency has all the email addresses entered, you can look at "
-"our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
+msgid "Once your constituency has all the email addresses entered, you can look at our <a href=\"%(url)s\">list of all candidates without emails listed</a>!"
 msgstr "Una vez que tu circunscripción tenga todas las direcciones de correo cargadas, podés mirar nuestra <a href=\"%(url)s\">lista de todos los candidatos sin dirección de email</a>!"

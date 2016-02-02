@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 14:53+0100\n"
+"POT-Creation-Date: 2016-02-02 10:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,6 +20,18 @@ msgstr ""
 #: candidates/static/js/constituency.js:53
 #, javascript-format
 msgid "Are you sure that %s (%s) was the winner in %s?"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:8
+msgid "Use my current location"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:9
+msgid "Getting location…"
+msgstr ""
+
+#: candidates/static/js/home_geolocation_form.js:24
+msgid "There was a problem getting your location"
 msgstr ""
 
 #: candidates/static/js/versions.js:4
