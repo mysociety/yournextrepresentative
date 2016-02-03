@@ -86,11 +86,13 @@ class Command(BaseCommand):
         u'Westmoreland Western'
     ]
 
-    def get_or_create_organization(self, slug, name):
+    def get_or_create_organization(self, slug, name, classification=None):
         try:
             org_extra = OrganizationExtra.objects.get(slug=slug)
             org = org_extra.base
             org.name = name
+            if classification is not None:
+                org.classification = classification
             org.save()
         except OrganizationExtra.DoesNotExist:
             org = Organization.objects.create(name=name)
@@ -154,15 +156,15 @@ class Command(BaseCommand):
                 election.area_types.add(area_type)
                 elections.append(election)
 
+            party_set = self.get_party_set(elections[0].name)
 
             # Now create all the Area objects:
             areas = []
             count = 1
             for area_name in self.AREAS:
-                party_set = self.get_party_set(area_name)
                 for party_name in self.PARTIES:
                     slug = slugify(party_name)
-                    party = self.get_or_create_organization(slug, party_name)
+                    party = self.get_or_create_organization(slug, party_name, 'Party')
                     if not party.party_sets.filter(slug=party_set.slug):
                         # print "adding party set {0}".format(party_set.slug)
                         party.party_sets.add(party_set)
@@ -184,8 +186,6 @@ class Command(BaseCommand):
             for election in elections:
                 for area in areas:
                     organization = election.organization
-                    party_set_slug = '2016_cons_' + slugify(area.name)
-                    party_set = PartySet.objects.get(slug=party_set_slug)
                     post_role = election.for_post_role
                     post_label = u'Member of Parliament for {0}' \
                         .format(area.name)
