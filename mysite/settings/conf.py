@@ -202,6 +202,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             election_app_fully_qualified,
             'candidates',
             'tasks',
+            'alerts',
             'cached_counts',
             'moderation_queue',
             'auth_helpers',
