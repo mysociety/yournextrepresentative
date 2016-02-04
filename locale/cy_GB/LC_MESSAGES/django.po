@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Curon Davies <cwd24@cantab.net>, 2016
 # Gareth Morlais, 2015
 # Gareth Morlais, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-22 12:05-0600\n"
-"PO-Revision-Date: 2016-01-21 18:00+0000\n"
-"Last-Translator: mySociety <transifex@mysociety.org>\n"
+"PO-Revision-Date: 2016-02-03 17:06+0000\n"
+"Last-Translator: Curon Davies <cwd24@cantab.net>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "Etholaethau sydd angen sylw"
 
 #: cached_counts/templates/attention_needed.html:8
 msgid "Election"
-msgstr ""
+msgstr "Etholiad"
 
 #: cached_counts/templates/attention_needed.html:9
 #: cached_counts/templates/constituency_counts.html:10
@@ -815,7 +816,7 @@ msgstr "Gallwch ddefnyddio'r data o'r wefan hon drwy'r <a href=\"%(api_url)s\">A
 
 #: candidates/templates/candidates/about.html:47
 msgid "Party logos"
-msgstr ""
+msgstr "Logo'r Bleidiau"
 
 #: candidates/templates/candidates/about.html:48
 #: elections/uk_general_election_2015/templates/candidates/about.html:59
