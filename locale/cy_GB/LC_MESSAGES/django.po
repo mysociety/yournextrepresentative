@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-22 12:05-0600\n"
-"PO-Revision-Date: 2016-02-03 17:06+0000\n"
-"Last-Translator: Curon Davies <cwd24@cantab.net>\n"
+"POT-Creation-Date: 2016-02-04 17:45+0000\n"
+"PO-Revision-Date: 2016-02-04 17:46+0000\n"
+"Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -460,8 +460,7 @@ msgstr ""
 msgid "Source of information that they won"
 msgstr "Ffynhonnell o wybodaeth eu bod nhw wedi ennill"
 
-#: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:33
-#: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:38
+#: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:47
 #, python-brace-format
 msgid "{post_role} for {area_name}"
 msgstr "{post_role} ar gyfer {area_name}"
@@ -882,59 +881,57 @@ msgstr "Defnyddio'r data drwy'r API"
 #: candidates/templates/candidates/api.html:16
 msgid ""
 "The data that's submitted to this site is available as a CSV/Excel download "
-"and programmatically via a RESTful web service called PopIt, which stores "
-"information about people and their positions in organizations. (You can <a "
-"href=\"http://popit.poplus.org/\">find out more about PopIt here</a>.)"
-msgstr "Mae'r data a gyflwynir i'r safle hwn yn ar gael i'w lawrlwytho fel CSV/Excel ac fel gwasanaeth gwe RESTful o'r enw PopIt, sy'n storio gwybodaeth am bobl a'u swyddi mewn sefydliadau. (Gallwch <a href=\"http://popit.poplus.org/\"> ddarganfod mwy am PopIt yma </a>.)"
+"and programmatically via a RESTful API."
+msgstr ""
 
-#: candidates/templates/candidates/api.html:24
+#: candidates/templates/candidates/api.html:21
 msgid "CSV/Excel Download"
 msgstr "Lawrlwythiad CSV/Excel"
 
-#: candidates/templates/candidates/api.html:26
+#: candidates/templates/candidates/api.html:23
 msgid "Current elections"
 msgstr "Etholiadau cyfredol"
 
-#: candidates/templates/candidates/api.html:32
-#: candidates/templates/candidates/api.html:47
+#: candidates/templates/candidates/api.html:29
+#: candidates/templates/candidates/api.html:44
 #, python-format
 msgid "Download of the %(title)s candidates "
 msgstr "Lawrlwythiad o'r  %(title)s ymgeisydd"
 
-#: candidates/templates/candidates/api.html:41
+#: candidates/templates/candidates/api.html:38
 msgid "Historic elections"
 msgstr "Etholiadau hanesyddol"
 
-#: candidates/templates/candidates/api.html:55
+#: candidates/templates/candidates/api.html:52
 msgid "API"
 msgstr "API"
 
-#: candidates/templates/candidates/api.html:57
+#: candidates/templates/candidates/api.html:54
 msgid "This API is a work in progress"
 msgstr ""
 
-#: candidates/templates/candidates/api.html:60
+#: candidates/templates/candidates/api.html:57
 msgid ""
 "This is an alpha version of the YourNextRepresentative API, which is likely "
 "to change in the near future."
 msgstr ""
 
-#: candidates/templates/candidates/api.html:69
+#: candidates/templates/candidates/api.html:66
 #, python-format
 msgid ""
 "The browsable base URL of the site's read-only API is: <a "
 "href=\"%(base_api_url)s\">%(base_api_url)s</a>"
 msgstr ""
 
-#: candidates/templates/candidates/api.html:75
+#: candidates/templates/candidates/api.html:72
 msgid "The following sections give examples of how to use the API."
 msgstr ""
 
-#: candidates/templates/candidates/api.html:80
+#: candidates/templates/candidates/api.html:77
 msgid "Find a Constituency ID"
 msgstr "Dod o hyd i Gyfeirnod Etholaeth"
 
-#: candidates/templates/candidates/api.html:82
+#: candidates/templates/candidates/api.html:79
 msgid ""
 "In order to look up candidates for a constituency, you have to find the ID "
 "of that constituency. The IDs that we use for constituencies are the IDs for"
@@ -942,34 +939,34 @@ msgid ""
 "href=\"http://mapit.mysociety.org\">MapIt</a>."
 msgstr "Er mwyn chwilio am ymgeiswyr ar gyfer etholaeth, rhaid canfod cyfeirnod (ID) yr etholaeth honno. Mae'r cyfeirnodau a ddefnyddiwn ar gyfer etholaethau yr un fath a'r rhai a defnyddir  ar gyfer ardaloedd etholaethau San Steffan, Llundain, ar wasanaeth gwe arall, <a href=\"http://mapit.mysociety.org\">MapIt</a>."
 
-#: candidates/templates/candidates/api.html:90
+#: candidates/templates/candidates/api.html:87
 msgid "... from a postcode"
 msgstr "... o'r cod post"
 
-#: candidates/templates/candidates/api.html:92
+#: candidates/templates/candidates/api.html:89
 msgid ""
 "Suppose you want to find the constituency for the postcode SW1A&nbsp;1AA, "
 "then you would make a GET request to the following URL:"
 msgstr "Os am ddarganfod etholaeth ar gyfer y cod post SW1A&nbsp;1AA, byddech chi'n gwneud cais GET i'r gwegyfeiriad canlynol:"
 
-#: candidates/templates/candidates/api.html:102
+#: candidates/templates/candidates/api.html:99
 msgid ""
 "This <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">returns a JSON "
 "object</a>, wherein the constituency ID can be found at "
 "<tt>.shortcuts.WMC</tt>."
 msgstr "Mae <a href=\"http://mapit.mysociety.org/postcode/SW1A1AA\">hwn yn dychwelyd gwrthrych JSON</a>, yn <tt>.shortcuts.WMC</tt>. mae'r cyfeirnod etholaeth"
 
-#: candidates/templates/candidates/api.html:108
+#: candidates/templates/candidates/api.html:105
 msgid ""
 "There's more documentation available on <a href=\"http://mapit.mysociety.org"
 "/#api-by_postcode\">postcode lookups on the MapIt front-page</a>."
 msgstr "Mae 'na ragor o fanylion  <a href=\"http://mapit.mysociety.org/#api-by_postcode\">ar adran cod post hafan MapIt</a>."
 
-#: candidates/templates/candidates/api.html:114
+#: candidates/templates/candidates/api.html:111
 msgid "... from a latitude / longitude or other coordinate"
 msgstr "... o ledred / hydred neu cyfesuryn arall"
 
-#: candidates/templates/candidates/api.html:116
+#: candidates/templates/candidates/api.html:113
 msgid ""
 "You can look up constituencies in MapIt using a variety of coordinate "
 "systems. To give the most common example, you might have a WGS84 coordinate "
@@ -978,30 +975,30 @@ msgid ""
 " looked up with:"
 msgstr "Gallwch chwilio am etholaethau yn MapIt gan ddefnyddio amrywiaeth o systemau cyfesuryn. E.e. os oes gennych cyfesuryn WGS84 o declyn llywio â lloeren neu o elfen leoliad API,  rhowch SRID 4326 yn eich ymholiad. E.e. gellid darganfod lledred o 52.205083  a hydred o 0.115194 gyda:"
 
-#: candidates/templates/candidates/api.html:128
+#: candidates/templates/candidates/api.html:125
 msgid ""
 "(Note that the longitude comes before the latitude, which might not be what "
 "you expect.) The only key in that object is the constituency ID."
 msgstr "(Noder bod yr hydred yn dod cyn y lledred, sy'n annisgwyl braidd) Yr unig allwedd yn y gwrthrych hwnnw yw cyfeirnod yr etholaeth."
 
-#: candidates/templates/candidates/api.html:134
+#: candidates/templates/candidates/api.html:131
 msgid ""
 "There's more documentation available on <a href=\"http://mapit.mysociety.org"
 "/#api-by_point\">point lookups on the MapIt front-page</a>."
 msgstr "Ceir mwy o ddogfennaeth ar <a href=\"http://mapit.mysociety.org/#api-by_point\">dudalen 'point lookups' MapIt</a>."
 
-#: candidates/templates/candidates/api.html:140
+#: candidates/templates/candidates/api.html:137
 msgid "... by selecting it from its name"
 msgstr "... drwy ei ddewis o'i enw"
 
-#: candidates/templates/candidates/api.html:142
+#: candidates/templates/candidates/api.html:139
 msgid ""
 "If you need to produce a list of all constituencies (e.g. for a select box) "
 "and allow the user to pick one, you can get a list of all Westminster "
 "constituencies in the UK from this request:"
 msgstr "Os oes rhaid i chi lunio rhestr o holl etholaethau (e.e. ar gyfer blwch dewis) a chaniatáu i'r defnyddiwr i ddewis un, gallwch gael rhestr o holl etholaethau San Steffan y DU o'r cais hwn:"
 
-#: candidates/templates/candidates/api.html:152
+#: candidates/templates/candidates/api.html:149
 msgid ""
 "The <a href=\"http://mapit.mysociety.org/areas/WMC\">returned data from that"
 " request</a> has the constituency ID as its keys; the values are objects "
@@ -1009,11 +1006,11 @@ msgid ""
 " official name of the constituency."
 msgstr "Mae gan <a href=\"http://mapit.mysociety.org/areas/WMC\">y data a ddychwelyd o'r cais hwnnw </a> cyfeirnod (ID) yr etholaeth fel ei allwedd; mae'r gwerthoedd yn wrthrychau sy'n cynnwys (ymhlith pethau eraill) yn elfen <tt>enw</tt> y bydd yn rhoi enw swyddogol yr etholaeth."
 
-#: candidates/templates/candidates/api.html:160
+#: candidates/templates/candidates/api.html:157
 msgid "Find Candidates for a Constituency"
 msgstr "Dod o hyd i Ymgeiswyr ar gyfer Etholaeth"
 
-#: candidates/templates/candidates/api.html:163
+#: candidates/templates/candidates/api.html:160
 #, python-format
 msgid ""
 "You can request all the candidates in that constituency by querying posts "
@@ -1023,7 +1020,7 @@ msgid ""
 "href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
 msgstr ""
 
-#: candidates/templates/candidates/api.html:173
+#: candidates/templates/candidates/api.html:170
 msgid ""
 "Each of the <tt>memberships</tt> in that reponse links to a person who is a "
 "candidate in that constituency for any known election.  The "
@@ -1232,16 +1229,28 @@ msgid ""
 msgstr "Peidiwch dalu am fas ddata o ymgeiswyr gan werthwyr data - mae'n wastraff arian."
 
 #: candidates/templates/candidates/frontpage.html:47
-#: elections/ar_elections_2015/templates/candidates/frontpage.html:48
 #: elections/cr/templates/cr/frontpage.html:48
+#: elections/uk_general_election_2015/templates/candidates/finder.html:48
+msgid "Use my current location"
+msgstr ""
+
+#: candidates/templates/candidates/frontpage.html:47
+#: elections/cr/templates/cr/frontpage.html:48
+#: elections/uk_general_election_2015/templates/candidates/finder.html:48
+msgid "Getting location…"
+msgstr ""
+
+#: candidates/templates/candidates/frontpage.html:48
+#: elections/ar_elections_2015/templates/candidates/frontpage.html:48
+#: elections/cr/templates/cr/frontpage.html:49
 msgid "Show candidates"
 msgstr "Dangos ymgeiswyr"
 
-#: candidates/templates/candidates/frontpage.html:58
+#: candidates/templates/candidates/frontpage.html:59
 msgid "This is a crowd-sourced database of election candidates."
 msgstr "Dyma gronfa ddata sydd wedi ei dorfoli o ymgeiswyr yn yr etholiad."
 
-#: candidates/templates/candidates/frontpage.html:62
+#: candidates/templates/candidates/frontpage.html:63
 #: elections/cr/templates/cr/frontpage.html:22
 #, python-format
 msgid ""
@@ -1251,25 +1260,25 @@ msgid ""
 "candidate details.</a>"
 msgstr "Mae ffynonellau data'r gronfa ddata mor dryloyw â phosib ac mae o ar gael fel data strwythuredig, yn addas ar gyfer creu gwefannau etholiad eraill.  <a href=\"%(api_url)s\">Mynnwch gopi o'r data</a>, neu <a href=\"%(tasks_url)s\">gallwch ein helpu drwy gyfrannu manylion ymgeiswyr newydd.</a>"
 
-#: candidates/templates/candidates/frontpage.html:76
+#: candidates/templates/candidates/frontpage.html:77
 msgid "Recent changes"
 msgstr "Newidiadau diweddar"
 
-#: candidates/templates/candidates/frontpage.html:83
+#: candidates/templates/candidates/frontpage.html:84
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> created <a href=\"%(person_url)s\">a new "
 "candidate</a> <span class=\"when\">%(when)s ago</span>"
 msgstr "Ychwanegodd y defnyddiwr <strong>%(username)s</strong> <a href=\"%(person_url)s\">ymgeisydd newydd</a> <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:89
+#: candidates/templates/candidates/frontpage.html:90
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> is creating a new candidate <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Mae <strong>%(username)s</strong> wrthi'n ychwanegu ymgeisydd newydd ers <span class=\"when\">%(when)s</span>"
 
-#: candidates/templates/candidates/frontpage.html:95
+#: candidates/templates/candidates/frontpage.html:96
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> merged another candidate into <a "
@@ -1277,7 +1286,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:101
+#: candidates/templates/candidates/frontpage.html:102
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> uploaded a photo of <a "
@@ -1285,7 +1294,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:107
+#: candidates/templates/candidates/frontpage.html:108
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> approved an uploaded photo of <a "
@@ -1293,7 +1302,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:113
+#: candidates/templates/candidates/frontpage.html:114
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> rejected an uploaded photo of <a "
@@ -1301,7 +1310,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:119
+#: candidates/templates/candidates/frontpage.html:120
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> reverted to an earlier version of <a "
@@ -1309,7 +1318,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:125
+#: candidates/templates/candidates/frontpage.html:126
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> confirmed candidacy for <a "
@@ -1317,7 +1326,7 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:131
+#: candidates/templates/candidates/frontpage.html:132
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> removed candidacy for <a "
@@ -1325,21 +1334,21 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:137
+#: candidates/templates/candidates/frontpage.html:138
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> locked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Gwnaeth <strong>%(username)s</strong> gloi etholaeth  <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:141
+#: candidates/templates/candidates/frontpage.html:142
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> unlocked a constituency <span "
 "class=\"when\">%(when)s ago</span>"
 msgstr "Gwnaeth <strong>%(username)s</strong> dad-gloi etholaeth  <span class=\"when\">%(when)s yn ôl</span>"
 
-#: candidates/templates/candidates/frontpage.html:145
+#: candidates/templates/candidates/frontpage.html:146
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> marked <a "
@@ -1347,7 +1356,7 @@ msgid ""
 "class=\"when\">%(when)s ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:151
+#: candidates/templates/candidates/frontpage.html:152
 #, python-format
 msgid ""
 "User <strong>%(username)s</strong> updated <a "
@@ -1355,15 +1364,15 @@ msgid ""
 "ago</span>"
 msgstr ""
 
-#: candidates/templates/candidates/frontpage.html:160
+#: candidates/templates/candidates/frontpage.html:161
 msgid "Show more changes…"
 msgstr "Dangos rhagor o newidiadau..."
 
-#: candidates/templates/candidates/frontpage.html:163
+#: candidates/templates/candidates/frontpage.html:164
 msgid "Top users this week"
 msgstr "Prif ddefnyddwyr yr wythnos hon"
 
-#: candidates/templates/candidates/frontpage.html:167
+#: candidates/templates/candidates/frontpage.html:168
 #, python-format
 msgid "%(count)s edit"
 msgid_plural "%(count)s edits"
@@ -1372,7 +1381,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: candidates/templates/candidates/frontpage.html:172
+#: candidates/templates/candidates/frontpage.html:173
 msgid "Show full leaderboard…"
 msgstr "Dangos y rhestr gyflawn o bwy sydd ar y brig..."
 
@@ -1836,7 +1845,7 @@ msgstr "Dilynwch un o'r dolenni isod i weld rhestr o'r ymgeiswyr sy'n hysbys inn
 #: candidates/templates/candidates/privacy.html:6
 #: candidates/templates/candidates/privacy.html:9
 #: elections/ar_elections_2015/templates/base.html:112
-#: mysite/templates/generic_base.html:126
+#: mysite/templates/generic_base.html:142
 msgid "Privacy policy"
 msgstr "Polisi Preifatrwydd"
 
@@ -1970,6 +1979,28 @@ msgid ""
 "href=\"%(email)s\">%(email)s</a>."
 msgstr ""
 
+#: candidates/templates/search/search.html:7
+msgid "Search candidates"
+msgstr ""
+
+#: candidates/templates/search/search.html:10
+#: mysite/templates/generic_base.html:99
+msgid "Find a candidate…"
+msgstr ""
+
+#: candidates/templates/search/search.html:11
+#: mysite/templates/generic_base.html:100 tasks/templates/tasks/field.html:42
+msgid "Search"
+msgstr "Chwilio"
+
+#: candidates/templates/search/search.html:14
+msgid "Results"
+msgstr ""
+
+#: candidates/templates/search/search.html:37
+msgid "No results found."
+msgstr ""
+
 #: candidates/templatetags/metadescription.py:22
 #: candidates/templatetags/metadescription.py:27
 msgid "Independent"
@@ -2041,6 +2072,15 @@ msgstr "Data annilys POSTed i ConstituencyLockView"
 msgid "Result recorded in error, retracting"
 msgstr "Cofnodwyd canlyniad mewn camgymeriad, wrthi'n tynnu'n ôl"
 
+#: candidates/views/frontpage.py:45
+#, python-brace-format
+msgid "The area lookup returned an error: '{0}'"
+msgstr ""
+
+#: candidates/views/frontpage.py:54
+msgid "Your location does not seem to be covered by this site"
+msgstr ""
+
 #: candidates/views/mixins.py:16
 msgid "All Time"
 msgstr "Holl Amser"
@@ -2083,30 +2123,30 @@ msgid "Provinces"
 msgstr "Taleithiau"
 
 #: elections/ar_elections_2015/templates/base.html:60
-#: mysite/templates/generic_base.html:83
+#: mysite/templates/generic_base.html:77
 #, python-format
 msgid "Signed in as <strong>%(username)s</strong>"
 msgstr "Wedi mewngofnodi i gyfrif <strong>%(username)s</strong>"
 
 #: elections/ar_elections_2015/templates/base.html:62
-#: mysite/templates/generic_base.html:84
+#: mysite/templates/generic_base.html:81
 msgid "Sign out"
 msgstr "Allgofnodi"
 
 #: elections/ar_elections_2015/templates/base.html:65
-#: mysite/templates/generic_base.html:88
+#: mysite/templates/generic_base.html:83
 msgid "Sign in to edit"
 msgstr "Mewngofnodi i olygu"
 
 #: elections/ar_elections_2015/templates/base.html:110
-#: mysite/templates/generic_base.html:123
+#: mysite/templates/generic_base.html:139
 msgid "Open data API"
 msgstr "Data agored yr API"
 
 #: elections/ar_elections_2015/templates/base.html:111
-#: elections/uk_general_election_2015/templates/base.html:25
-#: mysite/templates/generic_base.html:74
-#: mysite/templates/generic_base.html:124
+#: elections/uk_general_election_2015/templates/base.html:24
+#: mysite/templates/generic_base.html:93
+#: mysite/templates/generic_base.html:140
 msgid "About"
 msgstr "Amdanom Ni"
 
@@ -2151,7 +2191,7 @@ msgid "Upload a %(type)s"
 msgstr "Lanlwytho %(type)s"
 
 #: elections/bf_elections_2015/templates/base.html:8
-#: elections/example/templates/base.html:8
+#: elections/cy/templates/base.html:8 elections/example/templates/base.html:8
 #: elections/st_paul_municipal_2015/templates/base.html:8
 #, python-format
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
@@ -2201,23 +2241,23 @@ msgstr "Roedd yna lythrennau neu rifau gwaharddedig yn \"{0}\""
 msgid "No constituency found for the postcode \"{0}\""
 msgstr "Does dim etholaeth i'w gael dan god post  \"{0}\""
 
-#: elections/uk_general_election_2015/templates/base.html:26
+#: elections/uk_general_election_2015/templates/base.html:25
 msgid "Elections"
 msgstr ""
 
-#: elections/uk_general_election_2015/templates/base.html:27
-#: mysite/templates/generic_base.html:76
+#: elections/uk_general_election_2015/templates/base.html:26
+#: mysite/templates/generic_base.html:95
 msgid "Numbers"
 msgstr "Niferoedd"
 
-#: elections/uk_general_election_2015/templates/base.html:32
+#: elections/uk_general_election_2015/templates/base.html:31
 msgid ""
 "Supported by <a href=\"https://fullfact.org\">Full Fact</a>, <a "
 "href=\"http://unlockdemocracy.org.uk\">Unlock Democracy</a>, and <a "
 "href=\"https://mysociety.org\">mySociety</a>."
 msgstr "Cefnogwyd gan  <a href=\"https://fullfact.org\">Full Fact</a>, <a href=\"http://unlockdemocracy.org.uk\">Unlock Democracy</a>, a <a href=\"https://mysociety.org\">mySociety</a>."
 
-#: elections/uk_general_election_2015/templates/base.html:39
+#: elections/uk_general_election_2015/templates/base.html:38
 #, python-format
 msgid ""
 "Built by <a href=\"%(site_managers_url)s\"> <img src=\"%(logo_url)s\" %%} "
@@ -2648,7 +2688,7 @@ msgstr ""
 msgid "Standing for re-election"
 msgstr ""
 
-#: mysite/settings/conf.py:377
+#: mysite/settings/conf.py:379
 msgid ""
 "Please don't quote third-party candidate sites — we prefer URLs of news "
 "stories or official candidate pages."
@@ -2758,11 +2798,11 @@ msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
 msgstr "Os oes gennych gyfrif,  <a href=\"%(login_url)s\">mewngofnodwch</a> os gwelwch chi'n dda."
 
-#: mysite/templates/generic_base.html:75
+#: mysite/templates/generic_base.html:94
 msgid "Posts"
 msgstr "Etholaethau"
 
-#: mysite/templates/generic_base.html:125
+#: mysite/templates/generic_base.html:141
 msgid "Issue tracker"
 msgstr "Traciwr materion"
 
@@ -2889,10 +2929,6 @@ msgstr ""
 #: tasks/templates/tasks/field.html:41
 msgid "Tweet them"
 msgstr "Trydaru"
-
-#: tasks/templates/tasks/field.html:42
-msgid "Search"
-msgstr "Chwilio"
 
 #: tasks/templates/tasks/field.html:48
 msgid "Previous page"
