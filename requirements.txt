@@ -19,6 +19,7 @@ django-filter==0.11.0
 django-haystack==2.4.1
 django-model-utils==2.3.1
 django-nose==1.4.1
+django-notifications-hq==1.0.0
 django-pipeline==1.5.1
 -e git+https://github.com/mysociety/django-popolo@update-with-better-migrations-redux#egg=mysociety-django-popolo
 django-statici18n==1.1.5
