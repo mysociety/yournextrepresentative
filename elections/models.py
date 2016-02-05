@@ -1,8 +1,10 @@
+from collections import defaultdict
 from datetime import date
 
 from django.db import models
 from django.shortcuts import get_object_or_404
-from collections import defaultdict
+from django.utils.translation import ugettext_lazy as _
+
 from popolo.models import Organization
 
 class ElectionQuerySet(models.QuerySet):
@@ -38,7 +40,7 @@ class ElectionManager(models.Manager):
 class AreaType(models.Model):
     name = models.CharField(max_length=128)
     source = models.CharField(max_length=128, blank=True,
-                              help_text="e.g MapIt")
+                              help_text=_("e.g MapIt"))
 
     def __unicode__(self):
         return self.name
