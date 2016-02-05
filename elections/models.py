@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.shortcuts import get_object_or_404
 from collections import defaultdict
@@ -24,6 +26,10 @@ class ElectionManager(models.Manager):
                 generations[area_tuple].append(election)
 
         return generations
+
+    def are_upcoming_elections(self):
+        today = date.today()
+        return self.current().filter(election_date__gte=today).exists()
 
 
 # FIXME: shouldn't AreaType also have the MapIt generation?
