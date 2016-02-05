@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from mock import patch
-
 from __future__ import unicode_literals
+
+from mock import patch
 
 from django_webtest import WebTest
 from nose.plugins.attrib import attr
