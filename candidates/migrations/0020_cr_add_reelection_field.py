@@ -11,7 +11,7 @@ def add_extra_field(apps, schema_editor):
          ExtraField.objects.create(
             key='reelection',
             type='yesno',
-            label=u'Standing for re-election',
+            label='Standing for re-election',
         )
 
 

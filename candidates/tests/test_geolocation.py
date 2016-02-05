@@ -107,7 +107,7 @@ class TestGeolocator(WebTest):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.09153,51.444')
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json, {'url': '/areas/WMC-65808,LAC-11822'})
+        self.assertEquals(response.json, {'url': '/areas/LAC-11822,WMC-65808'})
 
     def test_invalid_coords_returns_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit

@@ -50,7 +50,7 @@ class ExtraFieldTests(TestUserMixin, WebTest):
 
         yn_field = ExtraField.objects.create(
             key='reelection',
-            label=u'Standing for re-election',
+            label='Standing for re-election',
             type=ExtraField.YESNO
         )
 
@@ -210,6 +210,6 @@ class ExtraFieldTests(TestUserMixin, WebTest):
         profession_dd = get_next_dd(profession_dt)
         self.assertEqual(profession_dd.text.strip(), 'Tree Surgeon')
 
-        profession_dt = response.html.find('dt', text=u'Standing for re-election')
+        profession_dt = response.html.find('dt', text='Standing for re-election')
         profession_dd = get_next_dd(profession_dt)
         self.assertEqual(profession_dd.text.strip(), 'Yes')
