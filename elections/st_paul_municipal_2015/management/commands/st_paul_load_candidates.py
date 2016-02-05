@@ -63,11 +63,13 @@ class Command(BaseCommand):
 
             try:
                 election_data = Election.objects.get_by_slug('council-member-2015')
-                ocd_division = election_data.post_id_format.format(area_id=row['Ward'])
+                post_id_format = 'ocd-division,country:us,state:mn,place:st_paul,ward:{area_id}'
+                ocd_division = post_id_format.format(area_id=row['Ward'])
                 post_data = get_post_cached(api, ocd_division)['result']
             except (UnknownPostException, memcache.Client.MemcachedKeyCharacterError):
                 election_data = Election.objects.get_by_slug('school-board-2015')
-                post_data = get_post_cached(api, election_data.post_id_format)['result']
+                post_id = 'ocd-division,country:us,state:mn,place:st_paul'
+                post_data = get_post_cached(api, post_id)['result']
 
             person_id = slugify(row['Name'])
 
