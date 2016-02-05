@@ -71,7 +71,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertIn(
-            'This candidate won!',
+            'This candidate was elected!',
             unicode(response),
         )
         record_url = reverse(
@@ -213,7 +213,7 @@ class TestRetractWinner(TestUserMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertIn(
-            'Unset the current winner',
+            'Unset the current winners',
             unicode(response),
         )
         record_url = reverse(
@@ -234,7 +234,7 @@ class TestRetractWinner(TestUserMixin, WebTest):
             user=self.user,
         )
         self.assertNotIn(
-            'Unset the current winner',
+            'Unset the current winners',
             unicode(response)
         )
 

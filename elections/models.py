@@ -1,8 +1,10 @@
+from collections import defaultdict
 from datetime import date
 
 from django.db import models
 from django.shortcuts import get_object_or_404
-from collections import defaultdict
+from django.utils.translation import ugettext_lazy as _
+
 from popolo.models import Organization
 
 class ElectionQuerySet(models.QuerySet):
@@ -38,7 +40,7 @@ class ElectionManager(models.Manager):
 class AreaType(models.Model):
     name = models.CharField(max_length=128)
     source = models.CharField(max_length=128, blank=True,
-                              help_text="e.g MapIt")
+                              help_text=_("e.g MapIt"))
 
     def __unicode__(self):
         return self.name
@@ -63,6 +65,11 @@ class Election(models.Model):
     area_generation = models.CharField(max_length=128, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True)
     party_lists_in_use = models.BooleanField(default=False)
+    people_elected_per_post = models.IntegerField(
+        default=1,
+        help_text=_("The number of people who are elected to this post in the "
+                    "election.  -1 means a variable number of winners")
+    )
     default_party_list_members_to_show = models.IntegerField(default=0)
     show_official_documents = models.BooleanField(default=False)
     ocd_division = models.CharField(max_length=250, blank=True)

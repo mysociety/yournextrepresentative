@@ -150,11 +150,16 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         )
 
         context['show_retract_result'] = False
+        number_of_winners = 0
         for c in current_candidacies:
+            if c.extra.elected:
+                number_of_winners += 1
             if c.extra.elected is not None:
                 context['show_retract_result'] = True
 
-        context['show_confirm_result'] = not context['show_retract_result']
+        max_winners = self.election_data.people_elected_per_post
+        context['show_confirm_result'] = (max_winners < 0) \
+            or number_of_winners < max_winners
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
@@ -324,50 +329,30 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
         )
 
         with transaction.atomic():
-            existing_winner = self.post_data.memberships.filter(
+            number_of_existing_winners = self.post_data.memberships.filter(
                 extra__elected=True,
                 extra__election=self.election_data
-            )
-            # FIXME: need to fix for elections with multiple winners
-            if existing_winner.exists():
-                old_winner = existing_winner.first()
-                old_winner.person.extra.record_version(change_metadata)
-                old_winner.person.save()
-
-                LoggedAction.objects.create(
-                    user=self.request.user,
-                    action_type='set-candidate-not-elected',
-                    ip_address=get_client_ip(self.request),
-                    popit_person_new_version=change_metadata['version_id'],
-                    person=old_winner.person,
-                    source=change_metadata['information_source'],
-                )
-
-                old_winner.extra.elected = False
-                old_winner.save()
-
-            role = self.election_data.candidate_membership_role
-            membership = Membership.objects.get(
-                role=role,
+            ).count()
+            max_winners = self.election_data.people_elected_per_post
+            if max_winners >= 0 and number_of_existing_winners >= max_winners:
+                msg = "There were already {n} winners of {post_label}" \
+                    "and the maximum in election {election_name} is {max}"
+                raise Exception(msg.format(
+                    n=number_of_existing_winners,
+                    post_label=self.post_data.label,
+                    election_name=self.election_data.name,
+                    max=self.election_data.people_elected_per_post
+                ))
+            # So now we know we can set this person as the winner:
+            candidate_role = self.election_data.candidate_membership_role
+            membership_new_winner = Membership.objects.get(
+                role=candidate_role,
                 post=self.post_data,
                 person=self.person,
                 extra__election=self.election_data,
             )
-
-            membership.extra.elected = True
-            membership.extra.save()
-
-            all_candidates = self.post_data.memberships.filter(
-                role=self.election_data.candidate_membership_role,
-                extra__election=self.election_data,
-            ).exclude(
-                extra__elected=True
-            )
-
-            for candidate in all_candidates.all():
-                candidate.extra.elected = False
-                candidate.extra.save()
-
+            membership_new_winner.extra.elected = True
+            membership_new_winner.extra.save()
 
             ResultEvent.objects.create(
                 election=self.election_data,
@@ -375,7 +360,7 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                 winner_person_name=self.person.name,
                 post_id=self.post_data.extra.slug,
                 post_name=self.post_data.label,
-                winner_party_id=membership.on_behalf_of.extra.slug,
+                winner_party_id=membership_new_winner.on_behalf_of.extra.slug,
                 source=form.cleaned_data['source'],
                 user=self.request.user,
             )
@@ -391,6 +376,27 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                 person=self.person,
                 source=change_metadata['information_source'],
             )
+
+            # Now, if the current number of winners is equal to the
+            # maximum number of winners, we can set everyone else as
+            # "not elected".
+            if max_winners >= 0:
+                max_reached = (max_winners == (number_of_existing_winners + 1))
+                if max_reached:
+                    losing_candidacies = self.post_data.memberships.filter(
+                        extra__election=self.election_data,
+                    ).exclude(extra__elected=True)
+                    for candidacy in losing_candidacies:
+                        if candidacy.extra.elected != False:
+                            candidacy.extra.elected = False
+                            candidacy.extra.save()
+                            candidate = candidacy.person
+                            change_metadata = get_change_metadata(
+                                self.request,
+                                _('Setting as "not elected" by implication')
+                            )
+                            candidate.extra.record_version(change_metadata)
+                            candidate.save()
 
         return get_redirect_to_post(
             self.election,
@@ -409,37 +415,21 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
         constituency_name = post.extra.short_label
 
         with transaction.atomic():
-            existing_winner = post.memberships.filter(
-                extra__elected=True,
-                extra__election=self.election_data
-            )
-
-            if existing_winner.exists():
-                membership = existing_winner.first()
-                candidate = membership.person
-
-                change_metadata = get_change_metadata(
-                    self.request,
-                    _('Result recorded in error, retracting')
-                )
-                candidate.extra.record_version(change_metadata)
-                candidate.save()
-                LoggedAction.objects.create(
-                    user=self.request.user,
-                    action_type='retract-result',
-                    ip_address=get_client_ip(self.request),
-                    popit_person_new_version=change_metadata['version_id'],
-                    person=candidate,
-                    source=change_metadata['information_source'],
-                )
-
-            all_candidates = post.memberships.filter(
+            all_candidacies = post.memberships.filter(
                 role=self.election_data.candidate_membership_role,
                 extra__election=self.election_data,
             )
-            for candidate in all_candidates.all():
-                candidate.extra.elected = None
-                candidate.extra.save()
+            for candidacy in all_candidacies.all():
+                if candidacy.extra.elected is not None:
+                    candidacy.extra.elected = None
+                    candidacy.extra.save()
+                    candidate = candidacy.person
+                    change_metadata = get_change_metadata(
+                        self.request,
+                        _('Result recorded in error, retracting')
+                    )
+                    candidate.extra.record_version(change_metadata)
+                    candidate.save()
 
         return HttpResponseRedirect(
             reverse(

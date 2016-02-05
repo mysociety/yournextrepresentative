@@ -146,14 +146,14 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         response.mustcontain('<a href="/person/2009/tessa-jowell" class="candidate-name">Tessa Jowell</a> <span class="party">Labour Party</span>')
         form = response.forms['new-candidate-form']
         self.assertTrue(form)
-        response.mustcontain(no='Unset the current winner')
+        response.mustcontain(no='Unset the current winners')
 
     def test_constituency_with_no_winner_record_results_user(self):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_record_results
         )
-        response.mustcontain(no='Unset the current winner')
+        response.mustcontain(no='Unset the current winners')
 
     def test_any_constituency_csv(self):
         response = self.app.get(
@@ -197,14 +197,14 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         response = self.app.get('/election/2015/post/14419/edinburgh-east')
         response.mustcontain('<li class="candidates-list__person candidates-list__person__winner">')
 
-        response.mustcontain(no='Unset the current winner')
+        response.mustcontain(no='Unset the current winners')
 
     def test_constituency_with_winner_record_results_user(self):
         response = self.app.get(
             '/election/2015/post/14419/edinburgh-east',
             user=self.user_who_can_record_results
         )
-        response.mustcontain('Unset the current winner')
+        response.mustcontain('Unset the current winners')
 
     def test_constituency_with_may_be_standing(self):
         response = self.app.get('/election/2015/post/14419/edinburgh-east')
