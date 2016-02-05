@@ -2,8 +2,6 @@
 
 from mock import patch, Mock
 
-from urlparse import urlsplit
-
 from django_webtest import WebTest
 
 from candidates.tests.factories import (
