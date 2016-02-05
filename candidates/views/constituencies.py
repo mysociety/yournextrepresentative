@@ -409,37 +409,21 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
         constituency_name = post.extra.short_label
 
         with transaction.atomic():
-            existing_winner = post.memberships.filter(
-                extra__elected=True,
-                extra__election=self.election_data
-            )
-
-            if existing_winner.exists():
-                membership = existing_winner.first()
-                candidate = membership.person
-
-                change_metadata = get_change_metadata(
-                    self.request,
-                    _('Result recorded in error, retracting')
-                )
-                candidate.extra.record_version(change_metadata)
-                candidate.save()
-                LoggedAction.objects.create(
-                    user=self.request.user,
-                    action_type='retract-result',
-                    ip_address=get_client_ip(self.request),
-                    popit_person_new_version=change_metadata['version_id'],
-                    person=candidate,
-                    source=change_metadata['information_source'],
-                )
-
-            all_candidates = post.memberships.filter(
+            all_candidacies = post.memberships.filter(
                 role=self.election_data.candidate_membership_role,
                 extra__election=self.election_data,
             )
-            for candidate in all_candidates.all():
-                candidate.extra.elected = None
-                candidate.extra.save()
+            for candidacy in all_candidacies.all():
+                if candidacy.extra.elected is not None:
+                    candidacy.extra.elected = None
+                    candidacy.extra.save()
+                    candidate = candidacy.person
+                    change_metadata = get_change_metadata(
+                        self.request,
+                        _('Result recorded in error, retracting')
+                    )
+                    candidate.extra.record_version(change_metadata)
+                    candidate.save()
 
         return HttpResponseRedirect(
             reverse(
