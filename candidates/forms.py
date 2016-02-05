@@ -96,9 +96,9 @@ class BasePersonForm(forms.Form):
                         # the values of that are too specific for a generic field
                         # so we redefine them here.
                         choices=(
-                            ('not-sure', _(u"Don’t Know")),
-                            ('yes', _(u"Yes")),
-                            ('no', _(u"No")),
+                            ('not-sure', _("Don’t Know")),
+                            ('yes', _("Yes")),
+                            ('no', _("No")),
                         )
                     )
             else:
