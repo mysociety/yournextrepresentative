@@ -137,7 +137,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/LAC-11822,GLA-2247,WMC-65808',
+            '/areas/GLA-2247,LAC-11822,WMC-65808',
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):

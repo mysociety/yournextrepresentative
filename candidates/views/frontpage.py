@@ -65,7 +65,7 @@ class GeoLocatorView(View):
         ]
 
         url = reverse('areas-view', kwargs={
-            'type_and_area_ids': ','.join(ids_and_areas)
+            'type_and_area_ids': ','.join(sorted(ids_and_areas))
         })
 
         return HttpResponse(
