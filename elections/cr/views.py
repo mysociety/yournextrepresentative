@@ -5,6 +5,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
+from elections.models import Election
 from candidates.views.mixins import ContributorsMixin
 from .forms import CantonSelectorForm
 
@@ -31,4 +32,5 @@ class CantonSelectorView(ContributorsMixin, FormView):
         context = super(CantonSelectorView, self).get_context_data(**kwargs)
         context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
+        context['upcoming_election'] = Election.objects.are_upcoming_elections()
         return context

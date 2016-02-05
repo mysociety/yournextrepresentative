@@ -35,9 +35,15 @@
 
 {% block hero %}
 
-  <h1>{% trans "Find candidates to be your next representative" %}</h1>
+  {% if upcoming_election %}
+    <h1>{% trans "Find candidates to be your next representative" %}</h1>
 
-  <p class="lead">{% trans "Find or add information about the candidates for the upcoming municipal elections on February 7" %}</p>
+    <p class="lead">{% trans "Find or add information about the candidates for the upcoming municipal elections on February 7" %}</p>
+  {% else %}
+    <h1>{% trans "Find candidates who stood in the Municipal Elections" %}</h1>
+
+    <p class="lead">{% trans "Find information about the candidates who stood in the elections on February 7 2016" %}</p>
+  {% endif %}
 
 {% endblock %}
 
