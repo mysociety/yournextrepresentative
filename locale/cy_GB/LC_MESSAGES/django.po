@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-04 17:45+0000\n"
-"PO-Revision-Date: 2016-02-04 17:46+0000\n"
+"POT-Creation-Date: 2016-02-05 10:28-0600\n"
+"PO-Revision-Date: 2016-02-05 16:28+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -535,11 +535,6 @@ msgstr ""
 msgid "'PersonExtra' object has no attribute '{name}'"
 msgstr ""
 
-#: candidates/static_data.py:44
-#, python-brace-format
-msgid "Found multiple areas for the post ID {post_id}"
-msgstr "Mae nifer o ardaloedd ar gyfer cyfeirnod swydd {post_id}"
-
 #: candidates/templates/candidates/_candidates_for_post.html:67
 msgid "(This list of candidates is currently <strong>locked</strong>.)"
 msgstr "(Bellach mae'r rhestr o ymgeiswyr yma <strong> dan glo </strong>.)"
@@ -556,8 +551,8 @@ msgid ""
 msgstr "Mae'r restr hon o ymgeiswyr bellach <strong>dan glo</strong>; gellir diwedaru manylion cyswllt ond nid enwau'r ymgeiswyr."
 
 #: candidates/templates/candidates/_candidates_for_post.html:83
-msgid "Unset the current winner, if incorrect"
-msgstr "Dadosod enw'r enillydd presennol, os yw'n anghywir"
+msgid "Unset the current winners, if incorrect"
+msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:91
 #, python-format
@@ -591,14 +586,12 @@ msgid "Edit"
 msgstr "Golygu"
 
 #: candidates/templates/candidates/_candidates_for_post.html:134
-#: candidates/templates/candidates/ordered-party-list.html:76
 msgid "[Quick update from the constituency page]"
 msgstr "[Diweddariad cyflym o'r dudalen etholaeth]"
 
 #: candidates/templates/candidates/_candidates_for_post.html:135
-#: candidates/templates/candidates/ordered-party-list.html:77
-msgid "This candidate won!"
-msgstr "Enillodd yr ymgeisydd yma!"
+msgid "This candidate was elected!"
+msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:150
 #, python-format
@@ -610,26 +603,26 @@ msgstr "<strong>Hen dro</strong>, nid ydym yn adnabod unrhyw ymgeiswyr yn  %(pos
 #: candidates/templates/candidates/_candidates_for_post.html:154
 #: candidates/templates/candidates/_candidates_for_post.html:162
 #: candidates/templates/candidates/_candidates_for_post.html:173
+#: candidates/templates/candidates/ordered-party-list.html:83
 #: candidates/templates/candidates/ordered-party-list.html:91
-#: candidates/templates/candidates/ordered-party-list.html:99
-#: candidates/templates/candidates/ordered-party-list.html:105
-#: candidates/templates/candidates/ordered-party-list.html:111
+#: candidates/templates/candidates/ordered-party-list.html:97
+#: candidates/templates/candidates/ordered-party-list.html:103
 #: candidates/templates/candidates/person-create.html:7
 msgid "Add a new candidate"
 msgstr "Ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:156
-#: candidates/templates/candidates/ordered-party-list.html:93
+#: candidates/templates/candidates/ordered-party-list.html:85
 msgid "Sign in to add a new candidate"
 msgstr "Mewngofnodi er mwyn ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:186
-#: candidates/templates/candidates/ordered-party-list.html:124
+#: candidates/templates/candidates/ordered-party-list.html:116
 msgid "Add new candidate"
 msgstr "Ychwanegu ymgeisydd newydd"
 
 #: candidates/templates/candidates/_candidates_for_post.html:187
-#: candidates/templates/candidates/ordered-party-list.html:125
+#: candidates/templates/candidates/ordered-party-list.html:117
 #: candidates/templates/candidates/record-winner.html:35
 #: moderation_queue/templates/moderation_queue/photo-review.html:160
 msgid "Cancel"
@@ -1218,7 +1211,7 @@ msgid "%(election_name)s candidates"
 msgstr "%(election_name)s ymgeiswyr"
 
 #: candidates/templates/candidates/frontpage.html:34
-#: elections/cr/templates/cr/frontpage.html:38
+#: elections/cr/templates/cr/frontpage.html:39
 msgid "Find candidates to be your next representative"
 msgstr "Dod o hyd i ymgeiswyr i fod yn eich cynrychiolydd nesaf"
 
@@ -1229,20 +1222,20 @@ msgid ""
 msgstr "Peidiwch dalu am fas ddata o ymgeiswyr gan werthwyr data - mae'n wastraff arian."
 
 #: candidates/templates/candidates/frontpage.html:47
-#: elections/cr/templates/cr/frontpage.html:48
+#: elections/cr/templates/cr/frontpage.html:54
 #: elections/uk_general_election_2015/templates/candidates/finder.html:48
 msgid "Use my current location"
 msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:47
-#: elections/cr/templates/cr/frontpage.html:48
+#: elections/cr/templates/cr/frontpage.html:54
 #: elections/uk_general_election_2015/templates/candidates/finder.html:48
 msgid "Getting location…"
 msgstr ""
 
 #: candidates/templates/candidates/frontpage.html:48
 #: elections/ar_elections_2015/templates/candidates/frontpage.html:48
-#: elections/cr/templates/cr/frontpage.html:49
+#: elections/cr/templates/cr/frontpage.html:55
 msgid "Show candidates"
 msgstr "Dangos ymgeiswyr"
 
@@ -1425,7 +1418,7 @@ msgstr ""
 msgid "%(party_name)s candidates for <a href=\"%(post_url)s\">%(post_label)s</a>"
 msgstr ""
 
-#: candidates/templates/candidates/ordered-party-list.html:87
+#: candidates/templates/candidates/ordered-party-list.html:79
 #, python-format
 msgid ""
 "<strong>Oh no!</strong> We don’t know of any candidates from %(party.name)s "
@@ -2064,11 +2057,15 @@ msgstr ""
 msgid "Attempt to edit a candidacy in a locked constituency"
 msgstr "Ymgais i olygu'r ymgeisyddiaeth mewn etholaeth sydd dan glo"
 
-#: candidates/views/constituencies.py:253
+#: candidates/views/constituencies.py:258
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr "Data annilys POSTed i ConstituencyLockView"
 
-#: candidates/views/constituencies.py:423
+#: candidates/views/constituencies.py:396
+msgid "Setting as \"not elected\" by implication"
+msgstr ""
+
+#: candidates/views/constituencies.py:429
 msgid "Result recorded in error, retracting"
 msgstr "Cofnodwyd canlyniad mewn camgymeriad, wrthi'n tynnu'n ôl"
 
@@ -2191,7 +2188,7 @@ msgid "Upload a %(type)s"
 msgstr "Lanlwytho %(type)s"
 
 #: elections/bf_elections_2015/templates/base.html:8
-#: elections/cy/templates/base.html:8 elections/example/templates/base.html:8
+#: elections/example/templates/base.html:8
 #: elections/st_paul_municipal_2015/templates/base.html:8
 #, python-format
 msgid "Run by <img src=\"%(logo_url)s\" %%} alt=\"%(site_managers)s\" class=\"dc-logo\">"
@@ -2215,10 +2212,30 @@ msgid ""
 "\"Spanish\" in the settings."
 msgstr ""
 
-#: elections/cr/templates/cr/frontpage.html:40
+#: elections/cr/templates/cr/frontpage.html:41
 msgid ""
 "Find or add information about the candidates for the upcoming municipal "
 "elections on February 7"
+msgstr ""
+
+#: elections/cr/templates/cr/frontpage.html:43
+msgid "Find candidates who stood in the Municipal Elections"
+msgstr ""
+
+#: elections/cr/templates/cr/frontpage.html:45
+msgid ""
+"Find information about the candidates who stood in the elections on February"
+" 7 2016"
+msgstr ""
+
+#: elections/models.py:43
+msgid "e.g MapIt"
+msgstr ""
+
+#: elections/models.py:70
+msgid ""
+"The number of people who are elected to this post in the election.  -1 means"
+" a variable number of winners"
 msgstr ""
 
 #: elections/st_paul_municipal_2015/templates/candidates/posts.html:6
