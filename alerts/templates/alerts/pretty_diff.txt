@@ -1,0 +1,18 @@
+{% load prettyjson %}
+
+User: {{ changes.username }}
+Time: {{ changes.timestamp }}
+Source: {{ changes.information_source }}
+Changes:
+{% for operation in changes.diff %}
+  {% if operation.op == 'add' %}
+     Added: {{ operation.path }} => {{ operation.value }}
+  {% elif operation.op == 'remove' %}
+     Removed: {{ operation.path }}
+     (previously it was {{ previous }})
+  {% elif operation.op == 'replace' %}
+     At {{ operation.path }} replaced {{ operation.previous_value }} with {{ operation.value }}
+  {% else %}
+     UNEXPECTED OPERATION: {{ operation }}
+  {% endif %}
+{% endfor %}
