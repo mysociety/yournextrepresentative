@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Manfred Vargas <manfred.vargas@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-30 14:53+0100\n"
-"PO-Revision-Date: 2016-02-02 13:50+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2016-02-05 18:20+0000\n"
+"Last-Translator: Manfred Vargas <manfred.vargas@gmail.com>\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/mysociety/yournextmp/language/es_CR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +21,12 @@ msgstr ""
 #: candidates/static/js/constituency.js:53
 #, javascript-format
 msgid "Are you sure that %s (%s) was the winner in %s?"
-msgstr ""
+msgstr "¿Estás seguro de que %s (%s) fue el ganador en %s?"
 
 #: candidates/static/js/versions.js:4
 msgid "Show full version"
-msgstr ""
+msgstr "Mostrar la versión completa"
 
 #: candidates/static/js/versions.js:6
 msgid "Hide full version"
-msgstr ""
+msgstr "Ocultar la versión completa"
