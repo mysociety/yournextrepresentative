@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-05 10:28-0600\n"
+"POT-Creation-Date: 2016-02-06 10:07-0600\n"
 "PO-Revision-Date: 2016-02-05 16:28+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Greek (http://www.transifex.com/mysociety/yournextmp/language/el/)\n"
@@ -2087,7 +2087,7 @@ msgstr "Την τελευταία εβδομάδα"
 #: candidates/views/people.py:120
 #, python-brace-format
 msgid "No person found with ID {person_id}"
-msgstr "Δε βρέθηκε κανένα άτομο με κωδικό "
+msgstr ""
 
 #: candidates/views/people.py:163
 #, python-brace-format
