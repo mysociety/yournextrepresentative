@@ -2,9 +2,17 @@
 
 MAILTO=yournextmp@mysociety.org
 
-# Update the live CSV file every 15 minutes on the production instance, offset
-# from generating the cached counts:
-2,17,32,47 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py candidates_create_csv --site-base-url='http!!(*= $https_only ? 's' : '' *)!!://!!(*= $vhost *)!!' /data/vhost/!!(*= $vhost *)!!/media_root/candidates
+!!(*
+    %csv_hour = (
+        'tusrepresentanteslocales.co.cr' => 10,
+        'yournextmp.mysociety.org' => 12,
+        'candidats.data.gov.bf' => 14,
+    );
+    if (exists $csv_hour{$vhost}) {
+*)!!
+# Update the generated CSV only once a day:
+41 !!(*= $csv_hour{$vhost} *)!! * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py candidates_create_csv --site-base-url='http!!(*= $https_only ? 's' : '' *)!!://!!(*= $vhost *)!!' /data/vhost/!!(*= $vhost *)!!/media_root/candidates
+!!(* } *)!!
 
 # Run face detection every 15 minutes, again offset a bit:
 10,25,40,55 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py moderation_queue_detect_faces_in_queued_images
