@@ -7,6 +7,7 @@ MAILTO=yournextmp@mysociety.org
         'tusrepresentanteslocales.co.cr' => 10,
         'yournextmp.mysociety.org' => 12,
         'candidats.data.gov.bf' => 14,
+        'jamaica.ynr.staging.mysociety.org' => 16,
     );
     if (exists $csv_hour{$vhost}) {
 *)!!
