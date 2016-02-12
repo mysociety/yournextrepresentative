@@ -10,3 +10,4 @@ libffi-dev
 libssl-dev
 memcached
 gettext
+elasticsearch (<< 1)
