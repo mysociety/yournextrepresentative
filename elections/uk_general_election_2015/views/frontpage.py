@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -35,9 +37,9 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         types_and_areas = get_areas_from_postcode(form.cleaned_data['postcode'])
         if settings.AREAS_TO_ALWAYS_RETURN:
             types_and_areas += settings.AREAS_TO_ALWAYS_RETURN
-        types_and_areas_joined = ','.join(
+        types_and_areas_joined = ','.join(sorted(
             '{0}-{1}'.format(*t) for t in types_and_areas
-        )
+        ))
         return HttpResponseRedirect(
             reverse('areas-view', kwargs={
                 'type_and_area_ids': types_and_areas_joined

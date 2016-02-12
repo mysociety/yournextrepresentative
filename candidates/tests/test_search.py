@@ -35,7 +35,7 @@ class TestSearchView(TestUserMixin, WebTest):
         PartyExtraFactory.reset_sequence()
         PartyFactory.reset_sequence()
         self.parties = {}
-        for i in xrange(0, 4):
+        for i in range(0, 4):
             party_extra = PartyExtraFactory.create()
             gb_parties.parties.add(party_extra.base)
             self.parties[party_extra.slug] = party_extra
@@ -50,14 +50,14 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Elizabeth''',
-                unicode(response)
+                response.text
             )
         )
 
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Mr Darcy''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -88,14 +88,14 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth''',
-                unicode(response)
+                response.text
             )
         )
 
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Mr Darcy''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -114,13 +114,13 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Bennet''',
-                unicode(response)
+                response.text
             )
         )
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Jones''',
-                unicode(response)
+                response.text
             )
         )
 
@@ -138,12 +138,12 @@ class TestSearchView(TestUserMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''<a[^>]*>Elizabeth Bennet''',
-                unicode(response)
+                response.text
             )
         )
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Elizabeth Jones''',
-                unicode(response)
+                response.text
             )
         )

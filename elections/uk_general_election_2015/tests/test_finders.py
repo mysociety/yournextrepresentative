@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 from mock import patch, Mock
 
-from urlparse import urlsplit
+from django.utils.six.moves.urllib_parse import urlsplit
 
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
@@ -135,7 +137,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/LAC-11822,GLA-2247,WMC-65808',
+            '/areas/GLA-2247,LAC-11822,WMC-65808',
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):
@@ -165,10 +167,10 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # Postcodes with non-ASCII characters should be rejected
-        form['postcode'] = u'SW1A 1ӔA'
+        form['postcode'] = 'SW1A 1ӔA'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            u'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
+            'There were disallowed characters in &quot;SW1A 1ӔA&quot;',
             response
         )

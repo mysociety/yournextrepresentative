@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from collections import defaultdict
 from datetime import date
 
@@ -6,6 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Organization
+
+from compat import python_2_unicode_compatible
+
 
 class ElectionQuerySet(models.QuerySet):
     def current(self, current=True):
@@ -37,12 +42,13 @@ class ElectionManager(models.Manager):
 # FIXME: shouldn't AreaType also have the MapIt generation?
 # FIXME: at the moment name is a code (like WMC); ideally that would
 # be a code field and the name field would be "Westminster Consituency"
+@python_2_unicode_compatible
 class AreaType(models.Model):
     name = models.CharField(max_length=128)
     source = models.CharField(max_length=128, blank=True,
                               help_text=_("e.g MapIt"))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def area_choices(self):
@@ -51,6 +57,7 @@ class AreaType(models.Model):
             .values_list('id', 'base__name')
 
 
+@python_2_unicode_compatible
 class Election(models.Model):
     slug = models.CharField(max_length=128, unique=True)
     for_post_role = models.CharField(max_length=128)
@@ -78,5 +85,5 @@ class Election(models.Model):
 
     objects = ElectionManager.from_queryset(ElectionQuerySet)()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name

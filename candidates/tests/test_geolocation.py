@@ -2,8 +2,6 @@
 
 from mock import patch, Mock
 
-from urlparse import urlsplit
-
 from django_webtest import WebTest
 
 from candidates.tests.factories import (
@@ -103,22 +101,22 @@ class TestGeolocator(WebTest):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.143207,51.5')
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json, {'url': '/areas/WMC-65759'})
+        self.assertEqual(response.json, {'url': '/areas/WMC-65759'})
 
     def test_valid_coords_redirects_with_two_elections(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.09153,51.444')
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json, {'url': '/areas/WMC-65808,LAC-11822'})
+        self.assertEqual(response.json, {'url': '/areas/LAC-11822,WMC-65808'})
 
     def test_invalid_coords_returns_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.143207,1.5')
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json, {'error': 'Your location does not seem to be covered by this site'})
+        self.assertEqual(response.json, {'error': 'Your location does not seem to be covered by this site'})
 
     def test_handles_mapit_error(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/geolocator/-0.207,1.5')
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json, {'error': 'The area lookup returned an error: \'There was an error\''})
+        self.assertEqual(response.json, {'error': 'The area lookup returned an error: \'There was an error\''})
