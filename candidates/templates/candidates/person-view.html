@@ -125,16 +125,18 @@
     <dd>{{ last_candidacy.on_behalf_of.name }}</dd>
   </dl>
 
-  <h2>{% trans "Constituencies:" %}</h2>
+  <h2>{% trans "Candidacies:" %}</h2>
 
   <dl>
-    {% for election_data in elections_by_date reversed %}
+    {% for election_data in elections_to_list %}
       <dt>{% if DATE_TODAY > election_data.election_date %}
            {% blocktrans with election_name=election_data.name %}Contested in the {{ election_name }}{% endblocktrans %}
         {% else %}
            {% blocktrans with election_name=election_data.name %}Contesting in the {{ election_name }}{% endblocktrans %}
         {% endif %}</dt>
       <dd>{{ person|post_in_election:election_data }}</dd>
+    {% empty %}
+      <p>{% trans "No candidacies known at the moment." %}</p>
     {% endfor %}
   </dl>
 

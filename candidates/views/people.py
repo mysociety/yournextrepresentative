@@ -102,7 +102,16 @@ class PersonView(TemplateView):
         context['redirect_after_login'] = urlquote(path)
         context['canonical_url'] = self.request.build_absolute_uri(path)
         context['person'] = self.person
-        context['elections_by_date'] = Election.objects.by_date()
+        elections_by_date = Election.objects.by_date().order_by('-election_date')
+        # If there are lots of elections known to this site, don't
+        # show a big list of elections they're not standing in - just
+        # show those that they are standing in:
+        if len(elections_by_date) > 2:
+            context['elections_to_list'] = Election.objects.filter(
+                candidacies__base__person=self.person
+            ).order_by('-election_date')
+        else:
+            context['elections_to_list'] = elections_by_date
         context['last_candidacy'] = self.person.extra.last_candidacy
         context['election_to_show'] = None
         if settings.ELECTION_APP == 'uk_general_election_2015':
