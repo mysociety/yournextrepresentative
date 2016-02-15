@@ -1,6 +1,6 @@
 # Periodically executed tasks for YourNextRepresentative sites.
 
-MAILTO=yournextmp@mysociety.org
+MAILTO=ynr@mysociety.org
 
 # Update the live CSV file every 15 minutes on the production instance, offset
 # from generating the cached counts:
