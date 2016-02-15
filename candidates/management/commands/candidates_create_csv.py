@@ -97,6 +97,6 @@ class Command(BaseCommand):
                 delete=False,
                 dir=dirname(output_filename)
             )
-            ntf.write(csv)
+            ntf.write(csv.encode('utf-8'))
             chmod(ntf.name, 0o644)
             rename(ntf.name, output_filename)
