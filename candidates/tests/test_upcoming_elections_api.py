@@ -6,6 +6,8 @@ from mock import patch, Mock
 
 from datetime import date, timedelta
 
+from django.conf import settings
+
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
 
@@ -23,19 +25,19 @@ from compat import text_type
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == 'http://mapit.mysociety.org/postcode/sw1a1aa':
+    if url == settings.MAPIT_BASE_URL + '/postcode/sw1a1aa':
         status_code = 200
         json_result = sw1a1aa_result
-    elif url == 'http://mapit.mysociety.org/postcode/se240ag':
+    elif url == settings.MAPIT_BASE_URL + '/postcode/se240ag':
         status_code = 200
         json_result = se240ag_result
-    elif url == 'http://mapit.mysociety.org/postcode/cb28rq':
+    elif url == settings.MAPIT_BASE_URL + '/postcode/cb28rq':
         status_code = 404
         json_result = {
             "code": 404,
             "error": "No Postcode matches the given query."
         }
-    elif url == 'http://mapit.mysociety.org/postcode/foobar':
+    elif url == settings.MAPIT_BASE_URL + '/postcode/foobar':
         status_code = 400
         json_result = {
             "code": 400,
