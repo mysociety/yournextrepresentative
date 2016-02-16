@@ -17,7 +17,12 @@ class Command(BaseCommand):
 
     PARTIES = [
         u"People's National Party",
-        u"Jamaica Labour Party"
+        u"Jamaica Labour Party",
+        u"National Democratic Movement",
+        u"Marcus Garvey People's Progressive Party",
+        u"People's Progressive Party",
+        u"Hope Party",
+        u"Independent",
     ]
 
     AREAS = [
