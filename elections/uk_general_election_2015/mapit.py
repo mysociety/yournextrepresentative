@@ -31,6 +31,19 @@ def area_sort_key(type_and_id_tuple):
         return len(UK_AREA_ORDER)
 
 
+def format_code_from_area(area):
+    code = None
+    if 'gss' in area['codes']:
+        code = str('gss:' + area['codes']['gss'])
+    elif 'ons' in area['codes']:
+        code = str('ons:' + area['codes']['ons'])
+    elif 'unit_id' in area['codes']:
+        code = str('unit_id:' + area['codes']['unit_id'])
+    elif 'police_id' in area['codes']:
+        code = str('police:' + area['codes']['police_id'])
+    return code
+
+
 def get_areas_from_postcode(original_postcode):
     postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
     if re.search(r'[^a-z0-9]', postcode):
