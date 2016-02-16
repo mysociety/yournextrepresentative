@@ -1,37 +1,37 @@
 @import "../foundation/scss/foundation/functions";
 
-$color-gold-900: #946e00;
-$color-gold-700: #c69900;
-$color-gold: #ecba00;
-$color-gold-300: #f4d661;
-$color-gold-100: #fdf3c2;
+$color-navy-900: #1c3e6b;
+$color-navy-700: #26569e;
+$color-navy: #2e69c3;
+$color-navy-300: #81a2d8;
+$color-navy-100: #eaebf4;
 
-$color-orange-900: #995a11;
-$color-orange-700: #ce7d19;
-$color-orange: #f5981f;
-$color-orange-300: #f9c374;
-$color-orange-100: #feeec9;
+$color-gold-900: #977b20;
+$color-gold-700: #ccac2f;
+$color-gold: #f2d03b;
+$color-gold-300: #f7e282;
+$color-gold-100: #fdf8dd;
 
-$color-teal-900: #32786c;
-$color-teal-700: #43a89f;
-$color-teal: #50ccc5;
-$color-teal-300: #9ee1db;
-$color-teal-100: #edf6f1;
+$color-teal-900: #2c8068;
+$color-teal-700: #3bb39b;
+$color-teal: #47d9bf;
+$color-teal-300: #90e7d6;
+$color-teal-100: #ecfaf3;
 
 $color-red-900: #99271d;
 $color-red-700: #cd372b;
 $color-red: #f44336;
-$color-red-300: #f89182;
-$color-red-100: #fde0ce;
+$color-red-300: #f88b7f;
+$color-red-100: #fde6dc;
 
 $color-offwhite: #f3f3f3;
 $color-cream: #e4dfdb;
 $color-yellow: #fdf2d5;
 $color-blue: #0099cc;
 
-$header-background-color: $color-gold;
-$body-background-color: $color-orange-100;
-$footer-text-color: $color-orange-700;
+$header-background-color: $color-navy;
+$body-background-color: $color-gold-100;
+$footer-text-color: $color-gold-700;
 $content-background-color: #fff;
 
 $muted-text-color: #999;
@@ -41,7 +41,7 @@ $message-border-color: $color-gold-300;
 
 $highlight-background-color: $color-yellow;
 $information-background-color: $color-teal-100;
-$danger-background-color: $color-orange-100;
+$danger-background-color: $color-red-100;
 
 $confirmation-background-color: $color-yellow;
 $error-background-color: $color-red-100;
@@ -53,11 +53,11 @@ $candidate-order-color: #fff;
 $candidate-order-background-color: $color-teal;
 $avatar-background-color: #ddd;
 
-$unknown-candidate-status-color: $color-orange;
+$unknown-candidate-status-color: $color-gold;
 $not-standing-candidate-status-color: $color-red-700;
 
 $homepage-description-background-color: $body-background-color;
-$homepage-description-text-color: $color-orange-700;
+$homepage-description-text-color: $color-gold-900;
 $homepage-activity-color: $color-teal-700;
 $homepage-leaderboard-color: $color-gold-700;
 
@@ -106,4 +106,9 @@ $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
     &:focus {
         text-decoration: none;
     }
+}
+
+.header__nav__search input {
+  border-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
