@@ -41,7 +41,9 @@ def get_areas_from_postcode(original_postcode):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = '{0}/postcode/{1}'.format(
+        settings.MAPIT_BASE_URL,
+        urlquote(postcode))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
@@ -81,7 +83,9 @@ def get_wmc_from_postcode(original_postcode):
     cached_result = cache.get(postcode)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = '{0}/postcode/{1}'.format(
+        settings.MAPIT_BASE_URL,
+        urlquote(postcode))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
