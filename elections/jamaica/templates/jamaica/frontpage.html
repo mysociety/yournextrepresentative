@@ -15,6 +15,38 @@
   </script>
 {% endblock %}
 
+{% block menu_bar_links %}
+<li class="nav-links__item"><a href="{% url 'help-about' %}">{% trans "About" %}</a></li>
+<li class="nav-links__item"><a href="{% url 'posts' %}">{% trans "Constituencies" %}</a></li>
+<li class="nav-links__item"><a href="{% url 'reports_home' %}">{% trans "Numbers" %}</a></li>
+{% endblock %}
+
+{% block hero %}
+
+  <h1>{% trans "Who's on your ballot paper" %}</h1>
+
+  <p class="lead">{% trans "Get to know the Jamaican General Election 2016 candidates in your constituency" %}</p>
+
+{% endblock %}
+
+{% block description %}
+  {% url 'help-api' as api_url %}
+  {% url "tasks_home" as tasks_url %}
+  <p>
+  {% blocktrans trimmed %}
+  YourNextMP.com.jm brings together on all candidates seeking office in one place,
+  giving you a full picture of your candidates and your constituency.
+  {% endblocktrans %}
+  </p>
+  <p>
+    {% blocktrans trimmed %}The database is transparently sourced and
+    available as structured data, suitable for building other election
+    websites. <a href="{{ api_url }}">Get the data now</a>, or
+    <a href="{{ tasks_url }}">help by contributing new candidate details.</a>
+    {% endblocktrans %}
+  </p>
+{% endblock %}
+
 {% block finder_forms %}
   <form id="cons-selector" action="{% url 'cons-frontpage' %}" method="post">
     {% csrf_token %}
