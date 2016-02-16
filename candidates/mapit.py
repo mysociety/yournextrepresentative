@@ -51,7 +51,7 @@ def get_areas_from_postcode(postcode):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = settings.MAPIT_BASE_URL + '/postcode/' + urlquote(postcode)
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
