@@ -42,6 +42,71 @@ class SimplePopoloField(models.Model):
     order = models.IntegerField(blank=True)
 
 
+class ComplexPopoloField(models.Model):
+    """
+    This model stores the name of the underlying relation, some details about
+    how it should be displayed ( label and field type ) and the details of
+    how to store the information in the generic relation.
+
+    The info_type_* properties are used to describe the key used to pull the
+    field value out of the underlying generic relation. _key being the name
+    of the field to store the value in info_type.
+
+    info_value_key is the name of the field in the underlying relation in
+    which to store the value of the complex field.
+
+    To get the value for a person you fetch the item from the generic relation
+    named in popolo_array where info_type_key matches info_type.
+    """
+    VALID_ARRAYS = (
+        ('links', 'Links'),
+        ('contact_details', 'Contact Details'),
+        ('identifier', 'Identifier'),
+    )
+
+    name = models.CharField(
+        max_length=256,
+    )
+    label = models.CharField(
+        max_length=256,
+        help_text="User facing description of the information",
+    )
+    popolo_array = models.CharField(
+        choices=VALID_ARRAYS,
+        max_length=256,
+        help_text="Name of the Popolo related type",
+    )
+
+    field_type = models.CharField(
+        choices=(
+            ('text', 'Text Field'),
+            ('url', 'URL Field'),
+            ('email', 'Email Field'),
+        ),
+        max_length=256,
+        help_text="Type of HTML field the user will see",
+    )
+    info_type_key = models.CharField(
+        max_length=100,
+        help_text="Name of the field in the array that stores the type ('note' for links, 'contact_type' for contacts, 'scheme' for identifiers)"
+    )
+    info_type = models.CharField(
+        max_length=100,
+        help_text="Value to put in the info_type_key e.g. twitter",
+    )
+    old_info_type = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Used for supporting info_types that have been renamed. As such it's rarely used."
+    )
+    info_value_key = models.CharField(
+        max_length=100,
+        help_text="Name of the field in the array that stores the value, e.g 'url' for links, 'value' for contact_type, 'identifier' for identifiers",
+    )
+
+    order = models.IntegerField(blank=True, default=0)
+
+
 @python_2_unicode_compatible
 class ExtraField(models.Model):
 
