@@ -156,26 +156,16 @@
   <h2>{% trans "Links and social media:" %}</h2>
 
   <dl>
-    <dt>Twitter</dt>
-    <dd>{% if person.extra.twitter_username %}<a rel="nofollow" href="https://twitter.com/{{ person.extra.twitter_username }}">@{{ person.extra.twitter_username }}</a>{% endif %}</dd>
-    <dt>Facebook</dt>
-    {% if person.extra.facebook_personal_url %}
-      <dd><a rel="nofollow" href="{{ person.extra.facebook_personal_url }}">{{ person.extra.facebook_personal_url }}</a> <small>{% trans "(personal profile)" %}</small></dd>
-    {% endif %}
-    {% if person.extra.facebook_page_url %}
-      <dd><a rel="nofollow" href="{{ person.extra.facebook_page_url }}">{{ person.extra.facebook_page_url }}</a> <small>{% trans "(campaign page)" %}</small></dd>
-    {% endif %}
-    {% if not person.extra.facebook_personal_url and not person.extra.facebook_page_url %}
-      <dd></dd>
-    {% endif %}
-    <dt>{% trans "Homepage" %}</dt>
-    <dd>{% if person.extra.homepage_url %}<a rel="nofollow" href="{{ person.extra.homepage_url }}">{{ person.extra.homepage_url }}</a>{% endif %}</dd>
-    <dt>{% trans "Wikipedia page" %}</dt>
-    <dd>{% if person.extra.wikipedia_url %}<a rel="nofollow" href="{{ person.extra.wikipedia_url }}">{{ person.extra.wikipedia_url }}</a>{% endif %}</dd>
-    <dt>{% trans "LinkedIn page" %}</dt>
-    <dd>{% if person.extra.linkedin_url %}<a rel="nofollow" href="{{ person.extra.linkedin_url }}">{{ person.extra.linkedin_url }}</a>{% endif %}</dd>
-    <dt>{% trans "Party candidate page" %}</dt>
-    <dd>{% if person.extra.party_ppc_page_url %}<a rel="nofollow" href="{{ person.extra.party_ppc_page_url }}">{{ person.extra.party_ppc_page_url }}</a>{% endif %}</dd>
+    {% for field, value in complex_fields %}
+        <dt>{{ field.label }}</dt>
+      {% if field.info_type == 'twitter' %}
+        <dd>{% if value %}<a rel="nofollow" href="https://twitter.com/{{ value }}">@{{ value }}</a>{% endif %}</dd>
+      {% elif field.field_type == 'url' %}
+        <dd>{% if value %}<a rel="nofollow" href="{{ value }}">{{ value }}</a>{% endif %}</dd>
+      {% else %}
+        <dd>{{ value }}</dt>
+      {% endif %}
+    {% endfor %}
   </dl>
 
   {% if has_demographics %}
