@@ -7,7 +7,7 @@ from django.forms import ModelForm
 
 from .models import (
     LoggedAction, PartySet, ExtraField, PersonExtraFieldValue,
-    SimplePopoloField, PostExtraElection
+    SimplePopoloField, ComplexPopoloField, PostExtraElection
 )
 
 
@@ -75,3 +75,9 @@ class PostExtraElectionAdmin(admin.ModelAdmin):
     list_filter = ('election__name', 'election__current')
 
     ordering = ('election', 'postextra__base__area__name')
+
+
+@admin.register(ComplexPopoloField)
+class ComplexPopoloFieldAdmin(admin.ModelAdmin):
+    list_display = ['name', 'label', 'order']
+    ordering = ('order',)
