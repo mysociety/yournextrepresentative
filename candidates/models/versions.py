@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
-from .fields import ExtraField, SimplePopoloField
-from .field_mappings import form_simple_fields, form_complex_fields_locations
+from .fields import ExtraField, SimplePopoloField, ComplexPopoloField
 
 from django.db.models import F
 
@@ -15,8 +14,8 @@ def get_person_as_version_data(person):
     result['id'] = str(person.id)
     for field in SimplePopoloField.objects.all():
         result[field.name] = getattr(person, field.name) or ''
-    for field in form_complex_fields_locations:
-        result[field] = getattr(person_extra, field)
+    for field in ComplexPopoloField.objects.all():
+        result[field.name] = getattr(person_extra, field.name)
     extra_values = {
         extra_value.field.key: extra_value.value
         for extra_value in person.extra_field_values.select_related('field')
@@ -90,16 +89,16 @@ def revert_person_from_version_data(person, person_extra, version_data):
             setattr(person, field.name, '')
 
     # Remove any old values in complex fields:
-    for location in form_complex_fields_locations.values():
-        related_manager = getattr(person, location['sub_array'])
-        type_kwargs = {location['info_type_key']: location['info_type']}
+    for field in ComplexPopoloField.objects.all():
+        related_manager = getattr(person, field.popolo_array)
+        type_kwargs = {field.info_type_key: field.info_type}
         related_manager.filter(**type_kwargs).delete()
 
     # Then recreate any that should be there:
-    for field, location in form_complex_fields_locations.items():
-        new_value = version_data.get(field, '')
+    for field in ComplexPopoloField.objects.all():
+        new_value = version_data.get(field.name, '')
         if new_value:
-            person_extra.update_complex_field(location, version_data[field])
+            person_extra.update_complex_field(field, version_data[field.name])
 
     # Remove any extra field data and create them from the JSON:
     person.extra_field_values.all().delete()
