@@ -160,12 +160,13 @@ class MapitLookup(dict):
                 logging.info("Making extra request to Mapit for ID {0}".format(
                     key
                 ))
-                res = {key: requests.get("{mapit_base_url}area/{key}".format(
-                    mapit_base_url=self.mapit_base_url, key=key
-                )).json()}
-                self.update(res)
-                if res[key].get('code', 200) == 404:
+                url = urljoin(self.mapit_base_url,
+                              "area/{key}".format(key=key))
+                req = requests.get(url)
+                if req.status_code == 404 or \
+                        req.json()[key].get('code', 200) == 404:
                     raise MapItAreaNotFoundException
+                self.update({key: req.json()})
                 return self[key]
             except MapItAreaNotFoundException:
                 raise KeyError
