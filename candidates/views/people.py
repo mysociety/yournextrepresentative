@@ -38,7 +38,7 @@ from ..models.versions import (
 )
 from ..models import (
     PersonExtra, merge_popit_people, ExtraField, PersonExtraFieldValue,
-    SimplePopoloField
+    SimplePopoloField, ComplexPopoloField
 )
 from .helpers import (
     get_field_groupings, get_person_form_fields
@@ -128,6 +128,10 @@ class PersonView(TemplateView):
             demographic in context['simple_fields']
             for demographic in demographic_fields
         )
+        context['complex_fields'] = [
+            (field, getattr(self.person.extra, field.name))
+            for field in ComplexPopoloField.objects.all()
+        ]
 
         context['extra_fields'] = get_extra_fields(self.person)
         return context
