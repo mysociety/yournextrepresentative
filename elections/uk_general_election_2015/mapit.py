@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import re
+import logging
 
 import requests
 
@@ -17,7 +18,14 @@ from candidates.mapit import (
 from elections.models import AreaType
 
 
+logger = logging.getLogger(__name__)
+
+
 class NoConstituencyForPostcodeException(BaseMapItException):
+    pass
+
+
+class MapItAreaNotFoundException(BaseMapItException):
     pass
 
 
@@ -128,3 +136,38 @@ def get_wmc_from_postcode(original_postcode):
                 original_postcode
             )
         )
+
+
+class MapitLookup(dict):
+    def __init__(self, initial_codes=(),
+                 mapit_base_url=settings.MAPIT_BASE_URL):
+        self.mapit_base_url = mapit_base_url
+        for code in initial_codes:
+            self.load_data(code)
+
+    def load_data(self, code):
+        data = requests.get("{mapit_base_url}areas/{code}".format(
+            mapit_base_url=self.mapit_base_url, code=code
+        )).json()
+        self.update(data)
+
+    def __getitem__(self, key):
+        key = str(key)
+        try:
+            return super(MapitLookup, self).__getitem__(key)
+        except KeyError:
+            try:
+                logging.info("Making extra request to Mapit for ID {0}".format(
+                    key
+                ))
+                res = {key: requests.get("{mapit_base_url}area/{key}".format(
+                    mapit_base_url=self.mapit_base_url, key=key
+                )).json()}
+                self.update(res)
+                if res[key].get('code', 200) == 404:
+                    raise MapItAreaNotFoundException
+                return self[key]
+            except MapItAreaNotFoundException:
+                raise KeyError
+            except Exception:
+                raise
