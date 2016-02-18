@@ -5,7 +5,7 @@ from django.conf.urls import patterns, url
 from . import views
 
 urlpatterns = patterns('',
-    url(r'^upload/election/(?P<election>[-\w]+)/post/(?P<post_id>[-\w]+)/$',
+    url(r'^upload/election/(?P<election>[-\w]+)/post/(?P<post_id>[-\w\:]+)/$',
         views.CreateDocumentView.as_view(),
         name='upload_document_view'),
     url(r'^(?P<pk>\d+)/$',

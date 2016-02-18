@@ -15,6 +15,8 @@ from django.conf import settings
 
 from candidates.models.address import check_address
 from elections.models import Election, AreaType
+from elections.uk import mapit
+
 from .mixins import ContributorsMixin
 
 from ..forms import AddressForm
@@ -60,7 +62,9 @@ class GeoLocatorView(View):
             )
 
         ids_and_areas = [
-            "{0}-{1}".format(area[1]['type'], area[0])
+            "{0}-{1}".format(
+                area[1]['type'],
+                mapit.format_code_from_area(area[1]))
             for area in mapit_json
         ]
 
