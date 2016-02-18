@@ -41,6 +41,8 @@ def format_code_from_area(area):
         code = str('unit_id:' + area['codes']['unit_id'])
     elif 'police_id' in area['codes']:
         code = str('police:' + area['codes']['police_id'])
+    elif 'osni_oid' in area['codes']:
+        code = str('osni_oid:' + area['codes']['osni_oid'])
     return code
 
 
@@ -61,14 +63,16 @@ def get_areas_from_postcode(original_postcode):
     if r.status_code == 200:
         mapit_result = r.json()
         known_area_types = set(AreaType.objects.values_list('name', flat=True))
+
         result = sorted(
             [
-                (a['type'], str(a['id']))
+                (a['type'], format_code_from_area(a))
                 for a in mapit_result['areas'].values()
                 if a['type'] in known_area_types
             ],
             key=area_sort_key
         )
+
         cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
         return result
     elif r.status_code == 400:
