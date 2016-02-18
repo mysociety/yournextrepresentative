@@ -121,66 +121,31 @@
 
       <h2>{% trans "Links and social media:" %}</h2>
 
-      <div class="form-item {% if form.twitter_username.errors %}form-item--errors{% endif %}">
-        {{ form.twitter_username.label_tag }}
-        <div class="row collapse">
-          <div class="small-1 columns">
-            <span class="prefix">@</span>
+
+      {% for field_info, tag in complex_fields %}
+        {% if field_info.info_type == 'twitter' %}
+          <div class="form-item {% if tag.errors %}form-item--errors{% endif %}">
+            {{ tag.label_tag }}
+            <div class="row collapse">
+              <div class="small-1 columns">
+                <span class="prefix">@</span>
+              </div>
+              <div class="small-11 columns">
+                {{ tag }}
+              </div>
+            </div>
+            {{ tag.errors }}
           </div>
-          <div class="small-11 columns">
-            {{ form.twitter_username }}
+        {% else %}
+          <div class="form-item {% if tag.errors %}form-item--errors{% endif %}">
+            <p>
+              {{ tag.label_tag }}
+              {{ tag }}
+            </p>
+            {{ tag.errors }}
           </div>
-        </div>
-        {{ form.twitter_username.errors }}
-      </div>
-
-      <div class="form-item {% if form.facebook_personal_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.facebook_personal_url.label_tag }}
-          {{ form.facebook_personal_url }}
-        </p>
-        {{ form.facebook_personal_url.errors }}
-      </div>
-
-      <div class="form-item {% if form.facebook_page_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.facebook_page_url.label_tag }}
-          {{ form.facebook_page_url }}
-        </p>
-        {{ form.facebook_page_url.errors }}
-      </div>
-
-      <div class="form-item {% if form.homepage_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.homepage_url.label_tag }}
-          {{ form.homepage_url }}
-        </p>
-        {{ form.homepage_url.errors }}
-      </div>
-
-      <div class="form-item {% if form.wikipedia_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.wikipedia_url.label_tag }}
-          {{ form.wikipedia_url }}
-        </p>
-        {{ form.wikipedia_url.errors }}
-      </div>
-
-      <div class="form-item {% if form.linkedin_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.linkedin_url.label_tag }}
-          {{ form.linkedin_url }}
-        </p>
-        {{ form.linkedin_url.errors }}
-      </div>
-
-      <div class="form-item {% if form.party_ppc_page_url.errors %}form-item--errors{% endif %}">
-        <p>
-          {{ form.party_ppc_page_url.label_tag }}
-          {{ form.party_ppc_page_url }}
-        </p>
-        {{ form.party_ppc_page_url.errors }}
-      </div>
+        {% endif %}
+      {% endfor %}
 
       <h2>{% trans "Demographics:" %}</h2>
 

@@ -38,7 +38,7 @@ from ..models.versions import (
 )
 from ..models import (
     PersonExtra, PartySet, merge_popit_people, ExtraField, PersonExtraFieldValue,
-    SimplePopoloField
+    SimplePopoloField, ComplexPopoloField
 )
 from popolo.models import Person
 
@@ -349,6 +349,11 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
 
             if field.name in demographic_fields:
                 context['demographic_fields'].append(kwargs['form'][field.name])
+
+        context['complex_fields'] = []
+        complex_fields = ComplexPopoloField.objects.order_by('order').all()
+        for field in complex_fields:
+            context['complex_fields'].append((field, kwargs['form'][field.name]))
 
         context['extra_fields'] = get_extra_fields(person)
         for k, v in context['extra_fields'].items():

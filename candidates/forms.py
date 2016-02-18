@@ -14,7 +14,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from candidates.models import PartySet, parse_approximate_date, ExtraField, SimplePopoloField
+from candidates.models import PartySet, parse_approximate_date, ExtraField, SimplePopoloField, ComplexPopoloField
 from popolo.models import Organization, Post
 
 class AddressForm(forms.Form):
@@ -119,46 +119,23 @@ class BasePersonForm(forms.Form):
             else:
                 self.fields[field.name] = forms.CharField(**opts)
 
+        for field in ComplexPopoloField.objects.all():
+            opts = {
+                'label': _(field.label),
+                'required': False
+            }
+
+            if field.field_type == 'url':
+                self.fields[field.name] = forms.URLField(**opts)
+            elif field.field_type == 'email':
+                self.fields[field.name] = forms.EmailField(**opts)
+            else:
+                self.fields[field.name] = forms.CharField(**opts)
+
     STANDING_CHOICES = (
         ('not-sure', _("Don’t Know")),
         ('standing', _("Yes")),
         ('not-standing', _("No")),
-    )
-
-    wikipedia_url = forms.URLField(
-        label=_("Wikipedia URL"),
-        max_length=256,
-        required=False,
-    )
-    homepage_url = forms.URLField(
-        label=_("Homepage URL"),
-        max_length=256,
-        required=False,
-    )
-    twitter_username = forms.CharField(
-        label=_("Twitter username (e.g. “democlub”)"),
-        max_length=256,
-        required=False,
-    )
-    facebook_personal_url = forms.URLField(
-        label=_("Facebook profile URL"),
-        max_length=256,
-        required=False,
-    )
-    facebook_page_url = forms.URLField(
-        label=_("Facebook page (e.g. for their campaign)"),
-        max_length=256,
-        required=False,
-    )
-    linkedin_url = forms.URLField(
-        label=_("LinkedIn URL"),
-        max_length=256,
-        required=False,
-    )
-    party_ppc_page_url = forms.URLField(
-        label=_("The party’s candidate page for this person"),
-        max_length=256,
-        required=False,
     )
 
     def clean_birth_date(self):
