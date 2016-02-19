@@ -27,8 +27,10 @@ You can do this with a command like:
 The message should be brief (more concise than the changelog
 entry), e.g.:
 
-> Version 0.3 of YourNextRepresentative
->
-> This tag marks when the source code was usable under
-> Python 2.7, Python 3.4 and Python 3.5.  (Previously
-> it couldn't be used with Python 3.)
+```
+Version 0.3 of YourNextRepresentative
+
+This tag marks when the source code was usable under
+Python 2.7, Python 3.4 and Python 3.5.  (Previously
+it couldn't be used with Python 3.)
+```
