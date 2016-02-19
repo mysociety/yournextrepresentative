@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body_class %}{% endblock %}
+
+{% block title %}{% trans "API for candidates" %}{% endblock %}
+
+{% block hero %}
+  <h1>{% trans "Using this data via the API" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="help-api">
+
+<p>{% blocktrans trimmed %}
+The data that's submitted to this site is available as a CSV/Excel download and
+programmatically via a RESTful web service called PopIt, which
+stores information about people and their positions in
+organizations.
+{% endblocktrans %}</p>
+
+<h2>{% trans "CSV/Excel Download" %}</h2>
+
+<h3>{% trans "Current elections" %}</h3>
+
+<p>
+  <ul>
+    {% for csv in current_csv_list %}
+      {% with slug=csv.slug title=csv.name %}
+      <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
+      {% endwith %}
+    {% endfor %}
+  </ul>
+</p>
+
+
+{% if historic_csv_list %}
+
+<h3>{% trans "Historic elections" %}</h3>
+
+<p>
+  <ul>
+    {% for csv in historic_csv_list %}
+      {% with slug=csv.slug title=csv.name %}
+      <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
+      {% endwith %}
+    {% endfor %}
+  </ul>
+</p>
+{% endif %}
+
+
+<h2>{% trans "API" %}</h2>
+
+<h3>{% trans "This API is a work in progress" %}</h3>
+
+<p>
+  {% blocktrans trimmed %}
+    This is an alpha version of the YourNextRepresentative API,
+    which is likely to change in the near future.
+  {% endblocktrans %}
+</p>
+
+<h3>Browseable API root</h3>
+
+<p>
+{% blocktrans trimmed %}
+  The browsable base URL of the site's read-only API is: <a href="{{ base_api_url }}">{{ base_api_url }}</a>
+{% endblocktrans %}
+</p>
+
+<h3>{% trans "Find Candidates for a Constituency" %}</h3>
+
+<p>
+  {% blocktrans trimmed %}
+    You can request all the candidates a in that constituency by
+    querying the post with that ID.  For example, for Clarendon
+    Central, which has the ID <tt>cons-1</tt>, you would make the
+    request: <a href="{{ base_api_url }}posts/cons-1/">{{ base_api_url }}posts/cons-1/</a>
+  {% endblocktrans %}
+</p>
+
+<p>
+  {% blocktrans trimmed %}
+    Each of the <tt>memberships</tt> in that reponse links to a
+    person who is a candidate in that constituency for any known
+    election.  The <tt>election</tt> property of each membership
+    tells you which election that candidacy is for.
+  {% endblocktrans %}
+</p>
+
+{% endblock %}
