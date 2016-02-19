@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block hero %}
+  <h1>{% trans "Contribute" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h2>{% blocktrans with site_name=site.name %}You can help us make {{ site_name }} better!{% endblocktrans %}</h2>
+
+<p>{% blocktrans trimmed with site_name=site.name %}
+{{ site_name }} is a volunteer-sourced database, and that means we constantly
+need help in making it better.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+There is a lot of useful information on candidates out there, so if you find
+any please do add it to our site.
+{% endblocktrans %}</p>
+
+<h3>{% trans "Emails" %}</h3>
+
+<p>{% blocktrans trimmed %}
+At the moment we're trying to get as many email addresses on candidates as
+we can.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+This will allow us to email them directly to ask them to add their own
+details.
+{% endblocktrans %}</p>
+
+<h4>{% trans "How to help" %}</h4>
+
+{% url "account_login" as url %}
+<p>{% blocktrans trimmed %}
+First off you'll need to <a href="{{ url }}">log in</a> in
+order to start making edits.
+{% endblocktrans %}</p>
+
+{% url "finder" as url %}
+<p>{% blocktrans trimmed %}
+We've added clear banners on the candidate and constituently pages
+indicating where we're missing email addresses, so you can start adding email
+addresses by <a href="{{ url }}">looking up your constituency on the
+home page</a>
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+Once you've found a candidate without an email address, you can go searching
+for it!
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+Please make sure you read our <a
+href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPX
+wXspA/edit">guidance on sourcing fields</a>, and specifically the part about
+what sort of email addresses we accept.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+In short, we only want email addresses could be considered public and
+related to the candidate's campaign.{% endblocktrans %}</p>
+
+{% url "incomplete_view" 'email' as url %}
+<p>{% blocktrans trimmed %}
+Once your constituency has all the email addresses entered, you can look at
+our <a href="{{ url }}">list of all candidates
+without emails listed</a>!
+{% endblocktrans %}</p>
+
+
+{% endblock content %}
