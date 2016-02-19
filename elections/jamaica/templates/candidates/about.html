@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body_class %}{% endblock %}
+
+{% block title %}{% trans "About this site" %}{% endblock %}
+
+{% block hero %}
+  <h1>{% trans "About this site" %}</h1>
+{% endblock %}
+
+{% block content %}
+{% with email=settings.SUPPORT_EMAIL %}
+
+<div class="help-about">
+
+<p>{% blocktrans trimmed %}
+YourNextMP Jamaica is a community-run initiative aimed at
+pulling together information on all candidates seeking office in
+the 2016 General election in one place, giving you a full
+picture of your candidates and your constituency. It is made
+possible by volunteer contributions and hosting by the
+SlashRoots Foundation in collaboration with mySociety.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+Digital Technologies, such as the Internet and Mobile phones are
+transforming our society. We believe technology can facilitate
+new channels of participation for the public and better inform
+us in our decisions throughout the electoral process. This is
+website is intended to demonstrate that possibility.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+The official list of candidates is available on the official
+<a href="http://www.eoj.com.jm/content-70-309.htm">Electoral
+Office Of Jamaica website</a> as a PDF document. The records of
+the candidates on this site are sourced by volunteers like
+yourself.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+If you have any questions on the initiative, please email
+<a href="mailto:{{ email }}">{{ email }}</a> with any feedback
+or bug reports.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+The source code for this site
+is <a href="https://github.com/mysociety/yournextrepresentative/">available
+on GitHub</a>, and you can find
+a <a href="https://github.com/mysociety/yournextrepresentative/issues">list
+of known bugs</a> there as well.
+{% endblocktrans %}</p>
+
+{% url 'help-api' as api_url %}
+<p>{% blocktrans trimmed %}
+You can use the data from this site, via the
+<a href="{{ api_url }}">API or CSV download</a>, under the
+terms of the Creative Commons license
+<a href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike
+(CC-BY-SA)</a> with the exception of:
+{% endblocktrans %}</p>
+
+<ul>
+    <li>{% trans "Party logos" %}</li>
+    <li>{% blocktrans trimmed %}
+Candidate photos, which are typically either submitted by the candidates
+themselves, or from sources where it seems reasonable that we might use them on
+this site, such as the party's official page for that candidate, or their
+social media profile picture.
+{% endblocktrans %}</li>
+</ul>
+
+<p>{% blocktrans trimmed %}
+If the CC-BY-SA licence is problematic for you, but you feel that you have a
+worthwhile use of the data in mind, please <a href="mailto:{{ email }}">contact
+us</a> to discuss your situation further.
+{% endblocktrans %}</p>
+
+<p>{% blocktrans trimmed %}
+The SlashRoots Foundation is collaborating with mySociety in the
+UK to make the platform available in Jamaica. YourNextMP
+Platform was originally developed by Mark Longair (mySociety),
+Sym Roe (Democracy Club) and Zarino Zappia (mySociety), and
+<a href="https://github.com/mysociety/yournextrepresentative/graphs/contributors">many
+other contributors</a> to whom we owe a debt of gratitude.
+{% endblocktrans %}</p>
+
+<h3>{% trans "Privacy Policy" %}</h3>
+
+{% url 'help-privacy' as url %}
+<p>{% blocktrans trimmed %}
+The privacy policy of this site can be found
+<a href="{{ url }}">here</a>.
+{% endblocktrans %}</p>
+
+<h3>{% trans "Disclaimer" %}</h3>
+
+<p>{% blocktrans trimmed %}
+The data on this website is crowd-sourced and may not be
+complete (or may contain inaccuracies). If you find an error,
+please either update the page yourself, or
+<a href="mailto:{{ email }}">email us</a> to report
+the problem.{% endblocktrans %}</p>
+
+</div>
+
+{% endwith %}
+{% endblock %}
