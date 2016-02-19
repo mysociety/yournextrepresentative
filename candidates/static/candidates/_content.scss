@@ -12,7 +12,7 @@
 }
 
 .button, input[type="submit"].button {
-  @extend .radius;
+  @include radius();
 }
 
 .code-sample {

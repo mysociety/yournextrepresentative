@@ -370,7 +370,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'PIPELINE_COMPILERS': (
             'pipeline.compilers.sass.SASSCompiler',
         ),
-        'PIPELINE_SASS_ARGUMENTS': '--trace',
+        'PIPELINE_SASS_ARGUMENTS': '--trace --quiet',
         'PIPELINE_CSS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
         'PIPELINE_JS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
         # On some platforms this might be called "yuicompressor", so it may be
