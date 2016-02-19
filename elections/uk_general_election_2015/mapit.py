@@ -10,6 +10,7 @@ import requests
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.http import urlquote
+from django.utils.six.moves.urllib_parse import urljoin
 from django.utils.translation import ugettext as _
 
 from candidates.mapit import (
@@ -64,9 +65,8 @@ def get_areas_from_postcode(original_postcode):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = '{0}/postcode/{1}'.format(
-        settings.MAPIT_BASE_URL,
-        urlquote(postcode))
+    url = urljoin(settings.MAPIT_BASE_URL,
+                  '/postcode/{0}'.format(urlquote(postcode)))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
@@ -108,9 +108,8 @@ def get_wmc_from_postcode(original_postcode):
     cached_result = cache.get(postcode)
     if cached_result:
         return cached_result
-    url = '{0}/postcode/{1}'.format(
-        settings.MAPIT_BASE_URL,
-        urlquote(postcode))
+    url = urljoin(settings.MAPIT_BASE_URL,
+                  '/postcode/{0}'.format(urlquote(postcode)))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
@@ -146,9 +145,9 @@ class MapitLookup(dict):
             self.load_data(code)
 
     def load_data(self, code):
-        data = requests.get("{mapit_base_url}areas/{code}".format(
+        data = requests.get(urljoin(self.mapit_base_url, "areas/{code}".format(
             mapit_base_url=self.mapit_base_url, code=code
-        )).json()
+        ))).json()
         self.update(data)
 
     def __getitem__(self, key):
