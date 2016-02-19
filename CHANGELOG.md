@@ -1,5 +1,18 @@
 # YourNextRepresentative Changelog
 
+## v0.4
+
+* This update requires a later version of Sass (3.4.21) and an
+  update to the Foundation submodule to v5.5.3. You may have a
+  different deployment environment, but in many cases these
+  updates will involve:
+
+    * gem install  sass -v 3.4.21
+    * git submodule update
+
+* CORS is now supported to allow cross-origin GET requests to
+  the API.
+
 ## v0.3
 
 * This release is the first which is compatible with Python 3.4
