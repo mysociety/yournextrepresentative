@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from mock import patch, Mock
 
-from django.utils.six.moves.urllib_parse import urlsplit
+from django.utils.six.moves.urllib_parse import urlsplit, urljoin
 from django.conf import settings
 
 from nose.plugins.attrib import attr
@@ -21,19 +21,19 @@ from .mapit_postcode_results import se240ag_result, sw1a1aa_result
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == settings.MAPIT_BASE_URL + '/postcode/sw1a1aa':
+    if url == urljoin(settings.MAPIT_BASE_URL, '/postcode/sw1a1aa'):
         status_code = 200
         json_result = sw1a1aa_result
-    elif url == settings.MAPIT_BASE_URL + '/postcode/se240ag':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/se240ag'):
         status_code = 200
         json_result = se240ag_result
-    elif url == settings.MAPIT_BASE_URL + '/postcode/cb28rq':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/cb28rq'):
         status_code = 404
         json_result = {
             "code": 404,
             "error": "No Postcode matches the given query."
         }
-    elif url == settings.MAPIT_BASE_URL + '/postcode/foobar':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/foobar'):
         status_code = 400
         json_result = {
             "code": 400,

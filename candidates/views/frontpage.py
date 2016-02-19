@@ -4,14 +4,15 @@ import json
 import requests
 from collections import defaultdict
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.utils.six.moves.urllib_parse import urljoin
+from django.utils.translation import ugettext as _
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View, FormView
-from django.utils.translation import ugettext as _
-from django.conf import settings
 
 from candidates.models.address import check_address
 from elections.models import Election, AreaType
@@ -29,14 +30,14 @@ class GeoLocatorView(View):
 
         generation_with_types = defaultdict(list)
         for t in AreaType.objects.filter(election__current=True) \
-            .values_list('election__area_generation', 'name'):
+                .values_list('election__area_generation', 'name'):
             generation_with_types[t[0]].append(t[1])
 
-        mapit_base_url = '{base_url}point/4326/{lon},{lat}'.format(
-            base_url=settings.MAPIT_BASE_URL,
-            lon=longitude,
-            lat=latitude,
-        )
+        mapit_base_url = urljoin(settings.MAPIT_BASE_URL,
+                                 'point/4326/{lon},{lat}'.format(
+                                     lon=longitude,
+                                     lat=latitude,
+                                 ))
 
         mapit_json = []
         for generation, types in generation_with_types.items():
