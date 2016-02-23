@@ -116,7 +116,7 @@ class PersonView(TemplateView):
             context['elections_to_list'] = elections_by_date
         context['last_candidacy'] = self.person.extra.last_candidacy
         context['election_to_show'] = None
-        if settings.ELECTION_APP == 'uk_general_election_2015':
+        if settings.ELECTION_APP == 'uk':
             context['election_to_show'] = Election.objects.get(slug='2015')
         context['extra_fields'] = get_extra_fields(self.person)
         return context

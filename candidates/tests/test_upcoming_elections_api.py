@@ -15,7 +15,7 @@ from candidates.tests.factories import (
     PartySetFactory, AreaExtraFactory
 )
 from elections.models import Election
-from elections.uk_general_election_2015.tests.mapit_postcode_results \
+from elections.uk.tests.mapit_postcode_results \
     import se240ag_result, sw1a1aa_result
 
 from compat import text_type
@@ -49,7 +49,7 @@ def fake_requests_for_mapit(url):
     })
 
 @attr(country='uk')
-@patch('elections.uk_general_election_2015.mapit.requests')
+@patch('elections.uk.mapit.requests')
 class TestUpcomingElectionsAPI(WebTest):
     def setUp(self):
         election = Election.objects.get(slug='2015')

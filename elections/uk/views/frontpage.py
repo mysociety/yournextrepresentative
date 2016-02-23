@@ -15,14 +15,6 @@ from elections.models import Election
 from ..forms import PostcodeForm
 from ..mapit import get_areas_from_postcode
 
-def get_current_election():
-    current_elections = Election.objects.current().by_date()
-    if len(current_elections) != 1:
-        message = "There should be exactly one current election in " + \
-            "uk_general_election_2015, not {0}"
-        raise Exception(message.format(len(current_elections)))
-    return current_elections.first()
-
 
 class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/finder.html'

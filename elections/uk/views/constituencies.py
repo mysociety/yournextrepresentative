@@ -30,7 +30,7 @@ def get_electionleaflets_url(mapit_area_id, constituency_name):
 
 class UKConstituencyDetailView(ConstituencyDetailView):
 
-    template_name = 'uk_general_election_2015/constituency.html'
+    template_name = 'uk/constituency.html'
 
     def get_context_data(self, **kwargs):
         context = super(UKConstituencyDetailView, self).get_context_data(**kwargs)

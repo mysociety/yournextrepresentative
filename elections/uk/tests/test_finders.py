@@ -45,7 +45,7 @@ def fake_requests_for_mapit(url):
     })
 
 @attr(country='uk')
-@patch('elections.uk_general_election_2015.mapit.requests')
+@patch('elections.uk.mapit.requests')
 class TestConstituencyPostcodeFinderView(WebTest):
     def setUp(self):
         election = Election.objects.get(slug='2015')

@@ -15,8 +15,8 @@ YNMP_DB_PORT: ''
 YNMP_DB_HOST: ''
 
 # Which election is this installation for? (This must be the name of a
-# package in the 'elections' package, at the moment one of
-# uk_general_election_2015 or ar_elections_2015):
+# package in the 'elections' package, e.g. uk, ar_elections_2015, cr,
+# example, etc.
 ELECTION_APP: 'example'
 
 # Default language/timezone of the installation
