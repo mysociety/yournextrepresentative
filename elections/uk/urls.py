@@ -14,7 +14,7 @@ urlpatterns = [
         name='lookup-postcode'
     ),
     url(
-        r'^election/{election}/post/(?P<post_id>[-\w]+)/(?P<ignored_slug>{ignore_pattern})$'.format(
+        r'^election/{election}/post/(?P<post_id>[-\w\:]+)/(?P<ignored_slug>{ignore_pattern})$'.format(
             election=r'(?P<election>[^/]+)',
             ignore_pattern=post_ignored_slug_re,
         ),

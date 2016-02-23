@@ -6,6 +6,9 @@ from mock import patch, Mock
 
 from datetime import date, timedelta
 
+from django.conf import settings
+from django.utils.six.moves.urllib_parse import urljoin
+
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
 
@@ -23,19 +26,19 @@ from compat import text_type
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == 'http://mapit.mysociety.org/postcode/sw1a1aa':
+    if url == urljoin(settings.MAPIT_BASE_URL, '/postcode/sw1a1aa'):
         status_code = 200
         json_result = sw1a1aa_result
-    elif url == 'http://mapit.mysociety.org/postcode/se240ag':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/se240ag'):
         status_code = 200
         json_result = se240ag_result
-    elif url == 'http://mapit.mysociety.org/postcode/cb28rq':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/cb28rq'):
         status_code = 404
         json_result = {
             "code": 404,
             "error": "No Postcode matches the given query."
         }
-    elif url == 'http://mapit.mysociety.org/postcode/foobar':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/foobar'):
         status_code = 400
         json_result = {
             "code": 400,
@@ -98,12 +101,12 @@ class TestUpcomingElectionsAPI(WebTest):
         lac_area_type = AreaTypeFactory.create(name='LAC')
         gla_area_type = AreaTypeFactory.create(name='GLA')
         area_extra_lac = AreaExtraFactory.create(
-            base__identifier='11822',
+            base__identifier='gss:E32000010',
             base__name="Dulwich and West Norwood",
             type=lac_area_type,
         )
         area_extra_gla = AreaExtraFactory.create(
-            base__identifier='2247',
+            base__identifier='unit_id:41441',
             base__name='Greater London Authority',
             type=gla_area_type,
         )
@@ -125,14 +128,14 @@ class TestUpcomingElectionsAPI(WebTest):
             elections=(election_lac,),
             base__area=area_extra_lac.base,
             base__organization=london_assembly.base,
-            slug='11822',
+            slug='gss:E32000010',
             base__label='Assembly Member for Lambeth and Southwark',
         )
         PostExtraFactory.create(
             elections=(election_gla,),
             base__area=area_extra_gla.base,
             base__organization=london_assembly.base,
-            slug='2247',
+            slug='unit_id:41441',
             base__label='Assembly Member',
         )
 
@@ -150,7 +153,7 @@ class TestUpcomingElectionsAPI(WebTest):
                 'election_name': '2016 London Assembly Election (Constituencies)',
                 'post_name': 'Assembly Member for Lambeth and Southwark',
                 'area': {
-                    'identifier': '11822',
+                    'identifier': 'gss:E32000010',
                     'type': 'LAC',
                     'name': 'Dulwich and West Norwood'
                 }
@@ -161,7 +164,7 @@ class TestUpcomingElectionsAPI(WebTest):
                 'election_name': '2016 London Assembly Election (Additional)',
                 'post_name': 'Assembly Member',
                 'area': {
-                    'identifier': '2247',
+                    'identifier': 'unit_id:41441',
                     'type': 'GLA',
                     'name': 'Greater London Authority'
                 }

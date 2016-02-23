@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 from mock import patch, Mock
 
-from django.utils.six.moves.urllib_parse import urlsplit
+from django.utils.six.moves.urllib_parse import urlsplit, urljoin
+from django.conf import settings
 
 from nose.plugins.attrib import attr
 from django_webtest import WebTest
@@ -17,21 +18,22 @@ from candidates.tests.factories import (
 from elections.models import Election
 from .mapit_postcode_results import se240ag_result, sw1a1aa_result
 
+
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == 'http://mapit.mysociety.org/postcode/sw1a1aa':
+    if url == urljoin(settings.MAPIT_BASE_URL, '/postcode/sw1a1aa'):
         status_code = 200
         json_result = sw1a1aa_result
-    elif url == 'http://mapit.mysociety.org/postcode/se240ag':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/se240ag'):
         status_code = 200
         json_result = se240ag_result
-    elif url == 'http://mapit.mysociety.org/postcode/cb28rq':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/cb28rq'):
         status_code = 404
         json_result = {
             "code": 404,
             "error": "No Postcode matches the given query."
         }
-    elif url == 'http://mapit.mysociety.org/postcode/foobar':
+    elif url == urljoin(settings.MAPIT_BASE_URL, '/postcode/foobar'):
         status_code = 400
         json_result = {
             "code": 400,
@@ -86,7 +88,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/WMC-65808',
+            '/areas/WMC-gss:E14000673',
         )
 
     def test_valid_postcode_redirects_to_multiple_areas(self, mock_requests):
@@ -142,7 +144,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/GLA-2247,LAC-11822,WMC-65808',
+            '/areas/GLA-unit_id:41441,LAC-gss:E32000010,WMC-gss:E14000673',
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):

@@ -3,12 +3,14 @@
 from __future__ import unicode_literals
 
 import re
+import logging
 
 import requests
 
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.http import urlquote
+from django.utils.six.moves.urllib_parse import urljoin
 from django.utils.translation import ugettext as _
 
 from candidates.mapit import (
@@ -17,7 +19,14 @@ from candidates.mapit import (
 from elections.models import AreaType
 
 
+logger = logging.getLogger(__name__)
+
+
 class NoConstituencyForPostcodeException(BaseMapItException):
+    pass
+
+
+class MapItAreaNotFoundException(BaseMapItException):
     pass
 
 
@@ -31,6 +40,21 @@ def area_sort_key(type_and_id_tuple):
         return len(UK_AREA_ORDER)
 
 
+def format_code_from_area(area):
+    code = None
+    if 'gss' in area['codes']:
+        code = str('gss:' + area['codes']['gss'])
+    elif 'ons' in area['codes']:
+        code = str('ons:' + area['codes']['ons'])
+    elif 'unit_id' in area['codes']:
+        code = str('unit_id:' + area['codes']['unit_id'])
+    elif 'police_id' in area['codes']:
+        code = str('police:' + area['codes']['police_id'])
+    elif 'osni_oid' in area['codes']:
+        code = str('osni_oid:' + area['codes']['osni_oid'])
+    return code
+
+
 def get_areas_from_postcode(original_postcode):
     postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
     if re.search(r'[^a-z0-9]', postcode):
@@ -41,19 +65,22 @@ def get_areas_from_postcode(original_postcode):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = urljoin(settings.MAPIT_BASE_URL,
+                  '/postcode/{0}'.format(urlquote(postcode)))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
         known_area_types = set(AreaType.objects.values_list('name', flat=True))
+
         result = sorted(
             [
-                (a['type'], str(a['id']))
+                (a['type'], format_code_from_area(a))
                 for a in mapit_result['areas'].values()
                 if a['type'] in known_area_types
             ],
             key=area_sort_key
         )
+
         cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
         return result
     elif r.status_code == 400:
@@ -81,7 +108,8 @@ def get_wmc_from_postcode(original_postcode):
     cached_result = cache.get(postcode)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = urljoin(settings.MAPIT_BASE_URL,
+                  '/postcode/{0}'.format(urlquote(postcode)))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
@@ -107,3 +135,39 @@ def get_wmc_from_postcode(original_postcode):
                 original_postcode
             )
         )
+
+
+class MapitLookup(dict):
+    def __init__(self, initial_codes=(),
+                 mapit_base_url=settings.MAPIT_BASE_URL):
+        self.mapit_base_url = mapit_base_url
+        for code in initial_codes:
+            self.load_data(code)
+
+    def load_data(self, code):
+        data = requests.get(urljoin(self.mapit_base_url, "areas/{code}".format(
+            mapit_base_url=self.mapit_base_url, code=code
+        ))).json()
+        self.update(data)
+
+    def __getitem__(self, key):
+        key = str(key)
+        try:
+            return super(MapitLookup, self).__getitem__(key)
+        except KeyError:
+            try:
+                logging.info("Making extra request to Mapit for ID {0}".format(
+                    key
+                ))
+                url = urljoin(self.mapit_base_url,
+                              "area/{key}".format(key=key))
+                req = requests.get(url)
+                if req.status_code == 404 or \
+                        req.json()[key].get('code', 200) == 404:
+                    raise MapItAreaNotFoundException
+                self.update({key: req.json()})
+                return self[key]
+            except MapItAreaNotFoundException:
+                raise KeyError
+            except Exception:
+                raise

@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.utils.six.moves.urllib_parse import urljoin
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
@@ -34,11 +35,11 @@ def check_address(address_string, country=None):
         area_types = election.area_types.values_list('name', flat=True)
         queries_to_try[election.area_generation].update(area_types)
     for area_generation, area_types in queries_to_try.items():
-        mapit_lookup_url = '{base_url}point/4326/{lon},{lat}'.format(
-            base_url=settings.MAPIT_BASE_URL,
-            lon=lon,
-            lat=lat,
-        )
+        mapit_lookup_url = urljoin(settings.MAPIT_BASE_URL,
+                                   'point/4326/{lon},{lat}'.format(
+                                       lon=lon,
+                                       lat=lat,
+                                       ))
         mapit_lookup_url += '?type=' + ','.join(area_types)
         mapit_lookup_url += '&generation={0}'.format(election.area_generation)
         mapit_result = requests.get(mapit_lookup_url)

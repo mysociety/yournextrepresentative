@@ -6,6 +6,7 @@ import requests
 from django.conf import settings
 from django.utils.http import urlquote
 from django.core.cache import cache
+from django.utils.six.moves.urllib_parse import urljoin
 from django.utils.translation import ugettext as _
 
 from elections.models import AreaType
@@ -51,7 +52,7 @@ def get_areas_from_postcode(postcode):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = 'http://mapit.mysociety.org/postcode/' + urlquote(postcode)
+    url = urljoin(settings.MAPIT_BASE_URL, '/postcode/' + urlquote(postcode))
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
