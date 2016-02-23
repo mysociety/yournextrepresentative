@@ -100,12 +100,12 @@ class TestUpcomingElectionsAPI(WebTest):
         lac_area_type = AreaTypeFactory.create(name='LAC')
         gla_area_type = AreaTypeFactory.create(name='GLA')
         area_extra_lac = AreaExtraFactory.create(
-            base__identifier='11822',
+            base__identifier='gss:E32000010',
             base__name="Dulwich and West Norwood",
             type=lac_area_type,
         )
         area_extra_gla = AreaExtraFactory.create(
-            base__identifier='2247',
+            base__identifier='unit_id:41441',
             base__name='Greater London Authority',
             type=gla_area_type,
         )
@@ -127,14 +127,14 @@ class TestUpcomingElectionsAPI(WebTest):
             elections=(election_lac,),
             base__area=area_extra_lac.base,
             base__organization=london_assembly.base,
-            slug='11822',
+            slug='gss:E32000010',
             base__label='Assembly Member for Lambeth and Southwark',
         )
         PostExtraFactory.create(
             elections=(election_gla,),
             base__area=area_extra_gla.base,
             base__organization=london_assembly.base,
-            slug='2247',
+            slug='unit_id:41441',
             base__label='Assembly Member',
         )
 
@@ -152,7 +152,7 @@ class TestUpcomingElectionsAPI(WebTest):
                 'election_name': '2016 London Assembly Election (Constituencies)',
                 'post_name': 'Assembly Member for Lambeth and Southwark',
                 'area': {
-                    'identifier': '11822',
+                    'identifier': 'gss:E32000010',
                     'type': 'LAC',
                     'name': 'Dulwich and West Norwood'
                 }
@@ -163,7 +163,7 @@ class TestUpcomingElectionsAPI(WebTest):
                 'election_name': '2016 London Assembly Election (Additional)',
                 'post_name': 'Assembly Member',
                 'area': {
-                    'identifier': '2247',
+                    'identifier': 'unit_id:41441',
                     'type': 'GLA',
                     'name': 'Greater London Authority'
                 }

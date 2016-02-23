@@ -10,6 +10,7 @@ import requests
 
 from candidates.models import AreaExtra, OrganizationExtra, PartySet, PostExtra
 from elections.models import AreaType, Election
+from elections.uk import mapit
 from popolo.models import Area, Organization, Post
 
 class Command(BaseCommand):
@@ -161,7 +162,7 @@ class Command(BaseCommand):
             for mapit_area_id, mapit_area_data in r.json().items():
 
                 area, _ = Area.objects.update_or_create(
-                    identifier=str(mapit_area_id),
+                    identifier=str(mapit.format_code_from_area(mapit_area_data)),
                     defaults={'name': mapit_area_data['name']}
                 )
                 # Now make sure that the MapIt codes are present as identifiers:
@@ -185,7 +186,7 @@ class Command(BaseCommand):
                 post_extra, _ = PostExtra.objects.update_or_create(
                     base=post,
                     defaults={
-                        'slug': str(mapit_area_id),
+                        'slug': str(mapit.format_code_from_area(mapit_area_data)),
                         'party_set': gb_parties,
                     },
                 )
