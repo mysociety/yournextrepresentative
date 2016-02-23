@@ -52,10 +52,15 @@ def fake_requests_for_mapit(url):
 @patch('elections.uk.mapit.requests')
 class TestUpcomingElectionsAPI(WebTest):
     def setUp(self):
-        election = Election.objects.get(slug='2015')
-        wmc_area_type = election.area_types.get(name='WMC')
+        wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         commons = ParliamentaryChamberFactory.create()
+        election = ElectionFactory.create(
+            slug='2015',
+            name='2015 General Election',
+            area_types=(wmc_area_type,),
+            organization=commons
+        )
         area_extra = AreaExtraFactory.create(
             base__name="Dulwich and West Norwood",
             type=wmc_area_type,
