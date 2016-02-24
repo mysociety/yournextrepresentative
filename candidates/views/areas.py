@@ -17,6 +17,8 @@ from candidates.models.auth import get_edits_allowed
 
 from elections.models import AreaType, Election
 
+from .people import get_field_groupings
+from ..models import SimplePopoloField, ExtraField
 from ..forms import NewPersonForm
 from .helpers import split_candidacies, group_candidates_by_party
 
@@ -73,7 +75,7 @@ class AreasView(TemplateView):
                     party_list=election.party_lists_in_use,
                     max_people=election.default_party_list_members_to_show
                 )
-                context['posts'].append({
+                post_context = {
                     'election': election.slug,
                     'election_data': election,
                     'post_data': {
@@ -92,7 +94,36 @@ class AreasView(TemplateView):
                         },
                         hidden_post_widget=True,
                     ),
-                })
+                }
+                post_context['extra_fields'] = []
+                for extra_field in ExtraField.objects.all():
+                    post_context['extra_fields'].append(
+                        post_context['add_candidate_form'][extra_field.key]
+                    )
+                personal_fields, demographic_fields = get_field_groupings()
+                post_context['personal_fields'] = []
+                post_context['demographic_fields'] = []
+                simple_fields = SimplePopoloField.objects.order_by('order').all()
+                for field in simple_fields:
+                    if field.name in personal_fields:
+                        post_context['personal_fields'].append(
+                            post_context['add_candidate_form'][field.name]
+                        )
+
+                    if field.name in demographic_fields:
+                        post_context['demographic_fields'].append(
+                            post_context['add_candidate_form'][field.name]
+                        )
+
+                post_context['election_fields'] = []
+                for field in post_context['add_candidate_form'] \
+                        .election_fields_names:
+                    post_context['election_fields'].append(
+                        post_context['add_candidate_form'][field]
+                    )
+
+                context['posts'].append(post_context)
+
         if not any_area_found:
             raise Http404("No such areas found")
         context['all_area_names'] = ' — '.join(all_area_names)

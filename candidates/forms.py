@@ -14,7 +14,9 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from candidates.models import PartySet, parse_approximate_date, ExtraField, SimplePopoloField
+from candidates.models import (
+    PartySet, parse_approximate_date, ExtraField, SimplePopoloField
+)
 from popolo.models import Organization, Post
 
 class AddressForm(forms.Form):
@@ -263,6 +265,8 @@ class NewPersonForm(BasePersonForm):
             election_data
         ]
 
+        self.election_fields_names = ['standing_' + election]
+
         post_field_kwargs = {
             'label': _("Post in the {election}").format(
                 election=election_data.name
@@ -291,6 +295,7 @@ class NewPersonForm(BasePersonForm):
                 )
 
         self.fields['constituency_' + election] = post_field
+        self.election_fields_names.append('constituency_' + election)
 
         # It seems to be common in elections around the world for
         # there to be different sets of parties that candidates can
@@ -326,6 +331,7 @@ class NewPersonForm(BasePersonForm):
                         }
                     ),
                 )
+            self.election_fields_names.append('party_' + party_set.slug + '_' + election)
 
     source = forms.CharField(
         label=_("Source of information ({0})").format(

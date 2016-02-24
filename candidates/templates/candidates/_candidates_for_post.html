@@ -174,15 +174,141 @@
 
       <form method="post" id="new-candidate-form" action="{% url 'person-create' election=election %}">
         {% csrf_token %}
-          {% for field in add_candidate_form.visible_fields %}
-            <p>
-              {{ field.errors }}
-              {{ field.label_tag }} {{ field }}
-            </p>
+        <h2>{% trans "Personal details:" %}</h2>
+
+        {% for simple_field in personal_fields %}
+        <div class="form-item {% if simple_field.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ simple_field.label_tag }}
+            {{ simple_field }}
+          </p>
+          {{ simple_field.errors }}
+        </div>
+
+        {% endfor %}
+
+        <div>
+          <h2>{% trans "Party:" %}</h2>
+            {% for field in election_fields %}
+              {% if field.is_hidden %}
+                {{ field }}
+              {% else %}
+              <div class="form-item">
+                <p>
+                  {{ field.errors }}
+                  {{ field.label }}
+                  {{ field }}
+                </p>
+              </div>
+              {% endif %}
+            {% endfor %}
+        </div>
+
+        <h2>{% trans "Links and social media:" %}</h2>
+
+        <div class="form-item {% if form.twitter_username.errors %}form-item--errors{% endif %}">
+          {{ add_candidate_form.twitter_username.label_tag }}
+          <div class="row collapse">
+            <div class="small-1 columns">
+              <span class="prefix">@</span>
+            </div>
+            <div class="small-11 columns">
+              {{ add_candidate_form.twitter_username }}
+            </div>
+          </div>
+          {{ add_candidate_form.twitter_username.errors }}
+        </div>
+
+        <div class="form-item {% if form.facebook_personal_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.facebook_personal_url.label_tag }}
+            {{ add_candidate_form.facebook_personal_url }}
+          </p>
+          {{ add_candidate_form.facebook_personal_url.errors }}
+        </div>
+
+        <div class="form-item {% if form.facebook_page_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.facebook_page_url.label_tag }}
+            {{ add_candidate_form.facebook_page_url }}
+          </p>
+          {{ add_candidate_form.facebook_page_url.errors }}
+        </div>
+
+        <div class="form-item {% if form.homepage_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.homepage_url.label_tag }}
+            {{ add_candidate_form.homepage_url }}
+          </p>
+          {{ add_candidate_form.homepage_url.errors }}
+        </div>
+
+        <div class="form-item {% if form.wikipedia_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.wikipedia_url.label_tag }}
+            {{ add_candidate_form.wikipedia_url }}
+          </p>
+          {{ add_candidate_form.wikipedia_url.errors }}
+        </div>
+
+        <div class="form-item {% if form.linkedin_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.linkedin_url.label_tag }}
+            {{ add_candidate_form.linkedin_url }}
+          </p>
+          {{ add_candidate_form.linkedin_url.errors }}
+        </div>
+
+        <div class="form-item {% if form.party_ppc_page_url.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ add_candidate_form.party_ppc_page_url.label_tag }}
+            {{ add_candidate_form.party_ppc_page_url }}
+          </p>
+          {{ add_candidate_form.party_ppc_page_url.errors }}
+        </div>
+
+        <h2>{% trans "Demographics:" %}</h2>
+
+        {% for simple_field in demographic_fields %}
+        <div class="form-item {% if simple_field.errors %}form-item--errors{% endif %}">
+          <p>
+            {{ simple_field.label_tag }}
+            {{ simple_field }}
+          </p>
+          {{ simple_field.errors }}
+        </div>
+
+        {% endfor %}
+
+        {% if extra_fields %}
+
+          <h2>{% trans "Additional information:" %}</h2>
+
+          {% for extra_field in extra_fields %}
+            <div class="form-item {% if extra_field..errors %}form-item--errors{% endif %}">
+              <p>
+                {{ extra_field.label }}
+                {{ extra_field }}
+              </p>
+              {{ extra_field.errors }}
+            </div>
           {% endfor %}
-          {% for hidden_field in add_candidate_form.hidden_fields %}
-            {{ hidden_field }}
-          {% endfor %}
+
+        {% endif %}
+
+        <div class="source-confirmation {% if form.source.errors %}source-confirmation--errors{% endif %}">
+          <p>
+            <label for="{{ form.source.id_for_label }}">
+              {% if add_candidate_form.source.errors %}
+                {% trans "<strong>You forgot to reference a source!</strong> Can you show us <em>where</em> you got this information?" %}
+              {% else %}
+                {% trans "What’s your <strong>source of information</strong> for this candidate?" %}
+              {% endif %}
+              {{ settings.SOURCE_HINTS }}
+            </label>
+            {{ add_candidate_form.source }}
+          </p>
+        </div>
         <input type="submit" class="button" value="{% trans "Add new candidate" %}">
         <a class="hide-new-candidate-form button secondary">{% trans "Cancel" %}</a>
       </form>

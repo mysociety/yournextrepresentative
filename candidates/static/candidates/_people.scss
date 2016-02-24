@@ -285,7 +285,7 @@
   }
 }
 
-.person__details {
+.person__details, .candidates__new {
   h2 {
     @extend %person-section-heading;
   }
