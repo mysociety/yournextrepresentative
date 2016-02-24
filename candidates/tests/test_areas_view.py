@@ -357,6 +357,26 @@ class TestAreasView(TestUserMixin, WebTest):
             )
         )
 
+        # make sure we've got the complex fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_twitter_username'}
+            )
+        )
+
+        # make sure we've got the simple personal fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_name'}
+            )
+        )
+
+        # make sure we've got the simple demographic fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_gender'}
+            )
+        )
 
     def test_get_malformed_url(self):
         response = self.app.get(

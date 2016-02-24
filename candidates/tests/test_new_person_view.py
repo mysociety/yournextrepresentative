@@ -64,6 +64,28 @@ class TestNewPersonView(TestUserMixin, WebTest):
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user,
         )
+
+        # make sure we've got the complex fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_twitter_username'}
+            )
+        )
+
+        # make sure we've got the simple personal fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_name'}
+            )
+        )
+
+        # make sure we've got the simple demographic fields
+        self.assertTrue(
+            response.html.find(
+                'input', {'id': 'id_gender'}
+            )
+        )
+
         form = response.forms['new-candidate-form']
         form['name'] = 'Elizabeth Bennet'
         form['email'] = 'lizzie@example.com'
