@@ -77,7 +77,7 @@ class TestNewPersonView(TestUserMixin, WebTest):
 
         self.assertContains(
             submission_response,
-            'You must indicate how you know about this candidate'
+            'You forgot to reference a source'
         )
 
         form['source'] = 'Testing adding a new person to a post'

@@ -94,7 +94,7 @@ class SimpleFieldsTests(TestUserMixin, WebTest):
             '/election/2015/person/create/',
             user=self.user
         )
-        form = response.forms['person-details']
+        form = response.forms['new-candidate-form']
         form['name'] = 'Naomi Newperson'
         form['additional_name'] = 'Naomi Newcomer'
         form['standing_2015'] = 'not-standing'
