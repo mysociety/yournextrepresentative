@@ -8,12 +8,22 @@
 {% endblock %}
 
 {% block content %}
-  <form id="person-details" action="{% url 'person-create' election=election %}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" class="button" value="{% trans "Save changes" %}">
-  </form>
+<div class="person__details">
+{% include 'candidates/_person_create_form.html' %}
+</div>
 
+<div class="person__actions">
+
+  <div class="person__actions__action person__actions__sourcing">
+    <h2>{% trans "Thanks for helping out!" %}</h2>
+    <p>{% blocktrans trimmed %}
+      Please make sure you read our <a href="https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit">guidance on sourcing fields</a>.
+      {% endblocktrans %}</p>
+  </div>
+</div>
+
+<div class="person__versions">
 {% include 'candidates/person-versions.html' %}
+</div>
 
 {% endblock %}

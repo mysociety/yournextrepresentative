@@ -440,6 +440,41 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
         result['standing_' + self.election] = 'standing'
         return result
 
+    def get_context_data(self, **kwargs):
+        context = super(NewPersonView, self).get_context_data(**kwargs)
+
+        context['add_candidate_form'] = kwargs['form']
+
+        context['extra_fields'] = []
+        extra_fields = ExtraField.objects.all()
+        for field in extra_fields:
+            context['extra_fields'].append(
+                context['add_candidate_form'][field.key]
+            )
+
+        personal_fields, demographic_fields = get_field_groupings()
+        context['personal_fields'] = []
+        context['demographic_fields'] = []
+        simple_fields = SimplePopoloField.objects.order_by('order').all()
+        for field in simple_fields:
+            if field.name in personal_fields:
+                context['personal_fields'].append(
+                    context['add_candidate_form'][field.name]
+                )
+
+            if field.name in demographic_fields:
+                context['demographic_fields'].append(
+                    context['add_candidate_form'][field.name]
+                )
+
+        context['election_fields'] = []
+        for field in context['add_candidate_form'].election_fields_names:
+            context['election_fields'].append(
+                context['add_candidate_form'][field]
+            )
+
+        return context
+
     def form_valid(self, form):
 
         with transaction.atomic():
