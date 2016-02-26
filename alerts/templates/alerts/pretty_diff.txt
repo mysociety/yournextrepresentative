@@ -1,18 +1,20 @@
 {% load prettyjson %}
+{% load i18n %}
 
-User: {{ changes.username }}
-Time: {{ changes.timestamp }}
-Source: {{ changes.information_source }}
-Changes:
+{% trans 'User' %}: {{ changes.username }}
+{% trans 'Time' %}: {{ changes.timestamp }}
+{% trans 'Source' %}: {{ changes.information_source }}
+{% trans 'Changes made' %}:
 {% for operation in changes.diff %}
   {% if operation.op == 'add' %}
-     Added: {{ operation.path }} => {{ operation.value }}
+     {% trans 'Added:' %} {{ operation.path }} => {{ operation.value }}
   {% elif operation.op == 'remove' %}
-     Removed: {{ operation.path }}
-     (previously it was {{ previous }})
+     {% trans 'Removed:' %} {{ operation.path }}
+     {% blocktrans with previous=operation.previous %}(previously it was {{ previous }}){% endblocktrans %}
   {% elif operation.op == 'replace' %}
-     At {{ operation.path }} replaced {{ operation.previous_value }} with {{ operation.value }}
+     {% blocktrans trimmed with field=operation.path previous=operation.previous_value current=operation.value %}
+     At {{ field }} replaced {{ previous }} with {{ current }}{% endblocktrans %}
   {% else %}
-     UNEXPECTED OPERATION: {{ operation }}
+    {% trans 'UNEXPECTED OPERATION' %}: {{ operation }}
   {% endif %}
 {% endfor %}

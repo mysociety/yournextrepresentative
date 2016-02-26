@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 from django_webtest import WebTest
 from django.core import mail
 from django.core.management import call_command
+from django.test.utils import override_settings
+
+from nose.plugins.attrib import attr
 
 from candidates.tests.factories import (
     AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
@@ -15,6 +18,7 @@ from candidates.tests.factories import (
 
 from django.contrib.contenttypes.models import ContentType
 
+from candidates.models import LoggedAction
 from candidates.tests.auth import TestUserMixin
 
 from .models import Alert
@@ -314,3 +318,41 @@ class AlertsTest(TestUserMixin, WebTest):
         call_command('alerts_send_alerts', '--daily')
 
         self.assertEquals(len(mail.outbox), 2)
+
+    @override_settings(LANGUAGE_CODE='es-cr')
+    @attr(country='cr')
+    def test_email_translated(self):
+        response = self.app.get(
+            '/person/2010/update',
+            user=self.user_who_can_lock,
+        )
+        form = response.forms['person-details']
+        form['honorific_prefix'] = 'Mrs'
+        form['source'] = "test_email_translated"
+        response = form.submit()
+
+        call_command('alerts_send_alerts', '--daily')
+
+        self.assertEquals(len(mail.outbox), 1)
+        msg = mail.outbox[0]
+
+        self.assertTrue(re.search(r'Angela Smith', msg.body))
+        self.assertTrue(re.search(r'Agregado', msg.body))
+
+    def test_change_with_no_details(self):
+        la = LoggedAction.objects.create(
+            user=self.user_who_can_lock,
+            person=self.person,
+            action_type='person-update',
+            source="test_change_with_no_details"
+        )
+
+        call_command('alerts_send_alerts', '--hourly')
+
+        self.assertEquals(len(mail.outbox), 1)
+        msg = mail.outbox[0]
+
+        self.assertTrue(re.search(r'Tessa Jowell', msg.body))
+        self.assertTrue(re.search(r'There has been 1 change we don', msg.body))
+
+        la.delete()

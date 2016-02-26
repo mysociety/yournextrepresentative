@@ -30,6 +30,7 @@ install:
     -e "s,(YNMP_DB_USER:) .*,\\1 'postgres',"
     -e "s,(SECRET_KEY:) '',\\1 'notatallsecret',"
     conf/general.yml-example > conf/general.yml
+  - ./manage.py compilemessages
 
 script:
   - ./run-tests --coverage
