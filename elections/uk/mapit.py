@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from candidates.mapit import (
     BaseMapItException, BadPostcodeException, UnknownMapitException
 )
-from elections.models import AreaType
+from popolo.models import Area
 
 
 logger = logging.getLogger(__name__)
@@ -70,13 +70,15 @@ def get_areas_from_postcode(original_postcode):
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
-        known_area_types = set(AreaType.objects.values_list('name', flat=True))
 
         result = sorted(
             [
                 (a['type'], format_code_from_area(a))
                 for a in mapit_result['areas'].values()
-                if a['type'] in known_area_types
+                if Area.objects.filter(
+                        extra__type__name=a['type'],
+                        identifier=format_code_from_area(a)
+                ).exists()
             ],
             key=area_sort_key
         )
