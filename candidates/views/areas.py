@@ -38,15 +38,16 @@ class AreasView(TemplateView):
         context = super(AreasView, self).get_context_data(**kwargs)
         all_area_names = set()
         context['posts'] = []
+        any_area_found = False
         for area_type_code, area_id in self.types_and_areas:
-            # FIXME: check that we're doing enough prefetch_related
-            # and select_related
-            area_extra = get_object_or_404(
-                AreaExtra.objects \
+            try:
+                area_extra = AreaExtra.objects \
                     .select_related('base', 'type') \
-                    .prefetch_related('base__posts'),
-                base__identifier=area_id,
-            )
+                    .prefetch_related('base__posts') \
+                    .get(base__identifier=area_id)
+                any_area_found = True
+            except AreaExtra.DoesNotExist:
+                continue
             area = area_extra.base
             all_area_names.add(area.name)
             for post in area.posts.all():
@@ -92,6 +93,8 @@ class AreasView(TemplateView):
                         hidden_post_widget=True,
                     ),
                 })
+        if not any_area_found:
+            raise Http404("No such areas found")
         context['all_area_names'] = ' — '.join(all_area_names)
         context['suppress_official_documents'] = True
         return context
