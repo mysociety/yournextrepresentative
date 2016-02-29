@@ -172,7 +172,11 @@
 
       <h4>{% trans "Add a new candidate" %}</h4>
 
-      {% include 'candidates/_person_create_form.html' %}
+      <form id="new-candidate-form" name="new-candidate-form" action="{% url 'person-create' election=election %}" method="post">
+      {% with form=add_candidate_form %}
+        {% include 'candidates/_person_form.html' %}
+      {% endwith %}
+      </form>
 
     </div>
   {% endif %}

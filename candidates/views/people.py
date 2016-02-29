@@ -40,6 +40,7 @@ from ..models import (
     PersonExtra, PartySet, merge_popit_people, ExtraField, PersonExtraFieldValue,
     SimplePopoloField
 )
+from .helpers import get_candidacy_fields_for_person_form
 from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):
@@ -350,32 +351,14 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             if field.name in demographic_fields:
                 context['demographic_fields'].append(kwargs['form'][field.name])
 
-        context['extra_fields'] = get_extra_fields(person)
-        for k, v in context['extra_fields'].items():
-            v['form_field'] = kwargs['form'][k]
+        extra_fields = get_extra_fields(person)
+        context['extra_fields'] = []
+        for k, v in extra_fields.items():
+            context['extra_fields'].append(kwargs['form'][k])
+            # v['form_field'] = kwargs['form'][k]
 
-        context['constituencies_form_fields'] = []
-        for election_data in Election.objects.by_date():
-            if not election_data.current:
-                continue
-            cons_form_fields = {
-                'election_name': election_data.name,
-                'standing': kwargs['form']['standing_' + election_data.slug],
-                'constituency': kwargs['form']['constituency_' + election_data.slug],
-            }
-            party_fields = []
-            for ps in PartySet.objects.all():
-                key_suffix = ps.slug + '_' + election_data.slug
-                position_field = None
-                if election_data.party_lists_in_use:
-                    position_field = kwargs['form']['party_list_position_' + key_suffix]
-                party_position_tuple = (
-                    kwargs['form']['party_' + key_suffix],
-                    position_field
-                )
-                party_fields.append(party_position_tuple)
-            cons_form_fields['party_fields'] = party_fields
-            context['constituencies_form_fields'].append(cons_form_fields)
+        context['constituencies_form_fields'] = \
+            get_candidacy_fields_for_person_form(kwargs['form'])
 
         return context
 
@@ -467,10 +450,9 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
                     context['add_candidate_form'][field.name]
                 )
 
-        context['election_fields'] = []
-        for field in context['add_candidate_form'].election_fields_names:
-            context['election_fields'].append(
-                context['add_candidate_form'][field]
+        context['constituencies_form_fields'] = \
+            get_candidacy_fields_for_person_form(
+                context['add_candidate_form']
             )
 
         return context

@@ -9,7 +9,7 @@ from elections.models import Election
 
 from slugify import slugify
 
-from ..models import MembershipExtra
+from ..models import MembershipExtra, PartySet
 
 def get_redirect_to_post(election, post):
     from ..election_specific import shorten_post_label
@@ -24,6 +24,40 @@ def get_redirect_to_post(election, post):
             }
         )
     )
+
+
+def get_candidacy_fields_for_person_form(form):
+    fields = []
+    for election_data in form.elections_with_fields:
+        if not election_data.current:
+            continue
+        cons_form_fields = {
+            'election': election_data,
+            'election_name': election_data.name,
+            'standing': form['standing_' + election_data.slug],
+            'constituency': form['constituency_' + election_data.slug],
+        }
+        party_fields = []
+        for ps in PartySet.objects.all():
+            key_suffix = ps.slug + '_' + election_data.slug
+            position_field = None
+            try:
+                if election_data.party_lists_in_use:
+                    position_field = form['party_list_position_' + key_suffix]
+                party_position_tuple = (
+                    form['party_' + key_suffix],
+                    position_field
+                )
+            # the new person form often is specific to one election so doesn't
+            # have all the party sets
+            except KeyError:
+                continue
+            party_fields.append(party_position_tuple)
+        cons_form_fields['party_fields'] = party_fields
+        fields.append(cons_form_fields)
+
+    return fields
+
 
 def get_party_people_for_election_from_memberships(
         election,

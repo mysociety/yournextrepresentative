@@ -18,9 +18,12 @@ from candidates.models.auth import get_edits_allowed
 from elections.models import AreaType, Election
 
 from .people import get_field_groupings
-from ..models import SimplePopoloField, ExtraField
+from ..models import SimplePopoloField, ExtraField, PartySet
 from ..forms import NewPersonForm
-from .helpers import split_candidacies, group_candidates_by_party
+from .helpers import (
+    split_candidacies, group_candidates_by_party,
+    get_candidacy_fields_for_person_form
+)
 
 class AreasView(TemplateView):
     template_name = 'candidates/areas.html'
@@ -121,6 +124,10 @@ class AreasView(TemplateView):
                     post_context['election_fields'].append(
                         post_context['add_candidate_form'][field]
                     )
+
+                form = post_context['add_candidate_form']
+                post_context['constituencies_form_fields'] = \
+                    get_candidacy_fields_for_person_form(form)
 
                 context['posts'].append(post_context)
 

@@ -8,8 +8,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="person__details">
-{% include 'candidates/_person_create_form.html' %}
+<div class="person__details" id="person-details">
+<form id="new-candidate-form" name="new-candidate-form" action="{% url 'person-create' election=election %}" method="post">
+{% with form=add_candidate_form %}
+  {% include 'candidates/_person_form.html' %}
+{% endwith %}
+</form>
 </div>
 
 <div class="person__actions">

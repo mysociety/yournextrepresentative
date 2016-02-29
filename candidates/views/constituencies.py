@@ -21,7 +21,7 @@ from auth_helpers.views import GroupRequiredMixin
 from .helpers import (
     get_party_people_for_election_from_memberships,
     split_candidacies, get_redirect_to_post,
-    group_candidates_by_party
+    group_candidates_by_party, get_candidacy_fields_for_person_form
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
@@ -200,6 +200,9 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
                 context['add_candidate_form'][field]
             )
 
+        form = context['add_candidate_form']
+        context['constituencies_form_fields'] = \
+            get_candidacy_fields_for_person_form(form)
         return context
 
 
