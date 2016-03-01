@@ -17,8 +17,6 @@ from candidates.models.auth import get_edits_allowed
 
 from elections.models import AreaType, Election
 
-from .people import get_field_groupings
-from ..models import SimplePopoloField, ExtraField
 from ..forms import NewPersonForm
 from .helpers import (
     split_candidacies, group_candidates_by_party,
