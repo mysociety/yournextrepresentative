@@ -92,8 +92,8 @@ class CachedCountTestCase(WebTest):
                 'current': [
                     {
                         'total': 18,
-                        'id': "general-election",
-                        'name': "General Election",
+                        'id': "sp.2016-05-05",
+                        'name': "Scottish Parliamentary elections",
                         'prior_elections': [
                             {
                                 "percentage": 900.0,
@@ -134,26 +134,26 @@ class CachedCountTestCase(WebTest):
                 ('<td>Earlier General Election</td>',
                  '<td><a href="/election/earlier-general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
                  '<td>0</td>'),
-                ('<td>General Election</td>',
-                 '<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                ('<td>Scottish Parliamentary elections</td>',
+                 '<td><a href="/election/sp.2016-05-05/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
                  '<td>0</td>'),
                 ('<td>Earlier General Election</td>',
                  '<td><a href="/election/earlier-general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
                  '<td>2</td>'),
-                ('<td>General Election</td>',
-                 '<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                ('<td>Scottish Parliamentary elections</td>',
+                 '<td><a href="/election/sp.2016-05-05/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
                  '<td>3</td>'),
-                ('<td>General Election</td>',
-                 '<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                ('<td>Scottish Parliamentary elections</td>',
+                 '<td><a href="/election/sp.2016-05-05/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
                  '<td>5</td>'),
-                ('<td>General Election</td>',
-                 '<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                ('<td>Scottish Parliamentary elections</td>',
+                 '<td><a href="/election/sp.2016-05-05/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
                  '<td>10</td>')
             ]
         )
 
     def test_post_counts_page(self):
-        response = self.app.get('/numbers/election/general-election/posts')
+        response = self.app.get('/numbers/election/sp.2016-05-05/posts')
         self.assertEqual(response.status_code, 200)
         rows = [
             tuple(td.decode() for td in row.find_all('td'))
@@ -162,19 +162,19 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                ('<td><a href="/election/general-election/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
                  '<td>10</td>'),
-                ('<td><a href="/election/general-election/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
                  '<td>5</td>'),
-                ('<td><a href="/election/general-election/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
                  '<td>3</td>'),
-                ('<td><a href="/election/general-election/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
                  '<td>0</td>'),
             ]
         )
 
     def test_party_counts_page(self):
-        response = self.app.get('/numbers/election/general-election/parties')
+        response = self.app.get('/numbers/election/sp.2016-05-05/parties')
         self.assertEqual(response.status_code, 200)
         rows = [
             tuple(td.decode() for td in row.find_all('td'))
@@ -183,15 +183,15 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                ('<td><a href="/election/general-election/party/party:63/green-party">Green Party</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/party/party:63/green-party">Green Party</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/general-election/party/party:53/labour-party">Labour Party</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/party/party:53/labour-party">Labour Party</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/general-election/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/general-election/party/party:52/conservative-party">Conservative Party</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/party/party:52/conservative-party">Conservative Party</a></td>',
                  '<td>3</td>'),
-                ('<td><a href="/election/general-election/party/party:10004/party-4">Party 4</a></td>',
+                ('<td><a href="/election/sp.2016-05-05/party/party:10004/party-4">Party 4</a></td>',
                  '<td>3</td>'),
                 ('<td>Party 5</td>',
                  '<td>0</td>'),

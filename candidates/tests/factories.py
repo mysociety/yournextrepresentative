@@ -46,12 +46,12 @@ class BaseElectionFactory(factory.DjangoModelFactory):
         model = 'elections.Election'
         abstract = True
 
-    slug = 'general-election'
-    for_post_role = 'Member of Parliament'
+    slug = 'sp.2016-05-05'
+    for_post_role = 'Member of the Scottish Parliament'
     winner_membership_role = None
     candidate_membership_role = 'Candidate'
     election_date = date_in_near_future
-    name = 'General Election'
+    name = 'Scottish Parliamentary elections'
     current = True
     use_for_candidate_suggestions = False
     area_generation = 22
