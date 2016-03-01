@@ -17,12 +17,10 @@ from candidates.models.auth import get_edits_allowed
 
 from elections.models import AreaType, Election
 
-from .people import get_field_groupings
-from ..models import SimplePopoloField, ExtraField, PartySet
 from ..forms import NewPersonForm
 from .helpers import (
     split_candidacies, group_candidates_by_party,
-    get_candidacy_fields_for_person_form
+    get_person_form_fields
 )
 
 class AreasView(TemplateView):
@@ -98,36 +96,10 @@ class AreasView(TemplateView):
                         hidden_post_widget=True,
                     ),
                 }
-                post_context['extra_fields'] = []
-                for extra_field in ExtraField.objects.all():
-                    post_context['extra_fields'].append(
-                        post_context['add_candidate_form'][extra_field.key]
-                    )
-                personal_fields, demographic_fields = get_field_groupings()
-                post_context['personal_fields'] = []
-                post_context['demographic_fields'] = []
-                simple_fields = SimplePopoloField.objects.order_by('order').all()
-                for field in simple_fields:
-                    if field.name in personal_fields:
-                        post_context['personal_fields'].append(
-                            post_context['add_candidate_form'][field.name]
-                        )
-
-                    if field.name in demographic_fields:
-                        post_context['demographic_fields'].append(
-                            post_context['add_candidate_form'][field.name]
-                        )
-
-                post_context['election_fields'] = []
-                for field in post_context['add_candidate_form'] \
-                        .election_fields_names:
-                    post_context['election_fields'].append(
-                        post_context['add_candidate_form'][field]
-                    )
-
-                form = post_context['add_candidate_form']
-                post_context['constituencies_form_fields'] = \
-                    get_candidacy_fields_for_person_form(form)
+                post_context = get_person_form_fields(
+                    post_context,
+                    post_context['add_candidate_form']
+                )
 
                 context['posts'].append(post_context)
 

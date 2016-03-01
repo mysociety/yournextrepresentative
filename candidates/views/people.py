@@ -37,10 +37,12 @@ from ..models.versions import (
     revert_person_from_version_data, get_person_as_version_data
 )
 from ..models import (
-    PersonExtra, PartySet, merge_popit_people, ExtraField, PersonExtraFieldValue,
+    PersonExtra, merge_popit_people, ExtraField, PersonExtraFieldValue,
     SimplePopoloField
 )
-from .helpers import get_candidacy_fields_for_person_form
+from .helpers import (
+    get_field_groupings, get_person_form_fields
+)
 from popolo.models import Person
 
 def get_call_to_action_flash_message(person, new_person=False):
@@ -90,29 +92,6 @@ def get_extra_fields(person):
         for extra_field in ExtraField.objects.all()
     }
 
-def get_field_groupings():
-    personal = [
-        'name',
-        'family_name',
-        'given_name',
-        'additional_name',
-        'honorific_prefix',
-        'honorific_suffix',
-        'patronymic_name',
-        'sort_name',
-        'email',
-        'summary',
-        'biography',
-    ]
-
-    demographic = [
-        'gender',
-        'birth_date',
-        'death_date',
-        'national_identity',
-    ]
-
-    return (personal, demographic)
 
 class PersonView(TemplateView):
     template_name = 'candidates/person-view.html'
@@ -339,26 +318,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             json.loads(person.extra.versions)
         )
 
-        personal_fields, demographic_fields = get_field_groupings()
-
-        context['personal_fields'] = []
-        context['demographic_fields'] = []
-        simple_fields = SimplePopoloField.objects.order_by('order').all()
-        for field in simple_fields:
-            if field.name in personal_fields:
-                context['personal_fields'].append(kwargs['form'][field.name])
-
-            if field.name in demographic_fields:
-                context['demographic_fields'].append(kwargs['form'][field.name])
-
-        extra_fields = get_extra_fields(person)
-        context['extra_fields'] = []
-        for k, v in extra_fields.items():
-            context['extra_fields'].append(kwargs['form'][k])
-            # v['form_field'] = kwargs['form'][k]
-
-        context['constituencies_form_fields'] = \
-            get_candidacy_fields_for_person_form(kwargs['form'])
+        context = get_person_form_fields(context, kwargs['form'])
 
         return context
 
@@ -435,25 +395,10 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
                 context['add_candidate_form'][field.key]
             )
 
-        personal_fields, demographic_fields = get_field_groupings()
-        context['personal_fields'] = []
-        context['demographic_fields'] = []
-        simple_fields = SimplePopoloField.objects.order_by('order').all()
-        for field in simple_fields:
-            if field.name in personal_fields:
-                context['personal_fields'].append(
-                    context['add_candidate_form'][field.name]
-                )
-
-            if field.name in demographic_fields:
-                context['demographic_fields'].append(
-                    context['add_candidate_form'][field.name]
-                )
-
-        context['constituencies_form_fields'] = \
-            get_candidacy_fields_for_person_form(
-                context['add_candidate_form']
-            )
+        context = get_person_form_fields(
+            context,
+            context['add_candidate_form']
+        )
 
         return context
 

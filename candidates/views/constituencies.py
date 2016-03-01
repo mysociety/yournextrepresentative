@@ -21,7 +21,7 @@ from auth_helpers.views import GroupRequiredMixin
 from .helpers import (
     get_party_people_for_election_from_memberships,
     split_candidacies, get_redirect_to_post,
-    group_candidates_by_party, get_candidacy_fields_for_person_form
+    group_candidates_by_party, get_person_form_fields
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
@@ -31,7 +31,6 @@ from ..models import (
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
     MembershipExtra, PartySet, SimplePopoloField, ExtraField
 )
-from .people import get_field_groupings
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
@@ -172,37 +171,11 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             },
             hidden_post_widget=True,
         )
-        context['extra_fields'] = []
-        extra_fields = ExtraField.objects.all()
-        for field in extra_fields:
-            context['extra_fields'].append(
-                context['add_candidate_form'][field.key]
-            )
 
-        personal_fields, demographic_fields = get_field_groupings()
-        context['personal_fields'] = []
-        context['demographic_fields'] = []
-        simple_fields = SimplePopoloField.objects.order_by('order').all()
-        for field in simple_fields:
-            if field.name in personal_fields:
-                context['personal_fields'].append(
-                    context['add_candidate_form'][field.name]
-                )
-
-            if field.name in demographic_fields:
-                context['demographic_fields'].append(
-                    context['add_candidate_form'][field.name]
-                )
-
-        context['election_fields'] = []
-        for field in context['add_candidate_form'].election_fields_names:
-            context['election_fields'].append(
-                context['add_candidate_form'][field]
-            )
-
-        form = context['add_candidate_form']
-        context['constituencies_form_fields'] = \
-            get_candidacy_fields_for_person_form(form)
+        context = get_person_form_fields(
+            context,
+            context['add_candidate_form']
+        )
         return context
 
 

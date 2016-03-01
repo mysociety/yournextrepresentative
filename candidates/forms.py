@@ -265,7 +265,6 @@ class NewPersonForm(BasePersonForm):
             election_data
         ]
 
-        self.election_fields_names = ['standing_' + election]
 
         post_field_kwargs = {
             'label': _("Post in the {election}").format(
@@ -295,7 +294,6 @@ class NewPersonForm(BasePersonForm):
                 )
 
         self.fields['constituency_' + election] = post_field
-        self.election_fields_names.append('constituency_' + election)
 
         # It seems to be common in elections around the world for
         # there to be different sets of parties that candidates can
@@ -331,7 +329,21 @@ class NewPersonForm(BasePersonForm):
                         }
                     ),
                 )
-            self.election_fields_names.append('party_' + party_set.slug + '_' + election)
+            if election_data.party_lists_in_use:
+                # Then add a field to enter the position on the party list
+                # as an integer:
+                field_name = 'party_list_position_' + party_set.slug + \
+                    '_' + election
+                self.fields[field_name] = forms.IntegerField(
+                    label=_("Position in party list ('1' for first, '2' for second, etc.)"),
+                    min_value=1,
+                    required=False,
+                    widget=forms.NumberInput(
+                        attrs={
+                            'class': 'party-position party-position-' + election
+                        }
+                    )
+                )
 
     source = forms.CharField(
         label=_("Source of information ({0})").format(

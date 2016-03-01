@@ -9,7 +9,35 @@ from elections.models import Election
 
 from slugify import slugify
 
-from ..models import MembershipExtra, PartySet
+from ..models import (
+    MembershipExtra, PartySet, SimplePopoloField, ExtraField
+)
+
+
+def get_field_groupings():
+    personal = [
+        'name',
+        'family_name',
+        'given_name',
+        'additional_name',
+        'honorific_prefix',
+        'honorific_suffix',
+        'patronymic_name',
+        'sort_name',
+        'email',
+        'summary',
+        'biography',
+    ]
+
+    demographic = [
+        'gender',
+        'birth_date',
+        'death_date',
+        'national_identity',
+    ]
+
+    return (personal, demographic)
+
 
 def get_redirect_to_post(election, post):
     from ..election_specific import shorten_post_label
@@ -24,6 +52,35 @@ def get_redirect_to_post(election, post):
             }
         )
     )
+
+
+def get_person_form_fields(context, form):
+    context['extra_fields'] = []
+    extra_fields = ExtraField.objects.all()
+    for field in extra_fields:
+        context['extra_fields'].append(
+            form[field.key]
+        )
+
+    personal_fields, demographic_fields = get_field_groupings()
+    context['personal_fields'] = []
+    context['demographic_fields'] = []
+    simple_fields = SimplePopoloField.objects.order_by('order').all()
+    for field in simple_fields:
+        if field.name in personal_fields:
+            context['personal_fields'].append(
+                form[field.name]
+            )
+
+        if field.name in demographic_fields:
+            context['demographic_fields'].append(
+                form[field.name]
+            )
+
+    context['constituencies_form_fields'] = \
+        get_candidacy_fields_for_person_form(form)
+
+    return context
 
 
 def get_candidacy_fields_for_person_form(form):
