@@ -78,6 +78,7 @@ def get_counts():
             total = election_id_to_candidates.get(e.id, 0)
             election_counts = {
                 'id': e.slug,
+                'html_id': e.slug.replace('.', '-'),
                 'name': e.name,
                 'total': total,
             }

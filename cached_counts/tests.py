@@ -74,7 +74,7 @@ class CachedCountTestCase(WebTest):
         response = self.app.get('/numbers/')
         self.assertEqual(response.status_code, 200)
         current_div = response.html.find(
-            'div', {'id': 'statistics-election-general-election'}
+            'div', {'id': 'statistics-election-sp-2016-05-05'}
         )
         self.assertTrue(current_div)
         self.assertIn('Total candidates: 18', str(current_div))
@@ -93,6 +93,7 @@ class CachedCountTestCase(WebTest):
                     {
                         'total': 18,
                         'id': "sp.2016-05-05",
+                        'html_id': "sp-2016-05-05",
                         'name': "Scottish Parliamentary elections",
                         'prior_elections': [
                             {
@@ -110,6 +111,7 @@ class CachedCountTestCase(WebTest):
                     {
                         'total': 2,
                         'id': "earlier-general-election",
+                        'html_id': 'earlier-general-election',
                         'name': "Earlier General Election"
                     }
                 ]

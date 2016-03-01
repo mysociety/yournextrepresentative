@@ -30,7 +30,7 @@
 
       {% for election in elections %}
         {% with election_name=election.name %}
-        <div id="statistics-election-{{ election.id }}">
+        <div id="statistics-election-{{ election.html_id }}">
            <h3>{% blocktrans %}Statistics for the {{ election_name }}{% endblocktrans %}</h3>
            <ul>
              <li>{% blocktrans %}Total candidates:{% endblocktrans %} {{ election.total }}</li>
