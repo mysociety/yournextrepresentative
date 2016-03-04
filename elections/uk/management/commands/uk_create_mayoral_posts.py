@@ -4,7 +4,9 @@ from datetime import date
 
 from django.core.management.base import BaseCommand
 
-from candidates.models import AreaExtra, OrganizationExtra, PartySet, PostExtra
+from candidates.models import (
+    AreaExtra, OrganizationExtra, PartySet, PostExtra, PostExtraElection
+)
 from elections.models import AreaType, Election
 from popolo.models import Area, Organization, Post
 
@@ -152,4 +154,7 @@ class Command(BaseCommand):
                 'party_set': self.gb_parties,
             },
         )
-        post_extra.elections.add(election['election_object'])
+        PostExtraElection.objects.update_or_create(
+            postextra=post_extra,
+            election=election['election_object'],
+        )

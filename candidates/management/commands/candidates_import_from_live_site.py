@@ -305,7 +305,10 @@ class Command(BaseCommand):
                 for election_data in post_data['elections']:
                     election = \
                         emodels.Election.objects.get(slug=election_data['id'])
-                    pe.elections.add(election)
+                    models.PostExtraElection.get_or_create(
+                        postextra=pe,
+                        election=election
+                    )
         extra_fields = {
             ef.key: ef for ef in models.ExtraField.objects.all()
         }

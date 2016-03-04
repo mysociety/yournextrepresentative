@@ -8,7 +8,9 @@ from django.utils.six.moves.urllib_parse import urljoin
 
 import requests
 
-from candidates.models import AreaExtra, OrganizationExtra, PartySet, PostExtra
+from candidates.models import (
+    AreaExtra, OrganizationExtra, PartySet, PostExtra, PostExtraElection
+)
 from elections.models import AreaType, Election
 from elections.uk import mapit
 from popolo.models import Area, Organization, Post
@@ -190,4 +192,7 @@ class Command(BaseCommand):
                         'party_set': gb_parties,
                     },
                 )
-                post_extra.elections.add(election)
+                PostExtraElection.objects.update_or_create(
+                    postextra=post_extra,
+                    election=election
+                )
