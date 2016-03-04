@@ -140,7 +140,7 @@ def get_version_diff(from_data, to_data):
         # differently so they can be presented in human-readable form,
         # so match those cases first:
         m = re.search(
-            r'(standing_in|party_memberships)(?:/([-_A-Za-z0-9]+))?(?:/(\w+))?',
+            r'(standing_in|party_memberships)(?:/([^/]+))?(?:/(\w+))?',
             operation['path'],
         )
         if op in ('replace', 'remove'):

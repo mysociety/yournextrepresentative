@@ -1,3 +1,11 @@
+/* This is a variant of the suggestion in the jQuery FAQ:
+     https://learn.jquery.com/using-jquery-core/faq/how-do-i-select-an-element-by-an-id-that-has-characters-used-in-css-notation/
+   We need this since election IDs now have dots in them.
+ */
+function escapeID(originalID) {
+  return originalID.replace( /(:|\.|\[|\]|,)/g, "\\$1" );
+}
+
 /* Get the element that should have its visibility changed to hide or show
    a Select2. */
 
@@ -75,7 +83,7 @@ function updateSelectsForElection(show, election) {
      determined by the boolean 'show'. */
   var partySelectToShowID,
       partyPositionToShowID,
-      postID = $('#id_constituency_' + election).val(),
+      postID = $('#id_constituency_' + escapeID(election)).val(),
       partySet;
   if (postID) {
     partySet = postIDToPartySet[postID];
@@ -84,33 +92,33 @@ function updateSelectsForElection(show, election) {
     if (postID) {
       partySelectToShowID = 'id_party_' + partySet + '_' + election;
       partyPositionToShowID = 'id_party_list_position_' + partySet + '_' + election;
-      $('.party-select-' + election).each(function(i) {
+      $('.party-select-' + escapeID(election)).each(function(i) {
         setSelect2Visibility(
           $(this),
           $(this).attr('id') == partySelectToShowID
         );
       });
-      $('.party-position-' + election).each(function(i) {
+      $('.party-position-' + escapeID(election)).each(function(i) {
         setVisibility(this, $(this).attr('id') == partyPositionToShowID);
       });
     } else {
       /* Then just show the first party select and hide the others: */
-      $('.party-select-' + election).each(function(i) {
+      $('.party-select-' + escapeID(election)).each(function(i) {
         setSelect2Visibility($(this), i == 0);
       });
-      $('.party-position-' + election).each(function(i) {
+      $('.party-position-' + escapeID(election)).each(function(i) {
         setVisibility(this, i == 0);
       });
     }
   } else {
-    $('.party-select-' + election).each(function(i) {
+    $('.party-select-' + escapeID(election)).each(function(i) {
       setSelect2Visibility($(this), false);
     });
-    $('.party-position-' + election).each(function() {
+    $('.party-position-' + escapeID(election)).each(function() {
       setVisibility(this, false);
     });
   }
-  setSelect2Visibility($('#id_constituency_' + election), show);
+  setSelect2Visibility($('#id_constituency_' + escapeID(election)), show);
 }
 
 /* Make sure that the party and constituency select boxes are updated
