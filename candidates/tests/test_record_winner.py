@@ -5,6 +5,7 @@ from django_webtest import WebTest
 
 from popolo.models import Person
 
+from ..models import PostExtraElection
 from .auth import TestUserMixin
 from .factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
@@ -26,7 +27,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             area_types=(wmc_area_type,),
             organization=commons
         )
-        post_extra = PostExtraFactory.create(
+        self.post_extra = PostExtraFactory.create(
             elections=(self.election,),
             base__organization=commons,
             slug='65808',
@@ -42,7 +43,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
+            base__post=self.post_extra.base,
             base__on_behalf_of=party_extra.base
             )
         MembershipFactory.create(
@@ -58,7 +59,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=winner.base,
-            base__post=post_extra.base,
+            base__post=self.post_extra.base,
             base__on_behalf_of=party_extra.base
             )
 
@@ -154,6 +155,138 @@ class TestRecordWinner(TestUserMixin, WebTest):
         person = Person.objects.get(id=4322)
         self.assertTrue(person.extra.get_elected(self.election))
 
+    def test_cannot_record_multiple_winners(self):
+        base_record_url = reverse(
+            'record-winner',
+            kwargs={
+                'election': '2015',
+                'post_id': '65808',
+            }
+        )
+        form_get_response = self.app.get(
+            base_record_url + '?person=4322',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        form = form_get_response.forms['record_winner']
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        submission_response = form.submit()
+        self.assertEqual(submission_response.status_code, 302)
+        self.assertEqual(
+            submission_response.location,
+            'http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood',
+        )
+
+        person = Person.objects.get(id=4322)
+        self.assertTrue(person.extra.get_elected(self.election))
+
+        form_get_response = self.app.get(
+            base_record_url + '?person=2009',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        with self.assertRaises(Exception) as context:
+            submission_response = form.submit()
+            self.assertEqual('There were already 1 winners' in context.exception)
+
+    def test_record_multiple_winners(self):
+        self.election.people_elected_per_post = 2
+        self.election.save()
+        base_record_url = reverse(
+            'record-winner',
+            kwargs={
+                'election': '2015',
+                'post_id': '65808',
+            }
+        )
+        form_get_response = self.app.get(
+            base_record_url + '?person=4322',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        form = form_get_response.forms['record_winner']
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        submission_response = form.submit()
+        self.assertEqual(submission_response.status_code, 302)
+        self.assertEqual(
+            submission_response.location,
+            'http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood',
+        )
+
+        person = Person.objects.get(id=4322)
+        self.assertTrue(person.extra.get_elected(self.election))
+
+        form_get_response = self.app.get(
+            base_record_url + '?person=2009',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        form = form_get_response.forms['record_winner']
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        submission_response = form.submit()
+        self.assertEqual(submission_response.status_code, 302)
+        self.assertEqual(
+            submission_response.location,
+            'http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood',
+        )
+
+        person = Person.objects.get(id=2009)
+        self.assertTrue(person.extra.get_elected(self.election))
+
+    def test_record_multiple_winners_per_post_setting(self):
+        post_election = PostExtraElection.objects.get(
+            postextra=self.post_extra,
+            election=self.election
+        )
+        post_election.winner_count = 2
+        post_election.save()
+        base_record_url = reverse(
+            'record-winner',
+            kwargs={
+                'election': '2015',
+                'post_id': '65808',
+            }
+        )
+        form_get_response = self.app.get(
+            base_record_url + '?person=4322',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        form = form_get_response.forms['record_winner']
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        submission_response = form.submit()
+        self.assertEqual(submission_response.status_code, 302)
+        self.assertEqual(
+            submission_response.location,
+            'http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood',
+        )
+
+        person = Person.objects.get(id=4322)
+        self.assertTrue(person.extra.get_elected(self.election))
+
+        form_get_response = self.app.get(
+            base_record_url + '?person=2009',
+            user=self.user_who_can_record_results,
+            expect_errors=True,
+        )
+        form = form_get_response.forms['record_winner']
+        self.assertEqual(form_get_response.status_code, 200)
+        form['source'] = 'BBC website'
+        submission_response = form.submit()
+        self.assertEqual(submission_response.status_code, 302)
+        self.assertEqual(
+            submission_response.location,
+            'http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood',
+        )
+
+        person = Person.objects.get(id=2009)
+        self.assertTrue(person.extra.get_elected(self.election))
 
 class TestRetractWinner(TestUserMixin, WebTest):
 
