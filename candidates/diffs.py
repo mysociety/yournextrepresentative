@@ -7,6 +7,7 @@ import re
 
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.http import Http404
 
 import jsonpatch
 import jsonpointer
@@ -22,9 +23,17 @@ def get_descriptive_value(election, attribute, value, leaf):
     be under that year in the 'standing_in' or 'party_memberships'
     dictionary (see the comment at the top of update.py)."""
 
-    election_data = Election.objects.get_by_slug(election)
-    current_election = election_data.current
-    election_name = election_data.name
+    try:
+        election_data = Election.objects.get_by_slug(election)
+        current_election = election_data.current
+        election_name = election_data.name
+    except Http404:
+        # The election slug may have changed since the diff was stored.
+        # Assume this is an older election
+        current_election = False
+        # Use the raw ID here, as it's more useful than nothing.
+        election_name = "{0} election".format(election)
+
 
     if attribute == 'party_memberships':
         if leaf:
