@@ -327,9 +327,9 @@ class TestAreasView(TestUserMixin, WebTest):
         self.assertIn('We don’t know of any candidates', response)
 
         # should be invited to sign in to add a candidate
-        self.assertFalse(
+        self.assertTrue(
             response.html.find(
-                'a', {'text': 'Sign in to add a new candidate'}
+                'a', string='Sign in to add a new candidate'
             )
         )
 
@@ -344,9 +344,16 @@ class TestAreasView(TestUserMixin, WebTest):
         self.assertIn('We don’t know of any candidates', response)
 
         # should be invited to add a candidate
-        self.assertFalse(
+        self.assertTrue(
             response.html.find(
-                'a', {'text': 'Add a new candidate'}
+                'a', string='Add a new candidate'
+            )
+        )
+
+        # make sure we include the party selection dropdown on the page
+        self.assertTrue(
+            response.html.find(
+                'select', {'id': 'id_party_gb_2015'}
             )
         )
 
