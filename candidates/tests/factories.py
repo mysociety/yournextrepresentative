@@ -145,6 +145,12 @@ class PostFactory(factory.DjangoModelFactory):
     role = 'Member of Parliament'
 
 
+class PostExtraElectionFactory(factory.DjangoModelFactory):
+
+    class Meta:
+        model = 'candidates.PostExtraElection'
+
+
 class PostExtraFactory(factory.DjangoModelFactory):
 
     class Meta:
@@ -159,7 +165,10 @@ class PostExtraFactory(factory.DjangoModelFactory):
             return
         if extracted:
             for election in extracted:
-                self.elections.add(election)
+                PostExtraElectionFactory.create(
+                    postextra=self,
+                    election=election
+                )
 
 
 EXAMPLE_PARTIES = [
