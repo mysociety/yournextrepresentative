@@ -15,7 +15,7 @@ def get_attention_needed_posts(max_results=None, random=False):
 SELECT pe.slug, p.label, ee.name, ee.slug, count(m.id) as count
   FROM popolo_post p
     INNER JOIN candidates_postextra pe ON pe.base_id = p.id
-    INNER JOIN candidates_postextra_elections cppee ON cppee.postextra_id = pe.id
+    INNER JOIN candidates_postextraelection cppee ON cppee.postextra_id = pe.id
     INNER JOIN elections_election ee ON cppee.election_id = ee.id
     LEFT OUTER JOIN
       (popolo_membership m
