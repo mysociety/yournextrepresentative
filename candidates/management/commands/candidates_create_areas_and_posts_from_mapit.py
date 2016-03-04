@@ -10,7 +10,7 @@ from optparse import make_option
 import requests
 
 from popolo.models import Post, Area
-from candidates.models import PostExtra, AreaExtra, PartySet
+from candidates.models import PostExtra, AreaExtra, PartySet, PostExtraElection
 from elections.models import Election, AreaType
 
 
@@ -134,4 +134,7 @@ in the Election objects in the app.
                     defaults={'party_set': party_set},
                 )
 
-                post_extra.elections.add(election)
+                PostExtraElection.objects.get_or_create(
+                    postextra=post_extra,
+                    election=election,
+                )

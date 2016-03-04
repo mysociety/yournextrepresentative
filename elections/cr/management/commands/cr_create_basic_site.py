@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils.text import slugify
 
 from candidates.models import (
-    AreaExtra, OrganizationExtra, PostExtra, PartySet
+    AreaExtra, OrganizationExtra, PostExtra, PartySet, PostExtraElection
 )
 from elections.models import AreaType, Election
 from popolo.models import Area, Organization, Post
@@ -132,4 +132,7 @@ class Command(BaseCommand):
                     post_extra.party_set = party_set
                     post_extra.save()
                     post_extra.elections.clear()
-                    post_extra.elections.add(election)
+                    PostExtraElection.objects.update_or_create(
+                        postextra=post_extra,
+                        election=election,
+                    )
