@@ -30,7 +30,7 @@ from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
-    MembershipExtra, PartySet, PostExtraElection
+    MembershipExtra, PartySet, SimplePopoloField, ExtraField, PostExtraElection
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
