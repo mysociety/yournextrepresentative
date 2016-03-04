@@ -517,10 +517,9 @@ class PostExtra(HasImageMixin, models.Model):
     slug = models.CharField(max_length=256, blank=True, unique=True)
 
     candidates_locked = models.BooleanField(default=False)
-    elections = models.ManyToManyField(Election, related_name='posts')
-    new_elections = models.ManyToManyField(
+    elections = models.ManyToManyField(
         Election,
-        related_name='new_posts',
+        related_name='posts',
         through='PostExtraElection'
     )
     group = models.CharField(max_length=1024, blank=True)
