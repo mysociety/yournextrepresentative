@@ -29,12 +29,26 @@ from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
-    MembershipExtra, PartySet, SimplePopoloField, ExtraField
+    MembershipExtra, PartySet, PostExtraElection
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
 
 from popolo.models import Membership, Post, Organization, Person
+
+
+def get_max_winners(post, election):
+    max_winners = election.people_elected_per_post
+    per_post_winners = PostExtraElection.objects.filter(
+        postextra__base=post,
+        election=election,
+        winner_count__isnull=False,
+    )
+    if per_post_winners.exists():
+        max_winners = per_post_winners.first().winner_count
+
+    return max_winners
+
 
 class ConstituencyDetailView(ElectionMixin, TemplateView):
     template_name = 'candidates/constituency.html'
@@ -159,7 +173,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             if c.extra.elected is not None:
                 context['show_retract_result'] = True
 
-        max_winners = self.election_data.people_elected_per_post
+        max_winners = get_max_winners(mp_post, self.election_data)
         context['show_confirm_result'] = (max_winners < 0) \
             or number_of_winners < max_winners
 
@@ -339,7 +353,7 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                 extra__elected=True,
                 extra__election=self.election_data
             ).count()
-            max_winners = self.election_data.people_elected_per_post
+            max_winners = get_max_winners(self.post_data, self.election_data)
             if max_winners >= 0 and number_of_existing_winners >= max_winners:
                 msg = "There were already {n} winners of {post_label}" \
                     "and the maximum in election {election_name} is {max}"

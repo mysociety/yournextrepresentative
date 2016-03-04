@@ -12,6 +12,7 @@ from .popolo_extra import MembershipExtra
 from .popolo_extra import PartySet
 from .popolo_extra import ImageExtra
 from .popolo_extra import parse_approximate_date
+from .popolo_extra import PostExtraElection
 
 from .field_mappings import CSV_ROW_FIELDS
 
