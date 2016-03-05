@@ -161,23 +161,26 @@ class PersonView(TemplateView):
                 prefetch_related('links', 'contact_details'). \
                 get(pk=person_id)
         except Person.DoesNotExist:
-            raise Http404(_("No person found with ID {person_id}").format(
-                person_id=person_id
-            ))
+            try:
+                return self.get_person_redirect(person_id)
+            except PersonRedirect.DoesNotExist:
+                raise Http404(_("No person found with ID {person_id}").format(
+                    person_id=person_id
+                ))
+        return super(PersonView, self).get(request, *args, **kwargs)
+
+    def get_person_redirect(self, person_id):
         # If there's a PersonRedirect for this person ID, do the
         # redirect, otherwise process the GET request as usual.
-        try:
-            new_person_id = PersonRedirect.objects.get(
-                old_person_id=self.person.id
-            ).new_person_id
-            return HttpResponsePermanentRedirect(
-                reverse('person-view', kwargs={
-                    'person_id': new_person_id,
-                    'ignored_slug': self.person.extra.get_slug(),
-                })
-            )
-        except PersonRedirect.DoesNotExist:
-            return super(PersonView, self).get(request, *args, **kwargs)
+        # try:
+        new_person_id = PersonRedirect.objects.get(
+            old_person_id=person_id
+        ).new_person_id
+        return HttpResponsePermanentRedirect(
+            reverse('person-view', kwargs={
+                'person_id': new_person_id,
+            })
+        )
 
 
 class RevertPersonView(LoginRequiredMixin, View):
