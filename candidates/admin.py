@@ -13,6 +13,7 @@ class LoggedActionAdminForm(ModelForm):
     pass
 
 
+@admin.register(LoggedAction)
 class LoggedActionAdmin(admin.ModelAdmin):
     form = LoggedActionAdminForm
     search_fields = ('user__username', 'popit_person_new_version',
@@ -38,6 +39,7 @@ class PartySetAdminForm(ModelForm):
     pass
 
 
+@admin.register(PartySet)
 class PartySetAdmin(admin.ModelAdmin):
     form = PartySetAdminForm
 
@@ -46,6 +48,7 @@ class ExtraFieldAdminForm(ModelForm):
     pass
 
 
+@admin.register(ExtraField)
 class ExtraFieldAdmin(admin.ModelAdmin):
     form = ExtraFieldAdminForm
 
@@ -54,16 +57,11 @@ class PersonExtraFieldValueAdminForm(ModelForm):
     pass
 
 
+@admin.register(PersonExtraFieldValue)
 class PersonExtraFieldValueAdmin(admin.ModelAdmin):
     form = PersonExtraFieldValueAdminForm
 
 
+@admin.register(SimplePopoloField)
 class SimplePopoloFieldAdmin(admin.ModelAdmin):
     list_display = ['name', 'label']
-
-
-admin.site.register(LoggedAction, LoggedActionAdmin)
-admin.site.register(PartySet, PartySetAdmin)
-admin.site.register(ExtraField, ExtraFieldAdmin)
-admin.site.register(PersonExtraFieldValue, PersonExtraFieldValueAdmin)
-admin.site.register(SimplePopoloField, SimplePopoloFieldAdmin)
