@@ -68,7 +68,7 @@ function setUpPostSelect2s() {
 
 function setVisibility(plainInputElement, newVisiblity) {
   var inputElement = $(plainInputElement),
-      inputElementID = plainInputElement.id,
+      inputElementID = escapeID(plainInputElement.id),
       labelElement = $('label[for=' + inputElementID + ']');
   inputElement.toggle(newVisiblity);
   labelElement.toggle(newVisiblity);
