@@ -5,8 +5,10 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 
-from .models import LoggedAction, PartySet, ExtraField, PersonExtraFieldValue, SimplePopoloField
-# Register your models here.
+from .models import (
+    LoggedAction, PartySet, ExtraField, PersonExtraFieldValue,
+    SimplePopoloField, PostExtraElection
+)
 
 
 class LoggedActionAdminForm(ModelForm):
@@ -65,3 +67,11 @@ class PersonExtraFieldValueAdmin(admin.ModelAdmin):
 @admin.register(SimplePopoloField)
 class SimplePopoloFieldAdmin(admin.ModelAdmin):
     list_display = ['name', 'label']
+
+
+@admin.register(PostExtraElection)
+class PostExtraElectionAdmin(admin.ModelAdmin):
+    list_display = ['postextra', 'election', 'winner_count']
+    list_filter = ('election__name', 'election__current')
+
+    ordering = ('election', 'postextra__base__area__name')
