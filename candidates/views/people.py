@@ -129,8 +129,6 @@ class PersonView(TemplateView):
             for demographic in demographic_fields
         )
 
-        if settings.ELECTION_APP == 'uk':
-            context['election_to_show'] = Election.objects.get(slug='2015')
         context['extra_fields'] = get_extra_fields(self.person)
         return context
 
