@@ -29,7 +29,7 @@ class Command(BaseCommand):
         )
 
         elections = {
-            'gb-sp-2016-05-05-r': {
+            'sp-2016-05-05-r': {
                 'name': '2016 Scottish Parliament Election (Regions)',
                 'for_post_role': 'Member of the Scottish Parliament',
                 'label_format': 'Member of the Scottish Parliament for {area_name}',
@@ -41,7 +41,7 @@ class Command(BaseCommand):
                 'organization_slug': 'scottish-parliament',
                 'organization_name': 'Scottish Parliament',
             },
-            'gb-sp-2016-05-05-c': {
+            'sp-2016-05-05-c': {
                 'name': '2016 Scottish Parliament Election (Constituencies)',
                 'for_post_role': 'Member of the Scottish Parliament',
                 'label_format': 'Member of the Scottish Parliament for {area_name}',
@@ -53,7 +53,7 @@ class Command(BaseCommand):
                 'organization_slug': 'scottish-parliament',
                 'organization_name': 'Scottish Parliament',
             },
-            'gb-naw-2016-05-05-r': {
+            'naw-2016-05-05-r': {
                 'name': '2016 Welsh Assembly Election (Regions)',
                 'for_post_role': 'Member of the National Assembly for Wales',
                 'label_format': 'Assembly Member for {area_name}',
@@ -65,7 +65,7 @@ class Command(BaseCommand):
                 'organization_slug': 'welsh-assembly',
                 'organization_name': 'National Assembly for Wales',
             },
-            'gb-naw-2016-05-05-c': {
+            'naw-2016-05-05-c': {
                 'name': '2016 Welsh Assembly Election (Constituencies)',
                 'for_post_role': 'Member of the National Assembly for Wales',
                 'label_format': 'Assembly Member for {area_name}',
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                 'organization_slug': 'welsh-assembly',
                 'organization_name': 'National Assembly for Wales',
             },
-            'gb-nia-2016-05-05': {
+            'nia-2016-05-05': {
                 'name': '2016 Northern Ireland Assembly Election',
                 'for_post_role': 'Member of the Legislative Assembly',
                 'label_format': 'Member of the Legislative Assembly for {area_name}',
@@ -89,7 +89,7 @@ class Command(BaseCommand):
                 'organization_slug': 'northern-ireland-assembly',
                 'organization_name': 'Northern Ireland Assembly',
             },
-            'gb-gla-2016-05-05-c': {
+            'gla-2016-05-05-c': {
                 'name': '2016 London Assembly Election (Constituencies)',
                 'for_post_role': 'Member of the London Assembly',
                 'label_format': 'Assembly Member for {area_name}',
@@ -101,7 +101,7 @@ class Command(BaseCommand):
                 'organization_slug': 'london-assembly',
                 'organization_name': 'London Assembly',
             },
-            'gb-gla-2016-05-05-a': {
+            'gla-2016-05-05-a': {
                 'name': '2016 London Assembly Election (Additional)',
                 'for_post_role': 'Member of the London Assembly',
                 'label_format': 'Assembly Member',

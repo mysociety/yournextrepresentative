@@ -39,7 +39,7 @@ def create_simple_fields(apps, schema_editor):
         ),
         SimpleField(
             name='gender',
-            label=u"Gender (e.g. “male”, “female”), Sir, etc.)",
+            label=u"Gender (e.g. “male”, “female”)",
             required=False,
             info_type_key='text',
             order=5,

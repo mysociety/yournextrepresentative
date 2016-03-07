@@ -14,7 +14,7 @@ from .mapit import get_areas_from_postcode
 
 class PostcodeForm(forms.Form):
     postcode = forms.CharField(
-        label='Enter your postcode',
+        label='Start with your postcode',
         max_length=20
     )
 

@@ -302,6 +302,11 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             1
         )
 
+        # Check that person 2007 redirects to person 2009 in future
+        response = self.app.get('/person/2007')
+        self.assertEqual(response.status_code, 301)
+
+
         # Check that the other person was deleted (in the future we
         # might want to "soft delete" the person instead).
         self.assertEqual(Person.objects.filter(id=2007).count(), 0)
