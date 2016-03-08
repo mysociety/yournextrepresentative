@@ -107,6 +107,7 @@ class CurrentElectionsView(View):
         res['Expires'] = date.today() + timedelta(days=7)
         return res
 
+
 class VersionView(View):
 
     http_method_names = ['get']
