@@ -94,10 +94,16 @@ def get_candidacy_fields_for_person_form(form):
     for election_data in form.elections_with_fields:
         if not election_data.current:
             continue
+
+        # Only show elections that we know this person to be standing in
+        standing_id = 'standing_' + election_data.slug
+        if not form.initial[standing_id] == 'standing':
+            continue
+
         cons_form_fields = {
             'election': election_data,
             'election_name': election_data.name,
-            'standing': form['standing_' + election_data.slug],
+            'standing': form[standing_id],
             'constituency': form['constituency_' + election_data.slug],
         }
         party_fields = []
