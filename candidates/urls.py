@@ -245,6 +245,11 @@ patterns_to_format = [
         'name': 'upcoming-elections'
     },
     {
+        'pattern': r'^api/current-elections',
+        'view': views.CurrentElectionsView.as_view(),
+        'name': 'current-elections'
+    },
+    {
         'pattern': r'^search$',
         'view': views.PersonSearch.as_view(),
         'name': 'person-search'
