@@ -85,6 +85,26 @@
           {% endfor %}
 
         {% endfor %}
+
+        <div>
+          <h2>Add a new election for this candidate</h2>
+          {# Put the nice JS stuff for adding more elections here :) #}
+          <input type=hidden id="add_more_elections" style="width:100%">
+          <script type="text/javascript">
+          $.getJSON("/api/current-elections/").done(function( data ) {
+            var select_data = $.map(data, function(obj, key) {
+                return { id: key, text: obj.name + ' (' + obj.election_date + ')' };
+              })
+              $('#add_more_elections').select2({
+              data: select_data,
+            }).on('change', function(e) {
+                console.debug("Go get " + e.val + " and add a new form for that election")
+            });
+          });
+
+          </script>
+        </div>
+
     </div>
 
     <h2>{% trans "Links and social media:" %}</h2>
