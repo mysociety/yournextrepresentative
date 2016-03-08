@@ -205,6 +205,7 @@ class AreaTypeViewSet(viewsets.ModelViewSet):
 
 
 class ElectionViewSet(viewsets.ModelViewSet):
+    lookup_value_regex="(?!\.json$)[^/]+"
     queryset = Election.objects.order_by('id')
     lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
