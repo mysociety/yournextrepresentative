@@ -5,8 +5,10 @@ from django.test import TestCase
 from ..forms import BasePersonForm, UpdatePersonForm
 
 from .factories import (
-    AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PostExtraFactory, PartySetFactory
+    AreaExtraFactory, AreaTypeFactory, ElectionFactory,
+    ParliamentaryChamberExtraFactory, PartyFactory, PartyExtraFactory,
+    PersonExtraFactory, PostExtraFactory, PartySetFactory,
+    CandidacyExtraFactory, MembershipFactory
 )
 
 
@@ -15,15 +17,18 @@ class TestValidators(TestCase):
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
+        commons = ParliamentaryChamberExtraFactory.create()
+
         election = ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
-            area_types=(wmc_area_type,)
+            area_types=(wmc_area_type,),
+            organization=commons.base
         )
-        commons = ParliamentaryChamberFactory.create()
+        self.election = election
         PostExtraFactory.create(
             elections=(election,),
-            base__organization=commons,
+            base__organization=commons.base,
             slug='65808',
             base__label='Member of Parliament for Dulwich and West Norwood',
             party_set=gb_parties,
@@ -35,6 +40,41 @@ class TestValidators(TestCase):
             party_extra = PartyExtraFactory.create()
             gb_parties.parties.add(party_extra.base)
             self.parties[party_extra.slug] = party_extra
+
+        dulwich_area_extra = AreaExtraFactory.create(
+            base__identifier='65808',
+            base__name='Dulwich and West Norwood',
+            type=wmc_area_type,
+        )
+
+        post_extra = PostExtraFactory.create(
+            elections=(election,),
+            base__organization=commons.base,
+            base__area=dulwich_area_extra.base,
+            slug='65809',
+            base__label='Member of Parliament for Dulwich and West Norwood',
+            party_set=gb_parties,
+        )
+
+        person_extra = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+
+        self.person = person_extra.base
+
+        CandidacyExtraFactory.create(
+            election=self.election,
+            base__person=person_extra.base,
+            base__post=post_extra.base,
+            base__on_behalf_of=party_extra.base
+            )
+        MembershipFactory.create(
+            person=person_extra.base,
+            organization=party_extra.base
+        )
+
+
 
     def tearDown(self):
         self.parties = {}
@@ -90,7 +130,7 @@ class TestValidators(TestCase):
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'standing',
-        })
+        }, initial={'person': self.person,})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
@@ -103,7 +143,7 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-        })
+        }, initial={'person': self.person,})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
@@ -117,7 +157,7 @@ class TestValidators(TestCase):
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.parties['party:52'].base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     # When 'not-standing' is selected, it shouldn't matter whether you
@@ -128,7 +168,7 @@ class TestValidators(TestCase):
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-standing',
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_standing_no_party_but_gb_constituency(self):
@@ -137,7 +177,7 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'not-standing',
             'constituency_2015': '65808',
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_standing_party_and_gb_constituency(self):
@@ -147,7 +187,7 @@ class TestValidators(TestCase):
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.parties['party:52'].base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     # Similarly, when 'not-sure' is selected, it shouldn't matter
@@ -158,7 +198,7 @@ class TestValidators(TestCase):
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_sure_no_party_but_gb_constituency(self):
@@ -167,7 +207,7 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_sure_party_and_gb_constituency(self):
@@ -177,5 +217,5 @@ class TestValidators(TestCase):
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
             'party_gb_2015': self.parties['party:52'].base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
