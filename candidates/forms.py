@@ -509,3 +509,74 @@ class ConstituencyRecordWinnerForm(forms.Form):
         label=_("Source of information that they won"),
         max_length=512,
     )
+
+
+class SingleElectionForm(BasePersonForm):
+    def __init__(self, *args, **kwargs):
+        from .election_specific import shorten_post_label
+
+
+        super(SingleElectionForm, self).__init__(*args, **kwargs)
+        self.fields = {}
+
+        election_data = kwargs['initial']['election']
+
+        self.fields['extra_election_id'] = forms.CharField(
+            max_length=256,
+            widget=forms.HiddenInput(),
+            initial=election_data.slug
+        )
+
+
+        election = election_data.slug
+        self.fields['standing_' + election] = \
+            forms.ChoiceField(
+                label=_('Standing in %s') % election_data.name,
+                choices=self.STANDING_CHOICES,
+                widget=forms.Select(attrs={'class': 'standing-select'}),
+            )
+        self.fields['constituency_' + election] = \
+            forms.ChoiceField(
+                label=_('Constituency in %s') % election_data.name,
+                required=False,
+                choices=[('', '')] + sorted(
+                    [
+                        (post.extra.slug,
+                         shorten_post_label(post.label))
+                        for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
+                    ],
+                    key=lambda t: t[1]
+                ),
+                widget=forms.Select(attrs={'class': 'post-select'}),
+            )
+        for party_set in PartySet.objects.all():
+            self.fields['party_' + party_set.slug + '_' + election] = \
+                forms.ChoiceField(
+                    label=_("Party in {election} ({party_set_name})").format(
+                        election=election_data.name,
+                        party_set_name=party_set.name,
+                    ),
+                    choices=party_set.party_choices(),
+                    required=False,
+                    widget=forms.Select(
+                        attrs={
+                            'class': 'party-select party-select-' + election
+                        }
+                    ),
+                )
+            if election_data.party_lists_in_use:
+                # Then add a field to enter the position on the party list
+                # as an integer:
+                field_name = 'party_list_position_' + party_set.slug + \
+                    '_' + election
+                self.fields[field_name] = forms.IntegerField(
+                    label=_("Position in party list ('1' for first, '2' for second, etc.)"),
+                    min_value=1,
+                    required=False,
+                    widget=forms.NumberInput(
+                        attrs={
+                            'class': 'party-position party-position-' + election
+                        }
+                    )
+                )
+
