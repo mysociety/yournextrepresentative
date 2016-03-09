@@ -448,9 +448,23 @@ class AddElectionFieldsMixin(object):
 class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
 
     def __init__(self, *args, **kwargs):
+        self.person = kwargs.pop('person')
+        extra_elections_to_include = Election.objects.none()
+        if len(args):
+            # If present, the first argument is the form data to
+            # parse. This may contain keys for elections that
+            # represent new candidacies for the person, so make sure
+            # those elections are included in those we parse and
+            # check.
+            required_election_slugs = \
+                self.get_election_slugs_from_form_keys(args[0].keys())
+            extra_elections_to_include = Election.objects.filter(
+                slug__in=required_election_slugs)
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
-
-        self.elections_with_fields = Election.objects.current().by_date()
+        self.elections_with_fields = Election.objects.filter(
+                candidacies__base__person=self.person,
+                current=True
+            ).order_by('-election_date') | extra_elections_to_include
 
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
@@ -472,6 +486,11 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
             }
         )
     )
+
+    def get_election_slugs_from_form_keys(self, form_keys):
+        return {
+            re.sub(r'^standing_', '', k) for k in form_keys
+            if k.startswith('standing_')}
 
     def clean(self):
         cleaned_data = super(UpdatePersonForm, self).clean()

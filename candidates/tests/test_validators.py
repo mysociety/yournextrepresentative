@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from ..forms import BasePersonForm, UpdatePersonForm
 
+from .factories import PersonExtraFactory
 from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
@@ -60,11 +61,12 @@ class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
         self.assertEqual(form.errors, {'email': ['Enter a valid email address.']})
 
     def test_update_person_form_standing_no_party_no_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'standing',
-        })
+        }, person=person.base)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
@@ -72,12 +74,13 @@ class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
         })
 
     def test_update_person_form_standing_no_party_but_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-        })
+        }, person=person.base)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {
             '__all__':
@@ -85,71 +88,78 @@ class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
         })
 
     def test_update_person_form_standing_party_and_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     # When 'not-standing' is selected, it shouldn't matter whether you
     # specify party of constituency:
 
     def test_update_person_form_not_standing_no_party_no_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-standing',
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_standing_no_party_but_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-standing',
             'constituency_2015': '65808',
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_standing_party_and_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     # Similarly, when 'not-sure' is selected, it shouldn't matter
     # whether you specify party of constituency:
 
     def test_update_person_form_not_sure_no_party_no_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_sure_no_party_but_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
 
     def test_update_person_form_not_sure_party_and_gb_constituency(self):
+        person = PersonExtraFactory.create(base__name='John Doe')
         form = UpdatePersonForm({
             'name': 'John Doe',
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, person=person.base)
         self.assertTrue(form.is_valid())
