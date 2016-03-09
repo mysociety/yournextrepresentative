@@ -303,6 +303,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             pk=self.kwargs['person_id']
         )
         initial_data.update(person.extra.get_initial_form_data())
+        initial_data['person'] = person
         return initial_data
 
     def get_context_data(self, **kwargs):
