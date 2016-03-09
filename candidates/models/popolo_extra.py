@@ -354,7 +354,10 @@ class PersonExtra(HasImageMixin, models.Model):
         ).select_related('field'):
             initial_data[extra_field_value.field.key] = extra_field_value.value
         not_standing_elections = list(self.not_standing.all())
-        for election_data in Election.objects.current().by_date():
+
+        for election_data in Election.objects.current().filter(
+                candidacies__base__person=self.base
+            ).by_date():
             constituency_key = 'constituency_' + election_data.slug
             standing_key = 'standing_' + election_data.slug
             try:
