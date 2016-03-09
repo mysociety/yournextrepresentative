@@ -109,6 +109,11 @@ patterns_to_format = [
         'name': 'person-update'
     },
     {
+        'pattern': r'^person/(?P<person_id>\d+)/update/single_election_form/{election}$',
+        'view': views.SingleElectionFormView.as_view(),
+        'name': 'person-update-single-election'
+    },
+    {
         'pattern': r'^update-disallowed$',
         'view': TemplateView.as_view(template_name="candidates/update-disallowed.html"),
         'name': 'update-disallowed'

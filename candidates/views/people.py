@@ -28,7 +28,7 @@ from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
 from .version_data import get_client_ip, get_change_metadata
-from ..forms import NewPersonForm, UpdatePersonForm
+from ..forms import NewPersonForm, UpdatePersonForm, SingleElectionForm
 from ..models import (
     LoggedAction, PersonRedirect, TRUSTED_TO_MERGE_GROUP_NAME
 )
@@ -440,3 +440,18 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
             )
 
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
+
+
+class SingleElectionFormView(LoginRequiredMixin, FormView):
+    template_name = 'candidates/person-edit-add-single-election.html'
+    form_class = SingleElectionForm
+
+    def get_initial(self):
+        initial_data = super(SingleElectionFormView, self).get_initial()
+        election = get_object_or_404(
+            Election.objects.all(),
+            slug=self.kwargs['election']
+        )
+        initial_data['election'] = election
+        return initial_data
+

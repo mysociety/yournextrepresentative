@@ -87,23 +87,37 @@
         {% endfor %}
 
         <div>
-          <h2>Add a new election for this candidate</h2>
-          {# Put the nice JS stuff for adding more elections here :) #}
-          <input type=hidden id="add_more_elections" style="width:100%">
-          <script type="text/javascript">
-          $.getJSON("/api/current-elections/").done(function( data ) {
-            var select_data = $.map(data, function(obj, key) {
-                return { id: key, text: obj.name + ' (' + obj.election_date + ')' };
-              })
-              $('#add_more_elections').select2({
-              data: select_data,
-            }).on('change', function(e) {
-                console.debug("Go get " + e.val + " and add a new form for that election")
-            });
-          });
+          <hr>
+          <a class="button" id="add_election_button">Add a new election for this person</a>
 
+          {# {# Put the nice JS stuff for adding more elections here :) #}
+          <div class="hidden add_more_elections_field">
+            <label for="add_more_elections">Election</label>
+            <input type=hidden id="add_more_elections" style="width:100%">
+          </div>
+          <script type="text/javascript">
+          function showElectionsForm() {
+            $.getJSON("/api/current-elections/").done(function( data ) {
+              var select_data = $.map(data, function(obj, key) {
+                  return { id: key, text: obj.name + ' (' + obj.election_date + ')' };
+                })
+                $('#add_more_elections').select2({
+                data: select_data,
+              }).on('change', function(e) {
+
+                var url = window.location.pathname + '/single_election_form/' + e.val;
+                $.get(url, function(data) {
+                  $('.extra_elections_forms').html(data);
+                });
+              });
+              $('.add_more_elections_field').show()
+            });
+          }
+
+          $('#add_election_button').on('click', showElectionsForm)
           </script>
         </div>
+        <div class="extra_elections_forms"></div>
 
     </div>
 
