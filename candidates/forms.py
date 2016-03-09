@@ -368,10 +368,14 @@ class NewPersonForm(BasePersonForm):
 class UpdatePersonForm(BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import shorten_post_label
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
+        self.elections_with_fields = Election.objects.filter(
+                candidacies__base__person=self.initial['person']
+            ).order_by('-election_date')
+        self.add_elections_fields(self.initial, self.elections_with_fields)
 
-        self.elections_with_fields = Election.objects.current().by_date()
+    def add_elections_fields(self, initial, elections):
+        from .election_specific import shorten_post_label
 
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
@@ -385,6 +389,7 @@ class UpdatePersonForm(BasePersonForm):
                     choices=self.STANDING_CHOICES,
                     widget=forms.Select(attrs={'class': 'standing-select'}),
                 )
+
             self.fields['constituency_' + election] = \
                 forms.ChoiceField(
                     label=_('Constituency in %s') % election_data.name,
@@ -447,6 +452,20 @@ class UpdatePersonForm(BasePersonForm):
     )
 
     def clean(self):
+        if 'extra_election_id' in self.data:
+            # We're adding a new election
+            election = Election.objects.filter(
+                slug=self.data['extra_election_id'])
+
+            # Add this new election to elections_with_fields
+            self.elections_with_fields  = self.elections_with_fields | election
+
+            # Then re-create the form with the new election in
+            self.add_elections_fields(self.initial, self.elections_with_fields)
+
+            # Now we need to re-clean the data, with the new election in it
+            self._clean_fields()
+
         cleaned_data = super(UpdatePersonForm, self).clean()
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
