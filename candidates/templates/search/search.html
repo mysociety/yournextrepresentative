@@ -3,48 +3,68 @@
 {% load staticfiles %}
 {% load thumbnail %}
 
+{% block title %}
+  {% if form.q.value %}
+    {% blocktrans with search_text=form.q.value %}Candidates matching “{{ search_text }}”{% endblocktrans %}
+  {% else %}
+    {% trans 'Search candidates' %}
+  {% endif %}
+{% endblock %}
+
+{% block person_search_value %}{% if form.q.value %}{{ form.q.value }}{% endif %}{% endblock %}
+
+{% block hero %}
+    <h1>
+      {% if form.q.value %}
+        {% blocktrans with search_text=form.q.value %}Candidates matching “{{ search_text }}”{% endblocktrans %}
+      {% else %}
+        {% trans 'Search candidates' %}
+      {% endif %}
+    </h1>
+{% endblock %}
+
 {% block content %}
-<h2>{% trans 'Search candidates' %}</h2>
+  {% if form.q.value %}
 
-    <form class="search" method="get" action="{% url 'person-search' %}">
-        <input type="search" placeholder="{% trans 'Find a candidate…' %}" name="q" value="{{ form.q.value }}"/>
-        <button type="submit">{% trans "Search" %}</button>
-
-        {% if query %}
-        <h3>{% trans 'Results' %}</h3>
-
-            <ul class="candidate-list">
-            {% for result in object_list %}
-
-                <li class="candidates-list__person">
-                    {% if result.object.extra.primary_image %}
-                      <a href="{% url 'person-view' result.object.id result.object.name|slugify %}">
-                        {% thumbnail result.object.extra.primary_image "x64" as im %}
-                          <img class="person-avatar" src="{{ im.url }}"/>
-                        {% endthumbnail %}
-                      </a>
-                    {% elif result.object.popit_data.gender|lower == 'female' %}
-                      <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
-                    {% else %}
-                      <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
-                    {% endif %}
-                    <div class="person-name-and-party">
-                      <a href="{% url 'person-view' result.object.id result.object.name|slugify %}" class="candidate-name">{{ result.object.name }}</a>
-                      <span class="party">{{ result.object.extra.last_party }}</span>
-                    </div>
-                </li>
-            {% empty %}
-            <p>{% trans 'No results found.' %}</p>
-            {% endfor %}
-            </ul>
-
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
+    <ul class="candidate-list">
+      {% for result in object_list %}
+        <li class="candidates-list__person">
+            {% if result.object.extra.primary_image %}
+              <a href="{% url 'person-view' result.object.id result.object.name|slugify %}">
+                {% thumbnail result.object.extra.primary_image "x64" as im %}
+                  <img class="person-avatar" src="{{ im.url }}"/>
+                {% endthumbnail %}
+              </a>
+            {% elif result.object.popit_data.gender|lower == 'female' %}
+              <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+            {% else %}
+              <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
             {% endif %}
-        {% endif %}
+            <div class="person-name-and-party">
+              <a href="{% url 'person-view' result.object.id result.object.name|slugify %}" class="candidate-name">{{ result.object.name }}</a>
+              <span class="party">{{ result.object.extra.last_party }}</span>
+            </div>
+        </li>
+      {% empty %}
+        <li>{% trans 'No results found.' %}</li>
+      {% endfor %}
+    </ul>
+
+    {% if page.has_previous or page.has_next %}
+        <div>
+            {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+            |
+            {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+        </div>
+    {% endif %}
+
+  {% else %}
+
+    <h2>{% trans 'Search candidates' %}</h2>
+    <form class="search" method="get" action="{% url 'person-search' %}">
+        <input type="search" placeholder="{% trans 'Find a candidate…' %}" name="q" />
+        <button type="submit">{% trans "Search" %}</button>
     </form>
+
+  {% endif %}
 {% endblock %}

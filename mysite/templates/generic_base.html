@@ -96,7 +96,7 @@
           {% endblock %}
         </ul>
         <form id="person_search_header" class="header__nav__search" action="{% url 'person-search' %}">
-          <input type="text" placeholder="{% trans 'Find a candidate…' %}" name="q">
+          <input type="text" placeholder="{% trans 'Find a candidate…' %}" name="q" value="{% block person_search_value %}{% endblock %}">
           <button type="submit">{% trans 'Search' %}</button>
         </form>
       </div>
