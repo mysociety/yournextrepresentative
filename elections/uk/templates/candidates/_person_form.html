@@ -85,34 +85,104 @@
           {% endfor %}
 
         {% endfor %}
+
+        <div>
+          <hr>
+          <a class="button" id="add_election_button">Add a new election for this person</a>
+
+          {# {# Put the nice JS stuff for adding more elections here :) #}
+          <div class="hidden add_more_elections_field">
+            <label for="add_more_elections">Election</label>
+            <input type=hidden id="add_more_elections" style="width:100%">
+          </div>
+          <script type="text/javascript">
+          function showElectionsForm() {
+            $.getJSON("/api/current-elections/").done(function( data ) {
+              var select_data = $.map(data, function(obj, key) {
+                  return { id: key, text: obj.name + ' (' + obj.election_date + ')' };
+                })
+                $('#add_more_elections').select2({
+                  data: select_data,
+                }).on('change', function(e) {
+
+                var url = window.location.pathname + '/single_election_form/' + e.val;
+                $.get(url, function(data) {
+                  $('.extra_elections_forms').html(data);
+                });
+              });
+              $('.add_more_elections_field').show()
+            });
+          }
+
+          $('#add_election_button').on('click', showElectionsForm)
+          </script>
+        </div>
+        <div class="extra_elections_forms"></div>
+
     </div>
 
     <h2>{% trans "Links and social media:" %}</h2>
 
-    {% for field_info, tag in complex_fields %}
-      {% if field_info.info_type == 'twitter' %}
-        <div class="form-item {% if tag.errors %}form-item--errors{% endif %}">
-          {{ tag.label_tag }}
-          <div class="row collapse">
-            <div class="small-1 columns">
-              <span class="prefix">@</span>
-            </div>
-            <div class="small-11 columns">
-              {{ tag }}
-            </div>
-          </div>
-          {{ tag.errors }}
+    <div class="form-item {% if form.twitter_username.errors %}form-item--errors{% endif %}">
+      {{ form.twitter_username.label_tag }}
+      <div class="row collapse">
+        <div class="small-1 columns">
+          <span class="prefix">@</span>
         </div>
-      {% else %}
-        <div class="form-item {% if tag.errors %}form-item--errors{% endif %}">
-          <p>
-            {{ tag.label_tag }}
-            {{ tag }}
-          </p>
-          {{ tag.errors }}
+        <div class="small-11 columns">
+          {{ form.twitter_username }}
         </div>
-      {% endif %}
-    {% endfor %}
+      </div>
+      {{ form.twitter_username.errors }}
+    </div>
+
+    <div class="form-item {% if form.facebook_personal_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.facebook_personal_url.label_tag }}
+        {{ form.facebook_personal_url }}
+      </p>
+      {{ form.facebook_personal_url.errors }}
+    </div>
+
+    <div class="form-item {% if form.facebook_page_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.facebook_page_url.label_tag }}
+        {{ form.facebook_page_url }}
+      </p>
+      {{ form.facebook_page_url.errors }}
+    </div>
+
+    <div class="form-item {% if form.homepage_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.homepage_url.label_tag }}
+        {{ form.homepage_url }}
+      </p>
+      {{ form.homepage_url.errors }}
+    </div>
+
+    <div class="form-item {% if form.wikipedia_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.wikipedia_url.label_tag }}
+        {{ form.wikipedia_url }}
+      </p>
+      {{ form.wikipedia_url.errors }}
+    </div>
+
+    <div class="form-item {% if form.linkedin_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.linkedin_url.label_tag }}
+        {{ form.linkedin_url }}
+      </p>
+      {{ form.linkedin_url.errors }}
+    </div>
+
+    <div class="form-item {% if form.party_ppc_page_url.errors %}form-item--errors{% endif %}">
+      <p>
+        {{ form.party_ppc_page_url.label_tag }}
+        {{ form.party_ppc_page_url }}
+      </p>
+      {{ form.party_ppc_page_url.errors }}
+    </div>
 
     <h2>{% trans "Demographics:" %}</h2>
 
