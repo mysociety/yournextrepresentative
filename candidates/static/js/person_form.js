@@ -38,7 +38,8 @@ function setSelect2Visibility(select2Element, visibility) {
 /* Make all the party drop-downs into Select2 widgets */
 
 function setUpPartySelect2s() {
-  $('.party-select').select2({width: '100%'});
+  $('.party-select').not('.select2-offscreen').not('.select2-container')
+    .select2({width: '100%'});
 }
 
 /* Make all the post drop-downs into Select2 widgets */
