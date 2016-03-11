@@ -64,7 +64,7 @@ class Command(BaseCommand):
         self.create_pcc_election()
         # Add all the areas for that election
         for mapit_area_id, mapit_area_data in mapit_results:
-            if mapit_area_data['codes']['police_id'] == "metropolitan":
+            if mapit_area_data['codes']['police_id'] in AREAS_WITHOUT_PCCS:
                 # The Met doesn't have a PCCge
                 continue
             self.add_pcc_areas(mapit_area_id, mapit_area_data)
