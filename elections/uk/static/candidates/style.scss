@@ -1,0 +1,111 @@
+@import "../foundation/scss/foundation/functions";
+
+$color-orange: #f97d3d;
+$color-red: #c55e59;
+$color-gold: #ba9f50;
+$color-blue: #085184;
+$color-cyan: #029db9;
+$color-teal: #09a691;
+$color-offwhite: #ece7e1;
+$color-cream: #e4dfdb;
+$color-yellow: #fdf2d5;
+
+$header-background-color: $color-teal;
+$body-background-color: mix($color-offwhite, #fff, 60%);
+$footer-text-color: mix($color-offwhite, #000, 60%);
+$content-background-color: #fff;
+
+$muted-text-color: darken($color-cream, 20%);
+
+$message-background-color: #FDF2D5; // lighter version of $color-gold
+$message-border-color: lighten($color-gold, 30%);
+
+$highlight-background-color: $color-yellow;
+$information-background-color: mix($color-cyan, #fff, 15%);
+$danger-background-color: mix($color-red, #fff, 15%);
+
+$confirmation-background-color: $color-yellow;
+$error-background-color: mix($color-red, #fff, 15%);
+$error-text-color: darken($color-red, 10%);
+$error-border-color: mix($color-red, #fff, 30%);
+$error-input-border-color: mix($color-red, #fff, 40%);
+
+$candidate-order-color: #fff;
+$candidate-order-background-color: $color-cyan;
+$avatar-background-color: #ddd;
+
+$unknown-candidate-status-color: $color-orange;
+$not-standing-candidate-status-color: $color-red;
+
+$homepage-description-background-color: $body-background-color;
+$homepage-description-text-color: #887; // dark desaturated browny-grey
+$homepage-activity-color: $color-cyan;
+$homepage-leaderboard-color: $color-gold;
+
+// Override Foundation variables here
+$primary-color: $color-cyan;
+$secondary-color: $color-cream;
+$button-tny: rem-calc(6);
+$button-sml: rem-calc(8);
+$button-med: rem-calc(10);
+$button-lrg: rem-calc(14);
+$button-radius: 3px;
+$code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
+
+$high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi';
+
+@import "../foundation/scss/normalize";
+@import "../foundation/scss/foundation";
+
+@import "../candidates/mixins";
+
+@import "../candidates/header";
+@import "../candidates/content";
+@import "../candidates/footer";
+@import "../candidates/forms";
+
+@import "../candidates/finder";
+@import "../candidates/people";
+@import "../candidates/versions";
+@import "../candidates/parties";
+@import "../candidates/person_edit";
+@import "../candidates/copyright-assignment";
+@import "../candidates/leaderboards";
+@import "../candidates/search";
+
+// The banner you get at the top of the search results page,
+// letting you create a new candidate based on your search.
+.search-create-candidate {
+    display: block;
+    overflow: auto; // clear the floated avatar
+    border: 2px dashed $color-cream;
+    border-radius: 0.5em;
+    padding: 1em;
+    margin-bottom: 2em;
+
+    @media #{$large-up} {
+        margin-left: -1.125em; // 1em parent padding + 3px parent border
+        margin-right: -1.125em;
+        margin-bottom: 2.5em;
+    }
+
+    &:hover,
+    &:focus {
+        border-color: $primary-color;
+        background-color: mix($primary-color, #fff, 5%);
+    }
+
+    .person-avatar {
+        float: left;
+        width: auto;
+        height: 4em;
+        margin-right: 1.5em;
+        background-color: $avatar-background-color;
+    }
+
+    h2 {
+        font-size: 1.25em;
+        font-weight: bold;
+        margin: 0 0 0.3em 0;
+    }
+}
