@@ -48,9 +48,15 @@ class Command(BaseCommand):
         r = requests.get(url)
         mapit_results = r.json().items()
 
+        AREAS_WITHOUT_PCCS = [
+            "metropolitan",
+            "city-of-london",
+            "northern-ireland",
+        ]
+
         # First make all the organisations
         for mapit_area_id, mapit_area_data in mapit_results:
-            if mapit_area_data['codes']['police_id'] == "metropolitan":
+            if mapit_area_data['codes']['police_id'] in AREAS_WITHOUT_PCCS:
                 continue
             self.add_police_force_orgs(mapit_area_id, mapit_area_data)
 
