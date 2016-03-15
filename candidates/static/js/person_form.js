@@ -50,8 +50,9 @@ function setUpPostSelect2s() {
       hidden = postSelect.prop('tagName') == 'INPUT' &&
          postSelect.attr('type') == 'hidden';
     /* If it's a real select box (not a hidden input) make it into a
-     * Select2 box */
-    if (!hidden) {
+     * Select2 box; also, don't try to reinitialize a select that's
+     * already a Select2 */
+    if (!(hidden || $(postSelect).data('select2'))) {
       postSelect.select2({
         placeholder: 'Post',
         allowClear: true,
