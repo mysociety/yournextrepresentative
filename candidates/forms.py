@@ -489,13 +489,11 @@ class ConstituencyRecordWinnerForm(forms.Form):
     )
 
 
-class SingleElectionForm(BasePersonForm):
+class SingleElectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         from .election_specific import shorten_post_label
 
-
         super(SingleElectionForm, self).__init__(*args, **kwargs)
-        self.fields = OrderedDict()
 
         election_data = kwargs['initial']['election']
 
@@ -510,7 +508,7 @@ class SingleElectionForm(BasePersonForm):
         self.fields['standing_' + election] = \
             forms.ChoiceField(
                 label=_('Standing in %s') % election_data.name,
-                choices=self.STANDING_CHOICES,
+                choices=BasePersonForm.STANDING_CHOICES,
                 widget=forms.Select(attrs={'class': 'standing-select'}),
             )
         self.fields['constituency_' + election] = \
