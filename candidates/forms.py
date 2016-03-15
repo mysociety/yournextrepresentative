@@ -62,6 +62,7 @@ class CandidacyDeleteForm(BaseCandidacyForm):
         max_length=512,
     )
 
+
 class BasePersonForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -366,166 +367,15 @@ class NewPersonForm(BasePersonForm):
         cleaned_data = super(NewPersonForm, self).clean()
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
-class UpdatePersonForm(BasePersonForm):
 
-    def __init__(self, *args, **kwargs):
-        super(UpdatePersonForm, self).__init__(*args, **kwargs)
-        self.elections_with_fields = Election.objects.filter(
-                candidacies__base__person=self.initial['person']
-            ).order_by('-election_date')
-        self.add_elections_fields(self.initial, self.elections_with_fields)
+class AddElectionFieldsMixin(object):
 
-    def add_elections_fields(self, initial, elections):
+    def add_elections_fields(self, elections):
+        for election_data in elections:
+            self.add_election_fields(election_data)
+
+    def add_election_fields(self, election_data):
         from .election_specific import shorten_post_label
-
-        # The fields on this form depends on how many elections are
-        # going on at the same time. (FIXME: this might be better done
-        # with formsets?)
-
-        for election_data in self.elections_with_fields:
-            election = election_data.slug
-            self.fields['standing_' + election] = \
-                forms.ChoiceField(
-                    label=_('Standing in %s') % election_data.name,
-                    choices=self.STANDING_CHOICES,
-                    widget=forms.Select(attrs={'class': 'standing-select'}),
-                )
-
-            self.fields['constituency_' + election] = \
-                forms.ChoiceField(
-                    label=_('Constituency in %s') % election_data.name,
-                    required=False,
-                    choices=[('', '')] + sorted(
-                        [
-                            (post.extra.slug,
-                             shorten_post_label(post.label))
-                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
-                        ],
-                        key=lambda t: t[1]
-                    ),
-                    widget=forms.Select(attrs={'class': 'post-select'}),
-                )
-            for party_set in PartySet.objects.all():
-                self.fields['party_' + party_set.slug + '_' + election] = \
-                    forms.ChoiceField(
-                        label=_("Party in {election} ({party_set_name})").format(
-                            election=election_data.name,
-                            party_set_name=party_set.name,
-                        ),
-                        choices=party_set.party_choices(),
-                        required=False,
-                        widget=forms.Select(
-                            attrs={
-                                'class': 'party-select party-select-' + election
-                            }
-                        ),
-                    )
-                if election_data.party_lists_in_use:
-                    # Then add a field to enter the position on the party list
-                    # as an integer:
-                    field_name = 'party_list_position_' + party_set.slug + \
-                        '_' + election
-                    self.fields[field_name] = forms.IntegerField(
-                        label=_("Position in party list ('1' for first, '2' for second, etc.)"),
-                        min_value=1,
-                        required=False,
-                        widget=forms.NumberInput(
-                            attrs={
-                                'class': 'party-position party-position-' + election
-                            }
-                        )
-                    )
-
-    source = forms.CharField(
-        label=_("Source of information for this change ({0})").format(
-            settings.SOURCE_HINTS
-        ),
-        max_length=512,
-        error_messages={
-            'required': _('You must indicate how you know about this candidate')
-        },
-        widget=forms.TextInput(
-            attrs={
-                'required': 'required',
-                'placeholder': _('How you know about this candidate')
-            }
-        )
-    )
-
-    def clean(self):
-        if 'extra_election_id' in self.data:
-            # We're adding a new election
-            election = Election.objects.filter(
-                slug=self.data['extra_election_id'])
-
-            # Add this new election to elections_with_fields
-            self.elections_with_fields  = self.elections_with_fields | election
-
-            # Then re-create the form with the new election in
-            self.add_elections_fields(self.initial, self.elections_with_fields)
-
-            # Now we need to re-clean the data, with the new election in it
-            self._clean_fields()
-
-        cleaned_data = super(UpdatePersonForm, self).clean()
-        return self.check_party_and_constituency_are_selected(cleaned_data)
-
-
-class UserTermsAgreementForm(forms.Form):
-
-    assigned_to_dc = forms.BooleanField(required=False)
-    next_path = forms.CharField(
-        max_length=512,
-        widget=forms.HiddenInput(),
-    )
-
-    def clean_assigned_to_dc(self):
-        assigned_to_dc = self.cleaned_data['assigned_to_dc']
-        if not assigned_to_dc:
-            message = _(
-                "You can only edit data on {site_name} if you agree to "
-                "this copyright assignment."
-            ).format(site_name=Site.objects.get_current().name)
-            raise ValidationError(message)
-        return assigned_to_dc
-
-
-class ToggleLockForm(forms.Form):
-    lock = forms.BooleanField(
-        required=False,
-        widget=forms.HiddenInput()
-    )
-    post_id = forms.CharField(
-        max_length=256,
-        widget=forms.HiddenInput()
-    )
-
-class ConstituencyRecordWinnerForm(forms.Form):
-    person_id = forms.CharField(
-        label=_('Person ID'),
-        max_length=256,
-        widget=forms.HiddenInput(),
-    )
-    source = forms.CharField(
-        label=_("Source of information that they won"),
-        max_length=512,
-    )
-
-
-class SingleElectionForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        from .election_specific import shorten_post_label
-
-        super(SingleElectionForm, self).__init__(*args, **kwargs)
-
-        election_data = kwargs['initial']['election']
-
-        self.fields['extra_election_id'] = forms.CharField(
-            max_length=256,
-            widget=forms.HiddenInput(),
-            initial=election_data.slug
-        )
-
 
         election = election_data.slug
         self.fields['standing_' + election] = \
@@ -579,3 +429,105 @@ class SingleElectionForm(forms.Form):
                     )
                 )
 
+
+class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
+
+    def __init__(self, *args, **kwargs):
+        super(UpdatePersonForm, self).__init__(*args, **kwargs)
+        self.elections_with_fields = Election.objects.filter(
+                candidacies__base__person=self.initial['person']
+            ).order_by('-election_date')
+        # The fields on this form depends on how many elections are
+        # going on at the same time. (FIXME: this might be better done
+        # with formsets?)
+        self.add_elections_fields(self.elections_with_fields)
+
+    source = forms.CharField(
+        label=_("Source of information for this change ({0})").format(
+            settings.SOURCE_HINTS
+        ),
+        max_length=512,
+        error_messages={
+            'required': _('You must indicate how you know about this candidate')
+        },
+        widget=forms.TextInput(
+            attrs={
+                'required': 'required',
+                'placeholder': _('How you know about this candidate')
+            }
+        )
+    )
+
+    def clean(self):
+        if 'extra_election_id' in self.data:
+            # We're adding a new election
+            election = Election.objects.filter(
+                slug=self.data['extra_election_id'])
+
+            # Add this new election to elections_with_fields
+            self.elections_with_fields  = self.elections_with_fields | election
+
+            # Then re-create the form with the new election in
+            self.add_elections_fields(self.elections_with_fields)
+
+            # Now we need to re-clean the data, with the new election in it
+            self._clean_fields()
+
+        cleaned_data = super(UpdatePersonForm, self).clean()
+        return self.check_party_and_constituency_are_selected(cleaned_data)
+
+
+class UserTermsAgreementForm(forms.Form):
+
+    assigned_to_dc = forms.BooleanField(required=False)
+    next_path = forms.CharField(
+        max_length=512,
+        widget=forms.HiddenInput(),
+    )
+
+    def clean_assigned_to_dc(self):
+        assigned_to_dc = self.cleaned_data['assigned_to_dc']
+        if not assigned_to_dc:
+            message = _(
+                "You can only edit data on {site_name} if you agree to "
+                "this copyright assignment."
+            ).format(site_name=Site.objects.get_current().name)
+            raise ValidationError(message)
+        return assigned_to_dc
+
+
+class ToggleLockForm(forms.Form):
+    lock = forms.BooleanField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
+    post_id = forms.CharField(
+        max_length=256,
+        widget=forms.HiddenInput()
+    )
+
+class ConstituencyRecordWinnerForm(forms.Form):
+    person_id = forms.CharField(
+        label=_('Person ID'),
+        max_length=256,
+        widget=forms.HiddenInput(),
+    )
+    source = forms.CharField(
+        label=_("Source of information that they won"),
+        max_length=512,
+    )
+
+
+class SingleElectionForm(AddElectionFieldsMixin, forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(SingleElectionForm, self).__init__(*args, **kwargs)
+
+        election_data = kwargs['initial']['election']
+
+        self.fields['extra_election_id'] = forms.CharField(
+            max_length=256,
+            widget=forms.HiddenInput(),
+            initial=election_data.slug
+        )
+
+        self.add_election_fields(election_data)
