@@ -216,6 +216,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.facebook',
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
+            'crispy_forms',
         ),
 
         'SITE_ID': 1,
@@ -404,6 +405,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'REST_FRAMEWORK': {
             'DEFAULT_PERMISSION_CLASSES': ('candidates.api_permissions.ReadOnly',),
             'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+            'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
             'PAGE_SIZE': 10,
         },
 
