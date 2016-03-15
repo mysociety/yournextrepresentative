@@ -11,7 +11,7 @@ from django.utils.text import slugify
 import requests
 
 from candidates.models import (
-    AreaExtra, OrganizationExtra, PartySet, PostExtra
+    AreaExtra, OrganizationExtra, PartySet, PostExtra, PostExtraElection
 )
 from elections.models import AreaType, Election
 from elections.uk import mapit
@@ -162,7 +162,7 @@ class Command(BaseCommand):
                 'party_set': self.gb_parties,
             },
         )
-        PostExtra.objects.update_or_create(
+        PostExtraElection.objects.update_or_create(
             postextra=post_extra,
             election=self.election,
         )
