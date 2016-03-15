@@ -22,7 +22,7 @@ django-pipeline==1.5.1
 -e git+https://github.com/mysociety/django-popolo@update-with-better-migrations-redux#egg=mysociety-django-popolo
 django-statici18n==1.1.5
 django-webtest==1.7.7
-djangorestframework==3.3.1
+djangorestframework==3.3.3
 docutils==0.10
 elasticsearch==0.4.5
 enum34==1.1.2
