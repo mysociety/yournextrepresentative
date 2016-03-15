@@ -17,7 +17,7 @@ from candidates import serializers
 from candidates import models as extra_models
 from elections.models import AreaType, Election
 from popolo.models import Area, Membership, Person, Post
-from rest_framework import viewsets
+from rest_framework import pagination, viewsets
 
 from compat import text_type
 
@@ -131,6 +131,12 @@ class PostIDToPartySetView(View):
 
 # Now the django-rest-framework based API views:
 
+class ResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 200
+
+
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects \
         .select_related('extra') \
@@ -197,11 +203,13 @@ class AreaViewSet(viewsets.ModelViewSet):
         .prefetch_related('extra') \
         .order_by('id')
     serializer_class = serializers.AreaSerializer
+    pagination_class = ResultsSetPagination
 
 
 class AreaTypeViewSet(viewsets.ModelViewSet):
     queryset = AreaType.objects.order_by('id')
     serializer_class = serializers.AreaTypeSerializer
+    pagination_class = ResultsSetPagination
 
 
 class ElectionViewSet(viewsets.ModelViewSet):
@@ -209,33 +217,41 @@ class ElectionViewSet(viewsets.ModelViewSet):
     queryset = Election.objects.order_by('id')
     lookup_field = 'slug'
     serializer_class = serializers.ElectionSerializer
+    filter_fields = ('current',)
+    pagination_class = ResultsSetPagination
 
 
 class PartySetViewSet(viewsets.ModelViewSet):
     queryset = extra_models.PartySet.objects.order_by('id')
     serializer_class = serializers.PartySetSerializer
+    pagination_class = ResultsSetPagination
 
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.order_by('id')
     serializer_class = serializers.ImageSerializer
+    pagination_class = ResultsSetPagination
 
 
 class MembershipViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.order_by('id')
     serializer_class = serializers.MembershipSerializer
+    pagination_class = ResultsSetPagination
 
 
 class LoggedActionViewSet(viewsets.ModelViewSet):
     queryset = extra_models.LoggedAction.objects.order_by('id')
     serializer_class = serializers.LoggedActionSerializer
+    pagination_class = ResultsSetPagination
 
 
 class ExtraFieldViewSet(viewsets.ModelViewSet):
     queryset = extra_models.ExtraField.objects.order_by('id')
     serializer_class = serializers.ExtraFieldSerializer
+    pagination_class = ResultsSetPagination
 
 
 class SimplePopoloFieldViewSet(viewsets.ModelViewSet):
     queryset = extra_models.SimplePopoloField.objects.order_by('id')
     serializer_class = serializers.SimplePopoloFieldSerializer
+    pagination_class = ResultsSetPagination
