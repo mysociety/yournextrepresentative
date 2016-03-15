@@ -224,7 +224,7 @@ urlpatterns += [
     url(
         p['pattern'].format(
             election=r'(?P<election>[^/]+)',
-            post=r'(?P<post_id>[-\w]+)',
+            post=r'(?P<post_id>[^/]+)',
         ),
         p['view'],
         name=p['name'],
