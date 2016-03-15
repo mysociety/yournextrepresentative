@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from collections import OrderedDict
 import re
 
 from .models.address import check_address
@@ -517,7 +518,7 @@ class SingleElectionForm(BasePersonForm):
 
 
         super(SingleElectionForm, self).__init__(*args, **kwargs)
-        self.fields = {}
+        self.fields = OrderedDict()
 
         election_data = kwargs['initial']['election']
 
