@@ -359,7 +359,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                     'foundation/js/foundation/foundation.abide.js',
                     'foundation/js/foundation/foundation.tab.js',
                     'select2/select2.js',
-                    'js/post-to-party-set.js',
                     'js/constituency.js',
                     'js/person_form.js',
                     'js/home_geolocation_form.js',
