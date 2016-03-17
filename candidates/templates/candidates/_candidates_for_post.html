@@ -87,7 +87,11 @@
   {% for c, party in winners %}
     {% if forloop.first %}
     <div class="candidates__known">
-      <h3>{% blocktrans with post_label=post_data.label %}Winning candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}</h3>
+      <h3>{% blocktrans with post_label=post_data.label count counter=winners|length %}
+        Winning candidate for <a href="{{ post_url }}">{{ post_label }}</a>
+        {% plural %}
+        Winning candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+      {% endblocktrans %}</h3>
       <ul class="candidate-list">
       {% endif %}
         <li class="candidates-list__person candidates-list__person__winner{% if user_can_record_results %} hover-highlighting{% endif %}">
