@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% load metadescription %}
+{% load standing %}
+{% load exists %}
+
+{% block body_class %}areas{% endblock %}
+
+{% block title %}{% blocktrans %}Areas: {{ all_area_names }}{% endblocktrans %}{% endblock %}
+
+{% block hero %}
+  <h1>{% blocktrans %}Areas: {{ all_area_names }}{% endblocktrans %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  {% for post in posts %}
+
+    {% with election=post.election election_data=post.election_data candidate_list_edits_allowed=post.candidate_list_edits_allowed candidates_locked=post.candidates_locked post_data=post.post_data add_candidate_form=post.add_candidate_form candidacies=post.candidacies personal_fields=post.personal_fields demographic_fields=post.demographic_fields extra_fields=post.extra_fields constituencies_form_fields=post.constituencies_form_fields %}
+
+      <h2>{{ election_data.name }}</h2>
+
+      {% include 'candidates/_candidates_for_post.html' %}
+
+    {% endwith %}
+  {% endfor %}
+
+  {% if no_data_areas %}
+  <h2>The following areas have elections that we can't cover</h2>
+  <p>The boundaries in some areas have changed, however
+    <a href="https://democracyclub.org.uk/blog/2016/02/29/a-reply-to-ordnance-survey/">
+      the data for the change hasn't been published</a>,
+      so we are unable to cover the following elections:</p>
+    <ul>
+      {% for area in no_data_areas %}
+        <li>
+          <strong>{{ area }}</strong>
+          <ul>
+          {% for child in area.base.children.all %}
+            {% for post in child.posts.all %}
+              <li>{{ post.extra }} ({{ post.extra.postextraelection_set.all.0.winner_count }} posts)</li>
+            {% endfor %}
+          {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+    <p>Please <a href="https://democracyclub.org.uk/contact/">contact us</a> if
+      you are able to help us get hold of this data.</p>
+  {% endif %}
+
+
+{% endblock %}
+

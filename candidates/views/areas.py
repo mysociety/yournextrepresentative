@@ -42,6 +42,7 @@ class AreasView(TemplateView):
         all_area_names = set()
         context['posts'] = []
         any_area_found = False
+        no_data_areas = []
         for area_type_code, area_id in self.types_and_areas:
             try:
                 area_extra = AreaExtra.objects \
@@ -51,6 +52,11 @@ class AreasView(TemplateView):
                 any_area_found = True
             except AreaExtra.DoesNotExist:
                 continue
+
+            if area_type_code == "NODATA":
+                no_data_areas.append(area_extra)
+                continue
+
             area = area_extra.base
             all_area_names.add(area.name)
             for post in area.posts.all():
@@ -103,6 +109,8 @@ class AreasView(TemplateView):
                 )
 
                 context['posts'].append(post_context)
+
+        context['no_data_areas'] = no_data_areas
 
         if not any_area_found:
             raise Http404("No such areas found")

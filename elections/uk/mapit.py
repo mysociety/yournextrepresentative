@@ -70,18 +70,32 @@ def get_areas_from_postcode(original_postcode):
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
+        result = []
+        for mapit_area in mapit_result['areas'].values():
+            areas = Area.objects.filter(
+                    extra__type__name=mapit_area['type'],
+                    identifier=format_code_from_area(mapit_area)
+            )
 
-        result = sorted(
-            [
-                (a['type'], format_code_from_area(a))
-                for a in mapit_result['areas'].values()
-                if Area.objects.filter(
-                        extra__type__name=a['type'],
-                        identifier=format_code_from_area(a)
-                ).exists()
-            ],
-            key=area_sort_key
-        )
+            if areas.exists():
+                is_no_data_area = False
+                for area in areas:
+                    for child_area in area.children.all():
+                        if child_area.identifier.startswith('NODATA:'):
+                            is_no_data_area = True
+                            break
+
+                if is_no_data_area:
+                    area_type = "NODATA"
+                else:
+                    area_type = mapit_area['type']
+
+                result.append((
+                    area_type,
+                    format_code_from_area(mapit_area))
+                )
+
+        result = sorted(result, key=area_sort_key)
 
         cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
         return result
