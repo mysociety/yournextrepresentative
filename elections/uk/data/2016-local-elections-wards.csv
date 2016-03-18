@@ -1,4 +1,213 @@
-ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
+ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,have_ward_boundaries
+3,Cherryfield,E08000011,Knowsley,MTD,E05000865,n
+3,Halewood North,E08000011,Knowsley,MTD,E05000866,n
+3,Halewood South,E08000011,Knowsley,MTD,E05000867,n
+3,Northwood,E08000011,Knowsley,MTD,E05000871,n
+3,Page Moss,E08000011,Knowsley,MTD,E05000872,n
+3,Roby,E08000011,Knowsley,MTD,E05000876,n
+3,St Gabriels,E08000011,Knowsley,MTD,E05000878,n
+3,St Michaels,E08000011,Knowsley,MTD,E05000879,n
+3,Shevington,E08000011,Knowsley,MTD,E05000880,n
+3,Stockbridge,E08000011,Knowsley,MTD,E05000881,n
+3,Swanside,E08000011,Knowsley,MTD,E05000882,n
+3,Beauchief and Greenhill,E08000019,Sheffield,MTD,E05001040,n
+3,Beighton,E08000019,Sheffield,MTD,E05001041,n
+3,Birley,E08000019,Sheffield,MTD,E05001042,n
+3,Burngreave,E08000019,Sheffield,MTD,E05001044,n
+3,Darnall,E08000019,Sheffield,MTD,E05001047,n
+3,Dore and Totley,E08000019,Sheffield,MTD,E05001048,n
+3,East Ecclesfield,E08000019,Sheffield,MTD,E05001049,n
+3,Ecclesall,E08000019,Sheffield,MTD,E05001050,n
+3,Firth Park,E08000019,Sheffield,MTD,E05001051,n
+3,Fulwood,E08000019,Sheffield,MTD,E05001052,n
+3,Gleadless Valley,E08000019,Sheffield,MTD,E05001053,n
+3,Graves Park,E08000019,Sheffield,MTD,E05001054,n
+3,Hillsborough,E08000019,Sheffield,MTD,E05001055,n
+3,Manor Castle,E08000019,Sheffield,MTD,E05001056,n
+3,Mosborough,E08000019,Sheffield,MTD,E05001057,n
+3,Richmond,E08000019,Sheffield,MTD,E05001059,n
+3,Shiregreen and Brightside,E08000019,Sheffield,MTD,E05001060,n
+3,Southey,E08000019,Sheffield,MTD,E05001061,n
+3,Stannington,E08000019,Sheffield,MTD,E05001062,n
+3,Stocksbridge and Upper Don,E08000019,Sheffield,MTD,E05001063,n
+3,Walkley,E08000019,Sheffield,MTD,E05001064,n
+3,West Ecclesfield,E08000019,Sheffield,MTD,E05001065,n
+3,Avonmouth and Lawrence Weston,E06000023,Bristol,UTA,E05010886,
+2,Bishopston and Ashley Down,E06000023,Bristol,UTA,E05010888,
+2,Central,E06000023,Bristol,UTA,E05010892,
+2,Clifton Down,E06000023,Bristol,UTA,E05010894,
+3,Hartcliffe and Withywood,E06000023,Bristol,UTA,E05010900,
+2,Henbury and Brentry,E06000023,Bristol,UTA,E05010901,
+3,Hengrove and Whitchurch Park,E06000023,Bristol,UTA,E05010902,
+1,Hotwells and Harbourside,E06000023,Bristol,UTA,E05010905,
+2,St George Central,E06000023,Bristol,UTA,E05010910,
+1,St George Troopers Hill,E06000023,Bristol,UTA,E05010911,
+3,Westbury-on-Trym and Henleaze,E06000023,Bristol,UTA,E05010917,
+2,Frome Vale,E06000023,Bristol,UTA,E05010899,
+2,Hillfields,E06000023,Bristol,UTA,E05010903,
+2,Horfield,E06000023,Bristol,UTA,E05010904,
+2,Knowle,E06000023,Bristol,UTA,E05010906,
+2,Lawrence Hill,E06000023,Bristol,UTA,E05010907,
+2,Lockleaze,E06000023,Bristol,UTA,E05010908,
+2,Redland,E06000023,Bristol,UTA,E05010909,
+1,St George West,E06000023,Bristol,UTA,E05010912,
+2,Southmead,E06000023,Bristol,UTA,E05010913,
+2,Southville,E06000023,Bristol,UTA,E05010914,
+2,Stockwood,E06000023,Bristol,UTA,E05010915,
+2,Stoke Bishop,E06000023,Bristol,UTA,E05010916,
+2,Windmill Hill,E06000023,Bristol,UTA,E05010918,
+3,Alphington,E07000041,Exeter,DIS,E05003491,n
+3,Exwick,E07000041,Exeter,DIS,E05003494,n
+3,Heavitree,E07000041,Exeter,DIS,E05003495,n
+3,Pennsylvania,E07000041,Exeter,DIS,E05003498,n
+3,Pinhoe,E07000041,Exeter,DIS,E05003499,n
+3,Priory,E07000041,Exeter,DIS,E05003501,n
+3,St David's,E07000041,Exeter,DIS,E05003502,n
+3,St Loyes,E07000041,Exeter,DIS,E05003505,n
+3,St Thomas,E07000041,Exeter,DIS,E05003506,n
+3,Topsham,E07000041,Exeter,DIS,E05003507,n
+3,Berechurch,E07000071,Colchester,DIS,E05004120,n
+3,Castle,E07000071,Colchester,DIS,E05004122,n
+3,Highwoods,E07000071,Colchester,DIS,E05004130,n
+3,Mile End,E07000071,Colchester,DIS,E05004133,n
+3,Prettygate,E07000071,Colchester,DIS,E05004135,n
+3,Shrub End,E07000071,Colchester,DIS,E05004140,n
+3,Stanway,E07000071,Colchester,DIS,E05004141,n
+3,Tiptree,E07000071,Colchester,DIS,E05004142,n
+3,Downhall and Rawreth,E07000075,Rochford,DIS,E05004209,n
+3,Hawkwell West,E07000075,Rochford,DIS,E05004214,n
+3,Hullbridge,E07000075,Rochford,DIS,E05004218,n
+3,Lodge,E07000075,Rochford,DIS,E05004219,n
+3,Trinity,E07000075,Rochford,DIS,E05004223,n
+3,Wheatley,E07000075,Rochford,DIS,E05004224,n
+2,Barnwood,E07000081,Gloucester,DIS,E05004364,n
+3,Barton and Tredworth,E07000081,Gloucester,DIS,E05004365,n
+2,Elmbridge,E07000081,Gloucester,DIS,E05004366,n
+2,Grange,E07000081,Gloucester,DIS,E05004367,n
+2,Hucclecote,E07000081,Gloucester,DIS,E05004368,n
+2,Kingsholm and Wotton,E07000081,Gloucester,DIS,E05004369,n
+3,Longlevens,E07000081,Gloucester,DIS,E05004370,n
+3,Matson and Robinswood,E07000081,Gloucester,DIS,E05004371,n
+3,Moreland,E07000081,Gloucester,DIS,E05004372,n
+1,Podsmead,E07000081,Gloucester,DIS,E05004373,n
+2,Quedgeley Fieldcourt,E07000081,Gloucester,DIS,E05004374,n
+2,Quedgeley Severn Vale,E07000081,Gloucester,DIS,E05004375,n
+2,Tuffley,E07000081,Gloucester,DIS,E05004376,n
+3,Westgate,E07000081,Gloucester,DIS,E05004377,n
+1,Amberley and Woodchester,E07000082,Stroud,DIS,E05004378,n
+1,Bisley,E07000082,Stroud,DIS,E05004380,n
+3,Cainscross,E07000082,Stroud,DIS,E05004381,n
+2,Cam East,E07000082,Stroud,DIS,E05004382,n
+2,Cam West,E07000082,Stroud,DIS,E05004383,n
+3,Chalford,E07000082,Stroud,DIS,E05004385,n
+1,Coaley and Uley,E07000082,Stroud,DIS,E05004386,n
+3,Dursley,E07000082,Stroud,DIS,E05004387,n
+3,Hardwicke,E07000082,Stroud,DIS,E05004390,n
+1,Kingswood,E07000082,Stroud,DIS,E05004391,n
+2,Minchinhampton,E07000082,Stroud,DIS,E05004392,n
+3,Nailsworth,E07000082,Stroud,DIS,E05004393,n
+1,"Randwick, Whiteshill and Ruscombe",E07000082,Stroud,DIS,E05004394,n
+2,Rodborough,E07000082,Stroud,DIS,E05004396,n
+2,Severn,E07000082,Stroud,DIS,E05004397,n
+3,Stonehouse,E07000082,Stroud,DIS,E05004399,n
+2,The Stanleys,E07000082,Stroud,DIS,E05004400,n
+1,Thrupp,E07000082,Stroud,DIS,E05004401,n
+3,Wotton-under-Edge,E07000082,Stroud,DIS,E05004407,n
+2,Colden Common and Twyford,E07000094,Winchester,DIS,E05004655,n
+3,Denmead,E07000094,Winchester,DIS,E05004657,n
+3,St Barnabas,E07000094,Winchester,DIS,E05004664,n
+3,St Bartholomew,E07000094,Winchester,DIS,E05004665,n
+2,St Luke,E07000094,Winchester,DIS,E05004667,n
+3,St Michael,E07000094,Winchester,DIS,E05004668,n
+3,St Paul,E07000094,Winchester,DIS,E05004669,n
+2,Upper Meon Valley,E07000094,Winchester,DIS,E05004674,n
+3,Wonston and Micheldever,E07000094,Winchester,DIS,E05004677,n
+3,Abbey,E07000138,Lincoln,DIS,E05005607,n
+3,Birchwood,E07000138,Lincoln,DIS,E05005608,n
+3,Boultham,E07000138,Lincoln,DIS,E05005609,n
+3,Carholme,E07000138,Lincoln,DIS,E05005611,n
+3,Castle,E07000138,Lincoln,DIS,E05005612,n
+3,Glebe,E07000138,Lincoln,DIS,E05005613,n
+3,Hartsholme,E07000138,Lincoln,DIS,E05005614,n
+3,Minster,E07000138,Lincoln,DIS,E05005615,n
+3,Moorland,E07000138,Lincoln,DIS,E05005616,n
+3,Park,E07000138,Lincoln,DIS,E05005617,n
+3,Banbury Hardwick,E07000177,Cherwell,DIS,E05006522,n
+3,Banbury Ruscote,E07000177,Cherwell,DIS,E05006524,n
+3,Bicester East,E07000177,Cherwell,DIS,E05006525,n
+3,Bicester West,E07000177,Cherwell,DIS,E05006529,n
+3,Deddington,E07000177,Cherwell,DIS,E05006533,n
+3,"Adderbury, Bloxham and Bodicote",E07000177,Cherwell,DIS,,n
+3,Banbury Calthorpe and Easington,E07000177,Cherwell,DIS,,n
+3,Banbury Cross and Neithrop,E07000177,Cherwell,DIS,,n
+3,Banbury Grimsbury and Hightown,E07000177,Cherwell,DIS,,n
+3,Bicester North and Caversfield,E07000177,Cherwell,DIS,,n
+3,Bicester South and Ambrosden,E07000177,Cherwell,DIS,,n
+3,"Cropredy, Sibfords and Wroxton",E07000177,Cherwell,DIS,,n
+3,Fringford and Heyfords,E07000177,Cherwell,DIS,,n
+3,Kidlington East,E07000177,Cherwell,DIS,,n
+3,Kidlington West,E07000177,Cherwell,DIS,,n
+3,Launton and Otmoor,E07000177,Cherwell,DIS,,n
+3,Greenstead,E07000071,Colchester,DIS,,n
+3,Lexden and Braiswick,E07000071,Colchester,DIS,,n
+3,Marks Tey and Layer,E07000071,Colchester,DIS,,n
+3,Mersea and Pyefleet,E07000071,Colchester,DIS,,n
+3,New Town and Christ Church,E07000071,Colchester,DIS,,n
+3,Old Heath and The Hythe,E07000071,Colchester,DIS,,n
+3,Rural North,E07000071,Colchester,DIS,,n
+3,St Anne's and St John's,E07000071,Colchester,DIS,,n
+3,Wivenhoe,E07000071,Colchester,DIS,,n
+3,Duryard and St James,E07000041,Exeter,DIS,,n
+3,Mincinglake and Whipton,E07000041,Exeter,DIS,,n
+3,Newtown and St Leonard's,E07000041,Exeter,DIS,,n
+2,Abbeydale,E07000081,Gloucester,DIS,,n
+2,Abbeymead,E07000081,Gloucester,DIS,,n
+1,Coney Hill,E07000081,Gloucester,DIS,,n
+2,Kingsway,E07000081,Gloucester,DIS,,n
+3,Witham,E07000138,Lincoln,DIS,,n
+3,Foulness and The Wakerings,E07000075,Rochford,DIS,,n
+3,Hawkwell East,E07000075,Rochford,DIS,,n
+3,Hockley,E07000075,Rochford,DIS,,n
+3,Hockley and Ashingdon,E07000075,Rochford,DIS,,n
+3,Roche North and Rural,E07000075,Rochford,DIS,,n
+3,Roche South,E07000075,Rochford,DIS,,n
+3,Sweyne Park and Grange,E07000075,Rochford,DIS,,n
+3,Berkeley Vale,E07000082,Stroud,DIS,,n
+3,Painswick and Upton,E07000082,Stroud,DIS,,n
+1,Stroud Central,E07000082,Stroud,DIS,,n
+1,Stroud Farmhill and Paganhill,E07000082,Stroud,DIS,,n
+1,Stroud Slade,E07000082,Stroud,DIS,,n
+1,Stroud Trinity,E07000082,Stroud,DIS,,n
+1,Stroud Uplands,E07000082,Stroud,DIS,,n
+1,Stroud Valley,E07000082,Stroud,DIS,,n
+3,Alresford and Itchen Valley,E07000094,Winchester,DIS,,n
+3,Badger Farm and Oliver's Battery,E07000094,Winchester,DIS,,n
+3,Bishop's Waltham,E07000094,Winchester,DIS,,n
+3,Central Meon Valley,E07000094,Winchester,DIS,,n
+3,Southwick and Wickham,E07000094,Winchester,DIS,,n
+3,The Worthys,E07000094,Winchester,DIS,,n
+3,Whiteley and Shedfield,E07000094,Winchester,DIS,,n
+3,Prescot North,E08000011,Knowsley,MTD,,n
+3,Prescot South,E08000011,Knowsley,MTD,,n
+3,Whiston and Cronton,E08000011,Knowsley,MTD,,n
+3,Whitefield,E08000011,Knowsley,MTD,E05000885,n
+3,Broomhill and Sharrow Vale,E08000019,Sheffield,MTD,,n
+3,City,E08000019,Sheffield,MTD,,n
+3,Crookes and Crosspool,E08000019,Sheffield,MTD,,n
+3,Nether Edge and Sharrow,E08000019,Sheffield,MTD,,n
+3,Park and Arbourthorne,E08000019,Sheffield,MTD,,n
+3,Woodhouse,E08000019,Sheffield,MTD,E05001066,n
+3,Avonmouth and Lawrence Weston,E06000023,Bristol,UTA,,n
+2,Bishopston and Ashley Down,E06000023,Bristol,UTA,,n
+2,Central,E06000023,Bristol,UTA,,n
+2,Clifton Down,E06000023,Bristol,UTA,,n
+3,Hartcliffe and Withywood,E06000023,Bristol,UTA,,n
+2,Henbury and Brentry,E06000023,Bristol,UTA,,n
+3,Hengrove and Whitchurch Park,E06000023,Bristol,UTA,,n
+1,Hotwells and Harbourside,E06000023,Bristol,UTA,,n
+2,St George Central,E06000023,Bristol,UTA,,n
+1,St George Troopers Hill,E06000023,Bristol,UTA,,n
+3,Westbury-on-Trym and Henleaze,E06000023,Bristol,UTA,,n
 1,Astley Bridge,E08000001,Bolton,MTD,E05000650,
 1,Bradshaw,E08000001,Bolton,MTD,E05000651,
 1,Breightmet,E08000001,Bolton,MTD,E05000652,
@@ -211,17 +420,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Wigan West,E08000010,Wigan,MTD,E05000862,
 1,Winstanley,E08000010,Wigan,MTD,E05000863,
 1,Worsley Mesnes,E08000010,Wigan,MTD,E05000864,
-3,Cherryfield,E08000011,Knowsley,MTD,E05000865,n
-3,Halewood North,E08000011,Knowsley,MTD,E05000866,n
-3,Halewood South,E08000011,Knowsley,MTD,E05000867,n
-3,Northwood,E08000011,Knowsley,MTD,E05000871,n
-3,Page Moss,E08000011,Knowsley,MTD,E05000872,n
-3,Roby,E08000011,Knowsley,MTD,E05000876,n
-3,St Gabriels,E08000011,Knowsley,MTD,E05000878,n
-3,St Michaels,E08000011,Knowsley,MTD,E05000879,n
-3,Shevington,E08000011,Knowsley,MTD,E05000880,n
-3,Stockbridge,E08000011,Knowsley,MTD,E05000881,n
-3,Swanside,E08000011,Knowsley,MTD,E05000882,n
 1,Allerton and Hunts Cross,E08000012,Liverpool,MTD,E05000886,
 1,Anfield,E08000012,Liverpool,MTD,E05000887,
 1,Belle Vale,E08000012,Liverpool,MTD,E05000888,
@@ -352,28 +550,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 3,Wath,E08000018,Rotherham,MTD,E05001036,
 3,Wickersley,E08000018,Rotherham,MTD,E05001037,
 3,Wingfield,E08000018,Rotherham,MTD,E05001038,
-3,Beauchief and Greenhill,E08000019,Sheffield,MTD,E05001040,n
-3,Beighton,E08000019,Sheffield,MTD,E05001041,n
-3,Birley,E08000019,Sheffield,MTD,E05001042,n
-3,Burngreave,E08000019,Sheffield,MTD,E05001044,n
-3,Darnall,E08000019,Sheffield,MTD,E05001047,n
-3,Dore and Totley,E08000019,Sheffield,MTD,E05001048,n
-3,East Ecclesfield,E08000019,Sheffield,MTD,E05001049,n
-3,Ecclesall,E08000019,Sheffield,MTD,E05001050,n
-3,Firth Park,E08000019,Sheffield,MTD,E05001051,n
-3,Fulwood,E08000019,Sheffield,MTD,E05001052,n
-3,Gleadless Valley,E08000019,Sheffield,MTD,E05001053,n
-3,Graves Park,E08000019,Sheffield,MTD,E05001054,n
-3,Hillsborough,E08000019,Sheffield,MTD,E05001055,n
-3,Manor Castle,E08000019,Sheffield,MTD,E05001056,n
-3,Mosborough,E08000019,Sheffield,MTD,E05001057,n
-3,Richmond,E08000019,Sheffield,MTD,E05001059,n
-3,Shiregreen and Brightside,E08000019,Sheffield,MTD,E05001060,n
-3,Southey,E08000019,Sheffield,MTD,E05001061,n
-3,Stannington,E08000019,Sheffield,MTD,E05001062,n
-3,Stocksbridge and Upper Don,E08000019,Sheffield,MTD,E05001063,n
-3,Walkley,E08000019,Sheffield,MTD,E05001064,n
-3,West Ecclesfield,E08000019,Sheffield,MTD,E05001065,n
 1,Birtley,E08000037,Gateshead,MTD,E05001067,
 1,Blaydon,E08000037,Gateshead,MTD,E05001068,
 1,Bridges,E08000037,Gateshead,MTD,E05001069,
@@ -874,29 +1050,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Oakwood,E06000015,Derby,UTA,E05001781,
 1,Sinfin,E06000015,Derby,UTA,E05001782,
 1,Spondon,E06000015,Derby,UTA,E05001783,
-3,Ashley,E06000023,Bristol,UTA,E05001972,n
-2,Bedminster,E06000023,Bristol,UTA,E05001974,n
-2,Bishopsworth,E06000023,Bristol,UTA,E05001976,n
-2,Brislington East,E06000023,Bristol,UTA,E05001977,n
-2,Brislington West,E06000023,Bristol,UTA,E05001978,n
-2,Clifton,E06000023,Bristol,UTA,E05001980,n
-2,Cotham,E06000023,Bristol,UTA,E05001982,n
-2,Easton,E06000023,Bristol,UTA,E05001983,n
-2,Eastville,E06000023,Bristol,UTA,E05001984,n
-2,Filwood,E06000023,Bristol,UTA,E05001985,n
-2,Frome Vale,E06000023,Bristol,UTA,E05001986,n
-2,Hillfields,E06000023,Bristol,UTA,E05001991,n
-2,Horfield,E06000023,Bristol,UTA,E05001992,n
-2,Knowle,E06000023,Bristol,UTA,E05001994,n
-2,Lawrence Hill,E06000023,Bristol,UTA,E05001995,n
-2,Lockleaze,E06000023,Bristol,UTA,E05001996,n
-2,Redland,E06000023,Bristol,UTA,E05001997,n
-1,St George West,E06000023,Bristol,UTA,E05001999,n
-2,Southmead,E06000023,Bristol,UTA,E05002000,n
-2,Southville,E06000023,Bristol,UTA,E05002001,n
-2,Stockwood,E06000023,Bristol,UTA,E05002002,n
-2,Stoke Bishop,E06000023,Bristol,UTA,E05002003,n
-2,Windmill Hill,E06000023,Bristol,UTA,E05002006,n
 1,Budshead,E06000026,Plymouth,UTA,E05002078,
 1,Compton,E06000026,Plymouth,UTA,E05002079,
 1,Devonport,E06000026,Plymouth,UTA,E05002080,
@@ -1099,16 +1252,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Ripley,E07000032,Amber Valley,DIS,E05003296,
 1,Ripley and Marehay,E07000032,Amber Valley,DIS,E05003297,
 1,Somercotes,E07000032,Amber Valley,DIS,E05003299,
-3,Alphington,E07000041,Exeter,DIS,E05003491,n
-3,Exwick,E07000041,Exeter,DIS,E05003494,n
-3,Heavitree,E07000041,Exeter,DIS,E05003495,n
-3,Pennsylvania,E07000041,Exeter,DIS,E05003498,n
-3,Pinhoe,E07000041,Exeter,DIS,E05003499,n
-3,Priory,E07000041,Exeter,DIS,E05003501,n
-3,St David's,E07000041,Exeter,DIS,E05003502,n
-3,St Loyes,E07000041,Exeter,DIS,E05003505,n
-3,St Thomas,E07000041,Exeter,DIS,E05003506,n
-3,Topsham,E07000041,Exeter,DIS,E05003507,n
 1,Littlemoor,E07000053,Weymouth and Portland,DIS,E05003770,
 1,Melcombe Regis,E07000053,Weymouth and Portland,DIS,E05003771,
 1,Preston,E07000053,Weymouth and Portland,DIS,E05003772,
@@ -1176,14 +1319,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,St Mary's,E07000069,Castle Point,DIS,E05004093,
 1,St Peter's,E07000069,Castle Point,DIS,E05004094,
 1,Victoria,E07000069,Castle Point,DIS,E05004095,
-3,Berechurch,E07000071,Colchester,DIS,E05004120,n
-3,Castle,E07000071,Colchester,DIS,E05004122,n
-3,Highwoods,E07000071,Colchester,DIS,E05004130,n
-3,Mile End,E07000071,Colchester,DIS,E05004133,n
-3,Prettygate,E07000071,Colchester,DIS,E05004135,n
-3,Shrub End,E07000071,Colchester,DIS,E05004140,n
-3,Stanway,E07000071,Colchester,DIS,E05004141,n
-3,Tiptree,E07000071,Colchester,DIS,E05004142,n
 1,Buckhurst Hill East,E07000072,Epping Forest,DIS,E05004148,
 1,Buckhurst Hill West,E07000072,Epping Forest,DIS,E05004149,
 1,Chigwell Row,E07000072,Epping Forest,DIS,E05004150,
@@ -1215,12 +1350,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Staple Tye,E07000073,Harlow,DIS,E05004187,
 1,Sumners and Kingsmoor,E07000073,Harlow,DIS,E05004188,
 1,Toddbrook,E07000073,Harlow,DIS,E05004189,
-3,Downhall and Rawreth,E07000075,Rochford,DIS,E05004209,n
-3,Hawkwell West,E07000075,Rochford,DIS,E05004214,n
-3,Hullbridge,E07000075,Rochford,DIS,E05004218,n
-3,Lodge,E07000075,Rochford,DIS,E05004219,n
-3,Trinity,E07000075,Rochford,DIS,E05004223,n
-3,Wheatley,E07000075,Rochford,DIS,E05004224,n
 1,All Saints,E07000078,Cheltenham,DIS,E05004288,
 1,Battledown,E07000078,Cheltenham,DIS,E05004289,
 1,Benhall and The Reddings,E07000078,Cheltenham,DIS,E05004290,
@@ -1241,39 +1370,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Swindon Village,E07000078,Cheltenham,DIS,E05004305,
 1,Up Hatherley,E07000078,Cheltenham,DIS,E05004306,
 1,Warden Hill,E07000078,Cheltenham,DIS,E05004307,
-2,Barnwood,E07000081,Gloucester,DIS,E05004364,n
-3,Barton and Tredworth,E07000081,Gloucester,DIS,E05004365,n
-2,Elmbridge,E07000081,Gloucester,DIS,E05004366,n
-2,Grange,E07000081,Gloucester,DIS,E05004367,n
-2,Hucclecote,E07000081,Gloucester,DIS,E05004368,n
-2,Kingsholm and Wotton,E07000081,Gloucester,DIS,E05004369,n
-3,Longlevens,E07000081,Gloucester,DIS,E05004370,n
-3,Matson and Robinswood,E07000081,Gloucester,DIS,E05004371,n
-3,Moreland,E07000081,Gloucester,DIS,E05004372,n
-1,Podsmead,E07000081,Gloucester,DIS,E05004373,n
-2,Quedgeley Fieldcourt,E07000081,Gloucester,DIS,E05004374,n
-2,Quedgeley Severn Vale,E07000081,Gloucester,DIS,E05004375,n
-2,Tuffley,E07000081,Gloucester,DIS,E05004376,n
-3,Westgate,E07000081,Gloucester,DIS,E05004377,n
-1,Amberley and Woodchester,E07000082,Stroud,DIS,E05004378,n
-1,Bisley,E07000082,Stroud,DIS,E05004380,n
-3,Cainscross,E07000082,Stroud,DIS,E05004381,n
-2,Cam East,E07000082,Stroud,DIS,E05004382,n
-2,Cam West,E07000082,Stroud,DIS,E05004383,n
-3,Chalford,E07000082,Stroud,DIS,E05004385,n
-1,Coaley and Uley,E07000082,Stroud,DIS,E05004386,n
-3,Dursley,E07000082,Stroud,DIS,E05004387,n
-3,Hardwicke,E07000082,Stroud,DIS,E05004390,n
-1,Kingswood,E07000082,Stroud,DIS,E05004391,n
-2,Minchinhampton,E07000082,Stroud,DIS,E05004392,n
-3,Nailsworth,E07000082,Stroud,DIS,E05004393,n
-1,"Randwick, Whiteshill and Ruscombe",E07000082,Stroud,DIS,E05004394,n
-2,Rodborough,E07000082,Stroud,DIS,E05004396,n
-2,Severn,E07000082,Stroud,DIS,E05004397,n
-3,Stonehouse,E07000082,Stroud,DIS,E05004399,n
-2,The Stanleys,E07000082,Stroud,DIS,E05004400,n
-1,Thrupp,E07000082,Stroud,DIS,E05004401,n
-3,Wotton-under-Edge,E07000082,Stroud,DIS,E05004407,n
 1,Basing,E07000084,Basingstoke and Deane,DIS,E05004430,
 1,Baughurst and Tadley North,E07000084,Basingstoke and Deane,DIS,E05004431,
 1,Brighton Hill South,E07000084,Basingstoke and Deane,DIS,E05004433,
@@ -1355,15 +1451,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Stakes,E07000090,Havant,DIS,E05004577,
 1,Warren Park,E07000090,Havant,DIS,E05004578,
 1,Waterloo,E07000090,Havant,DIS,E05004579,
-2,Colden Common and Twyford,E07000094,Winchester,DIS,E05004655,n
-3,Denmead,E07000094,Winchester,DIS,E05004657,n
-3,St Barnabas,E07000094,Winchester,DIS,E05004664,n
-3,St Bartholomew,E07000094,Winchester,DIS,E05004665,n
-2,St Luke,E07000094,Winchester,DIS,E05004667,n
-3,St Michael,E07000094,Winchester,DIS,E05004668,n
-3,St Paul,E07000094,Winchester,DIS,E05004669,n
-2,Upper Meon Valley,E07000094,Winchester,DIS,E05004674,n
-3,Wonston and Micheldever,E07000094,Winchester,DIS,E05004677,n
 1,Baldock East,E07000099,North Hertfordshire,DIS,E05004762,
 1,Baldock Town,E07000099,North Hertfordshire,DIS,E05004763,
 1,Chesfield,E07000099,North Hertfordshire,DIS,E05004765,
@@ -1574,16 +1661,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Tarleton,E07000127,West Lancashire,DIS,E05005377,
 1,Up Holland,E07000127,West Lancashire,DIS,E05005378,
 1,Wrightington,E07000127,West Lancashire,DIS,E05005379,
-3,Abbey,E07000138,Lincoln,DIS,E05005607,n
-3,Birchwood,E07000138,Lincoln,DIS,E05005608,n
-3,Boultham,E07000138,Lincoln,DIS,E05005609,n
-3,Carholme,E07000138,Lincoln,DIS,E05005611,n
-3,Castle,E07000138,Lincoln,DIS,E05005612,n
-3,Glebe,E07000138,Lincoln,DIS,E05005613,n
-3,Hartsholme,E07000138,Lincoln,DIS,E05005614,n
-3,Minster,E07000138,Lincoln,DIS,E05005615,n
-3,Moorland,E07000138,Lincoln,DIS,E05005616,n
-3,Park,E07000138,Lincoln,DIS,E05005617,n
 1,Bradwell North,E07000145,Great Yarmouth,DIS,E05005784,
 1,Bradwell South and Hopton,E07000145,Great Yarmouth,DIS,E05005785,
 1,Central and Northgate,E07000145,Great Yarmouth,DIS,E05005788,
@@ -1631,11 +1708,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Spofforth with Lower Wharfedale,E07000165,Harrogate,DIS,E05006267,
 1,Washburn,E07000165,Harrogate,DIS,E05006270,
 1,Wathvale,E07000165,Harrogate,DIS,E05006271,
-3,Banbury Hardwick,E07000177,Cherwell,DIS,E05006522,n
-3,Banbury Ruscote,E07000177,Cherwell,DIS,E05006524,n
-3,Bicester East,E07000177,Cherwell,DIS,E05006525,n
-3,Bicester West,E07000177,Cherwell,DIS,E05006529,n
-3,Deddington,E07000177,Cherwell,DIS,E05006533,n
 1,Barton and Sandhills,E07000178,Oxford,DIS,E05006545,
 1,Blackbird Leys,E07000178,Oxford,DIS,E05006546,
 1,Carfax,E07000178,Oxford,DIS,E05006547,
@@ -2030,40 +2102,12 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Hednesford South,E07000192,Cannock Chase,DIS,E05006913,
 1,Norton Canes,E07000192,Cannock Chase,DIS,E05006914,
 1,Western Springs,E07000192,Cannock Chase,DIS,E05006916,
-3,"Adderbury, Bloxham and Bodicote",E07000177,Cherwell,DIS,,n
-3,Banbury Calthorpe and Easington,E07000177,Cherwell,DIS,,n
-3,Banbury Cross and Neithrop,E07000177,Cherwell,DIS,,n
-3,Banbury Grimsbury and Hightown,E07000177,Cherwell,DIS,,n
-3,Bicester North and Caversfield,E07000177,Cherwell,DIS,,n
-3,Bicester South and Ambrosden,E07000177,Cherwell,DIS,,n
-3,"Cropredy, Sibfords and Wroxton",E07000177,Cherwell,DIS,,n
-3,Fringford and Heyfords,E07000177,Cherwell,DIS,,n
-3,Kidlington East,E07000177,Cherwell,DIS,,n
-3,Kidlington West,E07000177,Cherwell,DIS,,n
-3,Launton and Otmoor,E07000177,Cherwell,DIS,,n
-3,Greenstead,E07000071,Colchester,DIS,,n
-3,Lexden and Braiswick,E07000071,Colchester,DIS,,n
-3,Marks Tey and Layer,E07000071,Colchester,DIS,,n
-3,Mersea and Pyefleet,E07000071,Colchester,DIS,,n
-3,New Town and Christ Church,E07000071,Colchester,DIS,,n
-3,Old Heath and The Hythe,E07000071,Colchester,DIS,,n
-3,Rural North,E07000071,Colchester,DIS,,n
-3,St Anne's and St John's,E07000071,Colchester,DIS,,n
-3,Wivenhoe,E07000071,Colchester,DIS,,n
 3,Hersham Village,E07000207,Elmbridge,DIS,,
 3,Hinchley Wood and Weston Green,E07000207,Elmbridge,DIS,,
 3,Molesey West,E07000207,Elmbridge,DIS,,
 3,Oatlands and Burwood Park,E07000207,Elmbridge,DIS,,
 3,Weybridge Riverside,E07000207,Elmbridge,DIS,,
 3,Weybridge St George's Hill,E07000207,Elmbridge,DIS,,
-3,Duryard and St James,E07000041,Exeter,DIS,,n
-3,Mincinglake and Whipton,E07000041,Exeter,DIS,,n
-3,Newtown and St Leonard's,E07000041,Exeter,DIS,,n
-2,Abbeydale,E07000081,Gloucester,DIS,,n
-2,Abbeymead,E07000081,Gloucester,DIS,,n
-1,Coney Hill,E07000081,Gloucester,DIS,,n
-2,Kingsway,E07000081,Gloucester,DIS,,n
-3,Witham,E07000138,Lincoln,DIS,,n
 1,Audley and Bignall End,E07000195,Newcastle-under-Lyme,DIS,E05006964,
 1,Bradwell,E07000195,Newcastle-under-Lyme,DIS,E05006965,
 1,Butt Lane,E07000195,Newcastle-under-Lyme,DIS,E05006966,
@@ -2085,21 +2129,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Westlands,E07000195,Newcastle-under-Lyme,DIS,E05006986,
 1,Wolstanton,E07000195,Newcastle-under-Lyme,DIS,E05006987,
 1,Batchley and Brockhill,E07000236,Redditch,DIS,,
-3,Foulness and The Wakerings,E07000075,Rochford,DIS,,n
-3,Hawkwell East,E07000075,Rochford,DIS,,n
-3,Hockley,E07000075,Rochford,DIS,,n
-3,Hockley and Ashingdon,E07000075,Rochford,DIS,,n
-3,Roche North and Rural,E07000075,Rochford,DIS,,n
-3,Roche South,E07000075,Rochford,DIS,,n
-3,Sweyne Park and Grange,E07000075,Rochford,DIS,,n
-3,Berkeley Vale,E07000082,Stroud,DIS,,n
-3,Painswick and Upton,E07000082,Stroud,DIS,,n
-1,Stroud Central,E07000082,Stroud,DIS,,n
-1,Stroud Farmhill and Paganhill,E07000082,Stroud,DIS,,n
-1,Stroud Slade,E07000082,Stroud,DIS,,n
-1,Stroud Trinity,E07000082,Stroud,DIS,,n
-1,Stroud Uplands,E07000082,Stroud,DIS,,n
-1,Stroud Valley,E07000082,Stroud,DIS,,n
 1,Abbots Langley and Bedmond,E07000102,Three Rivers,DIS,,
 1,Chorleywood North and Sarratt,E07000102,Three Rivers,DIS,,
 1,Chorleywood South and Maple Cross,E07000102,Three Rivers,DIS,,
@@ -2108,13 +2137,6 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Penn and Mill End,E07000102,Three Rivers,DIS,,
 3,Hatfield South West,E07000241,Welwyn Hatfield,DIS,,
 3,Welham Green and Hatfield South,E07000241,Welwyn Hatfield,DIS,,
-3,Alresford and Itchen Valley,E07000094,Winchester,DIS,,n
-3,Badger Farm and Oliver's Battery,E07000094,Winchester,DIS,,n
-3,Bishop's Waltham,E07000094,Winchester,DIS,,n
-3,Central Meon Valley,E07000094,Winchester,DIS,,n
-3,Southwick and Wickham,E07000094,Winchester,DIS,,n
-3,The Worthys,E07000094,Winchester,DIS,,n
-3,Whiteley and Shedfield,E07000094,Winchester,DIS,,n
 3,Canalside,E07000217,Woking,DIS,,
 3,Goldsworth Park,E07000217,Woking,DIS,,
 3,Heathlands,E07000217,Woking,DIS,,
@@ -2133,30 +2155,9 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,import
 1,Rock,E07000239,Wyre Forest,DIS,,
 1,Sutton Park,E07000239,Wyre Forest,DIS,,
 1,Wribbenhall,E07000239,Wyre Forest,DIS,,
-3,Prescot North,E08000011,Knowsley,MTD,,n
-3,Prescot South,E08000011,Knowsley,MTD,,n
-3,Whiston and Cronton,E08000011,Knowsley,MTD,,n
-3,Whitefield,E08000011,Knowsley,MTD,E05000885,n
 1,Didsbury East,E08000003,Manchester,MTD,,
-3,Broomhill and Sharrow Vale,E08000019,Sheffield,MTD,,n
-3,City,E08000019,Sheffield,MTD,,n
-3,Crookes and Crosspool,E08000019,Sheffield,MTD,,n
-3,Nether Edge and Sharrow,E08000019,Sheffield,MTD,,n
-3,Park and Arbourthorne,E08000019,Sheffield,MTD,,n
-3,Woodhouse,E08000019,Sheffield,MTD,E05001066,n
 1,Bramhall South,E08000007,Stockport,MTD,,
 1,Denton West,E08000008,Tameside,MTD,,
-3,Avonmouth and Lawrence Weston,E06000023,Bristol,UTA,,n
-2,Bishopston and Ashley Down,E06000023,Bristol,UTA,,n
-2,Central,E06000023,Bristol,UTA,,n
-2,Clifton Down,E06000023,Bristol,UTA,,n
-3,Hartcliffe and Withywood,E06000023,Bristol,UTA,,n
-2,Henbury and Brentry,E06000023,Bristol,UTA,,n
-3,Hengrove and Whitchurch Park,E06000023,Bristol,UTA,,n
-1,Hotwells and Harbourside,E06000023,Bristol,UTA,,n
-2,St George Central,E06000023,Bristol,UTA,,n
-1,St George Troopers Hill,E06000023,Bristol,UTA,,n
-3,Westbury-on-Trym and Henleaze,E06000023,Bristol,UTA,,n
 1,Campbell Park and Old Woughton,E06000042,Milton Keynes,UTA,,
 1,Danesborough and Walton,E06000042,Milton Keynes,UTA,,
 1,Loughton and Shenley,E06000042,Milton Keynes,UTA,,
