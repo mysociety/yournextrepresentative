@@ -63,23 +63,40 @@ class Command(BaseCommand):
             "elections/uk/data/2016-local-elections-wards.csv")
         csv_file = csv.DictReader(open(csv_path))
         for line in csv_file:
-            if line['import'] == "n" or not line['ward_gss']:
-                continue
             election_id = self.election_id_from_line(line)
+            area_type = COUNCIL_TO_WARD_TYPE_CODES[line['council_code_type']]
+
+            if line['have_ward_boundaries'] == "n" or not line['ward_gss']:
+                elections[election_id]['have_ward_boundaries'] = False
+                ward_id = "NODATA:{0}-{1}".format(
+                    line['council_gss'],
+                    slugify(line['ward_name'])
+                )
+                ward_slug = ward_id
+            else:
+                elections[election_id]['have_ward_boundaries'] = True
+                ward_id = "gss:"+line['ward_gss']
+                ward_slug = "{0}:{1}".format(
+                    area_type,
+                    line['ward_gss']
+                )
+
             elections[election_id]['authority_name'] = line['council_name']
             elections[election_id]['authority_id'] = line['council_gss']
             elections[election_id]['authority_slug'] = \
                 slugify(line['council_name'])
             posts = elections[election_id].get('posts', [])
 
-            area_type = COUNCIL_TO_WARD_TYPE_CODES[line['council_code_type']]
+
             posts.append({
-                'ward_id': "gss:"+line['ward_gss'],
+                'ward_id': ward_id,
                 'ward_name': line['ward_name'],
-                'ward_slug': "{0}:{1}".format(area_type, line['ward_gss']),
+                'ward_slug': ward_slug,
                 'ward_seats': line['ward_seats'],
                 'area_type': area_type,
-
+                'parent_id': "gss:" + line['council_gss'],
+                'parent_name': line['council_name'],
+                'parent_code_type': line['council_code_type'],
             })
             elections[election_id]['posts'] = posts
         return elections
@@ -102,7 +119,7 @@ class Command(BaseCommand):
     def create_election(self, election_id, election):
         election_defaults = {
             'party_lists_in_use': False,
-            'name': election['authority_name'],
+            'name': "{0} local election".format(election['authority_name']),
             'for_post_role': "Councillor for {0}".format(
                 election['authority_name']),
             'area_generation': 1,
@@ -143,6 +160,7 @@ class Command(BaseCommand):
             parent_area, _ = Area.objects.get_or_create(
                 identifier=post_dict['parent_id'],
                 defaults={'name': post_dict['parent_name']}
+                name=post_dict['parent_name']
             )
 
             AreaExtra.objects.get_or_create(
@@ -152,9 +170,11 @@ class Command(BaseCommand):
 
         area, _ = Area.objects.update_or_create(
             identifier=post_dict['ward_id'],
-            defaults={'name': "{0} ward".format(post_dict['ward_name'])}
+            defaults={
+                'name': "{0} ward".format(post_dict['ward_name']),
+                'parent': parent_area,
+            }
         )
-
         AreaExtra.objects.get_or_create(base=area, type=area_type)
 
         post, _ = Post.objects.update_or_create(
