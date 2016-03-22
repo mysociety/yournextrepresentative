@@ -354,6 +354,7 @@ class AddElectionFieldsMixin(object):
     def add_election_fields(self, election_data):
         from .election_specific import shorten_post_label
 
+
         election = election_data.slug
         self.fields['standing_' + election] = \
             forms.ChoiceField(
@@ -412,7 +413,8 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
     def __init__(self, *args, **kwargs):
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
         self.elections_with_fields = Election.objects.filter(
-                candidacies__base__person=self.initial['person']
+                candidacies__base__person=self.initial['person'],
+                current=True
             ).order_by('-election_date')
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
