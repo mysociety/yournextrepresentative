@@ -238,7 +238,7 @@ class ElectionSerializer(MinimalElectionSerializer):
 class MinimalPostExtraSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = candidates_models.PostExtra
-        fields = ('id', 'url', 'label')
+        fields = ('id', 'url', 'label', 'slug')
 
     id = serializers.ReadOnlyField(source='slug')
     label = serializers.ReadOnlyField(source='base.label')
