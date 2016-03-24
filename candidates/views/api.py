@@ -65,13 +65,17 @@ class UpcomingElectionsView(View):
 
         results = []
         for post in posts.all():
-            election = post.extra.elections.get(
-                current=True,
-                election_date__gte=date.today()
-            )
+            try:
+                election = post.extra.elections.get(
+                    current=True,
+                    election_date__gte=date.today()
+                )
+            except:
+                continue
             if election:
                 results.append({
                     'post_name': post.label,
+                    'post_slug': post.extra.slug,
                     'organization': post.organization.name,
                     'area': {
                         'type': post.area.extra.type.name,
@@ -79,7 +83,8 @@ class UpcomingElectionsView(View):
                         'identifier': post.area.identifier,
                     },
                     'election_date': text_type(election.election_date),
-                    'election_name': election.name
+                    'election_name': election.name,
+                    'election_id': election.slug
                 })
 
         return HttpResponse(
@@ -183,6 +188,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         ) \
         .order_by('id')
     serializer_class = serializers.PersonSerializer
+    pagination_class = ResultsSetPagination
 
 
 class OrganizationViewSet(viewsets.ModelViewSet):
