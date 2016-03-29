@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk add candidates{% endblock %}
+
+{% block content %}
+<h2>Add candidates to {{ election }}: {{ post_id }}</h2>
+<form method=POST>
+  {% csrf_token %}
+  {{ formset.management_form }}
+  {% for form in formset %}
+    <h3>Person {{ forloop.counter }}</h3>
+    {{ form.as_p }}
+  {% endfor %}
+  <button type=submit>Next</button>
+</form>
+
+{% endblock content %}
