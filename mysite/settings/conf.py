@@ -471,4 +471,9 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     result['MAPIT_BASE_URL'] = \
         re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
 
+    result['INSTALLED_APPS'] = list(result['INSTALLED_APPS'])
+    result['INSTALLED_APPS'].extend(
+        getattr(elections_module, 'INSTALLED_APPS', [])
+    )
+
     return result
