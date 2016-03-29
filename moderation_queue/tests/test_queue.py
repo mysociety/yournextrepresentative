@@ -2,11 +2,15 @@
 
 from __future__ import unicode_literals
 
+import os
 from os.path import join, realpath, dirname
 import re
+from shutil import rmtree
 
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.utils.six.moves.urllib_parse import urlsplit
@@ -19,7 +23,8 @@ from mock import patch
 
 from popolo.models import Person
 from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, ImageExtra
+from mysite.helpers import mkdir_p
 
 from candidates.tests.factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
@@ -42,6 +47,24 @@ def get_image_type_and_dimensions(image_data):
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
 class PhotoReviewTests(WebTest):
+
+    example_image_filename = join(
+        settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super(PhotoReviewTests, cls).setUpClass()
+        storage = FileSystemStorage()
+        desired_storage_path = join('queued-images', 'pilot.jpg')
+        with open(cls.example_image_filename, 'rb') as f:
+            cls.storage_filename = storage.save(desired_storage_path, f)
+        mkdir_p(TEST_MEDIA_ROOT)
+
+    @classmethod
+    def tearDownClass(cls):
+        rmtree(TEST_MEDIA_ROOT)
+        super(PhotoReviewTests, cls).tearDownClass()
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
@@ -110,7 +133,7 @@ class PhotoReviewTests(WebTest):
             why_allowed='public-domain',
             justification_for_use="It's their Twitter avatar",
             decision='undecided',
-            image='pilot.jpg',
+            image=self.storage_filename,
             person=person_2009.base,
             user=self.test_upload_user
         )
@@ -118,7 +141,7 @@ class PhotoReviewTests(WebTest):
             why_allowed='copyright-assigned',
             justification_for_use="I took this last week",
             decision='approved',
-            image='pilot.jpg',
+            image=self.storage_filename,
             person=person_2007.base,
             user=self.test_upload_user
         )
@@ -126,7 +149,7 @@ class PhotoReviewTests(WebTest):
             why_allowed='other',
             justification_for_use="I found it somewhere",
             decision='rejected',
-            image='pilot.jpg',
+            image=self.storage_filename,
             person=person_2007.base,
             user=self.test_reviewer
         )
@@ -141,7 +164,6 @@ class PhotoReviewTests(WebTest):
         super(PhotoReviewTests, self).tearDown()
 
     def test_photo_upload(self):
-        image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
         queued_images = QueuedImage.objects.all()
         initial_count = queued_images.count()
         upload_form_url = reverse(
@@ -153,7 +175,7 @@ class PhotoReviewTests(WebTest):
             user=self.test_upload_user
         )
         form = form_page_response.forms['person-upload-photo']
-        with open(image_filename, 'rb') as f:
+        with open(self.example_image_filename, 'rb') as f:
             form['image'] = Upload('pilot.jpg', f.read())
         form['why_allowed'] = 'copyright-assigned'
         form['justification_for_use'] = 'I took this photo'
