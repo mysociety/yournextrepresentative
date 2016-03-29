@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk add candidates{% endblock %}
+
+{% block content %}
+
+<form method=POST>
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <table>
+  {% for form in formset %}
+    {% if form.name.value %}
+      <h2>Candidate: {{ form.name.value }}</h2>
+      {% if form.select_person.1 %}
+      <p>An existing person with this name has been found,
+          select them if you want to add them to the "{{ election }}: {{ post_id }}"</p>
+      {% endif %}
+      {% for choice in form.select_person %}
+        <li>
+          <label for="id_{{ choice.name }}">
+            {{ choice.tag }}
+            {% if choice.choice_value != '_new' %}
+            Mark <a href="{% url 'person-view' choice.choice_value %}" target="_blank">
+              {{ choice.choice_label }}</a> as standing in "{{ election }}: {{ post_id }}"
+            {% else %}
+            {{ choice.choice_label }}
+            {% endif %}
+           </label>
+           {{ form.name }}
+           {{ form.source }}
+           {{ form.party }}
+        </li>
+      {% endfor %}
+    {% endif %}
+
+  {% endfor %}
+  {# {{ formset }} #}
+  </table>
+  <button type=submit>Next</button>
+</form>
+
+{% endblock content %}
+

@@ -1,13 +1,14 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 
 post_ignored_slug_re = r'(?!record-winner$|retract-winner$|.*\.csv$).*'
 
 urlpatterns = [
+    url(r'^bulk_adding/', include('bulk_adding.urls')),
     url(
         r'^$',
         views.ConstituencyPostcodeFinderView.as_view(),

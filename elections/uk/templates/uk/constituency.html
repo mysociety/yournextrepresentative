@@ -1,3 +1,8 @@
 {% extends 'candidates/constituency.html' %}
 
-{% block other_resources %}{% endblock %}
+{% block other_resources %}
+{% if user_can_bulk_add %}
+<a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
+{% endif %}
+
+{% endblock %}
