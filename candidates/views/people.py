@@ -267,6 +267,15 @@ class MergePeopleView(GroupRequiredMixin, View):
         primary_person_extra.versions = json.dumps(primary_person_versions)
         primary_person_extra.record_version(change_metadata)
         primary_person_extra.save()
+        # Change the secondary person's images to point at the primary
+        # person instead:
+        existing_primary_image = \
+            primary_person_extra.images.filter(is_primary=True).exists()
+        for image in secondary_person.extra.images.all():
+            image.content_object = primary_person.extra
+            if existing_primary_image:
+                image.is_primary = False
+            image.save()
         # Now we delete the old person:
         secondary_person.delete()
         # Create a redirect from the old person to the new person:

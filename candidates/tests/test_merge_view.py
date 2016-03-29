@@ -1,21 +1,29 @@
 from __future__ import unicode_literals
 
+from os.path import join, dirname, realpath
+from shutil import rmtree
+
 from mock import patch
 
+from django.conf import settings
 from django.db.models import F
+from django.test.utils import override_settings
 
 from django_webtest import WebTest
 
 from popolo.models import Person
 
-from candidates.models import PersonRedirect, MembershipExtra
+from candidates.models import PersonRedirect, MembershipExtra, ImageExtra
+from mysite.helpers import mkdir_p
 from .auth import TestUserMixin
 from . import factories
 
 example_timestamp = '2014-09-29T10:11:59.216159'
 example_version_id = '5aa6418325c1a0bb'
 
+TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
+@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
 class TestMergePeopleView(TestUserMixin, WebTest):
 
     def setUp(self):
@@ -43,6 +51,10 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             base__label='Member of Parliament for Dulwich and West Norwood',
             party_set=gb_parties,
         )
+        example_image_filename = join(
+            settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
+        )
+        mkdir_p(TEST_MEDIA_ROOT)
         # Create Tessa Jowell (the primary person)
         person_extra = factories.PersonExtraFactory.create(
             base__id=2009,
@@ -123,6 +135,20 @@ class TestMergePeopleView(TestUserMixin, WebTest):
                   }
                 ]
             ''',
+        )
+        ImageExtra.objects.create_from_file(
+            example_image_filename,
+            'images/jowell-pilot.jpg',
+            base_kwargs={
+                'content_object': person_extra,
+                'is_primary': True,
+                'source': 'Taken from Wikipedia',
+            },
+            extra_kwargs={
+                'copyright': 'example-license',
+                'uploading_user': self.user,
+                'user_notes': 'A photo of Tessa Jowell',
+            },
         )
         factories.PartyFactory.reset_sequence()
         parties_extra = [
@@ -241,6 +267,20 @@ class TestMergePeopleView(TestUserMixin, WebTest):
                   }
                 ]
             ''')
+        ImageExtra.objects.create_from_file(
+            example_image_filename,
+            'images/collins-pilot.jpg',
+            base_kwargs={
+                'content_object': person_extra,
+                'is_primary': True,
+                'source': 'Taken from Twitter',
+            },
+            extra_kwargs={
+                'copyright': 'profile-photo',
+                'uploading_user': self.user,
+                'user_notes': 'A photo of Shane Collins',
+            },
+        )
         factories.CandidacyExtraFactory.create(
             election=election,
             base__person=person_extra.base,
@@ -253,6 +293,10 @@ class TestMergePeopleView(TestUserMixin, WebTest):
             base__post=post_extra.base,
             base__on_behalf_of=green_party_extra.base
         )
+
+    def tearDown(self):
+        # Delete the images we created in the test media root:
+        rmtree(TEST_MEDIA_ROOT)
 
     def test_merge_disallowed_no_form(self):
         response = self.app.get('/person/2009/update', user=self.user)
@@ -333,3 +377,20 @@ class TestMergePeopleView(TestUserMixin, WebTest):
         other_names = list(merged_person.other_names.all())
         self.assertEqual(len(other_names), 1)
         self.assertEqual(other_names[0].name, 'Shane Collins')
+
+        # Check that the remaining person now has two images, i.e. the
+        # one from the person to delete is added to the existing images:
+        self.assertEqual(
+            2,
+            merged_person.extra.images.count()
+        )
+
+        primary_image = merged_person.extra.images.get(is_primary=True)
+        non_primary_image = merged_person.extra.images.get(is_primary=False)
+
+        self.assertEqual(
+            primary_image.extra.user_notes, 'A photo of Tessa Jowell'
+        )
+        self.assertEqual(
+            non_primary_image.extra.user_notes, 'A photo of Shane Collins'
+        )
