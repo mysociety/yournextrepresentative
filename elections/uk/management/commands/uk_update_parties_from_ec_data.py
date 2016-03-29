@@ -73,8 +73,8 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         self.mime_type_magic = magic.Magic(mime=True)
-        self.gb_parties = PartySet.objects.get(slug='gb')
-        self.ni_parties = PartySet.objects.get(slug='ni')
+        self.gb_parties, _ = PartySet.objects.get_or_create(slug='gb')
+        self.ni_parties, _ = PartySet.objects.get_or_create(slug='ni')
         start = 0
         per_page = 50
         url = 'http://pefonline.electoralcommission.org.uk/api/search/Registrations'
