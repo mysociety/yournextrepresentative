@@ -140,16 +140,20 @@ class BulkAddReviewView(BaseBulkAddView):
 
         membership, _ = Membership.objects.get_or_create(
             post=post,
-            on_behalf_of=party,
             person=person_extra.base,
-            role=election.candidate_membership_role,
+            defaults={
+                'on_behalf_of': party,
+                'role': election.candidate_membership_role,
+            }
         )
 
         MembershipExtra.objects.get_or_create(
             base=membership,
-            party_list_position=None,
-            election=election,
-            elected=False,
+            defaults={
+                'party_list_position': None,
+                'election': election,
+                'elected': False,
+            }
         )
 
         change_metadata = get_change_metadata(
