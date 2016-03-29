@@ -88,8 +88,11 @@
 
     {# Use the post label here, since multiple posts may be used on a page #}
     {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
-    <h3>{% blocktrans with post_label=post_data.label %}Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
+    <h3>{% blocktrans with post_label=post_data.label %}
+      Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
+      in the <a href="{% url 'constituencies' election=election_data.slug %}"> {{ election_data.name }}</a>
     </h3>
+
 
     {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}
 
