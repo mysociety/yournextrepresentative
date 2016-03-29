@@ -152,6 +152,19 @@ class BulkAddReviewView(BaseBulkAddView):
             elected=False,
         )
 
+        change_metadata = get_change_metadata(
+            self.request, data['source']
+        )
+
+        LoggedAction.objects.create(
+            user=self.request.user,
+            person=person_extra.base,
+            action_type='person-update',
+            ip_address=get_client_ip(self.request),
+            popit_person_new_version=change_metadata['version_id'],
+            source=change_metadata['information_source'],
+        )
+
     def form_valid(self, context):
         for person_form in context['formset']:
             data = person_form.cleaned_data
