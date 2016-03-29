@@ -143,9 +143,9 @@
   <dl>
     {% for election_data in elections_to_list %}
       <dt>{% if DATE_TODAY > election_data.election_date %}
-           {% blocktrans with election_name=election_data.name %}Contested in the {{ election_name }}{% endblocktrans %}
+           {% blocktrans with election_name=election_data.name %}Contested the {{ election_name }}{% endblocktrans %}
         {% else %}
-           {% blocktrans with election_name=election_data.name %}Contesting in the {{ election_name }}{% endblocktrans %}
+           {% blocktrans with election_name=election_data.name %}Contesting the {{ election_name }}{% endblocktrans %}
         {% endif %}</dt>
       <dd>{{ person|post_in_election:election_data }}</dd>
     {% empty %}
