@@ -10,6 +10,7 @@ from rest_framework import routers
 import candidates.views as views
 
 from .feeds import RecentChangesFeed
+from .constants import ELECTION_ID_REGEX, POST_ID_REGEX
 
 api_router = routers.DefaultRouter()
 api_router.register(r'persons', views.PersonViewSet)
@@ -233,8 +234,8 @@ patterns_to_format = [
 urlpatterns += [
     url(
         p['pattern'].format(
-            election=r'(?P<election>[^/]+)',
-            post=r'(?P<post_id>[^/]+)',
+            election=ELECTION_ID_REGEX,
+            post=POST_ID_REGEX,
         ),
         p['view'],
         name=p['name'],
