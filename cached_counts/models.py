@@ -23,6 +23,7 @@ SELECT pe.slug, p.label, ee.name, ee.slug, count(m.id) as count
         ON me.base_id = m.id)
       ON m.role = ee.candidate_membership_role AND m.post_id = p.id AND
          me.election_id = ee.id
+    WHERE ee.current = TRUE
   GROUP BY pe.slug, p.label, ee.slug, ee.name
   ORDER BY'''
     if random:
