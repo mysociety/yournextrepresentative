@@ -92,8 +92,9 @@ class TestAreasView(TestUserMixin, WebTest):
   <h3>Known\s+candidates\s+for\s*
   <a\s+href="/election/2015/post/65808/
   member-of-parliament-for-dulwich-and-west-norwood">
-  Member\s+of\s+Parliament\s+for\s+Dulwich\s+and\s+West\s+Norwood</a>\s*
-  </h3>''',
+  Member\s+of\s+Parliament\s+for\s+Dulwich\s+and\s+West\s+Norwood</a>\s+
+  in\sthe\s<a\shref="/election/2015/constituencies">\s2015\sGeneral\s
+  Election</a>\s*</h3>''',
                 response.text
             )
         )
