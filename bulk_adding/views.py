@@ -160,6 +160,9 @@ class BulkAddReviewView(BaseBulkAddView):
             self.request, data['source']
         )
 
+        person_extra.record_version(change_metadata)
+        person_extra.save()
+
         LoggedAction.objects.create(
             user=self.request.user,
             person=person_extra.base,
