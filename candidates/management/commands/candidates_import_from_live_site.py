@@ -305,7 +305,7 @@ class Command(BaseCommand):
                 for election_data in post_data['elections']:
                     election = \
                         emodels.Election.objects.get(slug=election_data['id'])
-                    models.PostExtraElection.get_or_create(
+                    models.PostExtraElection.objects.get_or_create(
                         postextra=pe,
                         election=election
                     )
