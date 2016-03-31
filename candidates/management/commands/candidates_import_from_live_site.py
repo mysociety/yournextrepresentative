@@ -17,6 +17,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management.color import no_style
 from django.db import connection, transaction
+from django.utils.six import string_types
 from django.utils.six.moves.urllib_parse import urlsplit, urlunsplit
 
 import requests
@@ -239,8 +240,19 @@ class Command(BaseCommand):
                 ae.save()
                 # Save any parent:
                 if area_data['parent']:
-                    area_to_parent[area_data['id']] = \
-                        area_data['parent']['id']
+                    # The API currently (v0.9) returns a URL in the
+                    # 'parent' field, although the existing code was
+                    # written to expect a dictionary containing the
+                    # ID.  Support either representation in this script:
+                    if isinstance(area_data['parent'], string_types):
+                        m = re.search(r'/areas/(\d+)', area_data['parent'])
+                        if not m:
+                            msg = "Couldn't extra area ID from parent URL"
+                            raise Exception(msg)
+                        area_to_parent[area_data['id']] = int(m.group(1))
+                    else:
+                        area_to_parent[area_data['id']] = \
+                            area_data['parent']['id']
         # Set any parent areas:
         for child_id, parent_id in area_to_parent.items():
             child = pmodels.Area.objects.get(id=child_id)
