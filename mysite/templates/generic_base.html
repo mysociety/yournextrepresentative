@@ -88,17 +88,40 @@
 
     <div class="header__nav">
       <div class="container">
-        <ul class="nav-links">
-          {% block menu_bar_links %}
-            <li class="nav-links__item"><a href="{% url 'help-about' %}">{% trans "About" %}</a></li>
-            <li class="nav-links__item"><a href="{% url 'posts' %}">{% trans "Posts" %}</a></li>
-            <li class="nav-links__item"><a href="{% url 'reports_home' %}">{% trans "Numbers" %}</a></li>
-          {% endblock %}
-        </ul>
-        <form id="person_search_header" class="header__nav__search" action="{% url 'person-search' %}">
-          <input type="text" placeholder="{% trans 'Find a candidate…' %}" name="q">
-          <button type="submit">{% trans 'Search' %}</button>
-        </form>
+        <div class="row">
+          <div class="columns large-6">
+            <ul class="nav-links">
+              {% block menu_bar_links %}
+                <li class="nav-links__item"><a href="{% url 'help-about' %}">{% trans "About" %}</a></li>
+                <li class="nav-links__item"><a href="{% url 'posts' %}">{% trans "Posts" %}</a></li>
+                <li class="nav-links__item"><a href="{% url 'reports_home' %}">{% trans "Numbers" %}</a></li>
+              {% endblock %}
+            </ul>
+          </div>
+
+
+        {% if not hide_search_form %}
+          <div class="column large-6">
+            <form id="person_search_header" class="header__nav__search" action="{% url 'person-search' %}">
+              <div class="row collapse postfix-radius">
+                <div class="columns large-8">
+                  <input type="text" name="q" placeholder="{% trans 'Add or update a candidate' %}">
+                </div>
+                <div class="columns large-4">
+                  <button type="submit" class="postfix">{% trans 'Search' %}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+
+
+
+        </div>
+
+
+
+
       </div>
     </div>
 

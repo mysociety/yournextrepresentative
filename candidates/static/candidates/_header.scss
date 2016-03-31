@@ -50,10 +50,6 @@
     float: left;
     font-weight: bold;
   }
-
-  .header__nav__search {
-    float: right;
-  }
 }
 
 
@@ -79,12 +75,8 @@
 
 
 .header__nav__search {
-  position: relative;
-  margin-top: -0.5em; // line up with the .nav-links to the left
-
   input {
     margin: 0;
-    width: 15em;
     padding-left: 40px; // make room for the icon
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-bottom-color: rgba(255, 255, 255, 0.4);
@@ -114,11 +106,6 @@
         color: rgba(255, 255, 255, 0.7);
       }
     }
-  }
-
-  button {
-    position: absolute;
-    top: -99em;
   }
 }
 
