@@ -53,8 +53,12 @@ def get_extra_csv_values(person, election):
         party_ec_id = party.identifiers.get(scheme='electoral-commission').identifier
     except Identifier.DoesNotExist:
         party_ec_id = ''
+    try:
+        gss_code = post.area.other_identifiers.get(scheme='gss')
+    except Identifier.DoesNotExist:
+        gss_code = None
     return {
-        'gss_code': post.area.other_identifiers.get(scheme='gss'),
+        'gss_code': gss_code,
         'parlparse_id': parlparse_id,
         'theyworkforyou_url': theyworkforyou_url,
         'party_ec_id': party_ec_id
