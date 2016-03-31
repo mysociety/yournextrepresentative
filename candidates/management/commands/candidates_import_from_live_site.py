@@ -164,7 +164,7 @@ class Command(BaseCommand):
                 models.ExtraField.objects.create(**extra_field)
         for simple_field in self.get_api_results('simple_fields'):
             with show_data_on_error('simple_field', simple_field):
-                del simple_field['url']
+                simple_field.pop('url', None)
                 models.SimplePopoloField.objects.create(**simple_field)
         for area_type_data in self.get_api_results('area_types'):
             with show_data_on_error('area_type_data', area_type_data):
