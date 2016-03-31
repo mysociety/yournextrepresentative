@@ -103,7 +103,7 @@ class Command(BaseCommand):
     def get_api_results(self, endpoint):
         page = 1
         while True:
-            url = '{base_url}{endpoint}/?format=json&page={page}'.format(
+            url = '{base_url}{endpoint}/?format=json&page={page}&page_size=200'.format(
                 base_url=self.base_api_url, endpoint=endpoint, page=page
             )
             self.stdout.write("Fetching " + url)
