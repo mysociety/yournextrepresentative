@@ -375,6 +375,36 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
 
 
+class NewPersonSelectElectionView(LoginRequiredMixin, TemplateView):
+    """
+    For when we know new person's name, but not the election they are standing
+    in.  This is normally because we've not come via a post page to add a new
+    person (e.g., we've come from the search results page).
+    """
+
+    template_name = 'candidates/person-create-select-election.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(NewPersonSelectElectionView,
+                        self).get_context_data(**kwargs)
+        context['name'] = self.request.GET.get('name')
+        elections = []
+        local_elections = []
+        for election in Election.objects.filter(current=True).order_by('slug'):
+            election_type = election.slug.split('.')[0]
+            if election_type == "local":
+                election.type_name = "Local Elections"
+                local_elections.append(election)
+            else:
+                election.type_name = election.name
+                elections.append(election)
+        elections += local_elections
+        context['elections'] = elections
+
+        return context
+
+
+
 class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
     template_name = 'candidates/person-create.html'
     form_class = NewPersonForm
@@ -387,6 +417,7 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
     def get_initial(self):
         result = super(NewPersonView, self).get_initial()
         result['standing_' + self.election] = 'standing'
+        result['name'] = self.request.GET.get('name')
         return result
 
     def get_context_data(self, **kwargs):

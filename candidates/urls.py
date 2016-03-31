@@ -105,6 +105,11 @@ patterns_to_format = [
         'name': 'person-create'
     },
     {
+        'pattern': r'^person/create/select_election$',
+        'view': views.NewPersonSelectElectionView.as_view(),
+        'name': 'person-create-select-election'
+    },
+    {
         'pattern': r'^person/(?P<person_id>\d+)/update$',
         'view': views.UpdatePersonView.as_view(),
         'name': 'person-update'

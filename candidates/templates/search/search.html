@@ -48,4 +48,18 @@
             </div>
         {% endif %}
     {% endif %}
+
+    <h3>{% trans 'Add a new candidate' %}</h3>
+
+    {% url 'person-create-select-election' as select_election_view %}
+    {% blocktrans  with name=form.q.value %}
+    <p>If we don't have this person in our database already, you can add them yourself.</p>
+    <p>Please check that they aren't in the results below first – you can update
+      existing candidates if they are standing in another election!</p>
+    <a href="{{ select_election_view }}?name={{ name }}" class="button">
+      Add "{{ name }}" as a new candidate</a>
+    {% endblocktrans %}
+
+
+
 {% endblock %}
