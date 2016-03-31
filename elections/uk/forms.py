@@ -13,9 +13,10 @@ from compat import text_type
 from .mapit import get_areas_from_postcode
 
 class PostcodeForm(forms.Form):
-    postcode = forms.CharField(
-        label='Start with your postcode',
-        max_length=20
+    q = forms.CharField(
+        label='Enter a candidate name to start',
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': 'Enter a name'})
     )
 
     def clean_postcode(self):

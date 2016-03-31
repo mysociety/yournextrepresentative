@@ -42,11 +42,17 @@
 
 <div class="finder__forms">
   <div class="finder__forms__container">
-    <form id="form-postcode" action="{% url 'lookup-postcode' %}" method="post" {% if show_name_form %}style="display: none"{% endif %}>
+    <form id="form-postcode" action="{% url 'person-search' %}" method="get" {% if show_name_form %}style="display: none"{% endif %}>
       {{ postcode_form.as_p }}
       <input type="submit" class="button" value="Help get data!" />
-      <div class="js-geolocation-link" data-link-text="{% trans 'Use my current location' %}" data-loading-text="{% trans 'Getting location…' %}"></div>
+      {# <div class="js-geolocation-link" data-link-text="{% trans 'Use my current location' %}" data-loading-text="{% trans 'Getting location…' %}"></div> #}
       <a class="select-constituency" href="{% url 'posts' %}">Or select a location</a>
+      <p>Don't know the name of any candidates?  Not a problem!
+      <a href="https://docs.google.com/document/d/1lqC15-FUZl_mNzpEEoHG0mX8wyQ5GHZNUj61LE2KmoA/edit#">
+        use our guide on how to find candidates, or try to add more information about <a href="{% url 'reports_home'%}">
+          our existing candidate data
+        </a>
+      </a></p>
     </form>
   </div>
 
