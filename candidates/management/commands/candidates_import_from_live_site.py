@@ -426,16 +426,16 @@ class Command(BaseCommand):
                 models.ImageExtra.objects.update_or_create_from_file(
                     image_filename,
                     join('images', suggested_filename),
-                    md5sum=image_data['md5sum'],
+                    md5sum=image_data['md5sum'] or '',
                     defaults = {
                         'uploading_user': self.get_user_from_username(
                             image_data['uploading_user']
                         ),
-                        'copyright': image_data['copyright'],
-                        'notes': image_data['notes'],
-                        'user_copyright': image_data['user_copyright'],
-                        'user_notes': image_data['user_notes'],
-                        'base__source': image_data['source'],
+                        'copyright': image_data['copyright'] or '',
+                        'notes': image_data['notes'] or '',
+                        'user_copyright': image_data['user_copyright'] or '',
+                        'user_notes': image_data['user_notes'] or '',
+                        'base__source': image_data['source'] or '',
                         'base__is_primary': image_data['is_primary'],
                         'base__object_id': django_object.id,
                         'base__content_type_id':
