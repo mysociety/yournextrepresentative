@@ -63,7 +63,13 @@ class AreaTypeSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'url',  'name', 'source')
 
 
-class AreaSerializer(serializers.HyperlinkedModelSerializer):
+class MinimalAreaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = popolo_models.Area
+        fields = ('id', 'url', 'name')
+
+
+class AreaSerializer(MinimalAreaSerializer):
     class Meta:
         model = popolo_models.Area
         fields = (
@@ -78,6 +84,7 @@ class AreaSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     other_identifiers = IdentifierSerializer(many=True, read_only=True)
+    parent = MinimalAreaSerializer()
     type = AreaTypeSerializer(source='extra.type')
 
 
