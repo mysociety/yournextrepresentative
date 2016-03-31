@@ -17,6 +17,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management.color import no_style
 from django.db import connection, transaction
+from django.utils.six import string_types
 from django.utils.six.moves.urllib_parse import urlsplit, urlunsplit
 
 import requests
@@ -103,7 +104,7 @@ class Command(BaseCommand):
     def get_api_results(self, endpoint):
         page = 1
         while True:
-            url = '{base_url}{endpoint}/?format=json&page={page}'.format(
+            url = '{base_url}{endpoint}/?format=json&page={page}&page_size=200'.format(
                 base_url=self.base_api_url, endpoint=endpoint, page=page
             )
             self.stdout.write("Fetching " + url)
@@ -164,7 +165,7 @@ class Command(BaseCommand):
                 models.ExtraField.objects.create(**extra_field)
         for simple_field in self.get_api_results('simple_fields'):
             with show_data_on_error('simple_field', simple_field):
-                del simple_field['url']
+                simple_field.pop('url', None)
                 models.SimplePopoloField.objects.create(**simple_field)
         for area_type_data in self.get_api_results('area_types'):
             with show_data_on_error('area_type_data', area_type_data):
@@ -239,8 +240,19 @@ class Command(BaseCommand):
                 ae.save()
                 # Save any parent:
                 if area_data['parent']:
-                    area_to_parent[area_data['id']] = \
-                        area_data['parent']['id']
+                    # The API currently (v0.9) returns a URL in the
+                    # 'parent' field, although the existing code was
+                    # written to expect a dictionary containing the
+                    # ID.  Support either representation in this script:
+                    if isinstance(area_data['parent'], string_types):
+                        m = re.search(r'/areas/(\d+)', area_data['parent'])
+                        if not m:
+                            msg = "Couldn't extra area ID from parent URL"
+                            raise Exception(msg)
+                        area_to_parent[area_data['id']] = int(m.group(1))
+                    else:
+                        area_to_parent[area_data['id']] = \
+                            area_data['parent']['id']
         # Set any parent areas:
         for child_id, parent_id in area_to_parent.items():
             child = pmodels.Area.objects.get(id=child_id)
@@ -305,7 +317,7 @@ class Command(BaseCommand):
                 for election_data in post_data['elections']:
                     election = \
                         emodels.Election.objects.get(slug=election_data['id'])
-                    models.PostExtraElection.get_or_create(
+                    models.PostExtraElection.objects.get_or_create(
                         postextra=pe,
                         election=election
                     )
@@ -414,16 +426,16 @@ class Command(BaseCommand):
                 models.ImageExtra.objects.update_or_create_from_file(
                     image_filename,
                     join('images', suggested_filename),
-                    md5sum=image_data['md5sum'],
+                    md5sum=image_data['md5sum'] or '',
                     defaults = {
                         'uploading_user': self.get_user_from_username(
                             image_data['uploading_user']
                         ),
-                        'copyright': image_data['copyright'],
-                        'notes': image_data['notes'],
-                        'user_copyright': image_data['user_copyright'],
-                        'user_notes': image_data['user_notes'],
-                        'base__source': image_data['source'],
+                        'copyright': image_data['copyright'] or '',
+                        'notes': image_data['notes'] or '',
+                        'user_copyright': image_data['user_copyright'] or '',
+                        'user_notes': image_data['user_notes'] or '',
+                        'base__source': image_data['source'] or '',
                         'base__is_primary': image_data['is_primary'],
                         'base__object_id': django_object.id,
                         'base__content_type_id':
