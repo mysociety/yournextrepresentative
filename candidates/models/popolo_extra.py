@@ -8,6 +8,7 @@ import re
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -441,12 +442,14 @@ class PersonExtra(HasImageMixin, models.Model):
                 proxy_image_url_template = settings.IMAGE_PROXY_URL + \
                     encoded_url + '/{height}/{width}.{extension}'
 
-            if primary_image.extra:
+            try:
                 image_copyright = primary_image.extra.copyright
                 user = primary_image.extra.uploading_user
                 if user is not None:
                     image_uploading_user = primary_image.extra.uploading_user.username
                 image_uploading_user_notes = primary_image.extra.user_notes
+            except ObjectDoesNotExist:
+                pass
         else:
             primary_image_url = ''
 
