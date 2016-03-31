@@ -208,6 +208,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         .order_by('base__id')
     lookup_field = 'slug'
     serializer_class = serializers.OrganizationExtraSerializer
+    pagination_class = ResultsSetPagination
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -225,6 +226,7 @@ class PostViewSet(viewsets.ModelViewSet):
         .order_by('base__id')
     lookup_field = 'slug'
     serializer_class = serializers.PostExtraSerializer
+    pagination_class = ResultsSetPagination
 
 
 class AreaViewSet(viewsets.ModelViewSet):
