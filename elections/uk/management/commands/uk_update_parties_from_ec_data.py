@@ -44,7 +44,7 @@ IMAGES_TO_USE = {
     # Another Green Party
     'party:305': 'Emblem 3',
     # Plaid Cymru
-    'party:77': 'Emblem 3',
+    'party:77': 'emblem 3',
     # Ulster Unionist Party
     'party:83': 'Emblem 2',
     # Trade Unionist and Socialist Coalition
