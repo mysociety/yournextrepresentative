@@ -1,4 +1,9 @@
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
 from haystack.generic_views import SearchView
+
+from elections.uk.lib import is_valid_postcode
 
 
 class PersonSearch(SearchView):

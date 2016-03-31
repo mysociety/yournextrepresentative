@@ -25,8 +25,8 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     def dispatch(self, *args, **kwargs):
         return super(ConstituencyPostcodeFinderView, self).dispatch(*args, **kwargs)
 
-    def form_valid(self, form):
-        types_and_areas = get_areas_from_postcode(form.cleaned_data['postcode'])
+    def process_postcode(self, postcode):
+        types_and_areas = get_areas_from_postcode(postcode)
         if settings.AREAS_TO_ALWAYS_RETURN:
             types_and_areas += settings.AREAS_TO_ALWAYS_RETURN
         types_and_areas_joined = ','.join(sorted(
@@ -37,6 +37,15 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
                 'type_and_area_ids': types_and_areas_joined
             })
         )
+
+    def get(self, request, *args, **kwargs):
+        if 'postcode' in request.GET:
+            return self.process_postcode(request.GET['postcode'])
+        else:
+            return super(ConstituencyPostcodeFinderView, self).get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        return self.process_postcode(form.cleaned_data['postcode'])
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
