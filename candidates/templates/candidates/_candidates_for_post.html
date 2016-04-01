@@ -100,12 +100,14 @@
           {% if party_lists_in_use %}
             <h4 class="party-list-header">{{ party.name }}</h4>
             <p class="party-list-description">
-              {% if party.total_count %}
+              {% if party.truncated %}
                 {% trans "Showing the top candidates." %} <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See all {{ count }} members on the party list{% endblocktrans %} &raquo;</a>
+              {% else %}
+                <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See just this party list{% endblocktrans %} &raquo;</a>
               {% endif %}
           {% endif %}
 
-          {% for c, candidate_elected in people %}
+          {% for position_in_list, c, candidate_elected in people %}
             {% if forloop.first %}
               <ul class="candidate-list">
             {% endif %}
@@ -141,7 +143,7 @@
               </ul>
             {% endif %}
 
-          {% endfor %} {# end of 'for c, candidate_elected in people' #}
+          {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
 
         </div>
 
@@ -203,7 +205,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c, candidate_elected in people %}
+                {% for position_in_list, c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -221,7 +223,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c, candidate_elected in people' #}
+                {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
               </ul>
 
             </div>
@@ -249,7 +251,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c, candidate_elected in people %}
+                {% for position_in_list, c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -265,7 +267,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c, candidate_elected in people' #}
+                {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
               </ul>
 
             </div>
