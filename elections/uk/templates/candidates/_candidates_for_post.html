@@ -108,7 +108,7 @@
               {% endif %}
           {% endif %}
 
-          {% for c, candidate_elected in people %}
+          {% for position_in_list, c, candidate_elected in people %}
             {% if forloop.first %}
               <ul class="candidate-list">
             {% endif %}
@@ -144,7 +144,7 @@
               </ul>
             {% endif %}
 
-          {% endfor %} {# end of 'for c, candidate_elected in people' #}
+          {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
 
         </div>
 
@@ -206,7 +206,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c, candidate_elected in people %}
+                {% for position_in_list, c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -224,7 +224,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c, candidate_elected in people' #}
+                {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
               </ul>
 
             </div>
@@ -252,7 +252,7 @@
               {% endif %}
 
               <ul class="candidate-list">
-                {% for c, candidate_elected in people %}
+                {% for position_in_list, c, candidate_elected in people %}
 
                   <li class="candidates-list__person">
                     {% include 'candidates/_person_in_list.html' %}
@@ -268,7 +268,7 @@
                     {% endif %}
                     {% endif %}
                   </li>
-                {% endfor %} {# end of 'for c, candidate_elected in people' #}
+                {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
               </ul>
 
             </div>
