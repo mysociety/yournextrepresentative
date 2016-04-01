@@ -193,6 +193,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     party_id_to_name = {}
     party_id_to_people = defaultdict(list)
     party_truncated = dict()
+    party_total = dict()
     for candidacy in candidacies:
         party = candidacy.on_behalf_of
         party_id_to_name[party.extra.slug] = party.name
@@ -201,16 +202,20 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
             (position, candidacy.person, candidacy.extra.elected)
         )
     for party_id, people_list in party_id_to_people.items():
+        truncated = False
+        total_count = len(people_list)
         if election_data.party_lists_in_use:
             # sort by party list position
             people_list.sort(key=lambda p: ( p[0] is None, p[0] ))
             # only return the configured maximum number of people
             # for a party list
             if max_people and len(people_list) > max_people:
-                party_truncated[party_id] = len(people_list)
+                truncated = True
                 del people_list[max_people:]
         else:
             people_list.sort(key=lambda p: p[1].family_name)
+        party_truncated[party_id] = truncated
+        party_total[party_id] = total_count
     try:
         result = [
             (
@@ -218,7 +223,8 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
                     'id': k,
                     'name': party_id_to_name[k],
                     'max_count': max_people,
-                    'total_count': party_truncated.get(k)
+                    'truncated': party_truncated[k],
+                    'total_count': party_total[k],
                 },
                 # throw away the party list position data we
                 # were only using for sorting
