@@ -218,9 +218,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
                     'truncated': party_truncated[k],
                     'total_count': party_total[k],
                 },
-                # throw away the party list position data we
-                # were only using for sorting
-                [(p[1], p[2]) for p in v]
+                v
             )
             for k, v in party_id_to_people.items()
         ]
@@ -229,7 +227,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     if party_list:
         result.sort(key=lambda t: t[0]['name'])
     else:
-        result.sort(key=lambda t: t[1][0][0].name.split()[-1])
+        result.sort(key=lambda t: t[1][0][1].name.split()[-1])
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result
