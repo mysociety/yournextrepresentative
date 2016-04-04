@@ -151,7 +151,7 @@
           {% else %}
             {% trans "What’s your <strong>source of information</strong> for this candidate?" %}
           {% endif %}
-          {{ settings.SOURCE_HINTS }}
+          {% trans settings.SOURCE_HINTS %}
         </label>
         {{ form.source }}
       </p>
