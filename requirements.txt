@@ -78,3 +78,4 @@ waitress==0.8.9
 WebOb==1.4
 WebTest==2.0.15
 yanc==0.2.4
+git+https://github.com/dessibelle/sorl-thumbnail-serializer-field.git#egg=sorl-thumbnail-serializer-field
