@@ -45,7 +45,7 @@ _('Value to put in the info_type_key e.g. twitter')
 _('Name of the field in the array that stores the value, e.g url for links, value for contact_type, identifier for identifiers')
 
 _('Twitter username (e.g. democlub)')
-_('Twitter username (e.g. democlub)')
+_('Facebook profile URL')
 _('Facebook page (e.g. for their campaign)')
 _('Homepage URL')
 _('Wikipedia URL')
