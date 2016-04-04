@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-04 13:09+0100\n"
-"PO-Revision-Date: 2016-04-04 12:11+0000\n"
+"POT-Creation-Date: 2016-04-04 14:01+0100\n"
+"PO-Revision-Date: 2016-04-04 13:01+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/mysociety/yournextmp/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -2965,8 +2965,12 @@ msgid ""
 "value for contact_type, identifier for identifiers"
 msgstr ""
 
-#: mysite/extra_translations.py:47 mysite/extra_translations.py:48
+#: mysite/extra_translations.py:47
 msgid "Twitter username (e.g. democlub)"
+msgstr ""
+
+#: mysite/extra_translations.py:48
+msgid "Facebook profile URL"
 msgstr ""
 
 #: mysite/extra_translations.py:49
