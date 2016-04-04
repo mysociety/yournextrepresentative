@@ -4,6 +4,7 @@ import json
 
 from rest_framework import serializers
 from rest_framework.reverse import reverse
+from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
 from candidates import models as candidates_models
 from images.models import Image
@@ -324,6 +325,7 @@ class PersonSerializer(MinimalPersonSerializer):
             'memberships',
             'images',
             'extra_fields',
+            'thumbnail',
         )
 
     contact_details = ContactDetailSerializer(many=True, read_only=True)
@@ -338,6 +340,13 @@ class PersonSerializer(MinimalPersonSerializer):
 
     extra_fields = PersonExtraFieldSerializer(
         many=True, read_only=True, source='extra_field_values')
+
+    thumbnail = HyperlinkedSorlImageField(
+            '300x300',
+            options={"crop": "center"},
+            source='extra.primary_image',
+            read_only=True
+        )
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
     class Meta:
