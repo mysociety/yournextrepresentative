@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-04 11:48+0100\n"
-"PO-Revision-Date: 2016-04-04 10:48+0000\n"
+"POT-Creation-Date: 2016-04-04 13:09+0100\n"
+"PO-Revision-Date: 2016-04-04 12:11+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Welsh (United Kingdom) (http://www.transifex.com/mysociety/yournextmp/language/cy_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -365,60 +365,7 @@ msgstr "Ie / Oes / Ydy "
 msgid "No"
 msgstr "Na"
 
-#: candidates/forms.py:114
-msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
-msgstr "Teitl / swyddogaeth (e.e. Dr, Syr, ac ati.)"
-
-#: candidates/forms.py:119
-msgid "Full name"
-msgstr "Enw llawn"
-
-#: candidates/forms.py:123
-msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
-msgstr "Llythyrau ôl-enwol (e.e. CBE, DSO, ac ati.)"
-
-#: candidates/forms.py:128
-#: candidates/templates/candidates/person-view.html:122
-msgid "Email"
-msgstr "Ebost"
-
-#: candidates/forms.py:133
-msgid "Gender (e.g. “male”, “female”)"
-msgstr "Rhyw (e.e. \"gwryw\", \"benyw\")"
-
-#: candidates/forms.py:138
-msgid "Date of birth (a four digit year or a full date)"
-msgstr ""
-
-#: candidates/forms.py:142
-msgid "Wikipedia URL"
-msgstr "Gwegyfeiriad Wicipedia"
-
-#: candidates/forms.py:147
-msgid "Homepage URL"
-msgstr "Gwegyfeiriad yr Hafan"
-
-#: candidates/forms.py:152
-msgid "Twitter username (e.g. “democlub”)"
-msgstr "Enw defnyddiwr (e.e. “democlub”)"
-
-#: candidates/forms.py:157
-msgid "Facebook profile URL"
-msgstr "Gwegyfeiriad proffil Facebook"
-
-#: candidates/forms.py:162
-msgid "Facebook page (e.g. for their campaign)"
-msgstr "Tudalen Facebook (e.e. ar gyfer eu hymgyrch)"
-
-#: candidates/forms.py:167
-msgid "LinkedIn URL"
-msgstr "Gwegyfeiriad LinkedIn"
-
-#: candidates/forms.py:172
-msgid "The party’s candidate page for this person"
-msgstr "Tudalen ymgeisydd y blaid ar gyfer person hwn"
-
-#: candidates/forms.py:185
+#: candidates/forms.py:151
 msgid ""
 "That date of birth could not be understood. Try using DD/MM/YYYY instead"
 msgstr ""
@@ -1749,7 +1696,7 @@ msgid ""
 msgstr "Nid oes gennym gyfeiriad ebost ar gyfer %(name)s, <a href=\"%(url)s\"> helpwch ni drwy ychwanegu un</a>!"
 
 #: candidates/templates/candidates/person-view.html:115
-#: mysite/extra_translations.py:16
+#: mysite/extra_translations.py:18
 msgid "Name"
 msgstr "Enw"
 
@@ -1762,7 +1709,7 @@ msgid "additional name"
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:127
-#: mysite/extra_translations.py:24
+#: mysite/extra_translations.py:26 mysite/extra_translations.py:37
 msgid "Email"
 msgstr "Ebost"
 
@@ -1771,12 +1718,12 @@ msgid "Party"
 msgstr "Plaid"
 
 #: candidates/templates/candidates/person-view.html:133
-#: mysite/extra_translations.py:28
+#: mysite/extra_translations.py:30
 msgid "Summary"
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:137
-#: mysite/extra_translations.py:29
+#: mysite/extra_translations.py:31
 msgid "Biography"
 msgstr ""
 
@@ -1799,7 +1746,7 @@ msgid "No candidacies known at the moment."
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:177
-#: mysite/extra_translations.py:25
+#: mysite/extra_translations.py:27
 msgid "Gender"
 msgstr "Rhyw"
 
@@ -1826,7 +1773,7 @@ msgid ""
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:210
-#: mysite/extra_translations.py:30
+#: mysite/extra_translations.py:32
 msgid "National Identity"
 msgstr ""
 
@@ -2934,52 +2881,118 @@ msgstr "Anwybyddwyd llun a lanlwythwyd gan {uploading_user} (Fel arfer, i osgoi 
 msgid "You indicated a photo upload for {0} should be ignored"
 msgstr "Gwnaethoch chi argymell fod llun {0} yn cael ei anwybyddu"
 
-#: mysite/extra_translations.py:10
+#: mysite/extra_translations.py:12
 msgid "Profession"
 msgstr ""
 
-#: mysite/extra_translations.py:11
+#: mysite/extra_translations.py:13
 msgid "Important Roles"
 msgstr ""
 
-#: mysite/extra_translations.py:12
+#: mysite/extra_translations.py:14
 msgid "Standing for re-election"
 msgstr ""
 
-#: mysite/extra_translations.py:17
+#: mysite/extra_translations.py:19
 msgid "Family Name"
 msgstr ""
 
-#: mysite/extra_translations.py:18
+#: mysite/extra_translations.py:20
 msgid "Given Name"
 msgstr ""
 
-#: mysite/extra_translations.py:19
+#: mysite/extra_translations.py:21
 msgid "Additional Name"
 msgstr ""
 
-#: mysite/extra_translations.py:20
+#: mysite/extra_translations.py:22
 msgid "Honorific Prefix"
 msgstr ""
 
-#: mysite/extra_translations.py:21
+#: mysite/extra_translations.py:23
 msgid "Honorific Suffix"
 msgstr ""
 
-#: mysite/extra_translations.py:22
+#: mysite/extra_translations.py:24
 msgid "Patronymic Name"
 msgstr ""
 
-#: mysite/extra_translations.py:23
+#: mysite/extra_translations.py:25
 msgid "Sort Name"
 msgstr ""
 
-#: mysite/extra_translations.py:26
+#: mysite/extra_translations.py:28
 msgid "Birth Date"
 msgstr ""
 
-#: mysite/extra_translations.py:27
+#: mysite/extra_translations.py:29
 msgid "Death Date"
+msgstr ""
+
+#: mysite/extra_translations.py:34
+msgid "Title / pre-nominal honorific (e.g. Dr, Sir, etc.)"
+msgstr "Teitl / swyddogaeth (e.e. Dr, Syr, ac ati.)"
+
+#: mysite/extra_translations.py:35
+msgid "Full name"
+msgstr "Enw llawn"
+
+#: mysite/extra_translations.py:36
+msgid "Post-nominal letters (e.g. CBE, DSO, etc.)"
+msgstr "Llythyrau ôl-enwol (e.e. CBE, DSO, ac ati.)"
+
+#: mysite/extra_translations.py:38
+msgid "Gender (e.g. “male”, “female”)"
+msgstr "Rhyw (e.e. \"gwryw\", \"benyw\")"
+
+#: mysite/extra_translations.py:39
+msgid "Date of birth (a four digit year or a full date)"
+msgstr ""
+
+#: mysite/extra_translations.py:41
+msgid "User facing description of the information"
+msgstr ""
+
+#: mysite/extra_translations.py:42
+msgid "Name of the Popolo related type"
+msgstr ""
+
+#: mysite/extra_translations.py:43
+msgid "Type of HTML field the user will see"
+msgstr ""
+
+#: mysite/extra_translations.py:44
+msgid "Value to put in the info_type_key e.g. twitter"
+msgstr ""
+
+#: mysite/extra_translations.py:45
+msgid ""
+"Name of the field in the array that stores the value, e.g url for links, "
+"value for contact_type, identifier for identifiers"
+msgstr ""
+
+#: mysite/extra_translations.py:47 mysite/extra_translations.py:48
+msgid "Twitter username (e.g. democlub)"
+msgstr ""
+
+#: mysite/extra_translations.py:49
+msgid "Facebook page (e.g. for their campaign)"
+msgstr "Tudalen Facebook (e.e. ar gyfer eu hymgyrch)"
+
+#: mysite/extra_translations.py:50
+msgid "Homepage URL"
+msgstr "Gwegyfeiriad yr Hafan"
+
+#: mysite/extra_translations.py:51
+msgid "Wikipedia URL"
+msgstr "Gwegyfeiriad Wicipedia"
+
+#: mysite/extra_translations.py:52
+msgid "LinkedIn URL"
+msgstr "Gwegyfeiriad LinkedIn"
+
+#: mysite/extra_translations.py:53
+msgid "The party's candidate page for this person"
 msgstr ""
 
 #: mysite/settings/conf.py:385
@@ -3113,8 +3126,8 @@ msgid "The page that links to this document"
 msgstr "Y dudalen sydd gyda dolen at y ddogfen yma"
 
 #: official_documents/templates/official_documents/_post.html:4
-msgid "The following official documents are associate with this post:"
-msgstr "Cysylltir y dogfennau swyddogol canlynol gyda'r etholaeth:"
+msgid "The following official documents are associated with this post:"
+msgstr ""
 
 #: official_documents/templates/official_documents/_post.html:24
 #, python-format
