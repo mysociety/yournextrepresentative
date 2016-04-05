@@ -382,8 +382,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'TEST_RUNNER': 'django_nose.NoseTestSuiteRunner',
 
         'SOURCE_HINTS': _(
-            "Please don't quote third-party candidate sites \u2014 "
-            "we prefer URLs of news stories or official candidate pages."
+            u"Please don't quote third-party candidate sites \u2014 "
+            u"we prefer URLs of news stories or official candidate pages."
         ),
 
         # By default, cache successful results from MapIt for a day
