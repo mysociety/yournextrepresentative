@@ -96,6 +96,10 @@
 
     {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}
 
+      {% if parties_and_people and candidate_list_edits_allowed %}
+        <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
+      {% endif %}
+
       {% for party, people in parties_and_people %}
 
         <div class="party-group {% if party_lists_in_use %}party-list{% else %}no-party-list{% endif %}">
