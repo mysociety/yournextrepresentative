@@ -168,6 +168,40 @@ def parse_approximate_date(s):
     raise ValueError("Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 
+class PersonExtraQuerySet(models.QuerySet):
+
+    def missing(self, field):
+        people_in_current_elections = self.filter(
+            base__memberships__extra__election__current=True
+        )
+        # The field can be one of several types:
+        simple_field = SimplePopoloField.objects.filter(name=field).first()
+        if simple_field:
+            return people_in_current_elections.filter(**{'base__' + field: ''})
+        complex_field = ComplexPopoloField.objects.filter(name=field).first()
+        if complex_field:
+            kwargs = {
+                'base__{relation}__{key}'.format(
+                    relation=complex_field.popolo_array,
+                    key=complex_field.info_type_key
+                ):
+                complex_field.info_type
+            }
+            return people_in_current_elections.exclude(**kwargs)
+        extra_field = ExtraField.objects.filter(key=field).first()
+        if extra_field:
+            # This case is a bit more complicated because the
+            # PersonExtraFieldValue class allows a blank value.
+            pefv_completed = PersonExtraFieldValue.objects.filter(
+                field=extra_field
+            ).exclude(value='')
+            return people_in_current_elections.exclude(
+                base__id__in=[pefv.person_id for pefv in pefv_completed]
+            )
+        # If we get to this point, it's a non-existent field on the person:
+        raise ValueError("Unknown field '{0}'".format(field))
+
+
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
@@ -177,6 +211,8 @@ class PersonExtra(HasImageMixin, models.Model):
     versions = models.TextField(blank=True)
 
     images = GenericRelation(Image)
+
+    objects = PersonExtraQuerySet.as_manager()
 
     def __getattr__(self, name):
         # TODO: this does not seem optimal
