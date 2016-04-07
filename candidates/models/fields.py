@@ -41,6 +41,9 @@ class SimplePopoloField(models.Model):
     )
     order = models.IntegerField(blank=True)
 
+    def __unicode__(self):
+        return self.name
+
 
 class ComplexPopoloField(models.Model):
     """
@@ -105,6 +108,9 @@ class ComplexPopoloField(models.Model):
     )
 
     order = models.IntegerField(blank=True, default=0)
+
+    def __unicode__(self):
+        return self.name
 
 
 @python_2_unicode_compatible
