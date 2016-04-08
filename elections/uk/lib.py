@@ -5,9 +5,8 @@ import re
 from popolo.models import Identifier
 
 from candidates.models import MembershipExtra
-from candidates.mapit import get_areas_from_coords
 
-from .mapit import get_areas_from_postcode
+from .mapit import get_areas_from_postcode, get_areas_from_coords
 
 
 def shorten_post_label(post_label):

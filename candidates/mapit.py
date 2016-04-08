@@ -42,7 +42,7 @@ def get_known_area_types(mapit_result):
         known_area_types = set(AreaType.objects.values_list('name', flat=True))
         return [
             (a['type'], str(a['id']))
-            for a in mapit_result['areas'].values()
+            for a in mapit_result.values()
             if a['type'] in known_area_types
         ]
 
@@ -56,7 +56,7 @@ def get_areas_from_postcode(postcode):
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
-        areas = get_known_area_types(mapit_result)
+        areas = get_known_area_types(mapit_result['areas'])
         cache.set(cache_key, areas, settings.MAPIT_CACHE_SECONDS)
         return areas
     elif r.status_code == 400:
@@ -77,8 +77,10 @@ def get_areas_from_postcode(postcode):
 
 
 def get_areas_from_coords(coords):
-    base_url = 'http://mapit.mysociety.org/'
-    url = base_url + 'point/4326/' + urlquote(coords)
+    url = urljoin(
+        settings.MAPIT_BASE_URL,
+        '/point/4326/' + urlquote(coords)
+        )
 
     cache_key = 'mapit-postcode:' + coords
     cached_result = cache.get(cache_key)

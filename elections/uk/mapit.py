@@ -32,6 +32,36 @@ class MapItAreaNotFoundException(BaseMapItException):
 
 UK_AREA_ORDER = ['SPC', 'SPE', 'WAC', 'WAE', 'NIE', 'LAC', 'GLA', 'WMC']
 
+def get_known_area_types(mapit_areas):
+    result = []
+    for mapit_area in mapit_areas.values():
+        areas = Area.objects.filter(
+                extra__type__name=mapit_area['type'],
+                identifier=format_code_from_area(mapit_area)
+        )
+
+        if areas.exists():
+            is_no_data_area = False
+            for area in areas:
+                for child_area in area.children.all():
+                    if child_area.identifier.startswith('NODATA:'):
+                        is_no_data_area = True
+                        break
+
+            if is_no_data_area:
+                area_type = "NODATA"
+            else:
+                area_type = mapit_area['type']
+
+            result.append((
+                area_type,
+                format_code_from_area(mapit_area))
+            )
+
+    result = sorted(result, key=area_sort_key)
+    return result
+
+
 
 def area_sort_key(type_and_id_tuple):
     try:
@@ -70,33 +100,7 @@ def get_areas_from_postcode(original_postcode):
     r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
-        result = []
-        for mapit_area in mapit_result['areas'].values():
-            areas = Area.objects.filter(
-                    extra__type__name=mapit_area['type'],
-                    identifier=format_code_from_area(mapit_area)
-            )
-
-            if areas.exists():
-                is_no_data_area = False
-                for area in areas:
-                    for child_area in area.children.all():
-                        if child_area.identifier.startswith('NODATA:'):
-                            is_no_data_area = True
-                            break
-
-                if is_no_data_area:
-                    area_type = "NODATA"
-                else:
-                    area_type = mapit_area['type']
-
-                result.append((
-                    area_type,
-                    format_code_from_area(mapit_area))
-                )
-
-        result = sorted(result, key=area_sort_key)
-
+        result = get_known_area_types(mapit_result['areas'])
         cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
         return result
     elif r.status_code == 400:
@@ -113,6 +117,39 @@ def get_areas_from_postcode(original_postcode):
             )
         )
 
+
+def get_areas_from_coords(coords):
+    url = urljoin(
+        settings.MAPIT_BASE_URL,
+        '/point/4326/' + urlquote(coords)
+        )
+
+    cache_key = 'mapit-postcode:' + coords
+    cached_result = cache.get(cache_key)
+    if cached_result:
+        return cached_result
+
+    r = requests.get(url)
+    if r.status_code == 200:
+        mapit_result = r.json()
+        result = get_known_area_types(mapit_result)
+        cache.set(url, result, settings.MAPIT_CACHE_SECONDS)
+        return result
+    elif r.status_code == 400:
+        mapit_result = r.json()
+        raise BadCoordinatesException(mapit_result['error'])
+    elif r.status_code == 404:
+        raise BadCoordinatesException(
+            'The coordinates "{0}" could not be found'.format(
+                coords
+            )
+        )
+    else:
+        raise UnknownMapitException(
+            'Unknown MapIt error for coordinates "{0}"'.format(
+                coords
+            )
+        )
 
 
 def get_wmc_from_postcode(original_postcode):
