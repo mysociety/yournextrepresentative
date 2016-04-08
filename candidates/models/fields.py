@@ -7,6 +7,7 @@ from popolo.models import Person
 from compat import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class SimplePopoloField(models.Model):
     VALID_FIELDS = (
         ('name', 'Name'),
@@ -41,10 +42,11 @@ class SimplePopoloField(models.Model):
     )
     order = models.IntegerField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@python_2_unicode_compatible
 class ComplexPopoloField(models.Model):
     """
     This model stores the name of the underlying relation, some details about
@@ -109,7 +111,7 @@ class ComplexPopoloField(models.Model):
 
     order = models.IntegerField(blank=True, default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
