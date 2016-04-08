@@ -2997,7 +2997,9 @@ msgid "The party's candidate page for this person"
 msgstr ""
 
 #: mysite/settings/conf.py:385
-msgid "Please don't quote third-party candidate sites — we prefer URLs of news stories or official candidate pages."
+msgid ""
+"Please don't quote third-party candidate sites — we prefer URLs of "
+"news stories or official candidate pages."
 msgstr ""
 
 #: mysite/templates/account/email/email_confirmation_message.txt:1
