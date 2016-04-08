@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-04 14:01+0100\n"
+"POT-Creation-Date: 2016-04-08 12:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -496,9 +496,22 @@ msgstr ""
 msgid "That update isn't allowed because you can't change the party (in this case from {old_party} to {new_party}) for a candidate in a locked post ({post_label})"
 msgstr ""
 
-#: candidates/models/popolo_extra.py:195
+#: candidates/models/popolo_extra.py:231
 #, python-brace-format
 msgid "'PersonExtra' object has no attribute '{name}'"
+msgstr ""
+
+#: candidates/models/popolo_extra.py:324
+#, python-brace-format
+msgid "{min_age} or {max_age}"
+msgstr ""
+
+#: candidates/templates/candidates/_candidates_for_post.html:65
+msgid "Unlock candidate list"
+msgstr ""
+
+#: candidates/templates/candidates/_candidates_for_post.html:65
+msgid "Lock candidate list"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:67
@@ -949,7 +962,7 @@ msgstr ""
 
 #: candidates/templates/candidates/api.html:160
 #, python-format
-msgid "You can request all the candidates in that constituency by querying posts with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and West Norwood, which has the ID <tt>65808</tt>, you would make the request: <a href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
+msgid "You can request all the candidates in that constituency by querying posts with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and West Norwood, which has the ID <tt>65808</tt>, you would make the request: <a href=\"%(base_api_url)sposts/65808/\">%(base_api_url)sposts/65808/</a>"
 msgstr ""
 
 #: candidates/templates/candidates/api.html:170
@@ -1542,9 +1555,7 @@ msgstr ""
 #: candidates/templates/candidates/person-view.html:196
 #: candidates/templates/candidates/person-view.html:199
 #, python-format
-msgid ""
-"Date of birth: %(dob)s\n"
-"                     "
+msgid "Date of birth: %(dob)s"
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:210

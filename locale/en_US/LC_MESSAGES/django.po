@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-04 14:01+0100\n"
-"PO-Revision-Date: 2016-04-04 13:01+0000\n"
+"POT-Creation-Date: 2016-04-08 12:17+0100\n"
+"PO-Revision-Date: 2016-04-08 11:19+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: English (United States) (http://www.transifex.com/mysociety/yournextmp/language/en_US/)\n"
 "MIME-Version: 1.0\n"
@@ -528,9 +528,22 @@ msgid ""
 "({post_label})"
 msgstr ""
 
-#: candidates/models/popolo_extra.py:195
+#: candidates/models/popolo_extra.py:231
 #, python-brace-format
 msgid "'PersonExtra' object has no attribute '{name}'"
+msgstr ""
+
+#: candidates/models/popolo_extra.py:324
+#, python-brace-format
+msgid "{min_age} or {max_age}"
+msgstr ""
+
+#: candidates/templates/candidates/_candidates_for_post.html:65
+msgid "Unlock candidate list"
+msgstr ""
+
+#: candidates/templates/candidates/_candidates_for_post.html:65
+msgid "Lock candidate list"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:67
@@ -1069,8 +1082,7 @@ msgid ""
 "You can request all the candidates in that constituency by querying posts "
 "with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and"
 " West Norwood, which has the ID <tt>65808</tt>, you would make the request: "
-"<a "
-"href=\"%(base_api_url)sposts/?extra__slug=65808\">%(base_api_url)sposts/?extra__slug=65808</a>"
+"<a href=\"%(base_api_url)sposts/65808/\">%(base_api_url)sposts/65808/</a>"
 msgstr ""
 
 #: candidates/templates/candidates/api.html:170
@@ -1763,9 +1775,7 @@ msgstr ""
 #: candidates/templates/candidates/person-view.html:196
 #: candidates/templates/candidates/person-view.html:199
 #, python-format
-msgid ""
-"Date of birth: %(dob)s\n"
-"                     "
+msgid "Date of birth: %(dob)s"
 msgstr ""
 
 #: candidates/templates/candidates/person-view.html:210
@@ -2995,8 +3005,8 @@ msgstr ""
 
 #: mysite/settings/conf.py:385
 msgid ""
-"Please don't quote third-party candidate sites — we prefer URLs of "
-"news stories or official candidate pages."
+"Please don't quote third-party candidate sites — we prefer URLs of news "
+"stories or official candidate pages."
 msgstr ""
 
 #: mysite/templates/account/email/email_confirmation_message.txt:1
