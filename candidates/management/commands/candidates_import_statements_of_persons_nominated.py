@@ -138,6 +138,13 @@ class Command(BaseCommand):
                 print("Connection failed for {0}".format(name))
                 print("The URL was:", document_url)
                 continue
+            except requests.exceptions.MissingSchema:
+                # This is probably someone putting notes in the URL
+                # column, so ignore:
+                print("Probably not a document URL for {0}: {1}".format(
+                    name, document_url
+                ))
+                continue
             mime_type = mime_type_magic.from_file(downloaded_filename)
             extension = mimetypes.guess_extension(mime_type)
             if mime_type not in allowed_mime_types:
