@@ -19,6 +19,7 @@ from candidates.views.version_data import get_change_metadata, get_client_ip
 from candidates.views.people import get_call_to_action_flash_message
 from candidates.models import LoggedAction
 from popolo.models import Person, Post, Organization, Membership
+from official_documents.models import OfficialDocument
 
 from . import forms
 from . import models
@@ -46,6 +47,11 @@ class BulkAddView(BaseBulkAddView):
     def get_context_data(self, **kwargs):
         context = super(BulkAddView, self).get_context_data(**kwargs)
         context.update(self.add_election_and_post_to_context(context))
+
+        context['official_documents'] = OfficialDocument.objects.filter(
+            post__extra__slug=context['post_id'],
+            election__slug=context['election'],
+            )
 
         form_kwargs = {
             'parties': context['parties']

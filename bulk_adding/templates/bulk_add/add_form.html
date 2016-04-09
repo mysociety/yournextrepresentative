@@ -4,6 +4,16 @@
 
 {% block content %}
 <h2>Add candidates to {{ election }}: {{ post_id }}</h2>
+{% if official_documents %}
+<p>The following document{{ official_documents|pluralize }} might be of help with bulk adding:</p>
+<ul>
+  {% for doc in official_documents %}
+    <li><a herf="{{ doc.get_absolute_url }}">{{ doc.document_type }}</a> –
+      <button class="button tiny success set_source_button" data-value="{{ doc.source_url }}">
+        Use as source</button></li>
+  {% endfor %}
+</ul>
+{% endif %}
 <label for="one_source_to_rule_them_all">Single source for all</label>
 <input id="one_source_to_rule_them_all">
 <form method=POST id="bulk_add_form">
@@ -34,6 +44,11 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+$('.set_source_button').on('click', function(e, btn) {
+  $('[name*=-source]').val($(e.currentTarget).data('value'));
+  $('#one_source_to_rule_them_all').val($(e.currentTarget).data('value'));
+})
 
 $('#one_source_to_rule_them_all').keyup(function(el) {
   $('[name*=-source]').val(el.currentTarget.value)
