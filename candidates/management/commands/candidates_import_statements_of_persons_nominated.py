@@ -110,6 +110,11 @@ class Command(BaseCommand):
                     print("Failed to find post with for {0}".format(name))
                     continue
 
+            # Check that the post is actually valid for this election:
+            if election not in post.extra.elections.all():
+                msg = "The post {post} wasn't in the election {election}"
+                raise CommandError(msg.format(post=post.label, election=election.name))
+
             document_url_column = get_column_header(PDF_COLUMN_HEADERS_TO_TRY, row)
             document_url = row[document_url_column]
             if not document_url:
