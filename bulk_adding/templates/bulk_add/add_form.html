@@ -3,7 +3,7 @@
 {% block title %}Bulk add candidates{% endblock %}
 
 {% block content %}
-<h2>Add candidates to {{ election }}: {{ post_id }}</h2>
+<h2>Add candidates to {{ election_obj.name }}: {{ post_extra.base.area.name }}</h2>
 {% if official_documents %}
 <p>The following document{{ official_documents|pluralize }} might be of help with bulk adding:</p>
 <ul>
