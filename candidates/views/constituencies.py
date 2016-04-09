@@ -289,7 +289,9 @@ class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
         keys = ('locked', 'unlocked')
         for k in keys:
             context[k] = []
-        posts = Post.objects.select_related('extra').all()
+        posts = Post.objects.filter(
+            extra__elections=self.election_data
+        ).select_related('extra').all()
         for post in posts:
             total_constituencies += 1
             if post.extra.candidates_locked:
