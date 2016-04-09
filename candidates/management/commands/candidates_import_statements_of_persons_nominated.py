@@ -35,7 +35,7 @@ def download_file_cached(url):
     filename = join(directory, url_hash)
     if exists(filename):
         return filename
-    r = requests.get(url, verify=False)
+    r = requests.get(url)
     with open(filename, 'w') as f:
         f.write(r.content)
     return filename
