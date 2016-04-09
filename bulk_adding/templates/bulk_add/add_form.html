@@ -4,12 +4,14 @@
 
 {% block content %}
 <h2>Add candidates to {{ election }}: {{ post_id }}</h2>
-<form method=POST>
+<form method=POST id="bulk_add_form">
   {% csrf_token %}
   {{ formset.management_form }}
   {% for form in formset %}
+    <div class="form_group">
     <h3>Person {{ forloop.counter }}</h3>
     {{ form.as_p }}
+    </div>
   {% endfor %}
   <button type=submit>Next</button>
 </form>
@@ -33,8 +35,20 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 var source = getUrlParameter('source');
 
-$('[name=form-0-source]').val(source);
+$('[name*=-source]').val(source);
 
+$("#bulk_add_form").submit(function(e) {
+  $('[name*=-source]').each(function(e, source_el) {
+
+    var source_el = $(source_el);
+    var name_el = $($(source_el).parent().parent().find('input[id*=name]'));
+
+    if (name_el.val() == "") {
+      source_el.val("");
+    }
+
+  });
+})
 
 
 </script>
