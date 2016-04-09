@@ -187,6 +187,13 @@ class Command(BaseCommand):
             fname = join(emblem_directory, leafname)
             move(ntf.name, fname)
             md5sum = get_file_md5sum(fname)
+            existing_image = ImageExtra.objects.filter(
+                md5sum=md5sum,
+                base__object_id=party_extra.id,
+                base__content_type_id=content_type.id,
+            )
+            if existing_image.exists():
+                continue
             ImageExtra.objects.update_or_create_from_file(
                 fname,
                 desired_storage_path,
