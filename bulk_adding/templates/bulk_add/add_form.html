@@ -8,7 +8,7 @@
 <p>The following document{{ official_documents|pluralize }} might be of help with bulk adding:</p>
 <ul>
   {% for doc in official_documents %}
-    <li><a href="{{ doc.get_absolute_url }}">{{ doc.document_type }}</a> –
+    <li><a href="{{ doc.get_absolute_url }}" target="_blank">{{ doc.document_type }}</a> –
       <button class="button tiny success set_source_button" data-value="{{ doc.source_url }}">
         Use as source</button></li>
   {% endfor %}
