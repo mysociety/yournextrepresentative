@@ -9,8 +9,9 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from django.utils.text import slugify
 
-from auth_helpers.views import GroupRequiredMixin, user_in_group
+from braces.views import LoginRequiredMixin
 
+from auth_helpers.views import GroupRequiredMixin, user_in_group
 from elections.models import Election
 from candidates.models import PostExtra, PersonExtra, MembershipExtra
 from candidates.models.auth import check_creation_allowed, check_update_allowed
@@ -23,7 +24,7 @@ from . import forms
 from . import models
 
 
-class BaseBulkAddView(TemplateView):
+class BaseBulkAddView(LoginRequiredMixin, TemplateView):
     # required_group_name = models.TRUSTED_TO_BULK_ADD_GROUP_NAME
 
     def add_election_and_post_to_context(self, context):
