@@ -23,8 +23,8 @@ from . import forms
 from . import models
 
 
-class BaseBulkAddView(GroupRequiredMixin, TemplateView):
-    required_group_name = models.TRUSTED_TO_BULK_ADD_GROUP_NAME
+class BaseBulkAddView(TemplateView):
+    # required_group_name = models.TRUSTED_TO_BULK_ADD_GROUP_NAME
 
     def add_election_and_post_to_context(self, context):
         context['post_extra'] = PostExtra.objects.get(slug=context['post_id'])
