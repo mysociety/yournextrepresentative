@@ -17,8 +17,6 @@ from popolo.models import Post, Area
 
 from compat import StreamDictReader
 
-CSV_URL = 'https://docs.google.com/a/mysociety.org/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/export?format=csv&id=1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8&gid=0'
-
 allowed_mime_types = set([
     b'application/pdf',
     b'application/msword',
@@ -44,11 +42,11 @@ def download_file_cached(url):
 
 
 class Command(BaseCommand):
-    args = "<ELECTION_SLUG>"
+    args = "<ELECTION_SLUG> <CSV_URL>"
 
     def handle(self, *args, **options):
 
-        slug, = args
+        slug, csv_url = args
 
         try:
             election = Election.objects.get(slug=slug)
@@ -58,7 +56,7 @@ class Command(BaseCommand):
         mime_type_magic = magic.Magic(mime=True)
         storage = FileSystemStorage()
 
-        r = requests.get(CSV_URL)
+        r = requests.get(csv_url)
         r.encoding = 'utf-8'
         reader = StreamDictReader(r.text)
         for row in reader:
