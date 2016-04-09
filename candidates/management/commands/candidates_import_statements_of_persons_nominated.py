@@ -31,6 +31,7 @@ PDF_COLUMN_HEADERS_TO_TRY = (
 POST_OR_AREA_COLUMN_HEADERS_TO_TRY = (
     'Region',
     'Constituency',
+    'Ward',
 )
 
 def download_file_cached(url):
