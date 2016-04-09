@@ -23,6 +23,15 @@ allowed_mime_types = set([
     b'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ])
 
+PDF_COLUMN_HEADERS_TO_TRY = (
+    'Statement of Persons Nominated (SOPN) URL',
+    'Link to PDF',
+)
+
+POST_OR_AREA_COLUMN_HEADERS_TO_TRY = (
+    'Region',
+    'Constituency',
+)
 
 def download_file_cached(url):
     url_hash = hashlib.md5(url).hexdigest()
@@ -39,6 +48,13 @@ def download_file_cached(url):
     with open(filename, 'w') as f:
         f.write(r.content)
     return filename
+
+
+def get_column_header(possible_column_headers, row):
+    return [
+        ch for ch in possible_column_headers
+        if ch in row
+    ][0]
 
 
 class Command(BaseCommand):
@@ -66,23 +82,36 @@ class Command(BaseCommand):
         r.encoding = 'utf-8'
         reader = StreamDictReader(r.text)
         for row in reader:
-            name = row['Constituency']
+            post_or_area_header = get_column_header(
+                POST_OR_AREA_COLUMN_HEADERS_TO_TRY, row
+            )
+
+            name = row[post_or_area_header]
             if not name:
                 continue
+            name = name.strip()
 
             try:
-                area = Area.objects.get(name=name)
-            except Area.DoesNotExist:
-                print("Failed to find area for {0}".format(name))
-                continue
-
-            try:
-                post = Post.objects.get(area=area)
+                post = Post.objects.get(label=name)
             except Post.DoesNotExist:
-                print("Failed to find post with for {0}".format(name))
-                continue
+                msg = "Failed to find the post {0}, guessing it might be the area name instead"
+                print(msg.format(name))
+                # If the post name isn't there, try getting it from
+                # the area:
+                try:
+                    area = Area.objects.get(name=name)
+                except Area.DoesNotExist:
+                    print("Failed to find area for {0}".format(name))
+                    continue
 
-            document_url = row['Statement of Persons Nominated (SOPN) URL']
+                try:
+                    post = Post.objects.get(area=area)
+                except Post.DoesNotExist:
+                    print("Failed to find post with for {0}".format(name))
+                    continue
+
+            document_url_column = get_column_header(PDF_COLUMN_HEADERS_TO_TRY, row)
+            document_url = row[document_url_column]
             if not document_url:
                 print("No URL for {0}".format(name))
                 continue
