@@ -17,14 +17,21 @@ from popolo.models import Post, Area
 
 from compat import StreamDictReader
 
-CSV_URL = 'https://docs.google.com/a/mysociety.org/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/export?format=csv&id=1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8&gid=0'
-
 allowed_mime_types = set([
     b'application/pdf',
     b'application/msword',
     b'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ])
 
+PDF_COLUMN_HEADERS_TO_TRY = (
+    'Statement of Persons Nominated (SOPN) URL',
+    'Link to PDF',
+)
+
+POST_OR_AREA_COLUMN_HEADERS_TO_TRY = (
+    'Region',
+    'Constituency',
+)
 
 def download_file_cached(url):
     url_hash = hashlib.md5(url).hexdigest()
@@ -37,18 +44,31 @@ def download_file_cached(url):
     filename = join(directory, url_hash)
     if exists(filename):
         return filename
-    r = requests.get(url, verify=False)
+    r = requests.get(url)
     with open(filename, 'w') as f:
         f.write(r.content)
     return filename
 
 
+def get_column_header(possible_column_headers, row):
+    return [
+        ch for ch in possible_column_headers
+        if ch in row
+    ][0]
+
+
 class Command(BaseCommand):
-    args = "<ELECTION_SLUG>"
+    help = "Import official documents for posts from a URL to a CSV file"
+
+    args = "<ELECTION_SLUG> <CSV_URL>"
+
+    def add_arguments(self, parser):
+        parser.add_argument('--delete-existing', action='store_true')
+
 
     def handle(self, *args, **options):
 
-        slug, = args
+        slug, csv_url = args
 
         try:
             election = Election.objects.get(slug=slug)
@@ -58,36 +78,59 @@ class Command(BaseCommand):
         mime_type_magic = magic.Magic(mime=True)
         storage = FileSystemStorage()
 
-        r = requests.get(CSV_URL)
+        r = requests.get(csv_url)
         r.encoding = 'utf-8'
         reader = StreamDictReader(r.text)
         for row in reader:
-            name = row['Constituency']
+            post_or_area_header = get_column_header(
+                POST_OR_AREA_COLUMN_HEADERS_TO_TRY, row
+            )
+
+            name = row[post_or_area_header]
             if not name:
                 continue
+            name = name.strip()
 
             try:
-                area = Area.objects.get(name=name)
-            except Area.DoesNotExist:
-                print("Failed to find area for {0}".format(name))
-                continue
-
-            try:
-                post = Post.objects.get(area=area)
+                post = Post.objects.get(label=name)
             except Post.DoesNotExist:
-                print("Failed to find post with for {0}".format(name))
-                continue
+                msg = "Failed to find the post {0}, guessing it might be the area name instead"
+                print(msg.format(name))
+                # If the post name isn't there, try getting it from
+                # the area:
+                try:
+                    area = Area.objects.get(name=name)
+                except Area.DoesNotExist:
+                    print("Failed to find area for {0}".format(name))
+                    continue
 
-            document_url = row['Statement of Persons Nominated (SOPN) URL']
+                try:
+                    post = Post.objects.get(area=area)
+                except Post.DoesNotExist:
+                    print("Failed to find post with for {0}".format(name))
+                    continue
+
+            # Check that the post is actually valid for this election:
+            if election not in post.extra.elections.all():
+                msg = "The post {post} wasn't in the election {election}"
+                raise CommandError(msg.format(post=post.label, election=election.name))
+
+            document_url_column = get_column_header(PDF_COLUMN_HEADERS_TO_TRY, row)
+            document_url = row[document_url_column]
             if not document_url:
                 print("No URL for {0}".format(name))
                 continue
             existing_documents = OfficialDocument.objects.filter(
-                post_id=post
+                document_type=OfficialDocument.NOMINATION_PAPER,
+                post_id=post,
             )
             if existing_documents.count() > 0:
-                print("Skipping {0} since it already had documents".format(name))
-                continue
+                if options['delete_existing']:
+                    print("Removing existing documents")
+                    existing_documents.delete()
+                else:
+                    print("Skipping {0} since it already had documents".format(name))
+                    continue
             try:
                 downloaded_filename = download_file_cached(document_url)
             except requests.exceptions.ConnectionError:

@@ -27,7 +27,7 @@ class TestImageImport(TestUserMixin, TestCase):
         self.org_ct = ContentType.objects.get_for_model(self.labour_extra)
         self.image_filename = join(
             dirname(__file__), '..', '..', 'moderation_queue', 'tests',
-            'media', 'pilot.jpg'
+            'example-image.jpg'
         )
 
     def test_import_new_image(self):

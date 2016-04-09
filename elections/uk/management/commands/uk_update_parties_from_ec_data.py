@@ -44,7 +44,7 @@ IMAGES_TO_USE = {
     # Another Green Party
     'party:305': 'Emblem 3',
     # Plaid Cymru
-    'party:77': 'Emblem 3',
+    'party:77': 'emblem 3',
     # Ulster Unionist Party
     'party:83': 'Emblem 2',
     # Trade Unionist and Socialist Coalition
@@ -191,14 +191,13 @@ class Command(BaseCommand):
                 fname,
                 desired_storage_path,
                 md5sum=md5sum,
+                base__object_id=party_extra.id,
+                base__content_type_id=content_type.id,
                 defaults={
                     'uploading_user':None,
-                    'md5sum': md5sum,
                     'notes': emblem['MonochromeDescription'],
                     'base__source': 'The Electoral Commission',
                     'base__is_primary': primary,
-                    'base__object_id': party_extra.id,
-                    'base__content_type_id': content_type.id,
                 }
             )
             primary = False

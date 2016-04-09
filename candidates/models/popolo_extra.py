@@ -8,6 +8,7 @@ import re
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -167,6 +168,40 @@ def parse_approximate_date(s):
     raise ValueError("Couldn't parse '{0}' as an ApproximateDate".format(s))
 
 
+class PersonExtraQuerySet(models.QuerySet):
+
+    def missing(self, field):
+        people_in_current_elections = self.filter(
+            base__memberships__extra__election__current=True
+        )
+        # The field can be one of several types:
+        simple_field = SimplePopoloField.objects.filter(name=field).first()
+        if simple_field:
+            return people_in_current_elections.filter(**{'base__' + field: ''})
+        complex_field = ComplexPopoloField.objects.filter(name=field).first()
+        if complex_field:
+            kwargs = {
+                'base__{relation}__{key}'.format(
+                    relation=complex_field.popolo_array,
+                    key=complex_field.info_type_key
+                ):
+                complex_field.info_type
+            }
+            return people_in_current_elections.exclude(**kwargs)
+        extra_field = ExtraField.objects.filter(key=field).first()
+        if extra_field:
+            # This case is a bit more complicated because the
+            # PersonExtraFieldValue class allows a blank value.
+            pefv_completed = PersonExtraFieldValue.objects.filter(
+                field=extra_field
+            ).exclude(value='')
+            return people_in_current_elections.exclude(
+                base__id__in=[pefv.person_id for pefv in pefv_completed]
+            )
+        # If we get to this point, it's a non-existent field on the person:
+        raise ValueError("Unknown field '{0}'".format(field))
+
+
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
@@ -176,6 +211,8 @@ class PersonExtra(HasImageMixin, models.Model):
     versions = models.TextField(blank=True)
 
     images = GenericRelation(Image)
+
+    objects = PersonExtraQuerySet.as_manager()
 
     def __getattr__(self, name):
         # TODO: this does not seem optimal
@@ -284,7 +321,8 @@ class PersonExtra(HasImageMixin, models.Model):
         if min_age == max_age:
             # We know their exact age:
             return str(min_age)
-        return "{0} or {1}".format(min_age, max_age)
+        return _("{min_age} or {max_age}").format(min_age=min_age,
+                                                  max_age=max_age)
 
     """
     Return the elected state for a person in an election.
@@ -444,12 +482,14 @@ class PersonExtra(HasImageMixin, models.Model):
                 proxy_image_url_template = settings.IMAGE_PROXY_URL + \
                     encoded_url + '/{height}/{width}.{extension}'
 
-            if primary_image.extra:
+            try:
                 image_copyright = primary_image.extra.copyright
                 user = primary_image.extra.uploading_user
                 if user is not None:
                     image_uploading_user = primary_image.extra.uploading_user.username
                 image_uploading_user_notes = primary_image.extra.user_notes
+            except ObjectDoesNotExist:
+                pass
         else:
             primary_image_url = ''
 

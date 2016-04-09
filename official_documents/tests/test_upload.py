@@ -5,6 +5,7 @@ from os.path import join, realpath, dirname
 from django_webtest import WebTest
 from webtest import Upload
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from candidates.tests.auth import TestUserMixin
@@ -31,6 +32,10 @@ TEST_MEDIA_ROOT=realpath(
 # the candidates application tests.
 
 class TestModels(TestUserMixin, WebTest):
+
+    example_image_filename = join(
+        settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
+    )
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
@@ -59,8 +64,7 @@ class TestModels(TestUserMixin, WebTest):
             'upload_document_view',
             kwargs={'election': '2015', 'post_id': self.post_extra.slug}
         )
-        image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
-        with open(image_filename, 'rb') as f:
+        with open(self.example_image_filename, 'rb') as f:
             response = self.app.post(
                 upload_url,
                 {
@@ -94,8 +98,7 @@ class TestModels(TestUserMixin, WebTest):
         )
         form = response.forms['document-upload-form']
         form['source_url'] = 'http://example.org/foo'
-        image_filename = join(TEST_MEDIA_ROOT, 'pilot.jpg')
-        with open(image_filename, 'rb') as f:
+        with open(self.example_image_filename, 'rb') as f:
             form['uploaded_file'] = Upload('pilot.jpg', f.read())
         form.submit()
         self.assertEqual(response.status_code, 200)

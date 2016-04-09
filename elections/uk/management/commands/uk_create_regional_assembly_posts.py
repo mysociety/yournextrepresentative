@@ -185,11 +185,15 @@ class Command(BaseCommand):
                         )
                     }
                 )
+                if mapit_area_data['country_name'] == 'Northern Ireland':
+                    party_set = ni_parties
+                else:
+                    party_set = gb_parties
                 post_extra, _ = PostExtra.objects.update_or_create(
                     base=post,
                     defaults={
                         'slug': str(mapit.format_code_from_area(mapit_area_data)),
-                        'party_set': gb_parties,
+                        'party_set': party_set,
                     },
                 )
                 PostExtraElection.objects.update_or_create(

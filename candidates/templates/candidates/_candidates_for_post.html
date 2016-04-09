@@ -62,7 +62,7 @@
     <form method="post" action="{% url 'constituency-lock' election=election %}">
       {% csrf_token %}
       {% for field in lock_form %}{{ field }}{% endfor %}
-      <input type="submit" class="button small" value="{% if candidates_locked %}Unlock{% else %}Lock{% endif %} candidate list">
+      <input type="submit" class="button small" value="{% if candidates_locked %}{% trans "Unlock candidate list" %}{% else %}{% trans "Lock candidate list" %}{% endif %}">
       {% if candidates_locked %}
         {% trans "(This list of candidates is currently <strong>locked</strong>.)" %}
       {% else %}
@@ -88,7 +88,10 @@
 
     {# Use the post label here, since multiple posts may be used on a page #}
     {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
-    <h3>{% blocktrans with post_label=post_data.label %}Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
+    {% url 'constituencies' election=election_data.slug as election_posts_url %}
+    <h3>{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
+      Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+      in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
     </h3>
 
     {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}

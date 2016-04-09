@@ -59,7 +59,8 @@ class TestPersonView(WebTest):
   <h1>Tessa\s+Jowell</h1>\s*
   <p>Candidate\s+for\s+
   <a\s+href="/election/2015/post/65808/dulwich-and-west-norwood">Dulwich\s+
-  and\s+West\s+Norwood</a>\s+in\ 2015\s+General\s+Election\s*</p>''',
+  and\s+West\s+Norwood</a>\s+in\ <a\ href="/election/2015/constituencies">2015
+  \s+General\s+Election</a>\s*</p>''',
                 response.text
             )
         )

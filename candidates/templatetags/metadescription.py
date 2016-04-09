@@ -27,7 +27,7 @@ def metadescription(person, last_candidacy, today):
                 output = _("%(name)s stood for %(party)s in %(post)s in %(election)s") % args
         else:
             if last_party_name == _("Independent") % args:
-                output = _("%(name)s is standing as an independent candidate in %(post)s in %(election)s")
+                output = _("%(name)s is standing as an independent candidate in %(post)s in %(election)s") % args
             else:
                 output = _("%(name)s is standing for %(party)s in %(post)s in %(election)s") % args
     else:
