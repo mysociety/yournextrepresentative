@@ -212,8 +212,6 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
             if max_people and len(people_list) > max_people:
                 truncated = True
                 del people_list[max_people:]
-        else:
-            people_list.sort(key=lambda p: p[1].family_name)
         party_truncated[party_id] = truncated
         party_total[party_id] = total_count
     try:
@@ -235,7 +233,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     if party_list:
         result.sort(key=lambda t: t[0]['name'])
     else:
-        result.sort(key=lambda t: t[1][0][1].family_name)
+        result.sort(key=lambda t: t[1][0][1].name.split()[-1])
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result
