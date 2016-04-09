@@ -4,6 +4,8 @@
 
 {% block content %}
 <h2>Add candidates to {{ election }}: {{ post_id }}</h2>
+<label for="one_source_to_rule_them_all">Single source for all</label>
+<input id="one_source_to_rule_them_all">
 <form method=POST id="bulk_add_form">
   {% csrf_token %}
   {{ formset.management_form }}
@@ -32,6 +34,10 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+$('#one_source_to_rule_them_all').keyup(function(el) {
+  $('[name*=-source]').val(el.currentTarget.value)
+})
 
 var source = getUrlParameter('source');
 
