@@ -105,6 +105,8 @@ class Command(BaseCommand):
             if override_election_slug:
                 election = override_election
             else:
+                if 'Election' not in row:
+                    raise CommandError("There is no election name in the 'Election' column, so you must supply an election slug with --election")
                 election_name = row['Election']
                 election = election_name_to_election.get(election_name)
                 if election is None:
