@@ -24,17 +24,10 @@ class RecentChangesFeed(Feed):
         return LoggedAction.objects.order_by('-updated')[:50]
 
     def item_title(self, item):
-        m = lock_re.search(item.source)
-        if m:
-            return "{0} - {1}".format(
-                m.group(1),
-                item.action_type
-            )
-        else:
-            return "{0} - {1}".format(
-                item.person_id,
-                item.action_type
-            )
+        return "{0} - {1}".format(
+            item.person_id,
+            item.action_type
+        )
 
     def item_description(self, item):
         updated = _("Updated at {0}").format(str(item.updated))
@@ -45,14 +38,7 @@ class RecentChangesFeed(Feed):
     def item_link(self, item):
         # As a hack for the moment, constituencies are just mentioned
         # in the source message:
-        m = lock_re.search(item.source)
-        if m:
-            return reverse('constituency', kwargs={
-                'post_id': m.group(2),
-                'ignored_slug': slugify(m.group(1))
-            })
+        if item.person_id:
+            return reverse('person-view', args=[item.person_id])
         else:
-            if item.person_id:
-                return reverse('person-view', args=[item.person_id])
-            else:
-                return '/'
+            return '/'
