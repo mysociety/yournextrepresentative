@@ -81,7 +81,8 @@ class Command(BaseCommand):
                 print("No URL for {0}".format(name))
                 continue
             existing_documents = OfficialDocument.objects.filter(
-                post_id=post
+                document_type=OfficialDocument.NOMINATION_PAPER,
+                post_id=post,
             )
             if existing_documents.count() > 0:
                 print("Skipping {0} since it already had documents".format(name))
