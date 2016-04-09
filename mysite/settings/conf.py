@@ -425,7 +425,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
 
         # CORS config
         'CORS_ORIGIN_ALLOW_ALL': True,
-        'CORS_URLS_REGEX': r'^/api/.*$',
+        'CORS_URLS_REGEX': r'^/(api|upcoming-elections)/.*$',
         'CORS_ALLOW_METHODS': (
             'GET',
             'OPTIONS',
