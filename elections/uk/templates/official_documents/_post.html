@@ -12,12 +12,20 @@
         {% endif %}
       {% else %}
         We don't have nomination papers for {{ post_data.label }} yet.
+        {% if election == '2015' %}
         Can you help us by <a href="https://docs.google.com/spreadsheets/d/1jvWaQSENnASZfGne1IWRbDATMH2NT2xutyPEbZ5Is-8/edit#gid=0">
           adding them to this google spreadsheet</a>?
+        {% endif %}
         {% if user_can_upload_documents %}
-          Or, as you have permission to upload documents, you can
-          <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">
-          upload it directly</a>.
+          {% if election == '2015' %}
+            Or, as you have permission to upload documents, you can
+            <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">
+            upload it directly</a>.
+          {% else %}
+            Can you help us by
+            <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">uploading
+            the PDF of the Statement of Persons Nominated?</a>
+          {% endif %}
         {% endif %}
       {% endif %}
     </p>
