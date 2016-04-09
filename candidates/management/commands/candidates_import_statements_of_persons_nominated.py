@@ -42,7 +42,13 @@ def download_file_cached(url):
 
 
 class Command(BaseCommand):
+    help = "Import official documents for posts from a URL to a CSV file"
+
     args = "<ELECTION_SLUG> <CSV_URL>"
+
+    def add_arguments(self, parser):
+        parser.add_argument('--delete-existing', action='store_true')
+
 
     def handle(self, *args, **options):
 
@@ -85,8 +91,12 @@ class Command(BaseCommand):
                 post_id=post,
             )
             if existing_documents.count() > 0:
-                print("Skipping {0} since it already had documents".format(name))
-                continue
+                if options['delete_existing']:
+                    print("Removing existing documents")
+                    existing_documents.delete()
+                else:
+                    print("Skipping {0} since it already had documents".format(name))
+                    continue
             try:
                 downloaded_filename = download_file_cached(document_url)
             except requests.exceptions.ConnectionError:
