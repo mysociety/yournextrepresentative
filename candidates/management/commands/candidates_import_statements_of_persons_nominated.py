@@ -61,20 +61,28 @@ def get_column_header(possible_column_headers, row):
 class Command(BaseCommand):
     help = "Import official documents for posts from a URL to a CSV file"
 
-    args = "<ELECTION_SLUG> <CSV_URL>"
+    args = "<CSV_URL>"
 
     def add_arguments(self, parser):
         parser.add_argument('--delete-existing', action='store_true')
-
+        parser.add_argument('--election')
 
     def handle(self, *args, **options):
 
-        slug, csv_url = args
+        csv_url, = args
 
-        try:
-            election = Election.objects.get(slug=slug)
-        except Election.DoesNotExist:
-            raise CommandError('No election with slug {0} found'.format(slug))
+        override_election = None
+        override_election_slug = options['election']
+        if override_election_slug:
+            try:
+                override_election = Election.objects.get(
+                    slug=override_election_slug
+                )
+            except Election.DoesNotExist:
+                msg = 'No election with slug {0} found'
+                raise CommandError(msg.format(override_election_slug))
+
+        election_name_to_election = {}
 
         mime_type_magic = magic.Magic(mime=True)
         storage = FileSystemStorage()
@@ -92,8 +100,22 @@ class Command(BaseCommand):
                 continue
             name = name.strip()
 
+            # If there was no election specified, try to find it from
+            # the 'Election' column (which has the election name):
+            if override_election_slug:
+                election = override_election
+            else:
+                election_name = row['Election']
+                election = election_name_to_election.get(election_name)
+                if election is None:
+                    election = Election.objects.get(name=election_name)
+                    election_name_to_election[election_name] = election
+
             try:
-                post = Post.objects.get(label=name)
+                post = Post.objects.get(
+                    label=name,
+                    extra__elections=election,
+                )
             except Post.DoesNotExist:
                 msg = "Failed to find the post {0}, guessing it might be the area name instead"
                 print(msg.format(name))
