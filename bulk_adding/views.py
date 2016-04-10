@@ -144,9 +144,9 @@ class BulkAddReviewView(BaseBulkAddView):
             post=post,
             person=person_extra.base,
             extra__election=election,
+            role=election.candidate_membership_role,
             defaults={
                 'on_behalf_of': party,
-                'role': election.candidate_membership_role,
             }
         )
 
