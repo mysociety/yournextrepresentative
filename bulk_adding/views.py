@@ -143,6 +143,7 @@ class BulkAddReviewView(BaseBulkAddView):
         membership, _ = Membership.objects.get_or_create(
             post=post,
             person=person_extra.base,
+            extra__election=election,
             defaults={
                 'on_behalf_of': party,
                 'role': election.candidate_membership_role,
