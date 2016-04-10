@@ -103,55 +103,49 @@ class BulkAddReviewView(BaseBulkAddView):
 
     def add_person(self, person_data):
         # TODO Move this out of the view layer
-        with transaction.atomic():
-            person = Person.objects.create(name=person_data['name'])
-            person_extra = PersonExtra.objects.create(base=person)
-            check_creation_allowed(
-                self.request.user, person_extra.current_candidacies
-            )
+        person = Person.objects.create(name=person_data['name'])
+        person_extra = PersonExtra.objects.create(base=person)
+        check_creation_allowed(
+            self.request.user, person_extra.current_candidacies
+        )
 
-            change_metadata = get_change_metadata(
-                self.request, person_data['source']
-            )
+        change_metadata = get_change_metadata(
+            self.request, person_data['source']
+        )
 
-            person_extra.record_version(change_metadata)
-            person_extra.save()
+        person_extra.record_version(change_metadata)
+        person_extra.save()
 
-            LoggedAction.objects.create(
-                user=self.request.user,
-                person=person,
-                action_type='person-create',
-                ip_address=get_client_ip(self.request),
-                popit_person_new_version=change_metadata['version_id'],
-                source=change_metadata['information_source'],
-            )
+        LoggedAction.objects.create(
+            user=self.request.user,
+            person=person,
+            action_type='person-create',
+            ip_address=get_client_ip(self.request),
+            popit_person_new_version=change_metadata['version_id'],
+            source=change_metadata['information_source'],
+        )
 
-            # Add a message to be displayed after redirect:
-            messages.add_message(
-                self.request,
-                messages.SUCCESS,
-                get_call_to_action_flash_message(person, new_person=True),
-                extra_tags='safe do-something-else'
-            )
-            return person_extra
+        # Add a message to be displayed after redirect:
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            get_call_to_action_flash_message(person, new_person=True),
+            extra_tags='safe do-something-else'
+        )
+        return person_extra
 
     def update_person(self, context, data, person_extra):
         party = data['party']
         post = context['post_extra'].base
         election = Election.objects.get(slug=context['election'])
 
-        candidacy_qs = Membership.objects.filter(
-            extra__election=election,
-            role=election.candidate_membership_role,
-            person__extra=person_extra
-        )
-
         membership, _ = Membership.objects.get_or_create(
             post=post,
             person=person_extra.base,
+            extra__election=election,
+            role=election.candidate_membership_role,
             defaults={
                 'on_behalf_of': party,
-                'role': election.candidate_membership_role,
             }
         )
 
@@ -181,15 +175,17 @@ class BulkAddReviewView(BaseBulkAddView):
         )
 
     def form_valid(self, context):
-        for person_form in context['formset']:
-            data = person_form.cleaned_data
-            if data.get('select_person') == "_new":
-                # Add a new person
-                person_extra = self.add_person(data)
-            else:
-                person_extra = PersonExtra.objects.get(
-                    base__pk=int(data['select_person']))
-            self.update_person(context, data, person_extra)
+
+        with transaction.atomic():
+            for person_form in context['formset']:
+                data = person_form.cleaned_data
+                if data.get('select_person') == "_new":
+                    # Add a new person
+                    person_extra = self.add_person(data)
+                else:
+                    person_extra = PersonExtra.objects.get(
+                        base__pk=int(data['select_person']))
+                self.update_person(context, data, person_extra)
 
         url = reverse('constituency', kwargs={
             'election': context['election'],
