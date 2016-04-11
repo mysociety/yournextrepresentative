@@ -11,6 +11,11 @@
         <button type="submit">{% trans "Search" %}</button>
     </form>
 
+    {% if looks_like_postcode %}
+    <h3>Looking for a postcode?</h3>
+    <p>Try going to the <a href="{% url 'lookup-postcode' %}?postcode={{ form.q.value }}">page of elections for {{ form.q.value }}</a></p>
+    {% endif %}
+
     {% if object_list %}
     <h3>{% trans 'Existing candidates' %}</h3>
 
