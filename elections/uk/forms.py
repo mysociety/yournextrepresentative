@@ -14,7 +14,7 @@ from .mapit import get_areas_from_postcode
 
 class PostcodeForm(forms.Form):
     q = forms.CharField(
-        label='Enter a candidate name to start',
+        label='Enter a candidate name or postcode',
         max_length=200,
         widget=forms.TextInput(attrs={'placeholder': 'Enter a name'})
     )
