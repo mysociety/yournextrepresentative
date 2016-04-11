@@ -5,14 +5,16 @@
 {% block content %}
 <h2>Add candidates to {{ election_obj.name }}: {{ post_extra.base.area.name }}</h2>
 {% if official_documents %}
-<p>The following document{{ official_documents|pluralize }} might be of help with bulk adding:</p>
-<ul>
-  {% for doc in official_documents %}
-    <li><a href="{{ doc.get_absolute_url }}" target="_blank">{{ doc.document_type }}</a> –
-      <button class="button tiny success set_source_button" data-value="{{ doc.source_url }}">
-        Use as source</button></li>
-  {% endfor %}
-</ul>
+<h3>How to add candidates</h3>
+<ol>
+  <li>Open the <a href="{{ official_documents.0.get_absolute_url }}" target="_blank">nomination paper</a>
+    in a new window</li>
+  <li>Find the part of the document about {{ post_extra.base.area.name }}</li>
+  <li>Add each candidate in the forms below</li>
+  <li>Press review to check for duplicates and add the candidates</li>
+  <li>If you think this is the complete list, mark this area as complete</li>
+  <li>Do another area!</li>
+</ol>
 {% endif %}
 <label for="one_source_to_rule_them_all">Single source for all</label>
 <input id="one_source_to_rule_them_all">
@@ -25,7 +27,7 @@
     {{ form.as_p }}
     </div>
   {% endfor %}
-  <button type=submit>Next</button>
+  <button type=submit>Review</button>
 </form>
 
 <script>
