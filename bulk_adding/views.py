@@ -186,7 +186,7 @@ class BulkAddReviewView(BaseBulkAddView):
                     person_extra = PersonExtra.objects.get(
                         base__pk=int(data['select_person']))
                 self.update_person(context, data, person_extra)
-                if self.request.POST['suggest_locking'] == 'on':
+                if self.request.POST.get('suggest_locking') == 'on':
                     SuggestedPostLock.objects.create(
                         user=self.request.user,
                         post_extra=context['post_extra'],
