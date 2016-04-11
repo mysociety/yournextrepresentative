@@ -34,8 +34,12 @@
     {% endif %}
 
   {% endfor %}
-  {# {{ formset }} #}
   </table>
+  <p>
+    <label for="suggest_locking">Suggest locking this area – check this box if you
+      are confident that this area is complete as per an official document</label>
+    <input type="checkbox" name="suggest_locking" id="suggest_locking">
+  </p>
   <button type=submit>Next</button>
 </form>
 
