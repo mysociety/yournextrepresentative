@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Areas ready for bulk adding</h2>
+{% for doc in unlocked_sopns %}
+  <li>
+    <a href="{% url 'bulk_add' election=doc.election.slug post_id=doc.post.extra.slug %}?source={{ doc.source_url }}">
+    {{ doc.post.label }}</a>
+  </li>
+{% endfor %}
+{% endblock content %}

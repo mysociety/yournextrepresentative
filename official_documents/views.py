@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, TemplateView
 from django.shortcuts import get_object_or_404
 
 from auth_helpers.views import GroupRequiredMixin
 from elections.mixins import ElectionMixin
+from moderation_queue.models import SuggestedPostLock
 
 from .forms import UploadDocumentForm
 from .models import DOCUMENT_UPLOADERS_GROUP_NAME, OfficialDocument
@@ -41,3 +42,4 @@ class CreateDocumentView(ElectionMixin, GroupRequiredMixin, CreateView):
         post = get_object_or_404(Post, extra__slug=self.kwargs['post_id'])
         context['post_label'] = post.label
         return context
+

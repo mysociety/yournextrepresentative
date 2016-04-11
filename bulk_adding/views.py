@@ -18,11 +18,11 @@ from candidates.models.auth import check_creation_allowed, check_update_allowed
 from candidates.views.version_data import get_change_metadata, get_client_ip
 from candidates.views.people import get_call_to_action_flash_message
 from candidates.models import LoggedAction
-from popolo.models import Person, Post, Organization, Membership
+from popolo.models import Person, Membership
 from official_documents.models import OfficialDocument
+from moderation_queue.models import SuggestedPostLock
 
 from . import forms
-from . import models
 
 
 class BaseBulkAddView(LoginRequiredMixin, TemplateView):
@@ -199,7 +199,25 @@ class BulkAddReviewView(BaseBulkAddView):
         })
         return HttpResponseRedirect(url)
 
-
     def form_invalid(self, context):
         return self.render_to_response(context)
 
+
+class UnlockedWithDocumentsView(TemplateView):
+    template_name = "official_documents/unlocked_with_documents.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            UnlockedWithDocumentsView, self).get_context_data(**kwargs)
+
+        SOPNs_qs = OfficialDocument.objects.filter(
+            election__current=True).select_related('election', 'post__extra')
+
+        SOPNs_qs = SOPNs_qs.exclude(
+            post__in=SuggestedPostLock.objects.all().values(
+                'post_extra__base'))
+
+        context['unlocked_sopns'] = SOPNs_qs.filter(
+            post__extra__candidates_locked=False)
+
+        return context

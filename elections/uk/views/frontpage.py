@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import random
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -9,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
 from candidates.views.mixins import ContributorsMixin
+from official_documents.models import OfficialDocument
 
 from elections.models import Election
 
@@ -56,4 +59,35 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         context['election_data'] = Election.objects.current().by_date().last()
         context['hide_search_form'] = True
+
+        SOPNs_qs = OfficialDocument.objects.filter(
+            election__current=True).select_related('election', 'post__extra')
+        context['total_sopns_count'] = SOPNs_qs.count()
+        context['locked_sopns'] = SOPNs_qs.filter(
+            post__extra__candidates_locked=True)
+        context['locked_sopns_count'] = context['locked_sopns'].count()
+        context['unlocked_sopns'] = SOPNs_qs.filter(
+            post__extra__candidates_locked=False)
+        context['unlocked_sopns_count'] = context['unlocked_sopns'].count()
+
+        context['sopn_percent_complete'] = round(
+            float(context['locked_sopns_count']) / float(context['total_sopns_count'])
+            * 100)
+
+        non_local_sopns = context['unlocked_sopns'].exclude(
+                election__slug__contains='local')
+
+        local_sopns = context['unlocked_sopns'].filter(
+                election__slug__contains='local')
+
+        if non_local_sopns:
+            priority_sopns = non_local_sopns
+        else:
+            priority_sopns = local_sopns
+
+        if priority_sopns.count() > 5:
+            random_offset = random.randrange(priority_sopns.count())
+            priority_sopns = priority_sopns[random_offset:random_offset+5]
+        context['priority_sopns'] = priority_sopns
+
         return context
