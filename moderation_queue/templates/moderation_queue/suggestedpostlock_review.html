@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Posts with lock suggestions</h1>
+{% regroup object_list by post_extra.base.label as suggestions_list %}
+{% for suggestion_post in suggestions_list %}
+{% with suggestion_post.list.0 as suggestion %}
+  <h3><a href="{% url 'constituency' election=suggestion.election_for_suggestion.slug post_id=suggestion.post_extra.slug ignored_slug=suggestion.post_extra.base.label|slugify %}">{{ suggestion_post.grouper }}</a></h3>
+{% endwith %}
+  <ul>
+  {% for suggestion in suggestion_post.list %}
+    <li>
+      User {{ suggestion.user }} suggested locking this.
+      {% if suggestion.justification %}
+      They said:
+      <blockquote>{{ suggestion.justification }}</blockquote>
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+{% endfor %}
+<ul>
+  {# {% for suggestion in  %} #}
+  {# <li>{{ suggestion.post_extra.base.label }}</li> #}
+  {# {% endfor %} #}
+</ul>
+{% endblock content %}

@@ -102,3 +102,7 @@ class SuggestedPostLock(models.Model):
     updated = models.DateTimeField(auto_now=True)
     justification = models.TextField(blank=True,
         help_text="e.g I've reviewed the nomination paper for this area")
+
+    @property
+    def election_for_suggestion(self):
+        return self.post_extra.elections.filter(current=True)[0]

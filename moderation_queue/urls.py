@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 
 from .views import (
     upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview,
-    SuggestLockView
+    SuggestLockView, SuggestLockReviewListView
 )
 
 urlpatterns = patterns('',
@@ -23,4 +23,7 @@ urlpatterns = patterns('',
     url(r'^suggest-lock/(?P<election_id>.*)/$',
         SuggestLockView.as_view(),
         name="constituency-suggest-lock"),
+    url(r'^suggest-lock/$',
+        SuggestLockReviewListView.as_view(),
+        name="suggestions-to-lock-review-list"),
 )

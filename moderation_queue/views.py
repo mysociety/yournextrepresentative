@@ -462,3 +462,10 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
                 'post_id': self.object.post_extra.slug,
                 'ignored_slug': self.object.post_extra.slug
             })
+
+class SuggestLockReviewListView(ListView):
+    template_name = "moderation_queue/suggestedpostlock_review.html"
+
+    def get_queryset(self):
+        return SuggestedPostLock.objects.filter(
+            post_extra__candidates_locked=False)
