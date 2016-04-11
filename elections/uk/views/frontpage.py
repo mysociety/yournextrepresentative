@@ -12,6 +12,8 @@ from django.views.generic import FormView
 
 from candidates.views.mixins import ContributorsMixin
 from official_documents.models import OfficialDocument
+from moderation_queue.models import SuggestedPostLock
+
 
 from elections.models import Election
 
@@ -87,6 +89,9 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
         if priority_sopns.count() > 5:
             random_offset = random.randrange(priority_sopns.count())
+            priority_sopns = priority_sopns.exclude(
+                post__in=SuggestedPostLock.objects.all().values(
+                    'post_extra__base'))
             priority_sopns = priority_sopns[random_offset:random_offset+5]
         context['priority_sopns'] = priority_sopns
 
