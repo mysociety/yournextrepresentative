@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
+from candidates.models import PostExtra
+
 from compat import python_2_unicode_compatible
 
 PHOTO_REVIEWERS_GROUP_NAME = 'Photo Reviewers'
@@ -91,3 +93,12 @@ class QueuedImage(models.Model):
     def has_crop_bounds(self):
         crop_fields = ['crop_min_x', 'crop_min_y', 'crop_max_x', 'crop_max_y']
         return not any(getattr(self, c) is None for c in crop_fields)
+
+
+class SuggestedPostLock(models.Model):
+    post_extra = models.ForeignKey(PostExtra)
+    user = models.ForeignKey(User, blank=False, null=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    justification = models.TextField(blank=True,
+        help_text="e.g I've reviewed the nomination paper for this area")

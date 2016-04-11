@@ -33,6 +33,9 @@ from ..models import (
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
+from moderation_queue.forms import SuggestedPostLockForm
+from moderation_queue.models import SuggestedPostLock
+
 
 from popolo.models import Membership, Post, Organization, Person
 
@@ -100,12 +103,24 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         if hasattr(mp_post, 'extra'):
             context['candidates_locked'] = mp_post.extra.candidates_locked
 
+            context['suggest_lock_form'] = SuggestedPostLockForm(
+                initial={
+                    'post_extra': mp_post.extra
+                },
+            )
+            context['user_has_suggested_lock'] = \
+                SuggestedPostLock.objects.filter(
+                    user=self.request.user,
+                    post_extra=mp_post.extra
+                ).exists()
+
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,
                 'lock': not context['candidates_locked'],
             },
         )
+
         context['candidate_list_edits_allowed'] = \
             get_edits_allowed(self.request.user, context['candidates_locked'])
 

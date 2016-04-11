@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" class="button">Suggest locking</button>
+</form>
+{% endblock content %}

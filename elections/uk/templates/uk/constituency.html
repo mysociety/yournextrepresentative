@@ -2,4 +2,35 @@
 
 {% block other_resources %}
 <a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
+
+
+{% if request.user.is_authenticated %}
+  {% if not user_has_suggested_lock %}
+    {% if election_data.show_official_documents and official_documents %}
+      <form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
+        {% csrf_token %}
+        <h3>Suggest locking</h3>
+        <p>If you think this list is complete, please suggest that we lock it.
+          Locking means candidate can't be added or removed, but can still be edited.
+          This is useful when we know that the list is final.</p>
+        <p>Please only do this if you have a good reason for thinking it's complete, for example if you have
+          reviewed one of the official lists of candidates ("nomination papers" or "SOPNs") linked to above.</p>
+        {{ suggest_lock_form.post_extra }}
+
+        {{ suggest_lock_form.justification.label_tag }}
+        <label for="{{ suggest_lock_form.justification.id_for_label }}">{{ suggest_lock_form.justification.help_text }}</label>
+        {{ suggest_lock_form.justification }}
+        <button type="submit" class="button small secondary">Suggest locking</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <h3>Suggest locking</h3>
+    {% if candidates_locked %}
+    <p>Thanks! You suggested locking this list, and we did!</p>
+    {% else %}
+    <p>Thanks, you've suggested we lock this list – we'll review it soon.</p>
+    {% endif %}
+  {% endif %}
+{% endif %}
+
 {% endblock %}

@@ -6,7 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import QueuedImage, CopyrightOptions
+from .models import QueuedImage, CopyrightOptions, SuggestedPostLock
 
 class UploadPersonPhotoForm(forms.ModelForm):
 
@@ -61,3 +61,15 @@ class PhotoReviewForm(forms.Form):
     moderator_why_allowed = forms.ChoiceField(
         choices=CopyrightOptions.WHY_ALLOWED_CHOICES
     )
+
+class SuggestedPostLockForm(forms.ModelForm):
+    class Meta:
+        model = SuggestedPostLock
+        fields = ['justification', 'post_extra',]
+        widgets = {
+            'post_extra': forms.HiddenInput(),
+            'justification': forms.Textarea(
+                attrs={'rows': 1, 'columns': 72}
+            )
+
+        }

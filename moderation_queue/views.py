@@ -16,15 +16,16 @@ from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, CreateView
 
 from PIL import Image as PillowImage
+from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
 
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
-from .models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
+from .models import QueuedImage, SuggestedPostLock, PHOTO_REVIEWERS_GROUP_NAME
 
 from candidates.models import LoggedAction, ImageExtra, PersonExtra
 from candidates.views.version_data import get_client_ip, get_change_metadata
@@ -438,3 +439,26 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class SuggestLockView(LoginRequiredMixin, CreateView):
+    model = SuggestedPostLock
+    fields = ['justification', 'post_extra']
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.user = user
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            message="Thanks for suggesting we lock an area!"
+        )
+
+        return super(SuggestLockView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('constituency', kwargs={
+                'election': self.kwargs['election_id'],
+                'post_id': self.object.post_extra.slug,
+                'ignored_slug': self.object.post_extra.slug
+            })

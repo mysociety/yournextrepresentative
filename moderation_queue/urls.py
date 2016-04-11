@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 from django.conf.urls import patterns, url
 
 from .views import (
-    upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview
+    upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview,
+    SuggestLockView
 )
 
 urlpatterns = patterns('',
@@ -19,4 +20,7 @@ urlpatterns = patterns('',
     url(r'^photo/upload/(?P<person_id>\d+)/success$',
         PhotoUploadSuccess.as_view(),
         name="photo-upload-success"),
+    url(r'^suggest-lock/(?P<election_id>.*)/$',
+        SuggestLockView.as_view(),
+        name="constituency-suggest-lock"),
 )
