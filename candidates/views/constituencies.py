@@ -108,11 +108,13 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
                     'post_extra': mp_post.extra
                 },
             )
-            context['user_has_suggested_lock'] = \
-                SuggestedPostLock.objects.filter(
-                    user=self.request.user,
-                    post_extra=mp_post.extra
-                ).exists()
+
+            if self.request.user.is_authenticated():
+                context['user_has_suggested_lock'] = \
+                    SuggestedPostLock.objects.filter(
+                        user=self.request.user,
+                        post_extra=mp_post.extra
+                    ).exists()
 
         context['lock_form'] = ToggleLockForm(
             initial={
