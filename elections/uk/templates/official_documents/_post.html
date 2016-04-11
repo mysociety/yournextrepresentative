@@ -3,12 +3,12 @@
     <p>
       {% if docs %}
         {% for paper in docs %}
-          View the official Statement of Nominated Persons for this constituency:
+          View the official Statement of Persons Nominated for this constituency:
            <a href="{{ paper.get_absolute_url }}">{{ paper.document_type }}</a><br>
         {% endfor %}
         {% if user_can_upload_documents %}
           <a href="{% url 'upload_document_view' election=election post_id=post_data.id %}">
-          Upload an updated Statement of Nominated Persons</a>.
+          Upload an updated Statement of Persons Nominated</a>.
         {% endif %}
       {% else %}
         We don't have nomination papers for {{ post_data.label }} yet.

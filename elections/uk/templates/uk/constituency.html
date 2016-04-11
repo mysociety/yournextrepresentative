@@ -10,11 +10,18 @@
       <form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
         {% csrf_token %}
         <h3>Suggest locking</h3>
+
+
         <p>If you think this list is complete, please suggest that we lock it.
-          Locking means candidate can't be added or removed, but can still be edited.
-          This is useful when we know that the list is final.</p>
-        <p>Please only do this if you have a good reason for thinking it's complete, for example if you have
-          reviewed one of the official lists of candidates ("nomination papers" or "SOPNs") linked to above.</p>
+        Please only do this with good reason, for example if you have reviewed
+        one of the official lists of candidates ("Nomination papers" or
+        "Statement of Persons Nominated") linked to above.</p>
+
+        <p>Locking a list means that candidates can't be added or removed, but
+        their details can still be edited. This is useful when we know that
+        the list is final.</p>
+
+
         {{ suggest_lock_form.post_extra }}
 
         {{ suggest_lock_form.justification.label_tag }}
