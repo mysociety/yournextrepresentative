@@ -66,6 +66,9 @@ class BulkAddView(BaseBulkAddView):
                 **form_kwargs
             )
 
+        known_people = [m.person for m in context['post_extra'].base.memberships.all()]
+        known_people.sort(key=lambda i: i.name.split(' ')[-1])
+        context['known_people'] = known_people
 
         return context
 

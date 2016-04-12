@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load humanize %}
 
 {% block title %}Bulk add candidates{% endblock %}
 
 {% block content %}
-<h2>Add candidates to {{ election_obj.name }}: {{ post_extra.base.area.name }}</h2>
+<h2>Add candidates to {{ election_obj.name }}: <a href="{% url 'constituency' election=election_obj.slug post_id=post_extra.slug ignored_slug=post_extra.base.area.name|slugify %}">{{ post_extra.base.area.name }}</a></h2>
 {% if official_documents %}
 <h3>How to add candidates</h3>
 <ol>
@@ -16,6 +17,16 @@
   <li>Do another area!</li>
 </ol>
 {% endif %}
+{% if known_people %}
+<h3>There {{ known_people|pluralize:"is,are" }} {{ known_people|length|apnumber }} candidate{{ known_people|pluralize }} listed in this area already:</h3>
+<p>If {{ known_people|pluralize:"this person is,any of these people are" }} not listed on the nomination paper, please edit them and remove them from this election.</p>
+<ul>
+  {% for person in known_people %}
+    <li><a href="{% url 'person-view' person.pk %}" target="_blank">{{ person }}</a> <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">edit</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
 <label for="one_source_to_rule_them_all">Single source for all</label>
 <input id="one_source_to_rule_them_all">
 <form method=POST id="bulk_add_form">
