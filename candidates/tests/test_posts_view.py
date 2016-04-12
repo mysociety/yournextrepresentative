@@ -2,32 +2,13 @@ from __future__ import unicode_literals
 
 from django_webtest import WebTest
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
-    PostFactory, PostExtraFactory, ParliamentaryChamberFactory
-)
+from .uk_examples import UK2015ExamplesMixin
 
-class TestPostsView(WebTest):
+
+class TestPostsView(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        self.earlier_election = EarlierElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        PostFactory.reset_sequence()
-        for i in range(4):
-            PostExtraFactory.create(
-                elections=(self.election, self.earlier_election),
-                base__organization=commons
-            )
+        super(TestPostsView, self).setUp()
 
     def test_single_election_posts_page(self):
 

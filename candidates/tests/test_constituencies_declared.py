@@ -7,56 +7,15 @@ from candidates.models import MembershipExtra
 
 from .auth import TestUserMixin
 from .factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PersonExtraFactory,
-    CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
-    MembershipFactory, PartySetFactory, AreaExtraFactory
+    CandidacyExtraFactory, MembershipFactory, PersonExtraFactory,
 )
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestRecordWinner(TestUserMixin, WebTest):
+class TestConstituenciesDeclared(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        dulwich_area = AreaExtraFactory.create(
-            base__identifier='65808',
-            base__name='Dulwich and West Norwood',
-            type=wmc_area_type,
-        )
-        dulwich_post = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            base__area=dulwich_area.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-
-        camberwell_area = AreaExtraFactory.create(
-            base__identifier='65913',
-            base__name='Camberwell and Peckham',
-            type=wmc_area_type,
-        )
-        camberwell_post = PostExtraFactory.create(
-            elections=(self.election,),
-            base__area=camberwell_area.base,
-            base__organization=commons,
-            slug='65913',
-            candidates_locked=True,
-            base__label='Member of Parliament for Camberwell and Peckham',
-            party_set=gb_parties,
-        )
-
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
+        super(TestConstituenciesDeclared, self).setUp()
 
         tessa_jowell = PersonExtraFactory.create(
             base__id='2009',
@@ -65,12 +24,12 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=tessa_jowell.base,
-            base__post=dulwich_post.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=tessa_jowell.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         winner = PersonExtraFactory.create(
@@ -80,13 +39,13 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=winner.base,
-            base__post=dulwich_post.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             elected=True
             )
         MembershipFactory.create(
             person=winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         james_smith = PersonExtraFactory.create(
@@ -96,12 +55,12 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=james_smith.base,
-            base__post=camberwell_post.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.camberwell_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=james_smith.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
     def test_constituencies_declared(self):
@@ -113,7 +72,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         response.mustcontain('Dulwich')
         response.mustcontain('Camberwell')
 
-        response.mustcontain('1 still undeclared (50% done)')
+        response.mustcontain('3 still undeclared (25% done)')
 
     def test_constituencies_declared_bad_election(self):
         response = self.app.get(
@@ -147,7 +106,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
                 response.text
             )
         )
-        response.mustcontain('1 still undeclared (50% done)')
+        response.mustcontain('3 still undeclared (25% done)')
 
         unelected = MembershipExtra.objects.filter(
             election=self.election,
@@ -175,4 +134,4 @@ class TestRecordWinner(TestUserMixin, WebTest):
                 response.text
             )
         )
-        response.mustcontain('0 still undeclared (100% done)')
+        response.mustcontain('2 still undeclared (50% done)')

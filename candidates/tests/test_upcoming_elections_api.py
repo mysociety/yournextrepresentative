@@ -13,11 +13,10 @@ from nose.plugins.attrib import attr
 from django_webtest import WebTest
 
 from candidates.tests.factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, ParliamentaryChamberExtraFactory,
-    PartySetFactory, AreaExtraFactory
+    AreaTypeFactory, AreaExtraFactory, ElectionFactory,
+    ParliamentaryChamberExtraFactory, PostExtraFactory,
 )
-from elections.models import Election
+from .uk_examples import UK2015ExamplesMixin
 from elections.uk.tests.mapit_postcode_results \
     import se240ag_result, sw1a1aa_result
 
@@ -53,30 +52,9 @@ def fake_requests_for_mapit(url):
 
 @attr(country='uk')
 @patch('elections.uk.mapit.requests')
-class TestUpcomingElectionsAPI(WebTest):
+class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        area_extra = AreaExtraFactory.create(
-            base__name="Dulwich and West Norwood",
-            type=wmc_area_type,
-        )
-        self.area = area_extra.base
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-            base__area=area_extra.base,
-        )
+        super(TestUpcomingElectionsAPI, self).setUp()
 
     def test_empty_results(self, mock_requests):
         mock_requests.get.side_effect = fake_requests_for_mapit

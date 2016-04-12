@@ -13,38 +13,14 @@ from .auth import TestUserMixin
 from popolo.models import Person
 
 from candidates.models import ExtraField
-from .factories import (
-    AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
-    ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
-    PersonExtraFactory, PostExtraFactory, PartySetFactory
-)
+from .factories import CandidacyExtraFactory, PersonExtraFactory
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestUpdatePersonView(TestUserMixin, WebTest):
+class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        self.post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
+        super(TestUpdatePersonView, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
@@ -53,8 +29,8 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=self.post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
     def test_update_person_view_get_without_login(self):
@@ -81,7 +57,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         response = self.app.get('/person/2009/update', user=self.user)
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.labour_party_extra.base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit(user=self.user_refused)
         split_location = urlsplit(submission_response.location)
@@ -95,7 +71,7 @@ class TestUpdatePersonView(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Tessa_Jowell'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.labour_party_extra.base_id
         form['source'] = "Some source of this information"
         submission_response = form.submit()
 

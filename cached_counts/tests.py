@@ -9,27 +9,25 @@ from django_webtest import WebTest
 from popolo.models import Person
 
 from candidates.tests import factories
+from candidates.tests.uk_examples import UK2015ExamplesMixin
 
+class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
+    maxDiff = None
 
-class CachedCountTestCase(WebTest):
     def setUp(self):
-        commons = factories.ParliamentaryChamberFactory.create()
-        election = factories.ElectionFactory.create()
-        earlier_election = factories.EarlierElectionFactory.create()
-        factories.PostFactory.reset_sequence()
-        factories.PostExtraFactory.reset_sequence()
+        super(CachedCountTestCase, self).setUp()
         posts_extra = [
-            factories.PostExtraFactory.create(
-                elections=(election, earlier_election),
-                base__organization=commons
-            )
-            for i in range(4)
+            self.edinburgh_east_post_extra,
+            self.edinburgh_north_post_extra,
+            self.dulwich_post_extra,
+            self.camberwell_post_extra,
         ]
-        factories.PartyFactory.reset_sequence()
-        factories.PartyExtraFactory.reset_sequence()
         parties_extra = [
-            factories.PartyExtraFactory.create()
-            for i in range(7)
+            self.labour_party_extra,
+            self.ld_party_extra,
+            self.green_party_extra,
+            self.conservative_party_extra,
+            self.sinn_fein_extra,
         ]
         i = 0
         candidacy_counts = {
@@ -47,7 +45,7 @@ class CachedCountTestCase(WebTest):
                 )
                 party = parties_extra[n%5]
                 factories.CandidacyExtraFactory.create(
-                    election=election,
+                    election=self.election,
                     base__person=person_extra.base,
                     base__post=post_extra.base,
                     base__on_behalf_of=party.base,
@@ -57,14 +55,14 @@ class CachedCountTestCase(WebTest):
         # First, one sticking with the same party (but in a different
         # post):
         factories.CandidacyExtraFactory.create(
-            election=earlier_election,
+            election=self.earlier_election,
             base__person=Person.objects.get(id=7000),
             base__post=posts_extra[1].base,
             base__on_behalf_of=parties_extra[0].base,
         )
         # Now one in the same post but standing for a different party:
         factories.CandidacyExtraFactory.create(
-            election=earlier_election,
+            election=self.earlier_election,
             base__person=Person.objects.get(id=7001),
             base__post=posts_extra[1].base,
             base__on_behalf_of=parties_extra[2].base,
@@ -74,12 +72,12 @@ class CachedCountTestCase(WebTest):
         response = self.app.get('/numbers/')
         self.assertEqual(response.status_code, 200)
         current_div = response.html.find(
-            'div', {'id': 'statistics-election-sp-2016-05-05'}
+            'div', {'id': 'statistics-election-2015'}
         )
         self.assertTrue(current_div)
         self.assertIn('Total candidates: 18', str(current_div))
         earlier_div = response.html.find(
-            'div', {'id': 'statistics-election-earlier-general-election'}
+            'div', {'id': 'statistics-election-2010'}
         )
         self.assertIn('Total candidates: 2', str(earlier_div))
 
@@ -92,13 +90,13 @@ class CachedCountTestCase(WebTest):
                 'current': [
                     {
                         'total': 18,
-                        'id': "sp.2016-05-05",
-                        'html_id': "sp-2016-05-05",
-                        'name': "Scottish Parliamentary elections",
+                        'id': "2015",
+                        'html_id': "2015",
+                        'name': "2015 General Election",
                         'prior_elections': [
                             {
                                 "percentage": 900.0,
-                                "name": 'Earlier General Election',
+                                "name": '2010 General Election',
                                 "new_candidates": 16,
                                 "standing_again": 2,
                                 "standing_again_different_party": 1,
@@ -110,9 +108,9 @@ class CachedCountTestCase(WebTest):
                 'past': [
                     {
                         'total': 2,
-                        'id': "earlier-general-election",
-                        'html_id': 'earlier-general-election',
-                        'name': "Earlier General Election"
+                        'id': "2010",
+                        'html_id': '2010',
+                        'name': "2010 General Election"
                     }
                 ]
             }
@@ -127,23 +125,23 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                ('<td>Scottish Parliamentary elections</td>',
-                 '<td><a href="/election/sp.2016-05-05/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                ('<td>2015 General Election</td>',
+                 '<td><a href="/election/2015/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
                  '<td>0</td>'),
-                ('<td>Scottish Parliamentary elections</td>',
-                 '<td><a href="/election/sp.2016-05-05/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                ('<td>2015 General Election</td>',
+                 '<td><a href="/election/2015/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
                  '<td>3</td>'),
-                ('<td>Scottish Parliamentary elections</td>',
-                 '<td><a href="/election/sp.2016-05-05/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                ('<td>2015 General Election</td>',
+                 '<td><a href="/election/2015/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
                  '<td>5</td>'),
-                ('<td>Scottish Parliamentary elections</td>',
-                 '<td><a href="/election/sp.2016-05-05/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                ('<td>2015 General Election</td>',
+                 '<td><a href="/election/2015/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
                  '<td>10</td>')
             ]
         )
 
     def test_post_counts_page(self):
-        response = self.app.get('/numbers/election/sp.2016-05-05/posts')
+        response = self.app.get('/numbers/election/2015/posts')
         self.assertEqual(response.status_code, 200)
         rows = [
             tuple(td.decode() for td in row.find_all('td'))
@@ -152,19 +150,19 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                ('<td><a href="/election/sp.2016-05-05/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
+                ('<td><a href="/election/2015/post/14419/edinburgh-east">Member of Parliament for Edinburgh East</a></td>',
                  '<td>10</td>'),
-                ('<td><a href="/election/sp.2016-05-05/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
+                ('<td><a href="/election/2015/post/65808/dulwich-and-west-norwood">Member of Parliament for Dulwich and West Norwood</a></td>',
                  '<td>5</td>'),
-                ('<td><a href="/election/sp.2016-05-05/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
+                ('<td><a href="/election/2015/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',
                  '<td>3</td>'),
-                ('<td><a href="/election/sp.2016-05-05/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                ('<td><a href="/election/2015/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
                  '<td>0</td>'),
             ]
         )
 
     def test_party_counts_page(self):
-        response = self.app.get('/numbers/election/sp.2016-05-05/parties')
+        response = self.app.get('/numbers/election/2015/parties')
         self.assertEqual(response.status_code, 200)
         rows = [
             tuple(td.decode() for td in row.find_all('td'))
@@ -173,19 +171,15 @@ class CachedCountTestCase(WebTest):
         self.assertEqual(
             rows,
             [
-                ('<td><a href="/election/sp.2016-05-05/party/party:63/green-party">Green Party</a></td>',
+                ('<td><a href="/election/2015/party/party:63/green-party">Green Party</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/sp.2016-05-05/party/party:53/labour-party">Labour Party</a></td>',
+                ('<td><a href="/election/2015/party/party:53/labour-party">Labour Party</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/sp.2016-05-05/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
+                ('<td><a href="/election/2015/party/party:90/liberal-democrats">Liberal Democrats</a></td>',
                  '<td>4</td>'),
-                ('<td><a href="/election/sp.2016-05-05/party/party:52/conservative-party">Conservative Party</a></td>',
+                ('<td><a href="/election/2015/party/party:52/conservative-party">Conservative Party</a></td>',
                  '<td>3</td>'),
-                ('<td><a href="/election/sp.2016-05-05/party/party:10004/party-4">Party 4</a></td>',
+                ('<td><a href="/election/2015/party/party:39/sinn-fein">Sinn F\xe9in</a></td>',
                  '<td>3</td>'),
-                ('<td>Party 5</td>',
-                 '<td>0</td>'),
-                ('<td>Party 6</td>',
-                 '<td>0</td>')
             ]
         )

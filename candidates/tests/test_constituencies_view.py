@@ -4,28 +4,12 @@ import re
 
 from django_webtest import WebTest
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory,
-    PostExtraFactory, ParliamentaryChamberFactory,
-)
+from .uk_examples import UK2015ExamplesMixin
 
-class TestConstituencyDetailView(WebTest):
+class TestConstituencyDetailView(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        commons = ParliamentaryChamberFactory.create()
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
-        )
+        super(TestConstituencyDetailView, self).setUp()
 
     def test_constituencies_page(self):
         # Just a smoke test to check that the page loads:

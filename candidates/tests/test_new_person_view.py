@@ -8,40 +8,16 @@ from django_webtest import WebTest
 
 from popolo.models import Person
 
-from .auth import TestUserMixin
 from ..models import LoggedAction
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PostExtraFactory, PartySetFactory
-)
+from .auth import TestUserMixin
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestNewPersonView(TestUserMixin, WebTest):
+class TestNewPersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        self.post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
+        super(TestNewPersonView, self).setUp()
 
     def test_new_person_submission_refused_copyright(self):
         # Just a smoke test for the moment:
@@ -89,8 +65,9 @@ class TestNewPersonView(TestUserMixin, WebTest):
         form = response.forms['new-candidate-form']
         form['name'] = 'Elizabeth Bennet'
         form['email'] = 'lizzie@example.com'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
+        form['party_gb_2015'] = self.labour_party_extra.base_id
         form['wikipedia_url'] = 'http://en.wikipedia.org/wiki/Lizzie_Bennet'
+
         submission_response = form.submit()
 
         # If there's no source specified, it shouldn't ever get to

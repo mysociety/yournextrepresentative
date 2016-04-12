@@ -5,33 +5,13 @@ from django.test import TestCase
 from candidates.models import PersonExtra, ExtraField
 
 from .auth import TestUserMixin
+from .uk_examples import UK2015ExamplesMixin
 from . import factories
 
-class TestMissingFields(TestUserMixin, TestCase):
+class TestMissingFields(TestUserMixin, UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
-        wmc_area_type = factories.AreaTypeFactory.create()
-        gb_parties = factories.PartySetFactory.create(
-            slug='gb', name='Great Britain'
-        )
-        election = factories.ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        earlier_election = factories.EarlierElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = factories.ParliamentaryChamberFactory.create()
-        post_extra = factories.PostExtraFactory.create(
-            elections=(election, earlier_election),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
+        super(TestMissingFields, self).setUp()
         slogan_field = ExtraField.objects.create(
             key='slogan',
             type='line',
@@ -70,39 +50,29 @@ class TestMissingFields(TestUserMixin, TestCase):
             field=slogan_field,
             value='Things can only get better',
         )
-        person_with_details
-        factories.PartyFactory.reset_sequence()
-        parties_extra = [
-            factories.PartyExtraFactory.create()
-            for i in range(4)
-        ]
-        for party_extra in parties_extra:
-            gb_parties.parties.add(party_extra.base)
-        labour_party_extra = parties_extra[0]
-        green_party_extra = parties_extra[2]
         factories.CandidacyExtraFactory.create(
-            election=earlier_election,
+            election=self.earlier_election,
             base__person=person_old_election.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=labour_party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         factories.CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_no_details.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=labour_party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         factories.CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_empty_slogan.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=labour_party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         factories.CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_with_details.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=green_party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
     def test_find_those_missing_dob(self):

@@ -3,61 +3,18 @@ from __future__ import unicode_literals
 from django_webtest import WebTest
 
 from .factories import (
-    AreaExtraFactory, AreaTypeFactory, ElectionFactory,
-    PostExtraFactory, ParliamentaryChamberExtraFactory,
-    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, MembershipFactory, PartySetFactory
+    AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
+    PersonExtraFactory, PostExtraFactory,
 )
+from .uk_examples import UK2015ExamplesMixin
 
 from candidates.models import LoggedAction
 
 
-class TestAPI(WebTest):
+class TestAPI(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberExtraFactory.create()
-
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons.base
-        )
-        old_election = ElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons.base
-        )
-
-        PartyFactory.reset_sequence()
-        PartyExtraFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
-        gb_parties.parties.add(party_extra.base)
-
-        dulwich_area_extra = AreaExtraFactory.create(
-            base__identifier='65808',
-            base__name='Dulwich and West Norwood',
-            type=wmc_area_type,
-        )
-
-        post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons.base,
-            base__area=dulwich_area_extra.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        winner_post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons.base,
-            slug='14419',
-            base__label='Member of Parliament for Edinburgh East',
-            party_set=gb_parties,
-        )
+        super(TestAPI, self).setUp()
 
         person_extra = PersonExtraFactory.create(
             base__id='2009',
@@ -83,50 +40,50 @@ class TestAPI(WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=person_extra.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         CandidacyExtraFactory.create(
-            election=old_election,
+            election=self.earlier_election,
             base__person=dulwich_not_stand.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             )
         dulwich_not_stand.not_standing.add(self.election)
 
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=edinburgh_winner.base,
-            base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.edinburgh_east_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             elected=True,
             )
 
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=edinburgh_candidate.base,
-            base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.edinburgh_east_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=edinburgh_candidate.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         MembershipFactory.create(
             person=edinburgh_winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
         CandidacyExtraFactory.create(
-            election=old_election,
+            election=self.earlier_election,
             base__person=edinburgh_may_stand.base,
-            base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.edinburgh_east_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
 
     def test_api_basic_response(self):
@@ -228,7 +185,7 @@ class TestAPI(WebTest):
         areas = areas_resp.json
 
         self.assertEqual(areas['count'], len(areas['results']))
-        self.assertEqual(areas['count'], 1)
+        self.assertEqual(areas['count'], 4)
 
     def test_api_area(self):
         areas_resp = self.app.get('/api/v0.9/areas/')
@@ -255,7 +212,7 @@ class TestAPI(WebTest):
         organizations = organizations_resp.json
 
         self.assertEqual(organizations['count'], len(organizations['results']))
-        self.assertEqual(organizations['count'], 2)
+        self.assertEqual(organizations['count'], 5)
 
     def test_api_organization(self):
         organizations_resp = self.app.get('/api/v0.9/organizations/')
@@ -305,7 +262,7 @@ class TestAPI(WebTest):
         posts = posts_resp.json
 
         self.assertEqual(posts['count'], len(posts['results']))
-        self.assertEqual(posts['count'], 2)
+        self.assertEqual(posts['count'], 4)
 
     def test_api_post(self):
         posts_resp = self.app.get('/api/v0.9/posts/')

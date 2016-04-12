@@ -8,30 +8,18 @@ from popolo.models import Person
 
 from candidates.models import PersonExtra, ComplexPopoloField
 
-from .factories import (
-    AreaTypeFactory, PartySetFactory, ElectionFactory,
-    ParliamentaryChamberFactory
-)
-
 from .auth import TestUserMixin
+from .uk_examples import UK2015ExamplesMixin
 
 
 def get_next_dd(start):
     return [t for t in start.next_siblings if t.name == 'dd'][0]
 
 
-class ComplexFieldsTests(TestUserMixin, WebTest):
+class ComplexFieldsTests(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        # Standard setup (should be factored out):
-        wmc_area_type = AreaTypeFactory.create()
-        # commons = ParliamentaryChamberFactory.create()
-        # gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
+        super(ComplexFieldsTests, self).setUp()
 
         an_field = ComplexPopoloField.objects.create(
             name='additional_link',

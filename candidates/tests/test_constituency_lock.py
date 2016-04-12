@@ -1,49 +1,21 @@
 from __future__ import unicode_literals
 
-from mock import patch
-
 from django_webtest import WebTest
 from popolo.models import Person
 
 from candidates.models import PostExtra
 
 from .auth import TestUserMixin
+from .factories import CandidacyExtraFactory, PersonExtraFactory
+from .uk_examples import UK2015ExamplesMixin
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PersonExtraFactory,
-    CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, PartySetFactory
-)
-
-class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
+class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        post_extra = PostExtraFactory.create(
-            candidates_locked=False,
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PostExtraFactory.create(
-            candidates_locked=True,
-            elections=(election,),
-            base__organization=commons,
-            slug='65913',
-            base__label='Member of Parliament for Camberwell and Peckham',
-            party_set=gb_parties,
-        )
-        self.post_extra_id = post_extra.id
+        super(TestConstituencyLockAndUnlock, self).setUp()
+        self.camberwell_post_extra.candidates_locked = True
+        self.camberwell_post_extra.save()
+        self.post_extra_id = self.dulwich_post_extra.id
 
     def test_constituency_lock_unauthorized(self):
         self.app.get(
@@ -73,7 +45,7 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
         )
         csrftoken = self.app.cookies['csrftoken']
         with self.assertRaises(Exception) as context:
-            response = self.app.post(
+            self.app.post(
                 '/election/2015/post/lock',
                 {
                     'csrfmiddlewaretoken': csrftoken,
@@ -147,41 +119,14 @@ class TestConstituencyLockAndUnlock(TestUserMixin, WebTest):
         self.assertNotIn('Camberwell', response.text)
 
 
-class TestConstituencyLockWorks(TestUserMixin, WebTest):
+class TestConstituencyLockWorks(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        self.commons = ParliamentaryChamberFactory.create()
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
-        post_extra = PostExtraFactory.create(
-            candidates_locked=False,
-            elections=(self.election,),
-            base__organization=self.commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        post_extra_locked = PostExtraFactory.create(
-            candidates_locked=True,
-            elections=(self.election,),
-            base__organization=self.commons,
-            slug='65913',
-            base__label='Member of Parliament for Camberwell and Peckham',
-            party_set=gb_parties,
-        )
-        self.post_extra_id = post_extra.id
+        super(TestConstituencyLockWorks, self).setUp()
+        self.camberwell_post_extra.candidates_locked = True
+        self.camberwell_post_extra.save()
+        post_extra_locked = self.camberwell_post_extra
+        self.post_extra_id = self.dulwich_post_extra.id
         person_extra = PersonExtraFactory.create(
             base__id='4170',
             base__name='Naomi Newstead'
@@ -191,7 +136,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
             election=self.election,
             base__person=person_extra.base,
             base__post=post_extra_locked.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         person_extra = PersonExtraFactory.create(
@@ -202,8 +147,8 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
     def test_add_when_locked_unprivileged_disallowed(self):
@@ -219,7 +164,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
             {
                 'csrfmiddlewaretoken': csrftoken,
                 'name': 'Imaginary Candidate',
-                'party_gb_2015': self.parties['party:63'].base_id,
+                'party_gb_2015': self.green_party_extra.base_id,
                 'constituency_2015': '65913',
                 'standing_2015': 'standing',
                 'source': 'Testing adding a new candidate to a locked constituency',
@@ -235,7 +180,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['new-candidate-form']
         form['name'] = "Imaginary Candidate"
-        form['party_gb_2015'] = self.parties['party:63'].base_id
+        form['party_gb_2015'] = self.green_party_extra.base_id
         form['source'] = 'Testing adding a new candidate to a locked constituency'
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
@@ -308,7 +253,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_gb_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.conservative_party_extra.base_id
         submission_response = form.submit(expect_errors=True)
         self.assertEqual(submission_response.status_code, 403)
 
@@ -319,7 +264,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in a locked constituency'
-        form['party_gb_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.conservative_party_extra.base_id
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(
@@ -334,7 +279,7 @@ class TestConstituencyLockWorks(TestUserMixin, WebTest):
         )
         form = response.forms['person-details']
         form['source'] = 'Testing a party change in an unlocked constituency'
-        form['party_gb_2015'] = self.parties['party:52'].base_id
+        form['party_gb_2015'] = self.conservative_party_extra.base_id
         submission_response = form.submit()
         self.assertEqual(submission_response.status_code, 302)
         self.assertEqual(

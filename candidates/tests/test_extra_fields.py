@@ -12,31 +12,18 @@ from popolo.models import Person
 
 from candidates.models import ExtraField, PersonExtraFieldValue, PersonExtra
 
-from .factories import (
-    AreaTypeFactory, PartySetFactory, ElectionFactory,
-    ParliamentaryChamberFactory
-)
-
 from .auth import TestUserMixin
-
+from .uk_examples import UK2015ExamplesMixin
 
 def get_next_dd(start):
     return [t for t in start.next_siblings if t.name == 'dd'][0]
 
 
-class ExtraFieldTests(TestUserMixin, WebTest):
+class ExtraFieldTests(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        # Standard setup (should be factored out):
-        wmc_area_type = AreaTypeFactory.create()
-        # commons = ParliamentaryChamberFactory.create()
-        # gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        # And now the extra fields:
+        super(ExtraFieldTests, self).setUp()
+        # Create the extra fields:
         p_field = ExtraField.objects.create(
             key='profession',
             label='Profession',

@@ -7,8 +7,10 @@ from django_webtest import WebTest
 from candidates.tests.factories import (
     AreaTypeFactory, ElectionFactory, PostExtraFactory,
     ParliamentaryChamberExtraFactory,
-    PartySetFactory, AreaExtraFactory
+    AreaExtraFactory
 )
+
+from .uk_examples import UK2015ExamplesMixin
 
 
 def fake_requests_for_mapit(url):
@@ -34,21 +36,13 @@ def fake_requests_for_mapit(url):
 
 
 @patch('candidates.views.frontpage.requests')
-class TestGeolocator(WebTest):
+class TestGeolocator(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
+        super(TestGeolocator, self).setUp()
         lac_area_type = AreaTypeFactory.create(name='LAC')
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberExtraFactory.create()
         lac = ParliamentaryChamberExtraFactory.create(slug='lac')
 
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons.base
-        )
         election2 = ElectionFactory.create(
             slug='2015-secondary',
             name='2015 Secondary Election',
@@ -57,29 +51,15 @@ class TestGeolocator(WebTest):
         )
         area_extra = AreaExtraFactory.create(
             base__name="Westminster",
-            type=wmc_area_type,
+            type=self.wmc_area_type,
         )
 
         PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons.base,
+            elections=(self.election,),
+            base__organization=self.commons,
             slug='65759',
             base__label='Member of Parliament for Westminster',
-            party_set=gb_parties,
-            base__area=area_extra.base,
-        )
-
-        area_extra = AreaExtraFactory.create(
-            base__name="Dulwich and West Norwood",
-            type=wmc_area_type,
-        )
-
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
+            party_set=self.gb_parties,
             base__area=area_extra.base,
         )
 
@@ -90,10 +70,10 @@ class TestGeolocator(WebTest):
 
         PostExtraFactory.create(
             elections=(election2,),
-            base__organization=commons.base,
+            base__organization=self.commons,
             slug='11822',
             base__label='London Assembly Member for Lambeth and Southwark',
-            party_set=gb_parties,
+            party_set=self.gb_parties,
             base__area=area_extra.base,
         )
 

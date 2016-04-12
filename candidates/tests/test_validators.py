@@ -4,40 +4,13 @@ from django.test import TestCase
 
 from ..forms import BasePersonForm, UpdatePersonForm
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PostExtraFactory, PartySetFactory
-)
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestValidators(TestCase):
+class TestValidators(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
-
-    def tearDown(self):
-        self.parties = {}
+        super(TestValidators, self).setUp()
 
     def test_twitter_bad_url(self):
         form = BasePersonForm({
@@ -116,7 +89,7 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
+            'party_gb_2015': self.conservative_party_extra.base.id,
         })
         self.assertTrue(form.is_valid())
 
@@ -146,7 +119,7 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
+            'party_gb_2015': self.conservative_party_extra.base.id,
         })
         self.assertTrue(form.is_valid())
 
@@ -176,6 +149,6 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
+            'party_gb_2015': self.conservative_party_extra.base.id,
         })
         self.assertTrue(form.is_valid())

@@ -100,10 +100,10 @@ class EarlierElectionFactory(BaseElectionFactory):
 
 
 EXAMPLE_CONSTITUENCIES = [
-    {'id': '14419', 'name': 'Edinburgh East'},
-    {'id': '14420', 'name': 'Edinburgh North and Leith'},
-    {'id': '65808', 'name': 'Dulwich and West Norwood'},
-    {'id': '65913', 'name': 'Camberwell and Peckham'},
+    {'id': '14419', 'name': 'Edinburgh East', 'country': 'Scotland'},
+    {'id': '14420', 'name': 'Edinburgh North and Leith', 'country': 'Scotland'},
+    {'id': '65808', 'name': 'Dulwich and West Norwood', 'country': 'England'},
+    {'id': '65913', 'name': 'Camberwell and Peckham', 'country': 'England'},
 ]
 
 def get_constituency_id(n):
@@ -121,6 +121,10 @@ def get_post_label(n):
         constituency_name=constituency_name
     )
 
+def get_country(n):
+    if n < len(EXAMPLE_CONSTITUENCIES):
+        return EXAMPLE_CONSTITUENCIES[n]['country']
+    return ''
 
 class AreaFactory(factory.DjangoModelFactory):
 
@@ -158,6 +162,7 @@ class PostExtraFactory(factory.DjangoModelFactory):
 
     slug = factory.Sequence(get_constituency_id)
     base = factory.SubFactory(PostFactory)
+    group = factory.Sequence(get_country)
 
     @factory.post_generation
     def elections(self, create, extracted, **kwargs):

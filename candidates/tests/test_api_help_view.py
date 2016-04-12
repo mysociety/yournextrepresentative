@@ -9,15 +9,10 @@ from . import factories
 class TestApiHelpView(WebTest):
 
     def setUp(self):
-        wmc_area_type = factories.AreaTypeFactory.create()
-        commons = factories.ParliamentaryChamberFactory.create()
         factories.ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
         )
-
 
     def test_api_help(self):
         response = self.app.get('/help/api')

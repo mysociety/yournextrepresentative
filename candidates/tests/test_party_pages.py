@@ -1,50 +1,27 @@
 from __future__ import unicode_literals
 
-from mock import patch, MagicMock
 import re
 
 from django_webtest import WebTest
 
 from .factories import (
-    AreaTypeFactory, ElectionFactory, EarlierElectionFactory,
-    CandidacyExtraFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PersonExtraFactory,
-    PostExtraFactory
+    CandidacyExtraFactory, PersonExtraFactory, PostExtraFactory
 )
+from .uk_examples import UK2015ExamplesMixin
 
-class TestPartyPages(WebTest):
+class TestPartyPages(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        earlier_election = EarlierElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            parties[party_extra.slug] = party_extra
+        super(TestPartyPages, self).setUp()
         constituencies = {}
         for slug, cons_name, country in [
                 ('66090', 'Cardiff Central', 'Wales'),
-                ('14421', 'Edinburgh South', 'Scotland'),
                 ('65672', 'Doncaster North', 'England'),
                 ('65719', 'South Shields', 'England'),
-                ('65808', 'Dulwich and West Norwood', 'England'),
-                ('65913', 'Camberwell and Peckham', 'England'),
         ]:
             constituencies[cons_name] = PostExtraFactory.create(
-                elections=(election, earlier_election,),
-                base__organization=commons,
+                elections=(self.election, self.earlier_election,),
+                base__organization=self.commons,
                 slug=slug,
                 base__label='Member of Parliament for {0}'.format(cons_name),
                 group=country,
@@ -54,30 +31,30 @@ class TestPartyPages(WebTest):
             base__name='Ed Miliband'
         )
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
             base__post=constituencies['Doncaster North'].base,
-            base__on_behalf_of=parties['party:53'].base
+            base__on_behalf_of=self.labour_party_extra.base
         )
         person_extra = PersonExtraFactory.create(
             base__id='3814',
             base__name='David Miliband'
         )
         CandidacyExtraFactory.create(
-            election=earlier_election,
+            election=self.earlier_election,
             base__person=person_extra.base,
             base__post=constituencies['South Shields'].base,
-            base__on_behalf_of=parties['party:53'].base
+            base__on_behalf_of=self.labour_party_extra.base
         )
         conservative_opponent_extra = PersonExtraFactory.create(
             base__id='6648',
             base__name='Mark Fletcher'
         )
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=conservative_opponent_extra.base,
             base__post=constituencies['South Shields'].base,
-            base__on_behalf_of=parties['party:52'].base
+            base__on_behalf_of=self.conservative_party_extra.base
         )
 
     def test_parties_page(self):
