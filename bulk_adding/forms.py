@@ -83,7 +83,7 @@ class ReviewSinglePersonForm(forms.Form):
 
 BulkAddFormSet = forms.formset_factory(
     QuickAddSinglePersonForm,
-    extra=10,
+    extra=15,
     formset=BaseBulkAddFormSet)
 
 
