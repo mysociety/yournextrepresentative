@@ -36,6 +36,7 @@
              <li>{% blocktrans %}Total candidates:{% endblocktrans %} {{ election.total }}</li>
              <li><a href="{% url "posts_counts" election=election.id %}">{% trans "Candidates per post" %}</a></li>
              <li><a href="{% url "parties_counts" election=election.id %}">{% trans "Candidates per party" %}</a></li>
+             <li><a href="{% url "constituencies-unlocked" election=election.id %}">{% trans "See progress towards locking all posts" %}</a></li>
            </ul>
         </div>
         {% endwith %}
