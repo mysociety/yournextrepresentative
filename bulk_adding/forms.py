@@ -31,7 +31,7 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
 
 class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
     def suggested_people(self, person_name):
-        return SearchQuerySet().filter(content=person_name)
+        return SearchQuerySet().filter(content=person_name)[:5]
 
     def format_value(self, suggestion):
         """
