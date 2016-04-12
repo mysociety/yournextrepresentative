@@ -142,6 +142,14 @@ class BulkAddReviewView(BaseBulkAddView):
         post = context['post_extra'].base
         election = Election.objects.get(slug=context['election'])
 
+        previous_memberships_in_this_election = Membership.objects.filter(
+            person=person_extra.base,
+            extra__election=election,
+            role=election.candidate_membership_role,
+        )
+
+        previous_memberships_in_this_election.delete()
+
         membership, _ = Membership.objects.get_or_create(
             post=post,
             person=person_extra.base,
