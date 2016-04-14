@@ -1,3 +1,5 @@
+sudo: false
+
 notifications:
   email: false
   irc:
@@ -18,8 +20,6 @@ addons:
   postgresql: "9.1"
 
 install:
-  - sudo apt-get update -qq
-  - sudo apt-get install python-virtualenv curl yui-compressor
   - gem install --no-ri --no-rdoc compass -v 0.12.7
   - gem install --no-ri --no-rdoc sass -v 3.2.19
   # Now install the rest of the required Python packages:
