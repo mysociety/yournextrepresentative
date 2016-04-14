@@ -22,8 +22,10 @@ install:
   - sudo apt-get install python-virtualenv curl yui-compressor
   - gem install --no-ri --no-rdoc compass -v 0.12.7
   - gem install --no-ri --no-rdoc sass -v 3.2.19
+  # Make sure pip is at the latest version:
+  - pip install -U pip
   # Now install the rest of the required Python packages:
-  - CFLAGS="-O0" pip install -r requirements.txt --use-mirrors
+  - CFLAGS="-O0" pip install -r requirements.txt
   - pip install python-coveralls
   # Create a basic general.yml file:
   - sed -r
