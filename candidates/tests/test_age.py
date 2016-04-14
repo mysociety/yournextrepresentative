@@ -19,7 +19,7 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1976-09-01'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '1')
 
     def test_age_full_early_in_year(self, mock_date):
@@ -30,7 +30,7 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1976-09-01'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '0')
 
     def test_age_month_obvious(self, mock_date):
@@ -41,7 +41,7 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1976-09'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '1')
 
     def test_age_month_early_in_year(self, mock_date):
@@ -52,7 +52,7 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1976-09'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '0')
 
     def test_age_month_ambiguous(self, mock_date):
@@ -63,7 +63,7 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1976-09'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '0 or 1')
 
     def test_age_year_ambiguous(self, mock_date):
@@ -74,5 +74,5 @@ class TestAgeCalculation(TestCase):
             name='Test Person',
             birth_date='1975'
         )
-        pe = PersonExtra.objects.create(base=p)
+        PersonExtra.objects.create(base=p)
         self.assertEqual(p.extra.age, '1 or 2')
