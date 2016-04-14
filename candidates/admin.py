@@ -19,7 +19,7 @@ class LoggedActionAdminForm(ModelForm):
 class LoggedActionAdmin(admin.ModelAdmin):
     form = LoggedActionAdminForm
     search_fields = ('user__username', 'popit_person_new_version',
-                     'person', 'ip_address', 'source')
+                     'person__name', 'ip_address', 'source')
     list_filter = ('action_type',)
     list_display = ['user', 'ip_address', 'action_type',
                     'popit_person_new_version', 'person_link',
