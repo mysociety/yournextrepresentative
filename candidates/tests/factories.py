@@ -99,33 +99,6 @@ class EarlierElectionFactory(BaseElectionFactory):
                 self.area_types.add(area_type)
 
 
-EXAMPLE_CONSTITUENCIES = [
-    {'id': '14419', 'name': 'Edinburgh East', 'country': 'Scotland'},
-    {'id': '14420', 'name': 'Edinburgh North and Leith', 'country': 'Scotland'},
-    {'id': '65808', 'name': 'Dulwich and West Norwood', 'country': 'England'},
-    {'id': '65913', 'name': 'Camberwell and Peckham', 'country': 'England'},
-]
-
-def get_constituency_id(n):
-    if n < len(EXAMPLE_CONSTITUENCIES):
-        return EXAMPLE_CONSTITUENCIES[n]['id']
-    else:
-        return str(70000 + n)
-
-def get_post_label(n):
-    if n < len(EXAMPLE_CONSTITUENCIES):
-        constituency_name = EXAMPLE_CONSTITUENCIES[n]['name']
-    else:
-        constituency_name = 'Constituency {n}'.format(n=n)
-    return 'Member of Parliament for {constituency_name}'.format(
-        constituency_name=constituency_name
-    )
-
-def get_country(n):
-    if n < len(EXAMPLE_CONSTITUENCIES):
-        return EXAMPLE_CONSTITUENCIES[n]['country']
-    return ''
-
 class AreaFactory(factory.DjangoModelFactory):
 
     class Meta:
@@ -145,7 +118,6 @@ class PostFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'popolo.Post'
 
-    label = factory.Sequence(get_post_label)
     role = 'Member of Parliament'
 
 
@@ -160,9 +132,7 @@ class PostExtraFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'candidates.PostExtra'
 
-    slug = factory.Sequence(get_constituency_id)
     base = factory.SubFactory(PostFactory)
-    group = factory.Sequence(get_country)
 
     @factory.post_generation
     def elections(self, create, extracted, **kwargs):
@@ -176,33 +146,11 @@ class PostExtraFactory(factory.DjangoModelFactory):
                 )
 
 
-EXAMPLE_PARTIES = [
-    {'id': 'party:53', 'name': 'Labour Party'},
-    {'id': 'party:90', 'name': 'Liberal Democrats'},
-    {'id': 'party:63', 'name': 'Green Party'},
-    {'id': 'party:52', 'name': 'Conservative Party'},
-]
-
-def get_party_id(n):
-    if n < len(EXAMPLE_PARTIES):
-        return EXAMPLE_PARTIES[n]['id']
-    else:
-        return 'party:{ec_id}'.format(ec_id=(10000 + n))
-
-def get_party_name(n):
-    if n < len(EXAMPLE_PARTIES):
-        party_name = EXAMPLE_PARTIES[n]['name']
-    else:
-        party_name = 'Party {n}'.format(n=n)
-    return party_name
-
-
 class PartyFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = 'popolo.Organization'
 
-    name = factory.Sequence(get_party_name)
     classification='Party'
 
 
@@ -213,7 +161,6 @@ class PartyExtraFactory(factory.DjangoModelFactory):
 
     register = 'Great Britain'
 
-    slug = factory.Sequence(get_party_id)
     base = factory.SubFactory(PartyFactory)
 
 
