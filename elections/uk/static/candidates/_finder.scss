@@ -110,9 +110,9 @@
     .header__hero {
       padding-top: 2em;
       padding-bottom: 4em;
+      text-align: center;
 
       .lead {
-        width: 50%;
         font-size: 1.5em;
         line-height: 1.4em;
         margin-top: 0.7em;
@@ -121,15 +121,19 @@
   }
 
   .finder__forms {
-    position: absolute;
-    z-index: 1; // sit on top of following elements
-    top: -5em; // overlap into header above
-    right: 0.9375em; // default bootstrap column gutter
-    margin: 0; // override auto margins from smaller screens
-    padding: 2em 3em;
-    width: 40%;
-    background-color: #fff;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+    background-color: #f4f1ed;
+    max-width: 100%;
+
+    .finder__forms__container {
+      background-color: #FFF;
+      position: relative;
+      z-index: 1; // sit on top of following elements
+      top: -2em; // overlap into header above
+      margin: 0 auto; // override auto margins from smaller screens
+      padding: 2em 3em;
+      width: 40%;
+      box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+    }
   }
 
   .finder__description {
