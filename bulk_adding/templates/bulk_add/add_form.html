@@ -34,7 +34,7 @@
 <p>If {{ known_people|pluralize:"this person is,any of these people are" }} not listed on the nomination paper, please pressedit and mark them as not standing in this specific election.</p>
 <ul>
   {% for person in known_people %}
-    <li><a href="{% url 'person-view' person.pk %}" target="_blank">{{ person }}</a> <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">edit</a></li>
+    <li><a href="{% url 'person-view' person.pk %}" target="_blank">{{ person }} ({{ person.party.name }})</a> <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">edit</a></li>
   {% endfor %}
 </ul>
 {% endif %}
