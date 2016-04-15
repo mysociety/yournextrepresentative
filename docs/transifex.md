@@ -45,7 +45,24 @@ added to the project with:
 
 ```
 ./manage.py makemessages -a --no-wrap \
-    --ignore=data --ignore=candidates/static/foundation
+    --ignore=data \
+    --ignore=candidates/static/foundation \
+    --ignore=candidates/static/select2 \
+    --ignore=candidates/static/jquery \
+    --ignore=mysite/static/jsi18n \
+    --ignore=htmlcov
+```
+
+You also need to compile the Javascript files:
+
+```
+/manage.py makemessages -a --no-wrap -d djangojs \
+    --ignore=data \
+    --ignore=candidates/static/foundation \
+    --ignore=candidates/static/select2 \
+    --ignore=candidates/static/jquery \
+    --ignore=mysite/static/jsi18n \
+    --ignore=htmlcov
 ```
 
 That will add some fuzzily inferred translations to the `.po`
