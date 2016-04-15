@@ -18,7 +18,7 @@ from candidates.models.auth import check_creation_allowed, check_update_allowed
 from candidates.views.version_data import get_change_metadata, get_client_ip
 from candidates.views.people import get_call_to_action_flash_message
 from candidates.models import LoggedAction
-from popolo.models import Person, Membership
+from popolo.models import Person, Membership, Organization
 from official_documents.models import OfficialDocument
 from moderation_queue.models import SuggestedPostLock
 
@@ -31,7 +31,7 @@ class BaseBulkAddView(LoginRequiredMixin, TemplateView):
     def add_election_and_post_to_context(self, context):
         context['post_extra'] = PostExtra.objects.get(slug=context['post_id'])
         context['election_obj'] = Election.objects.get(slug=context['election'])
-        context['parties'] = context['post_extra'].party_set.parties
+        context['parties'] = context['post_extra'].party_set.party_choices()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -138,7 +138,7 @@ class BulkAddReviewView(BaseBulkAddView):
         return person_extra
 
     def update_person(self, context, data, person_extra):
-        party = data['party']
+        party = Organization.objects.get(pk=data['party'])
         post = context['post_extra'].base
         election = Election.objects.get(slug=context['election'])
 

@@ -17,9 +17,8 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
 
     def add_fields(self, form, index):
         super(BaseBulkAddFormSet, self).add_fields(form, index)
-        form.fields["party"] = forms.ModelChoiceField(
-            queryset=self.parties,
-            empty_label='Select Party',
+        form.fields["party"] = forms.ChoiceField(
+            choices=self.parties,
             widget=forms.Select(attrs={
                 'class': 'party-select',
             }),
@@ -50,9 +49,8 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
         form.fields['select_person'] = forms.ChoiceField(
             choices=CHOICES, widget=forms.RadioSelect())
 
-        form.fields["party"] = forms.ModelChoiceField(
-            queryset=self.parties,
-            empty_label=None,
+        form.fields["party"] = forms.ChoiceField(
+            choices=self.parties,
             widget=forms.HiddenInput(attrs={
                 'readonly':'readonly',
                 'class': 'party-select',
@@ -65,10 +63,6 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
 class QuickAddSinglePersonForm(forms.Form):
     name = forms.CharField(required=True)
     source = forms.CharField(required=True)
-
-    def clean_party(self):
-        party = self.cleaned_data['party']
-        return party.pk
 
 
 class ReviewSinglePersonForm(forms.Form):

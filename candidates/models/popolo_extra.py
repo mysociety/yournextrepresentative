@@ -622,7 +622,7 @@ class PartySet(models.Model):
 
     def party_choices_basic(self):
         result = list(self.parties.order_by('name').values_list('id', 'name'))
-        result.insert(0, ('party:none', ''))
+        result.insert(0, ('', ''))
         return result
 
     def party_choices(self):
@@ -650,7 +650,7 @@ class PartySet(models.Model):
             qs = candidacies_ever_qs
         else:
             return self.party_choices_basic()
-        result = [('party:none', '')]
+        result = [('', '')]
         parties_with_candidates = []
         for t in qs \
                 .values('on_behalf_of', 'on_behalf_of__name') \

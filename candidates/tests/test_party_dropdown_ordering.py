@@ -11,7 +11,7 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertEqual(
             party_choices,
             [
-                (u'party:none', u''),
+                (u'', u''),
                 (self.conservative_party_extra.base.id, u'Conservative Party'),
                 (self.green_party_extra.base.id, u'Green Party'),
                 (self.labour_party_extra.base.id, u'Labour Party'),
@@ -54,7 +54,7 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertEqual(
             party_choices,
             [
-                (u'party:none', u''),
+                (u'', u''),
                 (self.labour_party_extra.base.id, u'Labour Party (16 candidates)'),
                 (self.ld_party_extra.base.id, u'Liberal Democrats (8 candidates)'),
                 (self.conservative_party_extra.base.id, u'Conservative Party'),
@@ -74,7 +74,7 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertEqual(
             party_choices,
             [
-                (u'party:none', u''),
+                (u'', u''),
                 (self.ld_party_extra.base.id, u'Liberal Democrats (30 candidates)'),
                 (self.green_party_extra.base.id, u'Green Party (15 candidates)'),
                 (self.conservative_party_extra.base.id, u'Conservative Party'),
