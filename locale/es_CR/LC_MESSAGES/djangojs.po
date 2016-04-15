@@ -20,7 +20,7 @@ msgstr ""
 
 #: candidates/static/js/constituency.js:53
 #, javascript-format
-msgid "Are you sure that %s (%s) was the winner in %s?"
+msgid "Are you sure that %s (%s) was elected in %s?"
 msgstr "¿Estás seguro de que %s (%s) fue el ganador en %s?"
 
 #: candidates/static/js/versions.js:4
