@@ -14,7 +14,7 @@ from .factories import (
     CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
     MembershipFactory, PartySetFactory
 )
-from .test_person_view import processors_after
+from .dates import processors_after
 
 
 class TestRecordWinner(TestUserMixin, WebTest):

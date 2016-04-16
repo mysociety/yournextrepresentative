@@ -4,9 +4,7 @@ from datetime import date, timedelta
 
 import factory
 
-date_in_near_future = date.today() + timedelta(days=14)
-
-FOUR_YEARS_IN_DAYS = 1462
+from .dates import date_in_near_future, FOUR_YEARS_IN_DAYS
 
 
 class AreaTypeFactory(factory.DjangoModelFactory):
