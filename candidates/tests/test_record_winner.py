@@ -11,7 +11,7 @@ from .auth import TestUserMixin
 from .factories import (
     CandidacyExtraFactory, MembershipFactory, PersonExtraFactory,
 )
-from .test_person_view import processors_after
+from .dates import processors_after
 from .uk_examples import UK2015ExamplesMixin
 
 
