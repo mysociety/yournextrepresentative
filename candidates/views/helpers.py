@@ -171,24 +171,50 @@ def split_candidacies(election_data, memberships):
 
     return current_candidadacies, past_candidadacies
 
+def order_candidates_by_name_no_grouping(election_data, candidacies):
+    result = [
+        (
+            {
+                'id': candidacy.on_behalf_of_id,
+                'name': candidacy.on_behalf_of.name,
+                'max_count': 0,
+                'truncated': False,
+                'total_count': 1,
+            },
+            [(None, candidacy.person, candidacy.extra.elected)],
+        )
+        for candidacy in candidacies
+    ]
+    result.sort(key=lambda t: t[1][0][1].name.split()[-1])
+    return {
+        'party_lists_in_use': False,
+        'parties_and_people': result
+    }
+
 def group_candidates_by_party(election_data, candidacies, party_list=True, max_people=None):
     """Take a list of candidacies and return the people grouped by party
 
     This returns a tuple of the party_list boolean and a list of
     parties-and-people.
 
-    The the parties-and-people list is a list of tuples; each tuple
-    has two elements, the first of which is a dictionary with the
-    party's ID and name, while the second is a list of people in that
-    party.  The list of people for each party is sorted by their last
-    names.
+    The parties-and-people list is a list of tuples; each tuple has
+    two elements, the first of which is a dictionary with party data
+    (e.g. its ID and name), while the second is a list of people in
+    that party.  The list of people for each party is sorted by their
+    last names.
 
-    The order of the tuples in the parties-and-people list is
-    determined by the party_list parameter.  When party_list is True,
-    the groups of parties are ordered by their names.  Otherwise
-    (where there is typically one candidate per party), the groups
-    will be ordered by the last name of the first candidate for each
-    party."""
+    If party_list is True, the parties are sorted alphabetically and
+    the candidates within each party group are sorted by their last
+    name.
+
+    Otherwise, if party_list is False, no grouping by party is done -
+    the candidates are sorted by their last name.  (That means that if
+    there's more than one candidate for a party and party_list is
+    False, that party will once in the list for each candidate.)
+    """
+
+    if not party_list:
+        return order_candidates_by_name_no_grouping(election_data, candidacies)
 
     party_id_to_name = {}
     party_id_to_people = defaultdict(list)
@@ -204,14 +230,13 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     for party_id, people_list in party_id_to_people.items():
         truncated = False
         total_count = len(people_list)
-        if election_data.party_lists_in_use:
-            # sort by party list position
-            people_list.sort(key=lambda p: ( p[0] is None, p[0] ))
-            # only return the configured maximum number of people
-            # for a party list
-            if max_people and len(people_list) > max_people:
-                truncated = True
-                del people_list[max_people:]
+        # sort by party list position
+        people_list.sort(key=lambda p: ( p[0] is None, p[0] ))
+        # only return the configured maximum number of people
+        # for a party list
+        if max_people and len(people_list) > max_people:
+            truncated = True
+            del people_list[max_people:]
         party_truncated[party_id] = truncated
         party_total[party_id] = total_count
     try:
@@ -230,10 +255,7 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
         ]
     except KeyError as ke:
         raise Exception("Unknown party: {0}".format(ke))
-    if party_list:
-        result.sort(key=lambda t: t[0]['name'])
-    else:
-        result.sort(key=lambda t: t[1][0][1].name.split()[-1])
+    result.sort(key=lambda t: t[1][0][1].name.split()[-1])
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result
