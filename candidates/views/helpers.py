@@ -191,7 +191,7 @@ def order_candidates_by_name_no_grouping(election_data, candidacies):
         'parties_and_people': result
     }
 
-def group_candidates_by_party(election_data, candidacies, party_list=True, max_people=None):
+def group_candidates_by_party(election_data, candidacies):
     """Take a list of candidacies and return the people grouped by party
 
     This returns a tuple of the party_list boolean and a list of
@@ -212,6 +212,9 @@ def group_candidates_by_party(election_data, candidacies, party_list=True, max_p
     there's more than one candidate for a party and party_list is
     False, that party will once in the list for each candidate.)
     """
+
+    party_list = election_data.party_lists_in_use
+    max_people = election_data.default_party_list_members_to_show
 
     if not party_list:
         return order_candidates_by_name_no_grouping(election_data, candidacies)

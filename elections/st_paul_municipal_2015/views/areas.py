@@ -68,8 +68,6 @@ class StPaulAreasView(TemplateView):
                 current_candidacies = group_candidates_by_party(
                     election,
                     current_candidacies,
-                    party_list=election.party_lists_in_use,
-                    max_people=election.default_party_list_members_to_show
                 )
                 context['posts'].append({
                     'election': election.slug,
