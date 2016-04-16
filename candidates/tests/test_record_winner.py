@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
 from django_webtest import WebTest
 
 from popolo.models import Person
@@ -13,6 +14,7 @@ from .factories import (
     CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
     MembershipFactory, PartySetFactory
 )
+from .test_person_view import processors_after
 
 
 class TestRecordWinner(TestUserMixin, WebTest):
@@ -68,6 +70,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
             organization=party_extra.base
         )
 
+    @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_after)
     def test_record_winner_link_present(self):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
