@@ -45,7 +45,11 @@ def download_file_cached(url):
     filename = join(directory, url_hash)
     if exists(filename):
         return filename
-    r = requests.get(url)
+    try:
+        r = requests.get(url)
+    except requests.exceptions.SSLError:
+        print("Caught an SSLError, so retrying without certificate validation")
+        r = requests.get(url, verify=False)
     with open(filename, 'w') as f:
         f.write(r.content)
     return filename
