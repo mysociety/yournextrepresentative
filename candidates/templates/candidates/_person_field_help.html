@@ -30,7 +30,7 @@
       like their photo, other social media accounts or websites?</p>
 
     <p>
-    <form method="post" action="{% url 'couldnt_find_field' person.extra.pk %}/">
+    <form method="post" action="{% url 'couldnt_find_field' person.pk %}/">
       {% csrf_token %}
       {{ couldnt_find_field_form }}
       <button type="submit" class="button alert small">
