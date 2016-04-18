@@ -1,0 +1,41 @@
+<div class="panel">
+  <h3>Find {{ person.name }}'s
+    {% if highlight_field == 'facebook_page_url' %}Facebook page{% endif %}
+    {% if highlight_field == 'email' %}email address{% endif %}
+    {% if highlight_field == 'twitter_username' %}Twitter page{% endif %}
+  </h3>
+  <p>
+    Searching for
+    {% if highlight_field == 'facebook_page_url' %}
+    <a href="https://www.google.co.uk/search?q=%22{{ person.name }}%22+facebook" target="_blank">
+      “{{ person.name }} facebook”</a>
+
+    {% endif %}
+    {% if highlight_field == 'email' %}
+    <a href="https://www.google.co.uk/search?q=%22{{ person.name }}%22+email" target="_blank">
+      “{{ person.name }} email”</a>
+
+    {% endif %}
+    {% if highlight_field == 'twitter_username' %}
+    <a href="https://www.google.co.uk/search?q=%22{{ person.name }}%22+twitter" target="_blank">
+      “{{ person.name }} twitter”</a>
+    {% endif %}
+     works surprisingly often.</p>
+
+    <p>You’ll need to do a bit of checking to ensure it’s the right person
+      (e.g. compare pictures; location; election; any other info)…
+      But once you’re confident, add the information to the form below!</p>
+
+    <p>While you're searching, can you find any other information about {{ person.name }},
+      like their photo, other social media accounts or websites?</p>
+
+    <p>
+    <form method="post" action="{% url 'couldnt_find_field' person.extra.pk %}/">
+      {% csrf_token %}
+      {{ couldnt_find_field_form }}
+      <button type="submit" class="button alert small">
+        I can't find this information, give me something else</button>
+    </form>
+    </p>
+
+</div>

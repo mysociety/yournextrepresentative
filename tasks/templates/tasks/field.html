@@ -36,7 +36,7 @@ Of {{ num_candidates }} candidates in total ({{ percent_empty }}% blank)
     ({{ membership.party.name }}, {{ membership.post.name }})
     {% if membership.twitter %}
         &mdash; <a href="https://twitter.com/intent/tweet?text={% blocktrans trimmed with username=membership.twitter id=membership.person.id site_name=site.name %}
-        Hi @{{ username }} could you add your {{ field }} to your {{ site_name }} page please? https://yournextmp.com/person/{{ id }}/
+        Hi @{{ username }} could you add your {{ field }} to your {{ site_name }} page please? https://candidates.democracyclub.org.uk/person/{{ id }}/
         {% endblocktrans %}">
             {% trans "Tweet them" %}</a>{% endif %}
     &mdash; <a href="https://duckduckgo.com/?q=%22{{ membership.person.name }}%22+%22{{ membership.post.name }}%22+{{ field }}">{% trans "Search" %}</a>

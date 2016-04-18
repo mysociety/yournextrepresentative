@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 
 from popolo.models import Membership, ContactDetail
+from tasks.models import PersonTask
 
 
 class TaskHomeView(TemplateView):
@@ -82,3 +83,21 @@ class IncompleteFieldView(TemplateView):
             filtered_results = results.filter(**args)
 
         return filtered_results
+
+
+class CouldntFindFieldView(UpdateView):
+    model = PersonTask
+    fields = ('person', 'task_field')
+    success_url = "/"
+
+    def get_object(self, queryset=None):
+        return PersonTask.objects.get(
+            person_id=self.kwargs['pk'],
+            task_field=self.request.POST.get('task_field')
+        )
+
+    def form_valid(self, form):
+        task = form.save()
+        task.log_not_found()
+        return super(CouldntFindFieldView, self).form_valid(form)
+

@@ -31,7 +31,7 @@
 
 {% block hero %}
 
-  <h1>Help us identify every candidate for every election in May 2016</h1>
+  <h1>Every candidate for every election in May 2016</h1>
   <p class="lead">With data on candidates, we can build tools to help voters.</p>
 
 {% endblock %}
@@ -42,25 +42,13 @@
 
 <div class="finder__forms">
   <div class="finder__forms__container">
-
-    <h3>Add candidates from the nomination papers</h3>
-    <div class="radius progress success large-12" role="progressbar" aria-valuenow="{{ sopn_percent_complete }}" aria-valuemin="0" aria-valuemax="{{ total_sopns_count }}">
-      <span class="meter" style="width: {{ sopn_percent_complete }}%"></span>
-    </div>
-    <p>We know of <strong>{{ total_sopns_count }}</strong>
-      official candidate lists (Statements Of Persons Nominated) as provided by councils.</p>
-
-    <p>We've verified {{ locked_sopns_count }} of these, and have
-      {{ unlocked_sopns_count }} to go.</p>
-    <p>Get started right now, it takes about five minutes</p>
-      {% for doc in priority_sopns %}
-        <div>
-          <a href="{% url 'bulk_add' election=doc.election.slug post_id=doc.post.extra.slug %}?source={{ doc.source_url }}" class="button">
-          {{ doc.post.label }}</a>
-        </div>
-      {% endfor %}
-
-    <p><a href="{% url 'unlocked_posts_with_documents' %}">See the full list</a></p>
+    <h2>Improve our data!</h2>
+    <h3>Can you find {{ person_task.person.name }}'s
+      {% if person_task.task_field == 'facebook_page_url' %}Facebook page?{% endif %}
+      {% if person_task.task_field == 'email' %}email address?{% endif %}
+      {% if person_task.task_field == 'twitter_username' %}Twitter page?{% endif %}
+    </h3>
+    <p><a href="{% url 'person-update' person_task.person.pk %}?highlight_field={{ person_task.task_field }}" class="button">Start the search</a></p>
 
     <hr>
     <h4>or</h4>

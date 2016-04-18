@@ -41,7 +41,9 @@
 {% if user_can_edit %}
 
   <div class="person__details">
-
+    {% if request.GET.highlight_field %}
+    {% include "candidates/_person_field_help.html" with highlight_field=request.GET.highlight_field %}
+    {% endif %}
     <form id="person-details" action="{% url 'person-update' person_id=person.id %}" method="post">
     {% with election=constituency_fields.election %}
       {% include 'candidates/_person_form.html' %}
