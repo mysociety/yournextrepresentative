@@ -2,21 +2,16 @@
 
 from __future__ import unicode_literals
 
-from datetime import date, timedelta
 import re
 
-from django.conf import settings
 from django.test.utils import override_settings
 from django_webtest import WebTest
 
+from .dates import processors_before, processors_after
+from .factories import (
+    CandidacyExtraFactory, PersonExtraFactory
+)
 from .uk_examples import UK2015ExamplesMixin
-from .factories import CandidacyExtraFactory, PersonExtraFactory
-
-election_date_before = lambda r: {'DATE_TODAY': date.today()}
-election_date_after = lambda r: {'DATE_TODAY': date.today() + timedelta(days=28)}
-processors = settings.TEMPLATE_CONTEXT_PROCESSORS
-processors_before = processors + ("candidates.tests.test_person_view.election_date_before",)
-processors_after = processors + ("candidates.tests.test_person_view.election_date_after",)
 
 
 class TestPersonView(UK2015ExamplesMixin, WebTest):
