@@ -57,21 +57,21 @@ def get_redirect_to_post(election, post):
 
 def get_person_form_fields(context, form):
     context['extra_fields'] = []
-    extra_fields = ExtraField.objects.order_by('order').all()
+    extra_fields = ExtraField.objects.all()
     for field in extra_fields:
         context['extra_fields'].append(
             form[field.key]
         )
 
     context['complex_fields'] = []
-    complex_fields = ComplexPopoloField.objects.order_by('order').all()
+    complex_fields = ComplexPopoloField.objects.all()
     for field in complex_fields:
         context['complex_fields'].append((field, form[field.name]))
 
     personal_fields, demographic_fields = get_field_groupings()
     context['personal_fields'] = []
     context['demographic_fields'] = []
-    simple_fields = SimplePopoloField.objects.order_by('order').all()
+    simple_fields = SimplePopoloField.objects.all()
     for field in simple_fields:
         if field.name in personal_fields:
             context['personal_fields'].append(

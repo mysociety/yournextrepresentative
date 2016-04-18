@@ -92,7 +92,7 @@ def get_extra_fields(person):
                 'type': extra_field.type,
             }
         )
-        for extra_field in ExtraField.objects.order_by('order').all()
+        for extra_field in ExtraField.objects.all()
     ]
 
 
