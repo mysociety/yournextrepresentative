@@ -32,30 +32,40 @@ ward_seats,ward_name,council_gss,council_name,council_code_type,ward_gss,have_wa
 3,Stocksbridge and Upper Don,E08000019,Sheffield,MTD,E05001063,n
 3,Walkley,E08000019,Sheffield,MTD,E05001064,n
 3,West Ecclesfield,E08000019,Sheffield,MTD,E05001065,n
-3,Avonmouth and Lawrence Weston,E06000023,Bristol,UTA,E05010886,
-2,Bishopston and Ashley Down,E06000023,Bristol,UTA,E05010888,
-2,Central,E06000023,Bristol,UTA,E05010892,
-2,Clifton Down,E06000023,Bristol,UTA,E05010894,
-3,Hartcliffe and Withywood,E06000023,Bristol,UTA,E05010900,
-2,Henbury and Brentry,E06000023,Bristol,UTA,E05010901,
-3,Hengrove and Whitchurch Park,E06000023,Bristol,UTA,E05010902,
-1,Hotwells and Harbourside,E06000023,Bristol,UTA,E05010905,
-2,St George Central,E06000023,Bristol,UTA,E05010910,
-1,St George Troopers Hill,E06000023,Bristol,UTA,E05010911,
-3,Westbury-on-Trym and Henleaze,E06000023,Bristol,UTA,E05010917,
-2,Frome Vale,E06000023,Bristol,UTA,E05010899,
-2,Hillfields,E06000023,Bristol,UTA,E05010903,
-2,Horfield,E06000023,Bristol,UTA,E05010904,
-2,Knowle,E06000023,Bristol,UTA,E05010906,
-2,Lawrence Hill,E06000023,Bristol,UTA,E05010907,
-2,Lockleaze,E06000023,Bristol,UTA,E05010908,
-2,Redland,E06000023,Bristol,UTA,E05010909,
-1,St George West,E06000023,Bristol,UTA,E05010912,
-2,Southmead,E06000023,Bristol,UTA,E05010913,
-2,Southville,E06000023,Bristol,UTA,E05010914,
-2,Stockwood,E06000023,Bristol,UTA,E05010915,
-2,Stoke Bishop,E06000023,Bristol,UTA,E05010916,
-2,Windmill Hill,E06000023,Bristol,UTA,E05010918,
+3,Ashley,E06000023,Bristol,UTA,E05010885
+3,Avonmouth and Lawrence Weston,E06000023,Bristol,UTA,E05010886
+2,Bedminster,E06000023,Bristol,UTA,E05010887
+2,Bishopston and Ashley Down,E06000023,Bristol,UTA,E05010888
+2,Bishopsworth,E06000023,Bristol,UTA,E05010889
+2,Brislington East,E06000023,Bristol,UTA,E05010890
+2,Brislington West,E06000023,Bristol,UTA,E05010891
+2,Central,E06000023,Bristol,UTA,E05010892
+2,Clifton Down,E06000023,Bristol,UTA,E05010894
+2,Clifton,E06000023,Bristol,UTA,E05010893
+2,Cotham,E06000023,Bristol,UTA,E05010895
+2,Easton,E06000023,Bristol,UTA,E05010896
+2,Eastville,E06000023,Bristol,UTA,E05010897
+2,Filwood,E06000023,Bristol,UTA,E05010898
+2,Frome Vale,E06000023,Bristol,UTA,E05010899
+3,Hartcliffe and Withywood,E06000023,Bristol,UTA,E05010900
+2,Henbury and Brentry,E06000023,Bristol,UTA,E05010901
+3,Hengrove and Whitchurch Park,E06000023,Bristol,UTA,E05010902
+2,Hillfields,E06000023,Bristol,UTA,E05010903
+2,Horfield,E06000023,Bristol,UTA,E05010904
+1,Hotwells and Harbourside,E06000023,Bristol,UTA,E05010905
+2,Knowle,E06000023,Bristol,UTA,E05010906
+2,Lawrence Hill,E06000023,Bristol,UTA,E05010907
+2,Lockleaze,E06000023,Bristol,UTA,E05010908
+2,Redland,E06000023,Bristol,UTA,E05010909
+2,Southmead,E06000023,Bristol,UTA,E05010913
+2,Southville,E06000023,Bristol,UTA,E05010914
+2,St George Central,E06000023,Bristol,UTA,E05010910
+1,St George Troopers Hill,E06000023,Bristol,UTA,E05010911
+1,St George West,E06000023,Bristol,UTA,E05010912
+2,Stockwood,E06000023,Bristol,UTA,E05010915
+2,Stoke Bishop,E06000023,Bristol,UTA,E05010916
+3,Westbury-on-Trym and Henleaze,E06000023,Bristol,UTA,E05010917
+2,Windmill Hill,E06000023,Bristol,UTA,E05010918
 3,Alphington,E07000041,Exeter,DIS,E05003491,n
 3,Exwick,E07000041,Exeter,DIS,E05003494,n
 3,Heavitree,E07000041,Exeter,DIS,E05003495,n
