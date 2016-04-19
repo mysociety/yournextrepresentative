@@ -105,4 +105,12 @@ class SuggestedPostLock(models.Model):
 
     @property
     def election_for_suggestion(self):
-        return self.post_extra.elections.filter(current=True)[0]
+        # This might look like a poor alternative to:
+        #    self.post_extra.elections.filter(current=True)[0]
+        # However, that would negate any advantage from prefetching
+        # the elections in the get_queryset of SuggestLockReviewListView.
+        # Calling .filter() on a prefetched relationship causes an extra
+        # query where as iterating over .all() doesn't.
+        for election in self.post_extra.elections.all():
+            if election.current:
+                return election

@@ -468,4 +468,6 @@ class SuggestLockReviewListView(ListView):
 
     def get_queryset(self):
         return SuggestedPostLock.objects.filter(
-            post_extra__candidates_locked=False)
+            post_extra__candidates_locked=False).select_related(
+                'user', 'post_extra__base',
+            ).prefetch_related('post_extra__elections')
