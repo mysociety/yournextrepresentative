@@ -155,6 +155,7 @@ class BulkAddReviewView(BaseBulkAddView):
         )
 
         previous_memberships_in_this_election.delete()
+        person_extra.not_standing.remove(election)
 
         membership, _ = Membership.objects.get_or_create(
             post=post,
