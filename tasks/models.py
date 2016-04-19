@@ -29,7 +29,7 @@ class PersonTask(TimeStampedModel):
     objects = PersonTaskManager()
 
     class Meta:
-        ordering = ['task_priority', ]
+        ordering = ['-task_priority', ]
 
     def get_user_from_vesions(self):
         version_data = json.loads(self.person.extra.versions)
