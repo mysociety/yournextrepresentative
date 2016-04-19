@@ -163,23 +163,17 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             group_candidates_by_party(
                 self.election_data,
                 not_standing_candidacies,
-                party_list=self.election_data.party_lists_in_use,
-                max_people=self.election_data.default_party_list_members_to_show
             )
 
         context['candidacies_might_stand_again'] = \
             group_candidates_by_party(
                 self.election_data,
                 might_stand_candidacies,
-                party_list=self.election_data.party_lists_in_use,
-                max_people=self.election_data.default_party_list_members_to_show
             )
 
         context['candidacies'] = group_candidates_by_party(
             self.election_data,
             current_candidacies,
-            party_list=self.election_data.party_lists_in_use,
-            max_people=self.election_data.default_party_list_members_to_show
         )
 
         context['show_retract_result'] = False
