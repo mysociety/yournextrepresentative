@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block body_class %}person-othernames-list{% endblock %}
+
+{% block title %}{% blocktrans with name=person.name %}Other names for {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+
+  <h1>{% blocktrans trimmed with name=person.name person_url=person.extra.get_absolute_url %}
+    Other names for <a href="{{ person_url }}">{{ name }}</a>
+  {% endblocktrans %}</h1>
+
+  {% if othername_list %}
+    <ul>
+      {% for other_name in othername_list %}
+        <li>
+          <p>
+            <strong>{% trans "Name" %}</strong>: {{ other_name.name }}<br>
+            {% if other_name.start_date %}
+              <strong>{% trans "Start date" %}</strong>: {{ other_name.start_date }}<br>
+            {% endif %}
+            {% if other_name.end_date %}
+              <strong>{% trans "End date" %}</strong>: {{ other_name.end_date }}<br>
+            {% endif %}
+            <strong>{% trans "Note" %}</strong>: {{ other_name.note }}<br>
+          </p>
+
+          <p>
+            <a class="button tiny secondary" href="{% url 'person-other-name-update' pk=other_name.id person_id=person.id %}">
+              {% trans "Edit" %}
+            </a>
+            <a class="button tiny js-toggle-source-confirmation delete-other-name">{% trans 'Delete' %}</a>
+          </p>
+
+          <div class="source-confirmation source-confirmation-delete-other-name">
+            <form method="post" action="{% url 'person-other-name-delete' pk=other_name.id person_id=person.id %}">
+              {% csrf_token %}
+              <label for="id_source">{% trans "Before we delete this other name, can you tell us how you know it's not valid?" %} {{ settings.SOURCE_HINTS }}</label>
+              <div class="row">
+                <div class="small-12 medium-8 large-9 columns">
+                  <input type="text" name="source" id="id_source" maxlength="512" required="required"/>
+                </div>
+                <div class="small-6 medium-4 large-3 columns">
+                  <input type="submit" class="button expand" value="{% trans "Delete other name" %}" />
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "No alternative names found" %}</p>
+  {% endif %}
+
+  <a class="button" href="{% url 'person-other-name-create' person_id=person.id %}">{% trans "Add another name" %}</a>
+
+{% endblock %}

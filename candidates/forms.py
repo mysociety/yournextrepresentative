@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from candidates.models import (
     PartySet, parse_approximate_date, ExtraField, SimplePopoloField, ComplexPopoloField
 )
-from popolo.models import Organization, Post
+from popolo.models import Organization, OtherName, Post
 
 
 if django_version[:2] < (1, 9):
@@ -494,5 +494,24 @@ class ConstituencyRecordWinnerForm(forms.Form):
     )
     source = StrippedCharField(
         label=_("Source of information that they won"),
+        max_length=512,
+    )
+
+
+class OtherNameForm(forms.ModelForm):
+    class Meta:
+        model = OtherName
+        fields = ('name', 'note', 'start_date', 'end_date')
+        labels = {
+        }
+        help_texts = {
+            'start_date': _('(Optional) The date from which this name would be used'),
+            'end_date': _('(Optional) The date when this name stopped being used'),
+        }
+    source = StrippedCharField(
+        label=_("Source"),
+        help_text=_(
+            "Please indicate how you know that this is a valid alternative name"
+        ),
         max_length=512,
     )

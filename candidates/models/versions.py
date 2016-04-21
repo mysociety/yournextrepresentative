@@ -33,7 +33,7 @@ def get_person_as_version_data(person):
             'start_date': on.start_date,
             'end_date': on.end_date,
         }
-        for on in person.other_names.all()
+        for on in person.other_names.order_by('name', 'start_date', 'end_date')
     ]
     identifiers = list(person.identifiers.all())
     if identifiers:

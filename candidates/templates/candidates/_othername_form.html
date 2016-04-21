@@ -1,0 +1,49 @@
+{% load i18n %}
+
+{% csrf_token %}
+
+<div class="form-item {% if form.name.errors %}form-item--errors{% endif %}">
+  <p>
+    {{ form.name.label_tag }}
+    {{ form.name }}
+  </p>
+  {{ form.name.errors }}
+</div>
+
+<div class="form-item {% if form.note.errors %}form-item--errors{% endif %}">
+  <p>
+    {{ form.note.label_tag }}
+    {{ form.note }}
+  </p>
+  {{ form.note.errors }}
+</div>
+
+<div class="form-item {% if form.start_date.errors %}form-item--errors{% endif %}">
+  <p>
+    {{ form.start_date.label_tag }}
+    {{ form.start_date }}
+  </p>
+  {{ form.start_date.errors }}
+</div>
+
+<div class="form-item {% if form.end_date.errors %}form-item--errors{% endif %}">
+  <p>
+    {{ form.end_date.label_tag }}
+    {{ form.end_date }}
+  </p>
+  {{ form.end_date.errors }}
+</div>
+
+<div class="source-confirmation {% if form.source.errors %}source-confirmation--errors{% endif %}">
+  <p>
+    <label for="{{ form.source.id_for_label }}">
+      {% if form.source.errors %}
+        {% trans "<strong>You forgot to reference a source!</strong> Can you show us <em>where</em> you got this information?" %}
+      {% else %}
+        {% trans "What’s your <strong>source of information</strong> for this name being used for the candidate?" %}
+      {% endif %}
+      {{ settings.SOURCE_HINTS }}
+    </label>
+    {{ form.source }}
+  </p>
+</div>
