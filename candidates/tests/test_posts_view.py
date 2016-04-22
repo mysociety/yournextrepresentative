@@ -7,9 +7,6 @@ from .uk_examples import UK2015ExamplesMixin
 
 class TestPostsView(UK2015ExamplesMixin, WebTest):
 
-    def setUp(self):
-        super(TestPostsView, self).setUp()
-
     def test_single_election_posts_page(self):
 
         response = self.app.get('/posts')
