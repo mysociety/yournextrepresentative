@@ -30,6 +30,7 @@ from .field_mappings import (
 )
 from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField
 from ..diffs import get_version_diffs
+from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
 from .versions import get_person_as_version_data
 
 """Extensions to the base django-popolo classes for YourNextRepresentative
@@ -63,6 +64,10 @@ def update_person_from_form(person, person_extra, form):
             )
     person.save()
     person_extra.save()
+    try:
+        update_twitter_user_id(person)
+    except TwitterAPITokenMissing:
+        pass
     for election_data in form.elections_with_fields:
         post_id = form_data.get('constituency_' + election_data.slug)
         standing = form_data.pop('standing_' + election_data.slug, 'standing')

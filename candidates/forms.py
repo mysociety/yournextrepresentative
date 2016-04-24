@@ -18,7 +18,7 @@ from candidates.models import (
     PartySet, parse_approximate_date, ExtraField, SimplePopoloField, ComplexPopoloField
 )
 from popolo.models import Organization, OtherName, Post
-
+from .twitter_api import get_twitter_user_id, TwitterAPITokenMissing
 
 if django_version[:2] < (1, 9):
     class StrippedCharField(forms.CharField):
@@ -192,6 +192,16 @@ class BasePersonForm(forms.Form):
         if not re.search(r'^\w*$', username):
             message = _("The Twitter username must only consist of alphanumeric characters or underscore")
             raise ValidationError(message)
+        try:
+            user_id = get_twitter_user_id(username)
+            if not user_id:
+                message = _("The Twitter account {screen_name} doesn't exist")
+                raise ValidationError(message.format(screen_name=username))
+        except TwitterAPITokenMissing:
+            # If there's no API token, we can't check the screen name,
+            # but don't fail validation because the site owners
+            # haven't set that up.
+            return username
         return username
 
     def check_party_and_constituency_are_selected(self, cleaned_data):
