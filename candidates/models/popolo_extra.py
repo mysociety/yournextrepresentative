@@ -21,7 +21,9 @@ from slugify import slugify
 from django_date_extensions.fields import ApproximateDate
 
 from elections.models import Election, AreaType
-from popolo.models import Person, Organization, Post, Membership, Area
+from popolo.models import (
+    Person, Organization, Post, Membership, Area, Identifier
+)
 from images.models import Image, HasImageMixin
 
 from compat import python_2_unicode_compatible
@@ -494,6 +496,12 @@ class PersonExtra(HasImageMixin, models.Model):
                 pass
         else:
             primary_image_url = ''
+        try:
+            twitter_user_id = self.base.identifiers.get(
+                scheme='twitter',
+            ).identifier
+        except Identifier.DoesNotExist:
+            twitter_user_id = ''
 
         row = {
             'id': self.base.id,
@@ -511,6 +519,7 @@ class PersonExtra(HasImageMixin, models.Model):
             'elected': elected_for_csv,
             'email': self.base.email,
             'twitter_username': self.twitter_username,
+            'twitter_user_id': twitter_user_id,
             'facebook_page_url': self.facebook_page_url,
             'linkedin_url': self.linkedin_url,
             'party_ppc_page_url': self.party_ppc_page_url,
