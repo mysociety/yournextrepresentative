@@ -102,3 +102,11 @@ DD_MM_DATE_FORMAT_PREFERRED: true
 # party in the party set with most candidates down to those with the
 # least:
 CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST: 20
+
+# A Twitter application-only bearer token.  This is used by
+# candidates_update_twitter_usernames to map between twitter user IDs
+# and screen names. You can generate one of these by following the
+# instructions here: https://dev.twitter.com/oauth/application-only If
+# you don't set this then the only thing that won't work is
+# candidates_update_twitter_usernames
+TWITTER_APP_ONLY_BEARER_TOKEN: ''
