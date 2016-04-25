@@ -11,7 +11,7 @@ from django.test.utils import override_settings
 
 from django_webtest import WebTest
 
-from popolo.models import Person
+from popolo.models import Membership, Person
 
 from candidates.models import PersonRedirect, MembershipExtra, ImageExtra
 from mysite.helpers import mkdir_p
@@ -342,6 +342,16 @@ class TestMergePeopleView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         for c, expected_election in zip(candidacies, ('2010', '2015')):
             self.assertEqual(c.election.slug, expected_election)
             self.assertEqual(c.base.post.extra.slug, '65808')
+
+        # Check that there are only two Membership objects, since
+        # there has been a bug where the MembershipExtra objects were
+        # cleared on merging, but the Membership objects were left
+        # behind.  So make sure there are only two as a regression
+        # test.
+        self.assertEqual(
+            2,
+            Membership.objects.filter(person=merged_person).count()
+        )
 
         other_names = list(merged_person.other_names.all())
         self.assertEqual(len(other_names), 1)

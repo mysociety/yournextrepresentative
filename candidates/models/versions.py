@@ -133,9 +133,9 @@ def revert_person_from_version_data(person, person_extra, version_data):
         )
 
     # Remove all candidacies, and recreate:
-    MembershipExtra.objects.filter(
-        base__person=person_extra.base,
-        base__role=F('election__candidate_membership_role')
+    Membership.objects.filter(
+        person=person_extra.base,
+        role=F('extra__election__candidate_membership_role')
     ).delete()
     # Also remove the indications of elections that this person is
     # known not to be standing in:
