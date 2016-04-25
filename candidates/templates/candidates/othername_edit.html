@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block body_class %}person-othername-update{% endblock %}
+
+{% block title %}{% blocktrans with name=person.name %}Edit a name for {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+
+<h1>{% blocktrans with name=person.name %}Edit a name for {{ name }}{% endblocktrans %}</h1>
+
+  <div class="othername__details">
+
+    <form action="" method="post" id="person_update_other_name">
+      {% include 'candidates/_othername_form.html' %}
+      <input class="button" type="submit" value="{% trans 'Save' %}">
+    </form>
+
+  </div>
+
+{% endblock %}

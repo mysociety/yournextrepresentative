@@ -140,6 +140,26 @@ patterns_to_format = [
         'name': 'person-merge'
     },
     {
+        'pattern': r'^person/(?P<person_id>\d+)/other-names$',
+        'view': views.PersonOtherNamesView.as_view(),
+        'name': 'person-other-names',
+    },
+    {
+        'pattern': r'^person/(?P<person_id>\d+)/other-names/create$',
+        'view': views.PersonOtherNameCreateView.as_view(),
+        'name': 'person-other-name-create',
+    },
+    {
+        'pattern': r'^person/(?P<person_id>\d+)/other-name/(?P<pk>\d+)/delete$',
+        'view': views.PersonOtherNameDeleteView.as_view(),
+        'name': 'person-other-name-delete',
+    },
+    {
+        'pattern': r'^person/(?P<person_id>\d+)/other-name/(?P<pk>\d+)/update$',
+        'view': views.PersonOtherNameUpdateView.as_view(),
+        'name': 'person-other-name-update',
+    },
+    {
         'pattern': r'^person/(?P<person_id>\d+)(?:/(?P<ignored_slug>.*))?$',
         'view': views.PersonView.as_view(),
         'name': 'person-view'

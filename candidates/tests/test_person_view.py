@@ -2,53 +2,31 @@
 
 from __future__ import unicode_literals
 
-from datetime import date, timedelta
 import re
 
-from django.conf import settings
 from django.test.utils import override_settings
 from django_webtest import WebTest
 
+from .dates import processors_before, processors_after
 from .factories import (
-    AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
-    ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
-    PersonExtraFactory, PostExtraFactory
+    CandidacyExtraFactory, PersonExtraFactory
 )
-
-election_date_before = lambda r: {'DATE_TODAY': date.today()}
-election_date_after = lambda r: {'DATE_TODAY': date.today() + timedelta(days=28)}
-processors = settings.TEMPLATE_CONTEXT_PROCESSORS
-processors_before = processors + ("candidates.tests.test_person_view.election_date_before",)
-processors_after = processors + ("candidates.tests.test_person_view.election_date_after",)
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestPersonView(WebTest):
+class TestPersonView(UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
-        )
+        super(TestPersonView, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
         )
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
 
     def test_get_tessa_jowell(self):

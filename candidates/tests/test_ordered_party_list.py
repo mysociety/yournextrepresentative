@@ -3,47 +3,17 @@ from __future__ import unicode_literals
 import re
 from django_webtest import WebTest
 
-from candidates.models import MembershipExtra
-
 from .auth import TestUserMixin
 from .factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PersonExtraFactory,
-    CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
-    MembershipFactory, PartySetFactory, AreaExtraFactory
+    CandidacyExtraFactory, MembershipFactory, PersonExtraFactory
 )
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestRecordWinner(TestUserMixin, WebTest):
+class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons,
-            party_lists_in_use=True
-        )
-        dulwich_area = AreaExtraFactory.create(
-            base__identifier='65808',
-            base__name='Dulwich and West Norwood',
-            type=wmc_area_type,
-        )
-        dulwich_post = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            base__area=dulwich_area.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
-        self.party_id = party_extra.slug
+        super(TestRecordWinner, self).setUp()
 
         tessa_jowell = PersonExtraFactory.create(
             base__id='2009',
@@ -52,13 +22,13 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=tessa_jowell.base,
-            base__post=dulwich_post.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             party_list_position=1
             )
         MembershipFactory.create(
             person=tessa_jowell.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         winner = PersonExtraFactory.create(
@@ -68,13 +38,13 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=winner.base,
-            base__post=dulwich_post.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             party_list_position=2
             )
         MembershipFactory.create(
             person=winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         james_smith = PersonExtraFactory.create(
@@ -84,18 +54,18 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=james_smith.base,
-            base__post=dulwich_post.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             party_list_position=3
             )
         MembershipFactory.create(
             person=james_smith.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
     def test_party_list_page(self):
         response = self.app.get(
-            '/election/2015/party-list/65808/' + self.party_id
+            '/election/2015/party-list/65808/' + self.labour_party_extra.slug
         )
 
         self.assertEqual(response.status_code, 200)
@@ -136,6 +106,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
         )
 
     def test_links_to_party_list_if_list_length(self):
+        self.election.party_lists_in_use = True
         self.election.default_party_list_members_to_show = 2
         self.election.save()
 
@@ -150,7 +121,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
 
         response.mustcontain(
             '<a href="/election/2015/party-list/65808/{0}">See all 3 members on the party list'
-            .format(self.party_id)
+            .format(self.labour_party_extra.slug)
         )
 
         self.assertFalse(

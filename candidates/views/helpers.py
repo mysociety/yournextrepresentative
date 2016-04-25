@@ -64,14 +64,14 @@ def get_person_form_fields(context, form):
         )
 
     context['complex_fields'] = []
-    complex_fields = ComplexPopoloField.objects.order_by('order').all()
+    complex_fields = ComplexPopoloField.objects.all()
     for field in complex_fields:
         context['complex_fields'].append((field, form[field.name]))
 
     personal_fields, demographic_fields = get_field_groupings()
     context['personal_fields'] = []
     context['demographic_fields'] = []
-    simple_fields = SimplePopoloField.objects.order_by('order').all()
+    simple_fields = SimplePopoloField.objects.all()
     for field in simple_fields:
         if field.name in personal_fields:
             context['personal_fields'].append(
@@ -258,7 +258,10 @@ def group_candidates_by_party(election_data, candidacies):
         ]
     except KeyError as ke:
         raise Exception("Unknown party: {0}".format(ke))
-    result.sort(key=lambda t: t[1][0][1].name.split()[-1])
+    if party_list:
+        result.sort(key=lambda t: t[0]['name'])
+    else:
+        result.sort(key=lambda t: t[1][0][1].name.split()[-1])
     return {
         'party_lists_in_use': party_list,
         'parties_and_people': result

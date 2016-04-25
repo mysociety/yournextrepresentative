@@ -7,39 +7,12 @@ from .auth import TestUserMixin
 
 from popolo.models import Person
 
-from .factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
-    PartySetFactory
-)
+from .uk_examples import UK2015ExamplesMixin
 
-
-class TestSearchView(TestUserMixin, WebTest):
+class TestSearchView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            slug='65808',
-            party_set=gb_parties,
-            base__label='Member of Parliament for Dulwich and West Norwood'
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
-
+        super(TestSearchView, self).setUp()
         call_command('rebuild_index', verbosity=0, interactive=False)
 
     def test_search_page(self):
@@ -69,8 +42,8 @@ class TestSearchView(TestUserMixin, WebTest):
         form['name'] = 'Mr Darcy'
         form['email'] = 'darcy@example.com'
         form['source'] = 'Testing adding a new person to a post'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
-        submission_response = form.submit()
+        form['party_gb_2015'] = self.labour_party_extra.base_id
+        form.submit()
 
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
@@ -80,8 +53,8 @@ class TestSearchView(TestUserMixin, WebTest):
         form['name'] = 'Elizabeth Bennet'
         form['email'] = 'lizzie@example.com'
         form['source'] = 'Testing adding a new person to a post'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
-        submission_response = form.submit()
+        form['party_gb_2015'] = self.labour_party_extra.base_id
+        form.submit()
 
         # check searching finds them
         response = self.app.get('/search?q=Elizabeth')
@@ -107,8 +80,8 @@ class TestSearchView(TestUserMixin, WebTest):
         form['name'] = 'Elizabeth Jones'
         form['email'] = 'e.jones@example.com'
         form['source'] = 'Testing adding a new person to a post'
-        form['party_gb_2015'] = self.parties['party:53'].base_id
-        submission_response = form.submit()
+        form['party_gb_2015'] = self.labour_party_extra.base_id
+        form.submit()
 
         response = self.app.get('/search?q=Elizabeth')
         self.assertTrue(
@@ -132,7 +105,7 @@ class TestSearchView(TestUserMixin, WebTest):
         form = response.forms['person-details']
         form['name'] = 'Lizzie Jones'
         form['source'] = "Some source of this information"
-        submission_response = form.submit()
+        form.submit()
 
         response = self.app.get('/search?q=Elizabeth')
         self.assertTrue(

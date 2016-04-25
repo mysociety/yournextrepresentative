@@ -96,6 +96,10 @@
 
     {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}
 
+      {% if parties_and_people and candidate_list_edits_allowed %}
+        <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
+      {% endif %}
+
       {% for party, people in parties_and_people %}
 
         <div class="party-group {% if party_lists_in_use %}party-list{% else %}no-party-list{% endif %}">
@@ -132,13 +136,15 @@
                   {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
                 {% endif %}
                 {% endif %}
-                {% if user_can_record_results and show_confirm_result and not candidate_elected %}
-                  <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="person_id" value="{{ c.id }}">
-                    <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
-                    <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
-                  </form>
+                {% if DATE_TODAY >= election_data.election_date %}
+                  {% if user_can_record_results and show_confirm_result and not candidate_elected %}
+                    <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="person_id" value="{{ c.id }}">
+                      <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
+                      <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
+                    </form>
+                  {% endif %}
                 {% endif %}
               </li>
 

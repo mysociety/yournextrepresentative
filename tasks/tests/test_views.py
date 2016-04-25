@@ -7,30 +7,13 @@ from candidates.tests.factories import (
     ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
     PersonExtraFactory, PostExtraFactory
 )
+from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 
-class TestFieldView(TestCase):
+class TestFieldView(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        self.post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood'
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            self.parties[party_extra.slug] = party_extra
+        super(TestFieldView, self).setUp()
 
         person_extra = PersonExtraFactory.create(
             base__id='2009',
@@ -40,8 +23,8 @@ class TestFieldView(TestCase):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=self.post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         person_extra = PersonExtraFactory.create(
@@ -53,8 +36,8 @@ class TestFieldView(TestCase):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=self.post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
     def test_context_data(self):

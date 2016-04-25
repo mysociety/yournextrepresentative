@@ -32,6 +32,7 @@ from candidates.tests.factories import (
     CandidacyExtraFactory, PartyExtraFactory,
     PartyFactory, PartySetFactory, AreaFactory
 )
+from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
@@ -46,7 +47,7 @@ def get_image_type_and_dimensions(image_data):
 
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class PhotoReviewTests(WebTest):
+class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
 
     example_image_filename = join(
         settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
@@ -67,27 +68,7 @@ class PhotoReviewTests(WebTest):
         super(PhotoReviewTests, cls).tearDownClass()
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        area = AreaFactory.create(
-            name="Dulwich and West Norwood",
-        )
-
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons,
-            base__id='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-            base__area=area,
-        )
+        super(PhotoReviewTests, self).setUp()
         person_2009 = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
@@ -96,19 +77,17 @@ class PhotoReviewTests(WebTest):
             base__id='2007',
             base__name='Tessa Jowell'
         )
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_2009.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_2007.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
 
         self.site = Site.objects.create(domain='example.com', name='YNR')

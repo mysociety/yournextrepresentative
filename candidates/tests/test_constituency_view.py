@@ -1,53 +1,23 @@
 from __future__ import unicode_literals
 
-import csv
-
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
 from .factories import (
-    AreaExtraFactory, AreaTypeFactory, ElectionFactory,
-    PostExtraFactory, ParliamentaryChamberFactory,
-    PersonExtraFactory, CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, MembershipFactory, PartySetFactory
+    AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
+    PersonExtraFactory, PostExtraFactory,
 )
+from .uk_examples import UK2015ExamplesMixin
 
 from compat import StreamDictReader
 
 from ..models import MembershipExtra, PersonExtra
 
 
-class TestConstituencyDetailView(TestUserMixin, WebTest):
+class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        old_election = ElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        dulwich_area_extra = AreaExtraFactory.create(
-            base__identifier='65808',
-            base__name='Dulwich and West Norwood',
-            type=wmc_area_type,
-        )
-        post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            base__area=dulwich_area_extra.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
+        super(TestConstituencyDetailView, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
@@ -56,28 +26,18 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             base__id='4322',
             base__name='Helen Hayes'
         )
-        PartyFactory.reset_sequence()
-        PartyExtraFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
-        gb_parties.parties.add(party_extra.base)
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=person_extra.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
-        winner_post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='14419',
-            base__label='Member of Parliament for Edinburgh East',
-            party_set=gb_parties,
-        )
+        winner_post_extra = self.edinburgh_east_post_extra
 
         edinburgh_candidate = PersonExtraFactory.create(
             base__id='818',
@@ -93,10 +53,10 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
         )
 
         CandidacyExtraFactory.create(
-            election=old_election,
+            election=self.earlier_election,
             base__person=dulwich_not_stand.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             )
         dulwich_not_stand.not_standing.add(self.election)
 
@@ -104,7 +64,7 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             election=self.election,
             base__person=edinburgh_winner.base,
             base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             elected=True,
             )
 
@@ -112,21 +72,21 @@ class TestConstituencyDetailView(TestUserMixin, WebTest):
             election=self.election,
             base__person=edinburgh_candidate.base,
             base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=edinburgh_candidate.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
         MembershipFactory.create(
             person=edinburgh_winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
         CandidacyExtraFactory.create(
-            election=old_election,
+            election=self.earlier_election,
             base__person=edinburgh_may_stand.base,
             base__post=winner_post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__on_behalf_of=self.labour_party_extra.base
             )
 
     def test_any_constituency_page_without_login(self):

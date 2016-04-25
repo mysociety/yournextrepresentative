@@ -9,6 +9,10 @@ from compat import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class SimplePopoloField(models.Model):
+
+    class Meta:
+        ordering = ('order',)
+
     VALID_FIELDS = (
         ('name', 'Name'),
         ('family_name', 'Family Name'),
@@ -63,6 +67,10 @@ class ComplexPopoloField(models.Model):
     To get the value for a person you fetch the item from the generic relation
     named in popolo_array where info_type_key matches info_type.
     """
+
+    class Meta:
+        ordering = ('order',)
+
     VALID_ARRAYS = (
         ('links', 'Links'),
         ('contact_details', 'Contact Details'),
@@ -118,6 +126,9 @@ class ComplexPopoloField(models.Model):
 @python_2_unicode_compatible
 class ExtraField(models.Model):
 
+    class Meta:
+        ordering = ('order',)
+
     LINE = 'line'
     LONGER_TEXT = 'longer-text'
     URL = 'url'
@@ -136,6 +147,7 @@ class ExtraField(models.Model):
         choices=FIELD_TYPES,
     )
     label = models.CharField(max_length=1024)
+    order = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.key

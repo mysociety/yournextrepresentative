@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
 from django_webtest import WebTest
 
 from popolo.models import Person
@@ -8,47 +9,29 @@ from popolo.models import Person
 from ..models import PostExtraElection
 from .auth import TestUserMixin
 from .factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PersonExtraFactory,
-    CandidacyExtraFactory, PartyExtraFactory, PartyFactory,
-    MembershipFactory, PartySetFactory
+    CandidacyExtraFactory, MembershipFactory, PersonExtraFactory,
 )
+from .dates import processors_after
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestRecordWinner(TestUserMixin, WebTest):
+class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        self.post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
+        super(TestRecordWinner, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
         )
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=self.post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=person_extra.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         winner = PersonExtraFactory.create(
@@ -59,15 +42,16 @@ class TestRecordWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=winner.base,
-            base__post=self.post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
 
         MembershipFactory.create(
             person=winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
+    @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_after)
     def test_record_winner_link_present(self):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
@@ -240,7 +224,7 @@ class TestRecordWinner(TestUserMixin, WebTest):
 
     def test_record_multiple_winners_per_post_setting(self):
         post_election = PostExtraElection.objects.get(
-            postextra=self.post_extra,
+            postextra=self.dulwich_post_extra,
             election=self.election
         )
         post_election.winner_count = 2
@@ -288,40 +272,23 @@ class TestRecordWinner(TestUserMixin, WebTest):
         person = Person.objects.get(id=2009)
         self.assertTrue(person.extra.get_elected(self.election))
 
-class TestRetractWinner(TestUserMixin, WebTest):
+class TestRetractWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberFactory.create()
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons
-        )
-        post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
+        super(TestRetractWinner, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
         )
-        PartyFactory.reset_sequence()
-        party_extra = PartyExtraFactory.create()
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
             )
         MembershipFactory.create(
             person=person_extra.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
         winner = PersonExtraFactory.create(
@@ -332,14 +299,14 @@ class TestRetractWinner(TestUserMixin, WebTest):
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=winner.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base,
             elected=True
             )
 
         MembershipFactory.create(
             person=winner.base,
-            organization=party_extra.base
+            organization=self.labour_party_extra.base
         )
 
     def test_retract_winner_link_present(self):

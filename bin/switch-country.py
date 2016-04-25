@@ -12,10 +12,12 @@ root_directory = join(script_directory, '..')
 root_directory = normpath(root_directory)
 elections_directory = join(root_directory, 'elections')
 
-election_options = [
+election_options = sorted(
     e for e in os.listdir(elections_directory)
-    if isdir(join(elections_directory, e))
-]
+    if isdir(join(elections_directory, e)) and e not in (
+            '__pycache__', 'migrations'
+    )
+)
 
 def usage_and_exit():
     print("Usage: %s <ELECTION>" % (sys.argv[0],), file=sys.stderr)

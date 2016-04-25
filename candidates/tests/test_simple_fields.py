@@ -8,32 +8,20 @@ from popolo.models import Person
 
 from candidates.models import PersonExtra, SimplePopoloField
 
-from .factories import (
-    AreaTypeFactory, PartySetFactory, ElectionFactory,
-    ParliamentaryChamberFactory
-)
-
 from .auth import TestUserMixin
+from .uk_examples import UK2015ExamplesMixin
 
 
 def get_next_dd(start):
     return [t for t in start.next_siblings if t.name == 'dd'][0]
 
 
-class SimpleFieldsTests(TestUserMixin, WebTest):
+class SimpleFieldsTests(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        # Standard setup (should be factored out):
-        wmc_area_type = AreaTypeFactory.create()
-        # commons = ParliamentaryChamberFactory.create()
-        # gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
+        super(SimpleFieldsTests, self).setUp()
 
-        an_field = SimplePopoloField.objects.create(
+        SimplePopoloField.objects.create(
             name='additional_name',
             label='Additional Name',
             info_type_key='text',

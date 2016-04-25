@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 12:17+0100\n"
-"PO-Revision-Date: 2016-04-08 11:19+0000\n"
+"POT-Creation-Date: 2016-04-15 17:25+0100\n"
+"PO-Revision-Date: 2016-04-15 16:30+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: French (http://www.transifex.com/mysociety/yournextmp/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -161,46 +161,50 @@ msgstr "Candidats par postes"
 msgid "Candidates per party"
 msgstr "Candidats par parti"
 
-#: cached_counts/templates/reports.html:44
+#: cached_counts/templates/reports.html:39
+msgid "See progress towards locking all posts"
+msgstr ""
+
+#: cached_counts/templates/reports.html:45
 #, python-format
 msgid "Statistics compared to the %(prior_election_name)s"
 msgstr "Statistiques comparées à %(prior_election_name)s"
 
-#: cached_counts/templates/reports.html:46
+#: cached_counts/templates/reports.html:47
 #, python-format
 msgid "Total candidates in %(prior_election_name)s:"
 msgstr "Total des candidats à %(prior_election_name)s:"
 
-#: cached_counts/templates/reports.html:49
+#: cached_counts/templates/reports.html:50
 #, python-format
 msgid "Percentage (%(election_name)s / %(prior_election_name)s):"
 msgstr "Pourcentage (%(election_name)s / %(prior_election_name)s):"
 
-#: cached_counts/templates/reports.html:52
+#: cached_counts/templates/reports.html:53
 #, python-format
 msgid "New candidates compared to the %(prior_election_name)s:"
 msgstr "Nouveaux candidats comparés à %(prior_election_name)s:"
 
-#: cached_counts/templates/reports.html:55
+#: cached_counts/templates/reports.html:56
 #, python-format
 msgid "Candidates standing again from the %(prior_election_name)s:"
 msgstr "Candidats à %(prior_election_name)s briguant à nouveau :"
 
-#: cached_counts/templates/reports.html:58
+#: cached_counts/templates/reports.html:59
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for the same "
 "party:"
 msgstr "Candidats à %(prior_election_name)s briguant à nouveau pour le même parti:"
 
-#: cached_counts/templates/reports.html:62
+#: cached_counts/templates/reports.html:63
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for a different "
 "party:"
 msgstr "Candidats à %(prior_election_name)s briguant pour un parti différent :"
 
-#: cached_counts/templates/reports.html:74
+#: cached_counts/templates/reports.html:75
 msgid "No election data found."
 msgstr "Aucune donnée d'élection trouvée"
 
@@ -978,6 +982,10 @@ msgstr ""
 msgid ""
 "This is an alpha version of the YourNextRepresentative API, which is likely "
 "to change in the near future."
+msgstr ""
+
+#: candidates/templates/candidates/api.html:63
+msgid "Browsable API root"
 msgstr ""
 
 #: candidates/templates/candidates/api.html:66
@@ -2060,12 +2068,12 @@ msgstr "Pas encore d'information"
 msgid "Malformed type and area: '{0}'"
 msgstr "Type de zone mal formé: '{0}'"
 
-#: candidates/views/areas.py:125
+#: candidates/views/areas.py:131
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr "Zone '{0}' non trouvée"
 
-#: candidates/views/areas.py:127
+#: candidates/views/areas.py:133
 #, python-brace-format
 msgid "Multiple Area generations for type {area_type} found"
 msgstr ""
@@ -2078,11 +2086,11 @@ msgstr "Essai de modification d'un candidat dans une circonscription verrouillé
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr "données invalide POSTer à ConstituencyLockView"
 
-#: candidates/views/constituencies.py:416
+#: candidates/views/constituencies.py:418
 msgid "Setting as \"not elected\" by implication"
 msgstr ""
 
-#: candidates/views/constituencies.py:449
+#: candidates/views/constituencies.py:451
 msgid "Result recorded in error, retracting"
 msgstr "Résultat enregistré par erreur, retour "
 

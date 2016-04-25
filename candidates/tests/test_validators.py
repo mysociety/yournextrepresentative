@@ -10,9 +10,11 @@ from .factories import (
     PersonExtraFactory, PostExtraFactory, PartySetFactory,
     CandidacyExtraFactory, MembershipFactory
 )
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestValidators(TestCase):
+
+class TestValidators(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
         wmc_area_type = AreaTypeFactory.create()
@@ -78,6 +80,7 @@ class TestValidators(TestCase):
 
     def tearDown(self):
         self.parties = {}
+        super(TestValidators, self).setUp()
 
     def test_twitter_bad_url(self):
         form = BasePersonForm({
@@ -156,8 +159,8 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
-        }, initial={'person': self.person,})
+            'party_gb_2015': self.conservative_party_extra.base.id,
+        })
         self.assertTrue(form.is_valid())
 
     # When 'not-standing' is selected, it shouldn't matter whether you
@@ -186,8 +189,8 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'standing',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
-        }, initial={'person': self.person,})
+            'party_gb_2015': self.conservative_party_extra.base.id,
+        })
         self.assertTrue(form.is_valid())
 
     # Similarly, when 'not-sure' is selected, it shouldn't matter
@@ -216,6 +219,6 @@ class TestValidators(TestCase):
             'source': 'Just testing...',
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
-            'party_gb_2015': self.parties['party:52'].base.id,
-        }, initial={'person': self.person,})
+            'party_gb_2015': self.conservative_party_extra.base.id,
+        })
         self.assertTrue(form.is_valid())

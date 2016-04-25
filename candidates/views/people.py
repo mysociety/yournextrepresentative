@@ -84,14 +84,17 @@ def get_extra_fields(person):
         for extra_value
         in PersonExtraFieldValue.objects.filter(person=person)
     }
-    return {
-        extra_field.key: {
-            'value': extra_values.get(extra_field.key, ''),
-            'label': _(extra_field.label),
-            'type': extra_field.type,
-        }
+    return [
+        (
+            extra_field.key,
+            {
+                'value': extra_values.get(extra_field.key, ''),
+                'label': _(extra_field.label),
+                'type': extra_field.type,
+            }
+        )
         for extra_field in ExtraField.objects.all()
-    }
+    ]
 
 
 class PersonView(TemplateView):

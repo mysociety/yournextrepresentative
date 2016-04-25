@@ -10,11 +10,10 @@ from django.test.utils import override_settings
 from nose.plugins.attrib import attr
 
 from candidates.tests.factories import (
-    AreaTypeFactory, ElectionFactory, CandidacyExtraFactory,
-    ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
-    PersonExtraFactory, PostExtraFactory, PartySetFactory,
-    AreaExtraFactory
+    AreaExtraFactory, CandidacyExtraFactory, PersonExtraFactory,
+    PostExtraFactory,
 )
+from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 from django.contrib.contenttypes.models import ContentType
 
@@ -24,61 +23,21 @@ from candidates.tests.auth import TestUserMixin
 from .models import Alert
 
 
-class AlertsTest(TestUserMixin, WebTest):
+class AlertsTest(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        area_extra = AreaExtraFactory.create(
-            base__name="Dulwich and West Norwood",
-            type=wmc_area_type,
-        )
-        commons = ParliamentaryChamberFactory.create()
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
-            base__area=area_extra.base,
-            base__organization=commons,
-            slug='65808',
-            party_set=gb_parties,
-            base__label='Member of Parliament for Dulwich and West Norwood'
-        )
-        camberwell_area_extra = AreaExtraFactory.create(
-            base__identifier='65913',
-            type=wmc_area_type,
-        )
-        camberwell_post = PostExtraFactory.create(
-            elections=(election,),
-            base__area=camberwell_area_extra.base,
-            base__organization=commons,
-            slug='65913',
-            candidates_locked=True,
-            base__label='Member of Parliament for Camberwell and Peckham',
-            party_set=gb_parties,
-        )
+        super(AlertsTest, self).setUp()
         person_extra = PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
         )
         self.person = person_extra.base
 
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
-
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         person_extra = PersonExtraFactory.create(
@@ -88,10 +47,10 @@ class AlertsTest(TestUserMixin, WebTest):
         self.person2 = person_extra.base
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         content_type = ContentType.objects.get_for_model(person_extra.base)
@@ -120,35 +79,35 @@ class AlertsTest(TestUserMixin, WebTest):
         self.person2 = person_extra.base
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=camberwell_post.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__post=self.camberwell_post_extra.base,
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         content_type = ContentType.objects.get_for_model(
-            camberwell_area_extra.base
+            self.camberwell_post_extra.base.area
         )
         self.alert3 = Alert.objects.create(
             user=self.user_who_can_merge,
             target_content_type=content_type,
-            target_object_id=camberwell_area_extra.base.id,
+            target_object_id=self.camberwell_post_extra.base.area.id,
             last_sent=last_sent,
             frequency='daily'
         )
 
         aldershot_area_extra = AreaExtraFactory.create(
             base__identifier='65730',
-            type=wmc_area_type,
+            type=self.wmc_area_type,
         )
 
         aldershot_post = PostExtraFactory.create(
-            elections=(election,),
+            elections=(self.election,),
             base__area=aldershot_area_extra.base,
-            base__organization=commons,
+            base__organization=self.commons,
             slug='65730',
             base__label='Member of Parliament for Aldershot',
-            party_set=gb_parties,
+            party_set=self.gb_parties,
         )
 
         person_extra = PersonExtraFactory.create(
@@ -158,26 +117,26 @@ class AlertsTest(TestUserMixin, WebTest):
         self.person3 = person_extra.base
 
         CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
             base__post=aldershot_post.base,
-            base__on_behalf_of=self.parties['party:63'].base
+            base__on_behalf_of=self.green_party_extra.base
         )
 
         content_type = ContentType.objects.get_for_model(
-            self.parties['party:90'].base
+            self.ld_party_extra.base
         )
 
         self.alert4 = Alert.objects.create(
             user=self.user_who_can_rename,
             target_content_type=content_type,
-            target_object_id=self.parties['party:90'].base.id,
+            target_object_id=self.ld_party_extra.base.id,
             last_sent=last_sent,
             frequency='daily'
         )
 
         content_type = ContentType.objects.get_for_model(
-            camberwell_area_extra.base
+            self.camberwell_post_extra.base.area
         )
 
         self.alert5 = Alert.objects.create(
@@ -275,7 +234,7 @@ class AlertsTest(TestUserMixin, WebTest):
             user=self.user_who_can_lock,
         )
         form = response.forms['person-details']
-        form['party_gb_2015'] = self.parties['party:90'].base.id
+        form['party_gb_2015'] = self.ld_party_extra.base.id
         form['source'] = "test_send_area"
         response = form.submit()
 

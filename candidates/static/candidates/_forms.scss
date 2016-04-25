@@ -16,6 +16,15 @@
   @include css-triangle(20px, $confirmation-background-color, bottom);
 }
 
+.person-othernames-list .source-confirmation:before {
+  display: block;
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 56px;
+  @include css-triangle(20px, $confirmation-background-color, bottom);
+}
+
 .source-confirmation {
   position: relative;
   border-radius: 3px;
@@ -107,4 +116,8 @@ form.signup {
   p {
     margin-bottom: 0.5em;
   }
+}
+
+.alternative-names {
+  margin-top: 0.5em;
 }

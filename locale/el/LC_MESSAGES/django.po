@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-08 12:17+0100\n"
-"PO-Revision-Date: 2016-04-08 11:19+0000\n"
+"POT-Creation-Date: 2016-04-15 17:25+0100\n"
+"PO-Revision-Date: 2016-04-15 16:30+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Greek (http://www.transifex.com/mysociety/yournextmp/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -110,13 +110,13 @@ msgstr "Αριθμός υποψήφιων"
 #: cached_counts/templates/constituency_counts.html:5
 #, python-format
 msgid "Number of known %(election_name)s candidates per post"
-msgstr "Αριθμός γνωστοποιημένων υποψήφιων στις %(election_name)s ανά θέση"
+msgstr "Αριθμός γνωστών υποψήφιων στις %(election_name)s ανά θέση"
 
 #: cached_counts/templates/party_counts.html:5
 #: elections/ar_elections_2015/templates/party_counts.html:5
 #, python-format
 msgid "Number of known %(election_name)s candidates per party"
-msgstr "Αριθμός γνωστοποιημένων υποψήφιων στις %(election_name)s ανά κόμμα"
+msgstr "Αριθμός γνωστών υποψήφιων στις %(election_name)s ανά κόμμα"
 
 #: cached_counts/templates/party_counts.html:10
 #: elections/ar_elections_2015/templates/party_counts.html:10
@@ -163,46 +163,50 @@ msgstr "Υποψήφιοι ανά θέση"
 msgid "Candidates per party"
 msgstr "Υποψήφιοι ανά κόμμα"
 
-#: cached_counts/templates/reports.html:44
+#: cached_counts/templates/reports.html:39
+msgid "See progress towards locking all posts"
+msgstr ""
+
+#: cached_counts/templates/reports.html:45
 #, python-format
 msgid "Statistics compared to the %(prior_election_name)s"
 msgstr "Στατιστικές πληροφορίες σε σύγκριση με τις %(prior_election_name)s"
 
-#: cached_counts/templates/reports.html:46
+#: cached_counts/templates/reports.html:47
 #, python-format
 msgid "Total candidates in %(prior_election_name)s:"
 msgstr "Συνολικοί υποψήφιοι στις %(prior_election_name)s:"
 
-#: cached_counts/templates/reports.html:49
+#: cached_counts/templates/reports.html:50
 #, python-format
 msgid "Percentage (%(election_name)s / %(prior_election_name)s):"
 msgstr "Ποσοστό (%(election_name)s / %(prior_election_name)s):"
 
-#: cached_counts/templates/reports.html:52
+#: cached_counts/templates/reports.html:53
 #, python-format
 msgid "New candidates compared to the %(prior_election_name)s:"
 msgstr "Νέοι υποψήφιοι σε σύγκριση με τις %(prior_election_name)s:"
 
-#: cached_counts/templates/reports.html:55
+#: cached_counts/templates/reports.html:56
 #, python-format
 msgid "Candidates standing again from the %(prior_election_name)s:"
 msgstr "Υποψήφιοι που έθεσαν ξανά υποψηφιότητα στις %(prior_election_name)s:"
 
-#: cached_counts/templates/reports.html:58
+#: cached_counts/templates/reports.html:59
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for the same "
 "party:"
 msgstr "Υποψήφιοι που έθεσαν ξανά υποψηφιότητα στις %(prior_election_name)s με το ίδιο κόμμα:"
 
-#: cached_counts/templates/reports.html:62
+#: cached_counts/templates/reports.html:63
 #, python-format
 msgid ""
 "Candidates standing again from the %(prior_election_name)s for a different "
 "party:"
 msgstr "Υποψήφιοι που έθεσαν ξανά υποψηφιότητα στις %(prior_election_name)s με διαφορετικό κόμμα:"
 
-#: cached_counts/templates/reports.html:74
+#: cached_counts/templates/reports.html:75
 msgid "No election data found."
 msgstr "Δε βρέθηκαν δεδομένα για προηγούμενες εκλογές."
 
@@ -348,7 +352,7 @@ msgstr "Πηγή της πληροφορίας ότι έθεσαν υποψηφ�
 #: candidates/forms.py:58
 #, python-brace-format
 msgid "Information source for this change ({0})"
-msgstr "Πηγή πληροφοριών για αυτή την αλλαγή ({0})"
+msgstr "Πηγή πληροφοριών για αυτήν την αλλαγή ({0})"
 
 #: candidates/forms.py:101 candidates/forms.py:138
 #: candidates/templatetags/extra_field_value.py:26
@@ -397,7 +401,7 @@ msgstr "Ένας άγνωστος κωδικός θέσης «{post_id}»  εί�
 #, python-brace-format
 msgid ""
 "Could not find parties for the post with ID '{post_id}' in the {election}"
-msgstr "Δε μπορέσαμε να βρούμε κόμματα για την θέση με κωδικό «{post_id}» στις {election} "
+msgstr "Δε μπορέσαμε να βρούμε κόμματα για τη θέση με κωδικό «{post_id}» στις {election} "
 
 #: candidates/forms.py:215
 #, python-brace-format
@@ -538,15 +542,15 @@ msgstr ""
 #: candidates/models/popolo_extra.py:324
 #, python-brace-format
 msgid "{min_age} or {max_age}"
-msgstr ""
+msgstr "{min_age} ή {max_age}"
 
 #: candidates/templates/candidates/_candidates_for_post.html:65
 msgid "Unlock candidate list"
-msgstr ""
+msgstr "Ξεκλείδωσε τη λίστα υποψήφιων"
 
 #: candidates/templates/candidates/_candidates_for_post.html:65
 msgid "Lock candidate list"
-msgstr ""
+msgstr "Κλείδωσε τη λίστα υποψήφιων"
 
 #: candidates/templates/candidates/_candidates_for_post.html:67
 msgid "(This list of candidates is currently <strong>locked</strong>.)"
@@ -572,7 +576,7 @@ msgstr "Αναίρεσε τους τρέχων νικητές, αν είναι �
 msgid ""
 "Known candidates for <a href=\"%(post_url)s\">%(post_label)s</a> in the <a "
 "href=\"%(election_posts_url)s\"> %(election_name)s</a>"
-msgstr "Γνωστοί υποψήφιοι για «<a href=\"%(post_url)s\">%(post_label)s</a>» στις <a href=\"%(election_posts_url)s\"> %(election_name)s</a>"
+msgstr "Γνωστοί υποψήφιοι στις <a href=\"%(election_posts_url)s\"> %(election_name)s</a> για τη θέση:<br> <a href=\"%(post_url)s\">%(post_label)s</a>"
 
 #: candidates/templates/candidates/_candidates_for_post.html:107
 msgid "Showing the top candidates."
@@ -617,7 +621,7 @@ msgstr "Αυτός/ή ο/η υποψήφιος/α εκλέχθηκε!"
 msgid ""
 "<strong>Oh no!</strong> We don’t know of any candidates in %(post_label)s "
 "for the %(election_name)s yet."
-msgstr "Δεν έχουμε ακόμη κανένα υποψήφιο για την θέση «%(post_label)s» στις %(election_name)s."
+msgstr "Δεν έχουμε ακόμη κανένα υποψήφιο για τη θέση «%(post_label)s» στις %(election_name)s."
 
 #: candidates/templates/candidates/_candidates_for_post.html:159
 #: candidates/templates/candidates/_candidates_for_post.html:167
@@ -670,7 +674,7 @@ msgstr "Η επεξεργασία των δεδομένων στο %(site.name)s
 
 #: candidates/templates/candidates/_person_form.html:7
 msgid "Oops!"
-msgstr "Ωχ!"
+msgstr "A παναΐα μου!"
 
 #: candidates/templates/candidates/_person_form.html:8
 msgid "We could not accept some of the changes you made."
@@ -683,7 +687,7 @@ msgstr "Παρακαλούμε ελέξτε ότι οι πληροφορίες �
 #: candidates/templates/candidates/_person_form.html:17
 #: candidates/templates/candidates/person-view.html:112
 msgid "Personal details:"
-msgstr "Προσωπικά στοιχεία"
+msgstr "Προσωπικά στοιχεία:"
 
 #: candidates/templates/candidates/_person_form.html:31
 msgid "Candidacy:"
@@ -708,7 +712,7 @@ msgstr "Επιπρόσθετες πληροφορίες:"
 msgid ""
 "<strong>You forgot to reference a source!</strong> Can you show us "
 "<em>where</em> you got this information?"
-msgstr "<strong>Ξεχάσατε να υποδείξετε μια πηγή!</strong> Μπορείτε να μας πείτε από <em>πού</em> πήρατε αυτή την πληροφορία; "
+msgstr "<strong>Ξεχάσατε να υποδείξετε μια πηγή!</strong> Μπορείτε να μας πείτε από <em>πού</em> πήρατε αυτήν την πληροφορία; "
 
 #: candidates/templates/candidates/_person_form.html:152
 msgid "What’s your <strong>source of information</strong> for this candidate?"
@@ -756,16 +760,16 @@ msgstr "<a href=\"%(person_create_url)s\">Προσθήκη άλλου υποψή
 #: candidates/templates/candidates/_photo-credit.html:8
 #, python-format
 msgid "This photo was uploaded by the user ‘%(contributor)s’."
-msgstr "Αυτή η φωτογραφία ανέβηκε από το χρήστη: ‘%(contributor)s’."
+msgstr "Αυτή η φωτογραφία ανέβηκε από τον/την χρήστη %(contributor)s."
 
 #: candidates/templates/candidates/_photo-credit.html:11
 msgid "Their justification for its use on the site was:"
-msgstr "Η αιτιολόγηση για τη χρήση του στην ιστοσελίδα ήταν:"
+msgstr "Η αιτιολόγηση για τη χρήση της στην ιστοσελίδα ήταν:"
 
 #: candidates/templates/candidates/_photo-credit.html:15
 #, python-format
 msgid "They commented: “%(user_comment)s”."
-msgstr "Σχολίασαν: “%(user_comment)s”. "
+msgstr "Σχολίασαν: «%(user_comment)s»."
 
 #: candidates/templates/candidates/_photo-credit.html:18
 msgid ""
@@ -787,24 +791,24 @@ msgstr "Σημειώσεις σχετικά με αυτήν την εικόνα:
 msgid ""
 "the photo is free of copyright restrictions (i.e. has explictly been placed "
 "in the public domain)"
-msgstr ""
+msgstr "η εικόνα είναι ελεύθερη πνευματικών δικαιωμάτων (δλδ. έχει καταστεί ρητώς δημόσια περιουσία)"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:8
 #, python-format
 msgid ""
 "they have assigned the copyright of the image to %(site_owner)s so that we "
 "may use it on the site"
-msgstr "έχουν αναθέσει τα πνευματικά δικαιώματα της εικόνας στους %(site_owner)s ούτως ώστε να μπορεί να χρησιμοποιηθεί σε αυτήν την ιστοσελίδα "
+msgstr "έχουν αναθέσει τα πνευματικά δικαιώματα της εικόνας στους %(site_owner)s ούτως ώστε να μπορεί να χρησιμοποιηθεί σε αυτήν την ιστοσελίδα"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:13
 msgid ""
 "this photo is the candidate's profile on social media, or is used to promote"
 " their candidacy on an official candidate or party website"
-msgstr "αυτή η φωτογραφία είναι από το προφίλ του υποψήφιου στα μέσα κοινωνικής δικτύωσης, ή χρησιμοποιείται για να προάγει την υποψηφιότητα τους στην επίσημα ιστοσελίδα τους ή του κόμματός τους."
+msgstr "αυτή η φωτογραφία είναι από το προφίλ του υποψήφιου στα μέσα κοινωνικής δικτύωσης, ή χρησιμοποιείται για να προάγει την υποψηφιότητα τους στην επίσημη ιστοσελίδα τους ή του κόμματός τους"
 
 #: candidates/templates/candidates/_photo-expand-reason.html:18
 msgid "there is some reasonable justification for its use"
-msgstr "υπάρχει κάποια βάσιμη αιτιολόγηση για τη χρήση του"
+msgstr "υπάρχει κάποια βάσιμη αιτιολόγηση για τη χρήση της"
 
 #: candidates/templates/candidates/_source-plain.html:6
 msgid "Please indicate your source for that information in the box below:"
@@ -823,7 +827,7 @@ msgstr "Πριν το αποθηκεύσουμε, μπορείτε να μας �
 #: elections/uk/templates/candidates/about.html:6
 #: elections/uk/templates/candidates/about.html:9
 msgid "About this site"
-msgstr "Σχετικά με αυτή την ιστοσελίδα"
+msgstr "Σχετικά με αυτήν την ιστοσελίδα"
 
 #: candidates/templates/candidates/about.html:17
 #, python-format
@@ -841,7 +845,7 @@ msgid ""
 "GitHub</a>, and you can find a <a "
 "href=\"https://github.com/mysociety/yournextrepresentative/issues\">list of "
 "known bugs</a> there as well."
-msgstr "Ο πηγαίος κώδικας για αυτή την  ιστοσελίδα είναι <a href=\"https://github.com/mysociety/yournextrepresentative/\">διαθέσιμος στο GitHub</a>, και εκεί μπορείτε επίσης να βρείτε μια <a href=\"https://github.com/mysociety/yournextrepresentative/issues\"> λίστα με γνωστά σφάλματα</a>."
+msgstr "Ο πηγαίος κώδικας για αυτήν την ιστοσελίδα είναι <a href=\"https://github.com/mysociety/yournextrepresentative/\">διαθέσιμος στο GitHub</a>, και εκεί μπορείτε επίσης να βρείτε μια <a href=\"https://github.com/mysociety/yournextrepresentative/issues\"> λίστα με γνωστά σφάλματα</a>."
 
 #: candidates/templates/candidates/about.html:30
 msgid ""
@@ -940,7 +944,7 @@ msgstr "Χρήση αυτών των δεδομένων μέσω του API"
 msgid ""
 "The data that's submitted to this site is available as a CSV/Excel download "
 "and programmatically via a RESTful API."
-msgstr ""
+msgstr "Οι πληροφορίες που συνεισφέρονται σε αυτήν την ιστοσελίδα είναι διαθέσιμες σε μορφή CSV/Excel, όπως και προγραμματικά μέσω ενός RESTful API."
 
 #: candidates/templates/candidates/api.html:21
 #: elections/jamaica/templates/candidates/api.html:23
@@ -982,13 +986,17 @@ msgid ""
 "to change in the near future."
 msgstr "Αυτό είναι μια άλφα έκδοση του YourNextRepresentative API, η οποία πολύ πιθανό να αλλάξει στο προσεχές μέλλον."
 
+#: candidates/templates/candidates/api.html:63
+msgid "Browsable API root"
+msgstr ""
+
 #: candidates/templates/candidates/api.html:66
 #: elections/jamaica/templates/candidates/api.html:68
 #, python-format
 msgid ""
 "The browsable base URL of the site's read-only API is: <a "
 "href=\"%(base_api_url)s\">%(base_api_url)s</a>"
-msgstr ""
+msgstr "Η αρχική σελίδα του περιηγήσιμου, μόνο-αναγνώσιμου API είναι &lt;<a href=\"%(base_api_url)s\">%(base_api_url)s</a>&gt;."
 
 #: candidates/templates/candidates/api.html:72
 msgid "The following sections give examples of how to use the API."
@@ -996,7 +1004,7 @@ msgstr "Οι ακόλουθες ενότητες δίνουν παραδείγμ
 
 #: candidates/templates/candidates/api.html:77
 msgid "Find a Constituency ID"
-msgstr "Εύρεση κωδικού Εκλογικής Περιφέρειας"
+msgstr "Εύρεση κωδικού εκλογικής περιφέρειας"
 
 #: candidates/templates/candidates/api.html:79
 msgid ""
@@ -1085,7 +1093,7 @@ msgid ""
 "with the <tt>extra_slug</tt> filter parameter.  For example, for Dulwich and"
 " West Norwood, which has the ID <tt>65808</tt>, you would make the request: "
 "<a href=\"%(base_api_url)sposts/65808/\">%(base_api_url)sposts/65808/</a>"
-msgstr ""
+msgstr "Μπορείς να αιτηθείς τους υποψήφιους μίας συγκεκριμένης εκλογικής περιφέρειας φιλτράροντας τις θέσεις αναλόγως της παραμέτρου τους <tt>extra_slug</tt>. Για παράδειγμα, η Αμμόχωστος φέρει το «slug» <tt>805570</tt> και άρα αιτούμαστε &lt;<a href=\"%(base_api_url)sposts/805570/\">%(base_api_url)sposts/805570/</a>&gt;."
 
 #: candidates/templates/candidates/api.html:170
 #: elections/jamaica/templates/candidates/api.html:85
@@ -1094,7 +1102,7 @@ msgid ""
 "candidate in that constituency for any known election.  The "
 "<tt>election</tt> property of each membership tells you which election that "
 "candidacy is for."
-msgstr ""
+msgstr "Η κάθε μία από τις συμμετοχές (<tt>memberships</tt>) στην απάντηση αντιστοιχεί σε υποψήφιο σε αυτήν την εκλογική περιφέρεια σε οποιεσδήποτε εκλογές. Η τιμή <tt>election</tt> των συμμετοχών περιέχει τις ισχύοντες εκλογές."
 
 #: candidates/templates/candidates/areas-of-type.html:10
 #, python-format
@@ -1263,7 +1271,7 @@ msgstr "Ακολουθήστε τους παρακάτω συνδέσμους γ
 #: candidates/templates/candidates/constituency.html:34
 #, python-format
 msgid "Candidates for %(post_label_shorter)s in the %(election_name)s"
-msgstr "Υποψήφιοι για «%(post_label_shorter)s» στις %(election_name)s"
+msgstr "Υποψήφιοι στις %(election_name)s για τη θέση: %(post_label_shorter)s"
 
 #: candidates/templates/candidates/constituency.html:12
 #, python-format
@@ -1280,12 +1288,12 @@ msgstr "μάθετε περισσότερα στο %(site_name)s"
 #, python-format
 msgid ""
 "Candidates for <span id=\"constituency-name\">%(post_label_shorter)s</span>"
-msgstr "Υποψήφιοι για «<span id=\"constituency-name\">%(post_label_shorter)s</span>»"
+msgstr "Υποψήφιοι για τη θέση:<br> <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 
 #: candidates/templates/candidates/frontpage.html:10
 #, python-format
 msgid "%(election_name)s candidates"
-msgstr "%(election_name)s υποψήφιοι "
+msgstr "οι υποψήφιοι στις %(election_name)s"
 
 #: candidates/templates/candidates/frontpage.html:34
 #: elections/cr/templates/cr/frontpage.html:39
@@ -1329,7 +1337,7 @@ msgid ""
 "suitable for building other election websites. <a href=\"%(api_url)s\">Get "
 "the data now</a>, or <a href=\"%(tasks_url)s\">help by contributing new "
 "candidate details.</a>"
-msgstr "Ελεύθερα και δομημένα δεδομένα με παραπομπές, ιδανικά για τη δημιουργία άλλων εκλογικών ιστοσελίδων. <a href=\"%(api_url)s\">Κατέβασε τα δεδομένα τώρα</a> ή <a href=\"%(tasks_url)s\">συνείσφερε προσθέτοντας νέες πληροφορίες</a>"
+msgstr "Δομημένα δεδομένα που συλλέγονται με διαφάνεια και συνοδεύονται από πηγές, και είναι ιδανικά για τη δημιουργία άλλων εκλογικών ιστοσελίδων. <a href=\"%(api_url)s\">Κατέβασε τα δεδομένα τώρα</a> ή <a href=\"%(tasks_url)s\">συνείσφερε προσθέτοντας νέες πληροφορίες</a>"
 
 #: candidates/templates/candidates/frontpage.html:78
 msgid "Recent changes"
@@ -1371,7 +1379,7 @@ msgid ""
 "User <strong>%(username)s</strong> approved an uploaded photo of <a "
 "href=\"%(person_url)s\">%(person_name)s</a> <span class=\"when\">%(when)s "
 "ago</span>"
-msgstr "Ο/Η χρήστης <strong>%(username)s</strong> έγκρινε φωτογραφία του/της <a href=\"%(person_url)s\">%(person_name)s</a> που είχε αποσταλεί <span class=\"when\">πριν από %(when)s</span>"
+msgstr "Ο/Η χρήστης <strong>%(username)s</strong> ενέκρινε φωτογραφία του/της <a href=\"%(person_url)s\">%(person_name)s</a> που είχε αποσταλεί <span class=\"when\">πριν από %(when)s</span>"
 
 #: candidates/templates/candidates/frontpage.html:115
 #, python-format
@@ -1441,7 +1449,7 @@ msgstr "Εμφάνιση περισσότερων αλλαγών"
 
 #: candidates/templates/candidates/frontpage.html:167
 msgid "Top users this week"
-msgstr "Κορυφαίοι χρήστες αυτήν τη εβδομάδα"
+msgstr "Κορυφαίοι χρήστες αυτήν την εβδομάδα"
 
 #: candidates/templates/candidates/frontpage.html:171
 #, python-format
@@ -1469,32 +1477,32 @@ msgstr "Αριθμός επεξεργασιών"
 msgid ""
 "Party list of %(party_name)s for %(post_label_shorter)s in the "
 "%(election_name)s"
-msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s για «%(post_label_shorter)s» στις %(election_name)s"
+msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s στις %(election_name)s για τη θέση: %(post_label_shorter)s"
 
 #: candidates/templates/candidates/ordered-party-list.html:12
 #, python-format
 msgid ""
 "Party list of %(party_name)s for %(post_label_shorter)s in the %(election)s"
-msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s για «%(post_label_shorter)s» στις %(election)s"
+msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s στις %(election)s για τη θέση: %(post_label_shorter)s»"
 
 #: candidates/templates/candidates/ordered-party-list.html:37
 #, python-format
 msgid ""
 "Party list of %(party_name)s for <span id=\"constituency-"
 "name\">%(post_label_shorter)s</span>"
-msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s για «<span id=\"constituency-name\">%(post_label_shorter)s</span>»"
+msgstr "Το ψηφοδέλτιο του κόμματος %(party_name)s για τη θέση: <span id=\"constituency-name\">%(post_label_shorter)s</span>"
 
 #: candidates/templates/candidates/ordered-party-list.html:47
 #, python-format
 msgid "%(party_name)s candidates for <a href=\"%(post_url)s\">%(post_label)s</a>"
-msgstr "Υποψήφιοι του κόμματος %(party_name)s για «<a href=\"%(post_url)s\">%(post_label)s</a>»"
+msgstr "Υποψήφιοι του κόμματος %(party_name)s για:<br> <a href=\"%(post_url)s\">%(post_label)s</a>"
 
 #: candidates/templates/candidates/ordered-party-list.html:79
 #, python-format
 msgid ""
 "<strong>Oh no!</strong> We don’t know of any candidates from %(party.name)s "
 "for %(post_label)s for the %(election_name)s yet."
-msgstr "Δεν έχουμε ακόμη κανένα υποψήφιο από το κόμμα «%(party.name)s» για την θέση «%(post_label)s» στις %(election_name)s. "
+msgstr "Δεν έχουμε ακόμη κανένα υποψήφιο από το κόμμα «%(party.name)s» για τη θέση «%(post_label)s» στις %(election_name)s. "
 
 #: candidates/templates/candidates/ordered-party-list.html:116
 msgid "Add new candidate"
@@ -1564,7 +1572,7 @@ msgstr ""
 msgid ""
 "<a href=\"%(person_url)s\">%(name)s</a> is standing in <a "
 "href=\"%(post_url)s\">%(post_short_label)s</a>"
-msgstr "Ο/Η <a href=\"%(person_url)s\">%(name)s</a> έθεσε υποψηφιότητα για «<a href=\"%(post_url)s\">%(post_short_label)s</a>»"
+msgstr "Ο/Η <a href=\"%(person_url)s\">%(name)s</a> έθεσε υποψηφιότητα για <a href=\"%(post_url)s\">%(post_short_label)s</a>"
 
 #: candidates/templates/candidates/party.html:68
 #, python-format
@@ -1778,7 +1786,7 @@ msgstr "Έτος γέννησης: %(dob)s"
 #: candidates/templates/candidates/person-view.html:199
 #, python-format
 msgid "Date of birth: %(dob)s"
-msgstr ""
+msgstr "Ημερομηνία γέννησης: %(dob)s"
 
 #: candidates/templates/candidates/person-view.html:210
 #: mysite/extra_translations.py:32
@@ -1800,7 +1808,7 @@ msgstr "Η βάση δεδομένων κτίζεται από άτομα σαν
 #: candidates/templates/candidates/person-view.html:249
 msgid ""
 "Please do add extra details about this candidate – it only takes a moment."
-msgstr "Επιπρόσθετες πληροφορίες είναι καλοδεχούμενες - παίρνει παρά μόνο μια στιγμή να επεξεργαστείς αυτή την σελίδα."
+msgstr "Επιπρόσθετες πληροφορίες είναι καλοδεχούμενες - παίρνει παρά μόνο μια στιγμή να επεξεργαστείς αυτήν τη σελίδα."
 
 #: candidates/templates/candidates/person-view.html:251
 msgid "Edit candidate"
@@ -1816,14 +1824,14 @@ msgstr "Χρησιμοποίησε τα δεδομένα"
 
 #: candidates/templates/candidates/person-view.html:262
 msgid "Open data JSON API:"
-msgstr ""
+msgstr "API ανοικτών δεδομένων σε μορφή JSON:"
 
 #: candidates/templates/candidates/person-view.html:267
 #, python-format
 msgid ""
 "More details about getting <a href=\"%(api_url)s\">the data</a> and <a "
 "href=\"%(about_url)s\">its license</a>."
-msgstr "Περισσότερες πληροφορίες για <a href=\"%(api_url)s\">τα δεδομένα</a> και <a href=\"%(about_url)s\">την άδεια χρήσης</a>."
+msgstr "Περισσότερες πληροφορίες για <a href=\"%(api_url)s\">τα δεδομένα</a> και <a href=\"%(about_url)s\">την άδεια χρήσης</a>"
 
 #: candidates/templates/candidates/popit_down.html:7
 #, python-format
@@ -1885,7 +1893,7 @@ msgstr "Σας υποσχόμαστε τα εξής σχετικά με τις �
 msgid ""
 "We will not sell or distribute your email address or other personal "
 "information."
-msgstr "Δε θα πουλήσουμε ούτε θα διανέμουμε την διεύθυνση ηλεκτρονικού σας ταχυδρομείου ούτε άλλες προσωπικές σας πληροφορίες."
+msgstr "Δε θα πουλήσουμε ούτε θα διανέμουμε τη διεύθυνση ηλεκτρονικού σας ταχυδρομείου ούτε άλλες προσωπικές σας πληροφορίες."
 
 #: candidates/templates/candidates/privacy.html:38
 msgid ""
@@ -1920,7 +1928,7 @@ msgid ""
 "about those candidates available to members of the public and website "
 "developers so that they can find out more about those candidates, their "
 "promises and policy positions."
-msgstr "Παρακαλούμε έχετε υπόψιν ότι αυτή η πολιτική αναφέρεται στις προσωπικές πληροφορίες από τη δημιουργία λογαριασμού στην ιστοσελίδα, όχι τις πληροφορίες σχετικά με τους υποψήφιους για τις εκλογές. Ο λόγος που η ιστοσελίδα υπάρχει είναι για να κάνει διαθέσιμες τις πληροφορίες που αφορούν στους υποψήφιους στο ευρύ κοινό και τους προγραμματιστές και δημιουργούς άλλων ιστοσελίδων ούτως ώστε να μπορούν να μάθουν περισσότερα για τους συγκεκριμένους υποψήφιους, τις υποσχέσεις τους και τις πολιτικές τους θέσεις. "
+msgstr "Αυτή η πολιτική αναφέρεται στις προσωπικές πληροφορίες των εγγεγραμμένων χρηστών της ιστοσελίδας και όχι τις πληροφορίες σχετικά με τους υποψήφιους σε εκλογές. Ο λόγος που η ιστοσελίδα υπάρχει είναι για να παρέχει πληροφορίες που αφορούν στους υποψήφιους στο ευρύ κοινό και τους δημιουργούς άλλων ιστοσελίδων ούτως ώστε να μπορούν να μάθουν περισσότερα για τους συγκεκριμένους υποψήφιους, τις υποσχέσεις τους και τις πολιτικές τους θέσεις."
 
 #: candidates/templates/candidates/privacy.html:69
 msgid ""
@@ -1956,7 +1964,7 @@ msgstr "Πηγή πληροφόρησης"
 
 #: candidates/templates/candidates/recent-changes.html:40
 msgid "previous"
-msgstr "προηγούμενο"
+msgstr "προηγούμενη"
 
 #: candidates/templates/candidates/recent-changes.html:44
 #, python-format
@@ -1965,7 +1973,7 @@ msgstr "Σελίδα %(n)s από %(num)s. "
 
 #: candidates/templates/candidates/recent-changes.html:48
 msgid "next"
-msgstr "επόμενο"
+msgstr "επόμενη"
 
 #: candidates/templates/candidates/record-winner.html:6
 #, python-format
@@ -1993,7 +2001,7 @@ msgstr "Για σκοπούς πρόληψης, αυτή η ενημέρωση �
 
 #: candidates/templates/search/search.html:7
 msgid "Search candidates"
-msgstr ""
+msgstr "Εύρεση υποψήφιου"
 
 #: candidates/templates/search/search.html:10
 #: mysite/templates/generic_base.html:99
@@ -2062,12 +2070,12 @@ msgstr "Καμία πληροφορία ακόμα"
 msgid "Malformed type and area: '{0}'"
 msgstr "Εσφαλμένο είδος και περιοχή: «{0}»"
 
-#: candidates/views/areas.py:125
+#: candidates/views/areas.py:131
 #, python-brace-format
 msgid "Area '{0}' not found"
 msgstr "Η περιοχή «{0}» δε βρέθηκε"
 
-#: candidates/views/areas.py:127
+#: candidates/views/areas.py:133
 #, python-brace-format
 msgid "Multiple Area generations for type {area_type} found"
 msgstr ""
@@ -2080,11 +2088,11 @@ msgstr "Προσπάθεια επεξεργασίας ενός υποψήφιο�
 msgid "Invalid data POSTed to ConstituencyLockView"
 msgstr ""
 
-#: candidates/views/constituencies.py:416
+#: candidates/views/constituencies.py:418
 msgid "Setting as \"not elected\" by implication"
 msgstr ""
 
-#: candidates/views/constituencies.py:449
+#: candidates/views/constituencies.py:451
 msgid "Result recorded in error, retracting"
 msgstr ""
 
@@ -2361,7 +2369,7 @@ msgstr "Μπορείς να μας βοηθήσεις να κάνουμε το %
 msgid ""
 "%(site_name)s is a volunteer-sourced database, and that means we constantly "
 "need help in making it better."
-msgstr "Το %(site_name)s είναι μια βάση δεδομένων που ενημερώνεται από εθελοντές· χρειαζόμαστε την βοήθειά σας για να την βελτιώσουμε."
+msgstr "Το %(site_name)s είναι μια βάση δεδομένων που ενημερώνεται από εθελοντές· χρειαζόμαστε τη βοήθειά σας για να την βελτιώσουμε."
 
 #: elections/jamaica/templates/tasks/tasks_home.html:17
 #: tasks/templates/tasks/tasks_home.html:17
@@ -2544,7 +2552,7 @@ msgstr ""
 msgid ""
 "If you checked 'Other' then you must provide a justification for why we can "
 "use it."
-msgstr "Αν επιλέξατε \"Άλλο\" τότε πρέπει να παράσχετε μια αιτιολόγηση για το γιατί μπορούμε να το χρησιμοποιήσουμε."
+msgstr "Αν επιλέξατε «άλλο» τότε πρέπει να αιτιολογήσετε γιατί μπορούμε να τη χρησιμοποιήσουμε."
 
 #: moderation_queue/models.py:23
 msgid "This photograph is free of any copyright restrictions"
@@ -2554,7 +2562,7 @@ msgstr "Αυτή η φωτογραφία είναι ελεύθερη από πε
 msgid ""
 "I own copyright of this photo and I assign the copyright to Democracy Club "
 "Limited in return for it being displayed on this site"
-msgstr "Μου ανήκει η πνευματική ιδιοκτησία αυτής της φωτογραφίας και αναθέτω το δικαίωμα στην ιστοσελίδα να την χρησιμοποιεί για το συγκεκριμένο σκοπό.   "
+msgstr "Μου ανήκει η πνευματική ιδιοκτησία αυτής της φωτογραφίας και αναθέτω το δικαίωμα στην ιστοσελίδα να την χρησιμοποιεί για το συγκεκριμένο σκοπό"
 
 #: moderation_queue/models.py:29
 msgid ""
@@ -2568,19 +2576,19 @@ msgstr "Άλλο"
 
 #: moderation_queue/models.py:46
 msgid "Approved"
-msgstr "Εγκρίθηκε"
+msgstr "Εγκρίνω"
 
 #: moderation_queue/models.py:47
 msgid "Rejected"
-msgstr "Απορρίφθηκε"
+msgstr "Απορρίπτω"
 
 #: moderation_queue/models.py:48
 msgid "Undecided"
-msgstr "Αναποφάσιστοι"
+msgstr "Αναποφάσιστος/η"
 
 #: moderation_queue/models.py:49
 msgid "Ignore"
-msgstr "Αγνόησε"
+msgstr "Αγνοώ"
 
 #: moderation_queue/models.py:81
 #, python-brace-format
@@ -2595,8 +2603,8 @@ msgid ""
 msgid_plural ""
 "<strong>Warning:</strong> there are already %(queued_images)s photos of "
 "%(name)s in the queue, waiting to be moderated:"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "<strong>Προσοχή!</strong> Υπάρχει ήδη %(queued_images)s εικόνα του %(name)s στην ουρά, αναμένοντας επιθεώρησης:"
+msgstr[1] "<strong>Προσοχή!</strong> Υπάρχουν ήδη %(queued_images)s εικόνες του %(name)s στην ουρά, αναμένοντας επιθεώρησης:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:16
 #, python-format
@@ -2608,7 +2616,7 @@ msgstr "Η φωτογραφία απεστάλη από τον/την %(name)s �
 msgid ""
 "If you still want to upload another photo of %(name)s, first select an image"
 " from your computer:"
-msgstr ""
+msgstr "Αν ούτως ή άλλως θέλετε να ανεβάσετε νέα εικόνα του %(name)s, επιλέξτε την πρώτα από τον υπολογιστή σας:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:29
 msgid "First, select an image from your computer:"
@@ -2624,7 +2632,7 @@ msgstr "Ενημέρωσέ μας σχετικά με τα δικαιώματα 
 msgid ""
 "Here is my justification for why this photo may be reasonably used on the "
 "website, including the source URL:"
-msgstr "Εδώ είναι η αιτιολόγησή μου ως προς το γιατί αυτή η φωτογραφία μπορεί να χρησιμοποιηθεί σε αυτή την ιστοσελίδα, συμπεριλαμβανομένου και του URL της πηγής:"
+msgstr "Εδώ είναι η αιτιολόγησή μου ως προς το γιατί αυτή η φωτογραφία μπορεί να χρησιμοποιηθεί σε αυτήν την ιστοσελίδα, συμπεριλαμβανομένου και του URL της πηγής:"
 
 #: moderation_queue/templates/moderation_queue/_photo-upload-form.html:54
 #: official_documents/templates/official_documents/upload_document_form.html:14
@@ -2634,7 +2642,7 @@ msgstr "Αποστολή"
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:6
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:9
 msgid "Uploaded photos for review"
-msgstr ""
+msgstr "Απεσταλμένες εικόνες για επιθεώρηση"
 
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:18
 msgid "Date uploaded"
@@ -2642,7 +2650,7 @@ msgstr "Ημερομηνία αποστολής"
 
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:19
 msgid "Uploading user"
-msgstr ""
+msgstr "Χρήστης-αποστολέας"
 
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:20
 msgid "Candidate ID"
@@ -2654,12 +2662,12 @@ msgstr "Επιθεώρηση"
 
 #: moderation_queue/templates/moderation_queue/photo-review-list.html:36
 msgid "<strong>Congratulations!</strong> There are no more photos to review."
-msgstr ""
+msgstr "<strong>Συγχαρητήρια!</strong> Δεν υπάρχουν άλλες εικόνες για επιθεώρηση."
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:17
 #: moderation_queue/templates/moderation_queue/photo-review.html:20
 msgid "Review and crop the photo"
-msgstr ""
+msgstr "Επιθεώρηση και περικοπή"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:30
 #, python-format
@@ -2680,33 +2688,33 @@ msgstr "Αν προσπαθείτε να βρείτε την πιθανή  <em>�
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:41
 msgid "Click and drag in the image to crop"
-msgstr "Κάντε κλικ και σύρετε την εικόνα για περικοπή"
+msgstr "Κλίκαρε και σύρε το ποντίκι εντός της εικόνας για περικοπή"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:43
 msgid ""
 "Please crop to just around the candidate's head, since they're displayed in "
 "thumbnail form on the site."
-msgstr "Παρακαλούμε κάντε περικοπή γύρω από το κεφάλι του/της υποψηφίου, αφού θα παρουσιάζονται σε μορφή μικρογραφίας στην ιστοσελίδα."
+msgstr "Παρακαλώ περικόψε την εικόνα γύρω από το κεφάλι του/της υποψηφίου, αφού θα σμικρυνθεί όταν θα αναρτηθεί στην ιστοσελίδα."
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:68
 msgid "Minimum X co-ordinate:"
-msgstr ""
+msgstr "Ελάχιστη συντεταγμένη <i>x</i>:"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:73
 msgid "Maximum X co-ordinate:"
-msgstr ""
+msgstr "Μέγιστη συντεταγμένη <i>x</i>:"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:78
 msgid "Minimum Y co-ordinate:"
-msgstr ""
+msgstr "Ελάχιστη συντεταγμένη <i>y</i>:"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:83
 msgid "Maximum Y co-ordinate:"
-msgstr ""
+msgstr "Μέγιστη συντεταγμένη <i>y</i>:"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:88
 msgid "User-submitted information"
-msgstr "Πληροφορίες που καταχωρήθηκαν από χρήστες"
+msgstr "Πληροφορίες που καταχωρήθηκαν από τον/την χρήστη"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:92
 #, python-format
@@ -2716,17 +2724,17 @@ msgstr "Ανέβηκε από τον/την χρήστη %(username)s με επ�
 #: moderation_queue/templates/moderation_queue/photo-review.html:96
 #, python-format
 msgid "(The candidate's unconfirmed email address is <tt>%(email)s</tt>.)"
-msgstr ""
+msgstr "(Η ανεπιβεβαίωτη ηλεκτρονική διεύθυνση του υποψήφιου είναι <tt>%(email)s</tt>.)"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:104
 #, python-format
 msgid "%(username)s asserted that photo is free of copyright restrictions"
-msgstr ""
+msgstr "%(username)s ισχυρίστηκε ότι η εικόνα είναι ελεύθερη πνευματικών δικαιωμάτων"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:108
 #, python-format
 msgid "%(username)s assigned the copyright to %(copyright_holder)s"
-msgstr ""
+msgstr "%(username)s ανέθεσε τα πνευματικά δικαιώματα στους %(copyright_holder)s"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:113
 #, python-format
@@ -2740,11 +2748,11 @@ msgstr "Ο/Η %(username)s είπε ότι αυτή είναι η δημόσια
 msgid ""
 "%(username)s's justification for use of this photo was: "
 "&#8220;%(justification)s&#8221;"
-msgstr ""
+msgstr "Η αιτιολόγηση του %(username)s για την χρήση της εικόνας ήταν: «%(justification)s»"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:128
 msgid "Your decision"
-msgstr "Η απόφασή σας"
+msgstr "Απόφαση"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:133
 msgid "Decision:"
@@ -2762,7 +2770,7 @@ msgstr "Γιατί <em>εσείς</em> νομίζετε ότι επιτρέπε�
 msgid ""
 "Reason for rejection (<strong>Warning:</strong> this will be emailed to the "
 "user):"
-msgstr ""
+msgstr "Λόγος απόρριψης (<strong>προσοχή:</strong> θα ταχυδρομηθεί ηλεκτρονικώς στον χρήστη):"
 
 #: moderation_queue/templates/moderation_queue/photo-review.html:158
 msgid "Submit"
@@ -2796,7 +2804,7 @@ msgid ""
 "Thank-you for uploading a photo - you will receive an email when it is "
 "approved to be added to the site, or an explanation for why it cannot be "
 "used. <a href=\"%(url)s\">Return to %(name)s’s page.</a>"
-msgstr ""
+msgstr "Ευχαριστούμε για την εικόνα που ανεβάσατε. Θα ενημερωθείτε μέσω e-mail όταν εγκριθεί και προστεθεί στην ιστοσελίδα ή απορριφθεί, συμπεριλαμβανομένου του λόγου που δεν μπορεί να χρησιμοποιηθεί. <a href=\"%(url)s\">Επιστροφή στον/την %(name)s.</a>"
 
 #: moderation_queue/templates/moderation_queue/photo_rejected_email.txt:12
 #, python-format
@@ -2810,26 +2818,26 @@ msgstr "Ανέβηκε από {uploaded_by}: Εγκρίθηκε από την ε
 
 #: moderation_queue/views.py:245
 msgid "Approved from photo moderation queue"
-msgstr ""
+msgstr "Εγκρίθηκε μέσω της ουράς επιθεώρησης εικόνων"
 
 #: moderation_queue/views.py:289
 #, python-brace-format
 msgid ""
 "Approved a photo upload from {uploading_user} who provided the message: "
 "\"{message}\""
-msgstr ""
+msgstr "Εγκρίθηκε εικόνα που ανέβασε ο/η {uploading_user} με το ακόλουθο μήνυμα: «{message}»"
 
 #: moderation_queue/views.py:312
 #, python-brace-format
 msgid "{site_name} image upload approved"
-msgstr ""
+msgstr "Η είκονα που ανεβάσατε στο {site_name} εγκρίθηκε"
 
 #: moderation_queue/views.py:321
 #, python-brace-format
 msgid ""
 "Thank-you for submitting a photo to {site_name}; that's been uploaded now "
 "for the candidate page here:"
-msgstr ""
+msgstr "Ευχαριστούμε που ανεβάσατε φωτογραφία υποψηφίου στο {site_name}· την έχουμε δημοσιεύσει εδώ:"
 
 #: moderation_queue/views.py:326 moderation_queue/views.py:381
 #, python-brace-format
@@ -2839,31 +2847,31 @@ msgstr "Πολλά ευχαριστώ από τους εθελοντές του 
 #: moderation_queue/views.py:333
 #, python-format
 msgid "You approved a photo upload for %s"
-msgstr ""
+msgstr "Ενέκρινες εικόνα του/της %s"
 
 #: moderation_queue/views.py:338
 #, python-brace-format
 msgid "Rejected a photo upload from {uploading_user}"
-msgstr ""
+msgstr "Απερρίφθη εικόνα που ανέβασε ο/η {uploading_user}"
 
 #: moderation_queue/views.py:357
 #, python-brace-format
 msgid "{site_name} image moderation results"
-msgstr ""
+msgstr "Αποτελέσματα επιθεώρησης εικόνων στο {site_name}"
 
 #: moderation_queue/views.py:367
 #, python-brace-format
 msgid ""
 "Thank-you for uploading a photo of {candidate_name} to {site_name}, but "
 "unfortunately we can't use that image because:"
-msgstr ""
+msgstr "Ευχαριστούμε που ανεβάσατε εικόνα του {candidate_name} στο {site_name}· δυστυχώς δεν μπορούμε να την χρησιμοποιήσουμε επειδή:"
 
 #: moderation_queue/views.py:375
 msgid ""
 "You can just reply to this email if you want to discuss that further, or you"
 " can try uploading a photo with a different reason or justification for its "
 "use using this link:"
-msgstr ""
+msgstr "Μπορείτε να απαντήσετε στο e-mail αν θέλετε να συζητήσετε το αποτέλεσμα, ή μπορείτε να ανεβάσετε νέα εικόνα μέσω του ακόλουθου συνδέσμου:"
 
 #: moderation_queue/views.py:389
 #, python-format
@@ -2880,7 +2888,7 @@ msgstr "Αφήσατε μια αποστολή φωτογραφίας για {0}
 msgid ""
 "Ignored a photo upload from {uploading_user} (This usually means it was a "
 "duplicate)"
-msgstr ""
+msgstr "Αγνοήθηκε εικόνα που ανέβασε ο/η {uploading_user} (συνήθως αυτό σημαίνει ότι προϋπήρχε)"
 
 #: moderation_queue/views.py:416
 #, python-brace-format
@@ -3198,7 +3206,7 @@ msgstr "{name} ({party}) κέρδισε στις {cons}"
 msgid ""
 "A {site_name} volunteer recorded at {datetime} that {name} ({party}) won the"
 " ballot in {cons}, quoting the source '{source}')."
-msgstr "Ένας εθελοντής του {site_name} κατέγραψε στις {datetime} ότι ο/η {name} ({party}) κέρδισε τη ψηφοφορία {cons}, παραθέτοντας την πηγή «{source}»)."
+msgstr "Ένας εθελοντής του {site_name} κατέγραψε στις {datetime} ότι ο/η {name} ({party}) κέρδισε την ψηφοφορία {cons}, παραθέτοντας την πηγή «{source}»)."
 
 #: results/feeds.py:88
 #, python-brace-format

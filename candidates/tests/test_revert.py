@@ -16,6 +16,7 @@ from candidates.models import MembershipExtra, PersonExtra, ExtraField
 from compat import bytes_to_unicode
 
 from .auth import TestUserMixin
+from .uk_examples import UK2015ExamplesMixin
 from . import factories
 
 example_timestamp = '2014-09-29T10:11:59.216159'
@@ -23,7 +24,7 @@ example_version_id = '5aa6418325c1a0bb'
 
 # FIXME: add a test to check that unauthorized people can't revert
 
-class TestRevertPersonView(TestUserMixin, WebTest):
+class TestRevertPersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     version_template = Template('''[
           {
@@ -125,53 +126,30 @@ class TestRevertPersonView(TestUserMixin, WebTest):
     ''')
 
     def setUp(self):
-        wmc_area_type = factories.AreaTypeFactory.create()
-        gb_parties = factories.PartySetFactory.create(
-            slug='gb', name='Great Britain'
-        )
-        election = factories.ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        earlier_election = factories.EarlierElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = factories.ParliamentaryChamberFactory.create()
-        post_extra = factories.PostExtraFactory.create(
-            elections=(election, earlier_election),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        factories.PartyFactory.reset_sequence()
-        party_extra = factories.PartyExtraFactory.create()
-        self.party_slug = party_extra.slug
+        super(TestRevertPersonView, self).setUp()
         person_extra = factories.PersonExtraFactory.create(
             base__id=2009,
             base__name='Tessa Jowell',
             base__email='jowell@example.com',
-            versions=self.version_template.substitute(slug=self.party_slug)
+            versions=self.version_template.substitute(
+                slug=self.labour_party_extra.slug
+            )
         )
         person_extra.base.links.create(
             url='',
             note='wikipedia',
         )
-        gb_parties.parties.add(party_extra.base)
         factories.CandidacyExtraFactory.create(
-            election=election,
+            election=self.election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         factories.CandidacyExtraFactory.create(
-            election=earlier_election,
+            election=self.earlier_election,
             base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         ExtraField.objects.create(
             type='url',
@@ -234,7 +212,7 @@ class TestRevertPersonView(TestUserMixin, WebTest):
                 'wikipedia_url': '',
                 'party_memberships': {
                     '2010': {
-                        'id': self.party_slug,
+                        'id': self.labour_party_extra.slug,
                         'name': 'Labour Party'
                     }
                 },

@@ -7,40 +7,14 @@ from django.test import TestCase
 from ..csv_helpers import list_to_csv
 
 from . import factories
+from .uk_examples import UK2015ExamplesMixin
 
 
-class CSVTests(TestCase):
+class CSVTests(UK2015ExamplesMixin, TestCase):
     def setUp(self):
+        super(CSVTests, self).setUp()
         # The second person's name (and party name) have diacritics in
         # them to test handling of Unicode when outputting to CSV.
-        wmc_area_type = factories.AreaTypeFactory.create()
-        gb_parties = factories.PartySetFactory.create(
-            slug='gb', name='Great Britain'
-        )
-        ni_parties = factories.PartySetFactory.create(
-            slug='ni', name='Northern Ireland'
-        )
-        commons = factories.ParliamentaryChamberFactory.create()
-        self.election = factories.ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        self.earlier_election = factories.EarlierElectionFactory.create(
-            slug='2010',
-            name='2010 General Election',
-            area_types=(wmc_area_type,)
-        )
-        sinn_fein = factories.PartyExtraFactory.create(
-            slug='party:39',
-            base__name='Sinn Féin',
-        )
-        ni_parties.parties.add(sinn_fein.base)
-        labour_party = factories.PartyExtraFactory.create(
-            slug='party:53',
-            base__name='Labour Party',
-        )
-        gb_parties.parties.add(labour_party.base)
         self.gb_person_extra = factories.PersonExtraFactory.create(
             base__id=2009,
             base__name='Tessa Jowell',
@@ -54,27 +28,15 @@ class CSVTests(TestCase):
             base__name='Daithí McKay',
             base__gender='male',
         )
-        camberwell_area_extra = factories.AreaExtraFactory.create(
-            base__identifier='65913',
-            base__name='Camberwell and Peckham',
-            type=wmc_area_type,
-        )
+        camberwell_area_extra = self.camberwell_post_extra.base.area.extra
         camberwell_area_extra.base.other_identifiers.create(
             scheme='mapit-area-url',
             identifier='http://mapit.mysociety.org/area/65913',
         )
-        camberwell_post_extra = factories.PostExtraFactory.create(
-            elections=(self.election, self.earlier_election),
-            base__organization=commons,
-            base__area=camberwell_area_extra.base,
-            slug='65913',
-            base__label='Member of Parliament for Camberwell and Peckham',
-            party_set=gb_parties,
-        )
         north_antrim_area_extra = factories.AreaExtraFactory.create(
             base__identifier='66135',
             base__name='North Antrim',
-            type=wmc_area_type,
+            type=self.wmc_area_type,
         )
         north_antrim_area_extra.base.other_identifiers.create(
             scheme='mapit-area-url',
@@ -82,35 +44,35 @@ class CSVTests(TestCase):
         )
         north_antrim_post_extra = factories.PostExtraFactory.create(
             elections=(self.election, self.earlier_election),
-            base__organization=commons,
+            base__organization=self.commons,
             base__area=north_antrim_area_extra.base,
             slug='66135',
             base__label='Member of Parliament for North Antrim',
-            party_set=ni_parties,
+            party_set=self.ni_parties,
         )
         factories.CandidacyExtraFactory.create(
             election=self.election,
             base__person=self.ni_person_extra.base,
             base__post=north_antrim_post_extra.base,
-            base__on_behalf_of=sinn_fein.base
+            base__on_behalf_of=self.sinn_fein_extra.base
         )
         factories.CandidacyExtraFactory.create(
             election=self.earlier_election,
             base__person=self.ni_person_extra.base,
             base__post=north_antrim_post_extra.base,
-            base__on_behalf_of=sinn_fein.base
+            base__on_behalf_of=self.sinn_fein_extra.base
         )
         factories.CandidacyExtraFactory.create(
             election=self.election,
             base__person=self.gb_person_extra.base,
-            base__post=camberwell_post_extra.base,
-            base__on_behalf_of=labour_party.base
+            base__post=self.camberwell_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
         factories.CandidacyExtraFactory.create(
             election=self.earlier_election,
             base__person=self.gb_person_extra.base,
-            base__post=camberwell_post_extra.base,
-            base__on_behalf_of=labour_party.base
+            base__post=self.camberwell_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
         )
 
     def test_as_dict(self):

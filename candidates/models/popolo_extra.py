@@ -670,6 +670,51 @@ class PartySet(models.Model):
             .order_by('name').values_list('id', 'name')
         return result
 
+    def party_choices(self):
+        # For various reasons, we've found it's best to order the
+        # parties by those that have the most candidates - this means
+        # that the commonest parties to select are at the top of the
+        # drop down.  The logic here tries to build such an ordered
+        # list of candidates if there are enough that such an ordering
+        # makes sense.  Otherwise the fallback is to rank
+        # alphabetically.
+        candidacies_current_qs = Membership.objects.filter(
+            extra__election__current=True,
+            role=models.F('extra__election__candidate_membership_role'),
+            on_behalf_of__party_sets=self,
+        )
+        candidacies_ever_qs =  Membership.objects.filter(
+            role=models.F('extra__election__candidate_membership_role'),
+            on_behalf_of__party_sets=self,
+        )
+        minimum_count = settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
+        qs = None
+        if candidacies_current_qs.count() > minimum_count:
+            qs = candidacies_current_qs
+        elif candidacies_ever_qs.count() > minimum_count:
+            qs = candidacies_ever_qs
+        else:
+            return self.party_choices_basic()
+        result = [('party:none', '')]
+        parties_with_candidates = []
+        for party_tuple in qs \
+                .values('on_behalf_of', 'on_behalf_of__name') \
+                .order_by() \
+                .annotate(party_count=models.Count('pk')) \
+                .order_by('-party_count', 'on_behalf_of__name'):
+            parties_with_candidates.append(party_tuple['on_behalf_of'])
+            name_with_count = \
+                _('{party_name} ({number_of_candidates} candidates)').format(
+                    party_name=party_tuple['on_behalf_of__name'],
+                    number_of_candidates=party_tuple['party_count']
+                )
+            result.append(
+                (party_tuple['on_behalf_of'], name_with_count)
+            )
+        result += self.parties.exclude(id__in=parties_with_candidates) \
+            .order_by('name').values_list('id', 'name')
+        return result
+
 
 class ImageExtraManager(models.Manager):
 

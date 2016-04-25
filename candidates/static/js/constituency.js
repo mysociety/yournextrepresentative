@@ -9,6 +9,7 @@ $(function() {
      boxes and the add new candidate form. */
   $('.source-confirmation-standing').hide();
   $('.source-confirmation-not-standing').hide();
+  $('.source-confirmation-delete-other-name').hide()
   $('.candidates__new').hide();
 
   function getNewCandidateDiv(element) {
@@ -29,20 +30,30 @@ $(function() {
     newCandidate.slideUp();
   });
 
-  /* Handle showing/hiding the source confirmation box */
-  $('.js-toggle-source-confirmation').on('click', function(event){
-    var target = $(event.target),
-        standing = target.hasClass('standing') ? 'standing' : 'not-standing',
-        allConfirmationBoxes = $(this).parents('li').children('.source-confirmation'),
-        confirmationClass = '.source-confirmation-' + standing,
-        confirmation = $(this).parents('li').children(confirmationClass);
+  function toggleSourceConfirmation(button, classSuffix, target) {
+    var allConfirmationBoxes = $(button).parents('li').children('.source-confirmation'),
+    confirmationClass = '.source-confirmation-' + classSuffix,
+    confirmation = $(button).parents('li').children(confirmationClass);
     if(confirmation.is(':visible')){
       confirmation.hide();
     } else {
       allConfirmationBoxes.hide();
       confirmation.show().find('input:text').focus();
     }
-  })
+  }
+
+  /* Handle showing/hiding the source confirmation box */
+  $('.js-toggle-source-confirmation').on('click', function(event){
+    var i, validClass, target = $(event.target),
+    validClasses = ['standing', 'not-standing', 'delete-other-name'];
+    for (i = 0; i < validClasses.length; ++i ) {
+      validClass = validClasses[i];
+      if (target.hasClass(validClass)) {
+        toggleSourceConfirmation(this, validClass, target);
+        return;
+      }
+    }
+  });
 
   $('.winner-confirm').submit(function(e) {
     var enclosingDiv = $(e.target).parent(),

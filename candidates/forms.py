@@ -9,7 +9,7 @@ from .models.address import check_address
 
 from elections.models import Election
 
-from django import forms
+from django import forms, VERSION as django_version
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
@@ -18,10 +18,34 @@ from django.utils.translation import ugettext_lazy as _
 from candidates.models import (
     PartySet, parse_approximate_date, ExtraField, SimplePopoloField, ComplexPopoloField
 )
-from popolo.models import Organization, Post
+from popolo.models import Organization, OtherName, Post
+
+
+if django_version[:2] < (1, 9):
+    class StrippedCharField(forms.CharField):
+        """A backport of the Django 1.9 ``CharField`` ``strip`` option.
+
+        If ``strip`` is ``True`` (the default), leading and trailing
+        whitespace is removed.
+        """
+
+        def __init__(self, max_length=None, min_length=None, strip=True,
+                     *args, **kwargs):
+            self.strip = strip
+            super(StrippedCharField, self).__init__(max_length, min_length,
+                                                    *args, **kwargs)
+
+        def to_python(self, value):
+            value = super(StrippedCharField, self).to_python(value)
+            if self.strip:
+                value = value.strip()
+            return value
+else:
+    StrippedCharField = forms.CharField
+
 
 class AddressForm(forms.Form):
-    address = forms.CharField(
+    address = StrippedCharField(
         label=_('Enter your address or town'),
         max_length=2048,
     )
@@ -37,25 +61,27 @@ class AddressForm(forms.Form):
 
 
 class BaseCandidacyForm(forms.Form):
-    person_id = forms.CharField(
+    person_id = StrippedCharField(
         label=_('Person ID'),
         max_length=256,
     )
-    post_id = forms.CharField(
+    post_id = StrippedCharField(
         label=_('Post ID'),
         max_length=256,
     )
 
+
 class CandidacyCreateForm(BaseCandidacyForm):
-    source = forms.CharField(
+    source = StrippedCharField(
         label=_("Source of information that they're standing ({0})").format(
             settings.SOURCE_HINTS
         ),
         max_length=512,
     )
 
+
 class CandidacyDeleteForm(BaseCandidacyForm):
-    source = forms.CharField(
+    source = StrippedCharField(
         label=_("Information source for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
@@ -72,14 +98,14 @@ class BasePersonForm(forms.Form):
         for field in ExtraField.objects.all():
             if field.type == 'line':
                 self.fields[field.key] = \
-                    forms.CharField(
+                    StrippedCharField(
                         label=_(field.label),
                         max_length=1024,
                         required=False,
                     )
             elif field.type == 'longer-text':
                 self.fields[field.key] = \
-                    forms.CharField(
+                    StrippedCharField(
                         label=_(field.label),
                         required=False,
                         widget=forms.Textarea,
@@ -121,7 +147,7 @@ class BasePersonForm(forms.Form):
             elif field.info_type_key == 'email':
                 self.fields[field.name] = forms.EmailField(**opts)
             else:
-                self.fields[field.name] = forms.CharField(**opts)
+                self.fields[field.name] = StrippedCharField(**opts)
 
         for field in ComplexPopoloField.objects.all():
             opts = {
@@ -134,7 +160,7 @@ class BasePersonForm(forms.Form):
             elif field.field_type == 'email':
                 self.fields[field.name] = forms.EmailField(**opts)
             else:
-                self.fields[field.name] = forms.CharField(**opts)
+                self.fields[field.name] = StrippedCharField(**opts)
 
     STANDING_CHOICES = (
         ('not-sure', _("Don’t Know")),
@@ -253,7 +279,7 @@ class NewPersonForm(BasePersonForm):
         }
         if hidden_post_widget:
             post_field_kwargs['widget'] = forms.HiddenInput()
-            post_field = forms.CharField(**post_field_kwargs)
+            post_field = StrippedCharField(**post_field_kwargs)
         else:
             post_field = \
                 forms.ChoiceField(
@@ -324,7 +350,7 @@ class NewPersonForm(BasePersonForm):
                     )
                 )
 
-    source = forms.CharField(
+    source = StrippedCharField(
         label=_("Source of information ({0})").format(
             settings.SOURCE_HINTS
         ),
@@ -421,7 +447,7 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
         # with formsets?)
         self.add_elections_fields(self.elections_with_fields)
 
-    source = forms.CharField(
+    source = StrippedCharField(
         label=_("Source of information for this change ({0})").format(
             settings.SOURCE_HINTS
         ),
@@ -459,7 +485,7 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
 class UserTermsAgreementForm(forms.Form):
 
     assigned_to_dc = forms.BooleanField(required=False)
-    next_path = forms.CharField(
+    next_path = StrippedCharField(
         max_length=512,
         widget=forms.HiddenInput(),
     )
@@ -480,18 +506,19 @@ class ToggleLockForm(forms.Form):
         required=False,
         widget=forms.HiddenInput()
     )
-    post_id = forms.CharField(
+    post_id = StrippedCharField(
         max_length=256,
         widget=forms.HiddenInput()
     )
 
+
 class ConstituencyRecordWinnerForm(forms.Form):
-    person_id = forms.CharField(
+    person_id = StrippedCharField(
         label=_('Person ID'),
         max_length=256,
         widget=forms.HiddenInput(),
     )
-    source = forms.CharField(
+    source = StrippedCharField(
         label=_("Source of information that they won"),
         max_length=512,
     )
@@ -510,3 +537,22 @@ class SingleElectionForm(AddElectionFieldsMixin, forms.Form):
         )
 
         self.add_election_fields(election_data)
+
+
+class OtherNameForm(forms.ModelForm):
+    class Meta:
+        model = OtherName
+        fields = ('name', 'note', 'start_date', 'end_date')
+        labels = {
+        }
+        help_texts = {
+            'start_date': _('(Optional) The date from which this name would be used'),
+            'end_date': _('(Optional) The date when this name stopped being used'),
+        }
+    source = StrippedCharField(
+        label=_("Source"),
+        help_text=_(
+            "Please indicate how you know that this is a valid alternative name"
+        ),
+        max_length=512,
+    )

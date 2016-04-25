@@ -1,44 +1,17 @@
 from __future__ import unicode_literals
 
-import json
-
 from django.utils.six.moves.urllib_parse import urlsplit
 
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
-
-from .factories import (
-    AreaTypeFactory, ElectionFactory, ParliamentaryChamberFactory,
-    PartyFactory, PartyExtraFactory, PostExtraFactory, PartySetFactory
-)
+from .uk_examples import UK2015ExamplesMixin
 
 
-class TestCopyrightAssignment(TestUserMixin, WebTest):
+class TestCopyrightAssignment(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        self.election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,)
-        )
-        commons = ParliamentaryChamberFactory.create()
-        self.post_extra = PostExtraFactory.create(
-            elections=(self.election,),
-            base__organization=commons,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
+        super(TestCopyrightAssignment, self).setUp()
 
     def test_new_person_submission_refused_copyright(self):
         response = self.app.get(

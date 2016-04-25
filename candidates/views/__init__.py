@@ -10,3 +10,4 @@ from .people import *
 from .posts import *
 from .search import *
 from .users import *
+from .other_names import *
