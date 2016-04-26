@@ -9,6 +9,9 @@ MAILTO=ynr@mysociety.org
 # Run face detection every 15 minutes, again offset a bit:
 10,25,40,55 * * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py moderation_queue_detect_faces_in_queued_images
 
+# Make sure that the Twitter screen names and user IDs are consistent
+20 3 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/venv/bin/python /data/vhost/!!(*= $vhost *)!!/yournextrepresentative/manage.py candidates_update_twitter_usernames
+
 # Fetch data from TheyWorkForYou and check for any new parlparse
 # IDs. (The people.json file is being updated on 5n, so fetch data a few
 # minutes later, at 5n + 3.)
