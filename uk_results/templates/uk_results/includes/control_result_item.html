@@ -1,16 +1,21 @@
 <div class="control_result">
-  <h3>Reported result</h3>
+  <h3>
+    Reported result{% if show_council_name %}: {{ result.council_election.council.name }}{% endif %}
+  </h3>
+
   {% if result.confirmed_by %}
   <p>This result had been <strong>confirmed</strong>, from the following source:</p>
   <blockquote>{{ result.confirm_source }}</blockquote>
   {% else %}
   <p><strong>This result is not been confirmed</strong></p>
-  {% if user_can_confirm_control %}
-  <a href="{% url 'confirm-control-view' result.pk %}" class="button tiny">Confirm control</a>
-  {% endif %}
+    {% if user_can_confirm_control %}
+    <a href="{% url 'confirm-control-view' result.pk %}" class="button tiny">
+      Confirm control
+    </a>
+    {% endif %}
 
   {% endif %}
-  <p>Controlled by: {{ result.controller }}</p>
+  <p>Controlling party: {{ result.controller }}</p>
   <blockquote>
     {{ result.source }}
   </blockquote>

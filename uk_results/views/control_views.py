@@ -61,9 +61,9 @@ class LatestControlResults(ListView):
         status = self.request.GET.get('status')
         if status:
             if status == "confirmed":
-                queryset = queryset.exclude(confirmed_by=None)
+                queryset = queryset.confirmed()
             if status == "unconfirmed":
-                queryset = queryset.filter(confirmed_by=None)
+                queryset = queryset.unconfirmed()
         return queryset
 
 

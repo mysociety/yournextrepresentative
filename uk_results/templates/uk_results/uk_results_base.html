@@ -10,11 +10,15 @@
     </ul>
   </section>
 </nav>
-{% if debug %}
-<li>user_can_confirm_control: {{ user_can_confirm_control }}</li>
-<li>user_can_confirm_votes: {{ user_can_confirm_votes }}</li>
-{% endif %}
+{# {% if debug %} #}
+{# <li>user_can_confirm_control: {{ user_can_confirm_control }}</li> #}
+{# <li>user_can_confirm_votes: {{ user_can_confirm_votes }}</li> #}
+{# {% endif %} #}
+
+{% block results_title %}
 <h1>Results</h1>
+{% endblock results_title %}
+
 {% block results_content %}
 {% endblock results_content %}
 

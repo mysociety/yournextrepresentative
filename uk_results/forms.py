@@ -16,6 +16,7 @@ class ReportCouncilElectionControlForm(forms.ModelForm):
         fields = [
             'council_election',
             'controller',
+            'noc',
             'source',
         ]
         widgets = {
@@ -28,6 +29,8 @@ class ReportCouncilElectionControlForm(forms.ModelForm):
     def __init__(self, council_election, *args, **kwargs):
         super(ReportCouncilElectionControlForm, self).__init__(*args, **kwargs)
         self.fields['controller'].choices = council_election.party_set.party_choices()
+        self.fields['controller'].label = "Controlling party"
+        self.fields['noc'].label = "No overall control"
         self.fields['council_election'].initial = council_election.pk
 
 
@@ -57,12 +60,3 @@ class ConfirmControlForm(forms.ModelForm):
                 attrs={'rows': 1, 'columns': 72}
             )
         }
-
-    # def __init__(self, *args, **kwargs):
-    #     super(ConfirmControlForm, self).__init__(*args, **kwargs)
-    #     self.user = user
-
-    # def clean(self, **kwargs):
-    #     self.cleaned_data['confirmed_by'] = \
-    #         self.user.pk
-    #     return self.cleaned_data

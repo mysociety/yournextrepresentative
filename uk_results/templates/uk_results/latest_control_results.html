@@ -1,5 +1,9 @@
 {% extends "uk_results/uk_results_base.html" %}
 
+{% block results_title %}
+<h1>Latest reported results</h1>
+{% endblock results_title %}
+
 {% block results_content %}
 <dl class="sub-nav">
   <dt>Filter:</dt>
@@ -18,7 +22,7 @@
 </dl>
 
 {% for result in object_list %}
-  {% include "uk_results/includes/control_result_item.html" %}
+  {% include "uk_results/includes/control_result_item.html" with show_council_name=True%}
 {% empty %}
 <p>There are no results
   {% if request.GET.status == "confirmed" %}
