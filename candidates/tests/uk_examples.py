@@ -18,11 +18,13 @@ class UK2015ExamplesMixin(object):
         self.election = factories.ElectionFactory.create(
             slug='2015',
             name='2015 General Election',
+            for_post_role='Member of Parliament',
             area_types=(self.wmc_area_type,)
         )
         self.earlier_election = factories.EarlierElectionFactory.create(
             slug='2010',
             name='2010 General Election',
+            for_post_role='Member of Parliament',
             area_types=(self.wmc_area_type,)
         )
         # Create some example parties:

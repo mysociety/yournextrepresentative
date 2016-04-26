@@ -87,3 +87,124 @@ class Election(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def group_and_order_elections(cls, include_posts=False):
+        """Group elections in a helpful order
+
+        We should order and group elections in the following way:
+
+          Group by current=True, then current=False
+            Group by for_post_role (ordered alphabetically)
+              Order election by election date (new to old) then election name
+
+        If the parameter include_posts is set to True, then the posts
+        will be included as well.
+
+        e.g. An example of the returned data structure:
+
+        [
+          {
+            'current': True,
+            'roles': [
+              {
+                'role': 'Member of Parliament',
+                'elections': [
+                  {
+                    'election': <Election: 2015 General Election>,
+                    'posts': [
+                      <PostExtra: Member of Parliament for Aberavon>,
+                      <PostExtra: Member of Parliament for Aberconwy>,
+                      ...
+                    ]
+                  }
+                ]
+              },
+              {
+                'role': 'Member of the Scottish Parliament',
+                'elections': [
+                  {
+                    'election': <Election: 2016 Scottish Parliament Election (Regions)>,
+                     'posts': [
+                       <PostExtra: Member of the Scottish Parliament for Central Scotland>,
+                       <PostExtra: Member of the Scottish Parliament for Glasgow>,
+                       ...
+                     ]
+                  },
+                  {
+                    'election': <Election: 2016 Scottish Parliament Election (Constituencies)>,
+                    'posts': [
+                      <PostExtra: Member of the Scottish Parliament for Aberdeen Central>,
+                      <PostExtra: Member of the Scottish Parliament for Aberdeen Donside>,
+                      ...
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            'current': False,
+            'roles': [
+              {
+                'role': 'Member of Parliament',
+                'elections': [
+                  {
+                    'election': <Election: 2010 General Election>,
+                    'posts': [
+                      <PostExtra: Member of Parliament for Aberavon>,
+                      <PostExtra: Member of Parliament for Aberconwy>,
+                      ...
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+        ]
+
+        """
+        from candidates.models import PostExtra
+        result = [
+            {'current': True, 'roles': []},
+            {'current': False, 'roles': []},
+        ]
+        role = None
+        qs = cls.objects.order_by(
+            '-current', 'for_post_role', '-election_date', 'name'
+        )
+        # If we've been asked to include posts as well, add a prefetch
+        # to the queryset:
+        if include_posts:
+            qs = qs.prefetch_related(
+                models.Prefetch(
+                    'posts',
+                    PostExtra.objects.select_related('base') \
+                        .order_by('base__label'),
+                )
+            )
+        # The elections and posts are already sorted into the right
+        # order, but now need to be grouped into the useful
+        # data structure described in the docstring.
+        last_current = None
+        for election in qs:
+            current_index = 1 - int(election.current)
+            roles = result[current_index]['roles']
+            # If the role has changed, or we've switched from current
+            # elections to past elections, create a new array of
+            # elections to append to:
+            if (role is None) or role['role'] != election.for_post_role or \
+               (last_current is not None and last_current != election.current):
+                role = {
+                    'role': election.for_post_role,
+                    'elections': []
+                }
+                roles.append(role)
+            d = {
+                'election': election
+            }
+            if include_posts:
+                d['posts'] = list(election.posts.all())
+            role['elections'].append(d)
+            last_current = election.current
+        return result
