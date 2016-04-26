@@ -1,0 +1,10 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_content %}
+<h1>{{ object.council.name }}</h1>
+<form method=post>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="submit">Report results</button>
+</form>
+{% endblock results_content %}

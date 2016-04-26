@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<nav class="top-bar" data-topbar role="navigation">
+  <section class="top-bar-section">
+    <ul class="left">
+      <li><a href="{% url 'results-home' %}">Results Home</a></li>
+      <li><a href="{% url 'councils-with-elections' %}">All councils</a></li>
+      <li><a href="{% url 'latest-control-view' %}">Latest control results</a></li>
+    </ul>
+  </section>
+</nav>
+{% if debug %}
+<li>user_can_confirm_control: {{ user_can_confirm_control }}</li>
+<li>user_can_confirm_votes: {{ user_can_confirm_votes }}</li>
+{% endif %}
+<h1>Results</h1>
+{% block results_content %}
+{% endblock results_content %}
+
+{% endblock content %}

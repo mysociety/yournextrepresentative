@@ -1,0 +1,17 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_content %}
+<h2>{{ object.council }}</h2>
+
+<p>
+  <a href="{% url 'report-council-election-view' council_election=object.pk %}" class="button">
+    Report control
+  </a>
+</p>
+
+<h2>Reported results</h2>
+{% for result in object.councilelectionresultset_set.all %}
+  {% include "uk_results/includes/control_result_item.html" %}
+{% endfor %}
+
+{% endblock results_content %}

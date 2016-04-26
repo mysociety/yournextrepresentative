@@ -9,6 +9,7 @@ post_ignored_slug_re = r'(?!record-winner$|retract-winner$|.*\.csv$).*'
 
 urlpatterns = [
     url(r'^bulk_adding/', include('bulk_adding.urls')),
+    url(r'^uk_results/', include('uk_results.urls')),
     url(
         r'^$',
         views.ConstituencyPostcodeFinderView.as_view(),

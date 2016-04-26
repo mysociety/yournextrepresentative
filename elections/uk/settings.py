@@ -7,5 +7,6 @@ COPYRIGHT_HOLDER = 'Democracy Club Limited'
 
 
 INSTALLED_APPS = [
-    'bulk_adding'
+    'bulk_adding',
+    'uk_results',
 ]

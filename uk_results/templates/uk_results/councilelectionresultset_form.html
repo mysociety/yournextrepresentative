@@ -1,0 +1,19 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_content %}
+  <a href="{{ object.council_election.get_absolute_url }}">Back to election</a>
+  <p>Someone has said that {{ object.council_election.council.name }} is controlled by
+    <strong>{{ object.controller }}</strong></p>
+  <p>They said the source of this was:</p>
+  <blockquote>Controlled by: {{ object.source }}</blockquote>
+
+<p>Can you confirm this result?  Please give a good reason for confirming.</p>
+
+<form method=post>
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit">Confirm result</button>
+</form>
+
+
+{% endblock results_content %}

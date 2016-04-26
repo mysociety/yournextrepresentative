@@ -13,6 +13,11 @@ from candidates.models import (
 from moderation_queue.models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
 from bulk_adding.models import TRUSTED_TO_BULK_ADD_GROUP_NAME
+from uk_results.models import (
+    TRUSTED_TO_CONFIRM_CONTROL_RESULTS_GROUP_NAME,
+    TRUSTED_TO_CONFIRM_VOTE_RESULTS_GROUP_NAME,
+    )
+
 from moderation_queue.models import SuggestedPostLock
 from django.utils.translation import to_locale, get_language
 
@@ -80,6 +85,10 @@ def add_group_permissions(request):
             ('user_can_rename', TRUSTED_TO_RENAME_GROUP_NAME),
             ('user_can_record_results', RESULT_RECORDERS_GROUP_NAME),
             ('user_can_bulk_add', TRUSTED_TO_BULK_ADD_GROUP_NAME),
+            ('user_can_confirm_control',
+                TRUSTED_TO_CONFIRM_CONTROL_RESULTS_GROUP_NAME),
+            ('user_can_confirm_votes',
+                TRUSTED_TO_CONFIRM_VOTE_RESULTS_GROUP_NAME),
         )
     }
     result['user_can_edit'] = settings.EDITS_ALLOWED or request.user.is_staff

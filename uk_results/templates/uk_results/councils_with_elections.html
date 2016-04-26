@@ -1,0 +1,11 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_content %}
+{% for council_election in council_elections %}
+<li>
+  <a href="{{ council_election.get_absolute_url }}">
+    {{ council_election.election }} ({{ council_election.council }})
+  </a>
+</li>
+{% endfor %}
+{% endblock results_content %}
