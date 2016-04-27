@@ -56,6 +56,17 @@ class TestSearchView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         form['party_gb_2015'] = self.labour_party_extra.base_id
         form.submit()
 
+        response = self.app.get(
+            '/election/2015/post/65808/dulwich-and-west-norwood',
+            user=self.user,
+        )
+        form = response.forms['new-candidate-form']
+        form['name'] = "Charlotte O'Lucas" # testers license
+        form['email'] = 'charlotte@example.com'
+        form['source'] = 'Testing adding a new person to a post'
+        form['party_gb_2015'] = self.labour_party_extra.base_id
+        form.submit()
+
         # check searching finds them
         response = self.app.get('/search?q=Elizabeth')
         self.assertTrue(
@@ -117,6 +128,15 @@ class TestSearchView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertFalse(
             re.search(
                 r'''<a[^>]*>Elizabeth Jones''',
+                response.text
+            )
+        )
+
+        # check that searching for names with apostrophe works
+        response = self.app.get("/search?q=O'Lucas")
+        self.assertTrue(
+            re.search(
+                r'''<a[^>]*>Charlotte''',
                 response.text
             )
         )
