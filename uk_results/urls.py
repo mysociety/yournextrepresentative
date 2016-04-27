@@ -56,5 +56,10 @@ urlpatterns = [
         views.ReviewPostReportView.as_view(),
         name='review-votes-view'
     ),
+    url(
+        r'^posts$',
+        views.LatestVoteResults.as_view(),
+        name='latest-votes-view'
+    ),
 ]
 

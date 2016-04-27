@@ -1,0 +1,34 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_title %}
+<h1>Latest reported results</h1>
+{% endblock results_title %}
+
+{% block results_content %}
+<dl class="sub-nav">
+  <dt>Filter:</dt>
+  <dd{% if not request.GET.status %} class="active"{%endif%}>
+    <a href="{% url 'latest-control-view' %}">All</a>
+  </dd>
+
+  <dd{% if request.GET.status == "confirmed" %} class="active"{%endif%}>
+    <a href="?status=confirmed">Confirmed</a>
+  </dd>
+
+  <dd{% if request.GET.status == "unconfirmed" %} class="active"{%endif%}>
+    <a href="?status=unconfirmed">Unconfirmed</a>
+  </dd>
+
+</dl>
+{% for result in object_list %}
+  {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
+{% empty %}
+<p>There are no results
+  {% if request.GET.status == "confirmed" %}
+  confirmed
+  {% else %}
+  reported
+  {% endif %}
+   yet</p>
+{% endfor %}
+{% endblock results_content %}

@@ -4,9 +4,10 @@ from django.views.generic import (TemplateView, DetailView, FormView,
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
+from .base import BaseResultsViewMixin
 
 
-class CouncilsWithElections(TemplateView):
+class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
     template_name = "uk_results/councils_with_elections.html"
 
     def get_context_data(self, **kwargs):
@@ -18,11 +19,11 @@ class CouncilsWithElections(TemplateView):
         return context
 
 
-class CouncilElectionView(DetailView):
+class CouncilElectionView(BaseResultsViewMixin, DetailView):
     model = CouncilElection
 
 
-class ReportCouncilElectionView(FormView):
+class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
     model = CouncilElection
     pk_url_kwarg = 'council_election'
     template_name = "uk_results/report_council_election_control.html"
@@ -53,7 +54,7 @@ class ReportCouncilElectionView(FormView):
         return super(ReportCouncilElectionView, self).form_valid(form)
 
 
-class LatestControlResults(ListView):
+class LatestControlResults(BaseResultsViewMixin, ListView):
     template_name = "uk_results/latest_control_results.html"
     queryset = CouncilElectionResultSet.objects.all()
 
@@ -70,7 +71,7 @@ class LatestControlResults(ListView):
         return queryset
 
 
-class ConfirmControl(UpdateView):
+class ConfirmControl(BaseResultsViewMixin, UpdateView):
     template_name = "uk_results/review_reported_control.html"
     queryset = CouncilElectionResultSet.objects.all()
 

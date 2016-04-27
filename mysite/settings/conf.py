@@ -173,6 +173,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             "mysite.context_processors.add_notification_data",
             "mysite.context_processors.locale",
             "mysite.context_processors.add_site",
+            "uk_results.context_processors.show_results_feature",
         ),
 
         'ELECTION_APP': election_app,

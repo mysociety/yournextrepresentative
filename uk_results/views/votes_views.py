@@ -1,10 +1,12 @@
-from django.views.generic import (DetailView, FormView, UpdateView)
+from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
 from popolo.models import Post
 from ..models import PostResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
+from .base import BaseResultsViewMixin
 
-class PostResultsView(DetailView):
+
+class PostResultsView(BaseResultsViewMixin, DetailView):
     template_name = "uk_results/posts/post_view.html"
 
     def get_object(self):
@@ -14,7 +16,7 @@ class PostResultsView(DetailView):
 
 
 
-class PostReportVotesView(FormView):
+class PostReportVotesView(BaseResultsViewMixin, FormView):
     model = PostResult
     template_name = "uk_results/report_council_election_control.html"
 
@@ -49,7 +51,7 @@ class PostReportVotesView(FormView):
 
 
 
-class ReviewPostReportView(UpdateView):
+class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
     template_name = "uk_results/posts/review_reported_votes.html"
     queryset = ResultSet.objects.all()
 
@@ -62,3 +64,21 @@ class ReviewPostReportView(UpdateView):
 
     def get_success_url(self):
         return self.object.post_result.get_absolute_url()
+
+
+
+class LatestVoteResults(BaseResultsViewMixin, ListView):
+    template_name = "uk_results/posts/latest_vote_results.html"
+    queryset = ResultSet.objects.all()
+
+    def get_queryset(self):
+        queryset = self.queryset
+        status = self.request.GET.get('status')
+        if status:
+            if status == "confirmed":
+                queryset = queryset.confirmed()
+            if status == "unconfirmed":
+                queryset = queryset.unconfirmed()
+            if status == "rejected":
+                queryset = queryset.rejected()
+        return queryset

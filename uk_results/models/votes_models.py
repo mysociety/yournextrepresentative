@@ -41,7 +41,7 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
         return u"pk=%d user=%r post=%r" % (
             self.pk,
             self.user,
-            self.post,
+            self.post_result,
         )
 
     def save(self, *args, **kwargs):

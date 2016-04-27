@@ -5,15 +5,12 @@
   <section class="top-bar-section">
     <ul class="left">
       <li><a href="{% url 'results-home' %}">Results Home</a></li>
-      <li><a href="{% url 'councils-with-elections' %}">All councils</a></li>
-      <li><a href="{% url 'latest-control-view' %}">Latest control results</a></li>
+      <li><a href="{% url 'councils-with-elections' %}">Councils</a></li>
+      <li><a href="{% url 'latest-control-view' %}">Control results</a></li>
+      <li><a href="{% url 'latest-votes-view' %}">Vote results</a></li>
     </ul>
   </section>
 </nav>
-{# {% if debug %} #}
-{# <li>user_can_confirm_control: {{ user_can_confirm_control }}</li> #}
-{# <li>user_can_confirm_votes: {{ user_can_confirm_votes }}</li> #}
-{# {% endif %} #}
 
 {% block results_title %}
 <h1>Results</h1>
