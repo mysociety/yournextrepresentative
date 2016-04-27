@@ -2,25 +2,25 @@
 
 {% block other_resources %}
 
-  {% if post_obj.postresult_set.confirmed %}
-  <section>
-    <h3>Results</h3>
-    {% with post_obj.postresult_set.confirmed.0.result_sets.confirmed.0 as result %}
-      {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
-    {% endwith %}
+{% if show_results_feature %}
+    {% if post_obj.postresult_set.confirmed %}
+    <section>
+      <h3>Results</h3>
+      {% with post_obj.postresult_set.confirmed.0.result_sets.confirmed.0 as result %}
+        {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
+      {% endwith %}
 
 
-  </section>
-  {% endif %}
-
-
-    {% if show_results_feature %}
-      {% if not post_obj.postresult_set.confirmed %}
-      <a href="{% url "report-post-votes-view" post_data.id %}" class="button">
-        Report results for {{post_data.label}}
-      </a>
-      {% endif %}
+    </section>
     {% endif %}
+
+
+    {% if not post_obj.postresult_set.confirmed %}
+    <a href="{% url "report-post-votes-view" post_data.id %}" class="button">
+      Report results for {{post_data.label}}
+    </a>
+    {% endif %}
+{% endif %}
 
 {% if not candidates_locked %}
 <a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
