@@ -303,81 +303,85 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'django.contrib.staticfiles.finders.AppDirectoriesFinder',
             'pipeline.finders.PipelineFinder',
         ),
-        'PIPELINE_CSS': {
-            'image-review': {
-                'source_filenames': (
-                    'moderation_queue/css/jquery.Jcrop.css',
-                    'moderation_queue/css/crop.scss',
-                ),
-                'output_filename': 'css/image-review.css',
+        'PIPELINE': {
+            'STYLESHEETS': {
+                'image-review': {
+                    'source_filenames': (
+                        'moderation_queue/css/jquery.Jcrop.css',
+                        'moderation_queue/css/crop.scss',
+                    ),
+                    'output_filename': 'css/image-review.css',
+                },
+                'official_documents': {
+                    'source_filenames': (
+                        'official_documents/css/official_documents.scss',
+                    ),
+                    'output_filename': 'css/official_documents.css',
+                },
+                'all': {
+                    'source_filenames': (
+                        'candidates/style.scss',
+                        'cached_counts/style.scss',
+                        'select2/select2.css',
+                        'jquery/jquery-ui.css',
+                        'jquery/jquery-ui.structure.css',
+                        'jquery/jquery-ui.theme.css',
+                        'moderation_queue/css/photo-upload.scss',
+                    ),
+                    'output_filename': 'css/all.css',
+                }
             },
-            'official_documents': {
-                'source_filenames': (
-                    'official_documents/css/official_documents.scss',
-                ),
-                'output_filename': 'css/official_documents.css',
+            'JAVASCRIPT': {
+                'image-review': {
+                    'source_filenames': (
+                        'moderation_queue/js/jquery.color.js',
+                        'moderation_queue/js/jquery.Jcrop.js',
+                        'moderation_queue/js/crop.js',
+                    ),
+                    'output_filename': 'js/image-review.js',
+                },
+                'all': {
+                    'source_filenames': (
+                        'jquery/jquery-1.11.1.js',
+                        'jquery/jquery-ui.js',
+                        'foundation/js/foundation/foundation.js',
+                        'foundation/js/foundation/foundation.equalizer.js',
+                        'foundation/js/foundation/foundation.dropdown.js',
+                        'foundation/js/foundation/foundation.tooltip.js',
+                        'foundation/js/foundation/foundation.offcanvas.js',
+                        'foundation/js/foundation/foundation.accordion.js',
+                        'foundation/js/foundation/foundation.joyride.js',
+                        'foundation/js/foundation/foundation.alert.js',
+                        'foundation/js/foundation/foundation.topbar.js',
+                        'foundation/js/foundation/foundation.reveal.js',
+                        'foundation/js/foundation/foundation.slider.js',
+                        'foundation/js/foundation/foundation.magellan.js',
+                        'foundation/js/foundation/foundation.clearing.js',
+                        'foundation/js/foundation/foundation.orbit.js',
+                        'foundation/js/foundation/foundation.interchange.js',
+                        'foundation/js/foundation/foundation.abide.js',
+                        'foundation/js/foundation/foundation.tab.js',
+                        'select2/select2.js',
+                        'js/constituency.js',
+                        'js/person_form.js',
+                        'js/home_geolocation_form.js',
+                        'js/versions.js',
+                    ),
+                    'output_filename': 'js/all.js'
+                }
             },
-            'all': {
-                'source_filenames': (
-                    'candidates/style.scss',
-                    'cached_counts/style.scss',
-                    'select2/select2.css',
-                    'jquery/jquery-ui.css',
-                    'jquery/jquery-ui.structure.css',
-                    'jquery/jquery-ui.theme.css',
-                    'moderation_queue/css/photo-upload.scss',
-                ),
-                'output_filename': 'css/all.css',
-            }
+
+            'COMPILERS': (
+                'pipeline.compilers.sass.SASSCompiler',
+            ),
+            'SASS_BINARY': 'sassc',
+            'CSS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
+            'JS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
+            # On some platforms this might be called "yuicompressor", so it may be
+            # necessary to symlink it into your PATH as "yui-compressor".
+            'YUI_BINARY': '/usr/bin/env yui-compressor',
         },
-        'PIPELINE_JS': {
-            'image-review': {
-                'source_filenames': (
-                    'moderation_queue/js/jquery.color.js',
-                    'moderation_queue/js/jquery.Jcrop.js',
-                    'moderation_queue/js/crop.js',
-                ),
-                'output_filename': 'js/image-review.js',
-            },
-            'all': {
-                'source_filenames': (
-                    'jquery/jquery-1.11.1.js',
-                    'jquery/jquery-ui.js',
-                    'foundation/js/foundation/foundation.js',
-                    'foundation/js/foundation/foundation.equalizer.js',
-                    'foundation/js/foundation/foundation.dropdown.js',
-                    'foundation/js/foundation/foundation.tooltip.js',
-                    'foundation/js/foundation/foundation.offcanvas.js',
-                    'foundation/js/foundation/foundation.accordion.js',
-                    'foundation/js/foundation/foundation.joyride.js',
-                    'foundation/js/foundation/foundation.alert.js',
-                    'foundation/js/foundation/foundation.topbar.js',
-                    'foundation/js/foundation/foundation.reveal.js',
-                    'foundation/js/foundation/foundation.slider.js',
-                    'foundation/js/foundation/foundation.magellan.js',
-                    'foundation/js/foundation/foundation.clearing.js',
-                    'foundation/js/foundation/foundation.orbit.js',
-                    'foundation/js/foundation/foundation.interchange.js',
-                    'foundation/js/foundation/foundation.abide.js',
-                    'foundation/js/foundation/foundation.tab.js',
-                    'select2/select2.js',
-                    'js/constituency.js',
-                    'js/person_form.js',
-                    'js/home_geolocation_form.js',
-                    'js/versions.js',
-                ),
-                'output_filename': 'js/all.js'
-            }
-        },
-        'PIPELINE_COMPILERS': (
-            'pipeline.compilers.sass.SASSCompiler',
-        ),
-        'PIPELINE_SASS_ARGUMENTS': '--trace --quiet',
-        'PIPELINE_CSS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
-        'PIPELINE_JS_COMPRESSOR': 'pipeline.compressors.yui.YUICompressor',
-        # On some platforms this might be called "yuicompressor", so it may be
-        # necessary to symlink it into your PATH as "yui-compressor".
-        'PIPELINE_YUI_BINARY': '/usr/bin/env yui-compressor',
+
 
         'TEST_RUNNER': 'django_nose.NoseTestSuiteRunner',
 
