@@ -128,12 +128,13 @@
 .candidates__known,
 .candidates__new,
 .candidates__previous,
-.candidates__not-standing {
+.candidates__not-standing,
+.candidates__elected {
   margin-bottom: 3em;
 
   @media #{$medium-up} {
     padding-left: 100px;
-    background: transparent url(img/icon-candidates.gif) 0 0 no-repeat;
+    background: transparent url(img/icon-candidates.png) 0 0 no-repeat;
   }
 
   h3 {
@@ -148,13 +149,13 @@
 
 .candidates__new {
   @media #{$medium-up} {
-    background-image: url(img/icon-add-candidate.gif);
+    background-image: url(img/icon-add-candidate.png);
   }
 }
 
 .candidates__previous {
   @media #{$medium-up} {
-    background-image: url(img/icon-question.gif);
+    background-image: url(img/icon-question.png);
   }
 
   li > p > .button:first-child,
@@ -170,7 +171,7 @@
 
 .candidates__not-standing {
   @media #{$medium-up} {
-    background-image: url(img/icon-cross.gif);
+    background-image: url(img/icon-cross.png);
   }
 
   li > p > .button:first-child,
@@ -180,6 +181,12 @@
     &:hover, &:focus {
       background-color: scale-color($not-standing-candidate-status-color, $lightness: $button-function-factor);
     }
+  }
+}
+
+.candidates__elected {
+  @media #{$medium-up} {
+    background-image: url(img/icon-elected.png);
   }
 }
 
