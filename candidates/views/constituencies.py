@@ -71,6 +71,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             Post.objects.select_related('extra'),
             extra__slug=post_id
         )
+        context['post_obj'] = mp_post
 
         documents_by_type = {}
         # Make sure that every available document type has a key in

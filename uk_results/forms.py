@@ -98,11 +98,15 @@ class ResultSetForm(forms.ModelForm):
         existing_fields = self.fields
         fields = OrderedDict()
 
+        # TODO sort by last name here
         for membership in self.post.memberships.all():
             name = 'memberships_%d' % membership.person.pk
 
             fields[name] =  forms.IntegerField(
-                label=membership.person.name
+                label="{} ({})".format(
+                    membership.person.name,
+                    membership.on_behalf_of.name,
+                )
             )
             self.memberships.append((membership, name))
 
@@ -117,17 +121,21 @@ class ResultSetForm(forms.ModelForm):
         instance.ip_address = get_client_ip(request)
         instance.save()
 
-        winer_count = self.memberships[0][0]\
+        winner_count = self.memberships[0][0]\
             .extra.election.postextraelection_set.filter(
                 postextra=self.memberships[0][0].post.extra)[0].winner_count
 
-        winner = max((self[y].value(), x) for x, y
-            in self.memberships)[winer_count]
+        winners = dict(sorted(
+            [(self[y].value(), x)
+                for x, y in self.memberships],
+            reverse=True,
+            key=lambda votes: votes[0]
+        )[:winner_count])
 
         for membership, field_name in self.memberships:
             instance.candidate_results.create(
                 membership=membership,
-                is_winner=bool(membership == winner),
+                is_winner=bool(membership == winners.keys()),
                 num_ballots_reported=self[field_name].value(),
             )
 

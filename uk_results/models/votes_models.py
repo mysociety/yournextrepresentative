@@ -7,9 +7,16 @@ from django.db import models
 from .base import BaseResultModel, ResultStatusMixin
 
 
+class PostResultManager(models.Manager):
+    def confirmed(self):
+        return self.filter(confirmed=True)
+
+
 class PostResult(models.Model):
     post = models.ForeignKey('popolo.Post')
     confirmed = models.BooleanField(default=False)
+
+    objects = PostResultManager()
 
     @models.permalink
     def get_absolute_url(self):
@@ -68,7 +75,7 @@ class CandidateResult(BaseResultModel):
 
 
     class Meta:
-        ordering = ('membership__person',)
+        ordering = ('num_ballots_reported',)
         unique_together = (
             ('result_set', 'membership'),
         )

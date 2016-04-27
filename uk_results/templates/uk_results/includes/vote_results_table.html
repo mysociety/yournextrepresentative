@@ -19,7 +19,15 @@
       </a>
     </td>
     <td>{{ result.membership.on_behalf_of.name }}</td>
-    <td>{{ result.num_ballots_reported }}</td>
+    <td>
+        {% if result.is_winner %}
+        <strong>
+        {{ result.num_ballots_reported }}
+        </strong>
+        {% else %}
+        {{ result.num_ballots_reported }}
+        {% endif %}
+    </td>
   </tr>
   {% endfor %}
   </tbody>
