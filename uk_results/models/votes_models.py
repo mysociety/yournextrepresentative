@@ -4,12 +4,24 @@ import datetime
 
 from django.db import models
 
-from .base import BaseResultModel
+from .base import BaseResultModel, ResultStatusMixin
 
 
-class ResultSet(BaseResultModel):
-    post = models.ForeignKey(
-        'popolo.Post',
+class PostResult(models.Model):
+    post = models.ForeignKey('popolo.Post')
+    confirmed = models.BooleanField(default=False)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('post-results-view', (), {'post_id': self.post.extra.slug})
+
+
+
+
+
+class ResultSet(BaseResultModel, ResultStatusMixin):
+    post_result = models.ForeignKey(
+        PostResult,
         related_name='result_sets',
     )
 
@@ -32,6 +44,13 @@ class ResultSet(BaseResultModel):
             self.post,
         )
 
+    def save(self, *args, **kwargs):
+        super(ResultSet, self).save()
+        if self.review_status == "confirmed":
+            self.post_result.confirmed = True
+            self.post_result.save()
+
+
 
 class CandidateResult(BaseResultModel):
     result_set = models.ForeignKey(
@@ -39,9 +58,9 @@ class CandidateResult(BaseResultModel):
         related_name='candidate_results',
     )
 
-    person = models.ForeignKey(
-        'popolo.Person',
-        related_name='candidate_results',
+    membership = models.ForeignKey(
+        'popolo.Membership',
+        related_name='result',
     )
 
     num_ballots_reported = models.IntegerField()
@@ -49,13 +68,13 @@ class CandidateResult(BaseResultModel):
 
 
     class Meta:
-        ordering = ('person',)
+        ordering = ('membership__person',)
         unique_together = (
-            ('result_set', 'person'),
+            ('result_set', 'membership'),
         )
 
     def __unicode__(self):
-        return u"pk=%d title=%r" % (
-            self.pk,
-            self.title,
+        return u"{} ({} votes)".format(
+            self.membership.person,
+            self.num_ballots_reported
         )

@@ -8,6 +8,9 @@ urlpatterns = [
         views.ResultsHomeView.as_view(),
         name='results-home'
     ),
+
+
+    # Control
     url(
         r'^councils$',
         views.CouncilsWithElections.as_view(),
@@ -29,9 +32,29 @@ urlpatterns = [
         name='latest-control-view'
     ),
     url(
-        r'^confirm_control/(?P<pk>[\d]+)$',
+        r'^review_control/(?P<pk>[\d]+)$',
         views.ConfirmControl.as_view(),
-        name='confirm-control-view'
+        name='review-control-view'
+    ),
+
+
+
+    # Votes
+    url(
+        r'^posts/(?P<post_id>[^/]+)/$',
+        views.PostResultsView.as_view(),
+        name='post-results-view'
+    ),
+
+    url(
+        r'^posts/(?P<post_id>[^/]+)/report$',
+        views.PostReportVotesView.as_view(),
+        name='report-post-votes-view'
+    ),
+    url(
+        r'^posts/(?P<pk>[^/]+)/review$',
+        views.ReviewPostReportView.as_view(),
+        name='review-votes-view'
     ),
 ]
 

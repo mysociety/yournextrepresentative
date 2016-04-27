@@ -1,0 +1,35 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_title %}
+<h2>{{ object.post.extra.postextraelection_set.all.0.election.name }}</h2>
+<h3>{{ object.post.area.name }}</h3>
+{% endblock results_title %}
+
+{% block results_content %}
+
+{% if not object.confirmed %}
+<p>
+  <a href="{% url 'report-post-votes-view' post_id=object.post.extra.slug %}" class="button">
+    Report votes
+  </a>
+</p>
+
+<h3>Reported results</h3>
+{% for result in object.result_sets.all %}
+  {% include "uk_results/includes/vote_result_item.html" with show_post_name=True show_heading=True%}
+{% empty %}
+<p>No results reported yet.</p>
+{% endfor %}
+
+{% else %}
+
+<h3>Result</h3>
+{% with object.result_sets.confirmed.0 as result %}
+  {% include "uk_results/includes/vote_result_item.html" with show_heading=False %}
+{% endwith %}
+
+
+{% endif %}
+
+
+{% endblock results_content %}

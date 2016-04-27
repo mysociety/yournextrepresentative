@@ -8,3 +8,10 @@ COUNCIL_TYPES = [
     "LGD",
     "UTA",
 ]
+
+
+REPORTED_RESULT_STATUSES = (
+    ('unconfirmed', 'Unconfirmed'),
+    ('confirmed', 'Confirmed'),
+    ('rejected', 'Rejected'),
+)

@@ -1,0 +1,28 @@
+{% extends "uk_results/uk_results_base.html" %}
+
+{% block results_title %}
+<h1>Confirm reported votes</h1>
+{% endblock results_title %}
+
+
+{% block results_content %}
+  <a href="{{ object.post_result.get_absolute_url }}">Back to post</a>
+  <p>Someone has said that the votes cast in {{ object.post_result.post.area.name }}
+    are as follows:</p>
+
+    {% include "uk_results/includes/vote_results_table.html" with result=object results=object.candidate_results.all %}
+
+  <p>They said the source of this was:</p>
+  <blockquote>{{ object.source }}</blockquote>
+
+<p>Can you confirm or reject these votes?  Please give a good reason for your decision.</p>
+
+<form method=post>
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" name="btn_confirm">Review</button>
+</form>
+
+
+{% endblock results_content %}
+

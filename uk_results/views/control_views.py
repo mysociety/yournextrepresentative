@@ -2,7 +2,8 @@ from django.views.generic import (TemplateView, DetailView, FormView,
                                   ListView, UpdateView)
 
 from ..models import CouncilElection, CouncilElectionResultSet
-from ..forms import (ReportCouncilElectionControlForm, ConfirmControlForm)
+from ..forms import (ReportCouncilElectionControlForm,
+                     ReviewControlForm)
 
 
 class CouncilsWithElections(TemplateView):
@@ -64,16 +65,19 @@ class LatestControlResults(ListView):
                 queryset = queryset.confirmed()
             if status == "unconfirmed":
                 queryset = queryset.unconfirmed()
+            if status == "rejected":
+                queryset = queryset.rejected()
         return queryset
 
 
 class ConfirmControl(UpdateView):
+    template_name = "uk_results/review_reported_control.html"
     queryset = CouncilElectionResultSet.objects.all()
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
-        kwargs['initial'].update({'confirmed_by': self.request.user})
-        return ConfirmControlForm(
+        kwargs['initial'].update({'reviewed_by': self.request.user})
+        return ReviewControlForm(
             **kwargs
         )
 

@@ -1,10 +1,10 @@
-<div class="control_result">
+<div class="vote_result">
   {% if show_heading %}
   <h4>
     {% if result.review_status == 'confirmed' %}
-    Result{% if show_council_name %}: {{ result.council_election.council.name }}{% endif %}
+    Result{% if show_post_name %}: {{ result.post_result.post.area.name }}{% endif %}
     {% else %}
-    Reported result{% if show_council_name %}: {{ result.council_election.council.name }}{% endif %}
+    Reported result{% if show_post_name %}: {{ result.post_result.post.area.name }}{% endif %}
     {% endif %}
   </h4>
   {% endif %}
@@ -14,17 +14,14 @@
   {% else %}
   <p><strong>This result is not been confirmed</strong></p>
     {% if user_can_confirm_control %}
-    <a href="{% url 'review-control-view' result.pk %}" class="button tiny">
+    <a href="{% url 'review-votes-view' pk=result.pk %}" class="button tiny">
       Review
     </a>
     {% endif %}
   {% endif %}
-  {% if result.noc %}
-  <p>Controlling party: no overall control</p>
-  {% else %}
-  <p>Controlling party: {{ result.controller }}</p>
-  {% endif %}
   <blockquote>
     {{ result.source }}
   </blockquote>
+  {% include "uk_results/includes/vote_results_table.html" with result=result results=result.candidate_results.all %}
+
 </div>

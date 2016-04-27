@@ -1,17 +1,32 @@
 {% extends "uk_results/uk_results_base.html" %}
 
-{% block results_content %}
+{% block results_title %}
 <h2>{{ object.council }}</h2>
+{% endblock results_title %}
 
+{% block results_content %}
+
+{% if not object.confirmed %}
 <p>
   <a href="{% url 'report-council-election-view' council_election=object.pk %}" class="button">
     Report control
   </a>
 </p>
 
-<h2>Reported results</h2>
-{% for result in object.councilelectionresultset_set.all %}
+<h3>Reported results</h3>
+{% for result in object.reported_results.all %}
   {% include "uk_results/includes/control_result_item.html" %}
 {% endfor %}
+
+{% else %}
+
+<h3>Result</h3>
+{% with  object.reported_results.confirmed.0 as result %}
+  {% include "uk_results/includes/control_result_item.html" with show_heading=False %}
+{% endwith %}
+
+
+{% endif %}
+
 
 {% endblock results_content %}
