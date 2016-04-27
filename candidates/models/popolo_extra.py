@@ -695,7 +695,7 @@ class PartySet(models.Model):
             qs = candidacies_ever_qs
         else:
             return self.party_choices_basic()
-        result = [('party:none', '')]
+        result = [('', '')]
         parties_with_candidates = []
         for party_tuple in qs \
                 .values('on_behalf_of', 'on_behalf_of__name') \
