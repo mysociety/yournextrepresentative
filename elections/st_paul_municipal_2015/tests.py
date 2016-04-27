@@ -175,7 +175,7 @@ class StPaulTests(WebTest):
         with open('foo.html', 'w') as f:
             f.write(str(response))
         self.assertIn(
-            '<h2>City Council Election</h2>',
+            '<h3>City Council Election</h3>',
             response,
         )
         self.assertIn(
@@ -183,7 +183,7 @@ class StPaulTests(WebTest):
             response,
         )
         self.assertIn(
-            '<h2>School Board Election</h2>',
+            '<h3>School Board Election</h3>',
             response,
         )
         self.assertIn(
