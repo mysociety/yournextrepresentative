@@ -6,6 +6,7 @@ from collections import OrderedDict
 from django import forms
 
 from popolo.models import Organization
+from candidates.views.version_data import get_client_ip
 
 from models import CouncilElectionResultSet, ResultSet
 
@@ -113,7 +114,7 @@ class ResultSetForm(forms.ModelForm):
         instance.post_result = self.post_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
-        instance.ip_address = request.META['REMOTE_ADDR']
+        instance.ip_address = get_client_ip(request)
         instance.save()
 
         winer_count = self.memberships[0][0]\
