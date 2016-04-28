@@ -21,7 +21,8 @@ from auth_helpers.views import GroupRequiredMixin
 from .helpers import (
     get_party_people_for_election_from_memberships,
     split_candidacies, get_redirect_to_post,
-    group_candidates_by_party, get_person_form_fields
+    group_candidates_by_party, get_person_form_fields,
+    split_by_elected
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
@@ -144,6 +145,11 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
 
         other_candidates = past_candidates - current_candidates
 
+        elected, unelected = split_by_elected(
+            self.election_data,
+            current_candidacies,
+        )
+
         # Now split those candidates into those that we know aren't
         # standing again, and those that we just don't know about.
         not_standing_candidates = set(
@@ -172,10 +178,18 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
                 might_stand_candidacies,
             )
 
-        context['candidacies'] = group_candidates_by_party(
+        context['elected'] = group_candidates_by_party(
             self.election_data,
-            current_candidacies,
+            elected,
         )
+
+        context['unelected'] = group_candidates_by_party(
+            self.election_data,
+            unelected,
+        )
+
+        context['has_elected'] = \
+            len(context['elected']['parties_and_people']) > 0
 
         context['show_retract_result'] = False
         number_of_winners = 0

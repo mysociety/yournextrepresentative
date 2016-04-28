@@ -171,6 +171,17 @@ def split_candidacies(election_data, memberships):
 
     return current_candidadacies, past_candidadacies
 
+def split_by_elected(election_data, memberships):
+    elected_candidates = set()
+    unelected_candidates = set()
+    for membership in memberships:
+        if membership.extra.elected:
+            elected_candidates.add(membership)
+        else:
+            unelected_candidates.add(membership)
+
+    return elected_candidates, unelected_candidates
+
 def order_candidates_by_name_no_grouping(election_data, candidacies):
     result = [
         (

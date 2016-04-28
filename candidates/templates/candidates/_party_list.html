@@ -1,0 +1,104 @@
+{% load standing %}
+{% load i18n %}
+
+{% comment %}
+
+  The following variables are expected in the context:
+
+    election
+    election_data
+
+    post_data.id
+    post_data.label
+    post_label_shorter
+
+    candidacies
+    candidacies_might_stand_again
+    candidacies_not_standing_again
+
+    candidates_locked
+    show_confirm_result
+    show_retract_result
+    candidates_list_edits_allowed
+
+    lock_form
+    add_candidate_form
+
+  Permission variables from the context processor:
+
+    user_can_upload_documents
+    user_can_lock
+    user_can_record_results
+
+    user
+
+  Those required by included partials:
+
+    candidates/_person_in_list.html
+
+      c (a candidacy from candidacies, candidacies_might_stand_again, etc.)
+
+    candidates/_source_confirmation.html
+
+      c
+      standing (either 'standing' or 'not-standing')
+      post_data.id
+
+    official_documents/_post.html
+
+      official_documents
+      post_data.label
+      post_data.id
+
+{% endcomment %}
+
+        <div class="party-group {% if party_lists_in_use %}party-list{% else %}no-party-list{% endif %}">
+
+          {% if party_lists_in_use %}
+            <h4 class="party-list-header">{{ party.name }}</h4>
+            <p class="party-list-description">
+              {% if party.truncated %}
+                {% trans "Showing the top candidates." %} <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See all {{ count }} members on the party list{% endblocktrans %} &rarr;</a>
+              {% else %}
+                <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See just this party list{% endblocktrans %} &rarr;</a>
+              {% endif %}
+          {% endif %}
+
+          {% for position_in_list, c, candidate_elected in people %}
+            {% if forloop.first %}
+              <ul class="candidate-list">
+            {% endif %}
+
+              <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}">
+                {% include 'candidates/_person_in_list.html' with election=election %}
+                {% if user.is_authenticated %}
+                <p>
+                  {% if candidate_list_edits_allowed %}
+                    <a class="button tiny js-toggle-source-confirmation not-standing">{% trans "Not actually standing?" %}</a>
+                  {% endif %}
+                  <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
+                </p>
+                {% if candidate_list_edits_allowed %}
+                  {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
+                {% endif %}
+                {% endif %}
+                {% if DATE_TODAY >= election_data.election_date %}
+                  {% if user_can_record_results and show_confirm_result and not candidate_elected %}
+                    <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="person_id" value="{{ c.id }}">
+                      <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
+                      <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
+                    </form>
+                  {% endif %}
+                {% endif %}
+              </li>
+
+            {% if forloop.last %}
+              </ul>
+            {% endif %}
+
+          {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
+
+        </div>
+
