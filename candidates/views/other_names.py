@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.utils.functional import cached_property
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -50,18 +51,19 @@ class PersonOtherNameCreateView(LoginRequiredMixin, PersonMixin, CreateView):
     raise_exception = True
 
     def form_valid(self, form):
-        # This is similar to the example here:
-        #   https://docs.djangoproject.com/en/1.8/topics/class-based-views/generic-editing/#models-and-request-user
-        form.instance.content_object = self.person
-        result = super(
-            PersonOtherNameCreateView, self
-        ).form_valid(form)
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data['source']
-        )
-        self.person.extra.record_version(change_metadata)
-        self.person.extra.save()
-        return result
+        with transaction.atomic():
+            # This is similar to the example here:
+            #   https://docs.djangoproject.com/en/1.8/topics/class-based-views/generic-editing/#models-and-request-user
+            form.instance.content_object = self.person
+            result = super(
+                PersonOtherNameCreateView, self
+            ).form_valid(form)
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data['source']
+            )
+            self.person.extra.record_version(change_metadata)
+            self.person.extra.save()
+            return result
 
 
 class PersonOtherNameDeleteView(LoginRequiredMixin, PersonMixin, DeleteView):
@@ -70,14 +72,15 @@ class PersonOtherNameDeleteView(LoginRequiredMixin, PersonMixin, DeleteView):
     raise_exception = True
 
     def delete(self, request, *args, **kwargs):
-        result_redirect = super(PersonOtherNameDeleteView, self) \
-            .delete(request, *args, **kwargs)
-        change_metadata = get_change_metadata(
-            self.request, self.request.POST['source']
-        )
-        self.person.extra.record_version(change_metadata)
-        self.person.extra.save()
-        return result_redirect
+        with transaction.atomic():
+            result_redirect = super(PersonOtherNameDeleteView, self) \
+                .delete(request, *args, **kwargs)
+            change_metadata = get_change_metadata(
+                self.request, self.request.POST['source']
+            )
+            self.person.extra.record_version(change_metadata)
+            self.person.extra.save()
+            return result_redirect
 
 
 class PersonOtherNameUpdateView(LoginRequiredMixin, PersonMixin, UpdateView):
@@ -88,12 +91,13 @@ class PersonOtherNameUpdateView(LoginRequiredMixin, PersonMixin, UpdateView):
     raise_exception = True
 
     def form_valid(self, form):
-        result = super(
-            PersonOtherNameUpdateView, self
-        ).form_valid(form)
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data['source']
-        )
-        self.person.extra.record_version(change_metadata)
-        self.person.extra.save()
-        return result
+        with transaction.atomic():
+            result = super(
+                PersonOtherNameUpdateView, self
+            ).form_valid(form)
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data['source']
+            )
+            self.person.extra.record_version(change_metadata)
+            self.person.extra.save()
+            return result
