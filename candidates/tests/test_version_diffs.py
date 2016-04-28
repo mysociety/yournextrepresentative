@@ -580,3 +580,201 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
+
+    def test_index_error(self):
+        versions = [
+            {
+                'user': 'john',
+                'information_source': 'Manual correction by a user',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2009',
+                            'id': '123456',
+                        },
+                    ],
+                    'other_names': [
+                        {
+                            'end_date': '',
+                            'name': 'Joey',
+                            'note': '',
+                            'start_date': ''
+                        },
+                        {
+                            'end_date': '',
+                            'name': 'Joseph Tribbiani',
+                            'note': '',
+                            'start_date': ''
+                        },
+                        {
+                            'end_date': '',
+                            'name': 'Jonathan Francis Tribbiani',
+                            'note': 'Ballot paper',
+                            'start_date': ''
+                        }
+                    ]
+                }
+            },
+            {
+                'information_source': 'Updated by a script',
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2009',
+                            'id': '123457',
+                        }
+                    ],
+                    'other_names': [
+                        {
+                            'end_date': '',
+                            'name': 'Joseph Tribbiani',
+                            'note': '',
+                            'start_date': ''
+                        },
+                        {
+                            'end_date': '',
+                            'name': 'Jonathan Francis Tribbiani',
+                            'note': 'Ballot paper',
+                            'start_date': ''
+                        },
+                        {
+                            'end_date': '',
+                            'name': 'Joey',
+                            'note': '',
+                            'start_date': ''
+                        }
+                    ]
+                }
+            },
+        ]
+
+        expected_result = [
+            {
+                'information_source': 'Manual correction by a user',
+                'diff': [
+                    {
+                        'path': 'other_names/0',
+                        'value': {
+                            'note': '',
+                            'name': 'Joey',
+                            'end_date': '',
+                            'start_date': ''
+                        },
+                        'op': 'add'
+                    },
+                    {
+                        'path': 'other_names/3',
+                        'previous_value': {
+                            'note': '',
+                            'name': 'Joey',
+                            'end_date': '',
+                            'start_date': ''
+                        },
+                        'op': 'remove'
+                    }
+                ],
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2009'
+                        }
+                    ],
+                    'other_names': [
+                        {
+                            'note': '',
+                            'name': 'Joey',
+                            'end_date': '',
+                            'start_date': ''
+                        },
+                        {
+                            'note': '',
+                            'name': 'Joseph Tribbiani',
+                            'end_date': '', 'start_date': ''
+                        },
+                        {
+                            'note': 'Ballot paper',
+                            'name': 'Jonathan Francis Tribbiani',
+                            'end_date': '',
+                            'start_date': ''
+                        }
+                    ]
+                },
+                'user': 'john'
+            },
+            {
+                'information_source': 'Updated by a script',
+                'diff': [
+                    {
+                        'path': 'identifiers',
+                        'value': [
+                            {
+                                'scheme': 'yournextmp-candidate',
+                                'identifier': '2009'
+                            }
+                        ],
+                        'op': 'add'
+                    },
+                    {
+                        'path': 'other_names',
+                        'value': [
+                            {
+                                'note': '',
+                                'name': 'Joseph Tribbiani',
+                                'end_date': '',
+                                'start_date': ''
+                            },
+                            {
+                                'note': 'Ballot paper',
+                                'name': 'Jonathan Francis Tribbiani',
+                                'end_date': '',
+                                'start_date': ''
+                            },
+                            {
+                                'note': '',
+                                'name': 'Joey',
+                                'end_date': '',
+                                'start_date': ''
+                            }
+                        ],
+                        'op': 'add'
+                    }
+                ],
+                'data': {
+                    'identifiers': [
+                        {
+                            'scheme': 'yournextmp-candidate',
+                            'identifier': '2009'
+                        }
+                    ],
+                    'other_names': [
+                        {
+                            'note': '',
+                            'name': 'Joseph Tribbiani',
+                            'end_date': '',
+                            'start_date': ''
+                        },
+                        {
+                            'note': 'Ballot paper',
+                            'name': 'Jonathan Francis Tribbiani',
+                            'end_date': '',
+                            'start_date': ''
+                        },
+                        {
+                            'note': '',
+                            'name': 'Joey',
+                            'end_date': '',
+                            'start_date': ''
+                        }
+                    ]
+                }
+            }
+        ]
+
+        # This shouldn't raise an exception, but does at the moment:
+        versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
+
+        self.assertEqual(expected_result, versions_with_diffs)
