@@ -89,7 +89,7 @@ class Command(BaseCommand):
             verbose(_("{person} has Twitter screen name ({screen_name}) but no user ID").format(
                 person=person, screen_name=screen_name
             ))
-            if screen_name not in self.screen_name_to_user_id:
+            if screen_name.lower() not in self.screen_name_to_user_id:
                 print(_("Warning: screen name {screen_name} not found for {person_name}: {person_url}").format(
                     screen_name=screen_name,
                     person_name=person.name,
@@ -97,11 +97,11 @@ class Command(BaseCommand):
                 ))
                 return
             verbose(_("Adding the user ID {user_id}").format(
-                user_id=self.screen_name_to_user_id[screen_name]
+                user_id=self.screen_name_to_user_id[screen_name.lower()]
             ))
             person.identifiers.create(
                 scheme='twitter',
-                identifier=self.screen_name_to_user_id[screen_name]
+                identifier=self.screen_name_to_user_id[screen_name.lower()]
             )
             self.record_new_version(person)
         else:
@@ -141,7 +141,7 @@ class Command(BaseCommand):
                 headers=headers,
             )
             for d in r.json():
-                self.screen_name_to_user_id[d['screen_name']] = text_type(d['id'])
+                self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
                 self.user_id_to_screen_name[text_type(d['id'])] = d['screen_name']
 
         # Now look for any user IDs in the database that weren't found
@@ -159,7 +159,7 @@ class Command(BaseCommand):
                 headers=headers,
             )
             for d in r.json():
-                self.screen_name_to_user_id[d['screen_name']] = text_type(d['id'])
+                self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
                 self.user_id_to_screen_name[d['id']] = text_type(d['id'])
 
         # Now go through every person in the database and check their
