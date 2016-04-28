@@ -26,7 +26,7 @@ class Command(BaseCommand):
         return req.content
 
     def handle(self, **options):
-        # self.import_council_areas()
+        self.import_council_areas()
         self.import_concil_wards()
 
     def import_council_areas(self):
