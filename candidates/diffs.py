@@ -178,7 +178,6 @@ def get_version_diff(from_data, to_data):
         operation['path'] = re.sub(r'^/', '', operation['path'])
         if not ignore:
             result.append(operation)
-    result.sort(key=lambda o: (o['op'], o['path']))
     return result
 
 def clean_version_data(data):

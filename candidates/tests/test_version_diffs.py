@@ -6,6 +6,11 @@ from candidates.diffs import get_version_diffs
 from .uk_examples import UK2015ExamplesMixin
 
 
+def sort_operations_for_comparison(versions_with_diffs):
+    for v in versions_with_diffs:
+        v['diff'].sort(key=lambda o: (o['op'], o['path']))
+
+
 class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
@@ -123,6 +128,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
 
@@ -203,6 +209,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
 
@@ -276,6 +283,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
 
@@ -368,6 +376,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
 
@@ -442,6 +451,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
 
@@ -567,5 +577,6 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         ]
 
         versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
