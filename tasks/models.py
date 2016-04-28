@@ -33,7 +33,7 @@ class PersonTask(TimeStampedModel):
 
     def get_user_from_vesions(self):
         version_data = json.loads(self.person.extra.versions)
-        if not version_data:
+        if not version_data or 'username' not in version_data[0]:
             return None
         try:
             return User.objects.get(username=version_data[0]['username'])
