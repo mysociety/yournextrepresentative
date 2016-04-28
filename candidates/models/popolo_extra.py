@@ -21,7 +21,9 @@ from slugify import slugify
 from django_date_extensions.fields import ApproximateDate
 
 from elections.models import Election, AreaType
-from popolo.models import Person, Organization, Post, Membership, Area
+from popolo.models import (
+    Person, Organization, Post, Membership, Area, Identifier
+)
 from images.models import Image, HasImageMixin
 
 from compat import python_2_unicode_compatible
@@ -30,6 +32,7 @@ from .field_mappings import (
 )
 from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField
 from ..diffs import get_version_diffs
+from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
 from .versions import get_person_as_version_data
 
 """Extensions to the base django-popolo classes for YourNextRepresentative
@@ -63,6 +66,10 @@ def update_person_from_form(person, person_extra, form):
             )
     person.save()
     person_extra.save()
+    try:
+        update_twitter_user_id(person)
+    except TwitterAPITokenMissing:
+        pass
     for election_data in form.elections_with_fields:
         post_id = form_data.get('constituency_' + election_data.slug)
         standing = form_data.pop('standing_' + election_data.slug, 'standing')
@@ -492,6 +499,12 @@ class PersonExtra(HasImageMixin, models.Model):
                 pass
         else:
             primary_image_url = ''
+        try:
+            twitter_user_id = self.base.identifiers.get(
+                scheme='twitter',
+            ).identifier
+        except Identifier.DoesNotExist:
+            twitter_user_id = ''
 
         row = {
             'id': self.base.id,
@@ -509,6 +522,7 @@ class PersonExtra(HasImageMixin, models.Model):
             'elected': elected_for_csv,
             'email': self.base.email,
             'twitter_username': self.twitter_username,
+            'twitter_user_id': twitter_user_id,
             'facebook_page_url': self.facebook_page_url,
             'linkedin_url': self.linkedin_url,
             'party_ppc_page_url': self.party_ppc_page_url,

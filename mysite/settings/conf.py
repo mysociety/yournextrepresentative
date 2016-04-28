@@ -407,6 +407,10 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'RESTRICT_RENAMES': conf.get('RESTRICT_RENAMES'),
         'EDITS_ALLOWED': conf.get('EDITS_ALLOWED', True),
 
+        # A bearer token for the Twitter API for mapping between
+        # Twitter usernames and IDs.
+        'TWITTER_APP_ONLY_BEARER_TOKEN': conf.get('TWITTER_APP_ONLY_BEARER_TOKEN'),
+
         # Django Rest Framework settings:
         'REST_FRAMEWORK': {
             'DEFAULT_PERMISSION_CLASSES': ('candidates.api_permissions.ReadOnly',),

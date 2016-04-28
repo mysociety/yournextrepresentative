@@ -102,3 +102,19 @@ DD_MM_DATE_FORMAT_PREFERRED: true
 # party in the party set with most candidates down to those with the
 # least:
 CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST: 20
+
+# A Twitter application-only bearer token.  This is important so that
+# (a) Twitter usernames can be validated as actually existing when
+# they're supplied by a user (b) the stable Twitter user ID is stored
+# when someone sets a Twitter username and (c) the
+# candidates_update_twitter_usernames command (which deals with
+# changes of screen name) will work.
+#
+# You can generate an application-only bearer token with:
+#   curl -u "$CONSUMER_KEY:$CONSUMER_SECRET" \
+#       --data 'grant_type=client_credentials' \
+#       'https://api.twitter.com/oauth2/token'
+#
+# Or see https://dev.twitter.com/oauth/application-only for more
+# details.
+TWITTER_APP_ONLY_BEARER_TOKEN: ''

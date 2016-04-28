@@ -142,6 +142,7 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'mapit_url': '',
                 'proxy_image_url_template': '',
                 'twitter_username': '',
+                'twitter_user_id': '',
                 'post_id': '65808',
                 'party_id': 'party:53',
                 'image_copyright': '',

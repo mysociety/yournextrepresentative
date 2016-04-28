@@ -82,4 +82,5 @@ CSV_ROW_FIELDS = [
     'image_copyright',
     'image_uploading_user',
     'image_uploading_user_notes',
+    'twitter_user_id',
 ]
