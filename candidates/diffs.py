@@ -145,6 +145,7 @@ def get_version_diff(from_data, to_data):
     result = []
     for operation in basic_patch:
         op = operation['op']
+        ignore = False
         # We deal with standing_in and party_memberships slightly
         # differently so they can be presented in human-readable form,
         # so match those cases first:
@@ -162,21 +163,21 @@ def get_version_diff(from_data, to_data):
         if attribute:
             explain_standing_in_and_party_memberships(operation, attribute, election, leaf)
         if op in ('replace', 'remove'):
-            # Ignore replacing no data with no data:
-            if op == 'replace' and \
-               not operation['previous_value'] and \
-               not operation['value']:
-                continue
             if op == 'replace' and not operation['previous_value']:
-                operation['op'] = 'add'
+                if operation['value']:
+                    operation['op'] = 'add'
+                else:
+                    # Ignore replacing no data with no data:
+                    ignore = True
         elif op == 'add':
             # It's important that we don't skip the case where a
             # standing_in value is being set to None, because that's
             # saying 'we *know* they're not standing then'
             if (not operation['value']) and (attribute != 'standing_in'):
-                continue
+                ignore = True
         operation['path'] = re.sub(r'^/', '', operation['path'])
-        result.append(operation)
+        if not ignore:
+            result.append(operation)
     result.sort(key=lambda o: (o['op'], o['path']))
     return result
 
