@@ -15,7 +15,8 @@
 
   // create the tile layer with correct attribution
   // var osmUrl='http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
-  var osmUrl='http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
+  // var osmUrl='http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
+  var osmUrl='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png';
   var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
   var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 20, attribution: osmAttrib});
   mymap.addLayer(osm);
