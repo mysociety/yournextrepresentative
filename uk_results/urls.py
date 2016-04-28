@@ -61,5 +61,14 @@ urlpatterns = [
         views.LatestVoteResults.as_view(),
         name='latest-votes-view'
     ),
+
+
+
+    # Map Views
+    url(
+        r'^map/data.json$',
+        views.MapAreaView.as_view(),
+        name='map-data-view'
+    ),
 ]
 

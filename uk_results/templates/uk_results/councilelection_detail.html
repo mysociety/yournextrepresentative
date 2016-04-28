@@ -6,12 +6,54 @@
 
 {% block results_content %}
 
+{# TODO Only if confirmed! #}
+{% if not object.confirmed %}
+<a class=button>Report council control</a>
+{% else %}
+<div class="panel">
+  <h3>Result: Labour Gain {{ object.council }}</h3>
+  <small>Source: {{ object.reported_results.confirmed.0.source }}</small>
+</div>
+{% endif %}
+
+<h3>Previous control</h3>
+<p>Labour</p>
+
+{# TODO Hold/Gain/NOC #}
+{# Party X {% if previous == new %}hold{% endif %} {% if previous != new %}gain{% endif %} {{ ward name }} #}
+
+{# TODO Link this up #}
+<h3>Wards</h3>
+
+<div class="row">
+  <div class="columns large-6">
+    <ul>
+      {% for post in object.election.posts.all %}
+        <li class="area_{{ post.base.area.identifier }}">
+          {{ post }}
+          {% if post.base.postresult_set.confirmed %}
+          <a class="button tiny success">View results</a></li>
+          {% else %}
+          <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a>
+          {% endif %}
+      {% endfor %}
+    </ul>
+
+  </div>
+  <div class="columns large-6">
+    {% include "uk_results/includes/map.html" with parent=object.council.pk %}
+  </div>
+</div>
+
+
+
 {% if not object.confirmed %}
 <p>
   <a href="{% url 'report-council-election-view' council_election=object.pk %}" class="button">
     Report control
   </a>
 </p>
+
 
 <h3>Reported results</h3>
 {% for result in object.reported_results.all %}

@@ -23,9 +23,6 @@ class PostResult(models.Model):
         return ('post-results-view', (), {'post_id': self.post.extra.slug})
 
 
-
-
-
 class ResultSet(BaseResultModel, ResultStatusMixin):
     post_result = models.ForeignKey(
         PostResult,
