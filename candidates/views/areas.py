@@ -20,7 +20,7 @@ from elections.models import AreaType, Election
 from ..forms import NewPersonForm, ToggleLockForm
 from .helpers import (
     split_candidacies, group_candidates_by_party,
-    get_person_form_fields
+    get_person_form_fields, split_by_elected
 )
 
 class AreasView(TemplateView):
@@ -70,9 +70,19 @@ class AreasView(TemplateView):
                         'on_behalf_of__extra', 'organization'
                     ).all()
                 )
-                current_candidacies = group_candidates_by_party(
+                elected_candidacies, unelected_candidacies = split_by_elected(
                     election,
                     current_candidacies,
+                )
+                elected_candidacies = group_candidates_by_party(
+                    election,
+                    elected_candidacies,
+                    party_list=election.party_lists_in_use,
+                    max_people=election.default_party_list_members_to_show
+                )
+                unelected_candidacies = group_candidates_by_party(
+                    election,
+                    unelected_candidacies,
                     party_list=election.party_lists_in_use,
                     max_people=election.default_party_list_members_to_show
                 )
@@ -92,7 +102,10 @@ class AreasView(TemplateView):
                     ),
                     'candidate_list_edits_allowed':
                     get_edits_allowed(self.request.user, locked),
-                    'candidacies': current_candidacies,
+                    'has_elected': \
+                        len(elected_candidacies['parties_and_people']) > 0,
+                    'elected': elected_candidacies,
+                    'unelected': unelected_candidacies,
                     'add_candidate_form': NewPersonForm(
                         election=election.slug,
                         initial={
