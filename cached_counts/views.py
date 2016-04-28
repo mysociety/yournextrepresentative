@@ -92,6 +92,7 @@ def get_counts():
                             election_id_to_candidates.get(pe.id, 0), pe
                         )
                         for pe in past_elections
+                        if pe.for_post_role == e.for_post_role
                     ]
                 election_data.update(election_counts)
                 del election_data['election']
