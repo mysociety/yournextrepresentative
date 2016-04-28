@@ -172,8 +172,6 @@ class StPaulTests(WebTest):
 
     def test_posts_page(self):
         response = self.app.get('/posts')
-        with open('foo.html', 'w') as f:
-            f.write(str(response))
         self.assertIn(
             '<h3>City Council Election</h3>',
             response,
