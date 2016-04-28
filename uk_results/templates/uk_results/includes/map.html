@@ -100,7 +100,7 @@
         district_boundaries.addLayer(layer)
 
         {% if parent %}
-        mymap.fitBounds(district_boundaries);
+        mymap.fitBounds(district_boundaries.getBounds());
         {% else %}
         mymap.fitBounds([[50.261, -6.218], [55.553, 3.779]]);
         {% endif %}
