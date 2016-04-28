@@ -514,20 +514,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                 },
                 'diff': [
                     {
-                        "op": "replace",
-                        "path": "other_names/0",
-                        "previous_value": {
-                            "end_date": None,
-                            "name": "Tessa J Jowell",
-                            "note": "Full name",
-                            "start_date": None
-                        },
-                        "value": {
-                            "end_date": None,
-                            "name": "Tessa Jane Jowell",
-                            "note": "Full name",
-                            "start_date": None
-                        }
+                        'path': 'other_names/0/name',
+                        'previous_value': 'Tessa J Jowell',
+                        'value': 'Tessa Jane Jowell',
+                        'op': 'replace'
                     }
                 ],
             },
