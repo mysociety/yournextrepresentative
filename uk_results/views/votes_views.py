@@ -53,7 +53,8 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
             user=self.request.user,
             action_type='record-council-result',
             ip_address=get_client_ip(self.request),
-            source=form['source'].value()
+            source=form['source'].value(),
+            post=form.post,
         )
         return super(PostReportVotesView, self).form_valid(form)
 
