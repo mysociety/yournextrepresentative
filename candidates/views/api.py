@@ -186,13 +186,23 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = extra_models.PostExtra.objects \
         .select_related(
             'base__organization__extra',
-            'base__area__extra',
+            'base__area__extra__type',
+            'party_set',
         ) \
         .prefetch_related(
             'elections',
             'elections__area_types',
             'base__area__other_identifiers',
-            'base__memberships',
+            Prefetch(
+                'base__memberships',
+                Membership.objects.select_related(
+                    'person',
+                    'on_behalf_of__extra',
+                    'organization__extra',
+                    'post__extra',
+                    'extra__election',
+                )
+            )
         ) \
         .order_by('base__id')
     lookup_field = 'slug'
