@@ -1,5 +1,8 @@
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
+from candidates.views.version_data import get_client_ip
+from candidates.models import LoggedAction
+
 from popolo.models import Post
 from ..models import PostResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
@@ -46,6 +49,12 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
 
     def form_valid(self, form):
         form.save(self.request)
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='record-council-result',
+            ip_address=get_client_ip(self.request),
+            source=form['source'].value()
+        )
         return super(PostReportVotesView, self).form_valid(form)
 
 
@@ -65,6 +74,15 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
     def get_success_url(self):
         return self.object.post_result.get_absolute_url()
 
+    def form_valid(self, form):
+        form.save()
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='confirm-council-result',
+            ip_address=get_client_ip(self.request),
+            source=form['review_source'].value()
+        )
+        return super(ReviewPostReportView, self).form_valid(form)
 
 
 class LatestVoteResults(BaseResultsViewMixin, ListView):

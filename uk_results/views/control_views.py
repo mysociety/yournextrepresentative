@@ -1,6 +1,9 @@
 from django.views.generic import (TemplateView, DetailView, FormView,
                                   ListView, UpdateView)
 
+from candidates.views.version_data import get_client_ip
+from candidates.models import LoggedAction
+
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
@@ -51,6 +54,12 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
 
     def form_valid(self, form):
         form.save()
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='record-council-control',
+            ip_address=get_client_ip(self.request),
+            source=form['source'].value()
+        )
         return super(ReportCouncilElectionView, self).form_valid(form)
 
 
@@ -84,3 +93,13 @@ class ConfirmControl(BaseResultsViewMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.council_election.get_absolute_url()
+
+    def form_valid(self, form):
+        form.save()
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='confirm-council-control',
+            ip_address=get_client_ip(self.request),
+            source=form['review_source'].value()
+        )
+        return super(ConfirmControl, self).form_valid(form)
