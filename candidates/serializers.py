@@ -214,6 +214,7 @@ class ElectionSerializer(MinimalElectionSerializer):
             'id',
             'url',
             'name',
+            'for_post_role',
             'winner_membership_role',
             'candidate_membership_role',
             'election_date',

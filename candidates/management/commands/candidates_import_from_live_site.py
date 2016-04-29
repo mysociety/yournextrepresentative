@@ -268,7 +268,7 @@ class Command(BaseCommand):
                             'winner_membership_role',
                             'candidate_membership_role',
                             'election_date',
-                            # 'for_post_role',
+                            'for_post_role',
                             'current',
                             'use_for_candidate_suggestions',
                             'area_generation',
