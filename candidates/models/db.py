@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
-from popolo.models import Person
+from popolo.models import Person, Post
 
 
 class LoggedAction(models.Model):
@@ -26,6 +26,7 @@ class LoggedAction(models.Model):
     ip_address = models.CharField(max_length=50, blank=True, null=True)
     source = models.TextField()
     note = models.TextField(blank=True, null=True)
+    post = models.ForeignKey(Post, blank=True, null=True)
 
 
 class PersonRedirect(models.Model):
