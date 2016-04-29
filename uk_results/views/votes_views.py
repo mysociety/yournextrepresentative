@@ -1,5 +1,8 @@
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
+from candidates.views.version_data import get_client_ip
+from candidates.models import LoggedAction
+
 from popolo.models import Post
 
 from ..constants import CONFIRMED_STATUS
@@ -67,8 +70,6 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
                 post=form.post,
             )
 
-
-
         return super(PostReportVotesView, self).form_valid(form)
 
 
@@ -95,8 +96,12 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
             user=self.request.user,
             action_type='confirm-council-result',
             ip_address=get_client_ip(self.request),
+<<<<<<< HEAD
             source=form['review_source'].value(),
             post=form.post,
+=======
+            source=form['review_source'].value()
+>>>>>>> 544c3e8... Add result recording to logged actions
         )
         return super(ReviewPostReportView, self).form_valid(form)
 
