@@ -167,6 +167,10 @@ class Command(BaseCommand):
             with show_data_on_error('simple_field', simple_field):
                 simple_field.pop('url', None)
                 models.SimplePopoloField.objects.create(**simple_field)
+        for complex_field in self.get_api_results('complex_fields'):
+            with show_data_on_error('complex_field', complex_field):
+                complex_field.pop('url', None)
+                models.ComplexPopoloField.objects.create(**complex_field)
         for area_type_data in self.get_api_results('area_types'):
             with show_data_on_error('area_type_data', area_type_data):
                 del area_type_data['url']
@@ -446,7 +450,7 @@ class Command(BaseCommand):
             no_style(), [
                 emodels.AreaType, models.PartySet, pmodels.Area,
                 emodels.Election, Image, models.ExtraField,
-                models.SimplePopoloField
+                models.SimplePopoloField, models.ComplexPopoloField
             ]
         )
         if reset_sql_list:
