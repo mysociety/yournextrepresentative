@@ -8,7 +8,10 @@ from django.views.generic import TemplateView
 from rest_framework import routers
 
 import candidates.views as views
-from uk_results.views import CouncilElectionViewSet
+from uk_results.views import (
+    CouncilElectionViewSet, CandidateResultViewSet, PostResultViewSet,
+    ResultSetViewSet,
+)
 
 from .feeds import RecentChangesFeed
 from .constants import ELECTION_ID_REGEX, POST_ID_REGEX
@@ -26,7 +29,11 @@ api_router.register(r'memberships', views.MembershipViewSet)
 api_router.register(r'logged_actions', views.LoggedActionViewSet)
 api_router.register(r'extra_fields', views.ExtraFieldViewSet)
 api_router.register(r'simple_fields', views.SimplePopoloFieldViewSet)
-api_router.register(r'results', CouncilElectionViewSet)
+api_router.register(r'council_elections', CouncilElectionViewSet)
+api_router.register(r'candidate_results', CandidateResultViewSet)
+api_router.register(r'post_results', PostResultViewSet)
+api_router.register(r'result_sets', ResultSetViewSet)
+
 
 urlpatterns = \
     patterns('',
