@@ -450,7 +450,8 @@ class Command(BaseCommand):
             no_style(), [
                 emodels.AreaType, models.PartySet, pmodels.Area,
                 emodels.Election, Image, models.ExtraField,
-                models.SimplePopoloField, models.ComplexPopoloField
+                models.SimplePopoloField, models.ComplexPopoloField,
+                pmodels.Person,
             ]
         )
         if reset_sql_list:
