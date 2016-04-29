@@ -62,7 +62,9 @@ class CouncilElectionResultSet(BaseResultModel, ResultStatusMixin):
             )
             party_with_colour = PartyWithColour.objects.get_or_create(
                 party=self.controller,
-                hex_value="#FF0000",
+                defaults={
+                    "hex_value": "#FF0000",
+                }
             )[0]
             area.winning_party = party_with_colour
             area.save()
