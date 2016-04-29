@@ -61,8 +61,9 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['election_data'] = Election.objects.current().by_date().last()
         context['hide_search_form'] = True
 
-
-        random_offset = random.randrange(min(50, PersonTask.objects.count()))
-        context['person_task'] = PersonTask.objects.unfinished_tasks()[random_offset]
+        task_count = PersonTask.objects.count()
+        if task_count > 0:
+            random_offset = random.randrange(min(50, task_count))
+            context['person_task'] = PersonTask.objects.unfinished_tasks()[random_offset]
 
         return context

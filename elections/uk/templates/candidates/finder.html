@@ -42,6 +42,7 @@
 
 <div class="finder__forms">
   <div class="finder__forms__container">
+    {% if person_task %}
     <h2>Improve our data!</h2>
     <h3>Can you find {{ person_task.person.name }}'s
       {% if person_task.task_field == 'facebook_page_url' %}Facebook page?{% endif %}
@@ -52,6 +53,7 @@
 
     <hr>
     <h4>or</h4>
+    {% endif %}
 
     <form id="form-postcode" action="{% url 'person-search' %}" method="get" {% if show_name_form %}style="display: none"{% endif %}>
       {{ postcode_form.as_p }}
