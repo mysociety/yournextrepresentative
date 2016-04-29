@@ -90,7 +90,6 @@ class Command(BaseCommand):
                 # Additional models:
                 models.PartySet, models.ImageExtra, models.LoggedAction,
                 models.PersonRedirect, emodels.Election, models.ExtraField,
-                models.SimplePopoloField
         ):
             if model_class.objects.exists():
                 non_empty_models.append(model_class)
@@ -100,6 +99,16 @@ class Command(BaseCommand):
                 print(" ", model_class)
             msg = "This command should only be run on an empty database"
             raise CommandError(msg)
+
+    def remove_field_objects(self):
+        # The initial migrations create SimplePopoloField and
+        # ComplexPopoloField objects so that there's a useful default
+        # set of fields.  However, if the database is otherwise empty
+        # and we're running this script, the fields will be defined by
+        # those simple and complex fields we find from the API. So
+        # remove those fields:
+        models.SimplePopoloField.objects.all().delete()
+        models.ComplexPopoloField.objects.all().delete()
 
     def get_api_results(self, endpoint):
         page = 1
@@ -473,4 +482,5 @@ class Command(BaseCommand):
             new_url_parts[2] = '/api/v0.9/'
             self.base_api_url = urlunsplit(new_url_parts)
             self.check_database_is_empty()
+            self.remove_field_objects()
             self.mirror_from_api()
