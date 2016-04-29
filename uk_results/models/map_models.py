@@ -9,3 +9,9 @@ class ElectionArea(models.Model):
     parent = models.ForeignKey('self', null=True)
     area_name = models.CharField(blank=True, max_length=255)
     geo_json = models.TextField(blank=True)
+    winning_party = models.ForeignKey('PartyWithColour', null=True)
+
+
+class PartyWithColour(models.Model):
+    hex_value = models.CharField(blank=True, max_length=100)
+    party = models.OneToOneField('popolo.Organization', primary_key=True)

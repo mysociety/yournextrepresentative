@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from django.contrib import admin
 
-from .models import Council, CouncilElection, CouncilElectionResultSet
+from .models import (Council, CouncilElection, CouncilElectionResultSet,
+                     PartyWithColour)
 
 
 class ReadOnlyAdminMixIn(admin.ModelAdmin):
@@ -33,5 +34,6 @@ class CouncilElectionAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Council, CouncilAdmin)
+admin.site.register(PartyWithColour)
 admin.site.register(CouncilElection, CouncilElectionAdmin)
 admin.site.register(CouncilElectionResultSet)

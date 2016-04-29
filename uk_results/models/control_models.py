@@ -6,6 +6,7 @@ from elections.models import Election
 from candidates.models import PartySet
 
 from .base import BaseResultModel, ResultStatusMixin
+from .map_models import ElectionArea, PartyWithColour
 
 
 class Council(models.Model):
@@ -52,3 +53,14 @@ class CouncilElectionResultSet(BaseResultModel, ResultStatusMixin):
         if self.review_status == "confirmed":
             self.council_election.confirmed = True
             self.council_election.save()
+            area = ElectionArea.objects.get(
+                area_gss=self.council_election.council.council_id,
+                election=self.council_election.election
+            )
+            party_with_colour = PartyWithColour.objects.get_or_create(
+                party=self.controller,
+                hex_value="#FF0000",
+            )[0]
+            area.winning_party = party_with_colour
+            area.save()
+

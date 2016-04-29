@@ -7,14 +7,20 @@
 {% block results_content %}
 
 {# TODO Only if confirmed! #}
-{% if not object.confirmed %}
-<a class=button>Report council control</a>
+{% if object.confirmed %}
+  <div class="panel">
+    <h3>Result: Labour Gain {{ object.council }}</h3>
+    <small>Source: {{ object.reported_results.confirmed.0.source }}</small>
+  </div>
 {% else %}
-<div class="panel">
-  <h3>Result: Labour Gain {{ object.council }}</h3>
-  <small>Source: {{ object.reported_results.confirmed.0.source }}</small>
-</div>
+<p>
+  <a href="{% url 'report-council-election-view' council_election=object.pk %}" class="button">
+    Report council control
+  </a>
+</p>
 {% endif %}
+
+
 
 <h3>Previous control</h3>
 <p>Labour</p>
@@ -47,27 +53,15 @@
 
 
 
+
+
 {% if not object.confirmed %}
-<p>
-  <a href="{% url 'report-council-election-view' council_election=object.pk %}" class="button">
-    Report control
-  </a>
-</p>
-
-
-<h3>Reported results</h3>
-{% for result in object.reported_results.all %}
-  {% include "uk_results/includes/control_result_item.html" %}
-{% endfor %}
-
-{% else %}
-
-<h3>Result</h3>
-{% with  object.reported_results.confirmed.0 as result %}
-  {% include "uk_results/includes/control_result_item.html" with show_heading=False %}
-{% endwith %}
-
-
+  {% if object.reported_results.all %}
+    <h3>Reported results</h3>
+    {% for result in object.reported_results.all %}
+      {% include "uk_results/includes/control_result_item.html" %}
+    {% endfor %}
+  {% endif %}
 {% endif %}
 
 

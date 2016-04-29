@@ -54,7 +54,16 @@
       Object.keys(data).forEach(function (key) {
 
         var layer = new L.geoJson(data[key]);
-        layer.setStyle(geojsonMarkerOptions);
+        var layer_style = jQuery.extend(true, {}, geojsonMarkerOptions)
+        if (data[key].hex != undefined) {
+          console.log(data[key].hex)
+          layer.hex = data[key].hex;
+          layer_style['fillColor'] = data[key].hex
+          layer_style['color'] = data[key].hex
+          layer_style['fillOpacity'] = 1
+
+        }
+        layer.setStyle(layer_style);
         layer.GSSCode = key;
 
         {% if parent %}
