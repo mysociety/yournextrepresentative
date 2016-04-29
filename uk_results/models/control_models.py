@@ -34,6 +34,9 @@ class CouncilElection(models.Model):
     party_set = models.ForeignKey(PartySet)
     confirmed = models.BooleanField(default=False)
 
+    def controller(self):
+        return self.reported_results.all().confirmed().first()
+
     # TODO: Past Control?
 
     @models.permalink

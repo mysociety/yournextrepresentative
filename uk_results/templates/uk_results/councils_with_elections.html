@@ -1,11 +1,37 @@
 {% extends "uk_results/uk_results_base.html" %}
 
 {% block results_content %}
-{% for council_election in council_elections %}
-<li>
-  <a href="{{ council_election.get_absolute_url }}">
-    {{ council_election.election }} ({{ council_election.council }})
-  </a>
-</li>
-{% endfor %}
+
+
+<table>
+
+  <thead>
+    <th>Election</th>
+    <th>Control</th>
+  </thead>
+  <tbody>
+    {% for council_election in council_elections %}
+    <tr>
+      <td>
+          <a href="{{ council_election.get_absolute_url }}">
+            {{ council_election.election }}
+          </a>
+      </td>
+      <td>
+        {% if council_election.controller.controller %}
+          <span class="control_party_name" style="border-left:{{ council_election.controller.controller.partywithcolour.hex_value|default:"#AAA" }} 4px solid;padding-left:4px">
+            {{ council_election.controller.controller.name }}
+          </span>
+        {% else %}
+        {% if council_election.reported_results.all %}
+          Control not yet confirmed ({{ council_election.reported_results.count }} unconfirmed results)
+        {% else %}
+          No results reported yet
+        {% endif %}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock results_content %}

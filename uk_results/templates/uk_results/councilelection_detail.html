@@ -6,10 +6,9 @@
 
 {% block results_content %}
 
-{# TODO Only if confirmed! #}
 {% if object.confirmed %}
-  <div class="panel">
-    <h3>Result: Labour Gain {{ object.council }}</h3>
+  <div class="panel" style="border-top:{{object.reported_results.all.confirmed.0.controller.partywithcolour.hex_value|default:"#AAA"}} 4px solid">
+    <h3>Controlled by {{ object.reported_results.all.confirmed.0.controller.name }}</h3>
     <small>Source: {{ object.reported_results.confirmed.0.source }}</small>
   </div>
 {% else %}
@@ -22,11 +21,11 @@
 
 
 
-<h3>Previous control</h3>
-<p>Labour</p>
 
 {# TODO Hold/Gain/NOC #}
 {# Party X {% if previous == new %}hold{% endif %} {% if previous != new %}gain{% endif %} {{ ward name }} #}
+{# <h3>Previous control</h3> #}
+{# <p>Labour</p> #}
 
 {# TODO Link this up #}
 <h3>Wards</h3>
