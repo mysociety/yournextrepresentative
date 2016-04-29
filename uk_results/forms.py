@@ -79,6 +79,11 @@ class ReviewVotesForm(forms.ModelForm):
             )
         }
 
+    def __init__(self, review_result, *args, **kwargs):
+        self.post = review_result.post_result.post
+
+        super(ReviewVotesForm, self).__init__(*args, **kwargs)
+
 
 class ResultSetForm(forms.ModelForm):
     class Meta:

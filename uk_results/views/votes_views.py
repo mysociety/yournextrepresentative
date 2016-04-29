@@ -65,12 +65,23 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
         kwargs = self.get_form_kwargs()
         kwargs['initial'].update({'reviewed_by': self.request.user})
         return ReviewVotesForm(
+            review_result=self.object,
             **kwargs
         )
 
     def get_success_url(self):
         return self.object.post_result.get_absolute_url()
 
+    def form_valid(self, form):
+        form.save()
+        LoggedAction.objects.create(
+            user=self.request.user,
+            action_type='confirm-council-result',
+            ip_address=get_client_ip(self.request),
+            source=form['review_source'].value(),
+            post=form.post,
+        )
+        return super(ReviewPostReportView, self).form_valid(form)
 
 
 class LatestVoteResults(BaseResultsViewMixin, ListView):
