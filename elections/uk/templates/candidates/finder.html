@@ -96,6 +96,14 @@
             locked a constituency
           {% elif action.action_type == 'constituency-unlock' %}
             unlocked a constituency
+          {% elif action.action_type == 'record-council-result' %}
+            recorded a result for <a href="{% url 'post-results-view' post_id=action.post.role %}">{{ action.post.label }}</a>
+          {% elif action.action_type == 'record-council-control' %}
+            recorded overall control for a council
+          {% elif action.action_type == 'confirm-council-result' %}
+            reviewed a result for <a href="{% url 'post-results-view' post_id=action.post.role %}">{{ action.post.label }}</a>
+          {% elif action.action_type == 'confirm-council-control' %}
+            reviewed overall control for a council
           {% elif action.action_type == 'set-candidate-elected' %}
             marked <a href="{% url 'person-view' person_id=action.person.id %}">candidate #{{ action.person.id }}</a> as the winner
           {% else %}
