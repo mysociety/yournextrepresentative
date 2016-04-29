@@ -69,6 +69,7 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
         kwargs = self.get_form_kwargs()
         kwargs['initial'].update({'reviewed_by': self.request.user})
         return ReviewVotesForm(
+            review_result=self.object,
             **kwargs
         )
 
@@ -81,7 +82,8 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
             user=self.request.user,
             action_type='confirm-council-result',
             ip_address=get_client_ip(self.request),
-            source=form['review_source'].value()
+            source=form['review_source'].value(),
+            post=form.post,
         )
         return super(ReviewPostReportView, self).form_valid(form)
 
