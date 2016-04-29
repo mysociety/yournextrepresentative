@@ -119,7 +119,7 @@ class Command(BaseCommand):
     def add_related(self, o, model_class, related_data_list):
         for related_data in related_data_list:
             with show_data_on_error('related_data', related_data):
-                model_class.objects.create(**related_data)
+                model_class.objects.create(content_object=o, **related_data)
 
     def get_user_from_username(self, username):
         if not username:
