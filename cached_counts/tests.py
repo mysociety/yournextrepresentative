@@ -86,34 +86,50 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
         data = json.loads(response.body.decode('utf-8'))
         self.assertEqual(
             data,
-            {
-                'current': [
-                    {
-                        'total': 18,
-                        'id': "2015",
-                        'html_id': "2015",
-                        'name': "2015 General Election",
-                        'prior_elections': [
-                            {
-                                "percentage": 900.0,
-                                "name": '2010 General Election',
-                                "new_candidates": 16,
-                                "standing_again": 2,
-                                "standing_again_different_party": 1,
-                                "standing_again_same_party": 1
-                            },
-                        ]
-                    }
-                ],
-                'past': [
-                    {
-                        'total': 2,
-                        'id': "2010",
-                        'html_id': '2010',
-                        'name': "2010 General Election"
-                    }
-                ]
-            }
+            [
+                {
+                    'current': True,
+                    'roles': [
+                        {
+                            'role': 'Member of Parliament',
+                            'elections': [
+                                {
+                                    'prior_elections': [
+                                        {
+                                            'name': '2010 General Election',
+                                            'standing_again': 2,
+                                            'new_candidates': 16,
+                                            'percentage': 900.0,
+                                            'standing_again_different_party': 1,
+                                            'standing_again_same_party': 1
+                                        }
+                                    ],
+                                    'total': 18,
+                                    'id': '2015',
+                                    'html_id': '2015',
+                                    'name': '2015 General Election'
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    'current': False,
+                    'roles': [
+                        {
+                            'role': 'Member of Parliament',
+                            'elections': [
+                                {
+                                    'total': 2,
+                                    'name': '2010 General Election',
+                                    'html_id': '2010',
+                                    'id': '2010'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         )
 
     def test_attention_needed_page(self):
