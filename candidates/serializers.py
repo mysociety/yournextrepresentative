@@ -214,6 +214,7 @@ class ElectionSerializer(MinimalElectionSerializer):
             'id',
             'url',
             'name',
+            'for_post_role',
             'winner_membership_role',
             'candidate_membership_role',
             'election_date',
@@ -399,4 +400,16 @@ class ExtraFieldSerializer(serializers.HyperlinkedModelSerializer):
 class SimplePopoloFieldSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = candidates_models.SimplePopoloField
-        fields = ('id', 'name', 'label', 'required', 'info_type_key', 'order')
+        fields = (
+            'id', 'url', 'name', 'label', 'required', 'info_type_key', 'order'
+        )
+
+
+class ComplexPopoloFieldSerializer(serializers. HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.ComplexPopoloField
+        fields = (
+            'id', 'url', 'name', 'label', 'popolo_array', 'field_type',
+            'info_type_key', 'info_type', 'old_info_type', 'info_value_key',
+            'order',
+        )
