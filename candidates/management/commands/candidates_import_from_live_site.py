@@ -90,7 +90,6 @@ class Command(BaseCommand):
                 # Additional models:
                 models.PartySet, models.ImageExtra, models.LoggedAction,
                 models.PersonRedirect, emodels.Election, models.ExtraField,
-                models.SimplePopoloField
         ):
             if model_class.objects.exists():
                 non_empty_models.append(model_class)
@@ -100,6 +99,16 @@ class Command(BaseCommand):
                 print(" ", model_class)
             msg = "This command should only be run on an empty database"
             raise CommandError(msg)
+
+    def remove_field_objects(self):
+        # The initial migrations create SimplePopoloField and
+        # ComplexPopoloField objects so that there's a useful default
+        # set of fields.  However, if the database is otherwise empty
+        # and we're running this script, the fields will be defined by
+        # those simple and complex fields we find from the API. So
+        # remove those fields:
+        models.SimplePopoloField.objects.all().delete()
+        models.ComplexPopoloField.objects.all().delete()
 
     def get_api_results(self, endpoint):
         page = 1
@@ -119,7 +128,7 @@ class Command(BaseCommand):
     def add_related(self, o, model_class, related_data_list):
         for related_data in related_data_list:
             with show_data_on_error('related_data', related_data):
-                model_class.objects.create(**related_data)
+                model_class.objects.create(content_object=o, **related_data)
 
     def get_user_from_username(self, username):
         if not username:
@@ -167,6 +176,10 @@ class Command(BaseCommand):
             with show_data_on_error('simple_field', simple_field):
                 simple_field.pop('url', None)
                 models.SimplePopoloField.objects.create(**simple_field)
+        for complex_field in self.get_api_results('complex_fields'):
+            with show_data_on_error('complex_field', complex_field):
+                complex_field.pop('url', None)
+                models.ComplexPopoloField.objects.create(**complex_field)
         for area_type_data in self.get_api_results('area_types'):
             with show_data_on_error('area_type_data', area_type_data):
                 del area_type_data['url']
@@ -268,7 +281,7 @@ class Command(BaseCommand):
                             'winner_membership_role',
                             'candidate_membership_role',
                             'election_date',
-                            # 'for_post_role',
+                            'for_post_role',
                             'current',
                             'use_for_candidate_suggestions',
                             'area_generation',
@@ -446,7 +459,8 @@ class Command(BaseCommand):
             no_style(), [
                 emodels.AreaType, models.PartySet, pmodels.Area,
                 emodels.Election, Image, models.ExtraField,
-                models.SimplePopoloField
+                models.SimplePopoloField, models.ComplexPopoloField,
+                pmodels.Person,
             ]
         )
         if reset_sql_list:
@@ -468,4 +482,5 @@ class Command(BaseCommand):
             new_url_parts[2] = '/api/v0.9/'
             self.base_api_url = urlunsplit(new_url_parts)
             self.check_database_is_empty()
+            self.remove_field_objects()
             self.mirror_from_api()

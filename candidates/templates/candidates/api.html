@@ -45,34 +45,35 @@ programmatically via a RESTful API.
 
 <h2>{% trans "CSV/Excel Download" %}</h2>
 
-<h3>{% trans "Current elections" %}</h3>
+  <h3>{% trans "All Candidates" %}</h3>
 
-<p>
+  <p>{% blocktrans trimmed %}
+    This CSV file contains details of all candidates in the database
+  {% endblocktrans %}</p>
+
   <ul>
-    {% for csv in current_csv_list %}
-      {% with slug=csv.slug title=csv.name %}
-      <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
-      {% endwith %}
-    {% endfor %}
+    <li><a href="{{ MEDIA_URL }}candidates-all.csv">{% blocktrans %}Download of the all candidates {% endblocktrans %}</a></li>
   </ul>
-</p>
 
-
-{% if historic_csv_list %}
-
-<h3>{% trans "Historic elections" %}</h3>
-
-<p>
-  <ul>
-    {% for csv in historic_csv_list %}
-      {% with slug=csv.slug title=csv.name %}
-      <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
-      {% endwith %}
-    {% endfor %}
-  </ul>
-</p>
-{% endif %}
-
+  {% for era in grouped_elections %}
+    <div>
+      <h3>{% if era.current %}
+        {% trans "Current Elections" %}
+      {% else %}
+        {% trans "Past Elections" %}
+      {% endif %}</h3>
+      {% for role_data in era.roles %}
+        <h4>{{ role_data.role }}</h4>
+        <ul>
+          {% for election in role_data.elections %}
+            {% with slug=election.election.slug title=election.election.name %}
+              <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
+            {% endwith %}
+          {% endfor %}
+        </ul>
+      {% endfor %}
+  </div>
+  {% endfor %}
 
 <h2>{% trans "API" %}</h2>
 
