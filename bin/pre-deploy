@@ -56,19 +56,6 @@ fi
 # get the database up to speed
 ./manage.py migrate --noinput
 
-# Install gems in order to compile the CSS
-mkdir -p "../gems"
-export GEM_HOME="$(cd ../gems && pwd -P)"
-export PATH="$GEM_HOME/bin:$PATH"
-if (sass --version | grep '3\.4\.21') > /dev/null
-then
-    echo sass is already installed at the correct version
-else
-    echo Installing sass...
-    gem install --no-ri --no-rdoc sass -v 3.4.21
-    echo done.
-fi
-
 # Generate the files of translated strings for Javascript to use
 ./manage.py compilejsi18n
 
