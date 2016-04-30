@@ -12,6 +12,7 @@ from django import forms, VERSION as django_version
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
+from django.utils.functional import cached_property
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
@@ -384,6 +385,16 @@ class NewPersonForm(BasePersonForm):
 
 class AddElectionFieldsMixin(object):
 
+    @cached_property
+    def party_sets_and_party_choices(self):
+        # Generating the party choices for each party set is quite
+        # slow, so cache these results, so they're not fetched from
+        # the database again each time add_election_fields is called.
+        return [
+            (party_set, party_set.party_choices())
+            for party_set in PartySet.objects.all()
+        ]
+
     def add_elections_fields(self, elections):
         for election_data in elections:
             self.add_election_fields(election_data)
@@ -413,14 +424,14 @@ class AddElectionFieldsMixin(object):
                 ),
                 widget=forms.Select(attrs={'class': 'post-select'}),
             )
-        for party_set in PartySet.objects.all():
+        for party_set, party_choices in self.party_sets_and_party_choices:
             self.fields['party_' + party_set.slug + '_' + election] = \
                 forms.ChoiceField(
                     label=_("Party in {election} ({party_set_name})").format(
                         election=election_data.name,
                         party_set_name=party_set.name,
                     ),
-                    choices=party_set.party_choices(),
+                    choices=party_choices,
                     required=False,
                     widget=forms.Select(
                         attrs={
