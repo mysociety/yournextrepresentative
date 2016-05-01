@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import bleach
@@ -200,6 +201,9 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         return context
 
     def send_mail(self, subject, message, email_support_too=False):
+        if not self.queued_image.user:
+            # We can't send emails to bots…yet.
+            return
         recipients = [self.queued_image.user.email]
         if email_support_too:
             recipients.append(settings.SUPPORT_EMAIL)
@@ -225,9 +229,13 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         cropped.save(ntf.name, 'PNG')
         md5sum = get_file_md5sum(ntf.name)
         filename = str(person_id) + '.png'
+        if self.queued_image.user:
+            uploaded_by = self.queued_image.user.username
+        else:
+            uploaded_by = _("a script")
         source = _(
             'Uploaded by {uploaded_by}: Approved from photo moderation queue'
-        ).format(uploaded_by=self.queued_image.user.username)
+        ).format(uploaded_by=uploaded_by)
 
         ImageExtra.objects.create_from_file(
             ntf.name,
@@ -270,6 +278,11 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 message,
                 extra_tags='safe photo-review'
             )
+        if self.queued_image.user:
+            uploaded_by = self.queued_image.user.username
+        else:
+            uploaded_by = _("a script")
+
         if decision == 'approved':
             # Crop the image...
             crop_fields = ('x_min', 'y_min', 'x_max', 'y_max')
@@ -287,10 +300,11 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                     form.cleaned_data[field]
                 )
             self.queued_image.save()
+
             update_message = _('Approved a photo upload from '
                 '{uploading_user} who provided the message: '
                 '"{message}"').format(
-                uploading_user=self.queued_image.user.username,
+                uploading_user=uploaded_by,
                 message=self.queued_image.justification_for_use,
             )
             change_metadata = get_change_metadata(
@@ -338,7 +352,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             self.queued_image.save()
             update_message = _('Rejected a photo upload from '
                 '{uploading_user}').format(
-                uploading_user=self.queued_image.user.username,
+                uploading_user=uploaded_by,
             )
             LoggedAction.objects.create(
                 user=self.request.user,
@@ -403,7 +417,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             self.queued_image.save()
             update_message = _('Ignored a photo upload from '
                 '{uploading_user} (This usually means it was a duplicate)').format(
-                uploading_user=self.queued_image.user.username)
+                uploading_user=uploaded_by)
             LoggedAction.objects.create(
                 user=self.request.user,
                 action_type='photo-ignore',
