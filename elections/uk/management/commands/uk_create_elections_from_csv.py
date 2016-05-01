@@ -152,6 +152,9 @@ class Command(BaseCommand):
                 base=organization,
                 slug=org_slug
                 )
+        if not election.organization:
+            election.organization = organization_extra.base
+            election.save()
         return organization_extra
 
 
