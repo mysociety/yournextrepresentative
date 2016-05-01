@@ -243,9 +243,9 @@ class Command(BaseCommand):
             })
 
         post_extra, _ = PostExtra.objects.update_or_create(
-            base=post,
+            slug=post_extra_slug,
             defaults={
-                'slug': post_extra_slug,
+                'base': post,
                 'party_set': party_set,
             },
         )
