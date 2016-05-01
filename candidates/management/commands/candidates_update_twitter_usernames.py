@@ -9,10 +9,13 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext as _
 from django.utils.six import text_type
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
 
 from usersettings.shortcuts import get_current_usersettings
 
 from popolo.models import ContactDetail, Identifier, Person
+from moderation_queue.models import QueuedImage, CopyrightOptions
 import requests
 
 MAX_IN_A_REQUEST = 100
@@ -79,6 +82,28 @@ class Command(BaseCommand):
             "(candidates_update_twitter_usernames)",
         )
 
+    def add_twitter_image_to_queue(self, person, image_url):
+        if person.queuedimage_set.exclude(decision="rejected").exists():
+            # Don't add an image to the queue if there is one already
+            # Ignoring rejected queued images
+            return
+
+        # Add a new queued image
+        image_url = image_url.replace('_normal.', '.')
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(requests.get(image_url).content)
+        img_temp.flush()
+
+        qi = QueuedImage(
+            decision=QueuedImage.UNDECIDED,
+            why_allowed=CopyrightOptions.PROFILE_PHOTO,
+            justification_for_use="Auto imported from Twitter",
+            person=person
+        )
+        qi.save()
+        qi.image.save(image_url, File(img_temp))
+        qi.save()
+
     def handle_person(self, person):
         # Get the Twitter screen name and user ID if they exist:
         try:
@@ -135,6 +160,10 @@ class Command(BaseCommand):
                 verbose(_("The screen name ({screen_name}) was already correct").format(
                     screen_name=screen_name
                 ))
+
+            if user_id in self.user_id_to_photo_url:
+                self.add_twitter_image_to_queue(
+                    person, self.user_id_to_photo_url[user_id])
         # Otherwise, if they have a Twitter screen name (but no
         # user ID, since we already dealt with that case) then
         # find their Twitter user ID and set that as an identifier.
@@ -188,6 +217,7 @@ class Command(BaseCommand):
 
         self.screen_name_to_user_id = {}
         self.user_id_to_screen_name = {}
+        self.user_id_to_photo_url = {}
         for i in range(0, len(all_screen_names), MAX_IN_A_REQUEST):
             screen_names = all_screen_names[i:(i + MAX_IN_A_REQUEST)]
             r = requests.post(
@@ -197,12 +227,17 @@ class Command(BaseCommand):
                 },
                 headers=headers,
             )
+
+            
             response_data = r.json()
             if no_users_found(response_data):
                 continue
             for d in response_data:
-                self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
-                self.user_id_to_screen_name[text_type(d['id'])] = d['screen_name']
+                user_id = text_type(d['id'])
+                self.screen_name_to_user_id[d['screen_name'].lower()] = user_id
+                self.user_id_to_screen_name[user_id] = d['screen_name']
+                self.user_id_to_photo_url[user_id] = \
+                    d['profile_image_url_https']
 
         # Now look for any user IDs in the database that weren't found
         # from the above query:
@@ -222,9 +257,11 @@ class Command(BaseCommand):
             if no_users_found(response_data):
                 continue
             for d in response_data:
-                self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
-                self.user_id_to_screen_name[d['id']] = text_type(d['id'])
-
+                user_id = text_type(d['id'])
+                self.screen_name_to_user_id[d['screen_name'].lower()] = user_id
+                self.user_id_to_screen_name[user_id] = d['screen_name']
+                self.user_id_to_photo_url[user_id] = \
+                    d['profile_image_url_https']
         # Now go through every person in the database and check their
         # Twitter details:
         for person in Person.objects.select_related('extra'):
