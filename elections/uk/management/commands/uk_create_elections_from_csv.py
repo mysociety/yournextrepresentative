@@ -48,11 +48,14 @@ class Command(BaseCommand):
         r.encoding = 'utf-8'
         reader = StreamDictReader(r.text)
         for line in reader:
-            if not line['Election ID']:
+            cleaned_line = {}
+            for k,v in line.items():
+                cleaned_line[k] = strip(v)
+            if not cleaned_line['Election ID']:
                 continue
-            if not line['GSS Code']:
+            if not cleaned_line['GSS Code']:
                 continue
-            self.process_line(line)
+            self.process_line(cleaned_line)
 
     def process_line(self, line):
         # Create the elections
