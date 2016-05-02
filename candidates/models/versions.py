@@ -4,6 +4,8 @@ from .fields import ExtraField, SimplePopoloField, ComplexPopoloField
 
 from django.db.models import F
 
+from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
+
 # FIXME: handle the extra fields (e.g. cv & program for BF)
 # FIXME: check all the preserve_fields are dealt with
 
@@ -166,3 +168,7 @@ def revert_person_from_version_data(person, person_extra, version_data):
             )
     person.save()
     person_extra.save()
+    try:
+        update_twitter_user_id(person)
+    except TwitterAPITokenMissing:
+        pass
