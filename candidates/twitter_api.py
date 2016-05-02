@@ -12,7 +12,7 @@ class TwitterAPITokenMissing(Exception):
 
 
 def get_twitter_user_id(twitter_screen_name):
-    cache_key = 'twitter-screen-name'
+    cache_key = 'twitter-screen-name:{0}'.format(twitter_screen_name)
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
