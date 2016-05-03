@@ -274,6 +274,14 @@ class ImageViewSet(viewsets.ModelViewSet):
     pagination_class = ResultsSetPagination
 
 
+class PostExtraElectionViewSet(viewsets.ModelViewSet):
+    queryset = extra_models.PostExtraElection.objects \
+        .select_related('election', 'postextra') \
+        .order_by('id')
+    serializer_class = serializers.PostElectionSerializer
+    pagination_class = ResultsSetPagination
+
+
 class MembershipViewSet(viewsets.ModelViewSet):
     queryset = Membership.objects.order_by('id')
     serializer_class = serializers.MembershipSerializer
