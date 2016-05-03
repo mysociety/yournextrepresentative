@@ -46,6 +46,12 @@ programmatically via a RESTful API.
             {% endwith %}
           {% endfor %}
         </ul>
+      {% empty %}
+        <p>{% if era.current %}{% blocktrans trimmed %}
+          There are no current elections.
+        {% endblocktrans %}{% else %}{% blocktrans trimmed %}
+           There are no past elections.
+        {% endblocktrans %}{% endif %}</p>
       {% endfor %}
   </div>
   {% endfor %}
