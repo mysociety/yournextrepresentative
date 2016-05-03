@@ -241,62 +241,63 @@ class MergePeopleView(GroupRequiredMixin, View):
             raise ValueError(message.format(
                 primary_person_id, secondary_person_id
             ))
-        primary_person_extra, secondary_person_extra = [
-            get_object_or_404(
-                PersonExtra.objects.select_related('base'),
-                base__id=person_id
+        with transaction.atomic():
+            primary_person_extra, secondary_person_extra = [
+                get_object_or_404(
+                    PersonExtra.objects.select_related('base'),
+                    base__id=person_id
+                )
+                for person_id in (primary_person_id, secondary_person_id)
+            ]
+            primary_person = primary_person_extra.base
+            secondary_person = secondary_person_extra.base
+            # Merge the reduced JSON representations:
+            merged_person_version_data = merge_popit_people(
+                get_person_as_version_data(primary_person),
+                get_person_as_version_data(secondary_person),
             )
-            for person_id in (primary_person_id, secondary_person_id)
-        ]
-        primary_person = primary_person_extra.base
-        secondary_person = secondary_person_extra.base
-        # Merge the reduced JSON representations:
-        merged_person_version_data = merge_popit_people(
-            get_person_as_version_data(primary_person),
-            get_person_as_version_data(secondary_person),
-        )
-        # Update the primary person in PopIt:
-        change_metadata = get_change_metadata(
-            self.request, _('After merging person {0}').format(secondary_person_id)
-        )
-        revert_person_from_version_data(
-            primary_person,
-            primary_person_extra,
-            merged_person_version_data
-        )
-        # Make sure the secondary person's version history is appended, so it
-        # isn't lost.
-        primary_person_versions = json.loads(primary_person_extra.versions)
-        primary_person_versions += json.loads(secondary_person_extra.versions)
-        primary_person_extra.versions = json.dumps(primary_person_versions)
-        primary_person_extra.record_version(change_metadata)
-        primary_person_extra.save()
-        # Change the secondary person's images to point at the primary
-        # person instead:
-        existing_primary_image = \
-            primary_person_extra.images.filter(is_primary=True).exists()
-        for image in secondary_person.extra.images.all():
-            image.content_object = primary_person.extra
-            if existing_primary_image:
-                image.is_primary = False
-            image.save()
-        # Now we delete the old person:
-        secondary_person.delete()
-        # Create a redirect from the old person to the new person:
-        PersonRedirect.objects.create(
-            old_person_id=secondary_person_id,
-            new_person_id=primary_person_id,
-        )
-        # Log that that action has taken place, and will be shown in
-        # the recent changes, leaderboards, etc.
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='person-merge',
-            ip_address=get_client_ip(self.request),
-            popit_person_new_version=change_metadata['version_id'],
-            person=primary_person,
-            source=change_metadata['information_source'],
-        )
+            # Update the primary person in PopIt:
+            change_metadata = get_change_metadata(
+                self.request, _('After merging person {0}').format(secondary_person_id)
+            )
+            revert_person_from_version_data(
+                primary_person,
+                primary_person_extra,
+                merged_person_version_data
+            )
+            # Make sure the secondary person's version history is appended, so it
+            # isn't lost.
+            primary_person_versions = json.loads(primary_person_extra.versions)
+            primary_person_versions += json.loads(secondary_person_extra.versions)
+            primary_person_extra.versions = json.dumps(primary_person_versions)
+            primary_person_extra.record_version(change_metadata)
+            primary_person_extra.save()
+            # Change the secondary person's images to point at the primary
+            # person instead:
+            existing_primary_image = \
+                primary_person_extra.images.filter(is_primary=True).exists()
+            for image in secondary_person.extra.images.all():
+                image.content_object = primary_person.extra
+                if existing_primary_image:
+                    image.is_primary = False
+                image.save()
+            # Now we delete the old person:
+            secondary_person.delete()
+            # Create a redirect from the old person to the new person:
+            PersonRedirect.objects.create(
+                old_person_id=secondary_person_id,
+                new_person_id=primary_person_id,
+            )
+            # Log that that action has taken place, and will be shown in
+            # the recent changes, leaderboards, etc.
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='person-merge',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                person=primary_person,
+                source=change_metadata['information_source'],
+            )
         # And redirect to the primary person with the merged data:
         return HttpResponseRedirect(
             reverse('person-view', kwargs={
