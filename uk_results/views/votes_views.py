@@ -1,6 +1,8 @@
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
 from popolo.models import Post
+
+from ..constants import CONFIRMED_STATUS
 from ..models import PostResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
 from .base import BaseResultsViewMixin
@@ -45,7 +47,11 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
         return self.object.get_absolute_url()
 
     def form_valid(self, form):
-        form.save(self.request)
+        instance = form.save(self.request)
+        if 'report_and_confirm' in self.request.POST:
+            instance.review_status = CONFIRMED_STATUS
+            instance.save()
+
         return super(PostReportVotesView, self).form_valid(form)
 
 

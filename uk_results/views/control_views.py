@@ -1,6 +1,7 @@
 from django.views.generic import (TemplateView, DetailView, FormView,
                                   ListView, UpdateView)
 
+from ..constants import CONFIRMED_STATUS
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
@@ -56,7 +57,10 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
         return self.object.get_absolute_url()
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        if 'report_and_confirm' in self.request.POST:
+            instance.review_status = CONFIRMED_STATUS
+            instance.save()
         return super(ReportCouncilElectionView, self).form_valid(form)
 
 

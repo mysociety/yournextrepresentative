@@ -10,8 +10,12 @@ COUNCIL_TYPES = [
 ]
 
 
+UNCONFIRMED_STATUS = 'unconfirmed'
+CONFIRMED_STATUS = 'confirmed'
+REJECTED_STATUS = 'rejected'
+
 REPORTED_RESULT_STATUSES = (
-    ('unconfirmed', 'Unconfirmed'),
-    ('confirmed', 'Confirmed'),
-    ('rejected', 'Rejected'),
+    (UNCONFIRMED_STATUS, 'Unconfirmed'),
+    (CONFIRMED_STATUS, 'Confirmed'),
+    (REJECTED_STATUS, 'Rejected'),
 )
