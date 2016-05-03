@@ -10,6 +10,7 @@ class ElectionArea(models.Model):
     area_name = models.CharField(blank=True, max_length=255)
     geo_json = models.TextField(blank=True)
     winning_party = models.ForeignKey('PartyWithColour', null=True)
+    noc = models.BooleanField(default=False)
 
 
 class PartyWithColour(models.Model):

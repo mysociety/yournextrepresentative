@@ -40,11 +40,17 @@ class ReportCouncilElectionControlForm(forms.ModelForm):
         widget=forms.Select(attrs={
             'class': 'party-select',
         }),
+        required=False
     )
 
     def clean(self, **kwargs):
-        self.cleaned_data['controller'] = \
-            Organization.objects.get(pk=self.cleaned_data['controller'])
+        if not any(
+                (self.cleaned_data['controller'], self.cleaned_data['noc'])):
+            raise forms.ValidationError(
+                'Please select a party or check "No overall control"')
+        if self.cleaned_data.get('controller'):
+            self.cleaned_data['controller'] = \
+                Organization.objects.get(pk=self.cleaned_data['controller'])
         return self.cleaned_data
 
 
