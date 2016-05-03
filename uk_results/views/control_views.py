@@ -24,8 +24,9 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
     model = CouncilElection
 
     def get_object(self):
-        gss = self.kwargs.get('gss')
-        council_election = CouncilElection.objects.get(council__council_id=gss)
+        election_id = self.kwargs.get('election_id')
+        council_election = CouncilElection.objects.get(
+            election__slug=election_id)
         return council_election
 
 
@@ -45,7 +46,7 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
         Returns an instance of the form to be used in this view.
         """
         self.object = self.model.objects.get(
-            pk=self.kwargs['council_election']
+            election__slug=self.kwargs['election_id']
         )
 
         return ReportCouncilElectionControlForm(

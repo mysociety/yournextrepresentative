@@ -41,7 +41,7 @@ class CouncilElection(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('council-election-view', (), {'gss': self.council.council_id})
+        return ('council-election-view', (), {'election_id': self.election.slug})
 
 
 class CouncilElectionResultSet(BaseResultModel, ResultStatusMixin):

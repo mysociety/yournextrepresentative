@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+
 urlpatterns = [
     url(
         r'^$',
@@ -17,12 +18,12 @@ urlpatterns = [
         name='councils-with-elections'
     ),
     url(
-        r'^(?P<gss>[ENSW]\d{8})$',
+        r'^(?P<election_id>[^/]+)$',
         views.CouncilElectionView.as_view(),
         name='council-election-view'
     ),
     url(
-        r'^(?P<council_election>[^/]+)/report$',
+        r'^(?P<election_id>[^/]+)/report$',
         views.ReportCouncilElectionView.as_view(),
         name='report-council-election-view'
     ),
@@ -32,7 +33,7 @@ urlpatterns = [
         name='latest-control-view'
     ),
     url(
-        r'^review_control/(?P<pk>[\d]+)$',
+        r'^(?P<election_id>[^/]+)/review_control$',
         views.ConfirmControl.as_view(),
         name='review-control-view'
     ),
