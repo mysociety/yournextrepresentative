@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='queuedimage',
             name='decision',
-            field=models.CharField(default=b'undecided', max_length=32, choices=[(b'approved', b'Approved'), (b'rejected', b'Rejected'), (b'undecided', b'Undecided'), (b'ignore', b'Ignore')]),
+            field=models.CharField(default='undecided', max_length=32, choices=[('approved', 'Approved'), ('rejected', 'Rejected'), ('undecided', 'Undecided'), ('ignore', 'Ignore')]),
             preserve_default=True,
         ),
     ]

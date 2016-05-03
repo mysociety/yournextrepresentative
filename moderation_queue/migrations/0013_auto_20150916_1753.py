@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='queuedimage',
             name='why_allowed',
-            field=models.CharField(default=b'other', max_length=64, choices=[(b'public-domain', 'This photograph is free of any copyright restrictions'), (b'copyright-assigned', 'I own copyright of this photo and I assign the copyright to Democracy Club Limited in return for it being displayed on this site'), (b'profile-photo', "This is the candidate's public profile photo from social media (e.g. Twitter, Facebook) or their official campaign page"), (b'other', 'Other')]),
+            field=models.CharField(default='other', max_length=64, choices=[('public-domain', 'This photograph is free of any copyright restrictions'), ('copyright-assigned', 'I own copyright of this photo and I assign the copyright to Democracy Club Limited in return for it being displayed on this site'), ('profile-photo', "This is the candidate's public profile photo from social media (e.g. Twitter, Facebook) or their official campaign page"), ('other', 'Other')]),
         ),
     ]

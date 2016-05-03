@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
             name='ImageExtra',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('copyright', models.CharField(default=b'other', max_length=64, blank=True)),
+                ('copyright', models.CharField(default='other', max_length=64, blank=True)),
                 ('user_notes', models.TextField(blank=True)),
                 ('base', models.OneToOneField(related_name='extra', to='images.Image')),
                 ('md5sum', models.CharField(max_length=32, blank=True)),
