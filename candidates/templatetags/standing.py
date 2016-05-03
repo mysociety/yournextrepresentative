@@ -4,10 +4,13 @@ from slugify import slugify
 
 from django import template
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
 from popolo.models import Membership
+
+from uk_results.models import CandidateResult
 
 register = template.Library()
 
@@ -16,7 +19,15 @@ def post_in_election(person, election):
     # FIXME: this is inefficient, but similar to the previous
     # implementation.
     try:
-        candidacy = person.memberships.get(
+        candidacy = person.memberships.prefetch_related(
+            Prefetch(
+                'result',
+                CandidateResult.objects.select_related(
+                    'result_set',
+                    'result_set__post_result',
+                )
+            )
+        ).get(
             role=election.candidate_membership_role,
             extra__election=election
         )
@@ -41,6 +52,21 @@ def post_in_election(person, election):
         result += ' <span class="party">{0}</span>'.format(
             candidacy.on_behalf_of.name
         )
+        candidate_results = list(candidacy.result.all())
+        if candidate_results:
+            for candidate_result in candidate_results:
+                if candidate_result.result_set.post_result.confirmed:
+                    # Then we're OK to display this result:
+                    result += '<br>'
+                    if candidate_result.is_winner:
+                        result += '<span class="candidate-result-confirmed candidate-result-confirmed-elected">Elected!</span>'
+                    else:
+                        result += '<span class="candidate-result-confirmed candidate-result-confirmed-not-elected">Not elected</span>'
+                    result += ' <span class="vote-count">({0} votes)</span>'.format(
+                         candidate_result.num_ballots_reported
+                    )
+                    result += '<br>'
+
     else:
         if election in person.extra.not_standing.all():
             if election.current:
