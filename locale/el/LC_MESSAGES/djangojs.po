@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# [ɣʷufd̥], 2016
 # wfdd, 2016
 # [ɣʷufd̥], 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 14:53+0100\n"
+"POT-Creation-Date: 2016-05-03 12:52+0100\n"
 "PO-Revision-Date: 2016-04-15 16:32+0000\n"
 "Last-Translator: mySociety <transifex@mysociety.org>\n"
 "Language-Team: Greek (http://www.transifex.com/mysociety/yournextmp/language/el/)\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: candidates/static/js/constituency.js:53
+#: candidates/static/js/constituency.js:64
 #, javascript-format
 msgid "Are you sure that %s (%s) was elected in %s?"
 msgstr "Είσαι σίγουρος ότι ο/η %s (%s) εκλέχθηκε %s?"
