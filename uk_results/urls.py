@@ -17,7 +17,7 @@ urlpatterns = [
         name='councils-with-elections'
     ),
     url(
-        r'^(?P<pk>[\d]+)$',
+        r'^(?P<gss>[ENSW]\d{8})$',
         views.CouncilElectionView.as_view(),
         name='council-election-view'
     ),

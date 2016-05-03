@@ -22,6 +22,12 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
 class CouncilElectionView(BaseResultsViewMixin, DetailView):
     model = CouncilElection
 
+    def get_object(self):
+        gss = self.kwargs.get('gss')
+        council_election = CouncilElection.objects.get(council__council_id=gss)
+        return council_election
+
+
 
 class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
     model = CouncilElection

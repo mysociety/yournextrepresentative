@@ -22,7 +22,7 @@ def detectFaces(im):
     # from: http://pythonpath.wordpress.com/2012/05/08/pil-to-opencv-image/
     im = im.convert('L')
     cv_im = cv.CreateImageHeader(im.size, cv.IPL_DEPTH_8U, 1)
-    cv.SetData(cv_im, im.tostring(), im.size[0])
+    cv.SetData(cv_im, im.tobytes(), im.size[0])
 
     # variables
     min_size = (20, 20)
