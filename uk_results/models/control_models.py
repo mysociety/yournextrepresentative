@@ -33,9 +33,8 @@ class CouncilElection(models.Model):
     election = models.OneToOneField(Election)
     party_set = models.ForeignKey(PartySet)
     confirmed = models.BooleanField(default=False)
-
-    def controller(self):
-        return self.reported_results.all().confirmed().first()
+    controller_resultset = models.OneToOneField(
+        'CouncilElectionResultSet', null=True)
 
     # TODO: Past Control?
 
