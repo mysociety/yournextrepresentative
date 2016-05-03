@@ -55,17 +55,22 @@ class CouncilElectionResultSet(BaseResultModel, ResultStatusMixin):
         super(CouncilElectionResultSet, self).save()
         if self.review_status == "confirmed":
             self.council_election.confirmed = True
+            self.council_election.controller_resultset = self
             self.council_election.save()
             area = ElectionArea.objects.get(
                 area_gss=self.council_election.council.council_id,
                 election=self.council_election.election
             )
-            party_with_colour = PartyWithColour.objects.get_or_create(
-                party=self.controller,
-                defaults={
-                    "hex_value": "#FF0000",
-                }
-            )[0]
-            area.winning_party = party_with_colour
+            if self.noc:
+                area.noc = True
+            else:
+                party_with_colour = PartyWithColour.objects.get_or_create(
+                    party=self.controller,
+                    defaults={
+                        "hex_value": "#FF0000",
+                    }
+                )[0]
+                area.winning_party = party_with_colour
+
             area.save()
 

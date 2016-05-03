@@ -18,16 +18,20 @@
           </a>
       </td>
       <td>
-        {% if council_election.controller.controller %}
-          <span class="control_party_name" style="border-left:{{ council_election.controller.controller.partywithcolour.hex_value|default:"#AAA" }} 4px solid;padding-left:4px">
-            {{ council_election.controller.controller.name }}
+        {% if council_election.controller_resultset and not council_election.controller_resultset.noc  %}
+          <span class="control_party_name" style="border-left:{{ council_election.controller_resultset.controller.partywithcolour.hex_value|default:"#AAA" }} 4px solid;padding-left:4px">
+            {{ council_election.controller_resultset.controller.name }}
+          </span>
+        {% elif council_election.controller_resultset.noc %}
+          <span class="control_party_name" style="border-left:{{ council_election.controller_resultset.controller.partywithcolour.hex_value|default:"#AAA" }} 4px solid;padding-left:4px">
+            No overall control
           </span>
         {% else %}
-        {% if council_election.reported_results.all %}
-          Control not yet confirmed ({{ council_election.reported_results.count }} unconfirmed results)
-        {% else %}
-          No results reported yet
-        {% endif %}
+          {% if council_election.reported_results.all %}
+            Control not yet confirmed ({{ council_election.reported_results.count }} unconfirmed results)
+          {% else %}
+            No results reported yet
+          {% endif %}
         {% endif %}
       </td>
     </tr>

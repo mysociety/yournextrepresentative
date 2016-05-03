@@ -15,6 +15,8 @@ class PostResultManager(models.Manager):
 class PostResult(models.Model):
     post = models.ForeignKey('popolo.Post')
     confirmed = models.BooleanField(default=False)
+    confirmed_resultset = models.OneToOneField(
+        'ResultSet', null=True)
 
     objects = PostResultManager()
 
@@ -52,6 +54,7 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
         super(ResultSet, self).save()
         if self.review_status == "confirmed":
             self.post_result.confirmed = True
+            self.post_result.confirmed_resultset = self
             self.post_result.save()
 
 

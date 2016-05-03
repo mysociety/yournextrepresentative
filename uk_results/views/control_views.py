@@ -1,8 +1,10 @@
+from django.db.models import Prefetch
 from django.views.generic import (TemplateView, DetailView, FormView,
                                   ListView, UpdateView)
 
 from candidates.views.version_data import get_client_ip
 from candidates.models import LoggedAction
+from elections.models import Election
 
 from ..constants import CONFIRMED_STATUS
 from ..models import CouncilElection, CouncilElectionResultSet
@@ -17,7 +19,21 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(CouncilsWithElections, self).get_context_data(**kwargs)
         councils = CouncilElection.objects.all().order_by('council__name')
-        councils = councils.select_related('council', 'election')
+        councils = councils.select_related(
+            'council',
+            'election',
+            # 'reported_results',
+        )
+        councils = councils.prefetch_related(
+            Prefetch(
+                'reported_results',
+                CouncilElectionResultSet.objects.select_related(
+                    'council_election',
+                    'council_election__election',
+                    'council_election__council',
+                )
+            )
+        )
         context['council_elections'] = councils
 
         return context
@@ -28,10 +44,22 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
 
     def get_object(self):
         election_id = self.kwargs.get('election_id')
-        council_election = CouncilElection.objects.get(
-            election__slug=election_id)
+        council_election = CouncilElection.objects.select_related(
+            'election',
+            'council',
+        )
+        council_election = council_election.get(election__slug=election_id)
         return council_election
 
+    def get_context_data(self, **kwargs):
+        context = super(CouncilElectionView, self).get_context_data(**kwargs)
+        context['posts'] = self.object.election.posts.select_related(
+            'base',
+            'base__area',
+        ).prefetch_related(
+            'base__postresult_set__confirmed'
+        )
+        return context
 
 
 class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
@@ -70,6 +98,7 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
         )
         if 'report_and_confirm' in self.request.POST:
             instance.review_status = CONFIRMED_STATUS
+            instance.reviewed_by = self.request.user
             instance.save()
 
             LoggedAction.objects.create(

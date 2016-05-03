@@ -7,13 +7,17 @@
 {% block results_content %}
 
 {% if object.confirmed %}
-  <div class="panel" style="border-top:{{object.reported_results.all.confirmed.0.controller.partywithcolour.hex_value|default:"#AAA"}} 4px solid">
-    <h3>Controlled by {{ object.reported_results.all.confirmed.0.controller.name }}</h3>
-    <small>Source: {{ object.reported_results.confirmed.0.source }}</small>
+  <div class="panel" style="border-top:{{ object.controller_resultset.partywithcolour.hex_value|default:"#AAA"}} 4px solid">
+    {% if object.controller_resultset.noc %}
+    <h3>No overall control</h3>
+    {% else %}
+    <h3>Controlled by {{ object.controller.controller.name }}</h3>
+    {% endif %}
+    <small>Source: {{ object.controller_resultset.source }}</small>
   </div>
 {% else %}
 <p>
-  <a href="{% url 'report-council-election-view' election_id=object.election.slug %}" class="button">
+  {# <a href="{% url 'report-council-election-view' election_id=object.election.slug %}" class="button"> #}
     Report council control
   </a>
 </p>
@@ -29,14 +33,13 @@
 
 {# TODO Link this up #}
 <h3>Wards</h3>
-
 <div class="row">
   <div class="columns large-6">
     <ul>
-      {% for post in object.election.posts.all %}
+      {% for post in posts %}
         <li class="area_{{ post.base.area.identifier }}">
           {{ post }}
-          {% if post.base.postresult_set.confirmed %}
+          {% if post.confirmed %}
           <a class="button tiny success">View results</a></li>
           {% else %}
           <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a>
