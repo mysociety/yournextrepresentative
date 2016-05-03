@@ -334,6 +334,14 @@ class Command(BaseCommand):
                         postextra=pe,
                         election=election
                     )
+        for post_election_data in self.get_api_results('post_elections'):
+            with show_data_on_error('post_election_data', post_election_data):
+                pe_election = models.PostExtraElection.objects.get(
+                    postextra__slug=post_election_data['post']['id'],
+                    election__slug=post_election_data['election']['id'],
+                )
+                pe_election.winner_count = post_election_data['winner_count']
+                pe_election.save()
         extra_fields = {
             ef.key: ef for ef in models.ExtraField.objects.all()
         }
