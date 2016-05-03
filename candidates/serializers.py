@@ -289,6 +289,16 @@ class MembershipSerializer(serializers.HyperlinkedModelSerializer):
     election = MinimalElectionSerializer(source='extra.election')
 
 
+class PostElectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PostExtraElection
+        fields = ('id', 'url', 'post', 'election', 'winner_count')
+    post = MinimalPostExtraSerializer(
+        read_only=True, source='postextra'
+    )
+    election = MinimalElectionSerializer(read_only=True)
+
+
 class JSONSerializerField(serializers.Field):
     def to_representation(self, value):
         return json.loads(value)
