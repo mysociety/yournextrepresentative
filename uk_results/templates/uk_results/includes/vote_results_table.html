@@ -9,6 +9,9 @@
     <th>
       Votes
     </th>
+    <th>
+      Elected?
+    </th>
   </thead>
   <tbody>
   {% for result in results %}
@@ -18,7 +21,11 @@
         {{ result.membership.person.name }}
       </a>
     </td>
-    <td>{{ result.membership.on_behalf_of.name }}</td>
+    <td>
+      <span style="border-left:{{ result.membership.on_behalf_of.partywithcolour.hex_value|default:"#AAA"}} 4px solid;padding-left:0.5em">
+        {{ result.membership.on_behalf_of.name }}
+      </span>
+    </td>
     <td>
         {% if result.is_winner %}
         <strong>
@@ -26,6 +33,15 @@
         </strong>
         {% else %}
         {{ result.num_ballots_reported }}
+        {% endif %}
+    </td>
+    <td>
+        {% if result.is_winner %}
+        <strong>
+        {{ result.is_winner|yesno|title }}
+        </strong>
+        {% else %}
+        {{ result.is_winner|yesno|title }}
         {% endif %}
     </td>
   </tr>
@@ -40,7 +56,7 @@
     </td>
   </tr>
   <tr>
-    <th colspan=2>
+    <th colspan=3>
       <strong>Spoilt ballots</strong>
     </th>
     <td>

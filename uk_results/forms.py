@@ -132,12 +132,13 @@ class ResultSetForm(forms.ModelForm):
         instance.ip_address = get_client_ip(request)
         instance.save()
 
+
         winner_count = self.memberships[0][0]\
             .extra.election.postextraelection_set.filter(
                 postextra=self.memberships[0][0].post.extra)[0].winner_count
 
         winners = dict(sorted(
-            [(self[y].value(), x)
+            [(int(self[y].value()), x)
                 for x, y in self.memberships],
             reverse=True,
             key=lambda votes: votes[0]
@@ -146,7 +147,7 @@ class ResultSetForm(forms.ModelForm):
         for membership, field_name in self.memberships:
             instance.candidate_results.create(
                 membership=membership,
-                is_winner=bool(membership == winners.keys()),
+                is_winner=bool(membership in winners.values()),
                 num_ballots_reported=self[field_name].value(),
             )
 

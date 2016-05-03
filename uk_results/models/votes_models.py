@@ -75,7 +75,7 @@ class CandidateResult(BaseResultModel):
 
 
     class Meta:
-        ordering = ('num_ballots_reported',)
+        ordering = ('-num_ballots_reported',)
         unique_together = (
             ('result_set', 'membership'),
         )
