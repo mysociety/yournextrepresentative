@@ -4,7 +4,7 @@
 # 
 # Translators:
 # wfdd, 2016
-# wfdd, 2016
+# [ɣʷufd̥], 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: YourNextMP\n"
