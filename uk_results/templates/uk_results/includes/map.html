@@ -24,8 +24,8 @@
 
   var geojsonMarkerOptions = {
       radius: 1,
-      fillColor: "#999",
-      color: "#330000",
+      fillColor: "#EEE",
+      color: "#AAA",
       weight: 1,
       opacity: 1,
       fillOpacity: 0.8
@@ -53,11 +53,20 @@
     success: function(data) {
       Object.keys(data).forEach(function (key) {
 
-        var layer = new L.geoJson(data[key]);
+        var layer = new L.geoJson(
+          data[key]
+          {% if not parent %}
+          ,{
+            onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.election_name);
+            }}
+            {% endif %}
+        );
         var layer_style = jQuery.extend(true, {}, geojsonMarkerOptions)
         if (data[key].hex != undefined) {
-          console.log(data[key].hex)
           layer.hex = data[key].hex;
+          layer.election_name = data[key].election_name;
+          layer.href = data[key].href;
           layer_style['fillColor'] = data[key].hex
           layer_style['color'] = data[key].hex
           layer_style['fillOpacity'] = 1
@@ -67,41 +76,56 @@
         layer.GSSCode = key;
 
         {% if parent %}
-        el = $('[class*="' + key + '"]');
-        el.on("mouseover", function (e) {
-          var gss = e.target.className.substr(-9);
-          layer = gss_to_layer[gss];
-          layer.setStyle(polyHover);
-        });
-
-        el.on("mouseout", function (e) {
-          var gss = e.currentTarget.className.substr(-9);
-          Object.keys(gss_to_layer).forEach(function (key) {
-            gss_to_layer[key].setStyle(geojsonMarkerOptions);
-          });
-        });
-
-
-        layer.on("click", function (e) {
-            var gss = e.target.GSSCode;
-            url = $('[class*="' + gss + '"] a')[0]['href'];
-            window.location = url;
-        });
-
-        layer.on("mouseover", function (e) {
-            // change the style to the hover version
-            var gss = e.target.GSSCode;
-            el = $('[class$="' + gss + '"]');
-            el.addClass('highlight');
+          el = $('[class*="' + key + '"]');
+          el.on("mouseover", function (e) {
+            var gss = e.target.className.substr(-9);
+            layer = gss_to_layer[gss];
             layer.setStyle(polyHover);
-            });
+          });
 
-        layer.on("mouseout", function (e) {
-            var gss = e.target.GSSCode;
-            el = $('[class*="' + gss + '"]');
-            el.removeClass('highlight');
-            layer.setStyle(geojsonMarkerOptions);
-        });
+          el.on("mouseout", function (e) {
+            var gss = e.currentTarget.className.substr(-9);
+            Object.keys(gss_to_layer).forEach(function (key) {
+              gss_to_layer[key].setStyle(geojsonMarkerOptions);
+            });
+          });
+
+          layer.on("click", function (e) {
+              var gss = e.target.GSSCode;
+              url = $('[class*="' + gss + '"] a')[0]['href'];
+              window.location = url;
+          });
+
+          layer.on("mouseover", function (e) {
+              // change the style to the hover version
+              var gss = e.target.GSSCode;
+              el = $('[class$="' + gss + '"]');
+              el.addClass('highlight');
+              layer.setStyle(polyHover);
+              });
+
+          layer.on("mouseout", function (e) {
+              var gss = e.target.GSSCode;
+              el = $('[class*="' + gss + '"]');
+              el.removeClass('highlight');
+              layer.setStyle(geojsonMarkerOptions);
+          });
+        {% else %}
+
+          layer.on("mouseover", function (e) {
+              // change the style to the hover version
+              var gss = e.target.GSSCode;
+              el = $('[class$="' + gss + '"]');
+              el.addClass('highlight');
+              layer.setStyle(polyHover);
+              });
+
+          layer.on("mouseout", function (e) {
+              var gss = e.target.GSSCode;
+              el = $('[class*="' + gss + '"]');
+              el.removeClass('highlight');
+              layer.setStyle(geojsonMarkerOptions);
+          });
         {% endif %}
 
         gss_to_layer[key] = layer;

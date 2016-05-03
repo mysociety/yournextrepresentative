@@ -56,8 +56,6 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
         context['posts'] = self.object.election.posts.select_related(
             'base',
             'base__area',
-        ).prefetch_related(
-            'base__postresult_set__confirmed'
         )
         return context
 

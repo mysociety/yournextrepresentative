@@ -21,8 +21,14 @@ class MapAreaView(View):
         data = {}
         for area in ElectionArea.objects.filter(parent=parent):
             data[area.area_gss] = json.loads(area.geo_json)
+            data[area.area_gss]['election_name'] = "<a href='{}'>{}</a>".format(
+                area.election.slug,
+                area.election.name,
+            )
             if area.winning_party:
                 data[area.area_gss]['hex'] = area.winning_party.hex_value
+            if area.noc:
+                data[area.area_gss]['hex'] = "#AAA"
 
         return HttpResponse(
             json.dumps(data), content_type='application/json'
