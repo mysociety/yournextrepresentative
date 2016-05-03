@@ -18,7 +18,7 @@ urlpatterns = [
         name='councils-with-elections'
     ),
     url(
-        r'^(?P<election_id>[^/]+)$',
+        r'^(?P<election_id>.*\d\d\d\d-\d\d-\d\d)$',
         views.CouncilElectionView.as_view(),
         name='council-election-view'
     ),
@@ -33,7 +33,7 @@ urlpatterns = [
         name='latest-control-view'
     ),
     url(
-        r'^(?P<election_id>[^/]+)/review_control$',
+        r'^review_control/(?P<pk>[^/]+)$',
         views.ConfirmControl.as_view(),
         name='review-control-view'
     ),
