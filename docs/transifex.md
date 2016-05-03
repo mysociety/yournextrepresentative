@@ -56,7 +56,7 @@ added to the project with:
 You also need to compile the Javascript files:
 
 ```
-/manage.py makemessages -a --no-wrap -d djangojs \
+./manage.py makemessages -a --no-wrap -d djangojs \
     --ignore=data \
     --ignore=candidates/static/foundation \
     --ignore=candidates/static/select2 \
