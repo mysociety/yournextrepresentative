@@ -23,7 +23,12 @@ programmatically via a RESTful API.
   <h3>{% trans "All Candidates" %}</h3>
 
   <p>{% blocktrans trimmed %}
-    This CSV file contains details of all candidates in the database
+    This CSV file contains details of all candidates in the
+    database.{% endblocktrans %}
+    {% blocktrans trimmed %}(Please note that if the candidate
+    is standing in multiple elections, currently this
+    file <a href="https://github.com/mysociety/yournextrepresentative/issues/891">only
+    shows details of one of their candidacies.</a>)
   {% endblocktrans %}</p>
 
   <ul>
