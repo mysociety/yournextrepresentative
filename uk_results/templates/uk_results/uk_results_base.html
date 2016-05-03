@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if show_results_feature %}
 <nav class="top-bar" data-topbar role="navigation">
   <section class="top-bar-section">
     <ul class="left">
@@ -11,6 +12,7 @@
     </ul>
   </section>
 </nav>
+{% endif %}
 
 {% block results_title %}
 <h1>Results</h1>
