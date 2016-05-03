@@ -73,8 +73,6 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
         return super(PostReportVotesView, self).form_valid(form)
 
 
-
-
 class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
     template_name = "uk_results/posts/review_reported_votes.html"
     queryset = ResultSet.objects.all()
@@ -96,12 +94,8 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
             user=self.request.user,
             action_type='confirm-council-result',
             ip_address=get_client_ip(self.request),
-<<<<<<< HEAD
             source=form['review_source'].value(),
             post=form.post,
-=======
-            source=form['review_source'].value()
->>>>>>> 544c3e8... Add result recording to logged actions
         )
         return super(ReviewPostReportView, self).form_valid(form)
 

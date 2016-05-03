@@ -79,7 +79,6 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
                 source="Confirmed when reporting",
             )
 
-
         return super(ReportCouncilElectionView, self).form_valid(form)
 
 
