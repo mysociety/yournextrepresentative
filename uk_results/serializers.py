@@ -31,7 +31,7 @@ class ResultSetSerializer(serializers.HyperlinkedModelSerializer):
             'ip_address',
             'num_turnout_reported', 'num_spoilt_ballots',
             # 'post_result',
-            'user', 'user_id',
+            'user', 'user_id', 'review_status',
         )
     # post_result = PostResultSerializer()
     user = serializers.ReadOnlyField(source='user.username')
