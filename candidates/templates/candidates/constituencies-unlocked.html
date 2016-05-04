@@ -14,13 +14,19 @@
 {% block content %}
 
 <h2>{% trans "Still Unlocked Constituencies" %}</h2>
-<h4>{% blocktrans %}{{ total_left }} left to do ({{ percent_done }}% done){% endblocktrans %}</h4>
-<ul>
-  {% for c in unlocked %}
-    <li>
-     <a href="{% url 'constituency' election=election post_id=c.id ignored_slug=c.name|slugify %}">{{ c.name }}</a>
-    </li>
-  {% endfor %}
-</ul>
+{% if total_constituencies %}
+  <h4>{% blocktrans %}{{ total_left }} left to do ({{ percent_done }}% done){% endblocktrans %}</h4>
+  <ul>
+    {% for c in unlocked %}
+      <li>
+       <a href="{% url 'constituency' election=election post_id=c.id ignored_slug=c.name|slugify %}">{{ c.name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <h4>{% blocktrans trimmed with election_name=election_data.name %}
+    No constituencies found in {{ election_name }}
+  {% endblocktrans %}</h4>
+{% endif %}
 
 {% endblock %}
