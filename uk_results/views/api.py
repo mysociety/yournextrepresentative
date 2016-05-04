@@ -68,12 +68,12 @@ class CouncilElectionSerializer(serializers.ModelSerializer):
                 )
 
 
-class IsConfirmedFilter(django_filters.FilterSet):
+class CouncilElectionIsConfirmedFilter(django_filters.FilterSet):
     confirmed = django_filters.BooleanFilter(widget=BooleanWidget())
 
     class Meta:
         model = CouncilElection
-        fields = ['confirmed']
+        fields = ['confirmed', 'review_status']
 
 class CouncilElectionViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_value_regex="(?!\.json$)[^/]+"
@@ -82,8 +82,7 @@ class CouncilElectionViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'election__slug'
 
     filter_backends = (filters.DjangoFilterBackend,)
-    # filter_fields = ('confirmed',)
-    filter_class = IsConfirmedFilter
+    filter_class = CouncilElectionIsConfirmedFilter
 
 
 class CandidateResultViewSet(viewsets.ModelViewSet):
@@ -100,6 +99,14 @@ class CandidateResultViewSet(viewsets.ModelViewSet):
     pagination_class = ResultsSetPagination
 
 
+class ResultSetIsConfirmedFilter(django_filters.FilterSet):
+    confirmed = django_filters.BooleanFilter(widget=BooleanWidget())
+
+    class Meta:
+        model = ResultSet
+        fields = ['review_status']
+
+
 class ResultSetViewSet(viewsets.ModelViewSet):
     queryset = ResultSet.objects \
         .select_related(
@@ -109,6 +116,10 @@ class ResultSetViewSet(viewsets.ModelViewSet):
         .order_by('id')
     serializer_class = ResultSetSerializer
     pagination_class = ResultsSetPagination
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_class = ResultSetIsConfirmedFilter
+
 
 
 class PostResultViewSet(viewsets.ModelViewSet):
