@@ -43,76 +43,82 @@ class AreasView(TemplateView):
         context['posts'] = []
         any_area_found = False
         no_data_areas = []
+        posts_seen = set()
         for area_type_code, area_id in self.types_and_areas:
-            try:
-                area_extra = AreaExtra.objects \
-                    .select_related('base', 'type') \
-                    .prefetch_related('base__posts') \
-                    .get(base__identifier=area_id)
+            area_extras = AreaExtra.objects \
+                .select_related('base', 'type') \
+                .prefetch_related('base__posts') \
+                .filter(base__identifier=area_id)
+            if area_extras.exists():
                 any_area_found = True
-            except AreaExtra.DoesNotExist:
+            else:
                 continue
 
             if area_type_code == "NODATA":
-                no_data_areas.append(area_extra)
+                no_data_areas.append(area_extras.first())
                 continue
 
-            area = area_extra.base
-            all_area_names.add(area.name)
-            for post in area.posts.all():
-                post_extra = post.extra
-                try:
-                    election = post_extra.elections.get(current=True)
-                except Election.DoesNotExist:
-                    continue
-                locked = post_extra.candidates_locked
-                extra_qs = MembershipExtra.objects.select_related('election')
-                current_candidacies, _ = split_candidacies(
-                    election,
-                    post.memberships.prefetch_related(
-                        Prefetch('extra', queryset=extra_qs)
-                    ).select_related(
-                        'person', 'person__extra', 'on_behalf_of',
-                        'on_behalf_of__extra', 'organization'
-                    ).all()
-                )
-                current_candidacies = group_candidates_by_party(
-                    election,
-                    current_candidacies,
-                )
-                post_context = {
-                    'election': election.slug,
-                    'election_data': election,
-                    'post_data': {
-                        'id': post.extra.slug,
-                        'label': post.label,
-                    },
-                    'candidates_locked': locked,
-                    'lock_form': ToggleLockForm(
-                        initial={
-                            'post_id': post.extra.slug,
-                            'lock': not locked
+            for area_extra in area_extras:
+                area = area_extra.base
+                all_area_names.add(area.name)
+                for post in area.posts.all():
+                    post_extra = post.extra
+                    try:
+                        election = post_extra.elections.get(current=True)
+                    except Election.DoesNotExist:
+                        continue
+                    if post.id in posts_seen:
+                        continue
+                    else:
+                        posts_seen.add(post.id)
+                    locked = post_extra.candidates_locked
+                    extra_qs = MembershipExtra.objects.select_related('election')
+                    current_candidacies, _ = split_candidacies(
+                        election,
+                        post.memberships.prefetch_related(
+                            Prefetch('extra', queryset=extra_qs)
+                        ).select_related(
+                            'person', 'person__extra', 'on_behalf_of',
+                            'on_behalf_of__extra', 'organization'
+                        ).all()
+                    )
+                    current_candidacies = group_candidates_by_party(
+                        election,
+                        current_candidacies,
+                    )
+                    post_context = {
+                        'election': election.slug,
+                        'election_data': election,
+                        'post_data': {
+                            'id': post.extra.slug,
+                            'label': post.label,
                         },
-                    ),
-                    'candidate_list_edits_allowed':
-                    get_edits_allowed(self.request.user, locked),
-                    'candidacies': current_candidacies,
-                    'add_candidate_form': NewPersonForm(
-                        election=election.slug,
-                        initial={
-                            ('constituency_' + election.slug): post_extra.slug,
-                            ('standing_' + election.slug): 'standing',
-                        },
-                        hidden_post_widget=True,
-                    ),
-                }
+                        'candidates_locked': locked,
+                        'lock_form': ToggleLockForm(
+                            initial={
+                                'post_id': post.extra.slug,
+                                'lock': not locked
+                            },
+                        ),
+                        'candidate_list_edits_allowed':
+                        get_edits_allowed(self.request.user, locked),
+                        'candidacies': current_candidacies,
+                        'add_candidate_form': NewPersonForm(
+                            election=election.slug,
+                            initial={
+                                ('constituency_' + election.slug): post_extra.slug,
+                                ('standing_' + election.slug): 'standing',
+                            },
+                            hidden_post_widget=True,
+                        ),
+                    }
 
-                post_context = get_person_form_fields(
-                    post_context,
-                    post_context['add_candidate_form']
-                )
+                    post_context = get_person_form_fields(
+                        post_context,
+                        post_context['add_candidate_form']
+                    )
 
-                context['posts'].append(post_context)
+                    context['posts'].append(post_context)
 
         context['no_data_areas'] = no_data_areas
 
