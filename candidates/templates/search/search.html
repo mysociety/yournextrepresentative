@@ -12,8 +12,9 @@
     </form>
 
     {% if looks_like_postcode %}
-    <h3>Looking for a postcode?</h3>
-    <p>Try going to the <a href="{% url 'lookup-postcode' %}?postcode={{ form.q.value }}">page of elections for {{ form.q.value }}</a></p>
+    <h3>Looking information in your postcode?</h3>
+    <p>Try going to <a href="https://whocanivotefor.co.uk/elections/{{ form.q.value }}/">
+        'Who Can I Vote For' for information on your candidates and elections</a></p>
     {% endif %}
 
     {% if object_list %}
