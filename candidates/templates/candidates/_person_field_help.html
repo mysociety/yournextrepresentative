@@ -3,6 +3,7 @@
     {% if highlight_field == 'facebook_page_url' %}Facebook page{% endif %}
     {% if highlight_field == 'email' %}email address{% endif %}
     {% if highlight_field == 'twitter_username' %}Twitter page{% endif %}
+    {% if highlight_field == 'homepage_url' %}web page{% endif %}
   </h3>
   <p>
     Searching for
@@ -18,6 +19,10 @@
     {% endif %}
     {% if highlight_field == 'twitter_username' %}
     <a href="https://www.google.co.uk/search?q=%22{{ person.name }}%22+twitter" target="_blank">
+      “{{ person.name }} twitter”</a>
+    {% endif %}
+    {% if highlight_field == 'homepage_url' %}
+    <a href="https://www.google.co.uk/search?q=%22{{ person.name }}%22+web site" target="_blank">
       “{{ person.name }} twitter”</a>
     {% endif %}
      works surprisingly often.</p>

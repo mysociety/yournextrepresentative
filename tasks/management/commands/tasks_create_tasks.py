@@ -7,6 +7,7 @@ from tasks.models import PersonTask
 
 class Command(BaseCommand):
     FIELD_WEIGHT = {
+        'homepage_url': 30,
         'email': 20,
         'twitter_username': 15,
         'facebook_page_url': 15,
