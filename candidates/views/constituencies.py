@@ -321,7 +321,10 @@ class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
             context[k].sort(key=lambda c: c['name'])
         context['total_constituencies'] = total_constituencies
         context['total_left'] = total_constituencies - total_locked
-        context['percent_done'] = (100 * total_locked) // total_constituencies
+        if total_constituencies > 0:
+            context['percent_done'] = (100 * total_locked) // total_constituencies
+        else:
+            context['percent_done'] = 0
         return context
 
 class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
@@ -512,7 +515,10 @@ class ConstituenciesDeclaredListView(ElectionMixin, TemplateView):
         context['constituencies'] = constituencies
         context['total_constituencies'] = total_constituencies
         context['total_left'] = total_constituencies - total_declared
-        context['percent_done'] = (100 * total_declared) // total_constituencies
+        if total_constituencies > 0:
+            context['percent_done'] = (100 * total_declared) // total_constituencies
+        else:
+            context['percent_done'] = 0
         return context
 
 
