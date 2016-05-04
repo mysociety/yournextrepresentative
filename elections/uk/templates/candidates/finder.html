@@ -62,6 +62,7 @@
       {% if person_task.task_field == 'facebook_page_url' %}Facebook page?{% endif %}
       {% if person_task.task_field == 'email' %}email address?{% endif %}
       {% if person_task.task_field == 'twitter_username' %}Twitter page?{% endif %}
+      {% if person_task.task_field == 'homepage_url' %}web site?{% endif %}
     </h4>
     <p><a href="{% url 'person-update' person_task.person.pk %}?highlight_field={{ person_task.task_field }}" class="button">Start the search</a></p>
 
