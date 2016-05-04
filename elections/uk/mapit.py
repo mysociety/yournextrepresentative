@@ -97,7 +97,7 @@ def get_areas_from_postcode(original_postcode):
         return cached_result
     url = urljoin(settings.MAPIT_BASE_URL,
                   '/postcode/{0}'.format(urlquote(postcode)))
-    r = requests.get(url)
+    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
     if r.status_code == 200:
         mapit_result = r.json()
         result = get_known_area_types(mapit_result['areas'])
@@ -129,7 +129,7 @@ def get_areas_from_coords(coords):
     if cached_result:
         return cached_result
 
-    r = requests.get(url)
+    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
     if r.status_code == 200:
         mapit_result = r.json()
         result = get_known_area_types(mapit_result)
@@ -163,7 +163,7 @@ def get_wmc_from_postcode(original_postcode):
         return cached_result
     url = urljoin(settings.MAPIT_BASE_URL,
                   '/postcode/{0}'.format(urlquote(postcode)))
-    r = requests.get(url)
+    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
     if r.status_code == 200:
         mapit_result = r.json()
         wmc = mapit_result.get('shortcuts', {}).get('WMC')
@@ -200,7 +200,7 @@ class MapitLookup(dict):
     def load_data(self, code):
         data = requests.get(urljoin(self.mapit_base_url, "areas/{code}".format(
             mapit_base_url=self.mapit_base_url, code=code
-        ))).json()
+        )), headers={'User-Agent': 'scraper/sym', }).json()
         self.update(data)
 
     def __getitem__(self, key):
@@ -214,7 +214,7 @@ class MapitLookup(dict):
                 ))
                 url = urljoin(self.mapit_base_url,
                               "area/{key}".format(key=key))
-                req = requests.get(url)
+                req = requests.get(url, headers={'User-Agent': 'scraper/sym', })
                 if req.status_code == 404 or \
                         req.json()[key].get('code', 200) == 404:
                     raise MapItAreaNotFoundException

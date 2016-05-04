@@ -82,7 +82,7 @@ in the Election objects in the app.
             if election.area_generation:
                 all_areas_url = all_areas_url + '&generation=' + election.area_generation
 
-            mapit_result = requests.get(all_areas_url)
+            mapit_result = requests.get(all_areas_url, headers={'User-Agent': 'scraper/sym', })
             mapit_json = mapit_result.json()
 
             for_post_role = election.for_post_role
