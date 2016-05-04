@@ -73,7 +73,7 @@ class CouncilElectionIsConfirmedFilter(django_filters.FilterSet):
 
     class Meta:
         model = CouncilElection
-        fields = ['confirmed', 'review_status']
+        fields = ['confirmed',]
 
 class CouncilElectionViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_value_regex="(?!\.json$)[^/]+"
