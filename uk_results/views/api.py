@@ -99,14 +99,6 @@ class CandidateResultViewSet(viewsets.ModelViewSet):
     pagination_class = ResultsSetPagination
 
 
-class ResultSetIsConfirmedFilter(django_filters.FilterSet):
-    confirmed = django_filters.BooleanFilter(widget=BooleanWidget())
-
-    class Meta:
-        model = ResultSet
-        fields = ['review_status']
-
-
 class ResultSetViewSet(viewsets.ModelViewSet):
     queryset = ResultSet.objects \
         .select_related(
@@ -118,7 +110,7 @@ class ResultSetViewSet(viewsets.ModelViewSet):
     pagination_class = ResultsSetPagination
 
     filter_backends = (filters.DjangoFilterBackend,)
-    filter_class = ResultSetIsConfirmedFilter
+    filter_fields = ['review_status',]
 
 
 
