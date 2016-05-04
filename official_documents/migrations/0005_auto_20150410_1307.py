@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='officialdocument',
             name='source_url',
-            field=models.URLField(help_text=b'The page that links to this document', max_length=1000, blank=True),
+            field=models.URLField(help_text='The page that links to this document', max_length=1000, blank=True),
             preserve_default=True,
         ),
     ]

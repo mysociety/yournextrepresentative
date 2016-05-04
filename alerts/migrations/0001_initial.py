@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('target_object_id', models.CharField(max_length=255, null=True, blank=True)),
-                ('action', models.CharField(max_length=100, choices=[(b'created', b'Created'), (b'updated', b'Updated'), (b'deleted', b'Deleted'), (b'image_update', b'Images'), (b'all', b'All')])),
-                ('frequency', models.CharField(max_length=100, choices=[(b'hourly', b'Hourly'), (b'daily', b'Daily')])),
+                ('action', models.CharField(max_length=100, choices=[('created', 'Created'), ('updated', 'Updated'), ('deleted', 'Deleted'), ('image_update', 'Images'), ('all', 'All')])),
+                ('frequency', models.CharField(max_length=100, choices=[('hourly', 'Hourly'), ('daily', 'Daily')])),
                 ('last_sent', models.DateTimeField()),
                 ('enabled', models.BooleanField(default=True)),
                 ('target_content_type', models.ForeignKey(related_name='alert_target', blank=True, to='contenttypes.ContentType', null=True)),

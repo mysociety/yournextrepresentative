@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('key', models.CharField(max_length=256)),
-                ('type', models.CharField(max_length=64, choices=[(b'line', b'A single line of text'), (b'longer-text', b'One or more paragraphs of text'), (b'url', b'A URL')])),
+                ('type', models.CharField(max_length=64, choices=[('line', 'A single line of text'), ('longer-text', 'One or more paragraphs of text'), ('url', 'A URL')])),
                 ('label', models.CharField(max_length=1024)),
             ],
         ),

@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='extrafield',
             name='type',
-            field=models.CharField(max_length=64, choices=[(b'line', b'A single line of text'), (b'longer-text', b'One or more paragraphs of text'), (b'url', b'A URL'), (b'yesno', b"A Yes/No/Don't know dropdown")]),
+            field=models.CharField(max_length=64, choices=[('line', 'A single line of text'), ('longer-text', 'One or more paragraphs of text'), ('url', 'A URL'), ('yesno', "A Yes/No/Don't know dropdown")]),
         ),
     ]

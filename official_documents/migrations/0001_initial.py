@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
                 ('uploaded_file', models.FileField(max_length=800, upload_to=official_documents.models.document_file_name)),
                 ('mapit_id', models.CharField(max_length=50)),
-                ('source_url', models.URLField(help_text=b'The page that links to this document', blank=True)),
+                ('source_url', models.URLField(help_text='The page that links to this document', blank=True)),
             ],
             options={
                 'ordering': ('-modified', '-created'),

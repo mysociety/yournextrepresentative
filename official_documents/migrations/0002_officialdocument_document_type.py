@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='officialdocument',
             name='document_type',
-            field=models.CharField(default='Nomination paper', max_length=100, choices=[(b'nomination_paper', b'Nomination paper')]),
+            field=models.CharField(default='Nomination paper', max_length=100, choices=[('nomination_paper', 'Nomination paper')]),
             preserve_default=False,
         ),
     ]
