@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.views.generic import RedirectView
 
+from elections.uk.lib import is_valid_postcode
+
 
 class ConstituenciesRedirect(RedirectView):
 
@@ -60,3 +62,14 @@ class OfficialDocumentsRedirect(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return '/upload_document/upload/election/2015/post/' + kwargs['rest_of_path']
+
+
+class WhoPostcodeRedirect(RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        postcode = self.request.GET.get('postcode', '')
+        if is_valid_postcode(postcode):
+            return "https://whocanivotefor.co.uk/elections/{}".format(postcode)
+        else:
+            return "/?who_postcode={}&postcode_invalid=1".format(postcode)
+

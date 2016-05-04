@@ -59,4 +59,7 @@ urlpatterns = [
     url(r'^upload_document/upload/(?P<rest_of_path>[^/]*/)$',
         views.OfficialDocumentsRedirect.as_view()
     ),
+    url(r'^postcode_redirect/$',
+        views.WhoPostcodeRedirect.as_view()
+    ),
 ]
