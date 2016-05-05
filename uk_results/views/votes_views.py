@@ -51,24 +51,29 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
 
     def form_valid(self, form):
         instance = form.save(self.request)
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='record-council-result',
-            ip_address=get_client_ip(self.request),
-            source=form['source'].value(),
-            post=form.post,
-        )
+        user = None
+        if self.request.user.is_authenticated():
+            user = self.request.user
+            LoggedAction.objects.create(
+                user=user,
+                action_type='record-council-result',
+                ip_address=get_client_ip(self.request),
+                source=form['source'].value(),
+                post=form.post,
+            )
 
         if 'report_and_confirm' in self.request.POST:
             instance.review_status = CONFIRMED_STATUS
             instance.save()
-            LoggedAction.objects.create(
-                user=self.request.user,
-                action_type='confirm-council-result',
-                ip_address=get_client_ip(self.request),
-                source="Confirmed when reporting",
-                post=form.post,
-            )
+            if self.request.user.is_authenticated():
+                user = self.request.user
+                LoggedAction.objects.create(
+                    user=user,
+                    action_type='confirm-council-result',
+                    ip_address=get_client_ip(self.request),
+                    source="Confirmed when reporting",
+                    post=form.post,
+                )
 
         return super(PostReportVotesView, self).form_valid(form)
 
@@ -90,13 +95,15 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='confirm-council-result',
-            ip_address=get_client_ip(self.request),
-            source=form['review_source'].value(),
-            post=form.post,
-        )
+        if self.request.user.is_authenticated():
+            user = self.request.user
+            LoggedAction.objects.create(
+                user=user,
+                action_type='confirm-council-result',
+                ip_address=get_client_ip(self.request),
+                source=form['review_source'].value(),
+                post=form.post,
+            )
         return super(ReviewPostReportView, self).form_valid(form)
 
 
