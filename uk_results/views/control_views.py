@@ -56,7 +56,7 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
         context['posts'] = self.object.election.posts.select_related(
             'base',
             'base__area',
-        )
+        ).order_by('base__label')
         return context
 
 
