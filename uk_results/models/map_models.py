@@ -16,3 +16,9 @@ class ElectionArea(models.Model):
 class PartyWithColour(models.Model):
     hex_value = models.CharField(blank=True, max_length=100)
     party = models.OneToOneField('popolo.Organization', primary_key=True)
+
+    def __str__(self):
+        return u"{} ({})" % (
+            self.party,
+            self.hex_value,
+        )
