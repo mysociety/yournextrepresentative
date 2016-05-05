@@ -4,9 +4,13 @@ from __future__ import unicode_literals
 from collections import OrderedDict
 
 from django import forms
+from django.db import transaction
 
 from popolo.models import Organization
-from candidates.views.version_data import get_client_ip
+from candidates.views.version_data import get_change_metadata, get_client_ip
+from candidates.models import LoggedAction
+
+from results.models import ResultEvent
 
 from models import CouncilElectionResultSet, ResultSet
 
@@ -124,14 +128,63 @@ class ResultSetForm(forms.ModelForm):
         self.fields = fields
         self.fields.update(existing_fields)
 
+
+    def mark_candidates_as_winner(self, request, instance):
+        for candidate_result in instance.candidate_results.all():
+            membership = candidate_result.membership
+            post = instance.post_result.post
+            election = membership.extra.election
+
+            source = instance.review_source
+            if not source:
+                source = instance.source
+
+            change_metadata = get_change_metadata(
+                request, source
+            )
+
+
+            if candidate_result.is_winner:
+                membership.extra.elected = True
+                membership.extra.save()
+
+
+                ResultEvent.objects.create(
+                    election=election,
+                    winner=membership.person,
+                    winner_person_name=membership.person.name,
+                    post_id=post.extra.slug,
+                    post_name=post.label,
+                    winner_party_id=membership.on_behalf_of.extra.slug,
+                    source=source,
+                    user=instance.reviewed_by,
+                )
+
+                membership.person.extra.record_version(change_metadata)
+                membership.person.save()
+
+                LoggedAction.objects.create(
+                    user=instance.reviewed_by,
+                    action_type='set-candidate-elected',
+                    popit_person_new_version=change_metadata['version_id'],
+                    person=membership.person,
+                    source=source,
+                )
+            else:
+                change_metadata['information_source'] = \
+                    'Setting as "not elected" by implication'
+                membership.person.extra.record_version(change_metadata)
+                membership.extra.elected = False
+                membership.extra.save()
+
+
     def save(self, request):
         instance = super(ResultSetForm, self).save(commit=False)
         instance.post_result = self.post_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
         instance.ip_address = get_client_ip(request)
-        instance.save()
-
+        instance.save(request)
 
         winner_count = self.memberships[0][0]\
             .extra.election.postextraelection_set.filter(
@@ -150,5 +203,8 @@ class ResultSetForm(forms.ModelForm):
                 is_winner=bool(membership in winners.values()),
                 num_ballots_reported=self[field_name].value(),
             )
+
+        with transaction.atomic():
+            self.mark_candidates_as_winner(request, instance)
 
         return instance

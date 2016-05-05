@@ -72,4 +72,3 @@ class CouncilElectionResultSet(BaseResultModel, ResultStatusMixin):
                 area.winning_party = party_with_colour
 
             area.save()
-

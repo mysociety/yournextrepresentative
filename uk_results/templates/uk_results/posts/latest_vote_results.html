@@ -8,7 +8,7 @@
 <dl class="sub-nav">
   <dt>Filter:</dt>
   <dd{% if not request.GET.status %} class="active"{%endif%}>
-    <a href="{% url 'latest-control-view' %}">All</a>
+    <a href="{% url 'latest-votes-view' %}">All</a>
   </dd>
 
   <dd{% if request.GET.status == "confirmed" %} class="active"{%endif%}>
@@ -21,7 +21,13 @@
 
 </dl>
 {% for result in object_list %}
-  {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
+  {% if result.post_result.confirmed %}
+    {% if result.review_status == 'confirmed' %}
+      {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
+    {% endif %}
+  {% else %}
+    {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
+  {% endif %}
 {% empty %}
 <p>There are no results
   {% if request.GET.status == "confirmed" %}

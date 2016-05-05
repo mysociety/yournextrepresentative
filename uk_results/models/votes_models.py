@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
 
-import datetime
-
 from django.db import models
+from django.db import transaction
 
 from .base import BaseResultModel, ResultStatusMixin
 
@@ -51,10 +50,12 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
         )
 
     def save(self, *args, **kwargs):
-        super(ResultSet, self).save()
+        super(ResultSet, self).save(*args, **kwargs)
         if self.review_status == "confirmed":
             self.post_result.confirmed = True
             self.post_result.confirmed_resultset = self
+            if not self.review_source:
+                self.review_source = self.source
             self.post_result.save()
 
 

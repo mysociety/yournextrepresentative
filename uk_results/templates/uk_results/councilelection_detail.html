@@ -11,7 +11,7 @@
     {% if object.controller_resultset.noc %}
     <h3>No overall control</h3>
     {% else %}
-    <h3>Controlled by {{ object.controller.controller.name }}</h3>
+    <h3>Controlled by {{ object.controller_resultset.controller.name }}</h3>
     {% endif %}
     <small>Source: {{ object.controller_resultset.source }}</small>
   </div>
@@ -35,17 +35,23 @@
 <h3>Wards</h3>
 <div class="row">
   <div class="columns large-6">
-    <ul>
-      {% for post in posts %}
-        <li class="area_{{ post.base.area.identifier }}">
-          {{ post }}
-          {% if post.confirmed %}
-          <a class="button tiny success">View results</a></li>
-          {% else %}
+    {% for post in posts %}
+      {# <li class="area_{{ post.base.area.identifier }}"> #}
+      {#   {{ post }} #}
+      {#   {% if post.confirmed %} #}
+      {#   <a class="button tiny success">View results</a></li> #}
+      {#   {% else %} #}
+      {#   <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a> #}
+      {#   {% endif %} #}
+      {% if post.base.postresult_set.all.0.confirmed_resultset %}
+      {% include "uk_results/includes/vote_result_item.html" with result=post.base.postresult_set.all.0.confirmed_resultset results=result.candidate_results.all show_heading=True show_post_name=True %}
+      {% else %}
+        <div>
+          <h3>{{ post }}</h3>
           <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a>
-          {% endif %}
-      {% endfor %}
-    </ul>
+        </div>
+      {% endif %}
+    {% endfor %}
 
   </div>
   <div class="columns large-6">
