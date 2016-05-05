@@ -181,6 +181,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context['elected'] = group_candidates_by_party(
             self.election_data,
             elected,
+            show_all=True,
         )
 
         context['unelected'] = group_candidates_by_party(
