@@ -20,6 +20,43 @@
 {# <h1>FINISHED!</h1> #}
 {# {% include "uk_results/includes/home_pages/post-election-finished.html" %} #}
 
+<h3>Use the data!</h3>
+<p>The data for results is <a href="https://candidates.democracyclub.org.uk/help/api">
+  available for use under our standard terms (CC BY-SA)</a>.</p>
+
+<h4>Atom feed</h4>
+<p>You can subscribe to a feed of winning candidates here:</p>
+<p><a href="https://candidates.democracyclub.org.uk/results/all.atom" class="button">Atom Feed</a></p>
+<p><a href="https://candidates.democracyclub.org.uk/results/all-basic.atom" class="button">Atom Feed (simplified)</a></p>
+
+<h4>Council control API</h4>
+<p>We list all Council control results reported to us.</p>
+<p>Unfiltered, this endpoint contains all results reported by any member of the public.  Use with care!</p>
+<p>You can filter by results confirmed by LGiU and Democracy Club by adding
+  <code>?review_status=confirmed</code></p>
+<p>
+  <a href="https://candidates.democracyclub.org.uk/api/v0.9/council_elections/?review_status=confirmed" class="button success">
+    All confirmed results</a>
+</p>
+<p>
+  <a href="https://candidates.democracyclub.org.uk/api/v0.9/council_elections/" class="button warning">
+    All results, including unconfirmed (use with care)</a>
+</p>
+
+
+<h4>Votes API</h4>
+<p>We list all votes reported to us.</p>
+<p>Unfiltered, this endpoint contains all results reported by any member of the public.  Use with care!</p>
+<p>You can filter by results confirmed by LGiU and Democracy Club by adding
+  <code>?review_status=confirmed</code></p>
+<p>
+  <a href="https://candidates.democracyclub.org.uk/api/v0.9/result_sets/?review_status=confirmed" class="button success">
+    All confirmed results</a>
+</p>
+<p>
+  <a href="https://candidates.democracyclub.org.uk/api/v0.9/result_sets/" class="button warning">
+    All results, including unconfirmed (use with care)</a>
+</p>
 
 
 
