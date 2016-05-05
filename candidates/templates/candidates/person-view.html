@@ -20,7 +20,7 @@
     <meta property="og:type" content="article" />
     {% if person.extra.primary_image %}
       {% thumbnail person.extra.primary_image "x80" as im %}
-        <meta property="og:image" content="{{ im.url }}" />
+        <meta property="og:image" content="https://candidates.democracyclub.org.uk{{ im.url }}" />
       {% endthumbnail %}
     {% elif person.gender|lower == 'female' %}
       <meta property="og:image" content="{{ 'candidates/img/blank-woman.png'|static_image_path:request }}"/>
