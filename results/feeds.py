@@ -91,14 +91,17 @@ class ResultEventsFeed(BasicResultEventsFeed):
     description = _("A feed of results from the UK 2015 General Election (with extra data)")
 
     def item_extra_kwargs(self, o):
+        user_id = None
+        if o.user:
+            user_id = o.user.id
+
         return {
             'post_id': o.post_id,
             'winner_person_id': o.winner.id,
             'winner_person_name': o.winner.name,
             'winner_party_id': o.winner_party_id,
             'winner_party_name': o.winner_party_name,
-            'user_id': o.user.id,
-            'user_id': o.user.id,
+            'user_id': user_id,
             'post_name': o.post_name,
             'information_source': o.source,
             'image_url_template': o.proxy_image_url_template,
