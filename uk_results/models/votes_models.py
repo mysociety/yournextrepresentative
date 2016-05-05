@@ -31,8 +31,8 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
     )
 
     # num_turnout_calculated = models.IntegerField()
-    num_turnout_reported = models.IntegerField()
-    num_spoilt_ballots = models.IntegerField()
+    num_turnout_reported = models.IntegerField(null=True)
+    num_spoilt_ballots = models.IntegerField(null=True)
 
     user = models.ForeignKey(
         'auth.User',

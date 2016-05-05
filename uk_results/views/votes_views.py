@@ -85,6 +85,7 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
         kwargs = self.get_form_kwargs()
         kwargs['initial'].update({'reviewed_by': self.request.user})
         return ReviewVotesForm(
+            self.request,
             review_result=self.object,
             **kwargs
         )
