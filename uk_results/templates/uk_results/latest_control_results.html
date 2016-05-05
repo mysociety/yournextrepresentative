@@ -22,7 +22,7 @@
 </dl>
 
 {% for result in object_list %}
-  {% include "uk_results/includes/control_result_item.html" with show_council_name=True%}
+  {% include "uk_results/includes/control_result_item.html" with show_council_name=True show_heading=True %}
 {% empty %}
 <p>There are no results
   {% if request.GET.status == "confirmed" %}

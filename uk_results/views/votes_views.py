@@ -20,7 +20,6 @@ class PostResultsView(BaseResultsViewMixin, DetailView):
         return PostResult.objects.get_or_create(post=post)[0]
 
 
-
 class PostReportVotesView(BaseResultsViewMixin, FormView):
     model = PostResult
     template_name = "uk_results/report_council_election_control.html"
