@@ -88,12 +88,15 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
 
     def form_valid(self, form):
         instance = form.save()
-        LoggedAction.objects.create(
-            user=self.request.user,
-            action_type='record-council-control',
-            ip_address=get_client_ip(self.request),
-            source=form['source'].value()
-        )
+        user = None
+        if self.request.user.is_authenticated():
+            user = self.request.user
+            LoggedAction.objects.create(
+                user=user,
+                action_type='record-council-control',
+                ip_address=get_client_ip(self.request),
+                source=form['source'].value()
+            )
         if 'report_and_confirm' in self.request.POST:
             instance.review_status = CONFIRMED_STATUS
             instance.reviewed_by = self.request.user
