@@ -103,22 +103,6 @@
               el.removeClass('highlight');
               layer.setStyle(geojsonMarkerOptions);
           });
-        {% else %}
-
-          layer.on("mouseover", function (e) {
-              // change the style to the hover version
-              var gss = e.target.GSSCode;
-              el = $('[class$="' + gss + '"]');
-              el.addClass('highlight');
-              layer.setStyle(polyHover);
-              });
-
-          layer.on("mouseout", function (e) {
-              var gss = e.target.GSSCode;
-              el = $('[class*="' + gss + '"]');
-              el.removeClass('highlight');
-              layer.setStyle(geojsonMarkerOptions);
-          });
         {% endif %}
 
         gss_to_layer[key] = layer;
