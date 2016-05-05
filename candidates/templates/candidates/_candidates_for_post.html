@@ -58,6 +58,10 @@
 
 <div id="candidates-for-post-{{ post_data.id }}" class="candidates-for-post">
 
+  {# Use the post label here, since multiple posts may be used on a page #}
+  {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
+  {% url 'constituencies' election=election_data.slug as election_posts_url %}
+
   {% if user_can_lock %}
     <form method="post" action="{% url 'constituency-lock' election=election %}">
       {% csrf_token %}
@@ -84,78 +88,44 @@
     </form>
   {% endif %}
 
+  {% if has_elected %}
+  <div class="candidates__elected">
+      <h3>{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
+        Elected candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+        in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
+      </h3>
+
+    {% with party_lists_in_use=elected.party_lists_in_use parties_and_people=elected.parties_and_people %}
+
+      {% for party, people in parties_and_people %}
+        {% include 'candidates/_party_list.html' %}
+      {% endfor %}
+    {% endwith %}
+  </div>
+  {% endif %}
+
   <div class="candidates__known">
 
-    {# Use the post label here, since multiple posts may be used on a page #}
-    {% url 'constituency' election=election post_id=post_data.id ignored_slug=post_data.label|slugify as post_url %}
-    {% url 'constituencies' election=election_data.slug as election_posts_url %}
-    <h3>{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
+    <h3>
+        {% if has_elected %}
+        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
+      Unelected candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+      in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
       Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>
       in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
+      {% endif %}
     </h3>
 
-    {% with party_lists_in_use=candidacies.party_lists_in_use parties_and_people=candidacies.parties_and_people %}
+    {% with party_lists_in_use=unelected.party_lists_in_use parties_and_people=unelected.parties_and_people %}
 
       {% if parties_and_people and candidate_list_edits_allowed %}
         <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
       {% endif %}
 
       {% for party, people in parties_and_people %}
-
-        <div class="party-group {% if party_lists_in_use %}party-list{% else %}no-party-list{% endif %}">
-
-          {% if party_lists_in_use %}
-            <h4 class="party-list-header">{{ party.name }}</h4>
-            <p class="party-list-description">
-              {% if party.truncated %}
-                {% trans "Showing the top candidates." %} <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See all {{ count }} members on the party list{% endblocktrans %} &rarr;</a>
-              {% else %}
-                <a href="{% url 'party-for-post' election=election post_id=post_data.id organization_id=party.id %}">{% blocktrans with count=party.total_count %}See just this party list{% endblocktrans %} &rarr;</a>
-              {% endif %}
-          {% endif %}
-
-          {% for position_in_list, c, candidate_elected in people %}
-            {% if forloop.first %}
-              <ul class="candidate-list">
-            {% endif %}
-
-              <li class="candidates-list__person{% if user_can_record_results %} hover-highlighting{% endif %}{% if candidate_elected %} candidates-list__person__winner{% endif %}">
-                {% if candidate_elected %}
-                  <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
-                {% endif %}
-
-                {% include 'candidates/_person_in_list.html' with election=election %}
-                {% if user.is_authenticated %}
-                <p>
-                  {% if candidate_list_edits_allowed %}
-                    <a class="button tiny js-toggle-source-confirmation not-standing">{% trans "Not actually standing?" %}</a>
-                  {% endif %}
-                  <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
-                </p>
-                {% if candidate_list_edits_allowed %}
-                  {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
-                {% endif %}
-                {% endif %}
-                {% if DATE_TODAY >= election_data.election_date %}
-                  {% if user_can_record_results and show_confirm_result and not candidate_elected %}
-                    <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
-                      {% csrf_token %}
-                      <input type="hidden" name="person_id" value="{{ c.id }}">
-                      <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
-                      <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
-                    </form>
-                  {% endif %}
-                {% endif %}
-              </li>
-
-            {% if forloop.last %}
-              </ul>
-            {% endif %}
-
-          {% endfor %} {# end of 'for position_in_list, c, candidate_elected in people' #}
-
-        </div>
-
+        {% include 'candidates/_party_list.html' %}
       {% empty %}
         <div class="no-candidates row">
           <p class="medium-8 columns">{% blocktrans trimmed with post_label=post_data.label election_name=election_data.name %}

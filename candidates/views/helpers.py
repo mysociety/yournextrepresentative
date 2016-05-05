@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
@@ -171,6 +172,19 @@ def split_candidacies(election_data, memberships):
 
     return current_candidadacies, past_candidadacies
 
+def split_by_elected(election_data, memberships):
+    elected_candidates = set()
+    unelected_candidates = set()
+    for membership in memberships:
+        if membership.extra.elected:
+            elected_candidates.add(membership)
+            if not settings.HOIST_ELECTED_CANDIDATES:
+                unelected_candidates.add(membership)
+        else:
+            unelected_candidates.add(membership)
+
+    return elected_candidates, unelected_candidates
+
 def order_candidates_by_name_no_grouping(election_data, candidacies):
     result = [
         (
@@ -191,7 +205,7 @@ def order_candidates_by_name_no_grouping(election_data, candidacies):
         'parties_and_people': result
     }
 
-def group_candidates_by_party(election_data, candidacies):
+def group_candidates_by_party(election_data, candidacies, show_all=False):
     """Take a list of candidacies and return the people grouped by party
 
     This returns a tuple of the party_list boolean and a list of
@@ -214,7 +228,10 @@ def group_candidates_by_party(election_data, candidacies):
     """
 
     party_list = election_data.party_lists_in_use
-    max_people = election_data.default_party_list_members_to_show
+    if show_all:
+        max_people = None
+    else:
+        max_people = election_data.default_party_list_members_to_show
 
     if not party_list:
         return order_candidates_by_name_no_grouping(election_data, candidacies)

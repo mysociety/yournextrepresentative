@@ -52,7 +52,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             re.search(
                 r'''(?msx)
   <h1>Areas:\s+Dulwich\s+and\s+West\s+Norwood</h1>.*
-  <h3>Known\s+candidates\s+for\s*
+  <h3>.*Known\s+candidates\s+for\s*
   <a\s+href="/election/2015/post/65808/
   member-of-parliament-for-dulwich-and-west-norwood">
   Member\s+of\s+Parliament\s+for\s+Dulwich\s+and\s+West\s+Norwood</a>\s+
