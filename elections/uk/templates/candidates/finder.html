@@ -42,6 +42,10 @@
 
 <div class="finder__forms">
   <div class="finder__forms__container">
+    <h2>Election Results</h2>
+    <h3>Enter results as they come in</h3>
+    <p><a href="{% url "results-home"%}" class="button">Get started</a></p>
+    <hr>
     <h2>Find information on your candidates</h2>
     <h4>
       <label for="who_postcode" {% if request.GET.postcode_invalid %} class="error"{% endif %}>Enter your postcode</label>

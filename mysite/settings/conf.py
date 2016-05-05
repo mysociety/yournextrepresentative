@@ -486,5 +486,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     result['INSTALLED_APPS'].extend(
         getattr(elections_module, 'INSTALLED_APPS', [])
     )
+    result['RESULTS_FEATURE_ACTIVE'] = True
 
     return result

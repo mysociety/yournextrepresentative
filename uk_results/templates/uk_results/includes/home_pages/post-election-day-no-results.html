@@ -1,26 +1,57 @@
 <div class="row">
   <div class="columns large-12">
-    <h3>Help us record the details of every vote count in the local elections.</h3>
+    <h3>Help us record the details of every vote cast in the local elections.</h3>
   </div>
 </div>
 <div class="row">
   <div class="columns large-6">
-    <h4>The polls have closed!</h4>
+    <h3>The polls have closed!</h3>
     <p>Now the wait begins…</p>
+
+    <h3>Report results</h3>
     <p>Anyone can add a result, which will go into our unverified database.</p>
     <p>Results with official sources are likely to help us most of all.</p>
-
     <p>A team of people at LGiU and Democracy Club will work through these suggested results to verify them.</p>
+    <p>At the moment, we're only covering local elections.  If you know about other results,
+      <a href="https://twitter.com/democlub">please tweet us</a></p>
 
-    <p>You can get the data (unverified and verified counts) at democracyclub.org.uk/data</p>
+    <h4>1. Council Control</h4>
+    <p>Has a council announced the controlling party?  Tell us about it!</p>
+    <ol>
+      <li>Find a source URL for the information</li>
+      <li>
+        <a href="{% url "councils-with-elections" %}">
+          Navigate to the council's page on our site
+        </a>
+      </li>
+      <li>Press 'Report council control', enter the party and your source</li>
+      <li>Go and hunt for more results!</li>
+    </ol>
 
-    <p>We expect to have final verified data by the beginning of next week.</p>
+    <h4>2. Votes cast</h4>
+    <p>Who won?  Can you enter the votes cast per person?</p>
+    <ol>
+      <li>Find a source URL for the information</li>
+      <li>
+        <a href="{% url "councils-with-elections" %}">
+          Navigate to the council's page on our site
+        </a>
+      </li>
+      <li>Find the ward you have results for</li>
+      <li>Press 'Report votes'</li>
+      <li>Enter the results, checking them carefully.  Please enter a good source for this information</li>
+      <li>Go and hunt for more results!</li>
+    </ol>
 
-    <h4>Use the data</h4>
-    <h5>Council control</h5>
-    <p>[[LINK TO API PAGES]]</p>
-    <h5>Candidates level results</h5>
-    <p>[[LINK TO API PAGES]]</p>
+    {# <p>You can get the data (unverified and verified counts) at democracyclub.org.uk/data</p> #}
+    {#  #}
+    {# <p>We expect to have final verified data by the beginning of next week.</p> #}
+    {#  #}
+    {# <h4>Use the data</h4> #}
+    {# <h5>Council control</h5> #}
+    {# <p>[[LINK TO API PAGES]]</p> #}
+    {# <h5>Candidates level results</h5> #}
+    {# <p>[[LINK TO API PAGES]]</p> #}
 
   </div>
   <div class="columns large-6">

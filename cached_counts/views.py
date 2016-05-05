@@ -48,8 +48,8 @@ def get_prior_election_data(
             standing_again_same_party += 1
     standing_again_different_party = \
         standing_again - standing_again_same_party
-    if all((float(total_current), total_prior)):
-        100 * float(total_current) / total_prior
+    if total_prior:
+        percentage = 100 * float(total_current) / total_prior
     else:
         percentage = 0
 

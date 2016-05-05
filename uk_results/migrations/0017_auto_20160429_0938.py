@@ -38,12 +38,14 @@ def add_party_colours(apps, schema_editor):
     PartyWithColour = apps.get_model("uk_results", "PartyWithColour")
     Organization = apps.get_model("popolo", "Organization")
     for party_id, party_info in PARTY_COLOURS.items():
-        party = Organization.objects.get(extra__slug=party_id)
-        PartyWithColour.objects.get_or_create(
-            party=party,
-            defaults={"hex_value": party_info['hex']}
-        )
-
+        try:
+            party = Organization.objects.get(extra__slug=party_id)
+            PartyWithColour.objects.get_or_create(
+                party=party,
+                defaults={"hex_value": party_info['hex']}
+            )
+        except:
+            pass
 
 
 class Migration(migrations.Migration):
