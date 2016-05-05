@@ -18,7 +18,7 @@ class PartyWithColour(models.Model):
     party = models.OneToOneField('popolo.Organization', primary_key=True)
 
     def __str__(self):
-        return u"{} ({})" % (
+        return u"{} ({})".format(
             self.party,
             self.hex_value,
         )
