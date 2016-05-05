@@ -21,7 +21,8 @@ class MapAreaView(View):
         data = {}
         for area in ElectionArea.objects.filter(parent=parent):
             data[area.area_gss] = json.loads(area.geo_json)
-            data[area.area_gss]['election_name'] = "<a href='{}'>{}</a>".format(
+            data[area.area_gss]['election_name'] = "<a href='{}{}'>{}</a>".format(
+                "https://candidates.democracyclub.org.uk/uk_results/",
                 area.election.slug,
                 area.election.name,
             )

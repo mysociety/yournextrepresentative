@@ -1,26 +1,19 @@
 {% load staticfiles %}
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js"></script>
-
-
 <style>
   #mapid { height: 400px; }
 </style>
 <div id="mapid"></div>
-
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js"></script>
 <script>
-  var mymap = L.map('mapid').setView([55.16209, -4.41393], 6);
+  var mymap = L.map('mapid');
+  mymap.fitBounds([[50.261, -6.218], [55.553, 3.779]]);
 
-  // create the tile layer with correct attribution
-  // var osmUrl='http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png';
-  // var osmUrl='http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png';
   var osmUrl='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png';
   var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
   var osm = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 20, attribution: osmAttrib});
   mymap.addLayer(osm);
-
 
   var geojsonMarkerOptions = {
       radius: 1,
@@ -134,8 +127,6 @@
 
         {% if parent %}
         mymap.fitBounds(district_boundaries.getBounds());
-        {% else %}
-        mymap.fitBounds([[50.261, -6.218], [55.553, 3.779]]);
         {% endif %}
       });
     }
