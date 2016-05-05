@@ -444,6 +444,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'mysite.account_adapter.NoNewUsersAccountAdapter'
     result['CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST'] = \
         conf.get('CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST', 20)
+    result['HOIST_ELECTED_CANDIDATES'] = \
+        conf.get('HOIST_ELECTED_CANDIDATES', True)
     if tests:
         result['NOSE_ARGS'] = [
             '--nocapture',

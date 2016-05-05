@@ -85,6 +85,13 @@ NEW_ACCOUNTS_ALLOWED: true
 # If this is set to false, then no edits of people are allowed.
 EDITS_ALLOWED: true
 
+# When candidates are marked as being elected, they're shown in a
+# special 'elected' section on post and area pages.  If this option is
+# false, they will shown both in that elected section and a complete
+# list of candidates below.  If it is true, then it's as if the
+# elected candidates have been hoisted up to the elected section.
+HOIST_ELECTED_CANDIDATES: true
+
 # This should be set to true unless you're using the old version of
 # Google Analytics.
 USE_UNIVERSAL_ANALYTICS: true
