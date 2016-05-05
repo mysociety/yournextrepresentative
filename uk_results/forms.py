@@ -13,6 +13,7 @@ from candidates.models import LoggedAction
 from results.models import ResultEvent
 
 from models import CouncilElectionResultSet, ResultSet
+from .constants import CONFIRMED_STATUS
 
 
 class ReportCouncilElectionControlForm(forms.ModelForm):
@@ -204,7 +205,8 @@ class ResultSetForm(forms.ModelForm):
                 num_ballots_reported=self[field_name].value(),
             )
 
-        with transaction.atomic():
-            self.mark_candidates_as_winner(request, instance)
+        if instance.review_status == CONFIRMED_STATUS:
+            with transaction.atomic():
+                self.mark_candidates_as_winner(request, instance)
 
         return instance
