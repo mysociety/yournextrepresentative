@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.views.decorators.cache import cache_page
 
 from . import views
 
@@ -68,7 +69,7 @@ urlpatterns = [
     # Map Views
     url(
         r'^map/data.json$',
-        views.MapAreaView.as_view(),
+        cache_page(60*60)(views.MapAreaView.as_view()),
         name='map-data-view'
     ),
 ]
