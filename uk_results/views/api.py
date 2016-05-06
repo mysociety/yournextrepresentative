@@ -60,7 +60,7 @@ class CouncilElectionSerializer(serializers.ModelSerializer):
 
     def get_confirmed_controlling_party(self, obj):
         confirmed = obj.reported_results.all().confirmed()
-        if confirmed:
+        if confirmed and confirmed.first().controller:
             return OrganizationExtraSerializer(
                 context={'request': self.context['request']}
                 ).to_representation(
