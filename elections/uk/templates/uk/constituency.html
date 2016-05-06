@@ -6,6 +6,7 @@
 {# Basically, we can only support FPTP voting systems #}
 {% if 'local' in election %}
   {% if show_results_feature %}
+     {% if post_obj.postresult_set.confirmed %}
       {% if post_obj.postresult_set.all.0 %}
       <section>
         <h3>Results</h3>
@@ -20,6 +21,7 @@
         Report results for {{post_data.label}}
       </a>
       {% endif %}
+  {% endif %}
   {% endif %}
 {% endif %}
 
