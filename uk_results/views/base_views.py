@@ -15,7 +15,7 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
 
 class MapAreaView(View):
     def get(self, request, *args, **kwargs):
-        filter_kwargs = {}
+        filter_kwargs = {'parent': None}
 
         if request.GET.get('parent'):
             filter_kwargs['parent'] = ElectionArea.objects.get(
@@ -23,7 +23,6 @@ class MapAreaView(View):
 
         if request.GET.get('only'):
             filter_kwargs['election__slug'] = request.GET['only']
-            filter_kwargs['parent'] = None
 
         data = {}
 
