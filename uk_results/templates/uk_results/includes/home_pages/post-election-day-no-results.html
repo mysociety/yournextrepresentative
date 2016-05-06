@@ -5,8 +5,11 @@
 </div>
 <div class="row">
   <div class="columns large-6">
-    <h3>The polls have closed!</h3>
-    <p>Now the wait begins…</p>
+    <h3>{{ council_election_percent }}% of council controls have been verified</h3>
+    <div class="radius progress success large-12" role="progressbar" aria-valuenow="{{ council_confirmed }}" aria-valuemin="0" aria-valuemax="{{ council_total }}">
+      <span class="meter" style="width: {{ council_election_percent }}%"></span>
+    </div>
+
 
     <h3>Report results</h3>
     <p>Anyone can add a result, which will go into our unverified database.</p>

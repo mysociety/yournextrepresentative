@@ -9,6 +9,20 @@ from .base import BaseResultsViewMixin
 class ResultsHomeView(BaseResultsViewMixin, TemplateView):
     template_name = "uk_results/home.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(ResultsHomeView, self).get_context_data(**kwargs)
+        from uk_results.models import CouncilElection
+        context['council_total'] = CouncilElection.objects.all().count()
+        context['council_confirmed'] = CouncilElection.objects.filter(
+            confirmed=True).count()
+
+        context['council_election_percent'] = round(
+            float(context['council_confirmed']) /
+            float(context['council_total'])
+            * 100)
+
+        return context
+
     def test_func(self, user):
         return True
 
