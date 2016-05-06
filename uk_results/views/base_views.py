@@ -27,8 +27,7 @@ class MapAreaView(View):
 
         data = {}
 
-        for area in ElectionArea.objects.filter(
-                **filter_kwargs).distinct('area_gss'):
+        for area in ElectionArea.objects.filter(**filter_kwargs):
             data[area.area_gss] = json.loads(area.geo_json)
             data[area.area_gss]['election_name'] = "<a href='{}{}'>{}</a>".format(
                 "https://candidates.democracyclub.org.uk/uk_results/",
