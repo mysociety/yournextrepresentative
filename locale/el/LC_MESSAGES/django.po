@@ -613,7 +613,7 @@ msgid "[Quick update from the constituency page]"
 msgstr "[Γρήγορη ενημέρωση από τη σελίδα της εκλογικής περιφέρειας]"
 
 #: candidates/templates/candidates/_candidates_for_post.html:140
-msgid "This candidate was elected!"
+msgid "Mark candidate as elected"
 msgstr "Αυτός/ή ο/η υποψήφιος/α εκλέχθηκε!"
 
 #: candidates/templates/candidates/_candidates_for_post.html:155

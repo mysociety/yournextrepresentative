@@ -89,7 +89,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="person_id" value="{{ c.id }}">
                         <input type="hidden" name="source" value="{% trans "[Quick update from the constituency page]" %}">
-                        <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
+                        <input type="submit" class="button" value="{% trans "Mark candidate as elected" %}">
                       </form>
                     {% endif %}
                   {% endif %}

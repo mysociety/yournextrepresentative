@@ -58,7 +58,7 @@ class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertIn(
-            'This candidate was elected!',
+            'Mark candidate as elected',
             response.text,
         )
         record_url = reverse(
