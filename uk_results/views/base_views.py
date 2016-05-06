@@ -15,11 +15,20 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
 
 class MapAreaView(View):
     def get(self, request, *args, **kwargs):
-        parent = None
+        filter_kwargs = {}
+
         if request.GET.get('parent'):
-            parent = ElectionArea.objects.get(area_gss=request.GET['parent'])
+            filter_kwargs['parent'] = ElectionArea.objects.get(
+                area_gss=request.GET['parent'])
+
+        if request.GET.get('only'):
+            filter_kwargs['election__slug'] = request.GET['only']
+            filter_kwargs['parent'] = None
+
         data = {}
-        for area in ElectionArea.objects.filter(parent=parent):
+
+        for area in ElectionArea.objects.filter(
+                **filter_kwargs).distinct('area_gss'):
             data[area.area_gss] = json.loads(area.geo_json)
             data[area.area_gss]['election_name'] = "<a href='{}{}'>{}</a>".format(
                 "https://candidates.democracyclub.org.uk/uk_results/",

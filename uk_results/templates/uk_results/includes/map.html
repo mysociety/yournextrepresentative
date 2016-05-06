@@ -1,13 +1,12 @@
 {% load staticfiles %}
-
 <style>
-  #mapid { height: 400px; }
+  #{{ map_el_id|default:"mapid" }} { height: 400px; }
 </style>
-<div id="mapid"></div>
+<div id="{{ map_el_id|default:"mapid" }}"></div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-rc.1/leaflet.js"></script>
 <script>
-  var mymap = L.map('mapid');
+  var mymap = L.map('{{ map_el_id|default:"mapid" }}');
   mymap.fitBounds([[50.261, -6.218], [55.553, 3.779]]);
 
   var osmUrl='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png';
@@ -40,6 +39,8 @@
     dataType: "json",
     {% if parent %}
     url: "/uk_results/map/data.json?parent={{ parent }}",
+    {% elif only %}
+    url: "/uk_results/map/data.json?only={{ only }}",
     {% else %}
     url: "/uk_results/map/data.json",
     {% endif %}
@@ -110,7 +111,7 @@
         layer.addTo(mymap);
         district_boundaries.addLayer(layer)
 
-        {% if parent %}
+        {% if parent or only %}
         mymap.fitBounds(district_boundaries.getBounds());
         {% endif %}
       });
