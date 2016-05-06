@@ -7,7 +7,7 @@
 {% block results_content %}
 
 {% if object.confirmed %}
-  <div class="panel" style="border-top:{{ object.controller_resultset.partywithcolour.hex_value|default:"#AAA"}} 4px solid">
+  <div class="panel" style="border-top:{{ object.controller_resultset.controller.partywithcolour.hex_value|default:"#AAA"}} 4px solid">
     {% if object.controller_resultset.noc %}
     <h3>No overall control</h3>
     {% else %}
