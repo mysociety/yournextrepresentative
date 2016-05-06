@@ -46,6 +46,12 @@
     {% include "uk_results/includes/map.html" %}
     <h3>Enter results as they come in</h3>
     <p><a href="{% url "results-home"%}" class="button">Get started</a></p>
+
+    <h3>{{ council_election_percent }}% of council controls have been verified</h3>
+    <div class="radius progress success large-12" role="progressbar" aria-valuenow="{{ council_confirmed }}" aria-valuemin="0" aria-valuemax="{{ council_total }}">
+      <span class="meter" style="width: {{ council_election_percent }}%"></span>
+    </div>
+
     <hr>
     <h2>Find information on your candidates</h2>
     <h4>

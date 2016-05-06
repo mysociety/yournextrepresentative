@@ -61,6 +61,18 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['election_data'] = Election.objects.current().by_date().last()
         context['hide_search_form'] = True
 
+        from uk_results.models import CouncilElection
+        context['council_total'] = CouncilElection.objects.all().count()
+        context['council_confirmed'] = CouncilElection.objects.filter(
+            confirmed=True).count()
+
+        context['council_election_percent'] = round(
+            float(context['council_confirmed']) /
+            float(context['council_total'])
+            * 100)
+
+
+
         task_count = PersonTask.objects.count()
         if task_count > 0:
             random_offset = random.randrange(min(50, task_count))
