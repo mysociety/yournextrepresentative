@@ -611,7 +611,7 @@ msgid "[Quick update from the constituency page]"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:140
-msgid "This candidate was elected!"
+msgid "Mark candidate as elected"
 msgstr ""
 
 #: candidates/templates/candidates/_candidates_for_post.html:155

@@ -35,7 +35,7 @@ class TestWasElectedButtons(TestUserMixin, UK2015ExamplesMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertNotIn(
-            '<input type="submit" class="button" value="This candidate was elected!">',
+            '<input type="submit" class="button" value="Mark candidate as elected">',
             response,
         )
 
@@ -46,7 +46,7 @@ class TestWasElectedButtons(TestUserMixin, UK2015ExamplesMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertIn(
-            '<input type="submit" class="button" value="This candidate was elected!">',
+            '<input type="submit" class="button" value="Mark candidate as elected">',
             response,
         )
 
@@ -57,6 +57,6 @@ class TestWasElectedButtons(TestUserMixin, UK2015ExamplesMixin, WebTest):
             user=self.user_who_can_record_results,
         )
         self.assertIn(
-            '<input type="submit" class="button" value="This candidate was elected!">',
+            '<input type="submit" class="button" value="Mark candidate as elected">',
             response,
         )
