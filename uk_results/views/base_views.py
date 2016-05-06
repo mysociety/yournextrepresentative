@@ -21,6 +21,24 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
             float(context['council_total'])
             * 100)
 
+
+        from candidates.models import PostExtra
+        from uk_results.models import PostResult
+        context['votes_total'] = PostExtra.objects.filter(
+            postextraelection__election__slug__contains="local").count()
+        context['votes_confirmed'] = PostResult.objects.filter(
+            confirmed=True).count()
+
+        if float(context['votes_confirmed']):
+            context['votes_percent'] = round(
+                float(context['votes_confirmed']) /
+                float(context['votes_total'])
+                * 100)
+        else:
+            context['votes_percent'] = 0
+
+
+
         return context
 
     def test_func(self, user):
