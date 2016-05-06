@@ -9,7 +9,7 @@
       {% if post_obj.postresult_set.all.0 %}
       <section>
         <h3>Results</h3>
-        {% with post_obj.postresult_set.all.0.result_sets.confirmed.0 as result %}
+        {% with post_obj.postresult_set.all.0.result_sets.all.confirmed.0 as result %}
           {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
         {% endwith %}
       </section>
