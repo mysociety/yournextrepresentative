@@ -6,16 +6,16 @@
 {# Basically, we can only support FPTP voting systems #}
 {% if 'local' in election %}
   {% if show_results_feature %}
-      {% if post_obj.postresult_set.confirmed %}
+      {% if post_obj.postresult_set.all.confirmed %}
       <section>
         <h3>Results</h3>
-        {% with post_obj.postresult_set.confirmed.0.result_sets.confirmed.0 as result %}
+        {% with post_obj.postresult_set.all.confirmed.0.result_sets.confirmed.0 as result %}
           {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
         {% endwith %}
       </section>
       {% endif %}
 
-      {% if not post_obj.postresult_set.confirmed %}
+      {% if not post_obj.postresult_set.all.confirmed %}
       <a href="{% url "report-post-votes-view" post_data.id %}" class="button">
         Report results for {{post_data.label}}
       </a>
