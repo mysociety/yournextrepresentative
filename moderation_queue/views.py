@@ -346,6 +346,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 popit_person_new_version='',
                 person=person,
                 source=update_message,
+                note=form.cleaned_data['rejection_reason'],
             )
             retry_upload_link = self.request.build_absolute_uri(
                 reverse(
