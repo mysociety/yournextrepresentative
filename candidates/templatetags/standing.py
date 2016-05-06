@@ -41,6 +41,13 @@ def post_in_election(person, election):
         result += ' <span class="party">{0}</span>'.format(
             candidacy.on_behalf_of.name
         )
+
+        if candidacy.extra.party_list_position:
+            result = u'<div title="{0}" aria-label="{0}" class="person-position">{1}</div>{2}'.format(
+                _(u'Party list position'),
+                candidacy.extra.party_list_position,
+                result
+            )
     else:
         if election in person.extra.not_standing.all():
             if election.current:
