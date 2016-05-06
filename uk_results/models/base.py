@@ -39,10 +39,13 @@ class BaseResultSetManager(models.Manager):
 class BaseResultModel(TimeStampedModel):
     class Meta:
         abstract = True
+        get_latest_by = "modified"
 
     source = models.TextField(null=True)
 
     objects = BaseResultSetManager()
+
+
 
 
 class ResultStatusMixin(models.Model):
