@@ -69,7 +69,7 @@ urlpatterns = [
     # Map Views
     url(
         r'^map/data.json$',
-        cache_page(60*60)(views.MapAreaView.as_view()),
+        cache_page(60)(views.MapAreaView.as_view()),
         name='map-data-view'
     ),
 ]
