@@ -121,4 +121,11 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
                 queryset = queryset.unconfirmed()
             if status == "rejected":
                 queryset = queryset.rejected()
+        queryset = queryset.select_related('post_result',)
+        queryset = queryset.select_related('post_result__post',)
+        queryset = queryset.select_related('post_result__post__area',)
+        queryset = queryset.prefetch_related(
+            'candidate_results__membership__person',)
+        queryset = queryset.prefetch_related(
+            'candidate_results__membership__on_behalf_of__partywithcolour',)
         return queryset
