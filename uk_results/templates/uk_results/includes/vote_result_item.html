@@ -21,7 +21,7 @@
     {% endif %}
   {% endif %}
   <blockquote>
-    {{ result.source }}
+    {{ result.source|urlize }}
   </blockquote>
   {% include "uk_results/includes/vote_results_table.html" with result=result results=result.candidate_results.all %}
 
