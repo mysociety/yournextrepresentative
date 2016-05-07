@@ -132,4 +132,6 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
                 queryset = queryset.unconfirmed()
             if status == "rejected":
                 queryset = queryset.rejected()
+        queryset = queryset.order_by(
+            'post_result__post__extra__postextraelection__election')
         return queryset
