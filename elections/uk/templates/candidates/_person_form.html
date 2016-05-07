@@ -23,6 +23,15 @@
         {{ simple_field }}
       </p>
       {{ simple_field.errors }}
+      {% if simple_field.name == 'name'%}
+        {% if not add_candidate_form %}
+          <p class="alternative-names">
+            <a href="{% url 'person-other-names' person_id=person.id %}">
+              {% trans "Manage alternative names..." %}
+          </a></p>
+        {% endif %}
+      {% endif %}
+
     </div>
 
     {% endfor %}
