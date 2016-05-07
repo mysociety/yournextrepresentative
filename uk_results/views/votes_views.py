@@ -110,9 +110,20 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
 class LatestVoteResults(BaseResultsViewMixin, ListView):
     template_name = "uk_results/posts/latest_vote_results.html"
     queryset = ResultSet.objects.all()
+    paginate_by = 30
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super(LatestVoteResults, self).get_queryset()
+        queryset = queryset.select_related('post_result',)
+        queryset = queryset.select_related('post_result__post',)
+        queryset = queryset.select_related('post_result__post__area',)
+        queryset = queryset.prefetch_related(
+            'candidate_results__membership__person',)
+        queryset = queryset.prefetch_related(
+            'candidate_results__membership__on_behalf_of__partywithcolour',)
+
+        queryset = queryset.filter(post_result__confirmed_resultset=None)
+
         status = self.request.GET.get('status')
         if status:
             if status == "confirmed":
@@ -121,11 +132,4 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
                 queryset = queryset.unconfirmed()
             if status == "rejected":
                 queryset = queryset.rejected()
-        queryset = queryset.select_related('post_result',)
-        queryset = queryset.select_related('post_result__post',)
-        queryset = queryset.select_related('post_result__post__area',)
-        queryset = queryset.prefetch_related(
-            'candidate_results__membership__person',)
-        queryset = queryset.prefetch_related(
-            'candidate_results__membership__on_behalf_of__partywithcolour',)
         return queryset

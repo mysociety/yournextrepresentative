@@ -1,4 +1,5 @@
 {% extends "uk_results/uk_results_base.html" %}
+{% load get_query %}
 
 {% block results_title %}
 <h1>Latest reported results</h1>
@@ -20,7 +21,8 @@
   </dd>
 
 </dl>
-{% for result in object_list %}
+
+{% for result in page_obj.object_list %}
   {% if result.post_result.confirmed %}
     {% if result.review_status == 'confirmed' %}
       {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
@@ -28,6 +30,7 @@
   {% else %}
     {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all show_heading=True show_post_name=True%}
   {% endif %}
+
 {% empty %}
 <p>There are no results
   {% if request.GET.status == "confirmed" %}
@@ -37,4 +40,25 @@
   {% endif %}
    yet</p>
 {% endfor %}
+{% if object_list %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li>
+        <a href="{% query_string request.GET page=page_obj.previous_page_number %}">&laquo; previous</a>
+      </li>
+    {% endif %}
+
+    <li class="unavailable">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </li>
+
+    {% if page_obj.has_next %}
+      <li>
+        <a href="{% query_string request.GET page=page_obj.next_page_number %}">next &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+
 {% endblock results_content %}
