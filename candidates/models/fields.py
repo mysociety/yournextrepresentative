@@ -7,6 +7,16 @@ from popolo.models import Person
 from compat import python_2_unicode_compatible
 
 
+def get_complex_popolo_fields():
+    """Return a mapping of field name to ComplexField object
+
+    This returns a dict mapping the name of the field to the
+    ComplexField object which defines where the value is stored in the
+    django-popolo models
+    """
+    return {cf.name: cf for cf in ComplexPopoloField.objects.all()}
+
+
 @python_2_unicode_compatible
 class SimplePopoloField(models.Model):
 
