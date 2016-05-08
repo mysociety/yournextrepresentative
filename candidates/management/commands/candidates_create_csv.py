@@ -82,7 +82,8 @@ class Command(BaseCommand):
                     options['OUTPUT-PREFIX'] + '-' + election.slug + '.csv'
                 election_slug = election.slug
             people_data = people_by_election[election_slug]
-            csv = list_to_csv(people_data)
+            group_by_post = election is not None
+            csv = list_to_csv(people_data, group_by_post)
             # Write to a temporary file and atomically rename into place:
             ntf = NamedTemporaryFile(
                 delete=False,
