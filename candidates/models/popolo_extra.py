@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _l
 from django.utils.six.moves.urllib_parse import urljoin, quote_plus
@@ -27,7 +28,10 @@ from popolo.models import (
 from images.models import Image, HasImageMixin
 
 from compat import python_2_unicode_compatible
-from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField
+from .fields import (
+    ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField,
+    get_complex_popolo_fields,
+)
 from ..diffs import get_version_diffs
 from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
 from .versions import get_person_as_version_data
@@ -218,9 +222,17 @@ class PersonExtra(HasImageMixin, models.Model):
 
     objects = PersonExtraQuerySet.as_manager()
 
+    @cached_property
+    def complex_popolo_fields(self):
+        return get_complex_popolo_fields()
+
     def __getattr__(self, name):
-        # TODO: this does not seem optimal
-        field = ComplexPopoloField.objects.filter(name=name).first()
+        # We don't want to trigger the population of the
+        # complex_popolo_fields property just because Django is
+        # checking whether the prefetch objects cache is there:
+        if name == '_prefetched_objects_cache':
+            return super(PersonExtra, self).__getattr__(self, name)
+        field = self.complex_popolo_fields.get(name)
         if field:
             # Iterate rather than using filter because that would
             # cause an extra query when the relation has already been
