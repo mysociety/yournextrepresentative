@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .dates import date_in_near_future
 from .factories import (
     AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
     PersonExtraFactory, PostExtraFactory,
@@ -133,6 +134,8 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'facebook_personal_url': '',
                 'elected': '',
                 'election': '2015',
+                'election_current': 'True',
+                'election_date': str(date_in_near_future),
                 'image_uploading_user_notes': '',
                 'id': '2009',
                 'post_label': 'Dulwich and West Norwood',

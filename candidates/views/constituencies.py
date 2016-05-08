@@ -201,17 +201,16 @@ class ConstituencyDetailCSVView(ElectionMixin, View):
         post = Post.objects \
             .select_related('extra') \
             .get(extra__slug=kwargs['post_id'])
-        all_people = [
-            me.base.person.extra.as_dict(self.election_data)
-            for me in
-            MembershipExtra.objects \
+        all_people = []
+        for me in MembershipExtra.objects \
                 .filter(
                     election=self.election_data,
                     base__post=post
                 ) \
                 .select_related('base__person') \
-                .prefetch_related('base__person__extra')
-        ]
+                .prefetch_related('base__person__extra'):
+            for d in me.base.person.extra.as_list_of_dicts(self.election_data):
+                all_people.append(d)
 
         filename = "{election}-{constituency_slug}.csv".format(
             election=self.election,
