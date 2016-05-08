@@ -27,9 +27,6 @@ from popolo.models import (
 from images.models import Image, HasImageMixin
 
 from compat import python_2_unicode_compatible
-from .field_mappings import (
-    form_complex_fields_locations
-)
 from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField
 from ..diffs import get_version_diffs
 from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
