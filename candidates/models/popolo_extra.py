@@ -446,100 +446,110 @@ class PersonExtra(HasImageMixin, models.Model):
         update_person_from_form(person, person_extra, form)
         return person_extra
 
-    def as_dict(self, election, base_url=None):
+    def as_list_of_dicts(self, election, base_url=None):
+        result = []
         if not base_url:
             base_url = ''
-        candidacy_extra = MembershipExtra.objects \
-            .select_related('base', 'base__post__area') \
-            .prefetch_related(
-                'base__post__extra',
-                'base__on_behalf_of__extra',
-                'base__post__area__other_identifiers',
-            ) \
-            .get(
-                election=election,
-                base__person=self.base,
-                base__role=election.candidate_membership_role,
-            )
-        party = candidacy_extra.base.on_behalf_of
-        post = candidacy_extra.base.post
-        elected = self.get_elected(election)
-        elected_for_csv = ''
-        image_copyright = ''
-        image_uploading_user = ''
-        image_uploading_user_notes = ''
-        proxy_image_url_template = ''
-        if elected is not None:
-            elected_for_csv = str(elected)
-        mapit_identifier = post.area.other_identifiers \
-            .filter(scheme='mapit-area-url').first()
-        if mapit_identifier:
-            mapit_url = mapit_identifier.identifier
-        else:
-            mapit_url = ''
-        primary_image = self.images \
-            .select_related('extra') \
-            .filter(
-                is_primary=True
-            ).first()
-        if primary_image:
-            primary_image_url = urljoin(base_url, primary_image.image.url)
-            if settings.IMAGE_PROXY_URL and base_url:
-                encoded_url = quote_plus(primary_image_url)
-                proxy_image_url_template = settings.IMAGE_PROXY_URL + \
-                    encoded_url + '/{height}/{width}.{extension}'
-
+        # Find the list of relevant candidacies. So as not to cause
+        # extra queries, we don't use filter but instead iterate over
+        # all objects:
+        candidacies = []
+        for m in self.base.memberships.all():
             try:
-                image_copyright = primary_image.extra.copyright
-                user = primary_image.extra.uploading_user
-                if user is not None:
-                    image_uploading_user = primary_image.extra.uploading_user.username
-                image_uploading_user_notes = primary_image.extra.user_notes
+                m_extra = m.extra
             except ObjectDoesNotExist:
-                pass
-        else:
-            primary_image_url = ''
-        try:
-            twitter_user_id = self.base.identifiers.get(
-                scheme='twitter',
-            ).identifier
-        except Identifier.DoesNotExist:
+                continue
+            if not m_extra.election:
+                continue
+            expected_role = m.extra.election.candidate_membership_role
+            if election is None:
+                if expected_role == m.role:
+                    candidacies.append(m)
+            else:
+                if m_extra.election == election and expected_role == m.role:
+                    candidacies.append(m)
+        for candidacy in candidacies:
+            candidacy_extra = candidacy.extra
+            party = candidacy.on_behalf_of
+            post = candidacy.post
+            elected = candidacy_extra.elected
+            elected_for_csv = ''
+            image_copyright = ''
+            image_uploading_user = ''
+            image_uploading_user_notes = ''
+            proxy_image_url_template = ''
+            if elected is not None:
+                elected_for_csv = str(elected)
+            mapit_identifier = None
+            for identifier in post.area.other_identifiers.all():
+                if identifier.scheme == 'mapit-area-url':
+                    mapit_identifier = identifier
+            if mapit_identifier:
+                mapit_url = mapit_identifier.identifier
+            else:
+                mapit_url = ''
+            primary_image = None
+            for image in self.images.all():
+                if image.is_primary:
+                    primary_image = image
+            primary_image_url = None
+            if primary_image:
+                primary_image_url = urljoin(base_url, primary_image.image.url)
+                if settings.IMAGE_PROXY_URL and base_url:
+                    encoded_url = quote_plus(primary_image_url)
+                    proxy_image_url_template = settings.IMAGE_PROXY_URL + \
+                        encoded_url + '/{height}/{width}.{extension}'
+
+                try:
+                    image_copyright = primary_image.extra.copyright
+                    user = primary_image.extra.uploading_user
+                    if user is not None:
+                        image_uploading_user = primary_image.extra.uploading_user.username
+                    image_uploading_user_notes = primary_image.extra.user_notes
+                except ObjectDoesNotExist:
+                    pass
             twitter_user_id = ''
+            for identifier in self.base.identifiers.all():
+                if identifier.scheme == 'twitter':
+                    twitter_user_id = identifier.identifier
 
-        row = {
-            'id': self.base.id,
-            'name': self.base.name,
-            'honorific_prefix': self.base.honorific_prefix,
-            'honorific_suffix': self.base.honorific_suffix,
-            'gender': self.base.gender,
-            'birth_date': self.base.birth_date,
-            'election': election.slug,
-            'party_id': party.extra.slug,
-            'party_name': party.name,
-            'post_id': post.extra.slug,
-            'post_label': post.extra.short_label,
-            'mapit_url': mapit_url,
-            'elected': elected_for_csv,
-            'email': self.base.email,
-            'twitter_username': self.twitter_username,
-            'twitter_user_id': twitter_user_id,
-            'facebook_page_url': self.facebook_page_url,
-            'linkedin_url': self.linkedin_url,
-            'party_ppc_page_url': self.party_ppc_page_url,
-            'facebook_personal_url': self.facebook_personal_url,
-            'homepage_url': self.homepage_url,
-            'wikipedia_url': self.wikipedia_url,
-            'image_url': primary_image_url,
-            'proxy_image_url_template': proxy_image_url_template,
-            'image_copyright': image_copyright,
-            'image_uploading_user': image_uploading_user,
-            'image_uploading_user_notes': image_uploading_user_notes,
-        }
-        from ..election_specific import get_extra_csv_values
-        extra_csv_data = get_extra_csv_values(self.base, election)
-        row.update(extra_csv_data)
+            row = {
+                'id': self.base.id,
+                'name': self.base.name,
+                'honorific_prefix': self.base.honorific_prefix,
+                'honorific_suffix': self.base.honorific_suffix,
+                'gender': self.base.gender,
+                'birth_date': self.base.birth_date,
+                'election': candidacy_extra.election.slug,
+                'election_date': candidacy_extra.election.election_date,
+                'election_current': candidacy_extra.election.current,
+                'party_id': party.extra.slug,
+                'party_name': party.name,
+                'post_id': post.extra.slug,
+                'post_label': post.extra.short_label,
+                'mapit_url': mapit_url,
+                'elected': elected_for_csv,
+                'email': self.base.email,
+                'twitter_username': self.twitter_username,
+                'twitter_user_id': twitter_user_id,
+                'facebook_page_url': self.facebook_page_url,
+                'linkedin_url': self.linkedin_url,
+                'party_ppc_page_url': self.party_ppc_page_url,
+                'facebook_personal_url': self.facebook_personal_url,
+                'homepage_url': self.homepage_url,
+                'wikipedia_url': self.wikipedia_url,
+                'image_url': primary_image_url,
+                'proxy_image_url_template': proxy_image_url_template,
+                'image_copyright': image_copyright,
+                'image_uploading_user': image_uploading_user,
+                'image_uploading_user_notes': image_uploading_user_notes,
+            }
+            from ..election_specific import get_extra_csv_values
+            extra_csv_data = get_extra_csv_values(self.base, election)
+            row.update(extra_csv_data)
+            result.append(row)
 
-        return row
+        return result
 
     not_standing = models.ManyToManyField(
         Election, related_name='persons_not_standing'
