@@ -25,6 +25,7 @@ class ContributorsMixin(object):
                 qs = interesting_actions.filter(created__gt=since)
             else:
                 qs = interesting_actions
+            qs = qs.exclude(user__isnull=True)
             rows = qs.values('user'). \
                 annotate(edit_count=Count('user')).order_by('-edit_count')[:25]
             for row in rows:
