@@ -209,6 +209,28 @@ class PersonExtraQuerySet(models.QuerySet):
         # If we get to this point, it's a non-existent field on the person:
         raise ValueError("Unknown field '{0}'".format(field))
 
+    def joins_for_csv_output(self):
+        return self.select_related('base') \
+            .prefetch_related(
+                models.Prefetch(
+                    'base__memberships',
+                    Membership.objects.select_related(
+                        'extra',
+                        'extra__election',
+                        'on_behalf_of__extra',
+                        'post__area',
+                        'post__extra',
+                    ).prefetch_related(
+                        'on_behalf_of__identifiers',
+                        'post__area__other_identifiers',
+                    )
+                ),
+                'base__contact_details',
+                'base__identifiers',
+                'base__links',
+                'images__extra__uploading_user',
+            )
+
 
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
