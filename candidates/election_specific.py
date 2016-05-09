@@ -18,7 +18,7 @@ def default_fetch_area_ids(**kwargs):
 imports_and_defaults = (
     ('EXTRA_CSV_ROW_FIELDS', []),
     ('shorten_post_label', lambda post_label: post_label),
-    ('get_extra_csv_values', lambda person, election: {}),
+    ('get_extra_csv_values', lambda person, election, post: {}),
     ('fetch_area_ids', default_fetch_area_ids),
 )
 
