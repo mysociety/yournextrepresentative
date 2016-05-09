@@ -30,4 +30,6 @@ CSV_ROW_FIELDS = [
     'twitter_user_id',
     'election_date',
     'election_current',
+    'party_lists_in_use',
+    'party_list_position',
 ]

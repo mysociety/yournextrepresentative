@@ -552,6 +552,8 @@ class PersonExtra(HasImageMixin, models.Model):
                 'election_date': candidacy_extra.election.election_date,
                 'election_current': candidacy_extra.election.current,
                 'party_id': party.extra.slug,
+                'party_lists_in_use': candidacy_extra.election.party_lists_in_use,
+                'party_list_position': candidacy_extra.party_list_position,
                 'party_name': party.name,
                 'post_id': post.extra.slug,
                 'post_label': post.extra.short_label,
