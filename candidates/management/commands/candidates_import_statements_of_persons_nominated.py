@@ -15,7 +15,7 @@ from official_documents.models import OfficialDocument
 from elections.models import Election
 from popolo.models import Post, Area
 
-from compat import StreamDictReader
+from compat import BufferDictReader
 
 allowed_mime_types = set([
     b'application/pdf',
@@ -89,7 +89,7 @@ class Command(BaseCommand):
 
         r = requests.get(csv_url)
         r.encoding = 'utf-8'
-        reader = StreamDictReader(r.text)
+        reader = BufferDictReader(r.text)
         for row in reader:
             post_or_area_header = get_column_header(
                 POST_OR_AREA_COLUMN_HEADERS_TO_TRY, row

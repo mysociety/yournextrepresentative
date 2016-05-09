@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from compat import StreamDictWriter
+from compat import BufferDictWriter
 from .models import CSV_ROW_FIELDS
 
 
@@ -25,7 +25,7 @@ def _candidate_sort_by_post_key(row):
 def list_to_csv(candidates_list, group_by_post=False):
     from .election_specific import EXTRA_CSV_ROW_FIELDS
     csv_fields = CSV_ROW_FIELDS + EXTRA_CSV_ROW_FIELDS
-    writer = StreamDictWriter(fieldnames=csv_fields)
+    writer = BufferDictWriter(fieldnames=csv_fields)
     writer.writeheader()
     if group_by_post:
         sorted_rows = sorted(candidates_list, key=_candidate_sort_by_post_key)
