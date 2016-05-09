@@ -7,6 +7,7 @@ from .models import CSV_ROW_FIELDS
 def _candidate_sort_by_name_key(row):
     return (
         row['name'].split()[-1],
+        row['name'].rsplit(None, 1)[0],
         not row['election_current'],
         row['election_date'],
         row['election'],
@@ -19,7 +20,9 @@ def _candidate_sort_by_post_key(row):
         row['election_date'],
         row['election'],
         row['post_label'],
-        row['name'].split()[-1])
+        row['name'].split()[-1],
+        row['name'].rsplit(None, 1)[0],
+    )
 
 
 def list_to_csv(candidates_list, group_by_post=False):
