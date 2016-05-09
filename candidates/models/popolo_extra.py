@@ -576,7 +576,7 @@ class PersonExtra(HasImageMixin, models.Model):
                 'image_uploading_user_notes': image_uploading_user_notes,
             }
             from ..election_specific import get_extra_csv_values
-            extra_csv_data = get_extra_csv_values(self.base, election)
+            extra_csv_data = get_extra_csv_values(self.base, election, post)
             row.update(extra_csv_data)
             result.append(row)
 
