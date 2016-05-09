@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.utils.six import text_type
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
@@ -135,7 +136,7 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'elected': '',
                 'election': '2015',
                 'election_current': 'True',
-                'election_date': str(date_in_near_future),
+                'election_date': text_type(date_in_near_future),
                 'image_uploading_user_notes': '',
                 'id': '2009',
                 'post_label': 'Dulwich and West Norwood',
