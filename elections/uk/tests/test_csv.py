@@ -73,7 +73,7 @@ class CSVTests(UK2015ExamplesMixin, TestCase):
             person_dict_list = person_extra.as_list_of_dicts(self.election)
         self.assertEqual(len(person_dict_list), 1)
         person_dict = person_dict_list[0]
-        self.assertEqual(len(person_dict), 33)
+        self.assertEqual(len(person_dict), 35)
         self.assertEqual(person_dict['id'], 2009)
 
         # Test the extra CSV fields:

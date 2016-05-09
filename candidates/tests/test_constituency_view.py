@@ -149,6 +149,8 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'twitter_user_id': '',
                 'post_id': '65808',
                 'party_id': 'party:53',
+                'party_lists_in_use': 'False',
+                'party_list_position': '',
                 'image_copyright': '',
                 'name': 'Tessa Jowell',
                 'gender': '',
