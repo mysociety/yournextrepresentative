@@ -10,7 +10,7 @@ from .factories import (
 )
 from .uk_examples import UK2015ExamplesMixin
 
-from compat import StreamDictReader
+from compat import BufferDictReader
 
 from ..models import MembershipExtra, PersonExtra
 
@@ -123,7 +123,7 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood.csv',
         )
-        row_dicts = [row for row in StreamDictReader(response.content)]
+        row_dicts = [row for row in BufferDictReader(response.content)]
         self.assertEqual(1, len(row_dicts))
         self.assertEqual(
             row_dicts[0],
