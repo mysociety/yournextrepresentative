@@ -6,11 +6,32 @@ from os.path import dirname
 from tempfile import NamedTemporaryFile
 
 from django.core.management.base import BaseCommand, CommandError
+from django.db import reset_queries
 
 from candidates.csv_helpers import list_to_csv
 from candidates.models import PersonExtra
 from candidates.models.fields import get_complex_popolo_fields
 from elections.models import Election
+
+
+FETCH_AT_A_TIME = 1000
+
+
+def queryset_iterator(qs, complex_popolo_fields):
+    # To save building up a huge list of queries when DEBUG = True,
+    # call reset_queries:
+    reset_queries()
+    start_index = 0
+    while True:
+        chunk_qs = qs.order_by('pk')[start_index:start_index + FETCH_AT_A_TIME]
+        empty = True
+        for person_extra in chunk_qs.joins_for_csv_output():
+            empty = False
+            person_extra.complex_popolo_fields = complex_popolo_fields
+            yield person_extra
+        if empty:
+            return
+        start_index += FETCH_AT_A_TIME
 
 
 class Command(BaseCommand):
@@ -41,50 +62,44 @@ class Command(BaseCommand):
                 raise CommandError(message.format(election_slug=options['election']))
         else:
             all_elections = list(Election.objects.all()) + [None]
-        people_by_election = defaultdict(list)
 
         complex_popolo_fields = get_complex_popolo_fields()
 
         for election in all_elections:
+            all_people = []
             if election is None:
                 # Get information for every candidate in every
                 # election.
-                for person_extra in PersonExtra.objects \
-                        .joins_for_csv_output().all():
-                    person_extra.complex_popolo_fields = complex_popolo_fields
-                    people_by_election[None] += person_extra.as_list_of_dicts(
+                qs = PersonExtra.objects.all()
+                for person_extra in queryset_iterator(
+                        qs, complex_popolo_fields
+                ):
+                    all_people += person_extra.as_list_of_dicts(
                         None,
                         base_url=options['site_base_url']
                     )
+                output_filename = \
+                    options['OUTPUT-PREFIX'] + '-all.csv'
             else:
                 # Only get the candidates standing in that particular
                 # election
                 role = election.candidate_membership_role
-                for person_extra in PersonExtra.objects \
-                        .joins_for_csv_output() \
-                        .filter(
-                            base__memberships__extra__election=election,
-                            base__memberships__role=role,
-                        ):
-                    person_extra.complex_popolo_fields = complex_popolo_fields
-                    people_by_election[election.slug] += \
-                        person_extra.as_list_of_dicts(
-                            election,
-                            base_url=options['site_base_url']
-                        )
-
-        for election in all_elections:
-            if election is None:
-                output_filename = \
-                    options['OUTPUT-PREFIX'] + '-all.csv'
-                election_slug = None
-            else:
+                qs = PersonExtra.objects.filter(
+                    base__memberships__extra__election=election,
+                    base__memberships__role=role,
+                )
+                for person_extra in queryset_iterator(
+                        qs, complex_popolo_fields
+                ):
+                    all_people += person_extra.as_list_of_dicts(
+                        election,
+                        base_url=options['site_base_url']
+                    )
                 output_filename = \
                     options['OUTPUT-PREFIX'] + '-' + election.slug + '.csv'
-                election_slug = election.slug
-            people_data = people_by_election[election_slug]
+
             group_by_post = election is not None
-            csv = list_to_csv(people_data, group_by_post)
+            csv = list_to_csv(all_people, group_by_post)
             # Write to a temporary file and atomically rename into place:
             ntf = NamedTemporaryFile(
                 delete=False,
