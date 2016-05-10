@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from .views import (
     upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview,
     SuggestLockView, SuggestLockReviewListView
 )
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^photo/upload/(?P<person_id>\d+)$',
         upload_photo,
         name="photo-upload"),
@@ -26,4 +26,4 @@ urlpatterns = patterns('',
     url(r'^suggest-lock/$',
         SuggestLockReviewListView.as_view(),
         name="suggestions-to-lock-review-list"),
-)
+]

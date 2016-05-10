@@ -3,14 +3,14 @@ from __future__ import unicode_literals
 import sys
 
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 from django.contrib import admin
 
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^', include('candidates.urls')),
     url(r'^tasks/', include('tasks.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -18,13 +18,13 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('allauth.urls')),
     url(r'^upload_document/', include('official_documents.urls')),
     url(r'^results/', include('results.urls')),
-)
+]
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
-    )
+    ]
 
 if settings.DEBUG or settings.RUNNING_TESTS:
     urlpatterns += staticfiles_urlpatterns()

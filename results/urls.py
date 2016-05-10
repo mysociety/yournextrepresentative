@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns
+from django.conf.urls import url
 
 from .feeds import (
     BasicResultEventsFeed,
@@ -8,7 +8,7 @@ from .feeds import (
 )
 
 
-urlpatterns = patterns('',
-    (r'^all\.atom$', ResultEventsFeed()),
-    (r'^all-basic\.atom$', BasicResultEventsFeed()),
-)
+urlpatterns = [
+    url(r'^all\.atom$', ResultEventsFeed(), name='atom-results'),
+    url(r'^all-basic\.atom$', BasicResultEventsFeed(), name='atom-results-basic'),
+]
