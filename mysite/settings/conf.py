@@ -366,6 +366,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                         'js/person_form.js',
                         'js/home_geolocation_form.js',
                         'js/versions.js',
+                        'js/language-switcher.js',
                     ),
                     'output_filename': 'js/all.js'
                 }

@@ -72,6 +72,20 @@
     <div class="header__masthead">
       <div class="container">
         <a href="/" class="header__masthead__logo">{{ site.name }}</a>
+        <form id="language_switcher" action="{% url 'set_language' %}" method="post" class="nav-language js-language-switcher">
+          {% csrf_token %}
+          <select name="language" aria-label="Set site language">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+            <option lang="{{ language.code }}" value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.name_local }} ({{ language.code }})
+            </option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="Set language">
+        </form>
         <ul class="nav-links">
           {% if user.is_authenticated %}
             <li class="nav-links__item">{% blocktrans with username=user.username %}Signed in as <strong>{{ username }}</strong>{% endblocktrans %}</li>

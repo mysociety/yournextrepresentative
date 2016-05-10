@@ -56,6 +56,71 @@
   }
 }
 
+.nav-language {
+  display: inline-block;
+  font-size: 0.9em;
+  margin-left: 1em;
+  position: relative;
+
+  &:before {
+    position: absolute;
+    z-index: 0; // position behind the `select`
+    left: 0;
+    top: 50%;
+    margin-top: -0.1em; // vertically centre
+    @include css-triangle(0.3em, rgba(255, 255, 255, 0.9), top);
+  }
+
+  // The nav-language inputs are heavily custom styled.
+  // So, reset a bunch of defaults before we start.
+  select, input {
+    display: inline-block;
+    height: auto;
+    width: auto;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.5em;
+  }
+
+  select {
+    position: relative;
+    z-index: 2; // position in front of the `:before` triangle
+    padding-left: 1em;
+    color: rgba(255, 255, 255, 0.9);
+
+    // Increase contrast on focus.
+    &:focus {
+      color: #fff;
+    }
+
+    // Dropdown menu options inherit things like text color
+    // on IE and Firefox on Windows inherit, meaning we also
+    // need to set a dark background color if we want the white
+    // text to be legible.
+    option {
+      background-color: darken($header-background-color, 5%);
+    }
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  input {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: darken($header-background-color, 5%);
+    border-radius: 0.2em;
+    padding: 0.1em 0.5em;
+
+    html.js & {
+      display: none;
+    }
+  }
+}
+
 
 // A nav list component we use twice in the header.
 // TODO: Make this fold away on mobile!
