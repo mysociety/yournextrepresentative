@@ -221,6 +221,11 @@ patterns_to_format = [
         'name': 'help-api'
     },
     {
+        'pattern': r'^help/results$',
+        'view': views.HelpResultsView.as_view(),
+        'name': 'help-results'
+    },
+    {
         'pattern': r'^help/about$',
         'view': views.HelpAboutView.as_view(),
         'name': 'help-about'
