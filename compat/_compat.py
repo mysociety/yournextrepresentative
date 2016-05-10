@@ -18,7 +18,7 @@ def _map_dict(func, dict_):
 
 
 class BufferDictReader(csv.DictReader):
-    r"""A DictReader to work with streams, automating the selection of a buffer.
+    r"""A csv.DictReader subclass that reads from a string on any Python version
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
     objects), Python 3's is limited to Unicode.  ``BufferDictReader``
@@ -48,7 +48,7 @@ class BufferDictReader(csv.DictReader):
 
 
 class BufferDictWriter(csv.DictWriter):
-    r"""A DictWriter to work with streams, automating the selection of a buffer.
+    r"""A csv.DictWriter subclass that writes to a buffer, on any Python version
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
     objects), Python 3's is limited to Unicode.  ``BufferDictWriter``

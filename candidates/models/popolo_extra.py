@@ -249,7 +249,7 @@ class PersonExtra(HasImageMixin, models.Model):
         return get_complex_popolo_fields()
 
     def __getattr__(self, name):
-        # We want don't want to trigger the population of the
+        # We don't want to trigger the population of the
         # complex_popolo_fields property just because Django is
         # checking whether the prefetch objects cache is there:
         if name == '_prefetched_objects_cache':
