@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from ._compat import StreamDictReader, StreamDictWriter
+from ._compat import BufferDictReader, BufferDictWriter
 
 
 # These tests were adapted from the Python 3.5 stdlib test/test_csv.py
@@ -12,7 +12,7 @@ class TestDictFields(unittest.TestCase):
     ### "long" means the row is longer than the number of fieldnames
     ### "short" means there are fewer elements in the row than fieldnames
     def test_write_simple_dict(self):
-        writer = StreamDictWriter(fieldnames=["f1", "f2", "f3"])
+        writer = BufferDictWriter(fieldnames=["f1", "f2", "f3"])
         writer.writeheader()
         writer.f.seek(0)
         self.assertEqual(writer.f.readline(), "f1,f2,f3\r\n")
@@ -22,7 +22,7 @@ class TestDictFields(unittest.TestCase):
         self.assertEqual(writer.f.read(), "10,,abc\r\n")
 
     def test_write_multiple_dict_rows(self):
-        writer = StreamDictWriter(fieldnames=["f1", "f2", "f3"])
+        writer = BufferDictWriter(fieldnames=["f1", "f2", "f3"])
         writer.writeheader()
         self.assertEqual(writer.output, "f1,f2,f3\r\n")
         writer.writerows([{"f1": 1, "f2": "abc", "f3": "f"},
@@ -31,10 +31,10 @@ class TestDictFields(unittest.TestCase):
                          "f1,f2,f3\r\n1,abc,f\r\n2,5,xyz\r\n")
 
     def test_write_no_fields(self):
-        self.assertRaises(TypeError, StreamDictWriter)
+        self.assertRaises(TypeError, BufferDictWriter)
 
     def test_write_fields_not_in_fieldnames(self):
-        writer = StreamDictWriter(fieldnames=["f1", "f2", "f3"])
+        writer = BufferDictWriter(fieldnames=["f1", "f2", "f3"])
         # Of special note is the non-string key (issue 19449)
         with self.assertRaises(ValueError) as cx:
             writer.writerow({"f4": 10, "f2": "spam", 1: "abc"})
@@ -45,12 +45,12 @@ class TestDictFields(unittest.TestCase):
         self.assertIn("1", exception)
 
     def test_read_dict_fields(self):
-        reader = StreamDictReader("1,2,abc\r\n",
+        reader = BufferDictReader("1,2,abc\r\n",
                                   fieldnames=["f1", "f2", "f3"])
         self.assertEqual(next(reader), {"f1": '1', "f2": '2', "f3": 'abc'})
 
     def test_read_dict_no_fieldnames(self):
-        reader = StreamDictReader("f1,f2,f3\r\n1,2,abc\r\n")
+        reader = BufferDictReader("f1,f2,f3\r\n1,2,abc\r\n")
         self.assertEqual(next(reader), {"f1": '1', "f2": '2', "f3": 'abc'})
         self.assertEqual(reader.fieldnames, ["f1", "f2", "f3"])
 
@@ -70,33 +70,33 @@ class TestDictFields(unittest.TestCase):
 
     def test_read_dict_fieldnames_chain(self):
         import itertools
-        reader = StreamDictReader("f1,f2,f3\r\n1,2,abc\r\n")
+        reader = BufferDictReader("f1,f2,f3\r\n1,2,abc\r\n")
         first = next(reader)
         for row in itertools.chain([first], reader):
             self.assertEqual(reader.fieldnames, ["f1", "f2", "f3"])
             self.assertEqual(row, {"f1": '1', "f2": '2', "f3": 'abc'})
 
     def test_read_long(self):
-        reader = StreamDictReader("1,2,abc,4,5,6\r\n",
+        reader = BufferDictReader("1,2,abc,4,5,6\r\n",
                                   fieldnames=["f1", "f2"])
         self.assertEqual(next(reader), {"f1": '1', "f2": '2',
                                         None: ["abc", "4", "5", "6"]})
 
     def test_read_long_with_rest(self):
-        reader = StreamDictReader("1,2,abc,4,5,6\r\n",
+        reader = BufferDictReader("1,2,abc,4,5,6\r\n",
                                   fieldnames=["f1", "f2"], restkey="_rest")
         self.assertEqual(next(reader), {"f1": '1', "f2": '2',
                                          "_rest": ["abc", "4", "5", "6"]})
 
     def test_read_long_with_rest_no_fieldnames(self):
-        reader = StreamDictReader("f1,f2\r\n1,2,abc,4,5,6\r\n",
+        reader = BufferDictReader("f1,f2\r\n1,2,abc,4,5,6\r\n",
                                   restkey="_rest")
         self.assertEqual(reader.fieldnames, ["f1", "f2"])
         self.assertEqual(next(reader), {"f1": '1', "f2": '2',
                                          "_rest": ["abc", "4", "5", "6"]})
 
     def test_read_short(self):
-        reader = StreamDictReader("1,2,abc,4,5,6\r\n1,2,abc\r\n",
+        reader = BufferDictReader("1,2,abc,4,5,6\r\n1,2,abc\r\n",
                                   fieldnames=["1", "2", "3", "4", "5", "6"],
                                   restval="DEFAULT")
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
@@ -115,7 +115,7 @@ class TestDictFields(unittest.TestCase):
             ]
         )
 
-        reader = StreamDictReader(sample,
+        reader = BufferDictReader(sample,
                                   fieldnames=["i1", "float", "i2", "s1", "s2"])
         self.assertEqual(next(reader), {"i1": '2147483648',
                                          "float": '43.0e12',
@@ -132,7 +132,7 @@ class TestDictFields(unittest.TestCase):
                 ""
             ]
         )
-        reader = StreamDictReader(sample,
+        reader = BufferDictReader(sample,
                                   fieldnames=["1", "2", "3", "4", "5", "6"])
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',
                                          "4": '4', "5": '5', "6": '6'})
@@ -140,7 +140,7 @@ class TestDictFields(unittest.TestCase):
                                          "4": '4', "5": '5', "6": '6'})
 
     def test_read_semi_sep(self):
-        reader = StreamDictReader("1;2;abc;4;5;6\r\n",
+        reader = BufferDictReader("1;2;abc;4;5;6\r\n",
                                   fieldnames=["1", "2", "3", "4", "5", "6"],
                                   delimiter=';')
         self.assertEqual(next(reader), {"1": '1', "2": '2', "3": 'abc',

@@ -17,14 +17,14 @@ def _map_dict(func, dict_):
     return {func(k): func(v) for k, v in dict_.items()}
 
 
-class StreamDictReader(csv.DictReader):
+class BufferDictReader(csv.DictReader):
     r"""A DictReader to work with streams, automating the selection of a buffer.
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
-    objects), Python 3's is limited to Unicode.  ``StreamDictReader``
+    objects), Python 3's is limited to Unicode.  ``BufferDictReader``
     requires both the input and output to be Unicode.
 
-    >>> reader = StreamDictReader(u'α,b,c\r\n1,2,\r\n')
+    >>> reader = BufferDictReader(u'α,b,c\r\n1,2,\r\n')
     >>> tuple(reader) == ({u'α': u'1', u'b': u'2', u'c': u''},)
     True
     """
@@ -47,14 +47,14 @@ class StreamDictReader(csv.DictReader):
                                   **kwargs)
 
 
-class StreamDictWriter(csv.DictWriter):
+class BufferDictWriter(csv.DictWriter):
     r"""A DictWriter to work with streams, automating the selection of a buffer.
 
     Whereas the Python 2 ``csv`` module operates on binary files (and file-like
-    objects), Python 3's is limited to Unicode.  ``StreamDictWriter``
+    objects), Python 3's is limited to Unicode.  ``BufferDictWriter``
     requires both the input and output to be Unicode.
 
-    >>> writer = StreamDictWriter((u'α', u'b', u'c'))
+    >>> writer = BufferDictWriter((u'α', u'b', u'c'))
     >>> writer.writeheader()
     >>> _ = writer.writerow({u'α': 1, u'b': 2})
     >>> writer.output == u'α,b,c\r\n1,2,\r\n'

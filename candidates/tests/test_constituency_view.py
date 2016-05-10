@@ -1,15 +1,17 @@
 from __future__ import unicode_literals
 
+from django.utils.six import text_type
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .dates import date_in_near_future
 from .factories import (
     AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
     PersonExtraFactory, PostExtraFactory,
 )
 from .uk_examples import UK2015ExamplesMixin
 
-from compat import StreamDictReader
+from compat import BufferDictReader
 
 from ..models import MembershipExtra, PersonExtra
 
@@ -122,7 +124,7 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         response = self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood.csv',
         )
-        row_dicts = [row for row in StreamDictReader(response.content)]
+        row_dicts = [row for row in BufferDictReader(response.content)]
         self.assertEqual(1, len(row_dicts))
         self.assertEqual(
             row_dicts[0],
@@ -133,6 +135,8 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'facebook_personal_url': '',
                 'elected': '',
                 'election': '2015',
+                'election_current': 'True',
+                'election_date': text_type(date_in_near_future),
                 'image_uploading_user_notes': '',
                 'id': '2009',
                 'post_label': 'Dulwich and West Norwood',
@@ -145,6 +149,8 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'twitter_user_id': '',
                 'post_id': '65808',
                 'party_id': 'party:53',
+                'party_lists_in_use': 'False',
+                'party_list_position': '',
                 'image_copyright': '',
                 'name': 'Tessa Jowell',
                 'gender': '',

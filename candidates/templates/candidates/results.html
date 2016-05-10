@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body_class %}{% endblock %}
+
+{% block title %}{% trans "Election results data" %}{% endblock %}
+
+{% block hero %}
+  <h1>{% trans "Getting election results" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="help-api">
+
+<h2>{% trans "RSS/Atom feeds of results" %}</h2>
+
+{% blocktrans trimmed %}
+  There is an atom feed of recent election results available in two versions:
+{% endblocktrans %}
+
+<ul>
+  <li><a href="{% url 'atom-results' %}">{% trans "Atom feed with additional machine-readable elements" %}</a></li>
+  <li><a href="{% url 'atom-results-basic' %}">{% trans "Basic Atom feed" %}</a></li>
+</ul>
+
+<h2>{% trans "CSV/Excel downloads of election results" %}</h2>
+
+  <h3>{% trans "All Elected Candidates" %}</h3>
+
+  <p>{% blocktrans trimmed %}
+    This CSV file contains details of all candidates in the
+    database who were elected at an election that this site covers.
+  {% endblocktrans %}</p>
+
+  <ul>
+    <li>{% if all_results_exists %}
+      <a href="{{ MEDIA_URL }}candidates-elected-all.csv">{% blocktrans %}Download data about all of the candidates{% endblocktrans %}</a>
+      {% else %}
+      <em>{% trans "(The file of all elected candidates has not yet been generated.)" %}</em>
+      {% endif %}
+    </li>
+  </ul>
+
+  {% for era in grouped_elections %}
+    <div>
+      <h3>{% if era.current %}
+        {% trans "Current Elections" %}
+      {% else %}
+        {% trans "Past Elections" %}
+      {% endif %}</h3>
+      {% for role_data in era.roles %}
+        <h4>{{ role_data.role }}</h4>
+        <ul>
+          {% for election in role_data.elections %}
+            {% with slug=election.election.slug title=election.election.name %}
+              <li>{% if election.results_file_exists %}
+                <a href="{{ MEDIA_URL }}candidates-elected-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} elected candidates {% endblocktrans %}</a>
+                {% else %}
+                <em>{% blocktrans %}
+                  (The file of elected candidates in {{ title }} has not yet been generated.)
+                {% endblocktrans %}</em>
+                {% endif %}
+              </li>
+            {% endwith %}
+          {% endfor %}
+        </ul>
+      {% empty %}
+        <p>{% if era.current %}{% blocktrans trimmed %}
+          There are no current elections.
+        {% endblocktrans %}{% else %}{% blocktrans trimmed %}
+           There are no past elections.
+        {% endblocktrans %}{% endif %}</p>
+      {% endfor %}
+  </div>
+  {% endfor %}
+
+{% endblock %}

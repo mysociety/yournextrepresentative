@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import re
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from popolo.models import Identifier
 
 from candidates.models import MembershipExtra
@@ -24,38 +26,43 @@ EXTRA_CSV_ROW_FIELDS = [
     'party_ec_id',
 ]
 
-def get_extra_csv_values(person, election):
-    theyworkforyou_url = ''
+def get_extra_csv_values(person, election, post):
+    gss_code = ''
     parlparse_id = ''
-    try:
-        i = person.identifiers.get(scheme='uk.org.publicwhip')
-        parlparse_id = i.identifier
-        m = re.search(r'^uk.org.publicwhip/person/(\d+)$', parlparse_id)
-        if not m:
-            message = "Malformed parlparse ID found {0}"
-            raise Exception(message.format(parlparse_id))
-        theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
-            m.group(1)
-        )
-    except Identifier.DoesNotExist:
-        pass
-    candidacy = MembershipExtra.objects \
-        .select_related('base', 'base__post', 'base__post__area') \
-        .get(
-            election=election,
-            base__person=person,
-            base__role=election.candidate_membership_role,
-        )
-    post = candidacy.base.post
-    party = candidacy.base.on_behalf_of
-    try:
-        party_ec_id = party.identifiers.get(scheme='electoral-commission').identifier
-    except Identifier.DoesNotExist:
-        party_ec_id = ''
-    try:
-        gss_code = post.area.other_identifiers.get(scheme='gss')
-    except Identifier.DoesNotExist:
-        gss_code = None
+    theyworkforyou_url = ''
+    party_ec_id = ''
+    for i in person.identifiers.all():
+        if i.scheme == 'uk.org.publicwhip':
+            parlparse_id = i.identifier
+            m = re.search(r'^uk.org.publicwhip/person/(\d+)$', parlparse_id)
+            if not m:
+                message = "Malformed parlparse ID found {0}"
+                raise Exception(message.format(parlparse_id))
+            theyworkforyou_url = 'http://www.theyworkforyou.com/mp/{0}'.format(
+                m.group(1)
+            )
+    for m in person.memberships.all():
+        try:
+            m_extra = m.extra
+        except ObjectDoesNotExist:
+            continue
+        if not m_extra.election:
+            continue
+        if m_extra.election != election:
+            continue
+        expected_role = m_extra.election.candidate_membership_role
+        if expected_role != m.role:
+            continue
+        if m.post != post:
+            continue
+        # Now m / m_extra should be the candidacy membership:
+        for i in m.on_behalf_of.identifiers.all():
+            if i.scheme == 'electoral-commission':
+                party_ec_id = i.identifier
+        for i in m.post.area.other_identifiers.all():
+            if i.scheme == 'gss':
+                gss_code = i.identifier
+        break
     return {
         'gss_code': gss_code,
         'parlparse_id': parlparse_id,

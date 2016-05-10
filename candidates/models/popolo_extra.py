@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _l
 from django.utils.six.moves.urllib_parse import urljoin, quote_plus
@@ -27,10 +28,10 @@ from popolo.models import (
 from images.models import Image, HasImageMixin
 
 from compat import python_2_unicode_compatible
-from .field_mappings import (
-    form_complex_fields_locations
+from .fields import (
+    ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField,
+    get_complex_popolo_fields,
 )
-from .fields import ExtraField, PersonExtraFieldValue, SimplePopoloField, ComplexPopoloField
 from ..diffs import get_version_diffs
 from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
 from .versions import get_person_as_version_data
@@ -208,6 +209,28 @@ class PersonExtraQuerySet(models.QuerySet):
         # If we get to this point, it's a non-existent field on the person:
         raise ValueError("Unknown field '{0}'".format(field))
 
+    def joins_for_csv_output(self):
+        return self.select_related('base') \
+            .prefetch_related(
+                models.Prefetch(
+                    'base__memberships',
+                    Membership.objects.select_related(
+                        'extra',
+                        'extra__election',
+                        'on_behalf_of__extra',
+                        'post__area',
+                        'post__extra',
+                    ).prefetch_related(
+                        'on_behalf_of__identifiers',
+                        'post__area__other_identifiers',
+                    )
+                ),
+                'base__contact_details',
+                'base__identifiers',
+                'base__links',
+                'images__extra__uploading_user',
+            )
+
 
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
@@ -221,9 +244,17 @@ class PersonExtra(HasImageMixin, models.Model):
 
     objects = PersonExtraQuerySet.as_manager()
 
+    @cached_property
+    def complex_popolo_fields(self):
+        return get_complex_popolo_fields()
+
     def __getattr__(self, name):
-        # TODO: this does not seem optimal
-        field = ComplexPopoloField.objects.filter(name=name).first()
+        # We don't want to trigger the population of the
+        # complex_popolo_fields property just because Django is
+        # checking whether the prefetch objects cache is there:
+        if name == '_prefetched_objects_cache':
+            return super(PersonExtra, self).__getattr__(self, name)
+        field = self.complex_popolo_fields.get(name)
         if field:
             # Iterate rather than using filter because that would
             # cause an extra query when the relation has already been
@@ -446,100 +477,112 @@ class PersonExtra(HasImageMixin, models.Model):
         update_person_from_form(person, person_extra, form)
         return person_extra
 
-    def as_dict(self, election, base_url=None):
+    def as_list_of_dicts(self, election, base_url=None):
+        result = []
         if not base_url:
             base_url = ''
-        candidacy_extra = MembershipExtra.objects \
-            .select_related('base', 'base__post__area') \
-            .prefetch_related(
-                'base__post__extra',
-                'base__on_behalf_of__extra',
-                'base__post__area__other_identifiers',
-            ) \
-            .get(
-                election=election,
-                base__person=self.base,
-                base__role=election.candidate_membership_role,
-            )
-        party = candidacy_extra.base.on_behalf_of
-        post = candidacy_extra.base.post
-        elected = self.get_elected(election)
-        elected_for_csv = ''
-        image_copyright = ''
-        image_uploading_user = ''
-        image_uploading_user_notes = ''
-        proxy_image_url_template = ''
-        if elected is not None:
-            elected_for_csv = str(elected)
-        mapit_identifier = post.area.other_identifiers \
-            .filter(scheme='mapit-area-url').first()
-        if mapit_identifier:
-            mapit_url = mapit_identifier.identifier
-        else:
-            mapit_url = ''
-        primary_image = self.images \
-            .select_related('extra') \
-            .filter(
-                is_primary=True
-            ).first()
-        if primary_image:
-            primary_image_url = urljoin(base_url, primary_image.image.url)
-            if settings.IMAGE_PROXY_URL and base_url:
-                encoded_url = quote_plus(primary_image_url)
-                proxy_image_url_template = settings.IMAGE_PROXY_URL + \
-                    encoded_url + '/{height}/{width}.{extension}'
-
+        # Find the list of relevant candidacies. So as not to cause
+        # extra queries, we don't use filter but instead iterate over
+        # all objects:
+        candidacies = []
+        for m in self.base.memberships.all():
             try:
-                image_copyright = primary_image.extra.copyright
-                user = primary_image.extra.uploading_user
-                if user is not None:
-                    image_uploading_user = primary_image.extra.uploading_user.username
-                image_uploading_user_notes = primary_image.extra.user_notes
+                m_extra = m.extra
             except ObjectDoesNotExist:
-                pass
-        else:
-            primary_image_url = ''
-        try:
-            twitter_user_id = self.base.identifiers.get(
-                scheme='twitter',
-            ).identifier
-        except Identifier.DoesNotExist:
+                continue
+            if not m_extra.election:
+                continue
+            expected_role = m.extra.election.candidate_membership_role
+            if election is None:
+                if expected_role == m.role:
+                    candidacies.append(m)
+            else:
+                if m_extra.election == election and expected_role == m.role:
+                    candidacies.append(m)
+        for candidacy in candidacies:
+            candidacy_extra = candidacy.extra
+            party = candidacy.on_behalf_of
+            post = candidacy.post
+            elected = candidacy_extra.elected
+            elected_for_csv = ''
+            image_copyright = ''
+            image_uploading_user = ''
+            image_uploading_user_notes = ''
+            proxy_image_url_template = ''
+            if elected is not None:
+                elected_for_csv = str(elected)
+            mapit_identifier = None
+            for identifier in post.area.other_identifiers.all():
+                if identifier.scheme == 'mapit-area-url':
+                    mapit_identifier = identifier
+            if mapit_identifier:
+                mapit_url = mapit_identifier.identifier
+            else:
+                mapit_url = ''
+            primary_image = None
+            for image in self.images.all():
+                if image.is_primary:
+                    primary_image = image
+            primary_image_url = None
+            if primary_image:
+                primary_image_url = urljoin(base_url, primary_image.image.url)
+                if settings.IMAGE_PROXY_URL and base_url:
+                    encoded_url = quote_plus(primary_image_url)
+                    proxy_image_url_template = settings.IMAGE_PROXY_URL + \
+                        encoded_url + '/{height}/{width}.{extension}'
+
+                try:
+                    image_copyright = primary_image.extra.copyright
+                    user = primary_image.extra.uploading_user
+                    if user is not None:
+                        image_uploading_user = primary_image.extra.uploading_user.username
+                    image_uploading_user_notes = primary_image.extra.user_notes
+                except ObjectDoesNotExist:
+                    pass
             twitter_user_id = ''
+            for identifier in self.base.identifiers.all():
+                if identifier.scheme == 'twitter':
+                    twitter_user_id = identifier.identifier
 
-        row = {
-            'id': self.base.id,
-            'name': self.base.name,
-            'honorific_prefix': self.base.honorific_prefix,
-            'honorific_suffix': self.base.honorific_suffix,
-            'gender': self.base.gender,
-            'birth_date': self.base.birth_date,
-            'election': election.slug,
-            'party_id': party.extra.slug,
-            'party_name': party.name,
-            'post_id': post.extra.slug,
-            'post_label': post.extra.short_label,
-            'mapit_url': mapit_url,
-            'elected': elected_for_csv,
-            'email': self.base.email,
-            'twitter_username': self.twitter_username,
-            'twitter_user_id': twitter_user_id,
-            'facebook_page_url': self.facebook_page_url,
-            'linkedin_url': self.linkedin_url,
-            'party_ppc_page_url': self.party_ppc_page_url,
-            'facebook_personal_url': self.facebook_personal_url,
-            'homepage_url': self.homepage_url,
-            'wikipedia_url': self.wikipedia_url,
-            'image_url': primary_image_url,
-            'proxy_image_url_template': proxy_image_url_template,
-            'image_copyright': image_copyright,
-            'image_uploading_user': image_uploading_user,
-            'image_uploading_user_notes': image_uploading_user_notes,
-        }
-        from ..election_specific import get_extra_csv_values
-        extra_csv_data = get_extra_csv_values(self.base, election)
-        row.update(extra_csv_data)
+            row = {
+                'id': self.base.id,
+                'name': self.base.name,
+                'honorific_prefix': self.base.honorific_prefix,
+                'honorific_suffix': self.base.honorific_suffix,
+                'gender': self.base.gender,
+                'birth_date': self.base.birth_date,
+                'election': candidacy_extra.election.slug,
+                'election_date': candidacy_extra.election.election_date,
+                'election_current': candidacy_extra.election.current,
+                'party_id': party.extra.slug,
+                'party_lists_in_use': candidacy_extra.election.party_lists_in_use,
+                'party_list_position': candidacy_extra.party_list_position,
+                'party_name': party.name,
+                'post_id': post.extra.slug,
+                'post_label': post.extra.short_label,
+                'mapit_url': mapit_url,
+                'elected': elected_for_csv,
+                'email': self.base.email,
+                'twitter_username': self.twitter_username,
+                'twitter_user_id': twitter_user_id,
+                'facebook_page_url': self.facebook_page_url,
+                'linkedin_url': self.linkedin_url,
+                'party_ppc_page_url': self.party_ppc_page_url,
+                'facebook_personal_url': self.facebook_personal_url,
+                'homepage_url': self.homepage_url,
+                'wikipedia_url': self.wikipedia_url,
+                'image_url': primary_image_url,
+                'proxy_image_url_template': proxy_image_url_template,
+                'image_copyright': image_copyright,
+                'image_uploading_user': image_uploading_user,
+                'image_uploading_user_notes': image_uploading_user_notes,
+            }
+            from ..election_specific import get_extra_csv_values
+            extra_csv_data = get_extra_csv_values(self.base, election, post)
+            row.update(extra_csv_data)
+            result.append(row)
 
-        return row
+        return result
 
     not_standing = models.ManyToManyField(
         Election, related_name='persons_not_standing'
