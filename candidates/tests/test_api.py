@@ -172,7 +172,10 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         self.assertEqual(person['id'], 2009)
         self.assertEqual(person['name'], 'Tessa Jowell')
 
-        memberships = person['memberships']
+        memberships = sorted(
+            person['memberships'],
+            key=lambda m: m['role']
+        )
 
         self.assertEqual(len(memberships), 2)
         self.assertEqual(memberships[1]['role'], 'Candidate')
