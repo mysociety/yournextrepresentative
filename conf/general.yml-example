@@ -23,9 +23,6 @@ ELECTION_APP: 'example'
 LANGUAGE_CODE: 'en-gb'
 TIME_ZONE: 'Europe/London'
 
-# The path to the gems directory:
-GEMS_DIRECTORY: ''
-
 # SECRET_KEY should be a random string of characters
 SECRET_KEY: '098nadkafy123asidftqaer0aoejfoasdfa'
 

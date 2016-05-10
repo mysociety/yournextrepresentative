@@ -14,8 +14,6 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 grep -qG 'cd $HOME/yournextmp' "$HOME/.bashrc" ||
    cat <<'EOF' >> "$HOME/.bashrc"
 
-export PATH="$HOME/yournextmp/gems/bin:$PATH"
-export GEM_HOME="$HOME/yournextmp/gems"
 source ~/yournextmp/venv/bin/activate
 cd ~/yournextmp
 EOF

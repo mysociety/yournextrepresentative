@@ -40,16 +40,6 @@ if int(config.get('STAGING')) and sys.argv[1:2] != ['runserver']:
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.base")
 
-gems_directory = config.get('GEMS_DIRECTORY')
-if gems_directory:
-    if os.path.exists(gems_directory):
-        # If there's a gems directory in the virtualenv, set the GEM_HOME
-        # and PATH so that django-pipeline can use compass from there:
-        os.environ['GEM_HOME'] = gems_directory
-        os.environ['GEM_PATH'] = ''
-        os.environ['PATH'] = os.path.join(gems_directory, 'bin') + \
-            ':' + os.environ['PATH']
-
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
