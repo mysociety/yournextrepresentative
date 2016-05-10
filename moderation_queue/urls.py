@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from .views import (
     upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview
 )
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^photo/upload/(?P<person_id>\d+)$',
         upload_photo,
         name="photo-upload"),
@@ -19,4 +19,4 @@ urlpatterns = patterns('',
     url(r'^photo/upload/(?P<person_id>\d+)/success$',
         PhotoUploadSuccess.as_view(),
         name="photo-upload-success"),
-)
+]
