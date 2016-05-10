@@ -34,6 +34,18 @@ def queryset_iterator(qs, complex_popolo_fields):
         start_index += FETCH_AT_A_TIME
 
 
+def safely_write(output_filename, people, group_by_post):
+    csv = list_to_csv(people, group_by_post)
+    # Write to a temporary file and atomically rename into place:
+    ntf = NamedTemporaryFile(
+        delete=False,
+        dir=dirname(output_filename)
+    )
+    ntf.write(csv.encode('utf-8'))
+    chmod(ntf.name, 0o644)
+    rename(ntf.name, output_filename)
+
+
 class Command(BaseCommand):
 
     help = "Output CSV files for all elections"
@@ -53,6 +65,21 @@ class Command(BaseCommand):
             help='Only output CSV for the election with this slug'
         )
 
+    def get_people(self, election, qs):
+        all_people = []
+        elected_people = []
+        for person_extra in queryset_iterator(
+                qs, self.complex_popolo_fields
+        ):
+            for d in person_extra.as_list_of_dicts(
+                None,
+                base_url=self.options['site_base_url']
+            ):
+                all_people.append(d)
+                if d['elected'] == 'True':
+                    elected_people.append(d)
+        return all_people, elected_people
+
     def handle(self, **options):
         if options['election']:
             try:
@@ -63,23 +90,19 @@ class Command(BaseCommand):
         else:
             all_elections = list(Election.objects.all()) + [None]
 
-        complex_popolo_fields = get_complex_popolo_fields()
+        self.options = options
+        self.complex_popolo_fields = get_complex_popolo_fields()
 
         for election in all_elections:
-            all_people = []
             if election is None:
                 # Get information for every candidate in every
                 # election.
                 qs = PersonExtra.objects.all()
-                for person_extra in queryset_iterator(
-                        qs, complex_popolo_fields
-                ):
-                    all_people += person_extra.as_list_of_dicts(
-                        None,
-                        base_url=options['site_base_url']
-                    )
-                output_filename = \
-                    options['OUTPUT-PREFIX'] + '-all.csv'
+                all_people, elected_people = self.get_people(election, qs)
+                output_filenames = {
+                    'all': options['OUTPUT-PREFIX'] + '-all.csv',
+                    'elected': options['OUTPUT-PREFIX'] + '-elected-all.csv'
+                }
             else:
                 # Only get the candidates standing in that particular
                 # election
@@ -88,23 +111,21 @@ class Command(BaseCommand):
                     base__memberships__extra__election=election,
                     base__memberships__role=role,
                 )
-                for person_extra in queryset_iterator(
-                        qs, complex_popolo_fields
-                ):
-                    all_people += person_extra.as_list_of_dicts(
-                        election,
-                        base_url=options['site_base_url']
-                    )
-                output_filename = \
-                    options['OUTPUT-PREFIX'] + '-' + election.slug + '.csv'
-
+                all_people, elected_people = self.get_people(election, qs)
+                output_filenames = {
+                    'all': options['OUTPUT-PREFIX'] + \
+                        '-' + election.slug + '.csv',
+                    'elected': options['OUTPUT-PREFIX'] +
+                        '-elected-' + election.slug + '.csv',
+                }
             group_by_post = election is not None
-            csv = list_to_csv(all_people, group_by_post)
-            # Write to a temporary file and atomically rename into place:
-            ntf = NamedTemporaryFile(
-                delete=False,
-                dir=dirname(output_filename)
+            safely_write(
+                output_filenames['all'],
+                all_people,
+                group_by_post,
             )
-            ntf.write(csv.encode('utf-8'))
-            chmod(ntf.name, 0o644)
-            rename(ntf.name, output_filename)
+            safely_write(
+                output_filenames['elected'],
+                elected_people,
+                group_by_post,
+            )
