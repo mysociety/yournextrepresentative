@@ -72,7 +72,7 @@ class Command(BaseCommand):
                 qs, self.complex_popolo_fields
         ):
             for d in person_extra.as_list_of_dicts(
-                None,
+                election,
                 base_url=self.options['site_base_url']
             ):
                 all_people.append(d)
