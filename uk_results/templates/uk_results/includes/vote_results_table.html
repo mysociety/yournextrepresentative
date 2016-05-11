@@ -52,7 +52,7 @@
       <strong>Reported turnout</strong>
     </th>
     <td>
-      {{ result.num_turnout_reported }}
+      {{ result.num_turnout_reported|default_if_none:"Unknown" }}
     </td>
   </tr>
   <tr>
@@ -60,7 +60,7 @@
       <strong>Spoilt ballots</strong>
     </th>
     <td>
-      {{ result.num_spoilt_ballots }}
+      {{ result.num_spoilt_ballots|default_if_none:"Unknown" }}
     </td>
   </tr>
 </table>

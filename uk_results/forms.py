@@ -170,6 +170,12 @@ class ResultSetForm(forms.ModelForm):
         self.memberships = []
 
         super(ResultSetForm, self).__init__(*args, **kwargs)
+
+        self.fields['num_spoilt_ballots'].required = False
+        self.fields['num_spoilt_ballots'].label += " (Not required)"
+        self.fields['num_turnout_reported'].required = False
+        self.fields['num_turnout_reported'].label += " (Not required)"
+
         existing_fields = self.fields
         fields = OrderedDict()
 
