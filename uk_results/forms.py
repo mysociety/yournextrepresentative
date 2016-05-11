@@ -257,10 +257,10 @@ class ResultSetForm(forms.ModelForm):
                 postextra=self.memberships[0][0].post.extra)[0].winner_count
 
         winners = dict(sorted(
-            [(int(self[y].value()), x)
+            [("{}-{}".format(self[y].value(), x.person.id), x)
                 for x, y in self.memberships],
             reverse=True,
-            key=lambda votes: votes[0]
+            key=lambda votes: int(votes[0].split('-')[0])
         )[:winner_count])
 
         for membership, field_name in self.memberships:
