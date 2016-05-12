@@ -562,7 +562,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
             initial={
                 ('constituency_' + self.election): post_id,
                 ('standing_' + self.election): 'standing',
-                ('party_' + party_set.slug + '_' + self.election): party_id,
+                ('party_' + party_set.slug + '_' + self.election): party.id,
             },
             hidden_post_widget=True,
         )

@@ -7,6 +7,7 @@ from .auth import TestUserMixin
 from .factories import (
     CandidacyExtraFactory, MembershipFactory, PersonExtraFactory
 )
+from popolo.models import Organization
 from .uk_examples import UK2015ExamplesMixin
 
 
@@ -76,6 +77,22 @@ class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertTrue(
             re.search(
                 r'''(?ms)1</span>\s*<img[^>]*>\s*<div class="person-name-and-party">\s*<a[^>]*>Tessa Jowell''',
+                response.text
+            )
+        )
+
+    def test_party_pre_selected_in_form(self):
+        response = self.app.get(
+            '/election/2015/party-list/65808/' + self.labour_party_extra.slug,
+            user=self.user,
+        )
+        p = Organization.objects.get(extra__slug='party:53')
+
+        # make sure the party is pre-selected in the party drop down
+        # in the new candidate form
+        self.assertTrue(
+            re.search(
+                r'''(?ms)<option value="''' + str(p.id) + '''" selected="selected">''',
                 response.text
             )
         )
