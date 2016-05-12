@@ -30,12 +30,13 @@
 
   <p>{% blocktrans trimmed %}
     This CSV file contains details of all candidates in the
-    database who were elected at an election that this site covers.
+    database who have been recorded as elected at an election
+    that this site covers.
   {% endblocktrans %}</p>
 
   <ul>
     <li>{% if all_results_exists %}
-      <a href="{{ MEDIA_URL }}candidates-elected-all.csv">{% blocktrans %}Download data about all of the candidates{% endblocktrans %}</a>
+      <a href="{{ MEDIA_URL }}candidates-elected-all.csv">{% blocktrans %}Download data about all of the elected candidates{% endblocktrans %}</a>
       {% else %}
       <em>{% trans "(The file of all elected candidates has not yet been generated.)" %}</em>
       {% endif %}
@@ -45,9 +46,9 @@
   {% for era in grouped_elections %}
     <div>
       <h3>{% if era.current %}
-        {% trans "Current Elections" %}
+        {% trans "Elected Candidates from Current Elections" %}
       {% else %}
-        {% trans "Past Elections" %}
+        {% trans "Elected Candidates from Past Elections" %}
       {% endif %}</h3>
       {% for role_data in era.roles %}
         <h4>{{ role_data.role }}</h4>
