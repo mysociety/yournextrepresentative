@@ -314,6 +314,7 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             self.assertEqual(la.action_type, 'photo-reject')
             self.assertEqual(la.person.id, 2009)
             self.assertEqual(la.source, 'Rejected a photo upload from john')
+            self.assertEqual(la.note, 'There\'s no clear source or copyright statement')
 
             mock_send_mail.assert_called_once_with(
                 'YNR image moderation results',
