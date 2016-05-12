@@ -23,7 +23,7 @@ class LoggedActionAdmin(admin.ModelAdmin):
     list_filter = ('action_type',)
     list_display = ['user', 'ip_address', 'action_type',
                     'popit_person_new_version', 'person_link',
-                    'created', 'updated', 'source']
+                    'created', 'updated', 'source', 'note']
     ordering = ('-created',)
 
     def person_link(self, o):

@@ -25,6 +25,7 @@ class LoggedAction(models.Model):
     updated = models.DateTimeField(auto_now=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)
     source = models.TextField()
+    note = models.TextField(blank=True, null=True)
 
 
 class PersonRedirect(models.Model):
