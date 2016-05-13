@@ -566,5 +566,8 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
             },
             hidden_post_widget=True,
         )
-
+        context = get_person_form_fields(
+            context,
+            context['add_candidate_form']
+        )
         return context

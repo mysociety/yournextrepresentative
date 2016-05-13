@@ -102,19 +102,8 @@
 
       <h4>{% trans "Add a new candidate" %}</h4>
 
-      <form method="post" id="new-candidate-form" action="{% url 'person-create' election=election %}">
-        {% csrf_token %}
-          {% for field in add_candidate_form.visible_fields %}
-            <p>
-              {{ field.errors }}
-              {{ field.label_tag }} {{ field }}
-            </p>
-          {% endfor %}
-          {% for hidden_field in add_candidate_form.hidden_fields %}
-            {{ hidden_field }}
-          {% endfor %}
-        <input type="submit" class="button" value="{% trans "Add new candidate" %}">
-        <a class="hide-new-candidate-form button secondary">{% trans "Cancel" %}</a>
+      <form id="new-candidate-form" name="new-candidate-form" action="{% url 'person-create' election=election %}" method="post">
+      {% include 'candidates/_person_form.html' with form=add_candidate_form %}
       </form>
 
     </div>
