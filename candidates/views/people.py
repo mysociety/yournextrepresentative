@@ -121,6 +121,13 @@ class PersonView(TemplateView):
             ).order_by('-election_date')
         else:
             context['elections_to_list'] = elections_by_date
+
+        context['elected_in'] = self.person.memberships.filter(
+            extra__elected=True
+        ).select_related(
+            'post', 'extra__election'
+        ).order_by('-extra__election__election_date')
+
         context['last_candidacy'] = self.person.extra.last_candidacy
         context['election_to_show'] = None
         context['simple_fields'] = [

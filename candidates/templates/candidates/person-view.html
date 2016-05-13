@@ -109,6 +109,20 @@
             {% endblocktrans %}</h4>
     </div>
     {% endif %}
+
+  {% for membership in elected_in %}
+  {% if forloop.first %}
+  <div class="candidates__elected">
+    <h3>{% trans "Elected as:" %}</h3>
+    <ul>
+  {% endif %}
+      <li>{% blocktrans with post_label=membership.post.label election_name=membership.extra.election.name %}{{ post_label }} in {{ election_name }}{% endblocktrans %}</li>
+  {% if forloop.last %}
+    </ul>
+  </div>
+  {% endif %}
+  {% endfor %}
+
   <h2>{% trans "Personal details:" %}</h2>
 
   <dl>

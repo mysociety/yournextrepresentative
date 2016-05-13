@@ -369,6 +369,13 @@
       border-color: mix($error-input-border-color, #fff, 50%);
     }
   }
+
+  .candidates__elected ul {
+    list-style: none;
+    li {
+      margin-top: 0.5em;
+    }
+  }
 }
 
 @media #{$medium-up} {
