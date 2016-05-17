@@ -342,6 +342,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                 },
                 'all': {
                     'source_filenames': (
+                        'js/vendor/custom.modernizr.js',
                         'jquery/jquery-1.11.1.js',
                         'jquery/jquery-ui.js',
                         'foundation/js/foundation/foundation.js',
