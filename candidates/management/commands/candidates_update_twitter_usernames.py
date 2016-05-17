@@ -45,11 +45,21 @@ class Command(BaseCommand):
                 .get(contact_type='twitter').value
         except ContactDetail.DoesNotExist:
             screen_name = None
+        except ContactDetail.MultipleObjectsReturned:
+            print(_("WARNING: multiple Twitter screen names found for {name} ({id}), skipping.").format(
+                name=person.name, id=person.id
+            ))
+            return
         try:
             user_id = person.identifiers \
                 .get(scheme='twitter').identifier
         except Identifier.DoesNotExist:
             user_id = None
+        except Identifier.MultipleObjectsReturned:
+            print(_("WARNING: multiple Twitter user IDs found for {name} ({id}), skipping.").format(
+                name=person.name, id=person.id
+            ))
+            return
         # If they have a Twitter user ID, then check to see if we
         # need to update the screen name from that; if so, update
         # the screen name.  Skip to the next person. This catches
