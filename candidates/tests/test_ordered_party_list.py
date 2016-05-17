@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import re
+import datetime
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
@@ -146,4 +147,17 @@ class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 r'''(?ms)1\s*<img[^>]*>\s*<div class="person-name-and-party">\s*<a[^>]*>Tessa Jowell''',
                 response.text
             )
+        )
+
+    def test_was_elected_button(self):
+        self.election.election_date = datetime.date.today()
+        self.election.save()
+
+        response = self.app.get(
+            '/election/2015/party-list/65808/' + self.labour_party_extra.slug,
+            user=self.user_who_can_record_results
+        )
+
+        response.mustcontain(
+            'This candidate was elected'
         )

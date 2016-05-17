@@ -56,6 +56,18 @@ def get_redirect_to_post(election, post):
     )
 
 
+def get_redirect_to_party_list(election, post, party_slug):
+    return HttpResponseRedirect(
+        reverse(
+            'party-for-post',
+            kwargs={
+                'election': election,
+                'post_id': post.extra.slug,
+                'organization_id': party_slug,
+            }
+        )
+    )
+
 def get_person_form_fields(context, form):
     context['extra_fields'] = []
     extra_fields = ExtraField.objects.all()

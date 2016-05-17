@@ -22,7 +22,7 @@ from .helpers import (
     get_party_people_for_election_from_memberships,
     split_candidacies, get_redirect_to_post,
     group_candidates_by_party, get_person_form_fields,
-    split_by_elected
+    split_by_elected, get_redirect_to_party_list
 )
 from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
@@ -341,6 +341,10 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
         )
         self.person = get_object_or_404(Person, id=person_id)
         self.post_data = get_object_or_404(Post, extra__slug=self.kwargs['post_id'])
+        self.party_slug = self.request.POST.get(
+            'party',
+            self.request.GET.get('party', '')
+        )
 
         return super(ConstituencyRecordWinnerView, self). \
             dispatch(request, *args, **kwargs)
@@ -435,10 +439,17 @@ class ConstituencyRecordWinnerView(ElectionMixin, GroupRequiredMixin, FormView):
                             candidate.extra.record_version(change_metadata)
                             candidate.save()
 
-        return get_redirect_to_post(
-            self.election,
-            self.post_data,
-        )
+        if self.party_slug:
+            return get_redirect_to_party_list(
+                self.election,
+                self.post_data,
+                self.party_slug,
+            )
+        else:
+            return get_redirect_to_post(
+                self.election,
+                self.post_data,
+            )
 
 
 class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
@@ -572,6 +583,16 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
             )
 
         party_set = PartySet.objects.get(postextra__slug=post_id)
+
+        number_of_winners = 0
+        for c in context['positions_and_people']:
+            pos, person, elected = c
+            if elected:
+                number_of_winners += 1
+
+        max_winners = get_max_winners(mp_post, self.election_data)
+        context['show_confirm_result'] = (max_winners < 0) \
+            or number_of_winners < max_winners
 
         context['add_candidate_form'] = NewPersonForm(
             election=self.election,
