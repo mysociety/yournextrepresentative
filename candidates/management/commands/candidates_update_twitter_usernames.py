@@ -29,9 +29,10 @@ class Command(BaseCommand):
 
     help = "Use the Twitter API to check / fix Twitter screen names and user IDs"
 
-    def record_new_version(self, person):
-        msg = 'Updated by the automated Twitter account checker ' \
-              '(candidates_update_twitter_usernames)'
+    def record_new_version(self, person, msg=None):
+        if msg is None:
+            msg = 'Updated by the automated Twitter account checker ' \
+                  '(candidates_update_twitter_usernames)'
         person.extra.record_version(
             {
                 'information_source': msg,
@@ -63,6 +64,27 @@ class Command(BaseCommand):
         qi.image.save(image_url, File(img_temp))
         qi.save()
 
+    def remove_twitter_screen_name(self, person, twitter_screen_name):
+        person.contact_details.get(
+            contact_type='twitter',
+            value=twitter_screen_name,
+        ).delete()
+        self.record_new_version(
+            person,
+            msg="This Twitter screen name no longer exists; removing it " \
+            "(candidates_update_twitter_usernames)"
+        )
+
+    def remove_twitter_user_id(self, person, twitter_user_id):
+        person.identifiers.get(
+            scheme='twitter',
+            identifier=twitter_user_id,
+        ).delete()
+        self.record_new_version(
+            person,
+            msg="This Twitter user ID no longer exists; removing it " \
+            "(candidates_update_twitter_usernames)",
+        )
 
     def handle_person(self, person):
         # Get the Twitter screen name and user ID if they exist:
@@ -91,17 +113,19 @@ class Command(BaseCommand):
         # the screen name.  Skip to the next person. This catches
         # people who have changed their Twitter screen name, or
         # anyone who had a user ID set but not a screen name
-        # (which should be rare).
+        # (which should be rare).  If the user ID is not a valid
+        # Twitter user ID, it is deleted.
         if user_id:
             verbose(_("{person} has a Twitter user ID: {user_id}").format(
                 person=person, user_id=user_id
             ))
             if user_id not in self.user_id_to_screen_name:
-                print(_("Warning: user ID {user_id} not found for {person_name}: {person_url}").format(
+                print(_("Removing user ID {user_id} for {person_name} as it is not a valid Twitter user ID. {person_url}").format(
                     user_id=user_id,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
                 ))
+                self.remove_twitter_user_id(person, user_id)
                 return
             correct_screen_name = self.user_id_to_screen_name[user_id]
             if (screen_name is None) or (screen_name != correct_screen_name):
@@ -125,16 +149,19 @@ class Command(BaseCommand):
         # Otherwise, if they have a Twitter screen name (but no
         # user ID, since we already dealt with that case) then
         # find their Twitter user ID and set that as an identifier.
+        # If the screen name is not a valid Twitter screen name, it
+        # is deleted.
         elif screen_name:
             verbose(_("{person} has Twitter screen name ({screen_name}) but no user ID").format(
                 person=person, screen_name=screen_name
             ))
             if screen_name.lower() not in self.screen_name_to_user_id:
-                print(_("Warning: screen name {screen_name} not found for {person_name}: {person_url}").format(
+                print(_("Removing screen name {screen_name} for {person_name} as it is not a valid Twitter screen name. {person_url}").format(
                     screen_name=screen_name,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
                 ))
+                self.remove_twitter_screen_name(person, screen_name)
                 return
             verbose(_("Adding the user ID {user_id}").format(
                 user_id=self.screen_name_to_user_id[screen_name.lower()]
