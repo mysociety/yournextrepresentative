@@ -31,7 +31,9 @@ def get_conf(conf_file_leafname):
     else:
         full_filename = join(BASE_DIR, 'conf', conf_file_leafname)
         with open(full_filename) as f:
-            return yaml.load(f)
+            config = yaml.load(f)
+            config['config_path'] = full_filename
+            return config
 
 def get_settings(conf_file_leafname, election_app=None, tests=False):
     conf = get_conf(conf_file_leafname)
@@ -150,6 +152,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'ALLOWED_HOSTS': conf.get('ALLOWED_HOSTS'),
         'DEBUG': debug,
         'RUNNING_TESTS': tests,
+        'CONFIG_PATH': None,
 
         # Google analytics settings:
         'GOOGLE_ANALYTICS_ACCOUNT': conf.get('GOOGLE_ANALYTICS_ACCOUNT'),
@@ -457,6 +460,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'OPTIONS',
         ),
     }
+    if 'config_path' in conf:
+        result['CONFIG_PATH'] = conf['config_path']
     if not conf.get('NEW_ACCOUNTS_ALLOWED', True):
         result['ACCOUNT_ADAPTER'] = \
             'mysite.account_adapter.NoNewUsersAccountAdapter'

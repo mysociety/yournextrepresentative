@@ -17,7 +17,10 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import yaml
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.base")
+
+from django.conf import settings
 
 # Add the path to the project root manually here. Ideally it could be added via
 # python-path in the httpd.conf WSGI config, but I'm not changing that due to
@@ -30,18 +33,21 @@ sys.path.insert(
     os.path.normpath(file_dir + "/..")
 )
 
-config_path = os.path.abspath( os.path.join( os.path.dirname(__file__), '..', 'conf', 'general.yml' ) )
-config = yaml.load(open(config_path))
-
-if int(config.get('STAGING')) and sys.argv[1:2] != ['runserver']:
+if int(settings.DEBUG) and sys.argv[1:2] != ['runserver']:
     import mysite.wsgi_monitor
     mysite.wsgi_monitor.start(interval=1.0)
-    mysite.wsgi_monitor.track(config_path)
+    if settings.CONFIG_PATH is not None:
+        mysite.wsgi_monitor.track(settings.CONFIG_PATH)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings.base")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
-from django.core.wsgi import get_wsgi_application
-application = get_wsgi_application()
+if 'ON_HEROKU' in os.environ:
+    from django.core.wsgi import get_wsgi_application
+    from whitenoise.django import DjangoWhiteNoise
+    application = get_wsgi_application()
+    application = DjangoWhiteNoise(application)
+else:
+    from django.core.wsgi import get_wsgi_application
+    application = get_wsgi_application()
