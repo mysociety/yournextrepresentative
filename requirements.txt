@@ -76,3 +76,8 @@ waitress==0.8.9
 WebOb==1.4
 WebTest==2.0.15
 yanc==0.2.4
+
+# Packages needed for running on Heroku, but not otherwise:
+dj-database-url==0.4.
+gunicorn==19.4.5
+whitenoise==2.0.6
