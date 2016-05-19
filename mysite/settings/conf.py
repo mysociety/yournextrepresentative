@@ -160,16 +160,16 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
 
         # The email address which is made public on the site for sending
         # support email to:
-        'SUPPORT_EMAIL': conf['SUPPORT_EMAIL'],
+        'SUPPORT_EMAIL': conf.get('SUPPORT_EMAIL'),
 
         # Email addresses that error emails are sent to when DEBUG = False
-        'ADMINS': conf['ADMINS'],
+        'ADMINS': conf.get('ADMINS'),
 
         # The From: address for all emails except error emails
-        'DEFAULT_FROM_EMAIL': conf['DEFAULT_FROM_EMAIL'],
+        'DEFAULT_FROM_EMAIL': conf.get('DEFAULT_FROM_EMAIL'),
 
         # The From: address for error emails
-        'SERVER_EMAIL': conf['SERVER_EMAIL'],
+        'SERVER_EMAIL': conf.get('SERVER_EMAIL'),
 
         # SECURITY WARNING: keep the secret key used in production secret!
         'SECRET_KEY': conf['SECRET_KEY'],
