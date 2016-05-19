@@ -6,6 +6,7 @@ import importlib
 from os.path import dirname, exists, join, realpath
 import re
 import yaml
+import os
 
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, LANGUAGES
 from django.utils.translation import ugettext_lazy as _
@@ -16,9 +17,21 @@ from mysite.helpers import mkdir_p
 BASE_DIR = realpath(dirname(dirname(dirname(__file__))))
 
 def get_conf(conf_file_leafname):
-    full_filename = join(BASE_DIR, 'conf', conf_file_leafname)
-    with open(full_filename) as f:
-        return yaml.load(f)
+    if os.environ.get('CONFIG_FROM_ENV'):
+        # print("Loading config from environment variables", file=sys.stderr)
+        general_yml_example_fname = join(BASE_DIR, 'conf', 'general.yml-example')
+        with open(general_yml_example_fname) as f:
+            example_config = yaml.load(f)
+        config = {
+            k: os.environ[k]
+            for k in example_config.keys()
+            if k in os.environ
+        }
+        return config
+    else:
+        full_filename = join(BASE_DIR, 'conf', conf_file_leafname)
+        with open(full_filename) as f:
+            return yaml.load(f)
 
 def get_settings(conf_file_leafname, election_app=None, tests=False):
     conf = get_conf(conf_file_leafname)
@@ -89,24 +102,29 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
 
     # Database
     # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-    if conf.get('DATABASE_SYSTEM') == 'postgresql':
-        databases = {
-            'default': {
-                'ENGINE':   'django.db.backends.postgresql_psycopg2',
-                'NAME':     conf.get('YNMP_DB_NAME'),
-                'USER':     conf.get('YNMP_DB_USER'),
-                'PASSWORD': conf.get('YNMP_DB_PASS'),
-                'HOST':     conf.get('YNMP_DB_HOST'),
-                'PORT':     conf.get('YNMP_DB_PORT'),
-            }
-        }
+    if 'ON_HEROKU' in os.environ:
+        import dj_database_url
+        db_from_env = dj_database_url.config(conn_max_age=500)
+        databases = {'default': db_from_env}
     else:
-        databases = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': join(BASE_DIR, 'db.sqlite3'),
+        if conf.get('DATABASE_SYSTEM') == 'postgresql':
+            databases = {
+                'default': {
+                    'ENGINE':   'django.db.backends.postgresql_psycopg2',
+                    'NAME':     conf.get('YNMP_DB_NAME'),
+                    'USER':     conf.get('YNMP_DB_USER'),
+                    'PASSWORD': conf.get('YNMP_DB_PASS'),
+                    'HOST':     conf.get('YNMP_DB_HOST'),
+                    'PORT':     conf.get('YNMP_DB_PORT'),
+                }
             }
-        }
+        else:
+            databases = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': join(BASE_DIR, 'db.sqlite3'),
+                }
+            }
 
     # Setup caches depending on DEBUG:
     if debug:
