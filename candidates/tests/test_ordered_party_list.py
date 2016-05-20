@@ -82,6 +82,15 @@ class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
             )
         )
 
+        # make sure that the party name header from the _party_list.html partial
+        # isn't displayed
+        self.assertFalse(
+            re.search(
+                r'''party-list-header''',
+                response.text
+            )
+        )
+
     def test_party_pre_selected_in_form(self):
         response = self.app.get(
             '/election/2015/party-list/65808/' + self.labour_party_extra.slug,

@@ -47,45 +47,9 @@
     <h3>{% blocktrans with post_label=post_data.label party_name=party.name %}{{ party_name }} candidates for <a href="{{ post_url }}">{{ post_label }}</a>{% endblocktrans %}
     </h3>
 
-    {% for position_in_list, c, candidate_elected in positions_and_people %}
-      {% if forloop.first %}
-        <ul class="candidate-list">
-      {% endif %}
+    {% include 'candidates/_party_list.html' with people=positions_and_people %}
 
-        <li class="candidates-list__person{% if candidate_elected %} candidates-list__person__winner{% endif %}">
-          {% if candidate_elected %}
-            <h4 class="candidates-list__person__elected-text">{% trans "Winner" %}</h4>
-          {% endif %}
-
-          {% include 'candidates/_person_in_list.html' with election=election %}
-          {% if user.is_authenticated %}
-          <p>
-            {% if candidate_list_edits_allowed %}
-              <a class="button tiny js-toggle-source-confirmation not-standing">{% trans "Not actually standing?" %}</a>
-            {% endif %}
-            <a href="{% url 'person-update' person_id=c.id %}" class="button tiny secondary">{% trans "Edit" %}</a>
-          </p>
-          {% if candidate_list_edits_allowed %}
-            {% include 'candidates/_source_confirmation.html' with standing='not-standing' action='candidacy-delete' %}
-          {% endif %}
-          {% if DATE_TODAY >= election_data.election_date %}
-            {% if user_can_record_results and show_confirm_result and not candidate_elected %}
-              <form class="winner-confirm" action="{% url 'record-winner' election=election post_id=post_data.id %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="person_id" value="{{ c.id }}">
-                <input type="hidden" name="source" value="{% trans "[Quick update from the party list page]" %}">
-                <input type="hidden" name="party" value="{{ party.extra.slug}}" %}">
-                <input type="submit" class="button" value="{% trans "This candidate was elected!" %}">
-              </form>
-            {% endif %}
-          {% endif %}
-          {% endif %}
-        </li>
-
-      {% if forloop.last %}
-        </ul>
-      {% endif %}
-    {% empty %}
+    {% if not positions_and_people %}
       <div class="no-candidates row">
         <p class="medium-8 columns">{% blocktrans trimmed with party_name=party.name post_label=post_data.label election_name=election_data.name %}
             <strong>Oh no!</strong> We don’t know of any candidates from {{ party_name }} for {{ post_label }}
@@ -96,7 +60,7 @@
           <p class="medium-4 columns"><a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="show-new-candidate-form button">{% trans "Sign in to add a new candidate" %}</a></p>
         {% endif %}
       </div>
-    {% endfor %}
+    {% endif %}
 
     {% if candidates and candidate_list_edits_allowed %}
         <p><a class="show-new-candidate-form button">{% trans "Add a new candidate" %}</a></p>
