@@ -66,4 +66,14 @@ $(function() {
     return confirm(message);
   });
 
+  $('.winner-unset').submit(function(e) {
+    var enclosingDiv = $(e.target).parent(),
+      electedCandidatesDiv=enclosingDiv.find('.candidates__elected'),
+      electedCandidates=electedCandidatesDiv.find('li.candidates-list__person'),
+      message;
+    message = interpolate(gettext("Are you sure that you want to unset all %s winners?"),
+        [electedCandidates.length]);
+    return confirm(message);
+  });
+
 });
