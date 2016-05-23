@@ -107,14 +107,14 @@
   <div class="candidates__known">
 
     <h3>
-        {% if has_elected %}
-        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
-      Unelected candidates for <a href="{{ post_url }}">{{ post_label }}</a>
-      in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
+      {% if settings.HOIST_ELECTED_CANDIDATES and has_elected %}
+        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name %}
+          Unelected candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+          in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
       {% else %}
-        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name  %}
-      Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>
-      in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
+        {% blocktrans trimmed with post_label=post_data.label election_name=election_data.name %}
+          Known candidates for <a href="{{ post_url }}">{{ post_label }}</a>
+          in the <a href="{{ election_posts_url }}"> {{ election_name }}</a>{% endblocktrans %}
       {% endif %}
     </h3>
 

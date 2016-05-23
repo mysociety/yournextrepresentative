@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.test.utils import override_settings
 from django.utils.six import text_type
 from django_webtest import WebTest
 
@@ -169,6 +170,14 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         response.mustcontain('<div class="candidates__known">')
 
         response.mustcontain(no='Unset the current winners')
+
+        response.mustcontain('Unelected candidates for')
+        response.mustcontain(no='Known candidates for')
+
+        with override_settings(HOIST_ELECTED_CANDIDATES=False):
+            response = self.app.get('/election/2015/post/14419/edinburgh-east')
+            response.mustcontain(no='Unelected candidates for')
+            response.mustcontain('Known candidates for')
 
     def test_constituency_with_winner_record_results_user(self):
         response = self.app.get(
