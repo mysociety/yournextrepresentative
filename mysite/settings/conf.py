@@ -7,6 +7,7 @@ from os.path import dirname, exists, join, realpath
 import re
 import yaml
 
+from django.conf import locale
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS, LANGUAGES
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation.trans_real import to_locale
@@ -58,6 +59,26 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     ]
     languages.append(('cy-gb', 'Welsh'))
     languages.append(('es-cr', 'Costa Rican Spanish'))
+
+    # we need this to make the language switcher work because Django doesn't
+    # have any language information for these so if you try to tell it to
+    # switch to them it cannot and falls back to the existing/default language
+    EXTRA_LANG_INFO = {
+        'cy-gb': {
+            'bidi': False,
+            'code': 'cy-gb',
+            'name': 'Welsh',
+            'name_local': u'Cymraeg',
+        },
+        'es-cr': {
+            'bidi': False,
+            'code': 'es-cr',
+            'name': 'Spanish',
+            'name_local': u'español de Costa Rica',
+        },
+    }
+
+    locale.LANG_INFO.update(EXTRA_LANG_INFO)
 
     # The language selection has been slightly complicated now that we
     # have two es- languages: es-ar and es-cr.  Chrome doesn't offer
