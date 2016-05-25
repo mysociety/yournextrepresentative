@@ -240,9 +240,12 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
             'crispy_forms',
+            'usersettings',
         ),
 
         'SITE_ID': 1,
+
+        'USERSETTINGS_MODEL': 'candidates.SiteSettings',
 
         'MIDDLEWARE_CLASSES': (
             'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -256,6 +259,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'candidates.middleware.DisallowedUpdateMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
+            'usersettings.middleware.CurrentUserSettingsMiddleware',
         ),
 
         # django-allauth settings:
