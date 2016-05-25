@@ -68,7 +68,7 @@ class Election(models.Model):
     name = models.CharField(max_length=128)
     current = models.BooleanField()
     use_for_candidate_suggestions = models.BooleanField(default=False)
-    area_types = models.ManyToManyField(AreaType)
+    area_types = models.ManyToManyField(AreaType, blank=True)
     area_generation = models.CharField(max_length=128, blank=True)
     organization = models.ForeignKey(Organization, null=True, blank=True)
     party_lists_in_use = models.BooleanField(default=False)
