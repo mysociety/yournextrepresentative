@@ -16,6 +16,7 @@ from candidates.models import MembershipExtra, PersonExtra, ExtraField
 from compat import bytes_to_unicode
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from . import factories
 
@@ -24,7 +25,7 @@ example_version_id = '5aa6418325c1a0bb'
 
 # FIXME: add a test to check that unauthorized people can't revert
 
-class TestRevertPersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestRevertPersonView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     version_template = Template('''[
           {

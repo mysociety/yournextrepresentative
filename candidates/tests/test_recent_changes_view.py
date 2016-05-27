@@ -5,11 +5,13 @@ from django_webtest import WebTest
 from candidates.tests import factories
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from ..models import LoggedAction
 
-class TestRecentChangesView(TestUserMixin, WebTest):
+class TestRecentChangesView(TestUserMixin, SettingsMixin, WebTest):
 
     def setUp(self):
+        super(TestRecentChangesView, self).setUp()
         test_person_1 = factories.PersonExtraFactory.create(
             base__id=9876,
             base__name='Test Candidate for Recent Changes',

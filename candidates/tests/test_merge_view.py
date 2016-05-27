@@ -16,6 +16,7 @@ from popolo.models import Membership, Person
 from candidates.models import PersonRedirect, MembershipExtra, ImageExtra
 from mysite.helpers import mkdir_p
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from . import factories
 
@@ -25,7 +26,7 @@ example_version_id = '5aa6418325c1a0bb'
 TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class TestMergePeopleView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestMergePeopleView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestMergePeopleView, self).setUp()

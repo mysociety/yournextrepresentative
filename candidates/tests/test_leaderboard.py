@@ -6,11 +6,13 @@ from django_webtest import WebTest
 
 from .auth import TestUserMixin
 from .factories import PersonExtraFactory
+from .settings import SettingsMixin
 from ..models import LoggedAction
 
-class TestLeaderboardView(TestUserMixin, WebTest):
+class TestLeaderboardView(TestUserMixin, SettingsMixin, WebTest):
 
     def setUp(self):
+        super(TestLeaderboardView, self).setUp()
         self.user2 = User.objects.create_user(
             'jane',
             'jane@example.com',
@@ -81,4 +83,5 @@ class TestLeaderboardView(TestUserMixin, WebTest):
             '5,ermintrude,0\r\n'
             '6,frankie,0\r\n'
             '7,johnrefused,0\r\n'
+            '8,settings,0\r\n'
         )

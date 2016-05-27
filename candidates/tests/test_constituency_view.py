@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 
-from django.test.utils import override_settings
 from django.utils.six import text_type
 from django_webtest import WebTest
+
+from usersettings.shortcuts import get_current_usersettings
 
 from .auth import TestUserMixin
 from .dates import date_in_near_future
@@ -10,6 +11,7 @@ from .factories import (
     AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
     PersonExtraFactory, PostExtraFactory,
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 from compat import BufferDictReader
@@ -17,7 +19,7 @@ from compat import BufferDictReader
 from ..models import MembershipExtra, PersonExtra
 
 
-class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestConstituencyDetailView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyDetailView, self).setUp()
@@ -175,10 +177,12 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         response.mustcontain('Unelected candidates for')
         response.mustcontain(no='Known candidates for')
 
-        with override_settings(HOIST_ELECTED_CANDIDATES=False):
-            response = self.app.get('/election/2015/post/14419/edinburgh-east')
-            response.mustcontain(no='Unelected candidates for')
-            response.mustcontain('Known candidates for')
+        settings = get_current_usersettings()
+        settings.HOIST_ELECTED_CANDIDATES = False
+        settings.save()
+        response = self.app.get('/election/2015/post/14419/edinburgh-east')
+        response.mustcontain(no='Unelected candidates for')
+        response.mustcontain('Known candidates for')
 
     def test_constituency_with_winner_record_results_user(self):
         response = self.app.get(

@@ -16,6 +16,7 @@ from candidates.tests.factories import (
     AreaTypeFactory, AreaExtraFactory, ElectionFactory,
     ParliamentaryChamberExtraFactory, PostExtraFactory,
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from elections.uk.tests.mapit_postcode_results \
     import se240ag_result, sw1a1aa_result
@@ -52,7 +53,7 @@ def fake_requests_for_mapit(url):
 
 @attr(country='uk')
 @patch('elections.uk.mapit.requests')
-class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
+class TestUpcomingElectionsAPI(UK2015ExamplesMixin, SettingsMixin, WebTest):
     def setUp(self):
         super(TestUpcomingElectionsAPI, self).setUp()
 

@@ -6,11 +6,13 @@ from django_webtest import WebTest
 
 from popolo.models import Person
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from ..models import LoggedAction
 
-class TestFeeds(TestUserMixin, WebTest):
+class TestFeeds(TestUserMixin, SettingsMixin, WebTest):
 
     def setUp(self):
+        super(TestFeeds, self).setUp()
         self.person1 = Person.objects.create(
             name='Test Person1'
         )

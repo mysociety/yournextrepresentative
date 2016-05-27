@@ -11,10 +11,11 @@ from .dates import processors_before, processors_after
 from .factories import (
     CandidacyExtraFactory, PersonExtraFactory
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestPersonView(UK2015ExamplesMixin, WebTest):
+class TestPersonView(UK2015ExamplesMixin, SettingsMixin, WebTest):
 
     def setUp(self):
         super(TestPersonView, self).setUp()

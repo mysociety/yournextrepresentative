@@ -13,10 +13,11 @@ from popolo.models import Person
 from candidates.models import ExtraField, PersonExtraFieldValue, PersonExtra
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class ExtraFieldTests(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class ExtraFieldTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(ExtraFieldTests, self).setUp()

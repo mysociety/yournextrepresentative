@@ -7,9 +7,10 @@ from candidates.models import PostExtra
 
 from .auth import TestUserMixin
 from .factories import CandidacyExtraFactory, PersonExtraFactory
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestConstituencyLockAndUnlock(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyLockAndUnlock, self).setUp()
@@ -119,7 +120,7 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
         self.assertNotIn('Camberwell', response.text)
 
 
-class TestConstituencyLockWorks(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestConstituencyLockWorks(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyLockWorks, self).setUp()

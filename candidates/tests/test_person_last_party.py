@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 from django.test import TestCase
 
 from . import factories
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestPersonLastParty(UK2015ExamplesMixin, TestCase):
+class TestPersonLastParty(UK2015ExamplesMixin, SettingsMixin, TestCase):
 
     def setUp(self):
         super(TestPersonLastParty, self).setUp()

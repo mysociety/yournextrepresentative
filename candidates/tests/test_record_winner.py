@@ -8,6 +8,7 @@ from popolo.models import Person
 
 from ..models import PostExtraElection
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .factories import (
     CandidacyExtraFactory, MembershipFactory, PersonExtraFactory,
 )
@@ -15,7 +16,7 @@ from .dates import processors_after
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestRecordWinner(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestRecordWinner, self).setUp()
@@ -272,7 +273,7 @@ class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
         person = Person.objects.get(id=2009)
         self.assertTrue(person.extra.get_elected(self.election))
 
-class TestRetractWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestRetractWinner(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestRetractWinner, self).setUp()

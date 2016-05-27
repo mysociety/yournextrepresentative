@@ -9,6 +9,7 @@ from popolo.models import Person
 from candidates.models import PersonExtra, SimplePopoloField
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
@@ -16,7 +17,7 @@ def get_next_dd(start):
     return [t for t in start.next_siblings if t.name == 'dd'][0]
 
 
-class SimpleFieldsTests(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class SimpleFieldsTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(SimpleFieldsTests, self).setUp()

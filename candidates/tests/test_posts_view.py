@@ -2,10 +2,11 @@ from __future__ import unicode_literals
 
 from django_webtest import WebTest
 
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestPostsView(UK2015ExamplesMixin, WebTest):
+class TestPostsView(UK2015ExamplesMixin, SettingsMixin, WebTest):
 
     def test_single_election_posts_page(self):
 

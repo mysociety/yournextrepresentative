@@ -9,11 +9,12 @@ from .dates import (
     processors_on_election_day,
     processors_after,
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from .factories import CandidacyExtraFactory, PersonExtraFactory
 
 
-class TestWasElectedButtons(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestWasElectedButtons(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestWasElectedButtons, self).setUp()

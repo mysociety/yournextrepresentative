@@ -2,9 +2,10 @@ from django_webtest import WebTest
 
 from . import factories
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestPartyDropDownOrdering(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def test_hardly_any_candidates_at_all(self):
         party_choices = self.gb_parties.party_choices()

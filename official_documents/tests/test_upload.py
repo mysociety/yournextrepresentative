@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from candidates.tests.auth import TestUserMixin
+from candidates.tests.settings import SettingsMixin
 
 from official_documents.models import OfficialDocument
 
@@ -31,13 +32,14 @@ TEST_MEDIA_ROOT=realpath(
 # check whether the upload text appears correctly should be moved to
 # the candidates application tests.
 
-class TestModels(TestUserMixin, WebTest):
+class TestModels(TestUserMixin, SettingsMixin, WebTest):
 
     example_image_filename = join(
         settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
     )
 
     def setUp(self):
+        super(TestModels, self).setUp()
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         election = ElectionFactory.create(

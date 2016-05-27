@@ -13,6 +13,7 @@ from candidates.tests.factories import (
     AreaExtraFactory, CandidacyExtraFactory, PersonExtraFactory,
     PostExtraFactory,
 )
+from candidates.tests.settings import SettingsMixin
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 from django.contrib.contenttypes.models import ContentType
@@ -23,7 +24,7 @@ from candidates.tests.auth import TestUserMixin
 from .models import Alert
 
 
-class AlertsTest(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class AlertsTest(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(AlertsTest, self).setUp()

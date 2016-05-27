@@ -7,13 +7,16 @@ from django.utils.translation import override
 
 from django_date_extensions.fields import ApproximateDate
 
+from usersettings.shortcuts import get_current_usersettings
+
+from .settings import SettingsMixin
 from candidates.models import parse_approximate_date
 
 # These tests supplement the doctests; they're not done as
 # doctests because we need to override settings to pick
 # either US or non-US day/month default ordering:
 
-class DateParsingTests(TestCase):
+class DateParsingTests(SettingsMixin, TestCase):
 
     def test_only_year(self):
         parsed = parse_approximate_date('1977')
@@ -34,8 +37,10 @@ class DateParsingTests(TestCase):
         self.assertEqual(type(parsed), ApproximateDate)
         self.assertEqual(repr(parsed), '1977-04-01')
 
-    @override_settings(DD_MM_DATE_FORMAT_PREFERRED=False)
     def test_mm_dd_yyyy_with_slashes(self):
+        settings = get_current_usersettings()
+        settings.DD_MM_DATE_FORMAT_PREFERRED=False
+        settings.save()
         parsed = parse_approximate_date('4/1/1977')
         self.assertEqual(type(parsed), ApproximateDate)
         self.assertEqual(repr(parsed), '1977-04-01')

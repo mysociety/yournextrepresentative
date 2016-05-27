@@ -13,6 +13,7 @@ import pygeocoder
 
 from candidates.models import PartySet
 from candidates.tests.factories import PostExtraFactory, AreaExtraFactory
+from candidates.tests.settings import SettingsMixin
 from elections.models import AreaType, Election
 from popolo.models import Organization
 
@@ -132,8 +133,9 @@ def fake_represent_boundaries(url, params):
 
 
 @attr(country='st_paul')
-class StPaulTests(WebTest):
+class StPaulTests(SettingsMixin, WebTest):
     def setUp(self):
+        super(StPaulTests, self).setUp()
         election_school = Election.objects.get(slug='school-board-2015')
         election_council = Election.objects.get(slug='council-member-2015')
         ward_area_type = AreaType.objects.get(name='WARD')
