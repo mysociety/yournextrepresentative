@@ -14,6 +14,8 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 
+from usersettings.shortcuts import get_current_usersettings
+
 from candidates.models.auth import (
     NameChangeDisallowedException,
     ChangeToLockedConstituencyDisallowedException
@@ -24,6 +26,7 @@ class DisallowedUpdateMiddleware(object):
 
     def process_exception(self, request, exc):
         if isinstance(exc, NameChangeDisallowedException):
+            usersettings = get_current_usersettings()
             intro = _('As a precaution, an update was blocked:')
             outro = _('If this update is appropriate, someone should apply it manually.')
             # Then email the support address about the name change...
@@ -37,8 +40,8 @@ class DisallowedUpdateMiddleware(object):
                     site_name=Site.objects.get_current().name
                 ),
                 message,
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.SUPPORT_EMAIL],
+                usersettings.DEFAULT_FROM_EMAIL,
+                [usersettings.SUPPORT_EMAIL],
                 fail_silently=False
             )
             # And redirect to a page explaining to the user what has happened
@@ -63,6 +66,7 @@ class CopyrightAssignmentMiddleware(object):
         re.compile(r'^/copyright-question'),
         re.compile(r'^/accounts/'),
         re.compile(r'^/admin/'),
+        re.compile(r'^/settings/'),
     )
 
     def process_request(self, request):
