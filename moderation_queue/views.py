@@ -201,11 +201,11 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
     def send_mail(self, subject, message, email_support_too=False):
         recipients = [self.queued_image.user.email]
         if email_support_too:
-            recipients.append(settings.SUPPORT_EMAIL)
+            recipients.append(self.request.usersettings.SUPPORT_EMAIL)
         return send_mail(
             subject,
             message,
-            settings.DEFAULT_FROM_EMAIL,
+            self.request.usersettings.DEFAULT_FROM_EMAIL,
             recipients,
             fail_silently=False,
         )
