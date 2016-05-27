@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
+from usersettings.shortcuts import get_current_usersettings
 from auth_helpers.views import user_in_group
 
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
@@ -59,7 +60,8 @@ def check_creation_allowed(user, new_candidacies):
 def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidacies):
     # Check whether an unauthorized user has tried to rename someone
     # while RESTRICT_RENAMES is set:
-    if settings.RESTRICT_RENAMES:
+    usersettings = get_current_usersettings()
+    if usersettings.RESTRICT_RENAMES:
         allowed_by_group = user_in_group(user, TRUSTED_TO_RENAME_GROUP_NAME)
         name_the_same = old_name == new_name
         if not (allowed_by_group or name_the_same):
