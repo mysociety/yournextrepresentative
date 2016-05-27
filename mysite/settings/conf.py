@@ -154,25 +154,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'DEBUG': debug,
         'RUNNING_TESTS': tests,
 
-        # Google analytics settings:
-        'GOOGLE_ANALYTICS_ACCOUNT': conf.get('GOOGLE_ANALYTICS_ACCOUNT'),
-        'USE_UNIVERSAL_ANALYTICS': conf.get('USE_UNIVERSAL_ANALYTICS', True),
-
-        # The Twitter account referenced in the Twitter card data:
-        'TWITTER_USERNAME': conf.get('TWITTER_USERNAME', ''),
-
-        # The email address which is made public on the site for sending
-        # support email to:
-        'SUPPORT_EMAIL': conf['SUPPORT_EMAIL'],
-
         # Email addresses that error emails are sent to when DEBUG = False
         'ADMINS': conf['ADMINS'],
-
-        # The From: address for all emails except error emails
-        'DEFAULT_FROM_EMAIL': conf['DEFAULT_FROM_EMAIL'],
-
-        # The From: address for error emails
-        'SERVER_EMAIL': conf['SERVER_EMAIL'],
 
         # SECURITY WARNING: keep the secret key used in production secret!
         'SECRET_KEY': conf['SECRET_KEY'],
@@ -310,7 +293,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'USE_I18N': True,
         'USE_L10N': True,
         'USE_TZ': True,
-        'DD_MM_DATE_FORMAT_PREFERRED': conf.get('DD_MM_DATE_FORMAT_PREFERRED', True),
 
         # The media and static file settings:
         'MEDIA_ROOT': media_root,
@@ -429,14 +411,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'THUMBNAIL_CACHE': 'thumbnails',
         'THUMBNAIL_DEBUG': debug,
 
-        # Settings for restricting user activity to reduce abuse:
-        'RESTRICT_RENAMES': conf.get('RESTRICT_RENAMES'),
-        'EDITS_ALLOWED': conf.get('EDITS_ALLOWED', True),
-
-        # A bearer token for the Twitter API for mapping between
-        # Twitter usernames and IDs.
-        'TWITTER_APP_ONLY_BEARER_TOKEN': conf.get('TWITTER_APP_ONLY_BEARER_TOKEN'),
-
         # Django Rest Framework settings:
         'REST_FRAMEWORK': {
             'DEFAULT_PERMISSION_CLASSES': ('candidates.api_permissions.ReadOnly',),
@@ -466,13 +440,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'OPTIONS',
         ),
     }
-    if not conf.get('NEW_ACCOUNTS_ALLOWED', True):
-        result['ACCOUNT_ADAPTER'] = \
-            'mysite.account_adapter.NoNewUsersAccountAdapter'
-    result['CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST'] = \
-        conf.get('CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST', 20)
-    result['HOIST_ELECTED_CANDIDATES'] = \
-        conf.get('HOIST_ELECTED_CANDIDATES', True)
+
     if tests:
         result['NOSE_ARGS'] = [
             '--nocapture',
@@ -490,16 +458,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if conf.get('NGINX_SSL'):
         result['SECURE_PROXY_SSL_HEADER'] = ('HTTP_X_FORWARDED_PROTO', 'https')
         result['ACCOUNT_DEFAULT_HTTP_PROTOCOL'] = 'https'
-    for required_election_app_setting in (
-            'SITE_OWNER',
-            'COPYRIGHT_HOLDER',
-    ):
-        result[required_election_app_setting] = \
-            getattr(elections_module, required_election_app_setting)
     for optional_election_app_setting, default in (
-            ('SITE_OWNER_URL', ''),
             ('AREAS_TO_ALWAYS_RETURN', []),
-            ('IMAGE_PROXY_URL', ''),
     ):
         try:
             result[optional_election_app_setting] = \
