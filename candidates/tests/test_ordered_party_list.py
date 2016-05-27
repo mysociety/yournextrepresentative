@@ -8,11 +8,12 @@ from .auth import TestUserMixin
 from .factories import (
     CandidacyExtraFactory, MembershipFactory, PersonExtraFactory
 )
+from .settings import SettingsMixin
 from popolo.models import Organization
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestRecordWinner(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestRecordWinner(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestRecordWinner, self).setUp()

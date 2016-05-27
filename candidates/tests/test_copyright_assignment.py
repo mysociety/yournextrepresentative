@@ -5,10 +5,11 @@ from django.utils.six.moves.urllib_parse import urlsplit
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestCopyrightAssignment(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestCopyrightAssignment(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestCopyrightAssignment, self).setUp()

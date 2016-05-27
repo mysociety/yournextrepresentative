@@ -4,11 +4,13 @@ from __future__ import unicode_literals
 
 from django_webtest import WebTest
 
+from .settings import SettingsMixin
 from . import factories
 
-class TestApiHelpView(WebTest):
+class TestApiHelpView(SettingsMixin, WebTest):
 
     def setUp(self):
+        super(TestApiHelpView, self).setUp()
         factories.ElectionFactory.create(
             slug='2015',
             name='2015 General Election',

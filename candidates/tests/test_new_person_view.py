@@ -11,10 +11,11 @@ from popolo.models import Person
 from ..models import LoggedAction
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestNewPersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestNewPersonView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestNewPersonView, self).setUp()

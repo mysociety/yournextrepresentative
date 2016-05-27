@@ -12,9 +12,10 @@ from .factories import (
     AreaExtraFactory, CandidacyExtraFactory, PersonExtraFactory,
     PostExtraFactory,
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestAreasView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestAreasView, self).setUp()

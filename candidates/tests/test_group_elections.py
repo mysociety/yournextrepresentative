@@ -2,11 +2,12 @@ from django.test import TestCase
 
 from elections.models import Election
 
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from .factories import ElectionFactory
 
 
-class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
+class TestElectionGrouping(SettingsMixin, UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
         super(TestElectionGrouping, self).setUp()

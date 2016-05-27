@@ -7,11 +7,12 @@ from .factories import (
     PersonExtraFactory, PostExtraFactory,
 )
 from .uk_examples import UK2015ExamplesMixin
+from .settings import SettingsMixin
 
 from candidates.models import LoggedAction
 
 
-class TestAPI(UK2015ExamplesMixin, WebTest):
+class TestAPI(UK2015ExamplesMixin, SettingsMixin, WebTest):
 
     def setUp(self):
         super(TestAPI, self).setUp()

@@ -5,10 +5,11 @@ from django.test import TestCase
 from candidates.models import PersonExtra, ExtraField
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 from . import factories
 
-class TestMissingFields(TestUserMixin, UK2015ExamplesMixin, TestCase):
+class TestMissingFields(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
         super(TestMissingFields, self).setUp()

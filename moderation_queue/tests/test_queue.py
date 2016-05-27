@@ -15,6 +15,8 @@ from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.utils.six.moves.urllib_parse import urlsplit
 
+from usersettings.shortcuts import get_current_usersettings
+
 from PIL import Image
 from io import BytesIO
 from django_webtest import WebTest
@@ -32,6 +34,7 @@ from candidates.tests.factories import (
     CandidacyExtraFactory, PartyExtraFactory,
     PartyFactory, PartySetFactory, AreaFactory
 )
+from candidates.tests.settings import SettingsMixin
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
@@ -47,7 +50,7 @@ def get_image_type_and_dimensions(image_data):
 
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
+class PhotoReviewTests(SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     example_image_filename = join(
         settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
@@ -229,11 +232,14 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         # For the moment this is just a smoke test...
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_approved_privileged(
             self,
             mock_send_mail
     ):
+        settings = get_current_usersettings()
+        settings.DEFAULT_FROM_EMAIL = 'admins@example.com'
+        settings.site_id = self.site.id
+        settings.save()
         with self.settings(SITE_ID=self.site.id):
             review_url = reverse(
                 'photo-review',
@@ -284,12 +290,15 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'approved')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
-    @override_settings(SUPPORT_EMAIL='support@example.com')
     def test_photo_review_upload_rejected_privileged(
             self,
             mock_send_mail
     ):
+        settings = get_current_usersettings()
+        settings.DEFAULT_FROM_EMAIL = 'admins@example.com'
+        settings.SUPPORT_EMAIL = 'support@example.com'
+        settings.site_id = self.site.id
+        settings.save()
         with self.settings(SITE_ID=self.site.id):
             review_url = reverse(
                 'photo-review',
@@ -327,11 +336,13 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'rejected')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_undecided_privileged(
             self,
             mock_send_mail
     ):
+        settings = get_current_usersettings()
+        settings.DEFAULT_FROM_EMAIL = 'admins@example.com'
+        settings.save()
         review_url = reverse(
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
@@ -353,11 +364,13 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         self.assertEqual(QueuedImage.objects.get(pk=self.q1.id).decision, 'undecided')
 
     @patch('moderation_queue.views.send_mail')
-    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
     def test_photo_review_upload_ignore_privileged(
             self,
             mock_send_mail
     ):
+        settings = get_current_usersettings()
+        settings.DEFAULT_FROM_EMAIL = 'admins@example.com'
+        settings.save()
         review_url = reverse(
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}

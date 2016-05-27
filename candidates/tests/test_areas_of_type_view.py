@@ -7,6 +7,7 @@ import re
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 
 from .factories import (
     AreaExtraFactory, CandidacyExtraFactory, PersonExtraFactory,
@@ -14,7 +15,7 @@ from .factories import (
 )
 from .uk_examples import UK2015ExamplesMixin
 
-class TestAreasOfTypeView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestAreasOfTypeView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestAreasOfTypeView, self).setUp()

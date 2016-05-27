@@ -4,10 +4,11 @@ from django.test import TestCase
 
 from ..forms import BasePersonForm, UpdatePersonForm
 
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestValidators(UK2015ExamplesMixin, TestCase):
+class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
         super(TestValidators, self).setUp()

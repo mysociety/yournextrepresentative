@@ -7,9 +7,10 @@ from django_webtest import WebTest
 from .factories import (
     CandidacyExtraFactory, PersonExtraFactory, PostExtraFactory
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestPartyPages(UK2015ExamplesMixin, WebTest):
+class TestPartyPages(UK2015ExamplesMixin, SettingsMixin, WebTest):
 
     def setUp(self):
         super(TestPartyPages, self).setUp()

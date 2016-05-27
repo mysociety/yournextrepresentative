@@ -14,6 +14,7 @@ from ..csv_helpers import list_to_csv
 from . import factories
 from .auth import TestUserMixin
 from .dates import date_in_near_future, FOUR_YEARS_IN_DAYS
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
@@ -21,7 +22,7 @@ def get_person_extra_with_joins(person_id):
     return PersonExtra.objects.joins_for_csv_output().get(pk=person_id)
 
 
-class CSVTests(TestUserMixin, UK2015ExamplesMixin, TestCase):
+class CSVTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
         super(CSVTests, self).setUp()

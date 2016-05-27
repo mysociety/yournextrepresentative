@@ -4,9 +4,10 @@ import re
 
 from django_webtest import WebTest
 
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
-class TestConstituencyDetailView(UK2015ExamplesMixin, WebTest):
+class TestConstituencyDetailView(SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyDetailView, self).setUp()

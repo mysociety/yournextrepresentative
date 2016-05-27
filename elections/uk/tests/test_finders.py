@@ -15,6 +15,7 @@ from candidates.tests.factories import (
     ParliamentaryChamberFactory, ParliamentaryChamberExtraFactory,
     PartySetFactory, AreaExtraFactory
 )
+from candidates.tests.settings import SettingsMixin
 from elections.models import Election
 from .mapit_postcode_results import se240ag_result, sw1a1aa_result
 
@@ -48,8 +49,9 @@ def fake_requests_for_mapit(url):
 
 @attr(country='uk')
 @patch('elections.uk.mapit.requests')
-class TestConstituencyPostcodeFinderView(WebTest):
+class TestConstituencyPostcodeFinderView(SettingsMixin, WebTest):
     def setUp(self):
+        super(TestConstituencyPostcodeFinderView, self).setUp()
         wmc_area_type = AreaTypeFactory.create()
         gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
         commons = ParliamentaryChamberFactory.create()

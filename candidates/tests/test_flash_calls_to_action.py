@@ -7,12 +7,13 @@ from django.test import TestCase
 from candidates.views.people import get_call_to_action_flash_message
 
 from . import factories
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 def normalize_whitespace(s):
     return re.sub(r'(?ms)\s+', ' ', s)
 
-class TestGetFlashMessage(UK2015ExamplesMixin, TestCase):
+class TestGetFlashMessage(SettingsMixin, UK2015ExamplesMixin, TestCase):
 
     maxDiff = None
 

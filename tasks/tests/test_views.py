@@ -7,10 +7,11 @@ from candidates.tests.factories import (
     ParliamentaryChamberFactory, PartyFactory, PartyExtraFactory,
     PersonExtraFactory, PostExtraFactory
 )
+from candidates.tests.settings import SettingsMixin
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 
-class TestFieldView(UK2015ExamplesMixin, TestCase):
+class TestFieldView(UK2015ExamplesMixin, SettingsMixin, TestCase):
 
     def setUp(self):
         super(TestFieldView, self).setUp()

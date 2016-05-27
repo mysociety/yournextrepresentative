@@ -10,6 +10,7 @@ from candidates.tests.factories import (
     AreaExtraFactory
 )
 
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
@@ -36,7 +37,7 @@ def fake_requests_for_mapit(url):
 
 
 @patch('candidates.views.frontpage.requests')
-class TestGeolocator(UK2015ExamplesMixin, WebTest):
+class TestGeolocator(SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestGeolocator, self).setUp()

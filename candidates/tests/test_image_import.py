@@ -10,6 +10,7 @@ from candidates.models import ImageExtra
 
 from . import factories
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 
 
 def get_file_md5sum(filename):
@@ -17,9 +18,10 @@ def get_file_md5sum(filename):
         return hashlib.md5(f.read()).hexdigest()
 
 
-class TestImageImport(TestUserMixin, TestCase):
+class TestImageImport(TestUserMixin, SettingsMixin, TestCase):
 
     def setUp(self):
+        super(TestImageImport, self).setUp()
         self.labour_extra = factories.PartyExtraFactory.create(
             slug='party:53',
             base__name='Labour Party',

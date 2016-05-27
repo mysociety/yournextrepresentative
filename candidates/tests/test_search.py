@@ -4,12 +4,13 @@ from django.core.management import call_command
 from django_webtest import WebTest
 
 from .auth import TestUserMixin
+from .settings import SettingsMixin
 
 from popolo.models import Person
 
 from .uk_examples import UK2015ExamplesMixin
 
-class TestSearchView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestSearchView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestSearchView, self).setUp()

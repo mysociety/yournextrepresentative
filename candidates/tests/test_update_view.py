@@ -14,10 +14,11 @@ from popolo.models import Person
 
 from candidates.models import ExtraField
 from .factories import CandidacyExtraFactory, PersonExtraFactory
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestUpdatePersonView(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestUpdatePersonView, self).setUp()

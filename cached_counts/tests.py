@@ -9,9 +9,10 @@ from django_webtest import WebTest
 from popolo.models import Person
 
 from candidates.tests import factories
+from candidates.tests.settings import SettingsMixin
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
-class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
+class CachedCountTestCase(SettingsMixin, UK2015ExamplesMixin, WebTest):
     maxDiff = None
 
     def setUp(self):

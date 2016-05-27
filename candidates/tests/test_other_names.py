@@ -6,10 +6,11 @@ from popolo.models import OtherName
 
 from .auth import TestUserMixin
 from .factories import PersonExtraFactory
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestOtherNamesViews(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestOtherNamesViews(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestOtherNamesViews, self).setUp()

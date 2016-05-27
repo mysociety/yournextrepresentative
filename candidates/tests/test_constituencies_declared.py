@@ -9,10 +9,11 @@ from .auth import TestUserMixin
 from .factories import (
     CandidacyExtraFactory, MembershipFactory, PersonExtraFactory,
 )
+from .settings import SettingsMixin
 from .uk_examples import UK2015ExamplesMixin
 
 
-class TestConstituenciesDeclared(TestUserMixin, UK2015ExamplesMixin, WebTest):
+class TestConstituenciesDeclared(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituenciesDeclared, self).setUp()
