@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import date
 from django.conf import settings
 from django.contrib.sites.models import Site
+from usersettings.shortcuts import get_current_usersettings
 from auth_helpers.views import user_in_group
 from candidates.models import (
     TRUSTED_TO_MERGE_GROUP_NAME,
@@ -16,28 +17,40 @@ from django.utils.translation import to_locale, get_language
 
 SETTINGS_TO_ADD = (
     'ELECTION_APP',
+    'SOURCE_HINTS',
+    'MEDIA_URL',
+    'RUNNING_TESTS',
+)
+
+USERSETTINGS_TO_ADD = (
     'GOOGLE_ANALYTICS_ACCOUNT',
     'USE_UNIVERSAL_ANALYTICS',
     'TWITTER_USERNAME',
-    'SOURCE_HINTS',
-    'MEDIA_URL',
     'SUPPORT_EMAIL',
     'EDITS_ALLOWED',
     'SITE_OWNER',
+    'SITE_OWNER_URL',
     'COPYRIGHT_HOLDER',
     'HOIST_ELECTED_CANDIDATES',
-    'RUNNING_TESTS',
+    'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST',
 )
 
 
 def add_settings(request):
     """Add some selected settings values to the context"""
 
-    return {
-        'settings': {
-            k: getattr(settings, k) for k in SETTINGS_TO_ADD
-        }
+    all_settings = {
+        k: getattr(settings, k) for k in SETTINGS_TO_ADD
     }
+
+    current = get_current_usersettings()
+    usersettings = {
+        k: getattr(current, k) for k in USERSETTINGS_TO_ADD
+    }
+
+    all_settings.update(usersettings)
+
+    return {'settings': all_settings}
 
 
 def election_date(request):
