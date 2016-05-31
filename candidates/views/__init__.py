@@ -9,5 +9,6 @@ from .parties import *
 from .people import *
 from .posts import *
 from .search import *
+from .settings import *
 from .users import *
 from .other_names import *
