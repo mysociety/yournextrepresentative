@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body_class %}{% endblock %}
+
+{% block title %}
+  {% blocktrans trimmed with site_name=site.name %}
+    {{ site_name }} settings
+  {% endblocktrans %}
+{% endblock %}
+
+{% block hero %}
+  <h1>
+      {% blocktrans trimmed with site_name=site.name %}
+        {{ site_name }} settings
+      {% endblocktrans %}
+  </h1>
+{% endblock %}
+
+{% block content %}
+
+<form id="settings" method="post" action="">
+  {% csrf_token %}
+    {% if form.errors %}
+      <div class="form-error-summary">
+        <h2>{% trans "Oops!" %}</h2>
+        <p>{% trans "We could not accept some of the changes you made." %}</p>
+        {% if form.non_field_errors %}
+          {{ form.non_field_errors.as_ul }}
+        {% else %}
+          <p>{% trans "Please check your information matches our requirements, below." %}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  <h2>{% trans "Site owner's details" %}</h2>
+
+  <div class="form-item {% if form.SITE_OWNER.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.SITE_OWNER.label_tag }}
+      {{ form.SITE_OWNER }}
+    </p>
+    {{ form.SITE_OWNER.errors }}
+  </div>
+
+  <div class="form-item {% if form.SITE_OWNER_URL.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.SITE_OWNER_URL.label_tag }}
+      {{ form.SITE_OWNER_URL }}
+    </p>
+    {{ form.SITE_OWNER_URL.errors }}
+  </div>
+
+  <div class="form-item {% if form.COPYRIGHT_HOLDER.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.COPYRIGHT_HOLDER.label_tag }}
+      {{ form.COPYRIGHT_HOLDER }}
+    </p>
+    {{ form.COPYRIGHT_HOLDER.errors }}
+  </div>
+
+  <div class="form-item {% if form.TWITTER_USERNAME.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.TWITTER_USERNAME.label_tag }}
+      {{ form.TWITTER_USERNAME }}
+    </p>
+    {{ form.TWITTER_USERNAME.errors }}
+  </div>
+
+  <h2>{% trans "Email addresses" %}</h2>
+
+  <div class="form-item {% if form.SUPPORT_EMAIL.errors %}form-item--errors{% endif %}">
+    <p>
+      <label for="id_SUPPORT_EMAIL">{% trans "Email address for support enquiries to be sent to" %}:</label>
+      {{ form.SUPPORT_EMAIL }}
+    </p>
+    {{ form.SUPPORT_EMAIL.errors }}
+  </div>
+
+  <div class="form-item {% if form.DEFAULT_FROM_EMAIL.errors %}form-item--errors{% endif %}">
+    <p>
+      <label for="id_DEFAULT_FROM_EMAIL">{% trans "From email address to use in emails sent by the site" %}:</label>
+      {{ form.DEFAULT_FROM_EMAIL }}
+    </p>
+    {{ form.DEFAULT_FROM_EMAIL.errors }}
+  </div>
+
+  <div class="form-item {% if form.SERVER_EMAIL.errors %}form-item--errors{% endif %}">
+    <p>
+      <label for="id_SERVER_EMAIL">{% trans "From email address to use in error emails" %}:</label>
+      {{ form.SERVER_EMAIL }}
+    </p>
+    {{ form.SERVER_EMAIL.errors }}
+  </div>
+
+  <h2>{% trans "Localization" %}</h2>
+
+  <div class="form-item {% if form.DATE_FORMAT.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.DATE_FORMAT.label_tag }}
+      {{ form.DATE_FORMAT }}
+    </p>
+    {{ form.DATE_FORMAT.errors }}
+  </div>
+
+  <div class="form-item {% if form.DD_MM_DATE_FORMAT_PREFERRED.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.DD_MM_DATE_FORMAT_PREFERRED }}
+      - <label for="id_DD_MM_DATE_FORMAT_PREFERRED">{% trans "Expect dates to come before month in numeric dates (e.g. dd/mm/yyyy format)" %}</label>
+    </p>
+    {{ form.DD_MM_DATE_FORMAT_PREFERRED.errors }}
+  </div>
+
+  <h2>{% trans "Areas" %}</h2>
+
+  <div class="form-item {% if form.MAPIT_BASE_URL.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.MAPIT_BASE_URL.label_tag }}
+      {{ form.MAPIT_BASE_URL }}
+    </p>
+    {{ form.MAPIT_BASE_URL.errors }}
+  </div>
+
+  <h2>{% trans "Google Analytics" %}</h2>
+
+  <div class="form-item {% if form.GOOGLE_ANALYTICS_ACCOUNT.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.GOOGLE_ANALYTICS_ACCOUNT.label_tag }}
+      {{ form.GOOGLE_ANALYTICS_ACCOUNT }}
+    </p>
+    {{ form.GOOGLE_ANALYTICS_ACCOUNT.errors }}
+  </div>
+
+  <div class="form-item {% if form.USE_UNIVERSAL_ANALYTICS.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.USE_UNIVERSAL_ANALYTICS }}
+      - <label for="id_USE_UNIVERSAL_ANALYTICS">{% trans "Site uses Universal Google analytics" %}</label>
+    </p>
+    {{ form.USE_UNIVERSAL_ANALYTICS.errors }}
+  </div>
+
+  <h2>{% trans "Display options" %}</h2>
+
+  <div class="form-item {% if form.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST.label_tag }}
+      {{ form.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST }}
+    </p>
+    {{ form.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST.errors }}
+  </div>
+
+  <div class="form-item {% if form.HOIST_ELECTED_CANDIDATES.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.HOIST_ELECTED_CANDIDATES }}
+      - <label id="id_HOIST_ELECTED_CANDIDATES">{% trans "Only display elected candidates at top of page" %}</label>
+    </p>
+    {{ form.HOIST_ELECTED_CANDIDATES.errors }}
+  </div>
+
+  <h2>{% trans "Editing and account options" %}</h2>
+
+  <div class="form-item {% if form.RESTRICT_RENAMES.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.RESTRICT_RENAMES }}
+      - <label for="id_RESTRICT_RENAMES">{% trans "Prevent users from changing candidates names" %}</label>
+    </p>
+    {{ form.RESTRICT_RENAMES.errors }}
+  </div>
+
+  <div class="form-item {% if form.EDITS_ALLOWED.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.EDITS_ALLOWED }}
+      - <label for="id_EDITS_ALLOWED">{% trans "Allow candidates to be edited" %}</label>
+    </p>
+    {{ form.EDITS_ALLOWED.errors }}
+  </div>
+
+  <div class="form-item {% if form.NEW_ACCOUNTS_ALLOWED.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.NEW_ACCOUNTS_ALLOWED }}
+      - <label for="id_NEW_ACCOUNTS_ALLOWED">{% trans "Allow new accounts to be created" %}</label>
+    </p>
+    {{ form.NEW_ACCOUNTS_ALLOWED.errors }}
+  </div>
+
+  <h2>{% trans "Other" %}</h2>
+
+  <div class="form-item {% if form.TWITTER_APP_ONLY_BEARER_TOKEN.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.TWITTER_APP_ONLY_BEARER_TOKEN.label_tag }}
+      {{ form.TWITTER_APP_ONLY_BEARER_TOKEN }}
+    </p>
+    {{ form.TWITTER_APP_ONLY_BEARER_TOKEN.errors }}
+  </div>
+
+  <div class="form-item {% if form.IMAGE_PROXY_URL.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.IMAGE_PROXY_URL.label_tag }}
+      {{ form.IMAGE_PROXY_URL }}
+    </p>
+    {{ form.IMAGE_PROXY_URL.errors }}
+  </div>
+
+  <input type="submit" class="button" value="{% trans "Save" %}">
+</form>
+
+{% endblock %}

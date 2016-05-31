@@ -243,7 +243,12 @@ patterns_to_format = [
         'pattern': r'^geolocator/(?P<latitude>[\d.\-]+),(?P<longitude>[\d.\-]+)',
         'view': views.GeoLocatorView.as_view(),
         'name': 'geolocator'
-    }
+    },
+    {
+        'pattern': r'^settings$',
+        'view': views.SettingsView.as_view(),
+        'name': 'settings'
+    },
 ]
 
 urlpatterns += [

@@ -15,7 +15,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from candidates.models import (
-    PartySet, parse_approximate_date, ExtraField, SimplePopoloField, ComplexPopoloField
+    PartySet, parse_approximate_date, ExtraField, SimplePopoloField,
+    ComplexPopoloField, SiteSettings
 )
 from popolo.models import Organization, OtherName, Post
 from .twitter_api import get_twitter_user_id, TwitterAPITokenMissing
@@ -526,3 +527,28 @@ class OtherNameForm(forms.ModelForm):
         ),
         max_length=512,
     )
+
+
+class SettingsForm(forms.ModelForm):
+    class Meta:
+        model = SiteSettings
+        fields = (
+            'SITE_OWNER',
+            'SITE_OWNER_URL',
+            'COPYRIGHT_HOLDER',
+            'TWITTER_USERNAME',
+            'SUPPORT_EMAIL',
+            'DEFAULT_FROM_EMAIL',
+            'SERVER_EMAIL',
+            'DATE_FORMAT',
+            'DD_MM_DATE_FORMAT_PREFERRED',
+            'MAPIT_BASE_URL',
+            'GOOGLE_ANALYTICS_ACCOUNT',
+            'USE_UNIVERSAL_ANALYTICS',
+            'NEW_ACCOUNTS_ALLOWED',
+            'HOIST_ELECTED_CANDIDATES',
+            'RESTRICT_RENAMES',
+            'EDITS_ALLOWED',
+            'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST',
+            'TWITTER_APP_ONLY_BEARER_TOKEN',
+            'IMAGE_PROXY_URL')
