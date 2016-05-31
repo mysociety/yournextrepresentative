@@ -5,9 +5,12 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.forms import ModelForm
 
+from usersettings.admin import SettingsAdmin
+
 from .models import (
     LoggedAction, PartySet, ExtraField, PersonExtraFieldValue,
-    SimplePopoloField, ComplexPopoloField, PostExtraElection
+    SimplePopoloField, ComplexPopoloField, PostExtraElection,
+    SiteSettings
 )
 
 
@@ -81,3 +84,34 @@ class PostExtraElectionAdmin(admin.ModelAdmin):
 class ComplexPopoloFieldAdmin(admin.ModelAdmin):
     list_display = ['name', 'label', 'order']
     ordering = ('order',)
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(SettingsAdmin):
+    fieldsets = (
+        ("Site owner's details", {
+            'fields': ('SITE_OWNER', 'SITE_OWNER_URL', 'COPYRIGHT_HOLDER',
+                'TWITTER_USERNAME')
+        }),
+        ('Email addresses', {
+            'fields': ('SUPPORT_EMAIL', 'DEFAULT_FROM_EMAIL', 'SERVER_EMAIL')
+        }),
+        ('Localization', {
+            'fields': ('DATE_FORMAT', 'DD_MM_DATE_FORMAT_PREFERRED')
+        }),
+        ('Areas', {
+            'fields': ('MAPIT_BASE_URL',)
+        }),
+        ('Google Analytics', {
+            'fields': ('GOOGLE_ANALYTICS_ACCOUNT', 'USE_UNIVERSAL_ANALYTICS')
+        }),
+        ('Display and editing options', {
+            'description': 'How candidates are displayed and if eding is allowed',
+            'fields': ('NEW_ACCOUNTS_ALLOWED', 'RESTRICT_RENAMES', 'EDITS_ALLOWED'
+                'HOIST_ELECTED_CANDIDATES', 'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST')
+
+        }),
+        ('Other', {
+            'description': 'How candidates are displayed and if eding is allowed',
+            'fields': ('TWITTER_APP_ONLY_BEARER_TOKEN', 'IMAGE_PROXY_URL')
+        })
+    )
