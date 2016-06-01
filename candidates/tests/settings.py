@@ -17,10 +17,6 @@ class SettingsMixin(object):
         self.sitesettings = SiteSettings.objects.create(
             site_id=1,
             user_id=self.settings_user.id,
-            # COUNTRY=settings.COUNTRY,
-            LANGUAGE_CODE='en-gb',
-            TIME_ZONE='Europe/London',
-            # DATE_FORMAT=settings.DATE_FORMAT,
             SERVER_EMAIL='root@localhost',
             DEFAULT_FROM_EMAIL='webmaster@localhost',
             SUPPORT_EMAIL='yournextmp-support@example.org',
