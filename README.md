@@ -42,6 +42,11 @@ depending on what you're trying to do:
 * [A guide to setting up YourNextRepresentative for a new country](docs/new-instance.md)
   This is a work-in-progress, describing what's involved in
   setting up YourNextRepresentative in a new country.
+* [Notes on setting up a version of YourNextMP with Heroku](docs/heroku.md)
+  This covers the basic steps to setting up a YourNextRepresentative
+  instance on the [Heroku](https://www.heroku.com) hosting platform.
+  This is a good option for quickly getting a version up and running to
+  experiment with it.
 * [Notes on setting up a dev version of YourNextMP with vagrant](docs/ynmp-vagrant.md)
   This was created to make it easy for developers and designers
   to get started working on YourNextMP (the UK site), and may be
