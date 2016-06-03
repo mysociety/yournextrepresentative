@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: YourNextMP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-27 17:22+0100\n"
-"PO-Revision-Date: 2016-05-27 16:27+0000\n"
-"Last-Translator: mySociety <transifex@mysociety.org>\n"
+"PO-Revision-Date: 2016-05-27 16:54+0000\n"
+"Last-Translator: [ɣʷufd̥]\n"
 "Language-Team: Greek (http://www.transifex.com/mysociety/yournextmp/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2178,63 +2178,63 @@ msgstr "Ακύρωση"
 
 #: candidates/templates/candidates/results.html:6
 msgid "Election results data"
-msgstr ""
+msgstr "Δεδομέμενα αποτελεσμάτων εκλογών"
 
 #: candidates/templates/candidates/results.html:9
 msgid "Getting election results"
-msgstr ""
+msgstr "Λήψη αποτελεσμάτων εκλογών"
 
 #: candidates/templates/candidates/results.html:16
 msgid "RSS/Atom feeds of results"
-msgstr ""
+msgstr "Ροή αποτελεσμάτων σε μορφή RSS/Atom"
 
 #: candidates/templates/candidates/results.html:18
 msgid ""
 "There is an atom feed of recent election results available in two versions:"
-msgstr ""
+msgstr "Διατίθενται δύο διαφορετικές εκδόσεις της ροής αποτελεσμάτων μορφής «Atom»:"
 
 #: candidates/templates/candidates/results.html:23
 msgid "Atom feed with additional machine-readable elements"
-msgstr ""
+msgstr "Ροή με επιπλέον μηχαναγνώσιμες τιμές"
 
 #: candidates/templates/candidates/results.html:24
 msgid "Basic Atom feed"
-msgstr ""
+msgstr "Βασική ροή"
 
 #: candidates/templates/candidates/results.html:27
 msgid "CSV/Excel downloads of election results"
-msgstr ""
+msgstr "Αρχεία CSV/Excel αποτελεσμάτων εκλογών"
 
 #: candidates/templates/candidates/results.html:29
 msgid "All Elected Candidates"
-msgstr ""
+msgstr "Όλοι οι εκλελεγμένοι υποψήφιοι"
 
 #: candidates/templates/candidates/results.html:31
 msgid ""
 "This CSV file contains details of all candidates in the database who have "
 "been recorded as elected at an election that this site covers."
-msgstr ""
+msgstr "Αυτό το αρχείο CSV περιέχει πληροφορίες για όλους τους υποψήφιους στη βάση δεδομένων οι οποίοι έχουν επισημανθεί ως εκλελεγμένοι σε εκλογές τις οποίες η ιστοσελίδα αυτή καλύπτει."
 
 #: candidates/templates/candidates/results.html:39
 msgid "Download data about all of the elected candidates"
-msgstr ""
+msgstr "Λήψη δεδομένων για όλους τους εκλελεγμένους υποψήφιους"
 
 #: candidates/templates/candidates/results.html:41
 msgid "(The file of all elected candidates has not yet been generated.)"
-msgstr ""
+msgstr "(Το αρχείο εκλελεγμένων υποψήφιων δεν έχει ακόμα δημιουργηθεί.)"
 
 #: candidates/templates/candidates/results.html:49
 msgid "Elected Candidates from Current Elections"
-msgstr ""
+msgstr "Οι εκλελεγμένοι υποψήφιοι στις τρέχουσες εκλογές"
 
 #: candidates/templates/candidates/results.html:51
 msgid "Elected Candidates from Past Elections"
-msgstr ""
+msgstr "Οι εκλελεγμένοι υποψήφιοι προηγούμενων εκλογές"
 
 #: candidates/templates/candidates/results.html:59
 #, python-format
 msgid "Download of the %(title)s elected candidates "
-msgstr ""
+msgstr "Λήψη εκλελεγμένων υποψήφιων στις %(title)s"
 
 #: candidates/templates/candidates/results.html:61
 #, python-format
@@ -2242,7 +2242,7 @@ msgid ""
 "\n"
 "                  (The file of elected candidates in %(title)s has not yet been generated.)\n"
 "                "
-msgstr ""
+msgstr "\n(Το αρχείο εκλελεγμένων υποψήφιων στις %(title)s δεν έχει ακόμα δημιουργηθεί.)"
 
 #: candidates/templates/candidates/update-disallowed.html:16
 #, python-format
