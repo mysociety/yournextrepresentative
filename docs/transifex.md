@@ -50,7 +50,7 @@ added to the project with:
     --ignore=candidates/static/select2 \
     --ignore=candidates/static/jquery \
     --ignore=mysite/static/jsi18n \
-    --ignore=htmlcov
+    --ignore=htmlcov \
     --ignore=src
 ```
 
