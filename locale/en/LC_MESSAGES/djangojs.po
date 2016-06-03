@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-27 17:24+0100\n"
+"POT-Creation-Date: 2016-06-03 11:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,13 @@ msgstr ""
 #, javascript-format
 msgid "Are you sure that %s (%s) was elected in %s?"
 msgstr ""
+
+#: candidates/static/js/constituency.js:76
+#, javascript-format
+msgid "Are you sure that you want to unset one winner?"
+msgid_plural "Are you sure that you want to unset all %s winners?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: candidates/static/js/versions.js:4
 msgid "Show full version"
