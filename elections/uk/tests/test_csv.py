@@ -67,9 +67,9 @@ class CSVTests(UK2015ExamplesMixin, TestCase):
         person_extra = PersonExtra.objects \
             .joins_for_csv_output().get(pk=self.gb_person_extra.id)
         # After the select_related and prefetch_related calls
-        # PersonExtra there should only be one more query - that to
-        # find the complex fields mapping:
-        with self.assertNumQueries(1):
+        # PersonExtra there should two more queries - that to
+        # find the complex fields mapping and another for settings:
+        with self.assertNumQueries(2):
             person_dict_list = person_extra.as_list_of_dicts(self.election)
         self.assertEqual(len(person_dict_list), 1)
         person_dict = person_dict_list[0]
