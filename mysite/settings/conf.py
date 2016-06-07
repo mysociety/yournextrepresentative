@@ -263,6 +263,9 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'ACCOUNT_USERNAME_REQUIRED': True,
         'SOCIALACCOUNT_AUTO_SIGNUP': True,
 
+        # use our own adapter that checks if user signup has been disabled
+        'ACCOUNT_ADAPTER': 'mysite.account_adapter.CheckIfAllowedNewUsersAccountAdapter',
+
         'ROOT_URLCONF': 'mysite.urls',
         'WSGI_APPLICATION': 'mysite.wsgi.application',
 
