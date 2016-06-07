@@ -6,6 +6,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 
+from usersettings.shortcuts import get_current_usersettings
+
 from elections.models import Election
 
 from slugify import slugify
@@ -185,7 +187,8 @@ def split_by_elected(election_data, memberships):
     for membership in memberships:
         if membership.extra.elected:
             elected_candidates.add(membership)
-            if not settings.HOIST_ELECTED_CANDIDATES:
+            user_settings = get_current_usersettings()
+            if not user_settings.HOIST_ELECTED_CANDIDATES:
                 unelected_candidates.add(membership)
         else:
             unelected_candidates.add(membership)
