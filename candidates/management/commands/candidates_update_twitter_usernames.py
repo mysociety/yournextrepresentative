@@ -10,6 +10,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext as _
 from django.utils.six import text_type
 
+from usersettings.shortcuts import get_current_usersettings
+
 from popolo.models import ContactDetail, Identifier, Person
 import requests
 
@@ -150,7 +152,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         global VERBOSE
         VERBOSE = int(options['verbosity']) > 1
-        token = settings.TWITTER_APP_ONLY_BEARER_TOKEN
+        user_settings = get_current_usersettings()
+        token = user_settings.TWITTER_APP_ONLY_BEARER_TOKEN
         if not token:
             raise CommandError(_("TWITTER_APP_ONLY_BEARER_TOKEN was not set"))
         headers = {'Authorization': 'Bearer {token}'.format(token=token)}
