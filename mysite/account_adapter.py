@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 
 from allauth.account.adapter import DefaultAccountAdapter
+from usersettings.shortcuts import get_current_usersettings
 
-class NoNewUsersAccountAdapter(DefaultAccountAdapter):
+class CheckIfAllowedNewUsersAccountAdapter(DefaultAccountAdapter):
 
     def is_open_for_signup(self, request):
         """
@@ -13,4 +14,9 @@ class NoNewUsersAccountAdapter(DefaultAccountAdapter):
 
         (Comment reproduced from the overridden method.)
         """
+
+        userconf = get_current_usersettings()
+        if userconf.NEW_ACCOUNTS_ALLOWED:
+            return True
+
         return False
