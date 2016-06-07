@@ -4,6 +4,8 @@ from django.utils.six import text_type
 
 import requests
 
+from usersettings.shortcuts import get_current_usersettings
+
 from popolo.models import ContactDetail
 
 
@@ -16,7 +18,8 @@ def get_twitter_user_id(twitter_screen_name):
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    token = settings.TWITTER_APP_ONLY_BEARER_TOKEN
+    user_settings = get_current_usersettings()
+    token = user_settings.TWITTER_APP_ONLY_BEARER_TOKEN
     if not token:
         raise TwitterAPITokenMissing()
     headers = {'Authorization': 'Bearer {token}'.format(token=token)}
