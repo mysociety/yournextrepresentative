@@ -17,6 +17,8 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _l
 from django.utils.six.moves.urllib_parse import urljoin, quote_plus
 
+from usersettings.shortcuts import get_current_usersettings
+
 from dateutil import parser
 from slugify import slugify
 from django_date_extensions.fields import ApproximateDate
@@ -156,6 +158,8 @@ def parse_approximate_date(s):
     future
     """
 
+    user_settings = get_current_usersettings()
+
     for regexp in [
         r'^(\d{4})-(\d{2})-(\d{2})$',
         r'^(\d{4})-(\d{2})$',
@@ -170,7 +174,7 @@ def parse_approximate_date(s):
         dt = parser.parse(
             s,
             parserinfo=localparserinfo(),
-            dayfirst=settings.DD_MM_DATE_FORMAT_PREFERRED
+            dayfirst=user_settings.DD_MM_DATE_FORMAT_PREFERRED
         )
         return ApproximateDate(dt.year, dt.month, dt.day)
     raise ValueError("Couldn't parse '{0}' as an ApproximateDate".format(s))
@@ -476,6 +480,7 @@ class PersonExtra(HasImageMixin, models.Model):
 
     def as_list_of_dicts(self, election, base_url=None):
         result = []
+        user_settings = get_current_usersettings()
         if not base_url:
             base_url = ''
         # Find the list of relevant candidacies. So as not to cause
@@ -523,9 +528,9 @@ class PersonExtra(HasImageMixin, models.Model):
             primary_image_url = None
             if primary_image:
                 primary_image_url = urljoin(base_url, primary_image.image.url)
-                if settings.IMAGE_PROXY_URL and base_url:
+                if user_settings.IMAGE_PROXY_URL and base_url:
                     encoded_url = quote_plus(primary_image_url)
-                    proxy_image_url_template = settings.IMAGE_PROXY_URL + \
+                    proxy_image_url_template = user_settings.IMAGE_PROXY_URL + \
                         encoded_url + '/{height}/{width}.{extension}'
 
                 try:
@@ -696,7 +701,8 @@ class PartySet(models.Model):
             role=models.F('extra__election__candidate_membership_role'),
             on_behalf_of__party_sets=self,
         )
-        minimum_count = settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
+        user_settings = get_current_usersettings()
+        minimum_count = user_settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
         qs = None
         if candidacies_current_qs.count() > minimum_count:
             qs = candidacies_current_qs
