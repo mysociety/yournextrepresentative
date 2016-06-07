@@ -349,7 +349,8 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
 
-        if not (settings.EDITS_ALLOWED or self.request.user.is_staff):
+        if not (self.request.usersettings.EDITS_ALLOWED
+                or self.request.user.is_staff):
             return HttpResponseRedirect(reverse('all-edits-disallowed'))
 
         with transaction.atomic():
