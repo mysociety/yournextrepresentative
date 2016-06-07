@@ -116,7 +116,8 @@ class CSVTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, TestCase):
         # After the select_related and prefetch_related calls
         # PersonExtra there should only be one more query - that to
         # find the complex fields mapping:
-        with self.assertNumQueries(1):
+        # one for site settings, one for the person
+        with self.assertNumQueries(2):
             person_dict_list = person_extra.as_list_of_dicts(self.election)
         self.assertEqual(len(person_dict_list), 1)
         person_dict = person_dict_list[0]
@@ -126,9 +127,9 @@ class CSVTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, TestCase):
     def test_as_dict_2010(self):
         person_extra = get_person_extra_with_joins(self.gb_person_extra.id)
         # After the select_related and prefetch_related calls
-        # PersonExtra there should only be one more query - that to
-        # find the complex fields mapping:
-        with self.assertNumQueries(1):
+        # PersonExtra there should only be two more queries - that to
+        # find the complex fields mapping and another for the user settings:
+        with self.assertNumQueries(2):
             person_dict_list = person_extra.as_list_of_dicts(self.earlier_election)
         self.assertEqual(len(person_dict_list), 1)
         person_dict = person_dict_list[0]
@@ -151,8 +152,10 @@ class CSVTests(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, TestCase):
         gb_person_extra = get_person_extra_with_joins(self.gb_person_extra.id)
         ni_person_extra = get_person_extra_with_joins(self.ni_person_extra.id)
         # After the select_related and prefetch_related calls on
-        # PersonExtra, there should only be one query per PersonExtra:
-        with self.assertNumQueries(2):
+        # PersonExtra, there should only be two queries per PersonExtra,
+        # one for the data and one for the first time site settings
+        # are loaded:
+        with self.assertNumQueries(3):
             list_of_dicts = gb_person_extra.as_list_of_dicts(None)
             list_of_dicts += ni_person_extra.as_list_of_dicts(None)
         self.assertEqual(list_to_csv(list_of_dicts), example_output)
