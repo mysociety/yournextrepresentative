@@ -44,6 +44,17 @@ class TestUserMixin(object):
             'notagoodpasswordeither',
         )
         cls.users_to_delete.append(cls.user_refused)
+        cls.user_is_staff = User.objects.create_user(
+            'johnstaff',
+            'johnstaff@example.com',
+            'notagoodpasswordeither',
+        )
+        cls.user_is_staff.is_staff = True
+        cls.user_is_staff.save()
+        terms = cls.user_is_staff.terms_agreement
+        terms.assigned_to_dc = True
+        terms.save()
+        cls.users_to_delete.append(cls.user_is_staff)
 
     @classmethod
     def tearDownClass(cls):
