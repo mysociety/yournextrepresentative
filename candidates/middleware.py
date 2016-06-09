@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import re
+import pytz
 
 from requests.adapters import ConnectionError
 
@@ -12,6 +13,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.utils.http import urlquote
+from django.utils import timezone
 from django.utils.translation import (
     LANGUAGE_SESSION_KEY, ugettext as _, activate,
     get_language_from_request, check_for_language
@@ -119,3 +121,13 @@ class SetLanguage(object):
         activate(request.LANGUAGE_CODE)
 
         return None
+
+
+# adapted from https://docs.djangoproject.com/en/1.9/topics/i18n/timezones/
+class SetTimezone(object):
+    def process_request(self, request):
+        user_settings = get_current_usersettings()
+        if user_settings.TIME_ZONE:
+            timezone.activate(pytz.timezone(user_settings.TIME_ZONE))
+        else:
+            timezone.deactivate()

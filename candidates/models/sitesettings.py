@@ -12,6 +12,11 @@ class SiteSettings(UserSettings):
         max_length=200,
         default='en',
     )
+    TIME_ZONE = models.CharField(
+        _('Time Zone'),
+        max_length=200,
+        default='Europe/London',
+    )
     # TODO: is this actually used anywhere?
     DATE_FORMAT = models.CharField(
         _('Date Format'),

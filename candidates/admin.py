@@ -96,7 +96,7 @@ class SiteSettingsAdmin(SettingsAdmin):
             'fields': ('SUPPORT_EMAIL', 'DEFAULT_FROM_EMAIL', 'SERVER_EMAIL')
         }),
         ('Localization', {
-            'fields': ('LANGUAGE', 'DATE_FORMAT', 'DD_MM_DATE_FORMAT_PREFERRED')
+            'fields': ('LANGUAGE', 'TIME_ZONE', 'DATE_FORMAT', 'DD_MM_DATE_FORMAT_PREFERRED')
         }),
         ('Areas', {
             'fields': ('MAPIT_BASE_URL',)

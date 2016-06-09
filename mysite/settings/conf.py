@@ -236,6 +236,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.middleware.locale.LocaleMiddleware',
             'candidates.middleware.SetLanguage',
+            'candidates.middleware.SetTimezone',
             'django.middleware.common.CommonMiddleware',
             'django.middleware.csrf.CsrfViewMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',

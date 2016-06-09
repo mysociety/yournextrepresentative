@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import re
+import pytz
 
 from .models.address import check_address
 
@@ -543,10 +544,14 @@ class SettingsForm(forms.ModelForm):
             'RESTRICT_RENAMES', 'EDITS_ALLOWED',
             'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST',
             'TWITTER_APP_ONLY_BEARER_TOKEN', 'IMAGE_PROXY_URL',
-            'LANGUAGE')
+            'LANGUAGE', 'TIME_ZONE')
 
         widgets = {
             'LANGUAGE': forms.Select(
                 choices=settings.LANGUAGES,
+            ),
+
+            'TIME_ZONE': forms.Select(
+                choices=[(tz, tz) for tz in pytz.all_timezones],
             ),
         }

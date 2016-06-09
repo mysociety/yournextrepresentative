@@ -103,6 +103,14 @@
     {{ form.LANGUAGE.errors }}
   </div>
 
+  <div class="form-item {% if form.TIME_ZONE.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.TIME_ZONE.label_tag }}
+      {{ form.TIME_ZONE }}
+    </p>
+    {{ form.TIME_ZONE.errors }}
+  </div>
+
   <div class="form-item {% if form.DATE_FORMAT.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.DATE_FORMAT.label_tag }}

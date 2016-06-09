@@ -18,6 +18,7 @@ class SettingsMixin(object):
             site_id=1,
             user_id=self.settings_user.id,
             LANGUAGE='en',
+            TIME_ZONE='Europe/London',
             SERVER_EMAIL='root@localhost',
             DEFAULT_FROM_EMAIL='webmaster@localhost',
             SUPPORT_EMAIL='yournextmp-support@example.org',
