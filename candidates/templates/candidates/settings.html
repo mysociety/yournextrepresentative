@@ -95,6 +95,14 @@
 
   <h2>{% trans "Localization" %}</h2>
 
+  <div class="form-item {% if form.LANGUAGE.errors %}form-item--errors{% endif %}">
+    <p>
+      {{ form.LANGUAGE.label_tag }}
+      {{ form.LANGUAGE }}
+    </p>
+    {{ form.LANGUAGE.errors }}
+  </div>
+
   <div class="form-item {% if form.DATE_FORMAT.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.DATE_FORMAT.label_tag }}

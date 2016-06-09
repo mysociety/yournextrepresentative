@@ -235,6 +235,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'corsheaders.middleware.CorsMiddleware',
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.middleware.locale.LocaleMiddleware',
+            'candidates.middleware.SetLanguage',
             'django.middleware.common.CommonMiddleware',
             'django.middleware.csrf.CsrfViewMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',

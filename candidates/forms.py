@@ -542,4 +542,11 @@ class SettingsForm(forms.ModelForm):
             'NEW_ACCOUNTS_ALLOWED', 'HOIST_ELECTED_CANDIDATES',
             'RESTRICT_RENAMES', 'EDITS_ALLOWED',
             'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST',
-            'TWITTER_APP_ONLY_BEARER_TOKEN', 'IMAGE_PROXY_URL')
+            'TWITTER_APP_ONLY_BEARER_TOKEN', 'IMAGE_PROXY_URL',
+            'LANGUAGE')
+
+        widgets = {
+            'LANGUAGE': forms.Select(
+                choices=settings.LANGUAGES,
+            ),
+        }

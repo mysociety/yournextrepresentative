@@ -12,7 +12,10 @@ from django.http import Http404, HttpResponseRedirect
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from django.utils.http import urlquote
-from django.utils.translation import ugettext as _
+from django.utils.translation import (
+    LANGUAGE_SESSION_KEY, ugettext as _, activate,
+    get_language_from_request, check_for_language
+)
 
 from usersettings.shortcuts import get_current_usersettings
 
@@ -86,3 +89,33 @@ class CopyrightAssignmentMiddleware(object):
                 urlquote(request.path)
             )
             return HttpResponseRedirect(assign_copyright_url)
+
+
+class SetLanguage(object):
+    def process_request(self, request):
+        # this largely duplicates the code in get_language_from_request
+        # but without falling back to the default settings.LANGUAGE
+        # becuase we don't want to do that
+        language = None
+
+        # check if the user has set a language preference
+        if hasattr(request, 'session') and \
+                LANGUAGE_SESSION_KEY in request.session:
+            language = request.session[LANGUAGE_SESSION_KEY]
+        # or if they've set the language in a cookie
+        elif settings.LANGUAGE_COOKIE_NAME in request.COOKIES:
+            language = request.COOKIES[settings.LANGUAGE_COOKIE_NAME]
+        # or if they have an Accept-Language header
+        else:
+            language = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+
+        # Now check to see if we got a language and it's supported
+        if language is not None and check_for_language(language):
+            return None
+
+        # otherwise set to the default language from site settings
+        user_settings = get_current_usersettings()
+        request.LANGUAGE_CODE = user_settings.LANGUAGE
+        activate(request.LANGUAGE_CODE)
+
+        return None

@@ -7,6 +7,11 @@ from usersettings.models import UserSettings
 
 
 class SiteSettings(UserSettings):
+    LANGUAGE = models.CharField(
+        _('Language Code'),
+        max_length=200,
+        default='en',
+    )
     # TODO: is this actually used anywhere?
     DATE_FORMAT = models.CharField(
         _('Date Format'),

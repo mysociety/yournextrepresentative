@@ -15,10 +15,11 @@ from django.utils.feedgenerator import rfc3339_date
 from candidates.tests import factories
 
 from candidates.tests.auth import TestUserMixin
+from candidates.tests.settings import SettingsMixin
 from .models import ResultEvent
 
 
-class TestResultsFeed(TestUserMixin, WebTest):
+class TestResultsFeed(SettingsMixin, TestUserMixin, WebTest):
 
     maxDiff = None
 
@@ -44,6 +45,7 @@ class TestResultsFeed(TestUserMixin, WebTest):
             self.assertEqual(xml_a, xml_b)
 
     def setUp(self):
+        super(TestResultsFeed, self).setUp()
         wmc_area_type = factories.AreaTypeFactory.create()
         person_extra = factories.PersonExtraFactory.create(
             base__id='4322',
