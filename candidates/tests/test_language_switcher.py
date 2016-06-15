@@ -1,7 +1,9 @@
 from django_webtest import WebTest
 
+from .settings import SettingsMixin
 
-class TestLanguageSwitcher(WebTest):
+
+class TestLanguageSwitcher(SettingsMixin, WebTest):
 
     def test_switch_language(self):
         response = self.app.get('/')
