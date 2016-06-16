@@ -10,6 +10,7 @@ from candidates.models import (
     TRUSTED_TO_LOCK_GROUP_NAME,
     TRUSTED_TO_RENAME_GROUP_NAME,
     RESULT_RECORDERS_GROUP_NAME,
+    EDIT_SETTINGS_GROUP_NAME
 )
 from moderation_queue.models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
@@ -89,6 +90,7 @@ def add_group_permissions(request):
             ('user_can_lock', TRUSTED_TO_LOCK_GROUP_NAME),
             ('user_can_rename', TRUSTED_TO_RENAME_GROUP_NAME),
             ('user_can_record_results', RESULT_RECORDERS_GROUP_NAME),
+            ('user_can_edit_settings', EDIT_SETTINGS_GROUP_NAME),
         )
     }
     result['user_can_edit'] = request.usersettings.EDITS_ALLOWED or request.user.is_staff
