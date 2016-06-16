@@ -9,21 +9,21 @@ from usersettings.models import UserSettings
 class SiteSettings(UserSettings):
     # TODO: is this actually used anywhere?
     DATE_FORMAT = models.CharField(
-        _('Date Format'),
+        _('Date format'),
         max_length=250,
         blank=True
     )
     SERVER_EMAIL = models.EmailField(
-        _('From address for error emails'),
+        _("'From' email address to use in error emails"),
         max_length=250,
     )
     DEFAULT_FROM_EMAIL = models.EmailField(
-        _('Default From email address'),
+        _("'From' email address to use in emails sent by the site"),
         max_length=250,
         help_text=_("The 'From' address for all emails except error emails.")
     )
     SUPPORT_EMAIL = models.EmailField(
-        _('Support Email'),
+        _('Email address for support enquiries to be sent to'),
         max_length=250,
         help_text=_(
             '''\
@@ -33,16 +33,16 @@ email for all support requests, and so on.
         )
     )
     SITE_OWNER = models.CharField(
-        _('Site Owner'),
+        _('Site owner'),
         max_length=250,
     )
     SITE_OWNER_URL = models.URLField(
-        _('Website for Site Owner'),
+        _('Website for site owner'),
         max_length=250,
         blank=True,
     )
     COPYRIGHT_HOLDER = models.CharField(
-        _('Copyright Holder'),
+        _('Copyright holder'),
         max_length=250,
     )
     MAPIT_BASE_URL = models.URLField(
@@ -51,12 +51,12 @@ email for all support requests, and so on.
         blank=True
     )
     IMAGE_PROXY_URL = models.URLField(
-        _('Image Proxy URL'),
+        _('Image proxy URL'),
         max_length=250,
         blank=True
     )
     GOOGLE_ANALYTICS_ACCOUNT = models.CharField(
-        _('Google Analytics Account ID'),
+        _('Google Analytics account ID'),
         max_length=250,
         blank=True,
         help_text=_(
@@ -67,7 +67,7 @@ Analytics tracking ID.
         )
     )
     USE_UNIVERSAL_ANALYTICS = models.BooleanField(
-        _('Using Universal Google analytics'),
+        _('Use Universal Google Analytics'),
         default=True,
         help_text=_(
             '''\
@@ -114,7 +114,7 @@ details.
         )
     )
     RESTRICT_RENAMES = models.BooleanField(
-        _('Restrict Renames'),
+        _('Restrict users from changing candidate names'),
         default=False,
         help_text=_(
             '''\
@@ -124,7 +124,7 @@ order to change the name of a candidate:
         )
     )
     NEW_ACCOUNTS_ALLOWED = models.BooleanField(
-        _('Allow new accounts'),
+        _('Allow new accounts to be created'),
         default=True,
         help_text=_(
             '''\
@@ -135,14 +135,14 @@ opportunities for "drive-by" malicious edits.
         )
     )
     EDITS_ALLOWED = models.BooleanField(
-        _('Allow edits'),
+        _('Allow candidates to be edited'),
         default=True,
         help_text=_(
             'If this is set to false, then no edits of candidates are allowed.'
         )
     )
     HOIST_ELECTED_CANDIDATES = models.BooleanField(
-        _('Hoist elected Candidated'),
+        _('Only display elected candidates at top of page'),
         default=True,
         help_text=_(
             '''\
@@ -155,7 +155,7 @@ elected candidates have been hoisted up to the elected section.
         )
     )
     DD_MM_DATE_FORMAT_PREFERRED = models.BooleanField(
-        _('Prefer DD/MM date format'),
+        _('Expect day to come before month in numeric dates (e.g. dd/mm/yyyy)'),
         default=True,
         help_text=_(
             ''''\
@@ -165,7 +165,7 @@ to mm/dd.  So if your site is for the USA, set this to false.
         )
     )
     CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST = models.IntegerField(
-        _('Maximum party list size to display on post page'),
+        _('Number of candidates required for weighted party list'),
         default=20,
         help_text=_(
             '''\

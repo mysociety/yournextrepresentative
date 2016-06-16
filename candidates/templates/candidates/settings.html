@@ -71,7 +71,7 @@
 
   <div class="form-item {% if form.SUPPORT_EMAIL.errors %}form-item--errors{% endif %}">
     <p>
-      <label for="id_SUPPORT_EMAIL">{% trans "Email address for support enquiries to be sent to" %}:</label>
+      {{ form.SUPPORT_EMAIL.label_tag }}
       {{ form.SUPPORT_EMAIL }}
     </p>
     {{ form.SUPPORT_EMAIL.errors }}
@@ -79,7 +79,7 @@
 
   <div class="form-item {% if form.DEFAULT_FROM_EMAIL.errors %}form-item--errors{% endif %}">
     <p>
-      <label for="id_DEFAULT_FROM_EMAIL">{% trans "From email address to use in emails sent by the site" %}:</label>
+      {{ form.DEFAULT_FROM_EMAIL.label_tag }}
       {{ form.DEFAULT_FROM_EMAIL }}
     </p>
     {{ form.DEFAULT_FROM_EMAIL.errors }}
@@ -87,7 +87,7 @@
 
   <div class="form-item {% if form.SERVER_EMAIL.errors %}form-item--errors{% endif %}">
     <p>
-      <label for="id_SERVER_EMAIL">{% trans "From email address to use in error emails" %}:</label>
+      {{ form.SERVER_EMAIL.label_tag}}
       {{ form.SERVER_EMAIL }}
     </p>
     {{ form.SERVER_EMAIL.errors }}
@@ -106,7 +106,7 @@
   <div class="form-item {% if form.DD_MM_DATE_FORMAT_PREFERRED.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.DD_MM_DATE_FORMAT_PREFERRED }}
-      <label for="id_DD_MM_DATE_FORMAT_PREFERRED">{% trans "Expect dates to come before month in numeric dates (e.g. dd/mm/yyyy format)" %}</label>
+      <label for="{{ form.DD_MM_DATE_FORMAT_PREFERRED.id_for_label }}">{{ form.DD_MM_DATE_FORMAT_PREFERRED.label }}</label>
     </p>
     {{ form.DD_MM_DATE_FORMAT_PREFERRED.errors }}
   </div>
@@ -134,7 +134,7 @@
   <div class="form-item {% if form.USE_UNIVERSAL_ANALYTICS.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.USE_UNIVERSAL_ANALYTICS }}
-      <label for="id_USE_UNIVERSAL_ANALYTICS">{% trans "Site uses Universal Google analytics" %}</label>
+      <label for="{{ form.USE_UNIVERSAL_ANALYTICS.id_for_label }}">{{ form.USE_UNIVERSAL_ANALYTICS.label }}</label>
     </p>
     {{ form.USE_UNIVERSAL_ANALYTICS.errors }}
   </div>
@@ -152,7 +152,7 @@
   <div class="form-item {% if form.HOIST_ELECTED_CANDIDATES.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.HOIST_ELECTED_CANDIDATES }}
-      <label for="id_HOIST_ELECTED_CANDIDATES">{% trans "Only display elected candidates at top of page" %}</label>
+      <label for="{{ form.HOIST_ELECTED_CANDIDATES.id_for_label }}">{{ form.HOIST_ELECTED_CANDIDATES.label }}</label>
     </p>
     {{ form.HOIST_ELECTED_CANDIDATES.errors }}
   </div>
@@ -162,7 +162,7 @@
   <div class="form-item {% if form.RESTRICT_RENAMES.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.RESTRICT_RENAMES }}
-      <label for="id_RESTRICT_RENAMES">{% trans "Prevent users from changing candidates names" %}</label>
+      <label for="{{ form.RESTRICT_RENAMES.id_for_label }}">{{ form.RESTRICT_RENAMES.label }}</label>
     </p>
     {{ form.RESTRICT_RENAMES.errors }}
   </div>
@@ -170,7 +170,7 @@
   <div class="form-item {% if form.EDITS_ALLOWED.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.EDITS_ALLOWED }}
-      <label for="id_EDITS_ALLOWED">{% trans "Allow candidates to be edited" %}</label>
+      <label for="{{ form.EDITS_ALLOWED.id_for_label }}">{{ form.EDITS_ALLOWED.label }}</label>
     </p>
     {{ form.EDITS_ALLOWED.errors }}
   </div>
@@ -178,7 +178,7 @@
   <div class="form-item {% if form.NEW_ACCOUNTS_ALLOWED.errors %}form-item--errors{% endif %}">
     <p>
       {{ form.NEW_ACCOUNTS_ALLOWED }}
-      <label for="id_NEW_ACCOUNTS_ALLOWED">{% trans "Allow new accounts to be created" %}</label>
+      <label for="{{ form.NEW_ACCOUNTS_ALLOWED.id_for_label }}">{{ form.NEW_ACCOUNTS_ALLOWED.label }}</label>
     </p>
     {{ form.NEW_ACCOUNTS_ALLOWED.errors }}
   </div>
