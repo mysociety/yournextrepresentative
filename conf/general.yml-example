@@ -52,3 +52,19 @@ NGINX_SSL: false
 # a default location is used (a 'media' directory in the top level of
 # the repository).
 MEDIA_ROOT: null
+
+# Old settings required by mySociety Deploy system.
+# These should now be edited at /settings in the YNR instance
+SUPPORT_EMAIL: yournextmp-support@example.org
+SERVER_EMAIL: root@localhost
+DEFAULT_FROM_EMAIL: webmaster@localhost
+GOOGLE_ANALYTICS_ACCOUNT: ''
+TWITTER_USERNAME: ''
+RESTRICT_RENAMES: false
+NEW_ACCOUNTS_ALLOWED: true
+EDITS_ALLOWED: true
+HOIST_ELECTED_CANDIDATES: true
+USE_UNIVERSAL_ANALYTICS: true
+DD_MM_DATE_FORMAT_PREFERRED: true
+CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST: 20
+TWITTER_APP_ONLY_BEARER_TOKEN: ''
