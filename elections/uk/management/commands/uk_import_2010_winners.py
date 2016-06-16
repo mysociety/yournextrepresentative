@@ -52,4 +52,4 @@ class Command(BaseCommand):
                 membership.extra.elected = True
                 membership.extra.save()
 
-        print "matched {0} memberships".format(count)
+        print("matched {0} memberships".format(count))
