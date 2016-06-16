@@ -43,9 +43,9 @@ class Command(BaseCommand):
                         post__organization__extra__slug='commons',
                     )
                 except Membership.DoesNotExist:
-                    print("failed to find a membership for {0}").format(
+                    print("failed to find a membership for {0}".format(
                         parlparse_id
-                    )
+                    ))
                     continue
 
                 count += 1
