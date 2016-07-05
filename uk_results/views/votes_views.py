@@ -1,3 +1,5 @@
+from urllib import urlencode
+
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
 from candidates.views.version_data import get_client_ip
@@ -33,6 +35,13 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
         context = super(PostReportVotesView, self).get_context_data(**kwargs)
         context['object'] = self.object
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(PostReportVotesView, self).get_form_kwargs()
+        for k, v in self.request.GET.items():
+            new_k = "initial-{}".format(k)
+            kwargs[new_k] = v
+        return kwargs
 
     def get_form(self, form_class=None):
         """
@@ -92,6 +101,22 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.post_result.get_absolute_url()
+
+    def get_edit_url(self):
+        data = {
+            'source': self.object.source,
+            'num_turnout_reported': self.object.num_turnout_reported,
+            'num_spoilt_ballots': self.object.num_spoilt_ballots,
+        }
+        for result in self.object.candidate_results.all():
+            data['memberships_{}'.format(result.membership.person.pk)] = result.num_ballots_reported
+        return urlencode(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewPostReportView, self).get_context_data(**kwargs)
+        context['edit_querystring'] = self.get_edit_url()
+        return context
+
 
     def form_valid(self, form):
         form.save()

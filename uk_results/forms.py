@@ -169,6 +169,13 @@ class ResultSetForm(forms.ModelForm):
         self.post_result = post_result
         self.memberships = []
 
+        initial_values = {}
+        for k, v in kwargs.items():
+            if k.startswith('initial-'):
+                new_k = k.replace('initial-', '')
+                initial_values[new_k] = v
+                del kwargs[k]
+
         super(ResultSetForm, self).__init__(*args, **kwargs)
 
         self.fields['num_spoilt_ballots'].required = False
@@ -193,6 +200,9 @@ class ResultSetForm(forms.ModelForm):
 
         self.fields = fields
         self.fields.update(existing_fields)
+
+        for field in self.fields:
+            self.fields[field].initial = initial_values.get(field)
 
 
     def mark_candidates_as_winner(self, request, instance):
