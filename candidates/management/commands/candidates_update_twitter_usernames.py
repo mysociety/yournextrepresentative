@@ -73,7 +73,7 @@ class Command(BaseCommand):
         except ContactDetail.MultipleObjectsReturned:
             print(_("WARNING: multiple Twitter screen names found for {name} ({id}), skipping.").format(
                 name=person.name, id=person.id
-            ))
+            ).encode('utf-8'))
             return
         try:
             user_id = person.identifiers \
@@ -83,7 +83,7 @@ class Command(BaseCommand):
         except Identifier.MultipleObjectsReturned:
             print(_("WARNING: multiple Twitter user IDs found for {name} ({id}), skipping.").format(
                 name=person.name, id=person.id
-            ))
+            ).encode('utf-8'))
             return
         # If they have a Twitter user ID, then check to see if we
         # need to update the screen name from that; if so, update
@@ -95,13 +95,13 @@ class Command(BaseCommand):
         if user_id:
             verbose(_("{person} has a Twitter user ID: {user_id}").format(
                 person=person, user_id=user_id
-            ))
+            ).encode('utf-8'))
             if user_id not in self.user_id_to_screen_name:
                 print(_("Removing user ID {user_id} for {person_name} as it is not a valid Twitter user ID. {person_url}").format(
                     user_id=user_id,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
-                ))
+                ).encode('utf-8'))
                 self.remove_twitter_user_id(person, user_id)
                 return
             correct_screen_name = self.user_id_to_screen_name[user_id]
@@ -127,13 +127,13 @@ class Command(BaseCommand):
         elif screen_name:
             verbose(_("{person} has Twitter screen name ({screen_name}) but no user ID").format(
                 person=person, screen_name=screen_name
-            ))
+            ).encode('utf-8'))
             if screen_name.lower() not in self.screen_name_to_user_id:
                 print(_("Removing screen name {screen_name} for {person_name} as it is not a valid Twitter screen name. {person_url}").format(
                     screen_name=screen_name,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
-                ))
+                ).encode('utf-8'))
                 self.remove_twitter_screen_name(person, screen_name)
                 return
             verbose(_("Adding the user ID {user_id}").format(
@@ -147,7 +147,7 @@ class Command(BaseCommand):
         else:
             verbose(_("{person} had no Twitter account information").format(
                 person=person
-            ))
+            ).encode('utf-8'))
 
     def handle(self, *args, **options):
         global VERBOSE
