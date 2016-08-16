@@ -23,6 +23,22 @@ def verbose(*args, **kwargs):
     if VERBOSE:
         print(*args, **kwargs)
 
+def no_users_found(error_data):
+    """Return True if this means no users matched the query"""
+
+    if 'errors' in error_data:
+        errors = error_data['errors']
+        # If the error code is 17 that means "No user matches
+        # for specified terms" which might happen if none of
+        # the user IDs in that query exist any more.
+        if len(errors) == 1 and errors[0]['code'] == 17:
+            return True
+        # Otherwise it's a surprising error, so raise an exception:
+        raise Exception("Error returned by the Twitter API: {0}".format(
+                error_data))
+    else:
+        return False
+
 
 class Command(BaseCommand):
 
@@ -181,7 +197,10 @@ class Command(BaseCommand):
                 },
                 headers=headers,
             )
-            for d in r.json():
+            response_data = r.json()
+            if no_users_found(response_data):
+                continue
+            for d in response_data:
                 self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
                 self.user_id_to_screen_name[text_type(d['id'])] = d['screen_name']
 
@@ -199,7 +218,10 @@ class Command(BaseCommand):
                 },
                 headers=headers,
             )
-            for d in r.json():
+            response_data = r.json()
+            if no_users_found(response_data):
+                continue
+            for d in response_data:
                 self.screen_name_to_user_id[d['screen_name'].lower()] = text_type(d['id'])
                 self.user_id_to_screen_name[d['id']] = text_type(d['id'])
 
