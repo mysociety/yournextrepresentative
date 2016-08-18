@@ -43,6 +43,11 @@ in the Election objects in the app.
             help='The format of the corresponding Post ID, e.g. cons-{area_id}'
         )
         parser.add_argument(
+            '--area-ids',
+            help='Manually specify the MapIt area IDs to create posts for',
+            metavar='AREA-IDS',
+        )
+        parser.add_argument(
             '--post-label',
             help='Override the format string used to construct the post label [default: "%(default)s"]',
             metavar='POST-LABEL',
@@ -65,6 +70,14 @@ in the Election objects in the app.
         mapit_url = options['MAPIT-URL']
         area_type = options['AREA-TYPE']
         post_id_format = options['POST-ID-FORMAT']
+        manual_area_ids = []
+        if options['area_ids']:
+            try:
+                manual_area_ids = [
+                    int(n, 10) for n in options['area_ids'].split(',')
+                ]
+            except ValueError:
+                raise Command("The --area-ids option must be comma separated numeric IDs")
 
         party_set, created = PartySet.objects.get_or_create(
             slug=slugify(options['party_set']),
@@ -77,9 +90,14 @@ in the Election objects in the app.
             raise CommandError("There must be at least one election")
 
         for election in elections:
-            all_areas_url = mapit_url + '/covers' + '?type=' + area_type
-            if election.area_generation:
-                all_areas_url = all_areas_url + '&generation=' + election.area_generation
+            if manual_area_ids:
+                all_areas_url = mapit_url + '/areas/' + ','.join(
+                    text_type(a_id) for a_id in manual_area_ids
+                )
+            else:
+                all_areas_url = mapit_url + '/covers' + '?type=' + area_type
+                if election.area_generation:
+                    all_areas_url = all_areas_url + '&generation=' + election.area_generation
 
             mapit_result = requests.get(all_areas_url)
             mapit_json = mapit_result.json()
