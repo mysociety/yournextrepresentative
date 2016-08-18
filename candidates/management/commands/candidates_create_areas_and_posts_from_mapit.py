@@ -102,6 +102,10 @@ in the Election objects in the app.
             mapit_result = requests.get(all_areas_url)
             mapit_json = mapit_result.json()
 
+            if 'error' in mapit_json:
+                raise Command("Fetching the areas failed: {0}".format(
+                    mapit_json['error']))
+
             for_post_role = election.for_post_role
             org = election.organization
 
