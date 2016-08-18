@@ -45,7 +45,7 @@ in the Election objects in the app.
         )
         parser.add_argument(
             '--area-ids',
-            help='Manually specify the MapIt area IDs to create posts for',
+            help='Manually specify the MapIt area IDs to create posts for, as a comma-separated list',
             metavar='AREA-IDS',
         )
         parser.add_argument(
