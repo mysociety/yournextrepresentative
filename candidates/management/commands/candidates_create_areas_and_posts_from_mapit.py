@@ -5,6 +5,7 @@ from django.db import transaction
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 from django.utils.six.moves.urllib_parse import urljoin
+from django.utils.six import text_type
 
 import requests
 
@@ -115,7 +116,7 @@ in the Election objects in the app.
             for item in mapit_json.items():
                 area_json = item[1]
 
-                area_url = urljoin(mapit_url, '/area/' + str(area_json['id']))
+                area_url = urljoin(mapit_url, '/area/' + text_type(area_json['id']))
 
                 area, area_created = Area.objects.get_or_create(
                     name=area_json['name'],
