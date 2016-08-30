@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.views.generic import FormView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -7,7 +8,7 @@ from django.utils.translation import ugettext as _
 
 from auth_helpers.views import GroupRequiredMixin
 from ..forms import SettingsForm
-from ..models import EDIT_SETTINGS_GROUP_NAME, LoggedAction
+from ..models import EDIT_SETTINGS_GROUP_NAME, LoggedAction, SiteSettings
 
 from .version_data import get_client_ip
 
@@ -17,16 +18,23 @@ class SettingsView(GroupRequiredMixin, FormView):
     form_class = SettingsForm
     required_group_name = EDIT_SETTINGS_GROUP_NAME
 
-    def get_context_data(self, **kwargs):
-        context = super(SettingsView, self).get_context_data(**kwargs)
-
-        settings = self.request.usersettings
-        context['form'] = SettingsForm(instance=settings)
-
-        return context
+    def get_form_kwargs(self):
+        kwargs = super(SettingsView, self).get_form_kwargs()
+        # We're getting the current site settings in such a way as to
+        # avoid using any of the convenience methods that return the
+        # cached current UserSettings object, since is_valid may
+        # subsequently update the object we set here.  (is_valid
+        # doesn't save it to the database, but because the cached
+        # object is updated, it still means that the object returned
+        # by those conveninence method, including the
+        # self.request.usersettings attribute set by the middleware,
+        # may not be in sync with the database any more.
+        kwargs['instance'] = SiteSettings.objects.get(
+            site_id=settings.SITE_ID)
+        return kwargs
 
     def form_valid(self, form):
-        settings = self.request.usersettings
+        settings = SiteSettings.objects.get_current()
         note = ''
         for field in form.fields:
             if form.cleaned_data[field] != getattr(settings, field):
@@ -39,6 +47,8 @@ class SettingsView(GroupRequiredMixin, FormView):
                 ) + "\n"
             setattr(settings, field, form[field].value())
         settings.user = self.request.user
+        # n.b. saving the settings object automatically clears the
+        # cache of current UserSettings.
         settings.save()
 
         request = self.request

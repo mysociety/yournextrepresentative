@@ -61,6 +61,23 @@ class SettingsTests(TestUserMixin, SettingsMixin, WebTest):
         settings = get_current_usersettings()
         self.assertEqual(settings.SITE_OWNER, 'The New Owners')
 
+    def test_settings_validation_fails(self):
+        settings_url = reverse(
+            'settings',
+        )
+        response = self.app.get(settings_url, user=self.user_who_can_edit_settings)
+        form = response.forms['settings']
+
+        # SITE_OWNER is a required setting, so try setting it to the
+        # empty string to check we get a validation error:
+        form['SITE_OWNER'].value = ''
+        response = form.submit()
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn('Oops!', response)
+        self.assertIn('This field is required.', response)
+
     def test_logged_action_created(self):
         settings_url = reverse(
             'settings',
