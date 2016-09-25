@@ -38,4 +38,6 @@ class ContributorsMixin(object):
         return result
 
     def get_recent_changes_queryset(self):
-        return LoggedAction.objects.exclude(action_type='set-candidate-not-elected').order_by('-created')
+        ignored = ('set-candidate-not-elected', 'settings-edited')
+        return LoggedAction.objects.exclude(
+            action_type__in=ignored).order_by('-created')
