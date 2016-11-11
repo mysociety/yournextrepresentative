@@ -1,0 +1,20 @@
+{% extends 'candidates/person-edit-candidacy-wizard.html' %}
+
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=person.name %}Picking a new election for: {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block candidacy_wizard_instruction %}
+    <h3>{% trans "Choose the election to which you're adding a candidacy" %}</h3>
+{% endblock %}
+
+{% block candidacy_wizard_submit %}
+      <input type="submit" class="button pick-election"
+        value="{% trans "Select" context "On the submit button to select an election to add a candidacy for." %}" />
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(function() { $('#id_election-election').select2({width: '100%'}); })
+  </script>
+{% endblock %}

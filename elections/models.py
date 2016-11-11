@@ -88,6 +88,10 @@ class Election(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def number_of_posts(self):
+        return self.postextraelection_set.count()
+
     @classmethod
     def group_and_order_elections(cls, include_posts=False):
         """Group elections in a helpful order

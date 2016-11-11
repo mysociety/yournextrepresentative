@@ -1,0 +1,18 @@
+{% extends 'candidates/person-edit-candidacy-wizard.html' %}
+
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=person.name election=election.name %}Picking a new post in {{ election }} for: {{ name }}{% endblocktrans %}{% endblock %}
+
+{% block candidacy_wizard_instruction %}
+    <h3>{% trans "Choose the post for which you're adding a candidacy" %}</h3>
+{% endblock %}
+
+{% block candidacy_wizard_submit %}
+    <input type="submit" class="button pick-post"
+        value="{% trans "Select" context "On the submit button to select a post to add a candidacy for." %}" />
+{% endblock %}
+
+{% block js_end_of_body %}
+  $('#id_post').select2({width: '100%'});
+{% endblock %}

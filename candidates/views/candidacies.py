@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import FormView
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
@@ -7,9 +9,11 @@ from django.db import transaction
 
 from braces.views import LoginRequiredMixin
 
+from formtools.wizard.views import SessionWizardView
+
 from auth_helpers.views import user_in_group
 
-from popolo.models import Membership, Person, Post
+from popolo.models import Membership, Organization, Person, Post
 from candidates.models import MembershipExtra
 
 from elections.mixins import ElectionMixin
@@ -128,3 +132,122 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
         post = get_object_or_404(Post, extra__slug=self.request.POST.get('post_id'))
         context['post_label'] = post.label
         return context
+
+WIZARD_TEMPLATES = {
+    'election': 'candidates/person-edit-candidacy-pick-election.html',
+    'post': 'candidates/person-edit-candidacy-pick-post.html',
+    'party': 'candidates/person-edit-candidacy-pick-party.html',
+    'source': 'candidates/person-edit-candidacy-source.html',
+}
+
+WIZARD_FORMS = [
+    ('election', forms.AddCandidacyPickElectionForm),
+    ('post', forms.AddCandidacyPickPostForm),
+    ('party', forms.AddCandidacyPickPartyForm),
+    ('source', forms.AddCandidacySourceForm),
+]
+
+def do_candidacy_wizard_post_step(wizard):
+    election_step_data = wizard.get_cleaned_data_for_step('election')
+    if not election_step_data:
+        return False
+    return election_step_data['election'].number_of_posts != 1
+
+
+WIZARD_CONDITION_DICT = {
+    'post': do_candidacy_wizard_post_step
+}
+
+class AddCandidacyWizardView(LoginRequiredMixin, SessionWizardView):
+
+    form_list = WIZARD_FORMS
+    condition_dict = WIZARD_CONDITION_DICT
+
+    def dispatch(self, request, *args, **kwargs):
+        self.person = get_object_or_404(
+            Person.objects.select_related('extra'),
+            pk=self.kwargs['person_id'])
+        return super(AddCandidacyWizardView, self).dispatch(
+            request, *args, **kwargs)
+
+    def get_template_names(self):
+        return [WIZARD_TEMPLATES[self.steps.current]]
+
+    def get_post_slug(self):
+        cleaned_data_post = self.get_cleaned_data_for_step('post')
+        if cleaned_data_post:
+            return cleaned_data_post['post']
+        # Otherwise, if there's only one post for the election, return
+        # that.
+        election = self.get_cleaned_data_for_step('election')['election']
+        return election.postextraelection_set.get().postextra.slug
+
+    def get_form_kwargs(self, step=None):
+        kwargs = super(AddCandidacyWizardView, self).get_form_kwargs(step)
+        if step == 'election':
+            return kwargs
+        elif step == 'post':
+            cleaned_data = self.get_cleaned_data_for_step('election')
+            kwargs['election'] = cleaned_data['election']
+        elif step == 'party':
+            cleaned_data_election = self.get_cleaned_data_for_step('election')
+            kwargs['election'] = cleaned_data_election['election']
+            kwargs['post'] = self.get_post_slug()
+        return kwargs
+
+    def get_context_data(self, form, **kwargs):
+        context = super(AddCandidacyWizardView, self).get_context_data(form, **kwargs)
+        context['person'] = self.person
+        return context
+
+    def done(self, form_list, **kwargs):
+        form_election, form_post, form_party, form_source = form_list
+        election = form_election.cleaned_data['election']
+        post_slug = self.get_post_slug()
+        post = get_object_or_404(Post, extra__slug=post_slug)
+        party_id = form_party.cleaned_data['party']
+        party = get_object_or_404(Organization, pk=party_id)
+        party_list_position = form_party.cleaned_data.get('party_list_position')
+        raise_if_locked(self.request, post)
+        change_metadata = get_change_metadata(
+            self.request, form_source.cleaned_data['source']
+        )
+        with transaction.atomic():
+            LoggedAction.objects.create(
+                user=self.request.user,
+                action_type='candidacy-create',
+                ip_address=get_client_ip(self.request),
+                popit_person_new_version=change_metadata['version_id'],
+                person=self.person,
+                source=change_metadata['information_source'],
+            )
+
+            membership_exists = Membership.objects.filter(
+                person=self.person,
+                post=post,
+                role=election.candidate_membership_role,
+                extra__election=election
+            ).exists()
+
+            if not membership_exists:
+                membership = Membership.objects.create(
+                    person=self.person,
+                    post=post,
+                    role=election.candidate_membership_role,
+                    on_behalf_of=party,
+                )
+                MembershipExtra.objects.create(
+                    base=membership,
+                    election=election,
+                    party_list_position=party_list_position
+                )
+
+            self.person.extra.not_standing.remove(election)
+
+            self.person.extra.record_version(change_metadata)
+            self.person.extra.save()
+        # You get to the wizard from the person edit page, so redirect
+        # back to that:
+        return HttpResponseRedirect(
+            reverse('person-update', kwargs={'person_id': self.person.id})
+        )

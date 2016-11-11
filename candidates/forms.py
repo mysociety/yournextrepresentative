@@ -12,11 +12,12 @@ from django import forms, VERSION as django_version
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from candidates.models import (
     PartySet, parse_approximate_date, ExtraField, SimplePopoloField,
-    ComplexPopoloField, SiteSettings
+    ComplexPopoloField, SiteSettings, PostExtra
 )
 from popolo.models import Organization, OtherName, Post
 from .twitter_api import get_twitter_user_id, TwitterAPITokenMissing
@@ -552,3 +553,103 @@ class SettingsForm(forms.ModelForm):
             'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST',
             'TWITTER_APP_ONLY_BEARER_TOKEN',
             'IMAGE_PROXY_URL')
+
+
+class AddCandidacyPickElectionForm(forms.Form):
+
+    election = forms.ModelChoiceField(
+        queryset=Election.objects.order_by('-election_date', 'name'))
+
+    def clean_election(self):
+        election = self.cleaned_data['election']
+        posts_locked = PostExtra.objects.filter(
+            elections=election, candidates_locked=True).count()
+        posts_unlocked = PostExtra.objects.filter(
+            elections=election, candidates_locked=False).count()
+        posts_total = posts_locked + posts_unlocked
+        if posts_total == 0:
+            raise ValidationError(
+                _('No posts have been created for the {election_name}').format(
+                    election_name=election.name))
+        if posts_unlocked == 0:
+            raise ValidationError(
+                mark_safe(
+                    _('There are no unlocked posts in the election '
+                      '{election_name} - if you think the candidates for this '
+                      'election are wrong or incomplete, please '
+                      '<a href="mailto:{support_email}">contact us</a>.').format(
+                          election_name=election.name,
+                          support_email=settings.SUPPORT_EMAIL)))
+        return election
+
+
+class AddCandidacyPickPostForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        from .election_specific import shorten_post_label
+        election = kwargs.pop('election')
+        super(AddCandidacyPickPostForm, self).__init__(*args, **kwargs)
+        self.fields['post'] = forms.ChoiceField(
+            label=_('Post in %s') % election.name,
+            choices=[('', '')] + sorted(
+                [
+                    (post.extra.slug,
+                     shorten_post_label(post.label))
+                    for post in Post.objects.select_related('extra').filter(extra__elections=election)
+                ],
+                key=lambda t: t[1]
+            ),
+            widget=forms.Select(attrs={'class': 'post-select'}),
+        )
+
+
+class AddCandidacyPickPartyForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        election = kwargs.pop('election')
+        post = kwargs.pop('post')
+        super(AddCandidacyPickPartyForm, self).__init__(*args, **kwargs)
+        party_set = PartySet.objects.get(postextra__slug=post)
+
+        self.fields['party'] = \
+            forms.ChoiceField(
+                label=_("Party in {election}").format(
+                    election=election.name,
+                ),
+                choices=party_set.party_choices(),
+                required=False,
+                widget=forms.Select(
+                    attrs={
+                        'class': 'party-select party-select-' + election.slug
+                    }
+                ),
+            )
+        if election.party_lists_in_use:
+            # Then add a field to enter the position on the party list
+            # as an integer:
+            self.fields['party_list_position'] = forms.IntegerField(
+                label=_("Position in party list ('1' for first, '2' for second, etc.)"),
+                min_value=1,
+                required=False,
+                widget=forms.NumberInput(
+                    attrs={
+                        'class': 'party-position party-position-' + election.slug
+                    }
+                )
+            )
+
+    def clean_party(self):
+        party = self.cleaned_data['party']
+        if party == 'party:none':
+            raise ValidationError(_("You must specify a party"))
+        return party
+
+
+class AddCandidacySourceForm(forms.Form):
+
+    source = StrippedCharField(
+        label=_("Source of information that they're standing ({0})").format(
+            settings.SOURCE_HINTS
+        ),
+        max_length=512,
+    )

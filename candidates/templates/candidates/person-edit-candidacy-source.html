@@ -1,0 +1,14 @@
+{% extends 'candidates/person-edit-candidacy-wizard.html' %}
+
+{% load i18n %}
+
+{% block title %}{% blocktrans with name=person.name election=election.name post=post.label %}Picking a new party for {{ name }}, standing for {{ post }} in {{ election }}{% endblocktrans %}{% endblock %}
+
+{% block candidacy_wizard_instruction %}
+    <h3>{% trans "Enter the source of that information" %}</h3>
+{% endblock %}
+
+{% block candidacy_wizard_submit %}
+      <input type="submit" class="button pick-post"
+        value="{% trans "Add Candidacy" context "On the submit button to enter the information source of someone you're adding a candidacy for." %}" />
+{% endblock %}
