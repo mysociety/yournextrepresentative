@@ -91,7 +91,7 @@ patterns_to_format = [
     },
     {
         'pattern': r'^election/{election}/candidacy$',
-        'view': views.CandidacyView.as_view(),
+        'view': views.CandidacyCreateView.as_view(),
         'name': 'candidacy-create'
     },
     {
