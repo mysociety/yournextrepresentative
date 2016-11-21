@@ -16,7 +16,8 @@ from elections.mixins import ElectionMixin
 
 from .helpers import get_redirect_to_post
 from .version_data import get_client_ip, get_change_metadata
-from ..forms import CandidacyCreateForm, CandidacyDeleteForm
+from .. import forms
+
 from ..models import LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 
 
@@ -32,7 +33,7 @@ def raise_if_locked(request, post):
 
 class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
 
-    form_class = CandidacyCreateForm
+    form_class = forms.CandidacyCreateForm
     template_name = 'candidates/candidacy-create.html'
 
     def form_valid(self, form):
@@ -88,7 +89,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
 
 class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
 
-    form_class = CandidacyDeleteForm
+    form_class = forms.CandidacyDeleteForm
     template_name = 'candidates/candidacy-delete.html'
 
     def form_valid(self, form):
