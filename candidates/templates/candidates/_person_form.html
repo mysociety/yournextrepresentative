@@ -94,6 +94,15 @@
           {% endfor %}
 
         {% endfor %}
+
+        {% if not add_candidate_form %}
+          <div class="add-candidacy-link">
+            <a href="{% url 'person-update-add-candidacy' person_id=person.id %}">
+              {% trans "Add a candidacy in an election" %}
+            </a>
+          </div>
+        {% endif %}
+
     </div>
 
     <h2>{% trans "Links and social media:" %}</h2>
