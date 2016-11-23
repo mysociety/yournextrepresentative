@@ -214,9 +214,11 @@ class BasePersonForm(forms.Form):
             election = election_data.slug
             election_name = election_data.name
 
-            standing_status = cleaned_data.get(
-                'standing_' + election, 'standing'
-            )
+            standing_key = 'standing_' + election
+            if standing_key not in cleaned_data:
+                continue
+
+            standing_status = cleaned_data[standing_key]
             if standing_status != 'standing':
                continue
 
@@ -399,6 +401,7 @@ class UpdatePersonForm(BasePersonForm):
                     label=_('Standing in %s') % election_data.name,
                     choices=self.STANDING_CHOICES,
                     widget=forms.Select(attrs={'class': 'standing-select'}),
+                    required=False,
                 )
             self.fields['constituency_' + election] = \
                 forms.ChoiceField(
