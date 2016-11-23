@@ -343,7 +343,13 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             json.loads(person.extra.versions)
         )
 
-        context = get_person_form_fields(context, kwargs['form'])
+        elections_standing_in = Election.objects.filter(
+            candidacies__base__person=person,
+            current=True,
+        ).order_by('-election_date', 'name')
+
+        context = get_person_form_fields(
+            context, kwargs['form'], elections_standing_in)
 
         return context
 

@@ -70,7 +70,10 @@ def get_redirect_to_party_list(election, post, party_slug):
         )
     )
 
-def get_person_form_fields(context, form):
+# If elections is not None, it should be a sequence of Election
+# objects, indicating that only candidacy fields for those elections
+# should be included.
+def get_person_form_fields(context, form, elections=None):
     context['extra_fields'] = []
     extra_fields = ExtraField.objects.all()
     for field in extra_fields:
@@ -99,16 +102,16 @@ def get_person_form_fields(context, form):
             )
 
     context['constituencies_form_fields'] = \
-        get_candidacy_fields_for_person_form(form)
+        get_candidacy_fields_for_person_form(form, elections)
 
     return context
 
 
-def get_candidacy_fields_for_person_form(form):
+def get_candidacy_fields_for_person_form(form, elections):
     fields = []
-    for election_data in form.elections_with_fields:
-        if not election_data.current:
-            continue
+    if elections is None:
+        elections = [e for e in form.elections_with_fields if e.current]
+    for election_data in elections:
         cons_form_fields = {
             'election': election_data,
             'election_name': election_data.name,
