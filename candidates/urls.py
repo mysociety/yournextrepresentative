@@ -91,7 +91,7 @@ patterns_to_format = [
     },
     {
         'pattern': r'^election/{election}/candidacy$',
-        'view': views.CandidacyView.as_view(),
+        'view': views.CandidacyCreateView.as_view(),
         'name': 'candidacy-create'
     },
     {
@@ -108,6 +108,11 @@ patterns_to_format = [
         'pattern': r'^person/(?P<person_id>\d+)/update$',
         'view': views.UpdatePersonView.as_view(),
         'name': 'person-update'
+    },
+    {
+        'pattern': r'^person/(?P<person_id>\d+)/update/add-candidacy$',
+        'view': views.AddCandidacyWizardView.as_view(),
+        'name': 'person-update-add-candidacy'
     },
     {
         'pattern': r'^update-disallowed$',

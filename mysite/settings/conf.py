@@ -192,6 +192,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'django.contrib.messages',
             'django.contrib.staticfiles',
             'django.contrib.sites',
+            'formtools',
             'django_nose',
             'django_extensions',
             'pipeline',
@@ -401,6 +402,8 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             u"Please don't quote third-party candidate sites \u2014 "
             u"we prefer URLs of news stories or official candidate pages."
         ),
+
+        'SUPPORT_EMAIL': 'yournextmp-support@example.org',
 
         # By default, cache successful results from MapIt for a day
         'MAPIT_CACHE_SECONDS': 86400,

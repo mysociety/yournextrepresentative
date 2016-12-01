@@ -434,17 +434,22 @@ class PersonExtra(HasImageMixin, models.Model):
                 person=self.base
         ).select_related('field'):
             initial_data[extra_field_value.field.key] = extra_field_value.value
-        not_standing_elections = list(self.not_standing.all())
+        not_standing_elections = set(self.not_standing.all())
+        election_to_membershipextra = {
+            me.election: me for me in
+            MembershipExtra.objects.filter(
+                base__person__extra=self,
+                election__current=True,
+            ).select_related(
+                'election',
+                'base__post__extra',
+                'base__on_behalf_of',
+            )
+        }
         for election_data in Election.objects.current().by_date():
             constituency_key = 'constituency_' + election_data.slug
             standing_key = 'standing_' + election_data.slug
-            try:
-                candidacy = MembershipExtra.objects.get(
-                    election=election_data,
-                    base__person__extra=self
-                )
-            except MembershipExtra.DoesNotExist:
-                candidacy = None
+            candidacy = election_to_membershipextra.get(election_data)
             if election_data in not_standing_elections:
                 initial_data[standing_key] = 'not-standing'
             elif candidacy:
