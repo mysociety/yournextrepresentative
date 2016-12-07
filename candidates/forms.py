@@ -382,10 +382,72 @@ class NewPersonForm(BasePersonForm):
         return self.check_party_and_constituency_are_selected(cleaned_data)
 
 
-class UpdatePersonForm(BasePersonForm):
+class AddElectionFieldsMixin(object):
+
+    def add_elections_fields(self, elections):
+        for election_data in elections:
+            self.add_election_fields(election_data)
+
+    def add_election_fields(self, election_data):
+        from .election_specific import shorten_post_label
+
+        election = election_data.slug
+        self.fields['standing_' + election] = \
+            forms.ChoiceField(
+                label=_('Standing in %s') % election_data.name,
+                choices=BasePersonForm.STANDING_CHOICES,
+                widget=forms.Select(attrs={'class': 'standing-select'}),
+                required=False,
+            )
+        self.fields['constituency_' + election] = \
+            forms.ChoiceField(
+                label=_('Constituency in %s') % election_data.name,
+                required=False,
+                choices=[('', '')] + sorted(
+                    [
+                        (post.extra.slug,
+                         shorten_post_label(post.label))
+                        for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
+                    ],
+                    key=lambda t: t[1]
+                ),
+                widget=forms.Select(attrs={'class': 'post-select'}),
+            )
+        for party_set in PartySet.objects.all():
+            self.fields['party_' + party_set.slug + '_' + election] = \
+                forms.ChoiceField(
+                    label=_("Party in {election} ({party_set_name})").format(
+                        election=election_data.name,
+                        party_set_name=party_set.name,
+                    ),
+                    choices=party_set.party_choices(),
+                    required=False,
+                    widget=forms.Select(
+                        attrs={
+                            'class': 'party-select party-select-' + election
+                        }
+                    ),
+                )
+            if election_data.party_lists_in_use:
+                # Then add a field to enter the position on the party list
+                # as an integer:
+                field_name = 'party_list_position_' + party_set.slug + \
+                    '_' + election
+                self.fields[field_name] = forms.IntegerField(
+                    label=_("Position in party list ('1' for first, '2' for second, etc.)"),
+                    min_value=1,
+                    required=False,
+                    widget=forms.NumberInput(
+                        attrs={
+                            'class': 'party-position party-position-' + election
+                        }
+                    )
+                )
+
+
+class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
 
     def __init__(self, *args, **kwargs):
-        from .election_specific import shorten_post_label
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
 
         self.elections_with_fields = Election.objects.current().by_date()
@@ -393,60 +455,7 @@ class UpdatePersonForm(BasePersonForm):
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
         # with formsets?)
-
-        for election_data in self.elections_with_fields:
-            election = election_data.slug
-            self.fields['standing_' + election] = \
-                forms.ChoiceField(
-                    label=_('Standing in %s') % election_data.name,
-                    choices=self.STANDING_CHOICES,
-                    widget=forms.Select(attrs={'class': 'standing-select'}),
-                    required=False,
-                )
-            self.fields['constituency_' + election] = \
-                forms.ChoiceField(
-                    label=_('Constituency in %s') % election_data.name,
-                    required=False,
-                    choices=[('', '')] + sorted(
-                        [
-                            (post.extra.slug,
-                             shorten_post_label(post.label))
-                            for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
-                        ],
-                        key=lambda t: t[1]
-                    ),
-                    widget=forms.Select(attrs={'class': 'post-select'}),
-                )
-            for party_set in PartySet.objects.all():
-                self.fields['party_' + party_set.slug + '_' + election] = \
-                    forms.ChoiceField(
-                        label=_("Party in {election} ({party_set_name})").format(
-                            election=election_data.name,
-                            party_set_name=party_set.name,
-                        ),
-                        choices=party_set.party_choices(),
-                        required=False,
-                        widget=forms.Select(
-                            attrs={
-                                'class': 'party-select party-select-' + election
-                            }
-                        ),
-                    )
-                if election_data.party_lists_in_use:
-                    # Then add a field to enter the position on the party list
-                    # as an integer:
-                    field_name = 'party_list_position_' + party_set.slug + \
-                        '_' + election
-                    self.fields[field_name] = forms.IntegerField(
-                        label=_("Position in party list ('1' for first, '2' for second, etc.)"),
-                        min_value=1,
-                        required=False,
-                        widget=forms.NumberInput(
-                            attrs={
-                                'class': 'party-position party-position-' + election
-                            }
-                        )
-                    )
+        self.add_elections_fields(self.elections_with_fields)
 
     source = StrippedCharField(
         label=_("Source of information for this change ({0})").format(
