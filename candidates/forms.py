@@ -520,6 +520,13 @@ class ConstituencyRecordWinnerForm(forms.Form):
     )
 
 
+class SingleElectionForm(AddElectionFieldsMixin, forms.Form):
+    def __init__(self, *args, **kwargs):
+        election = kwargs.pop('election')
+        super(SingleElectionForm, self).__init__(*args, **kwargs)
+        self.add_election_fields(election)
+
+
 class OtherNameForm(forms.ModelForm):
     class Meta:
         model = OtherName
