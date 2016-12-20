@@ -45,7 +45,8 @@ function setUpPartySelect2s() {
 /* Make all the post drop-downs into Select2 widgets */
 
 function setUpPostSelect2s() {
-  $('.post-select').each(function(i) {
+  $('.post-select').not('.select2-offscreen').not('.select2-container')
+    .each(function(i) {
     var postSelect = $(this),
       hidden = postSelect.prop('tagName') == 'INPUT' &&
          postSelect.attr('type') == 'hidden';
