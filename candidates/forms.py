@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from collections import defaultdict
 import re
 
 from .models.address import check_address
@@ -18,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from candidates.models import (
     PartySet, parse_approximate_date, ExtraField, SimplePopoloField,
-    ComplexPopoloField, SiteSettings, PostExtra
+    ComplexPopoloField, SiteSettings, PostExtra, PostExtraElection
 )
 from popolo.models import Organization, OtherName, Post
 from .twitter_api import get_twitter_user_id, TwitterAPITokenMissing
@@ -396,11 +397,27 @@ class AddElectionFieldsMixin(object):
         ]
 
     def add_elections_fields(self, elections):
+        # Providing this dictionary to add_election_fields saves lots
+        # of queries being performed by that method:
+        election_to_posts = defaultdict(list)
+        for pee in PostExtraElection.objects \
+                .select_related('election', 'postextra__base') \
+                .filter(election__in=elections):
+            election_to_posts[pee.election].append(pee.postextra.base)
         for election_data in elections:
-            self.add_election_fields(election_data)
+            self.add_election_fields(election_data, election_to_posts)
 
-    def add_election_fields(self, election_data):
+    def add_election_fields(self, election_data, election_to_posts=None):
         from .election_specific import shorten_post_label
+
+        # If the election_to_posts dictionary hasn't been provided,
+        # created it for just this election:
+        if election_to_posts is None:
+            election_to_posts = {
+                election_data:
+                Post.objects.select_related('extra').filter(
+                    extra__elections=election_data)
+            }
 
         election = election_data.slug
         self.fields['standing_' + election] = \
@@ -418,7 +435,7 @@ class AddElectionFieldsMixin(object):
                     [
                         (post.extra.slug,
                          shorten_post_label(post.label))
-                        for post in Post.objects.select_related('extra').filter(extra__elections__slug=election)
+                        for post in election_to_posts[election_data]
                     ],
                     key=lambda t: t[1]
                 ),
