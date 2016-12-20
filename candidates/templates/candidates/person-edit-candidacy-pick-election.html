@@ -11,6 +11,9 @@
 {% block candidacy_wizard_submit %}
       <input type="submit" class="button pick-election"
         value="{% trans "Select" context "On the submit button to select an election to add a candidacy for." %}" />
+  {% if not include_historic %}
+    <p>Or there's <a href="?historic=1">another form if you need to add a candidacy for a historic election.</a></p>
+  {% endif %}
 {% endblock %}
 
 {% block extra_js %}

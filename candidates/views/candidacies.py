@@ -185,7 +185,8 @@ class AddCandidacyWizardView(LoginRequiredMixin, SessionWizardView):
     def get_form_kwargs(self, step=None):
         kwargs = super(AddCandidacyWizardView, self).get_form_kwargs(step)
         if step == 'election':
-            return kwargs
+            include_historic = self.request.GET.get('historic') == '1'
+            kwargs['include_historic'] = include_historic
         elif step == 'post':
             cleaned_data = self.get_cleaned_data_for_step('election')
             kwargs['election'] = cleaned_data['election']
@@ -198,6 +199,7 @@ class AddCandidacyWizardView(LoginRequiredMixin, SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super(AddCandidacyWizardView, self).get_context_data(form, **kwargs)
         context['person'] = self.person
+        context['include_historic'] = (self.request.GET.get('historic') == '1')
         return context
 
     def done(self, form_list, **kwargs):

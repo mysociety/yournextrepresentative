@@ -557,8 +557,13 @@ class SettingsForm(forms.ModelForm):
 
 class AddCandidacyPickElectionForm(forms.Form):
 
-    election = forms.ModelChoiceField(
-        queryset=Election.objects.order_by('-election_date', 'name'))
+    def __init__(self, *args, **kwargs):
+        include_historic = kwargs.pop('include_historic')
+        super(AddCandidacyPickElectionForm, self).__init__(*args, **kwargs)
+        election_qs = Election.objects.order_by('-election_date', 'name')
+        if not include_historic:
+            election_qs = election_qs.filter(current=True)
+        self.fields['election'] = forms.ModelChoiceField(queryset=election_qs)
 
     def clean_election(self):
         election = self.cleaned_data['election']

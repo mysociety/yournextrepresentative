@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import re
 
 from django.core.urlresolvers import reverse
 from django.utils.six import text_type
@@ -228,3 +229,35 @@ class TestAddCandidacyWizard(TestUserMixin, SettingsMixin, UK2015ExamplesMixin, 
             person=self.person,
             role='Candidate')
         self.assertEqual(m.extra.party_list_position, 3)
+
+    def test_election_pick_historic_link_present(self):
+        response = self.app.get(self.wizard_url, user=self.user)
+        link = response.html.find(
+            'a',
+            text=re.compile(r'add a candidacy for a historic election'))
+        self.assertTrue(link)
+
+    def test_election_pick_historic_link_not_present(self):
+        url = self.wizard_url + '?historic=1'
+        response = self.app.get(url, user=self.user)
+        link = response.html.find(
+            'a',
+            text=re.compile(r'add a candidacy for a historic election'))
+        self.assertFalse(link)
+
+    def test_election_pick_only_current_by_default(self):
+        response = self.app.get(self.wizard_url, user=self.user)
+        election_form = response.forms['add-candidacy-wizard']
+        election_field = election_form['election-election']
+        self.assertEqual(
+            [t[2] for t in election_field.options],
+            ['---------', '2015 General Election'])
+
+    def test_election_all_elections_with_historic_parameter(self):
+        url = self.wizard_url + '?historic=1'
+        response = self.app.get(url, user=self.user)
+        election_form = response.forms['add-candidacy-wizard']
+        election_field = election_form['election-election']
+        self.assertEqual(
+            [t[2] for t in election_field.options],
+            ['---------', '2015 General Election', '2010 General Election'])

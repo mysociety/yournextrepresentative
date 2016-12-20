@@ -96,9 +96,10 @@
         {% endfor %}
 
         {% if not add_candidate_form %}
+          <h2>{% trans "Add a candidacy in another election" %}</h2>
           <div class="add-candidacy-link">
             <a href="{% url 'person-update-add-candidacy' person_id=person.id %}">
-              {% trans "Add a candidacy in an election" %}
+              {% trans "Add a new candidacy" %}
             </a>
           </div>
         {% endif %}
