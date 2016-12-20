@@ -464,7 +464,26 @@ msgstr ""
 msgid "Please indicate how you know that this is a valid alternative name"
 msgstr ""
 
-#: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:50
+#: candidates/forms.py:577
+#, python-brace-format
+msgid "No posts have been created for the {election_name}"
+msgstr ""
+
+#: candidates/forms.py:582
+#, python-brace-format
+msgid "There are no unlocked posts in the election {election_name} - if you think the candidates for this election are wrong or incomplete, please <a href=\"mailto:{support_email}\">contact us</a>."
+msgstr ""
+
+#: candidates/forms.py:598
+#, python-format
+msgid "Post in %s"
+msgstr ""
+
+#: candidates/forms.py:649
+msgid "You must specify a party"
+msgstr ""
+
+#: candidates/management/commands/candidates_create_areas_and_posts_from_mapit.py:55
 #, python-brace-format
 msgid "{post_role} for {area_name}"
 msgstr ""
@@ -753,6 +772,14 @@ msgid "Candidacy:"
 msgstr ""
 
 #: candidates/templates/candidates/_person_form.html:99
+msgid "Add a candidacy in another election"
+msgstr ""
+
+#: candidates/templates/candidates/_person_form.html:102
+msgid "Add a new candidacy"
+msgstr ""
+
+#: candidates/templates/candidates/_person_form.html:109
 #: candidates/templates/candidates/person-view.html:171
 msgid "Links and social media:"
 msgstr ""
@@ -1551,6 +1578,59 @@ msgstr ""
 msgid "Please make sure you read our <a href=\"https://docs.google.com/document/d/1iA5Tv3ZgjDHWNv6gbNESqL-C7Goz6ZSo1X9pPXwXspA/edit\">guidance on sourcing fields</a>."
 msgstr ""
 
+#: candidates/templates/candidates/person-edit-candidacy-pick-election.html:5
+#, python-format
+msgid "Picking a new election for: %(name)s"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-election.html:8
+msgid "Choose the election to which you're adding a candidacy"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-election.html:13
+msgctxt "On the submit button to select an election to add a candidacy for."
+msgid "Select"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-party.html:5
+#: candidates/templates/candidates/person-edit-candidacy-source.html:5
+#, python-format
+msgid "Picking a new party for %(name)s, standing for %(post)s in %(election)s"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-party.html:8
+msgid "Choose the party they're standing for:"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-party.html:13
+msgctxt "On the submit button to select a party of someone you're add a candidacy for."
+msgid "Select"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-post.html:5
+#, python-format
+msgid "Picking a new post in %(election)s for: %(name)s"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-post.html:8
+msgid "Choose the post for which you're adding a candidacy"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-pick-post.html:13
+msgctxt "On the submit button to select a post to add a candidacy for."
+msgid "Select"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-source.html:8
+msgid "Enter the source of that information"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-source.html:13
+msgctxt "On the submit button to enter the information source of someone you're adding a candidacy for."
+msgid "Add Candidacy"
+msgstr ""
+
+#: candidates/templates/candidates/person-edit-candidacy-wizard.html:22
 #: candidates/templates/candidates/person-edit.html:9
 #: candidates/templates/candidates/person-edit.html:27
 #, python-format
