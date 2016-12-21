@@ -4,10 +4,13 @@ from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 
 from ..models import LoggedAction
+from popolo.models import Person
 
 
 class ContributorsMixin(object):
@@ -41,3 +44,21 @@ class ContributorsMixin(object):
         ignored = ('set-candidate-not-elected', 'settings-edited')
         return LoggedAction.objects.exclude(
             action_type__in=ignored).order_by('-created')
+
+
+class PersonMixin(object):
+
+    @cached_property
+    def person(self):
+        return get_object_or_404(
+            Person.objects.select_related('extra'),
+            pk=self.kwargs['person_id'])
+
+    # We include *args in the signature so this can be used by
+    # SessionWizardView subclasses whose get_context_data has the
+    # parameters (self, form, **kwargs) as opposed to the core Django
+    # CBVs, which use (self, **kwargs)
+    def get_context_data(self, *args, **kwargs):
+        context = super(PersonMixin, self).get_context_data(*args, **kwargs)
+        context['person'] = self.person
+        return context
