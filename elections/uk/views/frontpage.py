@@ -93,7 +93,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         # context['council_election_percent'] = council_confirmed / council_total * 100
 
 
-        task_count = PersonTask.objects.count()
+        task_count = PersonTask.objects.unfinished_tasks().count()
         if task_count > 0:
             random_offset = random.randrange(min(50, task_count))
             context['person_task'] = PersonTask.objects.unfinished_tasks()[random_offset]
