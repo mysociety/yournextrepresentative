@@ -42,7 +42,7 @@ class Command(BaseCommand):
                     getattr(membership.post, 'extra')
                 except:
                     continue
-                for election in membership.post.extra.elections.all():
+                for election in membership.post.extra.elections.filter(current=True):
                     for election_id, election_weight in self.ELECTION_WEIGHT.items():
                         if election.slug.startswith(election_id):
                             person_weight += election_weight
