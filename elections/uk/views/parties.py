@@ -14,7 +14,7 @@ class UKPartyDetailView(PartyDetailView):
             party_ec_id = context['party'].identifiers.get(scheme='electoral-commission')
             if party_ec_id:
                 ec_tmpl = 'http://search.electoralcommission.org.uk/English/Registrations/{0}'
-                context['ec_url'] = ec_tmpl.format(party_ec_id)
+                context['ec_url'] = ec_tmpl.format(party_ec_id.identifier)
             context['register'] = context['party'].extra.register
         except Identifier.DoesNotExist:
             pass
