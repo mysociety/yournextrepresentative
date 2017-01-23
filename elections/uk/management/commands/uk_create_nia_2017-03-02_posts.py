@@ -104,7 +104,7 @@ class Command(BaseCommand):
                 post, _ = Post.objects.update_or_create(
                     organization=organization,
                     area=area,
-                    role='Member of the Scottish Parliament',
+                    role=election_defaults['for_post_role'],
                     defaults={
                         'label': data['label_format'].format(
                             area_name=area.name
