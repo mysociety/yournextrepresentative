@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from datetime import date
 
 from django.db import models
@@ -96,8 +96,9 @@ class Election(models.Model):
         We should order and group elections in the following way:
 
           Group by current=True, then current=False
-            Group by for_post_role (ordered alphabetically)
-              Order election by election date (new to old) then election name
+            Group election by election date (new to old)
+              Group by for_post_role (ordered alphabetically)
+                Order by election name
 
         If the parameter include_posts is set to True, then the posts
         will be included as well.
@@ -107,7 +108,7 @@ class Election(models.Model):
         [
           {
             'current': True,
-            'roles': [
+            'dates': OrderedDict([(datetime.date(2017, 1, 5), [
               {
                 'role': 'Member of Parliament',
                 'elections': [
@@ -142,11 +143,11 @@ class Election(models.Model):
                   }
                 ]
               }
-            ]
+            ])
           },
           {
             'current': False,
-            'roles': [
+            'dates': OrderedDict([(datetime.date(2017, 1, 5), [
               {
                 'role': 'Member of Parliament',
                 'elections': [
@@ -161,20 +162,20 @@ class Election(models.Model):
                 ]
               }
             ]
-          },
+          ]),
         ]
 
         """
         from candidates.models import PostExtra
         result = [
-            {'current': True, 'roles': []},
+            {'current': True, 'dates': OrderedDict()},
         ]
         if include_noncurrent:
-            result.append({'current': False, 'roles': []})
+            result.append({'current': False, 'dates': OrderedDict()})
 
         role = None
         qs = cls.objects.order_by(
-            '-current', 'for_post_role', '-election_date', 'name'
+            'election_date', '-current', 'for_post_role', 'name',
         )
         # If we've been asked to include posts as well, add a prefetch
         # to the queryset:
@@ -194,7 +195,7 @@ class Election(models.Model):
         last_current = None
         for election in qs:
             current_index = 1 - int(election.current)
-            roles = result[current_index]['roles']
+            roles = result[current_index]['dates'].setdefault(election.election_date, [])
             # If the role has changed, or we've switched from current
             # elections to past elections, create a new array of
             # elections to append to:
