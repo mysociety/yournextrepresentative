@@ -14,23 +14,21 @@
   <p>{% trans "Follow one of the links below to see the known candidates for that post:" %}</p>
 
   {% for era in elections_and_posts %}
-    {% if era.current %}
-      {% for role_data in era.roles %}
-        <h2>{{ role_data.role }}</h2>
-        {% for election_data in role_data.elections %}
-          {% with election=election_data.election %}
-            <h3>{{ election.name }}</h3>
-            <ul>
-              {% for p in election_data.posts %}
-                <li>
-                 <a href="{% url 'constituency' election=election.slug post_id=p.slug ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endwith %}
-        {% endfor %}
+    {% for role_data in era.roles %}
+      <h2>{{ role_data.role }}</h2>
+      {% for election_data in role_data.elections %}
+        {% with election=election_data.election %}
+          <h3>{{ election.name }}</h3>
+          <ul>
+            {% for p in election_data.posts %}
+              <li>
+               <a href="{% url 'constituency' election=election.slug post_id=p.slug ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endwith %}
       {% endfor %}
-    {% endif %}
+    {% endfor %}
   {% endfor %}
 
 {% endblock %}

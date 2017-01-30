@@ -89,7 +89,8 @@ class Election(models.Model):
         return self.name
 
     @classmethod
-    def group_and_order_elections(cls, include_posts=False):
+    def group_and_order_elections(cls, include_posts=False,
+                                  include_noncurrent=True):
         """Group elections in a helpful order
 
         We should order and group elections in the following way:
@@ -167,8 +168,10 @@ class Election(models.Model):
         from candidates.models import PostExtra
         result = [
             {'current': True, 'roles': []},
-            {'current': False, 'roles': []},
         ]
+        if include_noncurrent:
+            result.append({'current': False, 'roles': []})
+
         role = None
         qs = cls.objects.order_by(
             '-current', 'for_post_role', '-election_date', 'name'
@@ -183,6 +186,8 @@ class Election(models.Model):
                         .order_by('base__label'),
                 )
             )
+        if not include_noncurrent:
+            qs = qs.filter(current=True)
         # The elections and posts are already sorted into the right
         # order, but now need to be grouped into the useful
         # data structure described in the docstring.
