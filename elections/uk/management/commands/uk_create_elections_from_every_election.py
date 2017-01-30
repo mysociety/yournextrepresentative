@@ -230,7 +230,7 @@ class Command(BaseCommand):
 
         post.area = area
         post.role = post_role
-        post.label = post_role
+        post.label = area_name
         post.organization = organization_extra.base
         post.save()
         post_extra.party_set = party_set
