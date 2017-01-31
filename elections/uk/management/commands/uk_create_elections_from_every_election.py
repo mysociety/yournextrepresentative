@@ -31,8 +31,6 @@ class Command(BaseCommand):
             self.process_results(data['results'])
             url = data.get('next')
 
-
-
         errors = check_paired_models()
         if errors:
             for error in errors:
@@ -98,12 +96,15 @@ class Command(BaseCommand):
 
     def get_or_create_organisation(self, election_model, election_dict):
         org_name = election_dict['organisation']['official_name']
-        org_slug = election_dict['organisation']['slug']
         classification = election_dict['organisation']['organisation_type']
+        org_slug = ":".join([
+            classification,
+            election_dict['organisation']['slug'],
+        ])
 
         try:
             organization_extra = OrganizationExtra.objects.get(
-                slug=org_slug)
+                slug=org_slug, base__classification=classification)
             organization = organization_extra.base
         except OrganizationExtra.DoesNotExist:
             organization = Organization.objects.create(
