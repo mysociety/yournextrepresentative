@@ -48,7 +48,8 @@ class DisallowedUpdateMiddleware(object):
             disallowed_explanation_url = reverse('update-disallowed')
             return HttpResponseRedirect(disallowed_explanation_url)
         elif isinstance(exc, ChangeToLockedConstituencyDisallowedException):
-            return HttpResponseForbidden()
+            msg = 'Attempted a change candidates in a locked constituency'
+            return HttpResponseForbidden(msg)
 
 
 class CopyrightAssignmentMiddleware(object):
