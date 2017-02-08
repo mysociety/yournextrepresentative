@@ -115,12 +115,12 @@ class Command(BaseCommand):
                 election_name = row['Election']
                 election = election_name_to_election.get(election_name)
                 if election is None:
-                    election = Election.objects.get(name=election_name)
+                    election = Election.objects.get(slug=election_name)
                     election_name_to_election[election_name] = election
 
             try:
                 post = Post.objects.get(
-                    label=name,
+                    extra__slug=name,
                     extra__elections=election,
                 )
             except Post.DoesNotExist:
