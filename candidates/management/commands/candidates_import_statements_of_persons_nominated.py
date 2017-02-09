@@ -153,13 +153,15 @@ class Command(BaseCommand):
             existing_documents = OfficialDocument.objects.filter(
                 document_type=OfficialDocument.NOMINATION_PAPER,
                 post_id=post,
+                election=election,
             )
             if existing_documents.count() > 0:
                 if options['delete_existing']:
                     print("Removing existing documents")
                     existing_documents.delete()
                 else:
-                    print("Skipping {0} since it already had documents".format(name))
+                    msg = "Skipping {0} since it already had documents for {1}"
+                    print(msg.format(name, election))
                     continue
             try:
                 downloaded_filename = download_file_cached(document_url)
