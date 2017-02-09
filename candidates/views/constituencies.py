@@ -80,7 +80,8 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         doc_lookup = {t[0]: (t[1], t[2]) for t in OfficialDocument.DOCUMENT_TYPES}
         for t in doc_lookup.values():
             documents_by_type[t] = []
-        documents_for_post = OfficialDocument.objects.filter(post_id=mp_post.id)
+        documents_for_post = OfficialDocument.objects.filter(
+            post_id=mp_post.id, election__slug=self.election)
         for od in documents_for_post:
             documents_by_type[doc_lookup[od.document_type]].append(od)
         context['official_documents'] = documents_by_type.items()
