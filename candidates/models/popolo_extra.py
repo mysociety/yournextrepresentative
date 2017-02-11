@@ -654,6 +654,17 @@ class MembershipExtra(models.Model):
         Election, blank=True, null=True, related_name='candidacies'
     )
 
+    def save(self, *args, **kwargs):
+        if self.election and getattr(self, 'check_for_broken', True):
+            required = {
+                'postextra': self.base.post.extra,
+                'election': self.election}
+            if not PostExtraElection.objects.filter(**required).exists():
+                msg = 'Trying to create a candidacy for post {postextra} ' \
+                      'and election {election} that aren\'t linked'
+                raise Exception(msg.format(**required))
+        super(MembershipExtra, self).save(*args, **kwargs)
+
 
 @python_2_unicode_compatible
 class AreaExtra(models.Model):

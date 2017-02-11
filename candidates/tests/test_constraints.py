@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
+from mock import patch
+
 from django.test import TestCase
-from popolo.models import Post
+from popolo.models import Membership, Post
 
 from elections.models import Election
 
 from ..models import (
-    PostExtra, check_paired_models, check_membership_elections_consistent)
+    MembershipExtra, PostExtra,
+    check_paired_models, check_membership_elections_consistent)
 from .factories import (
     ElectionFactory, MembershipExtraFactory, PersonExtraFactory)
 from .uk_examples import UK2015ExamplesMixin
@@ -64,13 +67,18 @@ class PostElectionCombinationTests(UK2015ExamplesMixin, TestCase):
         )
         # Create a broken candidacy, where the post / election
         # combination isn't represented in PostExtraElection
-        # relationships.
-        MembershipExtraFactory.create(
-            base__person=new_candidate.base,
-            base__post=post_extra.base,
-            base__organization=election.organization,
-            election=election,
-        )
+        # relationships. (In order to create this bad data for the
+        # test, we add an attribute to the MembershipExtra class to
+        # tell the save method not to try preventing creation of the
+        # bad data.)
+        with patch.object(
+                MembershipExtra, 'check_for_broken', False, create=True):
+            MembershipExtraFactory.create(
+                base__person=new_candidate.base,
+                base__post=post_extra.base,
+                base__organization=election.organization,
+                election=election,
+            )
         expected_error = "There was a membership for John Doe ({0}) with " \
             "post Member of Parliament for Edinburgh East (14419) and " \
             "election 2005 but there's no PostExtraElection linking " \
@@ -78,3 +86,32 @@ class PostElectionCombinationTests(UK2015ExamplesMixin, TestCase):
         self.assertEqual(
             check_membership_elections_consistent(),
             [expected_error])
+
+
+class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
+
+    def test_prevent_creating(self):
+        new_candidate = PersonExtraFactory.create(
+            base__name='John Doe'
+        )
+        post_extra = PostExtra.objects.get(slug='14419')
+        election = ElectionFactory.create(
+            slug='2005',
+            name='2005 General Election',
+            for_post_role='Member of Parliament',
+            area_types=(self.wmc_area_type,)
+        )
+        membership = Membership.objects.create(
+            role='Candidate',
+            person=new_candidate.base,
+            on_behalf_of=self.green_party_extra.base,
+            post=post_extra.base,
+        )
+        with self.assertRaisesRegexp(
+                Exception,
+                r'Trying to create a candidacy for post Member of Parliament ' \
+                'for Edinburgh East and election 2005 General Election that ' \
+                'aren\'t linked'):
+            MembershipExtra.objects.create(
+                base=membership,
+                election=election)
