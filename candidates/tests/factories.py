@@ -186,6 +186,8 @@ class MembershipExtraFactory(factory.DjangoModelFactory):
     class Meta:
         model = 'candidates.MembershipExtra'
 
+    base = factory.SubFactory(MembershipFactory)
+
 
 class CandidacyFactory(MembershipFactory):
 
