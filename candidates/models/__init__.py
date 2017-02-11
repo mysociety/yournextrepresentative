@@ -3,6 +3,7 @@ from .auth import get_constituency_lock_from_person_data
 from .auth import get_edits_allowed
 
 from .constraints import check_paired_models
+from .constraints import check_membership_elections_consistent
 
 from .merge import merge_popit_people
 
