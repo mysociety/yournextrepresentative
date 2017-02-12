@@ -15,15 +15,15 @@ from .uk_examples import UK2015ExamplesMixin
 
 def fake_requests_for_mapit(url):
     """Return reduced MapIt output for some known URLs"""
-    if url == 'http://global.mapit.mysociety.org/point/4326/51.5,-0.143207?type=WMC,LAC&generation=22':
+    if url == 'http://global.mapit.mysociety.org/point/4326/51.5,-0.143207?type=LAC,WMC&generation=22':
         status_code = 200
         json_result = \
             {"65759": {"parent_area": None, "generation_high": 26, "all_names": {}, "id": 65759, "codes": {"gss": "E14000639", "unit_id": "25040"}, "name": "Cities of London and Westminster", "country": "E", "type_name": "UK Parliament constituency", "generation_low": 13, "country_name": "England", "type": "WMC"}}
-    elif url == 'http://global.mapit.mysociety.org/point/4326/51.444,-0.09153?type=WMC,LAC&generation=22':
+    elif url == 'http://global.mapit.mysociety.org/point/4326/51.444,-0.09153?type=LAC,WMC&generation=22':
         status_code = 200
         json_result = \
             {"65808": {"parent_area": None, "generation_high": 26, "all_names": {}, "id": 65808, "codes": {"gss": "E14000673", "unit_id": "25031"}, "name": "Dulwich and West Norwood", "country": "E", "type_name": "UK Parliament constituency", "generation_low": 13, "country_name": "England", "type": "WMC"}, "11822": {"parent_area": 2247, "generation_high": 26, "all_names": {}, "id": 11822, "codes": {"gss": "E32000010", "unit_id": "41446"}, "name": "Lambeth and Southwark", "country": "E", "type_name": "London Assembly constituency", "generation_low": 1, "country_name": "England", "type": "LAC"}}
-    elif url == 'http://global.mapit.mysociety.org/point/4326/1.5,-0.143207?type=WMC,LAC&generation=22':
+    elif url == 'http://global.mapit.mysociety.org/point/4326/1.5,-0.143207?type=LAC,WMC&generation=22':
         status_code = 200
         json_result = {}
     else:
