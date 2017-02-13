@@ -75,8 +75,9 @@ def add_notification_data(request):
 def add_group_permissions(request):
     """Add user_can_merge and user_can_review_photos"""
 
+    groups = set(request.user.groups.values_list('name', flat=True))
     result = {
-        context_variable: user_in_group(request.user, group_name)
+        context_variable: group_name in groups
         for context_variable, group_name in (
             ('user_can_upload_documents', DOCUMENT_UPLOADERS_GROUP_NAME),
             ('user_can_merge', TRUSTED_TO_MERGE_GROUP_NAME),
