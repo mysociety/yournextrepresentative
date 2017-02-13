@@ -46,12 +46,12 @@ class TestPersonView(UK2015ExamplesMixin, WebTest):
     @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_before)
     def test_get_tessa_jowell_before_election(self):
         response = self.app.get('/person/2009/tessa-jowell')
-        self.assertContains(response, 'Contesting in the 2015 General Election')
+        self.assertContains(response, 'Contesting the 2015 General Election')
 
     @override_settings(TEMPLATE_CONTEXT_PROCESSORS=processors_after)
     def test_get_tessa_jowell_after_election(self):
         response = self.app.get('/person/2009/tessa-jowell')
-        self.assertContains(response, 'Contested in the 2015 General Election')
+        self.assertContains(response, 'Contested the 2015 General Election')
 
     def test_get_non_existent(self):
         response = self.app.get(
