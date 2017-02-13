@@ -48,10 +48,11 @@ class HelpResultsView(TemplateView):
 
         context['grouped_elections'] = Election.group_and_order_elections()
         for era_data in context['grouped_elections']:
-            for role_data in era_data['roles']:
-                for election_dict in role_data['elections']:
-                    election = election_dict['election']
-                    election_dict['results_file_exists'] = \
-                        self.results_file_exists(election.slug)
+            for date, elections in era_data['dates'].items():
+                for role_data in elections:
+                    for election_dict in role_data['elections']:
+                        election = election_dict['election']
+                        election_dict['results_file_exists'] = \
+                            self.results_file_exists(election.slug)
 
         return context
