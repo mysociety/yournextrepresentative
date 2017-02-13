@@ -1,3 +1,6 @@
+from collections import OrderedDict
+import datetime
+
 from django.test import TestCase
 
 from elections.models import Election
@@ -30,33 +33,39 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                 [
                     {
                         'current': True,
-                        'roles': [
-                            {
-                                'role': 'Member of Parliament',
-                                'elections': [
-                                    {'election': self.election},
-                                ]
-                            },
-                            {
-                                'role': 'Member of the Scottish Parliament',
-                                'elections': [
-                                    {'election': self.sp_c_election},
-                                    {'election': self.sp_r_election},
-                                ]
-                            }
-                        ]
+                        'dates': OrderedDict([
+                            (datetime.date(2016, 5, 5), [
+                                {
+                                    'role': 'Member of the Scottish Parliament',
+                                    'elections': [
+                                        {'election': self.sp_c_election},
+                                        {'election': self.sp_r_election},
+                                    ]
+                                }
+                            ]),
+                            (self.election.election_date, [
+                                {
+                                    'role': 'Member of Parliament',
+                                    'elections': [
+                                        {'election': self.election}
+                                    ]
+                                }
+                            ])
+                        ])
                     },
                     {
                         'current': False,
-                        'roles': [
-                            {
-                                'role': 'Member of Parliament',
-                                'elections': [
-                                    {'election': self.earlier_election},
-                                ]
-                            }
-                        ]
-                    },
+                        'dates': OrderedDict([
+                            (self.earlier_election.election_date, [
+                                {
+                                    'role': 'Member of Parliament',
+                                    'elections': [
+                                        {'election':self.earlier_election}
+                                    ]
+                                }
+                            ])
+                        ])
+                    }
                 ]
             )
 
@@ -67,49 +76,55 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                 [
                     {
                         'current': True,
-                        'roles': [
-                            {
+                        'dates': OrderedDict([
+                            (datetime.date(2016, 5, 5), [{
+                                'role': 'Member of the Scottish Parliament',
+                                'elections': [
+                                    {
+                                        'posts': [],
+                                        'election': self.sp_c_election
+                                    },
+                                    {
+                                        'posts': [],
+                                        'election': self.sp_r_election
+                                    }
+                                ]
+                            }]),
+                            (self.election.election_date, [{
                                 'role': 'Member of Parliament',
                                 'elections': [
                                     {
-                                        'election': self.election,
                                         'posts': [
                                             self.camberwell_post_extra,
                                             self.dulwich_post_extra,
                                             self.edinburgh_east_post_extra,
                                             self.edinburgh_north_post_extra,
-                                        ]
-                                    },
+                                        ],
+                                        'election': self.election
+                                    }
                                 ]
-                            },
-                            {
-                                'role': 'Member of the Scottish Parliament',
-                                'elections': [
-                                    {'election': self.sp_c_election, 'posts': []},
-                                    {'election': self.sp_r_election, 'posts': []},
-                                ]
-                            }
-                        ]
+                            }])
+                        ])
                     },
                     {
                         'current': False,
-                        'roles': [
-                            {
+                        'dates': OrderedDict([
+                            (self.earlier_election.election_date, [{
                                 'role': 'Member of Parliament',
                                 'elections': [
                                     {
-                                        'election': self.earlier_election,
                                         'posts': [
                                             self.camberwell_post_extra,
                                             self.dulwich_post_extra,
                                             self.edinburgh_east_post_extra,
                                             self.edinburgh_north_post_extra,
-                                        ]
-                                    },
+                                        ],
+                                        'election': self.earlier_election
+                                    }
                                 ]
-                            }
-                        ]
-                    },
+                            }])
+                        ])
+                    }
                 ]
             )
 
@@ -122,25 +137,24 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                 [
                     {
                         'current': True,
-                        'roles': [
-                            {
-                                'role': 'Member of Parliament',
-                                'elections': [
-                                    {'election': self.election},
+                        'dates': OrderedDict([
+                            (self.election.election_date, [{
+                                'role': 'Member of Parliament', 'elections': [
+                                    {'election': self.election}
                                 ]
-                            },
-                        ]
+                            }])
+                        ])
                     },
                     {
                         'current': False,
-                        'roles': [
-                            {
+                        'dates': OrderedDict([
+                            (self.earlier_election.election_date, [{
                                 'role': 'Member of Parliament',
                                 'elections': [
-                                    {'election': self.earlier_election},
+                                    {'election': self.earlier_election}
                                 ]
-                            }
-                        ]
-                    },
+                            }])
+                        ])
+                    }
                 ]
             )
