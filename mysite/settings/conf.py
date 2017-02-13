@@ -21,6 +21,31 @@ def get_conf(conf_file_leafname):
     with open(full_filename) as f:
         return yaml.load(f)
 
+
+def add_election_specific_settings(settings, full_election_app):
+    election_settings_module = full_election_app + '.settings'
+    elections_module = importlib.import_module(election_settings_module)
+
+    # Set optional election-specific settings:
+    for optional_election_app_setting, default in (
+            ('AREAS_TO_ALWAYS_RETURN', []),
+            ('GEOCODE_COUNTRY', None),
+    ):
+        try:
+            settings[optional_election_app_setting] = \
+                getattr(elections_module, optional_election_app_setting)
+        except AttributeError:
+            settings[optional_election_app_setting] = default
+
+    # Make sure there's a trailing slash at the end of base MapIt URL:
+    settings['MAPIT_BASE_URL'] = \
+        re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
+
+    # Add any election-specific INSTALLED_APPS:
+    settings['INSTALLED_APPS'].extend(
+        getattr(elections_module, 'INSTALLED_APPS', []))
+
+
 def get_settings(conf_file_leafname, election_app=None, tests=False):
     conf = get_conf(conf_file_leafname)
 
@@ -30,8 +55,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if election_app is None:
         election_app = conf['ELECTION_APP']
     election_app_fully_qualified = 'elections.' + election_app
-    election_settings_module = election_app_fully_qualified + '.settings'
-    elections_module = importlib.import_module(election_settings_module)
 
     language_code = conf.get('LANGUAGE_CODE', 'en-gb')
 
@@ -181,7 +204,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'ELECTION_APP_FULLY_QUALIFIED': election_app_fully_qualified,
 
         # The Django applications in use:
-        'INSTALLED_APPS': (
+        'INSTALLED_APPS': [
             'django.contrib.admin',
             'django.contrib.auth',
             'django.contrib.contenttypes',
@@ -222,8 +245,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
             'crispy_forms',
-            'usersettings',
-        ),
+        ],
 
         'SITE_ID': 1,
 
@@ -470,22 +492,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if conf.get('NGINX_SSL'):
         result['SECURE_PROXY_SSL_HEADER'] = ('HTTP_X_FORWARDED_PROTO', 'https')
         result['ACCOUNT_DEFAULT_HTTP_PROTOCOL'] = 'https'
-    for optional_election_app_setting, default in (
-            ('AREAS_TO_ALWAYS_RETURN', []),
-            ('GEOCODE_COUNTRY', None),
-    ):
-        try:
-            result[optional_election_app_setting] = \
-                getattr(elections_module, optional_election_app_setting)
-        except AttributeError:
-            result[optional_election_app_setting] = default
-    # Make sure there's a trailing slash at the end of base MapIt URL:
-    result['MAPIT_BASE_URL'] = \
-        re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
 
-    result['INSTALLED_APPS'] = list(result['INSTALLED_APPS'])
-    result['INSTALLED_APPS'].extend(
-        getattr(elections_module, 'INSTALLED_APPS', [])
-    )
+    add_election_specific_settings(result, election_app_fully_qualified)
 
     return result
