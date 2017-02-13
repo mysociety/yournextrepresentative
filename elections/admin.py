@@ -4,9 +4,9 @@ from django.contrib import admin
 from .models import AreaType, Election
 
 class ElectionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'current')
+    list_display = ('name', 'election_date', 'description', 'current')
     search_fields = ('name', 'slug')
-    ordering = ('election_date', 'name')
+    ordering = ('-election_date', 'name')
 
 class AreaTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'source')
