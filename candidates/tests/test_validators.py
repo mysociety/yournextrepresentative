@@ -4,83 +4,15 @@ from django.test import TestCase
 
 from ..forms import BasePersonForm, UpdatePersonForm
 
-from .factories import (
-    AreaExtraFactory, AreaTypeFactory, ElectionFactory,
-    ParliamentaryChamberExtraFactory, PartyFactory, PartyExtraFactory,
-    PersonExtraFactory, PostExtraFactory, PartySetFactory,
-    CandidacyExtraFactory, MembershipFactory
-)
+from .factories import PersonExtraFactory
 from .uk_examples import UK2015ExamplesMixin
-
 
 
 class TestValidators(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
-        wmc_area_type = AreaTypeFactory.create()
-        gb_parties = PartySetFactory.create(slug='gb', name='Great Britain')
-        commons = ParliamentaryChamberExtraFactory.create()
-
-        election = ElectionFactory.create(
-            slug='2015',
-            name='2015 General Election',
-            area_types=(wmc_area_type,),
-            organization=commons.base
-        )
-        self.election = election
-        PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons.base,
-            slug='65808',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-        PartyExtraFactory.reset_sequence()
-        PartyFactory.reset_sequence()
-        self.parties = {}
-        for i in range(0, 4):
-            party_extra = PartyExtraFactory.create()
-            gb_parties.parties.add(party_extra.base)
-            self.parties[party_extra.slug] = party_extra
-
-        dulwich_area_extra = AreaExtraFactory.create(
-            base__identifier='65808',
-            base__name='Dulwich and West Norwood',
-            type=wmc_area_type,
-        )
-
-        post_extra = PostExtraFactory.create(
-            elections=(election,),
-            base__organization=commons.base,
-            base__area=dulwich_area_extra.base,
-            slug='65809',
-            base__label='Member of Parliament for Dulwich and West Norwood',
-            party_set=gb_parties,
-        )
-
-        person_extra = PersonExtraFactory.create(
-            base__id='2009',
-            base__name='Tessa Jowell'
-        )
-
-        self.person = person_extra.base
-
-        CandidacyExtraFactory.create(
-            election=self.election,
-            base__person=person_extra.base,
-            base__post=post_extra.base,
-            base__on_behalf_of=party_extra.base
-            )
-        MembershipFactory.create(
-            person=person_extra.base,
-            organization=party_extra.base
-        )
-
-
-
-    def tearDown(self):
-        self.parties = {}
         super(TestValidators, self).setUp()
+        self.person = PersonExtraFactory.create(base__name='John Doe').base
 
     def test_twitter_bad_url(self):
         form = BasePersonForm({
@@ -124,7 +56,7 @@ class TestValidators(UK2015ExamplesMixin, TestCase):
         form = BasePersonForm({
             'name': 'John Bercow',
             'email': 'foo bar!',
-        })
+        }, initial={'person': self.person,})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors, {'email': ['Enter a valid email address.']})
 
@@ -160,7 +92,7 @@ class TestValidators(UK2015ExamplesMixin, TestCase):
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     # When 'not-standing' is selected, it shouldn't matter whether you
@@ -190,7 +122,7 @@ class TestValidators(UK2015ExamplesMixin, TestCase):
             'standing_2015': 'standing',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
 
     # Similarly, when 'not-sure' is selected, it shouldn't matter
@@ -220,5 +152,5 @@ class TestValidators(UK2015ExamplesMixin, TestCase):
             'standing_2015': 'not-sure',
             'constituency_2015': '65808',
             'party_gb_2015': self.conservative_party_extra.base.id,
-        })
+        }, initial={'person': self.person,})
         self.assertTrue(form.is_valid())
