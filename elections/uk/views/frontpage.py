@@ -66,11 +66,13 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['council_confirmed'] = CouncilElection.objects.filter(
             confirmed=True).count()
 
-        context['council_election_percent'] = round(
-            float(context['council_confirmed']) /
-            float(context['council_total'])
-            * 100)
-
+        if context['council_total']:
+            context['council_election_percent'] = round(
+                float(context['council_confirmed']) /
+                float(context['council_total'])
+                * 100)
+        else:
+            context['council_election_percent'] = 0
 
         from candidates.models import PostExtra
         from uk_results.models import PostResult
