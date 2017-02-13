@@ -215,7 +215,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         organizations = organizations_resp.json
 
         self.assertEqual(organizations['count'], len(organizations['results']))
-        self.assertEqual(organizations['count'], 5)
+        self.assertEqual(organizations['count'], 6)
 
     def test_api_organization(self):
         organizations_resp = self.app.get('/api/v0.9/organizations/')
