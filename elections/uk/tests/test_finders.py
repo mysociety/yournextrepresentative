@@ -83,7 +83,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/')
         form = response.forms['form-postcode']
-        form['postcode'] = 'SE24 0AG'
+        form['q'] = 'SE24 0AG'
         response = form.submit()
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
@@ -139,7 +139,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         # ----------------------------
         response = self.app.get('/')
         form = response.forms['form-postcode']
-        form['postcode'] = 'SE24 0AG'
+        form['q'] = 'SE24 0AG'
         response = form.submit()
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
@@ -183,7 +183,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         # ----------------------------
         response = self.app.get('/')
         form = response.forms['form-postcode']
-        form['postcode'] = 'SE24 0AG'
+        form['q'] = 'SE24 0AG'
         response = form.submit()
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
@@ -198,7 +198,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         form = response.forms['form-postcode']
         # This looks like a postcode to the usual postcode-checking
         # regular expressions, but doesn't actually exist
-        form['postcode'] = 'CB2 8RQ'
+        form['q'] = 'CB2 8RQ'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn('The postcode “CB2 8RQ” couldn’t be found', response)
@@ -209,7 +209,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         form = response.forms['form-postcode']
         # This looks like a postcode to the usual postcode-checking
         # regular expressions, but doesn't actually exist
-        form['postcode'] = 'foo bar'
+        form['q'] = 'foo bar'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn('Postcode &#39;FOOBAR&#39; is not valid.', response)
@@ -219,7 +219,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # Postcodes with non-ASCII characters should be rejected
-        form['postcode'] = 'SW1A 1ӔA'
+        form['q'] = 'SW1A 1ӔA'
         response = form.submit()
         self.assertEqual(response.status_code, 200)
         self.assertIn(
