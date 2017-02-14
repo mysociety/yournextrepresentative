@@ -4,7 +4,7 @@ import re
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from popolo.models import Identifier
+from popolo.models import Identifier, Post
 
 from candidates.models import MembershipExtra
 
@@ -79,6 +79,21 @@ def fetch_area_ids(**kwargs):
         areas = get_areas_from_coords(kwargs['coords'])
 
     return areas
+
+def fetch_posts_for_area(**kwargs):
+    areas = fetch_area_ids(**kwargs)
+
+    area_ids = [area[1] for area in areas]
+
+    posts = Post.objects.filter(
+        area__identifier__in=area_ids,
+    ).select_related(
+        'area', 'area__extra__type', 'organization'
+    ).prefetch_related(
+        'extra__elections'
+    )
+    return posts
+
 
 def is_valid_postcode(postcode):
     outcode_pattern = '[A-PR-UWYZ]([0-9]{1,2}|([A-HIK-Y][0-9](|[0-9]|[ABEHMNPRVWXY]))|[0-9][A-HJKSTUW])'

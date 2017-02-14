@@ -23,7 +23,7 @@ from rest_framework import pagination, viewsets
 
 from compat import text_type
 
-from ..election_specific import fetch_area_ids
+from ..election_specific import fetch_posts_for_area
 
 
 class UpcomingElectionsView(View):
@@ -42,7 +42,7 @@ class UpcomingElectionsView(View):
             }
 
         try:
-            areas = fetch_area_ids(postcode=postcode, coords=coords)
+            posts = fetch_posts_for_area(postcode=postcode, coords=coords)
         except Exception as e:
             errors = {
                 'error': e.message
@@ -52,16 +52,6 @@ class UpcomingElectionsView(View):
             return HttpResponse(
                 json.dumps(errors), status=400, content_type='application/json'
             )
-
-        area_ids = [area[1] for area in areas]
-
-        posts = Post.objects.filter(
-            area__identifier__in=area_ids,
-        ).select_related(
-            'area', 'area__extra__type', 'organization'
-        ).prefetch_related(
-            'extra__elections'
-        )
 
         results = []
         for post in posts.all():
