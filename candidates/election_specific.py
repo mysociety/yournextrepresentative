@@ -11,22 +11,6 @@ def default_fetch_area_ids(**kwargs):
 
     return areas
 
-
-def default_fetch_posts_for_area(**kwargs):
-    areas = default_fetch_area_ids(**kwargs)
-
-    area_ids = [area[1] for area in areas]
-
-    posts = Post.objects.filter(
-        area__identifier__in=area_ids,
-    ).select_related(
-        'area', 'area__extra__type', 'organization'
-    ).prefetch_related(
-        'extra__elections'
-    )
-    return posts
-
-
 # This is actually taken from Pombola's country-specific code package
 # in pombola/country/__init__.py. You should add to this list anything
 # country-specific you want to be available through an import from
@@ -37,7 +21,6 @@ imports_and_defaults = (
     ('shorten_post_label', lambda post_label: post_label),
     ('get_extra_csv_values', lambda person, election, post: {}),
     ('fetch_area_ids', default_fetch_area_ids),
-    ('fetch_posts_for_area', default_fetch_posts_for_area),
 )
 
 # Note that one could do this without the dynamic import and use of

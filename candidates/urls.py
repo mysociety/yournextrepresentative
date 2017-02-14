@@ -37,6 +37,11 @@ api_router.register(r'candidate_results', CandidateResultViewSet)
 api_router.register(r'post_results', PostResultViewSet)
 api_router.register(r'result_sets', ResultSetViewSet)
 
+api_router.register(
+    r'candidates_for_postcode',
+    views.CandidatesAndElectionsForPostcodeViewSet,
+    base_name='candidates-for-postcode'
+)
 
 urlpatterns = [
     url(r'^api/(?P<version>v0.9)/', include(api_router.urls)),

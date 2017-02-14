@@ -359,6 +359,33 @@ class PersonSerializer(MinimalPersonSerializer):
             read_only=True
         )
 
+
+class NoVersionPersonSerializer(PersonSerializer):
+    class Meta:
+        model = popolo_models.Person
+        fields = (
+            'id',
+            'url',
+            'name',
+            'other_names',
+            'identifiers',
+            'honorific_prefix',
+            'honorific_suffix',
+            'sort_name',
+            'email',
+            'gender',
+            'birth_date',
+            'death_date',
+            'contact_details',
+            'links',
+            'memberships',
+            'images',
+            'extra_fields',
+            'thumbnail',
+        )
+
+
+
 class PostExtraSerializer(MinimalPostExtraSerializer):
     class Meta:
         model = candidates_models.PostExtra

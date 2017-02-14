@@ -154,3 +154,115 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
         ]
 
         self.assertEqual(expected, output)
+
+    def test_results_for_candidates_for_postcode(self, mock_requests):
+        self._setup_data()
+
+        person_extra = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+
+        CandidacyExtraFactory.create(
+            election=self.election_gla,
+            base__person=person_extra.base,
+            base__post=self.post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
+        )
+        membership_pk = person_extra.base.memberships.first().pk
+
+        self.maxDiff = None
+
+        mock_requests.get.side_effect = fake_requests_for_mapit
+        response = self.app.get(
+            '/api/v0.9/candidates_for_postcode/?postcode=SE24+0AG')
+
+        output = response.json
+        self.assertEqual(len(output), 2)
+        expected = [{
+            u'area': {
+                u'identifier': u'gss:E32000010',
+                u'name': u'Dulwich and West Norwood',
+                u'type': u'LAC'
+            },
+            u'candidates': [],
+            u'election_date': text_type(self.future_date.isoformat()),
+            u'election_id': u'gb-gla-2016-05-05-c',
+            u'election_name':
+                u'2016 London Assembly Election (Constituencies)',
+            u'organization': u'London Assembly',
+            u'post': {
+                u'post_candidates': None,
+                u'post_name': u'Assembly Member for Lambeth and Southwark',
+                u'post_slug': u'gss:E32000010'
+            }},
+            {u'area': {
+                u'identifier': u'unit_id:41441',
+                u'name': u'Greater London Authority',
+                u'type': u'GLA'
+            },
+            u'candidates': [
+                {
+                    u'birth_date': u'',
+                    u'contact_details': [],
+                    u'death_date': u'',
+                    u'email': None,
+                    u'extra_fields': [],
+                    u'gender': u'',
+                    u'honorific_prefix': u'',
+                    u'honorific_suffix': u'',
+                    u'id': 2009,
+                    u'identifiers': [],
+                    u'images': [],
+                    u'links': [],
+                    u'memberships': [{
+                        u'elected': None,
+                        u'election': {
+                            u'id': u'gb-gla-2016-05-05-a',
+                            u'name': u'2016 London Assembly Election (Additional)',
+                            u'url': u'http://localhost:80/api/v0.9/elections/gb-gla-2016-05-05-a/'
+                        },
+                        u'end_date': None,
+                        u'id': membership_pk,
+                        u'label': u'',
+                        u'on_behalf_of': {
+                            u'id': u'party:53',
+                            u'name': u'Labour Party',
+                            u'url': u'http://localhost:80/api/v0.9/organizations/party:53/'
+                        },
+                        u'organization': None,
+                        u'party_list_position': None,
+                        u'person': {
+                            u'id': 2009,
+                            u'name': u'Tessa Jowell',
+                            u'url': u'http://localhost:80/api/v0.9/persons/2009/'
+                        },
+                        u'post': {
+                            u'id': u'unit_id:41441',
+                            u'label': u'Assembly Member',
+                            u'slug': u'unit_id:41441',
+                            u'url': u'http://localhost:80/api/v0.9/posts/unit_id:41441/'
+                        },
+                        u'role': u'Candidate',
+                        u'start_date': None,
+                        u'url': u'http://localhost:80/api/v0.9/memberships/{}/'.format(membership_pk)
+                    }],
+                    u'name': u'Tessa Jowell',
+                    u'other_names': [],
+                    u'sort_name': u'',
+                    u'thumbnail': None,
+                    u'url': u'http://localhost:80/api/v0.9/persons/2009/',
+                }
+            ],
+            u'election_date': text_type(self.future_date.isoformat()),
+            u'election_id': u'gb-gla-2016-05-05-a',
+            u'election_name': u'2016 London Assembly Election (Additional)',
+            u'organization': u'London Assembly',
+            u'post': {
+                u'post_candidates': None,
+                u'post_name': u'Assembly Member',
+                u'post_slug': u'unit_id:41441'
+            }
+        }]
+
+        self.assertEqual(expected, output)
