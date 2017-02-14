@@ -129,8 +129,10 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, SettingsMixin, WebTest):
             {
                 'organization': 'London Assembly',
                 'election_date': text_type(future_date.isoformat()),
+                'election_id': 'gb-gla-2016-05-05-c',
                 'election_name': '2016 London Assembly Election (Constituencies)',
                 'post_name': 'Assembly Member for Lambeth and Southwark',
+                'post_slug': 'gss:E32000010',
                 'area': {
                     'identifier': 'gss:E32000010',
                     'type': 'LAC',
@@ -140,8 +142,10 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, SettingsMixin, WebTest):
             {
                 'organization': 'London Assembly',
                 'election_date': text_type(future_date.isoformat()),
+                'election_id': 'gb-gla-2016-05-05-a',
                 'election_name': '2016 London Assembly Election (Additional)',
                 'post_name': 'Assembly Member',
+                'post_slug': 'unit_id:41441',
                 'area': {
                     'identifier': 'unit_id:41441',
                     'type': 'GLA',
