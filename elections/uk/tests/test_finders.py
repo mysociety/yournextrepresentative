@@ -19,7 +19,7 @@ from elections.models import Election
 from .mapit_postcode_results import se240ag_result, sw1a1aa_result
 
 
-def fake_requests_for_mapit(url):
+def fake_requests_for_mapit(url, *args, **kwargs):
     """Return reduced MapIt output for some known URLs"""
     if url == urljoin(settings.MAPIT_BASE_URL, '/postcode/sw1a1aa'):
         status_code = 200
