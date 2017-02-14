@@ -376,6 +376,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                         'select2/select2.js',
                         'js/constituency.js',
                         'js/person_form.js',
+                        'js/dynamic_add_election.js',
                         'js/home_geolocation_form.js',
                         'js/versions.js',
                         'js/language-switcher.js',

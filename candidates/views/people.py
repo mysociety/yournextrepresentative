@@ -27,8 +27,9 @@ from elections.models import Election
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
+from .mixins import PersonMixin
 from .version_data import get_client_ip, get_change_metadata
-from ..forms import NewPersonForm, UpdatePersonForm
+from ..forms import NewPersonForm, UpdatePersonForm, SingleElectionForm
 from ..models import (
     LoggedAction, PersonRedirect, TRUSTED_TO_MERGE_GROUP_NAME
 )
@@ -175,20 +176,15 @@ class PersonView(TemplateView):
         )
 
 
-class RevertPersonView(LoginRequiredMixin, View):
+class RevertPersonView(LoginRequiredMixin, PersonMixin, View):
 
     http_method_names = ['post']
 
     def post(self, request, *args, **kwargs):
         version_id = self.request.POST['version_id']
-        person_id = self.kwargs['person_id']
         source = self.request.POST['source']
 
-        person_extra = get_object_or_404(
-            PersonExtra.objects.select_related('base'),
-            base__id=person_id
-        )
-        person = person_extra.base
+        person_extra = self.person.extra
 
         versions = json.loads(person_extra.versions)
 
@@ -200,14 +196,14 @@ class RevertPersonView(LoginRequiredMixin, View):
 
         if not data_to_revert_to:
             message = _("Couldn't find the version {0} of person {1}")
-            raise Exception(message.format(version_id, person_id))
+            raise Exception(message.format(version_id, self.person.id))
 
         with transaction.atomic():
 
             change_metadata = get_change_metadata(self.request, source)
 
             # Update the person here...
-            revert_person_from_version_data(person, person_extra, data_to_revert_to)
+            revert_person_from_version_data(self.person, person_extra, data_to_revert_to)
 
             person_extra.record_version(change_metadata)
             person_extra.save()
@@ -216,7 +212,7 @@ class RevertPersonView(LoginRequiredMixin, View):
             # the recent changes, leaderboards, etc.
             LoggedAction.objects.create(
                 user=self.request.user,
-                person=person,
+                person=self.person,
                 action_type='person-revert',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version=change_metadata['version_id'],
@@ -226,7 +222,7 @@ class RevertPersonView(LoginRequiredMixin, View):
         return HttpResponseRedirect(
             reverse(
                 'person-view',
-                kwargs={'person_id': person_id}
+                kwargs={'person_id': self.person.id}
             )
         )
 
@@ -312,7 +308,7 @@ class MergePeopleView(GroupRequiredMixin, View):
             })
         )
 
-class UpdatePersonView(LoginRequiredMixin, FormView):
+class UpdatePersonView(LoginRequiredMixin, PersonMixin, FormView):
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
 
@@ -325,14 +321,13 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         initial_data.update(person.extra.get_initial_form_data())
         return initial_data
 
+    def get_form_kwargs(self):
+        form_kwargs = super(UpdatePersonView, self).get_form_kwargs()
+        form_kwargs['person'] = self.person
+        return form_kwargs
+
     def get_context_data(self, **kwargs):
         context = super(UpdatePersonView, self).get_context_data(**kwargs)
-
-        person = get_object_or_404(
-            Person.objects.select_related('extra'),
-            pk=self.kwargs['person_id']
-        )
-        context['person'] = person
 
         context['user_can_merge'] = user_in_group(
             self.request.user,
@@ -340,11 +335,11 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
         )
 
         context['versions'] = get_version_diffs(
-            json.loads(person.extra.versions)
+            json.loads(self.person.extra.versions)
         )
 
         elections_standing_in = Election.objects.filter(
-            candidacies__base__person=person,
+            candidacies__base__person=self.person,
             current=True,
         ).order_by('-election_date', 'name')
 
@@ -361,12 +356,8 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
 
         with transaction.atomic():
 
-            person = get_object_or_404(
-                Person.objects.select_related('extra'),
-                id=self.kwargs['person_id']
-            )
-            old_name = person.name
-            person_extra = person.extra
+            old_name = self.person.name
+            person_extra = self.person.extra
             old_candidacies = person_extra.current_candidacies
             person_extra.update_from_form(form)
             new_name = person_extra.base.name
@@ -383,7 +374,7 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             person_extra.save()
             LoggedAction.objects.create(
                 user=self.request.user,
-                person=person,
+                person=self.person,
                 action_type='person-update',
                 ip_address=get_client_ip(self.request),
                 popit_person_new_version=change_metadata['version_id'],
@@ -394,11 +385,11 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
             messages.add_message(
                 self.request,
                 messages.SUCCESS,
-                get_call_to_action_flash_message(person, new_person=False),
+                get_call_to_action_flash_message(self.person, new_person=False),
                 extra_tags='safe do-something-else'
             )
 
-        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
+        return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': self.person.id}))
 
 
 class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
@@ -466,3 +457,16 @@ class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):
             )
 
         return HttpResponseRedirect(reverse('person-view', kwargs={'person_id': person.id}))
+
+
+class SingleElectionFormView(LoginRequiredMixin, FormView):
+    template_name = 'candidates/person-edit-add-single-election.html'
+    form_class = SingleElectionForm
+
+    def get_form_kwargs(self):
+        kwargs = super(SingleElectionFormView, self).get_form_kwargs()
+        kwargs['election'] = get_object_or_404(
+            Election.objects.all(),
+            slug=self.kwargs['election']
+        )
+        return kwargs

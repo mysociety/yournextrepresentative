@@ -38,13 +38,15 @@ function setSelect2Visibility(select2Element, visibility) {
 /* Make all the party drop-downs into Select2 widgets */
 
 function setUpPartySelect2s() {
-  $('.party-select').select2({width: '100%'});
+  $('.party-select').not('.select2-offscreen').not('.select2-container')
+    .select2({width: '100%'});
 }
 
 /* Make all the post drop-downs into Select2 widgets */
 
 function setUpPostSelect2s() {
-  $('.post-select').each(function(i) {
+  $('.post-select').not('.select2-offscreen').not('.select2-container')
+    .each(function(i) {
     var postSelect = $(this),
       hidden = postSelect.prop('tagName') == 'INPUT' &&
          postSelect.attr('type') == 'hidden';

@@ -1,7 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.utils.functional import cached_property
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from braces.views import LoginRequiredMixin
@@ -9,27 +8,19 @@ from braces.views import LoginRequiredMixin
 from candidates.forms import OtherNameForm
 from popolo.models import OtherName, Person
 
+from .mixins import PersonMixin
 from .version_data import get_change_metadata
 
 
-class PersonMixin(object):
-
-    @cached_property
-    def person(self):
-        return Person.objects.get(pk=self.kwargs['person_id'])
+class PersonOtherNamesMixin(PersonMixin):
 
     def get_success_url(self):
         return reverse(
             'person-other-names', kwargs={'person_id': self.person.id}
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PersonMixin, self).get_context_data(**kwargs)
-        context['person'] = self.person
-        return context
 
-
-class PersonOtherNamesView(PersonMixin, ListView):
+class PersonOtherNamesView(PersonOtherNamesMixin, ListView):
 
     model = OtherName
     template_name = 'candidates/othername_list.html'
@@ -43,7 +34,7 @@ class PersonOtherNamesView(PersonMixin, ListView):
         ).order_by('name', 'start_date', 'end_date')
 
 
-class PersonOtherNameCreateView(LoginRequiredMixin, PersonMixin, CreateView):
+class PersonOtherNameCreateView(LoginRequiredMixin, PersonOtherNamesMixin, CreateView):
 
     model = OtherName
     form_class = OtherNameForm
@@ -66,7 +57,7 @@ class PersonOtherNameCreateView(LoginRequiredMixin, PersonMixin, CreateView):
             return result
 
 
-class PersonOtherNameDeleteView(LoginRequiredMixin, PersonMixin, DeleteView):
+class PersonOtherNameDeleteView(LoginRequiredMixin, PersonOtherNamesMixin, DeleteView):
 
     model = OtherName
     raise_exception = True
@@ -83,7 +74,7 @@ class PersonOtherNameDeleteView(LoginRequiredMixin, PersonMixin, DeleteView):
             return result_redirect
 
 
-class PersonOtherNameUpdateView(LoginRequiredMixin, PersonMixin, UpdateView):
+class PersonOtherNameUpdateView(LoginRequiredMixin, PersonOtherNamesMixin, UpdateView):
 
     model = OtherName
     form_class = OtherNameForm

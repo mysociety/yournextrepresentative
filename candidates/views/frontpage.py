@@ -42,7 +42,7 @@ class GeoLocatorView(View):
         mapit_json = []
         for generation, types in generation_with_types.items():
             lookup_url = mapit_base_url + '?type=' \
-                + ','.join(types)
+                + ','.join(sorted(types))
             lookup_url += '&generation={0}'.format(generation)
             mapit_result = requests.get(lookup_url)
             mapit_result = mapit_result.json()

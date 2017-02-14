@@ -97,11 +97,18 @@
 
         {% if not add_candidate_form %}
           <h2>{% trans "Add a candidacy in another election" %}</h2>
-          <div class="add-candidacy-link">
-            <a href="{% url 'person-update-add-candidacy' person_id=person.id %}">
-              {% trans "Add a new candidacy" %}
+          <div class="form-item add-candidacy-link">
+            <a class="small secondary button" id="add_election_button" href="{% url 'person-update-add-candidacy' person_id=person.id %}">
+              {% trans "Add a candidacy in an election" %}
             </a>
+
+            <div class="add_more_elections_field">
+              <label for="add_more_elections">{% trans "Add new election:" %}</label>
+              <input type="hidden" id="add_more_elections" style="width:100%">
+            </div>
+
           </div>
+          <div class="extra_elections_forms"></div>
         {% endif %}
 
     </div>

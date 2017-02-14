@@ -19,6 +19,7 @@ from candidates.models import MembershipExtra
 from elections.mixins import ElectionMixin
 
 from .helpers import get_redirect_to_post
+from .mixins import PersonMixin
 from .version_data import get_client_ip, get_change_metadata
 from .. import forms
 
@@ -158,17 +159,10 @@ WIZARD_CONDITION_DICT = {
     'post': do_candidacy_wizard_post_step
 }
 
-class AddCandidacyWizardView(LoginRequiredMixin, SessionWizardView):
+class AddCandidacyWizardView(LoginRequiredMixin, PersonMixin, SessionWizardView):
 
     form_list = WIZARD_FORMS
     condition_dict = WIZARD_CONDITION_DICT
-
-    def dispatch(self, request, *args, **kwargs):
-        self.person = get_object_or_404(
-            Person.objects.select_related('extra'),
-            pk=self.kwargs['person_id'])
-        return super(AddCandidacyWizardView, self).dispatch(
-            request, *args, **kwargs)
 
     def get_template_names(self):
         return [WIZARD_TEMPLATES[self.steps.current]]
@@ -198,7 +192,6 @@ class AddCandidacyWizardView(LoginRequiredMixin, SessionWizardView):
 
     def get_context_data(self, form, **kwargs):
         context = super(AddCandidacyWizardView, self).get_context_data(form, **kwargs)
-        context['person'] = self.person
         context['include_historic'] = (self.request.GET.get('historic') == '1')
         return context
 
