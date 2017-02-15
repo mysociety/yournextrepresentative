@@ -88,6 +88,10 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = form.submit()
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
+        self.assertEqual(split_location.path, '/')
+        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        response = self.app.get(response.location)
+        split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
             '/areas/WMC-gss:E14000673',
@@ -144,6 +148,10 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response = form.submit()
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
+        self.assertEqual(split_location.path, '/')
+        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        response = self.app.get(response.location)
+        split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
             '/areas/GLA-unit_id:41441,LAC-gss:E32000010,WMC-gss:E14000673',
@@ -187,6 +195,10 @@ class TestConstituencyPostcodeFinderView(WebTest):
         form['q'] = 'SE24 0AG'
         response = form.submit()
         self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual(split_location.path, '/')
+        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        response = self.app.get(response.location)
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
