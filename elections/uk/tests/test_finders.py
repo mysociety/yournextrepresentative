@@ -213,7 +213,11 @@ class TestConstituencyPostcodeFinderView(WebTest):
         # regular expressions, but doesn't actually exist
         form['q'] = 'CB2 8RQ'
         response = form.submit()
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual(split_location.path, '/')
+        self.assertEqual(split_location.query, 'postcode=CB2%208RQ')
+        response = self.app.get(response.location)
         self.assertIn('The postcode “CB2 8RQ” couldn’t be found', response)
 
     def test_nonsense_postcode_searches_for_candidate(self, mock_requests):
