@@ -19,8 +19,8 @@ class PostcodeForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Enter a name'})
     )
 
-    def clean_postcode(self):
-        postcode = self.cleaned_data['postcode']
+    def clean_q(self):
+        postcode = self.cleaned_data['q']
         try:
             # Go to MapIt to check if this postcode is valid and
             # contained in a constituency. (If it's valid then the
