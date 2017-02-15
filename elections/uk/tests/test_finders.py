@@ -89,7 +89,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        self.assertEqual(split_location.query, 'q=SE24%200AG')
         response = self.app.get(response.location)
         split_location = urlsplit(response.location)
         self.assertEqual(
@@ -149,7 +149,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        self.assertEqual(split_location.query, 'q=SE24%200AG')
         response = self.app.get(response.location)
         split_location = urlsplit(response.location)
         self.assertEqual(
@@ -197,7 +197,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'postcode=SE24%200AG')
+        self.assertEqual(split_location.query, 'q=SE24%200AG')
         response = self.app.get(response.location)
         split_location = urlsplit(response.location)
         self.assertEqual(
@@ -216,7 +216,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertEqual(response.status_code, 302)
         split_location = urlsplit(response.location)
         self.assertEqual(split_location.path, '/')
-        self.assertEqual(split_location.query, 'postcode=CB2%208RQ')
+        self.assertEqual(split_location.query, 'q=CB2%208RQ')
         response = self.app.get(response.location)
         self.assertIn('The postcode “CB2 8RQ” couldn’t be found', response)
 

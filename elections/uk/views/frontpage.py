@@ -43,13 +43,13 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         )
 
     def get(self, request, *args, **kwargs):
-        if 'postcode' in request.GET:
-            return self.process_postcode(request.GET['postcode'])
+        if 'q' in request.GET:
+            return self.process_postcode(request.GET['q'])
         else:
             return super(ConstituencyPostcodeFinderView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        return self.process_postcode(form.cleaned_data['postcode'])
+        return self.process_postcode(form.cleaned_data['q'])
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
