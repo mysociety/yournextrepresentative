@@ -1,4 +1,4 @@
-from urllib import urlencode
+from django.utils.six.moves.urllib_parse import urlencode
 
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 
