@@ -88,46 +88,50 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
             data,
             [
                 {
-                    'current': True,
-                    'roles': [
-                        {
-                            'role': 'Member of Parliament',
-                            'elections': [
-                                {
-                                    'prior_elections': [
-                                        {
-                                            'name': '2010 General Election',
-                                            'standing_again': 2,
-                                            'new_candidates': 16,
-                                            'percentage': 900.0,
-                                            'standing_again_different_party': 1,
-                                            'standing_again_same_party': 1
-                                        }
-                                    ],
-                                    'total': 18,
-                                    'id': '2015',
-                                    'html_id': '2015',
-                                    'name': '2015 General Election'
-                                }
-                            ]
-                        }
-                    ]
+                    "current": True,
+                    "dates": {
+                        "2017-03-01": [
+                            {
+                                "elections": [
+                                    {
+                                        "html_id": "2015",
+                                        "id": "2015",
+                                        "name": "2015 General Election",
+                                        "prior_elections": [
+                                            {
+                                                "name": "2010 General Election",
+                                                "new_candidates": 16,
+                                                "percentage": 900.0,
+                                                "standing_again": 2,
+                                                "standing_again_different_party": 1,
+                                                "standing_again_same_party": 1
+                                            }
+                                        ],
+                                        "total": 18
+                                    }
+                                ],
+                                "role": "Member of Parliament"
+                            }
+                        ]
+                    }
                 },
                 {
-                    'current': False,
-                    'roles': [
-                        {
-                            'role': 'Member of Parliament',
-                            'elections': [
-                                {
-                                    'total': 2,
-                                    'name': '2010 General Election',
-                                    'html_id': '2010',
-                                    'id': '2010'
-                                }
-                            ]
-                        }
-                    ]
+                    "current": False,
+                    "dates": {
+                        "2013-02-28": [
+                            {
+                                "elections": [
+                                    {
+                                        "html_id": "2010",
+                                        "id": "2010",
+                                        "name": "2010 General Election",
+                                        "total": 2
+                                    }
+                                ],
+                                "role": "Member of Parliament"
+                            }
+                        ]
+                    }
                 }
             ]
         )

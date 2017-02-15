@@ -90,7 +90,8 @@ class Election(models.Model):
 
     @classmethod
     def group_and_order_elections(cls, include_posts=False,
-                                  include_noncurrent=True):
+                                  include_noncurrent=True,
+                                  for_json=False):
         """Group elections in a helpful order
 
         We should order and group elections in the following way:
@@ -101,7 +102,10 @@ class Election(models.Model):
                 Order by election name
 
         If the parameter include_posts is set to True, then the posts
-        will be included as well.
+        will be included as well. If for_json is True, the returned data
+        should be safe to serialize to JSON (e.g. the election dates will
+        be ISO 8601 date strings (i.e. YYYY-MM-DD) rather than
+        datetime.date objects).
 
         e.g. An example of the returned data structure:
 
@@ -195,7 +199,11 @@ class Election(models.Model):
         last_current = None
         for election in qs:
             current_index = 1 - int(election.current)
-            roles = result[current_index]['dates'].setdefault(election.election_date, [])
+            if for_json:
+                election_date = election.election_date.isoformat()
+            else:
+                election_date = election.election_date
+            roles = result[current_index]['dates'].setdefault(election_date, [])
             # If the role has changed, or we've switched from current
             # elections to past elections, create a new array of
             # elections to append to:

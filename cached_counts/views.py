@@ -63,7 +63,7 @@ def get_prior_election_data(
     }
 
 
-def get_counts():
+def get_counts(for_json=True):
     election_id_to_candidates = {
         d['extra__election']: d['count']
         for d in Membership.objects \
@@ -71,7 +71,7 @@ def get_counts():
             .values('extra__election') \
             .annotate(count=Count('extra__election'))
     }
-    grouped_elections = Election.group_and_order_elections()
+    grouped_elections = Election.group_and_order_elections(for_json=for_json)
     past_elections = [
         election_data['election']
         for era_data in grouped_elections
@@ -117,7 +117,7 @@ class ReportsHomeView(TemplateView):
     def get(self, *args, **kwargs):
         if self.request.GET.get('format') == "json":
             return HttpResponse(
-                json.dumps(get_counts()),
+                json.dumps(get_counts(for_json=True)),
                 content_type="application/json"
             )
         return super(ReportsHomeView, self).get(*args, **kwargs)
