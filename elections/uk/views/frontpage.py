@@ -42,9 +42,22 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             })
         )
 
+    def get_form_kwargs(self):
+        if self.request.method == 'GET' and 'q' in self.request.GET:
+            return {
+                'data': self.request.GET,
+                'initial': self.get_initial(),
+                'prefix': self.get_prefix(),
+            }
+        else:
+            return super(ConstituencyPostcodeFinderView, self).get_form_kwargs()
+
     def get(self, request, *args, **kwargs):
         if 'q' in request.GET:
-            return self.process_postcode(request.GET['q'])
+            # The treat it like a POST request; we've overridden
+            # get_form_kwargs to make sure the GET parameters are used
+            # for the form in this case.
+            return self.post(request, *args, **kwargs)
         else:
             return super(ConstituencyPostcodeFinderView, self).get(request, *args, **kwargs)
 
