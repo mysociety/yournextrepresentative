@@ -114,7 +114,3 @@ class UK2015ExamplesMixin(object):
                 group=cons['country'],
             )
             setattr(self, cons['attr'], pe)
-            for election in (self.election, self.earlier_election):
-                factories.PostExtraElectionFactory.create(
-                    postextra=pe,
-                    election=election)
