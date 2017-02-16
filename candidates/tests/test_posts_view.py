@@ -13,7 +13,7 @@ class TestPostsView(UK2015ExamplesMixin, WebTest):
 
         self.assertTrue(
             response.html.find(
-                'h3', text='2015 General Election'
+                'h4', text='2015 General Election'
             )
         )
 
@@ -32,12 +32,12 @@ class TestPostsView(UK2015ExamplesMixin, WebTest):
 
         self.assertTrue(
             response.html.find(
-                'h3', text='2010 General Election'
+                'h4', text='2010 General Election'
             )
         )
 
         self.assertTrue(
             response.html.find(
-                'h3', text='2015 General Election'
+                'h4', text='2015 General Election'
             )
         )

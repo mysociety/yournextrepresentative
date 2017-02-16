@@ -42,14 +42,27 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             })
         )
 
+    def get_form_kwargs(self):
+        if self.request.method == 'GET' and 'q' in self.request.GET:
+            return {
+                'data': self.request.GET,
+                'initial': self.get_initial(),
+                'prefix': self.get_prefix(),
+            }
+        else:
+            return super(ConstituencyPostcodeFinderView, self).get_form_kwargs()
+
     def get(self, request, *args, **kwargs):
-        if 'postcode' in request.GET:
-            return self.process_postcode(request.GET['postcode'])
+        if 'q' in request.GET:
+            # The treat it like a POST request; we've overridden
+            # get_form_kwargs to make sure the GET parameters are used
+            # for the form in this case.
+            return self.post(request, *args, **kwargs)
         else:
             return super(ConstituencyPostcodeFinderView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        return self.process_postcode(form.cleaned_data['postcode'])
+        return self.process_postcode(form.cleaned_data['q'])
 
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
@@ -66,11 +79,13 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['council_confirmed'] = CouncilElection.objects.filter(
             confirmed=True).count()
 
-        context['council_election_percent'] = round(
-            float(context['council_confirmed']) /
-            float(context['council_total'])
-            * 100)
-
+        if context['council_total']:
+            context['council_election_percent'] = round(
+                float(context['council_confirmed']) /
+                float(context['council_total'])
+                * 100)
+        else:
+            context['council_election_percent'] = 0
 
         from candidates.models import PostExtra
         from uk_results.models import PostResult

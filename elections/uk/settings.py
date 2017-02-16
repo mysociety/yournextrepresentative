@@ -10,3 +10,7 @@ INSTALLED_APPS = [
     'bulk_adding',
     'uk_results',
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "uk_results.context_processors.show_results_feature",
+)

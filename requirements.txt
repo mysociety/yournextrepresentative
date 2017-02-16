@@ -18,7 +18,7 @@ django-extensions==1.6.1
 django-filter==0.13
 django-haystack==2.4.1
 django-model-utils==2.3.1
-django-nose==1.4.1
+django-nose==1.4.4
 django-notifications-hq==1.0.0
 django-pipeline==1.6.8
 -e git+https://github.com/mysociety/django-popolo@update-with-better-migrations-redux#egg=mysociety-django-popolo
@@ -38,7 +38,7 @@ ipdb==0.8
 ipython==4.0.0
 ipython-genutils==0.1.0
 jsonfield==1.0.3
-jsonpatch==1.9
+jsonpatch==1.13
 jsonpointer==1.10
 libsass==0.11.1
 lxml==3.4.1

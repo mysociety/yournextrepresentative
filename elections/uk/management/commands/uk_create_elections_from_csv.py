@@ -1,6 +1,6 @@
 from __future__ import print_function, unicode_literals
 
-from compat import StreamDictReader
+from compat import BufferDictReader
 import re
 
 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
         csv_url, = args
         r = requests.get(csv_url)
         r.encoding = 'utf-8'
-        reader = StreamDictReader(r.text)
+        reader = BufferDictReader(r.text)
         for line in reader:
             cleaned_line = {}
             for k,v in line.items():

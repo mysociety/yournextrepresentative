@@ -20,6 +20,45 @@ def get_conf(conf_file_leafname):
     with open(full_filename) as f:
         return yaml.load(f)
 
+
+def add_election_specific_settings(settings, full_election_app):
+    election_settings_module = full_election_app + '.settings'
+    elections_module = importlib.import_module(election_settings_module)
+
+    # Set some required election-specific settings:
+    for required_election_app_setting in (
+            'SITE_OWNER',
+            'COPYRIGHT_HOLDER',
+    ):
+        settings[required_election_app_setting] = \
+            getattr(elections_module, required_election_app_setting)
+
+    # Set optional election-specific settings:
+    for optional_election_app_setting, default in (
+            ('SITE_OWNER_URL', ''),
+            ('AREAS_TO_ALWAYS_RETURN', []),
+            ('IMAGE_PROXY_URL', ''),
+    ):
+        try:
+            settings[optional_election_app_setting] = \
+                getattr(elections_module, optional_election_app_setting)
+        except AttributeError:
+            settings[optional_election_app_setting] = default
+
+    # Make sure there's a trailing slash at the end of base MapIt URL:
+    settings['MAPIT_BASE_URL'] = \
+        re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
+
+    # Add any election-specific context processors:
+    extra_context_processors = \
+        getattr(elections_module, 'TEMPLATE_CONTEXT_PROCESSORS', ())
+    settings['TEMPLATE_CONTEXT_PROCESSORS'] += extra_context_processors
+
+    # Add any election-specific INSTALLED_APPS:
+    settings['INSTALLED_APPS'].extend(
+        getattr(elections_module, 'INSTALLED_APPS', []))
+
+
 def get_settings(conf_file_leafname, election_app=None, tests=False):
     conf = get_conf(conf_file_leafname)
 
@@ -29,8 +68,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if election_app is None:
         election_app = conf['ELECTION_APP']
     election_app_fully_qualified = 'elections.' + election_app
-    election_settings_module = election_app_fully_qualified + '.settings'
-    elections_module = importlib.import_module(election_settings_module)
 
     language_code = conf.get('LANGUAGE_CODE', 'en-gb')
 
@@ -173,14 +210,13 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             "mysite.context_processors.add_notification_data",
             "mysite.context_processors.locale",
             "mysite.context_processors.add_site",
-            "uk_results.context_processors.show_results_feature",
         ),
 
         'ELECTION_APP': election_app,
         'ELECTION_APP_FULLY_QUALIFIED': election_app_fully_qualified,
 
         # The Django applications in use:
-        'INSTALLED_APPS': (
+        'INSTALLED_APPS': [
             'django.contrib.admin',
             'django.contrib.auth',
             'django.contrib.contenttypes',
@@ -220,7 +256,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
             'crispy_forms',
-        ),
+        ],
 
         'SITE_ID': 1,
 
@@ -464,30 +500,9 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if conf.get('NGINX_SSL'):
         result['SECURE_PROXY_SSL_HEADER'] = ('HTTP_X_FORWARDED_PROTO', 'https')
         result['ACCOUNT_DEFAULT_HTTP_PROTOCOL'] = 'https'
-    for required_election_app_setting in (
-            'SITE_OWNER',
-            'COPYRIGHT_HOLDER',
-    ):
-        result[required_election_app_setting] = \
-            getattr(elections_module, required_election_app_setting)
-    for optional_election_app_setting, default in (
-            ('SITE_OWNER_URL', ''),
-            ('AREAS_TO_ALWAYS_RETURN', []),
-            ('IMAGE_PROXY_URL', ''),
-    ):
-        try:
-            result[optional_election_app_setting] = \
-                getattr(elections_module, optional_election_app_setting)
-        except AttributeError:
-            result[optional_election_app_setting] = default
-    # Make sure there's a trailing slash at the end of base MapIt URL:
-    result['MAPIT_BASE_URL'] = \
-        re.sub(r'/*$', '/', elections_module.MAPIT_BASE_URL)
 
-    result['INSTALLED_APPS'] = list(result['INSTALLED_APPS'])
-    result['INSTALLED_APPS'].extend(
-        getattr(elections_module, 'INSTALLED_APPS', [])
-    )
+    add_election_specific_settings(result, election_app_fully_qualified)
+
     result['RESULTS_FEATURE_ACTIVE'] = True
 
     return result

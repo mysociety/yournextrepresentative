@@ -11,8 +11,6 @@ from elections.models import Election
 
 
 class Command(BaseCommand):
-    GB_PARTY_SET = PartySet.objects.get(slug='gb')
-
     date = date(2016, 5, 5)
 
     def election_id_from_line(self, line):
@@ -31,6 +29,8 @@ class Command(BaseCommand):
 
 
     def handle(self, **options):
+        gb_party_set = PartySet.objects.get(slug='gb')
+
         csv_path = os.path.abspath(
             "elections/uk/data/2016-local-elections-wards.csv")
         csv_file = csv.DictReader(open(csv_path))
@@ -46,6 +46,6 @@ class Command(BaseCommand):
                 election=election,
                 council=council,
                 defaults={
-                    'party_set': self.GB_PARTY_SET,
+                    'party_set': gb_party_set,
                 }
             )

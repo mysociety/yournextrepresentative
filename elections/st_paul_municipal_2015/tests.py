@@ -173,7 +173,7 @@ class StPaulTests(WebTest):
     def test_posts_page(self):
         response = self.app.get('/posts')
         self.assertIn(
-            '<h3>City Council Election</h3>',
+            '<h4>City Council Election</h4>',
             response,
         )
         self.assertIn(
@@ -181,7 +181,7 @@ class StPaulTests(WebTest):
             response,
         )
         self.assertIn(
-            '<h3>School Board Election</h3>',
+            '<h4>School Board Election</h4>',
             response,
         )
         self.assertIn(

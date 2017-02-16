@@ -63,7 +63,7 @@ def get_prior_election_data(
     }
 
 
-def get_counts():
+def get_counts(for_json=True):
     election_id_to_candidates = {
         d['extra__election']: d['count']
         for d in Membership.objects \
@@ -71,36 +71,38 @@ def get_counts():
             .values('extra__election') \
             .annotate(count=Count('extra__election'))
     }
-    grouped_elections = Election.group_and_order_elections()
+    grouped_elections = Election.group_and_order_elections(for_json=for_json)
     past_elections = [
         election_data['election']
         for era_data in grouped_elections
-        for role_data in era_data['roles']
+        for date, elections in era_data['dates'].items()
+        for role_data in elections
         for election_data in role_data['elections']
         if not era_data['current']
     ]
     for era_data in grouped_elections:
-        for role_data in era_data['roles']:
-            for election_data in role_data['elections']:
-                e = election_data['election']
-                total = election_id_to_candidates.get(e.id, 0)
-                election_counts = {
-                    'id': e.slug,
-                    'html_id': e.slug.replace('.', '-'),
-                    'name': e.name,
-                    'total': total,
-                }
-                if era_data['current']:
-                    election_counts['prior_elections'] = [
-                        get_prior_election_data(
-                            total, e,
-                            election_id_to_candidates.get(pe.id, 0), pe
-                        )
-                        for pe in past_elections
-                        if pe.for_post_role == e.for_post_role
-                    ]
-                election_data.update(election_counts)
-                del election_data['election']
+        for date, elections in era_data['dates'].items():
+            for role_data in elections:
+                for election_data in role_data['elections']:
+                    e = election_data['election']
+                    total = election_id_to_candidates.get(e.id, 0)
+                    election_counts = {
+                        'id': e.slug,
+                        'html_id': e.slug.replace('.', '-'),
+                        'name': e.name,
+                        'total': total,
+                    }
+                    if era_data['current']:
+                        election_counts['prior_elections'] = [
+                            get_prior_election_data(
+                                total, e,
+                                election_id_to_candidates.get(pe.id, 0), pe
+                            )
+                            for pe in past_elections
+                            if pe.for_post_role == e.for_post_role
+                        ]
+                    election_data.update(election_counts)
+                    del election_data['election']
     return grouped_elections
 
 
@@ -115,7 +117,7 @@ class ReportsHomeView(TemplateView):
     def get(self, *args, **kwargs):
         if self.request.GET.get('format') == "json":
             return HttpResponse(
-                json.dumps(get_counts()),
+                json.dumps(get_counts(for_json=True)),
                 content_type="application/json"
             )
         return super(ReportsHomeView, self).get(*args, **kwargs)

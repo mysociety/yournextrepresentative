@@ -16,7 +16,7 @@ class PersonSearch(SearchView):
                 # This looks like a postcode, and we've found nothing else
                 # so redirect to a postcode view.
                 home_page = reverse('lookup-postcode')
-                return HttpResponseRedirect("{0}?postcode={1}".format(
+                return HttpResponseRedirect("{0}?q={1}".format(
                     home_page,
                     context['query']
                 ))

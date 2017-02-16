@@ -12,7 +12,7 @@ from candidates.models import LoggedAction
 
 from results.models import ResultEvent
 
-from models import CouncilElectionResultSet, ResultSet
+from .models import CouncilElectionResultSet, ResultSet
 from .constants import CONFIRMED_STATUS
 
 
