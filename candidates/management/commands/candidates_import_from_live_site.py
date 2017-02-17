@@ -31,6 +31,7 @@ CACHE_DIRECTORY = join(dirname(__file__), '.download-cache')
 
 PILLOW_FORMAT_EXTENSIONS = {
     'JPEG': 'jpg',
+    'MPO': 'jpg',
     'PNG': 'png',
     'GIF': 'gif',
     'BMP': 'bmp',
