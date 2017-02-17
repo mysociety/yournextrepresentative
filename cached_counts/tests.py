@@ -11,6 +11,9 @@ from popolo.models import Person
 from candidates.tests import factories
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
+from compat import text_type
+
+
 class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
     maxDiff = None
 
@@ -90,7 +93,7 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
                 {
                     "current": True,
                     "dates": {
-                        "2017-03-01": [
+                        text_type(self.election.election_date.isoformat()): [
                             {
                                 "elections": [
                                     {
@@ -118,7 +121,7 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
                 {
                     "current": False,
                     "dates": {
-                        "2013-02-28": [
+                        text_type(self.earlier_election.election_date.isoformat()): [
                             {
                                 "elections": [
                                     {
