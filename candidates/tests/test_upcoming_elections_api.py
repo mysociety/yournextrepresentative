@@ -15,6 +15,7 @@ from django_webtest import WebTest
 from candidates.tests.factories import (
     AreaTypeFactory, AreaExtraFactory, ElectionFactory,
     ParliamentaryChamberExtraFactory, PostExtraFactory,
+    PersonExtraFactory, CandidacyExtraFactory
 )
 from .uk_examples import UK2015ExamplesMixin
 from elections.uk.tests.mapit_postcode_results \
