@@ -70,9 +70,9 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
         output = response.json
         self.assertEqual(output, [])
 
-    def test_results_for_upcoming_elections(self, mock_requests):
+    def _setup_data(self):
         one_day = timedelta(days=1)
-        future_date = date.today() + one_day
+        self.future_date = date.today() + one_day
         london_assembly = ParliamentaryChamberExtraFactory.create(
             slug='london-assembly', base__name='London Assembly'
         )
@@ -92,14 +92,14 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
             slug='gb-gla-2016-05-05-c',
             organization=london_assembly.base,
             name='2016 London Assembly Election (Constituencies)',
-            election_date=future_date.isoformat(),
+            election_date=self.future_date.isoformat(),
             area_types=(lac_area_type,),
         )
-        election_gla = ElectionFactory.create(
+        self.election_gla = ElectionFactory.create(
             slug='gb-gla-2016-05-05-a',
             organization=london_assembly.base,
             name='2016 London Assembly Election (Additional)',
-            election_date=future_date.isoformat(),
+            election_date=self.future_date.isoformat(),
             area_types=(gla_area_type,),
         )
         PostExtraFactory.create(
@@ -109,13 +109,16 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
             slug='gss:E32000010',
             base__label='Assembly Member for Lambeth and Southwark',
         )
-        PostExtraFactory.create(
-            elections=(election_gla,),
+        self.post_extra = PostExtraFactory.create(
+            elections=(self.election_gla,),
             base__area=area_extra_gla.base,
             base__organization=london_assembly.base,
             slug='unit_id:41441',
             base__label='Assembly Member',
         )
+
+    def test_results_for_upcoming_elections(self, mock_requests):
+        self._setup_data()
 
         mock_requests.get.side_effect = fake_requests_for_mapit
         response = self.app.get('/upcoming-elections/?postcode=SE24+0AG')
@@ -127,9 +130,10 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
         expected = [
             {
                 'organization': 'London Assembly',
-                'election_date': text_type(future_date.isoformat()),
+                'election_date': text_type(self.future_date.isoformat()),
                 'election_id': 'gb-gla-2016-05-05-c',
-                'election_name': '2016 London Assembly Election (Constituencies)',
+                'election_name':
+                    '2016 London Assembly Election (Constituencies)',
                 'post_name': 'Assembly Member for Lambeth and Southwark',
                 'post_slug': 'gss:E32000010',
                 'area': {
@@ -140,7 +144,7 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
             },
             {
                 'organization': 'London Assembly',
-                'election_date': text_type(future_date.isoformat()),
+                'election_date': text_type(self.future_date.isoformat()),
                 'election_id': 'gb-gla-2016-05-05-a',
                 'election_name': '2016 London Assembly Election (Additional)',
                 'post_name': 'Assembly Member',
