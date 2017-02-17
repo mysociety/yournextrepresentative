@@ -30,6 +30,13 @@ class Command(BaseCommand):
             data = req.json()
             self.process_results(data['results'])
             url = data.get('next')
+        url = "{}api/elections?group_type=election".format(
+            self.EE_BASE_URL)
+        while url:
+            req = requests.get(url)
+            data = req.json()
+            self.process_parl_results(data['results'])
+            url = data.get('next')
 
         errors = check_paired_models()
         if errors:
@@ -43,6 +50,18 @@ class Command(BaseCommand):
             # TODO Support elections with TMP IDs somehow
             if election.get('election_id'):
                 if election.get('group_type') == "organisation":
+                    self.process_election(election)
+
+    def process_parl_results(self, results):
+        for parl_election in results:
+            # TODO Support elections with TMP IDs somehow
+            if parl_election.get('election_id', '').startswith('parl.'):
+                for child in parl_election['children']:
+                    url = "{}api/elections/{}".format(
+                        self.EE_BASE_URL,
+                        child
+                    )
+                    election = requests.get(url).json()
                     self.process_election(election)
 
     def process_election(self, election_dict):
