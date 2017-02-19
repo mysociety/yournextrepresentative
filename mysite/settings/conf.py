@@ -505,4 +505,6 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
 
     result['RESULTS_FEATURE_ACTIVE'] = True
 
+    result['DATE_FORMAT'] = conf.get('DATE_FORMAT', "jS E Y")
+
     return result

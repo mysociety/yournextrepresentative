@@ -14,7 +14,7 @@
   <p>{% trans "Follow one of the links below to see the known candidates for that post:" %}</p>
   {% for era in elections_and_posts %}
     {% for date, roles in era.dates.items %}
-      <h2>{{ date }}</h2>
+      <h2>{{ date|date }}</h2>
       {% for role_data in roles %}
         <h3>{{ role_data.role }}</h3>
         {% for election_data in role_data.elections %}
