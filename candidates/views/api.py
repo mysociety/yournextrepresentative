@@ -13,6 +13,8 @@ from django.http import HttpResponse
 from django.views.generic import View
 
 from rest_framework.reverse import reverse
+from rest_framework.viewsets import ViewSet
+from rest_framework.response import Response
 
 from images.models import Image
 from candidates import serializers
@@ -24,6 +26,22 @@ from rest_framework import pagination, viewsets
 from compat import text_type
 
 from ..election_specific import fetch_area_ids
+
+
+def fetch_posts_for_area(**kwargs):
+    areas = fetch_area_ids(**kwargs)
+
+    area_ids = [area[1] for area in areas]
+
+    posts = Post.objects.filter(
+        area__identifier__in=area_ids,
+    ).select_related(
+        'area', 'area__extra__type', 'organization'
+    ).prefetch_related(
+        'extra__elections'
+    )
+    return posts
+
 
 
 class UpcomingElectionsView(View):
@@ -42,7 +60,7 @@ class UpcomingElectionsView(View):
             }
 
         try:
-            areas = fetch_area_ids(postcode=postcode, coords=coords)
+            posts = fetch_posts_for_area(postcode=postcode, coords=coords)
         except Exception as e:
             errors = {
                 'error': e.message
@@ -52,16 +70,6 @@ class UpcomingElectionsView(View):
             return HttpResponse(
                 json.dumps(errors), status=400, content_type='application/json'
             )
-
-        area_ids = [area[1] for area in areas]
-
-        posts = Post.objects.filter(
-            area__identifier__in=area_ids,
-        ).select_related(
-            'area', 'area__extra__type', 'organization'
-        ).prefetch_related(
-            'extra__elections'
-        )
 
         results = []
         for post in posts.all():
@@ -90,6 +98,102 @@ class UpcomingElectionsView(View):
         return HttpResponse(
             json.dumps(results), content_type='application/json'
         )
+
+
+class CandidatesAndElectionsForPostcodeViewSet(ViewSet):
+    # This re-produces a lot of UpcomingElectionsView, but the output
+    # is different enough to justify it being a different view
+
+    http_method_names = ['get']
+
+    def _error(self, error_msg):
+        return Response({'error': error_msg}, status=400,)
+
+    def list(self, request, *args, **kwargs):
+        postcode = request.GET.get('postcode', None)
+        coords = request.GET.get('coords', None)
+
+        # TODO: postcode may not make sense everywhere
+        errors = None
+        if not postcode and not coords:
+            return self._error('Postcode or Co-ordinates required')
+
+        try:
+            posts = fetch_posts_for_area(postcode=postcode, coords=coords)
+        except Exception as e:
+            return self._error(e.message)
+
+
+        election_kwargs = {
+            'current': True,
+        }
+        if 'all_elections' in request.GET:
+            del election_kwargs['current']
+        if 'date_gte' in request.GET:
+            if request.GET['date_gte'] == "today":
+                election_kwargs['election_date__gte'] = date.today()
+            else:
+                election_kwargs['election_date__gte'] = request.GET['date_gte']
+
+        results = []
+        for post in posts.all():
+            for election in post.extra.elections.filter(**election_kwargs):
+                candidates = []
+                for membership in post.memberships.filter(
+                        extra__election=election,
+                        role=election.candidate_membership_role) \
+                        .prefetch_related(
+                            Prefetch(
+                                'person__memberships',
+                                Membership.objects.select_related(
+                                    'on_behalf_of__extra',
+                                    'organization__extra',
+                                    'post__extra',
+                                    'extra__election',
+                                )
+                            ),
+                            Prefetch(
+                                'person__extra__images',
+                                Image.objects.select_related('extra__uploading_user')
+                            ),
+                            'person__other_names',
+                            'person__contact_details',
+                            'person__links',
+                            'person__identifiers',
+                            'person__extra_field_values',
+                        ) \
+                        .select_related('person__extra'):
+                    candidates.append(
+                        serializers.NoVersionPersonSerializer(
+                            instance=membership.person,
+                            context={
+                                'request': request,
+                            },
+                            read_only=True,
+                        ).data
+                    )
+                election = {
+                    'election_date': text_type(election.election_date),
+                    'election_name': election.name,
+                    'election_id': election.slug,
+                    'post': {
+                        'post_name': post.label,
+                        'post_slug': post.extra.slug,
+                        'post_candidates': None
+                    },
+                    'area': {
+                        'type': post.area.extra.type.name,
+                        'name': post.area.name,
+                        'identifier': post.area.identifier,
+                    },
+                    'organization': post.organization.name,
+                    'candidates': candidates,
+
+                }
+
+                results.append(election)
+
+        return Response(results)
 
 
 class CurrentElectionsView(View):

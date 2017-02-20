@@ -14,6 +14,7 @@ class TestUserMixin(object):
 
     @classmethod
     def setUpClass(cls):
+        super(TestUserMixin, cls).setUpClass()
         cls.users_to_delete = []
         for username, attr, group_names in (
                 ('john', 'user', []),
@@ -47,5 +48,6 @@ class TestUserMixin(object):
 
     @classmethod
     def tearDownClass(cls):
+        super(TestUserMixin, cls).tearDownClass()
         for u in cls.users_to_delete:
             u.delete()

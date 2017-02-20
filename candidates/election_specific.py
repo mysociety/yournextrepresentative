@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from candidates.mapit import get_areas_from_coords
+from popolo.models import Post
 
 
 def default_fetch_area_ids(**kwargs):
