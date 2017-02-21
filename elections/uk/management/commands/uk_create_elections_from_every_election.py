@@ -10,7 +10,7 @@ from django.db import transaction
 from candidates.models import (
     AreaExtra, OrganizationExtra, PartySet, PostExtra, PostExtraElection
 )
-from candidates.models import check_paired_models
+from candidates.models import check_constraints
 from elections.models import AreaType, Election
 from popolo.models import Area, Organization, Post
 
@@ -38,12 +38,13 @@ class Command(BaseCommand):
             self.process_parl_results(data['results'])
             url = data.get('next')
 
-        errors = check_paired_models()
+        errors = check_constraints()
         if errors:
             for error in errors:
                 print(error)
-            raise Exception("Unpaired models found - raising" +
-                            " an exception to rollback the transaction")
+            msg = "The import broke the constraints listed above; rolling " \
+                  "back the transaction..."
+            raise Exception(msg)
 
     def process_results(self, results):
         for election in results:
