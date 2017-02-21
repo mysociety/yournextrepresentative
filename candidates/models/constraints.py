@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from . import popolo_extra as models
 
+def check_constraints():
+    return check_paired_models() + check_membership_elections_consistent()
 
 def check_paired_models():
     errors = []
