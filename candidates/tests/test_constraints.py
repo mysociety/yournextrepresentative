@@ -10,6 +10,7 @@ from elections.models import Election
 from ..models import (
     MembershipExtra, PostExtra,
     check_paired_models, check_membership_elections_consistent)
+from ..models.constraints import check_no_candidancy_for_election
 from .factories import (
     ElectionFactory, MembershipExtraFactory, PersonExtraFactory)
 from .uk_examples import UK2015ExamplesMixin
@@ -135,3 +136,22 @@ class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
             MembershipExtra.objects.create(
                 base=membership,
                 election=self.election)
+
+    def test_raise_if_candidacy_exists(self):
+        new_candidate = PersonExtraFactory.create(
+            base__name='John Doe'
+        )
+        post_extra = PostExtra.objects.get(slug='14419')
+        # Create a new candidacy:
+        MembershipExtraFactory.create(
+            base__person=new_candidate.base,
+            base__post=post_extra.base,
+            base__role=self.election.candidate_membership_role,
+            election=self.election,
+        )
+        with self.assertRaisesRegexp(
+                Exception,
+                (r'There was an existing candidacy for John Doe ' \
+                 r'\({person_id}\) in the election "2015 General ' \
+                 r'Election"').format(person_id=new_candidate.base.id)):
+            check_no_candidancy_for_election(new_candidate.base, self.election)

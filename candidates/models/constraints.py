@@ -71,3 +71,13 @@ def check_membership_elections_consistent():
                     post_extra_slug=post_extra.slug,
                     election_slug=me.election.slug))
     return errors
+
+
+def check_no_candidancy_for_election(person, election):
+    if election.candidacies.filter(
+            base__person=person,
+            base__role=election.candidate_membership_role).exists():
+        msg = 'There was an existing candidacy for {person} ({person_id}) ' \
+            'in the election "{election}"'
+        raise Exception(msg.format(
+            person=person, person_id=person.id, election=election.name))

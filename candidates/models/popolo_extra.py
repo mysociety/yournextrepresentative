@@ -118,6 +118,8 @@ def update_person_from_form(person, person_extra, form):
                 elected=elected_saved.get(election_data.slug)
             )
         elif standing == 'not-standing':
+            from .constraints import check_no_candidancy_for_election
+            check_no_candidancy_for_election(person, election_data)
             person_extra.not_standing.add(election_data)
 
 

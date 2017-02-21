@@ -11,6 +11,7 @@ from auth_helpers.views import user_in_group
 
 from popolo.models import Membership, Person, Post
 from candidates.models import MembershipExtra
+from candidates.models.constraints import check_no_candidancy_for_election
 
 from elections.mixins import ElectionMixin
 
@@ -115,6 +116,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
                 extra__election=self.election_data,
             ).delete()
 
+            check_no_candidancy_for_election(person, self.election_data)
             person.extra.not_standing.add(self.election_data)
 
             person.extra.record_version(change_metadata)
