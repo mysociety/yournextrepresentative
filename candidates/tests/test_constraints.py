@@ -90,7 +90,7 @@ class PostElectionCombinationTests(UK2015ExamplesMixin, TestCase):
 
 class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
 
-    def test_prevent_creating(self):
+    def test_prevent_creating_no_poestextraelection(self):
         new_candidate = PersonExtraFactory.create(
             base__name='John Doe'
         )
@@ -115,3 +115,23 @@ class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
             MembershipExtra.objects.create(
                 base=membership,
                 election=election)
+
+    def test_prevent_creating_conflicts_with_not_standing(self):
+        new_candidate = PersonExtraFactory.create(
+            base__name='John Doe'
+        )
+        new_candidate.not_standing.add(self.election)
+        membership = Membership.objects.create(
+            role='Candidate',
+            person=new_candidate.base,
+            on_behalf_of=self.green_party_extra.base,
+            post=self.camberwell_post_extra.base,
+        )
+        with self.assertRaisesRegexp(
+                Exception,
+                r'Trying to add a MembershipExtra with an election "2015 '
+                r'General Election", but that\'s in John Doe '
+                r'\({0}\)\'s not_standing list'.format(new_candidate.base.id)):
+            MembershipExtra.objects.create(
+                base=membership,
+                election=self.election)

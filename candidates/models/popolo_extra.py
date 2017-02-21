@@ -663,6 +663,14 @@ class MembershipExtra(models.Model):
                 msg = 'Trying to create a candidacy for post {postextra} ' \
                       'and election {election} that aren\'t linked'
                 raise Exception(msg.format(**required))
+            if self.election in self.base.person.extra.not_standing.all():
+                msg = 'Trying to add a MembershipExtra with an election ' \
+                      '"{election}", but that\'s in {person} ' \
+                      '({person_id})\'s not_standing list.'
+                raise Exception(msg.format(
+                    election=self.election,
+                    person=self.base.person.name,
+                    person_id=self.base.person.id))
         super(MembershipExtra, self).save(*args, **kwargs)
 
 

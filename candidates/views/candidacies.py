@@ -60,6 +60,8 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
                 extra__election=self.election_data
             ).exists()
 
+            person.extra.not_standing.remove(self.election_data)
+
             if not membership_exists:
                 membership = Membership.objects.create(
                     person=person,
@@ -71,8 +73,6 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
                     base=membership,
                     election=self.election_data
                 )
-
-            person.extra.not_standing.remove(self.election_data)
 
             person.extra.record_version(change_metadata)
             person.extra.save()
