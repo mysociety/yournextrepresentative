@@ -118,6 +118,8 @@ def update_person_from_form(person, person_extra, form):
                 elected=elected_saved.get(election_data.slug)
             )
         elif standing == 'not-standing':
+            from .constraints import check_no_candidancy_for_election
+            check_no_candidancy_for_election(person, election_data)
             person_extra.not_standing.add(election_data)
 
 
@@ -663,6 +665,14 @@ class MembershipExtra(models.Model):
                 msg = 'Trying to create a candidacy for post {postextra} ' \
                       'and election {election} that aren\'t linked'
                 raise Exception(msg.format(**required))
+            if self.election in self.base.person.extra.not_standing.all():
+                msg = 'Trying to add a MembershipExtra with an election ' \
+                      '"{election}", but that\'s in {person} ' \
+                      '({person_id})\'s not_standing list.'
+                raise Exception(msg.format(
+                    election=self.election,
+                    person=self.base.person.name,
+                    person_id=self.base.person.id))
         super(MembershipExtra, self).save(*args, **kwargs)
 
 

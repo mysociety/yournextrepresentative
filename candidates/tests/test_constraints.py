@@ -10,6 +10,7 @@ from elections.models import Election
 from ..models import (
     MembershipExtra, PostExtra,
     check_paired_models, check_membership_elections_consistent)
+from ..models.constraints import check_no_candidancy_for_election
 from .factories import (
     ElectionFactory, MembershipExtraFactory, PersonExtraFactory)
 from .uk_examples import UK2015ExamplesMixin
@@ -90,7 +91,7 @@ class PostElectionCombinationTests(UK2015ExamplesMixin, TestCase):
 
 class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
 
-    def test_prevent_creating(self):
+    def test_prevent_creating_no_poestextraelection(self):
         new_candidate = PersonExtraFactory.create(
             base__name='John Doe'
         )
@@ -115,3 +116,42 @@ class PreventCreatingBadMembershipExtras(UK2015ExamplesMixin, TestCase):
             MembershipExtra.objects.create(
                 base=membership,
                 election=election)
+
+    def test_prevent_creating_conflicts_with_not_standing(self):
+        new_candidate = PersonExtraFactory.create(
+            base__name='John Doe'
+        )
+        new_candidate.not_standing.add(self.election)
+        membership = Membership.objects.create(
+            role='Candidate',
+            person=new_candidate.base,
+            on_behalf_of=self.green_party_extra.base,
+            post=self.camberwell_post_extra.base,
+        )
+        with self.assertRaisesRegexp(
+                Exception,
+                r'Trying to add a MembershipExtra with an election "2015 '
+                r'General Election", but that\'s in John Doe '
+                r'\({0}\)\'s not_standing list'.format(new_candidate.base.id)):
+            MembershipExtra.objects.create(
+                base=membership,
+                election=self.election)
+
+    def test_raise_if_candidacy_exists(self):
+        new_candidate = PersonExtraFactory.create(
+            base__name='John Doe'
+        )
+        post_extra = PostExtra.objects.get(slug='14419')
+        # Create a new candidacy:
+        MembershipExtraFactory.create(
+            base__person=new_candidate.base,
+            base__post=post_extra.base,
+            base__role=self.election.candidate_membership_role,
+            election=self.election,
+        )
+        with self.assertRaisesRegexp(
+                Exception,
+                (r'There was an existing candidacy for John Doe ' \
+                 r'\({person_id}\) in the election "2015 General ' \
+                 r'Election"').format(person_id=new_candidate.base.id)):
+            check_no_candidancy_for_election(new_candidate.base, self.election)
