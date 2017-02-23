@@ -257,9 +257,8 @@ class Command(BaseCommand):
         post_extra.party_set = party_set
         post_extra.save()
 
-        post_extra.elections.clear()
-        PostExtraElection.objects.create(
+        PostExtraElection.objects.update_or_create(
             postextra=post_extra,
             election=election,
-            winner_count=winner_count,
+            defaults={'winner_count': winner_count}
         )
