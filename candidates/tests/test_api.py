@@ -320,3 +320,10 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
             'Origin': b'http://example.com'}
         )
         self.assertFalse('Access-Control-Allow-Origin' in resp.headers)
+
+    def test_api_jsonp_response(self):
+        response = self.app.get(
+            '/api/v0.9/?format=jsonp&callback=test'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.text.startswith('test('))

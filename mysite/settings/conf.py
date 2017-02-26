@@ -452,6 +452,11 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'DEFAULT_PERMISSION_CLASSES': ('candidates.api_permissions.ReadOnly',),
             'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
             'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+            'DEFAULT_RENDERER_CLASSES': (
+                'rest_framework.renderers.JSONRenderer',
+                'rest_framework_jsonp.renderers.JSONPRenderer',
+                'rest_framework.renderers.BrowsableAPIRenderer',
+            ),
             'PAGE_SIZE': 10,
         },
 
