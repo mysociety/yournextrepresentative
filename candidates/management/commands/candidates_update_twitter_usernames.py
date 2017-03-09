@@ -13,7 +13,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.core.files import File
 
 from usersettings.shortcuts import get_current_usersettings
-
+from candidates.models import MultipleTwitterIdentifiers
 from popolo.models import ContactDetail, Identifier, Person
 from moderation_queue.models import QueuedImage, CopyrightOptions
 import requests
@@ -105,26 +105,10 @@ class Command(BaseCommand):
         qi.save()
 
     def handle_person(self, person):
-        # Get the Twitter screen name and user ID if they exist:
         try:
-            screen_name = person.contact_details \
-                .get(contact_type='twitter').value
-        except ContactDetail.DoesNotExist:
-            screen_name = None
-        except ContactDetail.MultipleObjectsReturned:
-            print(_("WARNING: multiple Twitter screen names found for {name} ({id}), skipping.").format(
-                name=person.name, id=person.id
-            ).encode('utf-8'))
-            return
-        try:
-            user_id = person.identifiers \
-                .get(scheme='twitter').identifier
-        except Identifier.DoesNotExist:
-            user_id = None
-        except Identifier.MultipleObjectsReturned:
-            print(_("WARNING: multiple Twitter user IDs found for {name} ({id}), skipping.").format(
-                name=person.name, id=person.id
-            ).encode('utf-8'))
+            user_id, screen_name = person.extra.twitter_identifiers
+        except MultipleTwitterIdentifiers as e:
+            print(u"WARNING: {message}, skipping".format(message=e))
             return
         # If they have a Twitter user ID, then check to see if we
         # need to update the screen name from that; if so, update
