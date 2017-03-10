@@ -14,7 +14,8 @@ from django.utils.six.moves.urllib_parse import urljoin
 from django.utils.translation import ugettext as _
 
 from candidates.mapit import (
-    BaseMapItException, BadPostcodeException, UnknownMapitException
+    BaseMapItException, BadPostcodeException,
+    UnknownMapitException, BadCoordinatesException
 )
 from popolo.models import Area
 
