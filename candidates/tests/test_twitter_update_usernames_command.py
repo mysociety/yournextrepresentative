@@ -149,7 +149,13 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             self.just_userid.contact_details.get(contact_type='twitter').value,
             'ascreennamewewereunawareof')
 
-        self.assertEqual(split_output(out), [])
+        self.assertEqual(
+            split_output(out),
+            [
+                'Correcting the screen name from None to ascreennamewewereunawareof',
+                'Adding the user ID 321',
+            ]
+        )
 
     @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_adds_user_id(self, mock_requests):
@@ -163,7 +169,13 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             self.just_screen_name.identifiers.get(scheme='twitter').identifier,
             '321')
 
-        self.assertEqual(split_output(out), [])
+        self.assertEqual(
+            split_output(out),
+            [
+                'Correcting the screen name from None to ascreennamewewereunawareof',
+                'Adding the user ID 321',
+            ]
+        )
 
     @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_screen_name_was_wrong(self, mock_requests):
@@ -207,7 +219,14 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             self.screen_name_and_user_id.contact_details.get(contact_type='twitter').value,
             'changedscreenname')
 
-        self.assertEqual(split_output(out), [])
+        self.assertEqual(
+            split_output(out),
+            [
+                'Correcting the screen name from None to ascreennamewewereunawareof',
+                'Adding the user ID 321',
+                'Correcting the screen name from notatwitteraccounteither to changedscreenname',
+            ]
+        )
 
     @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_screen_name_disappeared(self, mock_requests):
@@ -252,11 +271,12 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
+                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Removing screen name notreallyatwitteraccount for Person ' \
                 'with just a Twitter screen name as it is not a valid ' \
                 'Twitter screen name. ' \
                 '/person/{0}/person-with-just-a-twitter-screen-name'.format(
-                    self.just_screen_name.id)
+                    self.just_screen_name.id),
             ]
         )
 
@@ -312,6 +332,7 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                 'Removing user ID 987 for Person with just a Twitter user ID ' \
                 'as it is not a valid Twitter user ID. '
                 '/person/{0}/person-with-just-a-twitter-user-id'.format(
-                    self.just_userid.id)
+                    self.just_userid.id),
+                'Adding the user ID 321',
             ]
         )
