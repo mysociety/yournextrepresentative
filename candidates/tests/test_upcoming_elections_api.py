@@ -20,6 +20,8 @@ from candidates.tests.factories import (
 from .uk_examples import UK2015ExamplesMixin
 from elections.uk.tests.mapit_postcode_results \
     import se240ag_result, sw1a1aa_result
+from elections.uk.tests.ee_postcode_results \
+    import ee_se240ag_result, ee_sw1a1aa_result
 
 from compat import text_type
 
@@ -51,6 +53,33 @@ def fake_requests_for_mapit(url, *args, **kwargs):
         'status_code': status_code
     })
 
+def fake_requests_for_every_election(url, *args, **kwargs):
+    """Return reduced EE output for some known URLs"""
+
+    EE_BASE_URL = getattr(
+        settings, "EE_BASE_URL", "https://elections.democracyclub.org.uk/")
+    if url == urljoin(EE_BASE_URL,
+                      '/api/elections/?postcode=se240ag'):
+        status_code = 200
+        json_result = ee_se240ag_result
+    elif url == urljoin(EE_BASE_URL,
+                      '/api/elections/?postcode=sw1a1aa'):
+        status_code = 200
+        json_result = ee_sw1a1aa_result
+    elif url == urljoin(EE_BASE_URL, '/api/elections/?postcode=cb28rq'):
+        status_code = 404
+        json_result = {
+            "code": 404,
+            "error": "No Postcode matches the given query."
+        }
+    else:
+        raise Exception("URL that hasn't been mocked yet: " + url)
+    return Mock(**{
+        'json.return_value': json_result,
+        'status_code': status_code
+    })
+
+
 @attr(country='uk')
 @patch('elections.uk.mapit.requests')
 class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
@@ -58,14 +87,14 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
         super(TestUpcomingElectionsAPI, self).setUp()
 
     def test_empty_results(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/upcoming-elections/?postcode=SW1A+1AA')
 
         output = response.json
         self.assertEqual(output, [])
 
     def test_results_for_past_elections(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/upcoming-elections/?postcode=SE24+0AG')
 
         output = response.json
@@ -121,7 +150,7 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
     def test_results_for_upcoming_elections(self, mock_requests):
         self._setup_data()
 
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/upcoming-elections/?postcode=SE24+0AG')
 
         output = response.json
@@ -178,7 +207,7 @@ class TestUpcomingElectionsAPI(UK2015ExamplesMixin, WebTest):
 
         self.maxDiff = None
 
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get(
             '/api/v0.9/candidates_for_postcode/?postcode=SE24+0AG')
 

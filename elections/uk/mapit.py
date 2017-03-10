@@ -22,6 +22,9 @@ from popolo.models import Area
 
 logger = logging.getLogger(__name__)
 
+EE_BASE_URL = getattr(
+    settings, "EE_BASE_URL", "https://elections.democracyclub.org.uk/")
+
 
 class NoConstituencyForPostcodeException(BaseMapItException):
     pass
@@ -31,197 +34,81 @@ class MapItAreaNotFoundException(BaseMapItException):
     pass
 
 
-UK_AREA_ORDER = ['SPC', 'SPE', 'WAC', 'WAE', 'NIE', 'LAC', 'GLA', 'WMC']
-
-def get_known_area_types(mapit_areas):
+def get_known_area_types(ee_areas):
     result = []
-    for mapit_area in mapit_areas.values():
-        areas = Area.objects.filter(
-                extra__type__name=mapit_area['type'],
-                identifier=format_code_from_area(mapit_area)
+    for election in ee_areas['results']:
+        if election['group_type'] == 'election':
+            continue
+        if election['group_type'] == 'organisation':
+            area_type = election['organisation']['organisation_type']
+            area_id = ":".join(
+                [area_type, election['organisation']['official_identifier']])
+        else:
+            area_id = election['division']['official_identifier']
+            area_type = election['division']['division_type']
+        result.append((
+            area_type,
+            area_id
+        ))
+
+    area_ids = [r[1] for r in result]
+    known_areas = Area.objects.filter(identifier__in=area_ids)
+
+    return [(a.extra.type.name,a.identifier) for a in known_areas]
+
+
+def get_areas(url, cache_key, exception):
+    r = requests.get(url)
+    if r.status_code == 200:
+        ee_result = r.json()
+        result = get_known_area_types(ee_result)
+        cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
+        return result
+    elif r.status_code == 400:
+        ee_result = r.json()
+        raise exception(ee_result['error'])
+    elif r.status_code == 404:
+        raise exception(
+            _('The url "{}" couldn’t be found').format(url)
         )
-
-        if areas.exists():
-            is_no_data_area = False
-            for area in areas:
-                for child_area in area.children.all():
-                    if child_area.identifier.startswith('NODATA:'):
-                        is_no_data_area = True
-                        break
-
-            if is_no_data_area:
-                area_type = "NODATA"
-            else:
-                area_type = mapit_area['type']
-
-            result.append((
-                area_type,
-                format_code_from_area(mapit_area))
+    else:
+        raise UnknownMapitException(
+            _('Unknown error for "{0}"').format(
+                url
             )
-
-    result = sorted(result, key=area_sort_key)
-    return result
-
-
-
-def area_sort_key(type_and_id_tuple):
-    try:
-        return UK_AREA_ORDER.index(type_and_id_tuple[0])
-    except ValueError:
-        return len(UK_AREA_ORDER)
-
-
-def format_code_from_area(area):
-    code = None
-    if 'gss' in area['codes']:
-        code = str('gss:' + area['codes']['gss'])
-    elif 'ons' in area['codes']:
-        code = str('ons:' + area['codes']['ons'])
-    elif 'unit_id' in area['codes']:
-        code = str('unit_id:' + area['codes']['unit_id'])
-    elif 'police_id' in area['codes']:
-        code = str('police:' + area['codes']['police_id'])
-    elif 'osni_oid' in area['codes']:
-        code = str('osni_oid:' + area['codes']['osni_oid'])
-    return code
+        )
 
 
 def get_areas_from_postcode(original_postcode):
     postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
     if re.search(r'[^a-z0-9]', postcode):
         raise BadPostcodeException(
-            _('There were disallowed characters in "{0}"').format(original_postcode)
+            _('There were disallowed characters in "{0}"').format(
+                original_postcode)
         )
     cache_key = 'mapit-postcode:' + postcode
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
-    url = urljoin(settings.MAPIT_BASE_URL,
-                  '/postcode/{0}'.format(urlquote(postcode)))
-    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
-    if r.status_code == 200:
-        mapit_result = r.json()
-        result = get_known_area_types(mapit_result['areas'])
-        cache.set(cache_key, result, settings.MAPIT_CACHE_SECONDS)
-        return result
-    elif r.status_code == 400:
-        mapit_result = r.json()
-        raise BadPostcodeException(mapit_result['error'])
-    elif r.status_code == 404:
+
+    url = urljoin(EE_BASE_URL, "/api/elections/?postcode={0}".format(
+        urlquote(postcode)))
+    try:
+        areas = get_areas(url, cache_key, BadPostcodeException)
+    except BadPostcodeException:
+        # Give a nicer error message, as this is used on the frontend
         raise BadPostcodeException(
-            _('The postcode “{0}” couldn’t be found').format(original_postcode)
-        )
-    else:
-        raise UnknownMapitException(
-            _('Unknown MapIt error for postcode "{0}"').format(
-                original_postcode
-            )
-        )
+            'The postcode “{}” couldn’t be found'.format(original_postcode))
+    return areas
 
 
 def get_areas_from_coords(coords):
-    url = urljoin(
-        settings.MAPIT_BASE_URL,
-        '/point/4326/' + urlquote(coords)
-        )
+    url = urljoin(EE_BASE_URL, "/api/elections/?coords={0}".format(
+        urlquote(coords)))
 
     cache_key = 'mapit-postcode:' + coords
     cached_result = cache.get(cache_key)
     if cached_result:
         return cached_result
 
-    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
-    if r.status_code == 200:
-        mapit_result = r.json()
-        result = get_known_area_types(mapit_result)
-        cache.set(url, result, settings.MAPIT_CACHE_SECONDS)
-        return result
-    elif r.status_code == 400:
-        mapit_result = r.json()
-        raise BadCoordinatesException(mapit_result['error'])
-    elif r.status_code == 404:
-        raise BadCoordinatesException(
-            'The coordinates "{0}" could not be found'.format(
-                coords
-            )
-        )
-    else:
-        raise UnknownMapitException(
-            'Unknown MapIt error for coordinates "{0}"'.format(
-                coords
-            )
-        )
-
-
-def get_wmc_from_postcode(original_postcode):
-    postcode = re.sub(r'(?ms)\s*', '', original_postcode.lower())
-    if re.search(r'[^a-z0-9]', postcode):
-        raise BadPostcodeException(
-            _('There were disallowed characters in "{0}"').format(original_postcode)
-        )
-    cached_result = cache.get(postcode)
-    if cached_result:
-        return cached_result
-    url = urljoin(settings.MAPIT_BASE_URL,
-                  '/postcode/{0}'.format(urlquote(postcode)))
-    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
-    if r.status_code == 200:
-        mapit_result = r.json()
-        wmc = mapit_result.get('shortcuts', {}).get('WMC')
-        if not wmc:
-            raise NoConstituencyForPostcodeException(
-                _('No constituency found for the postcode "{0}"').format(
-                    original_postcode
-                )
-            )
-        cache.set(postcode, wmc, settings.MAPIT_CACHE_SECONDS)
-        return wmc
-    elif r.status_code == 400:
-        mapit_result = r.json()
-        raise BadPostcodeException(mapit_result['error'])
-    elif r.status_code == 404:
-        raise BadPostcodeException(
-            _('The postcode “{0}” couldn’t be found').format(original_postcode)
-        )
-    else:
-        raise UnknownMapitException(
-            _('Unknown MapIt error for postcode "{0}"').format(
-                original_postcode
-            )
-        )
-
-
-class MapitLookup(dict):
-    def __init__(self, initial_codes=(),
-                 mapit_base_url=settings.MAPIT_BASE_URL):
-        self.mapit_base_url = mapit_base_url
-        for code in initial_codes:
-            self.load_data(code)
-
-    def load_data(self, code):
-        data = requests.get(urljoin(self.mapit_base_url, "areas/{code}".format(
-            mapit_base_url=self.mapit_base_url, code=code
-        )), headers={'User-Agent': 'scraper/sym', }).json()
-        self.update(data)
-
-    def __getitem__(self, key):
-        key = str(key)
-        try:
-            return super(MapitLookup, self).__getitem__(key)
-        except KeyError:
-            try:
-                logging.info("Making extra request to Mapit for ID {0}".format(
-                    key
-                ))
-                url = urljoin(self.mapit_base_url,
-                              "area/{key}".format(key=key))
-                req = requests.get(url, headers={'User-Agent': 'scraper/sym', })
-                if req.status_code == 404 or \
-                        req.json()[key].get('code', 200) == 404:
-                    raise MapItAreaNotFoundException
-                self.update({key: req.json()})
-                return self[key]
-            except MapItAreaNotFoundException:
-                raise KeyError
-            except Exception:
-                raise
+    return get_areas(url, cache_key, BadCoordinatesException)

@@ -18,6 +18,7 @@ from candidates.tests.factories import (
 )
 from elections.models import Election
 from .mapit_postcode_results import se240ag_result, sw1a1aa_result
+from .ee_postcode_results import ee_se240ag_result, ee_sw1a1aa_result
 
 
 def fake_requests_for_mapit(url, *args, **kwargs):
@@ -39,6 +40,32 @@ def fake_requests_for_mapit(url, *args, **kwargs):
         json_result = {
             "code": 400,
             "error": "Postcode 'FOOBAR' is not valid."
+        }
+    else:
+        raise Exception("URL that hasn't been mocked yet: " + url)
+    return Mock(**{
+        'json.return_value': json_result,
+        'status_code': status_code
+    })
+
+def fake_requests_for_every_election(url, *args, **kwargs):
+    """Return reduced EE output for some known URLs"""
+
+    EE_BASE_URL = getattr(
+        settings, "EE_BASE_URL", "https://elections.democracyclub.org.uk/")
+    if url == urljoin(EE_BASE_URL,
+                      '/api/elections/?postcode=se240ag'):
+        status_code = 200
+        json_result = ee_se240ag_result
+    elif url == urljoin(EE_BASE_URL,
+                      '/api/elections/?postcode=sw1a1aa'):
+        status_code = 200
+        json_result = ee_sw1a1aa_result
+    elif url == urljoin(EE_BASE_URL, '/api/elections/?postcode=cb28rq'):
+        status_code = 404
+        json_result = {
+            "code": 404,
+            "error": 'The url "{}" couldn’t be found'.format(url)
         }
     else:
         raise Exception("URL that hasn't been mocked yet: " + url)
@@ -81,7 +108,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         response.forms['form-postcode']
 
     def test_valid_postcode_redirects_to_constituency(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/')
         form = response.forms['form-postcode']
         form['q'] = 'SE24 0AG'
@@ -98,7 +125,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         )
 
     def test_valid_postcode_redirects_to_multiple_areas(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         # Create some extra posts and areas:
         london_assembly = ParliamentaryChamberExtraFactory.create(
             slug='london-assembly', base__name='London Assembly'
@@ -158,7 +185,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         )
 
     def test_valid_postcode_redirects_to_only_real_areas(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         # Create some extra posts and areas:
         london_assembly = ParliamentaryChamberExtraFactory.create(
             slug='london-assembly', base__name='London Assembly'
@@ -206,7 +233,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # This looks like a postcode to the usual postcode-checking
@@ -221,7 +248,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         self.assertIn('The postcode “CB2 8RQ” couldn’t be found', response)
 
     def test_nonsense_postcode_searches_for_candidate(self, mock_requests):
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # This looks like a postcode to the usual postcode-checking
@@ -240,7 +267,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
     def test_nonascii_postcode(self, mock_requests):
         # This used to produce a particular error, but now goes to the
         # search candidates page. Assert the new behaviour:
-        mock_requests.get.side_effect = fake_requests_for_mapit
+        mock_requests.get.side_effect = fake_requests_for_every_election
         response = self.app.get('/')
         form = response.forms['form-postcode']
         # Postcodes with non-ASCII characters aren't postcodes, so
