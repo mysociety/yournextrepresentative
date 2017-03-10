@@ -5,20 +5,15 @@ from random import randint
 import sys
 
 from django.db import transaction
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.translation import ugettext as _
-from django.utils.six import text_type
-from django.core.files.temp import NamedTemporaryFile
-from django.core.files import File
 
-from usersettings.shortcuts import get_current_usersettings
 from candidates.models import MultipleTwitterIdentifiers
-from popolo.models import ContactDetail, Identifier, Person
-from moderation_queue.models import QueuedImage, CopyrightOptions
-import requests
+from popolo.models import Person
 
-MAX_IN_A_REQUEST = 100
+from ..twitter import TwitterAPIData
+
+
 VERBOSE = False
 
 
@@ -82,28 +77,6 @@ class Command(BaseCommand):
             "(candidates_update_twitter_usernames)",
         )
 
-    def add_twitter_image_to_queue(self, person, image_url):
-        if person.queuedimage_set.exclude(decision="rejected").exists():
-            # Don't add an image to the queue if there is one already
-            # Ignoring rejected queued images
-            return
-
-        # Add a new queued image
-        image_url = image_url.replace('_normal.', '.')
-        img_temp = NamedTemporaryFile(delete=True)
-        img_temp.write(requests.get(image_url).content)
-        img_temp.flush()
-
-        qi = QueuedImage(
-            decision=QueuedImage.UNDECIDED,
-            why_allowed=CopyrightOptions.PROFILE_PHOTO,
-            justification_for_use="Auto imported from Twitter",
-            person=person
-        )
-        qi.save()
-        qi.image.save(image_url, File(img_temp))
-        qi.save()
-
     def handle_person(self, person):
         try:
             user_id, screen_name = person.extra.twitter_identifiers
@@ -121,7 +94,7 @@ class Command(BaseCommand):
             verbose(_("{person} has a Twitter user ID: {user_id}").format(
                 person=person, user_id=user_id
             ).encode('utf-8'))
-            if user_id not in self.user_id_to_screen_name:
+            if user_id not in self.twitter_data.user_id_to_screen_name:
                 print(_("Removing user ID {user_id} for {person_name} as it is not a valid Twitter user ID. {person_url}").format(
                     user_id=user_id,
                     person_name=person.name,
@@ -129,7 +102,7 @@ class Command(BaseCommand):
                 ).encode('utf-8'))
                 self.remove_twitter_user_id(person, user_id)
                 return
-            correct_screen_name = self.user_id_to_screen_name[user_id]
+            correct_screen_name = self.twitter_data.user_id_to_screen_name[user_id]
             if (screen_name is None) or (screen_name != correct_screen_name):
                 verbose(_("Correcting the screen name from {old_screen_name} to {correct_screen_name}").format(
                     old_screen_name=screen_name,
@@ -145,9 +118,6 @@ class Command(BaseCommand):
                     screen_name=screen_name
                 ))
 
-            if user_id in self.user_id_to_photo_url:
-                self.add_twitter_image_to_queue(
-                    person, self.user_id_to_photo_url[user_id])
         # Otherwise, if they have a Twitter screen name (but no
         # user ID, since we already dealt with that case) then
         # find their Twitter user ID and set that as an identifier.
@@ -157,7 +127,7 @@ class Command(BaseCommand):
             verbose(_("{person} has Twitter screen name ({screen_name}) but no user ID").format(
                 person=person, screen_name=screen_name
             ).encode('utf-8'))
-            if screen_name.lower() not in self.screen_name_to_user_id:
+            if screen_name.lower() not in self.twitter_data.screen_name_to_user_id:
                 print(_("Removing screen name {screen_name} for {person_name} as it is not a valid Twitter screen name. {person_url}").format(
                     screen_name=screen_name,
                     person_name=person.name,
@@ -166,11 +136,11 @@ class Command(BaseCommand):
                 self.remove_twitter_screen_name(person, screen_name)
                 return
             verbose(_("Adding the user ID {user_id}").format(
-                user_id=self.screen_name_to_user_id[screen_name.lower()]
+                user_id=self.twitter_data.screen_name_to_user_id[screen_name.lower()]
             ))
             person.identifiers.create(
                 scheme='twitter',
-                identifier=self.screen_name_to_user_id[screen_name.lower()]
+                identifier=self.twitter_data.screen_name_to_user_id[screen_name.lower()]
             )
             self.record_new_version(person)
         else:
@@ -181,71 +151,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         global VERBOSE
         VERBOSE = int(options['verbosity']) > 1
-        user_settings = get_current_usersettings()
-        token = user_settings.TWITTER_APP_ONLY_BEARER_TOKEN
-        if not token:
-            raise CommandError(_("TWITTER_APP_ONLY_BEARER_TOKEN was not set"))
-        headers = {'Authorization': 'Bearer {token}'.format(token=token)}
-
-        # Find all unique Twitter screen names in the database:
-        all_screen_names = list(
-            ContactDetail.objects.filter(contact_type='twitter'). \
-                values_list('value', flat=True).distinct()
-        )
-
-        # Find all unique Twitter identifiers in the database:
-        all_user_ids = list(
-            Identifier.objects.filter(scheme='twitter'). \
-                values_list('identifier', flat=True).distinct()
-        )
-
-        self.screen_name_to_user_id = {}
-        self.user_id_to_screen_name = {}
-        self.user_id_to_photo_url = {}
-        for i in range(0, len(all_screen_names), MAX_IN_A_REQUEST):
-            screen_names = all_screen_names[i:(i + MAX_IN_A_REQUEST)]
-            r = requests.post(
-                'https://api.twitter.com/1.1/users/lookup.json',
-                data={
-                    'screen_name': ','.join(screen_names)
-                },
-                headers=headers,
-            )
-
-            
-            response_data = r.json()
-            if no_users_found(response_data):
-                continue
-            for d in response_data:
-                user_id = text_type(d['id'])
-                self.screen_name_to_user_id[d['screen_name'].lower()] = user_id
-                self.user_id_to_screen_name[user_id] = d['screen_name']
-                self.user_id_to_photo_url[user_id] = \
-                    d['profile_image_url_https']
-
-        # Now look for any user IDs in the database that weren't found
-        # from the above query:
-        remaining_user_ids = list(
-            set(all_user_ids) - set(self.user_id_to_screen_name.keys())
-        )
-        for i in range(0, len(remaining_user_ids), MAX_IN_A_REQUEST):
-            user_ids = remaining_user_ids[i:(i + MAX_IN_A_REQUEST)]
-            r = requests.post(
-                'https://api.twitter.com/1.1/users/lookup.json',
-                data={
-                    'user_id': ','.join(user_ids)
-                },
-                headers=headers,
-            )
-            response_data = r.json()
-            if no_users_found(response_data):
-                continue
-            for d in response_data:
-                user_id = text_type(d['id'])
-                self.screen_name_to_user_id[d['screen_name'].lower()] = user_id
-                self.user_id_to_screen_name[user_id] = d['screen_name']
-                self.user_id_to_photo_url[user_id] = \
-                    d['profile_image_url_https']
+        self.twitter_data = TwitterAPIData()
+        self.twitter_data.update_from_api()
         # Now go through every person in the database and check their
         # Twitter details:
         for person in Person.objects.select_related('extra'):
