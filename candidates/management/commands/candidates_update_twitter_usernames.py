@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 return
             correct_screen_name = self.twitter_data.user_id_to_screen_name[user_id]
             if (screen_name is None) or (screen_name != correct_screen_name):
-                verbose(_("Correcting the screen name from {old_screen_name} to {correct_screen_name}").format(
+                print(_("Correcting the screen name from {old_screen_name} to {correct_screen_name}").format(
                     old_screen_name=screen_name,
                     correct_screen_name=correct_screen_name
                 ))
@@ -119,7 +119,7 @@ class Command(BaseCommand):
                 ))
                 self.remove_twitter_screen_name(person, screen_name)
                 return
-            verbose(_("Adding the user ID {user_id}").format(
+            print(_("Adding the user ID {user_id}").format(
                 user_id=self.twitter_data.screen_name_to_user_id[screen_name.lower()]
             ))
             person.identifiers.create(
