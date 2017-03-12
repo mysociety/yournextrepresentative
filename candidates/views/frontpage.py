@@ -16,7 +16,7 @@ from django.views.generic import View, FormView
 
 from candidates.models.address import check_address
 from elections.models import Election, AreaType
-from elections.uk import mapit
+from candidates import mapit
 
 from .mixins import ContributorsMixin
 

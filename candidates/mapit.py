@@ -37,6 +37,20 @@ def fetch_area_ids(**kwargs):
 
     return areas
 
+def format_code_from_area(area):
+    code = None
+    if 'gss' in area['codes']:
+        code = str('gss:' + area['codes']['gss'])
+    elif 'ons' in area['codes']:
+        code = str('ons:' + area['codes']['ons'])
+    elif 'unit_id' in area['codes']:
+        code = str('unit_id:' + area['codes']['unit_id'])
+    elif 'police_id' in area['codes']:
+        code = str('police:' + area['codes']['police_id'])
+    elif 'osni_oid' in area['codes']:
+        code = str('osni_oid:' + area['codes']['osni_oid'])
+    return code
+
 
 def get_known_area_types(mapit_result):
         known_area_types = set(AreaType.objects.values_list('name', flat=True))
