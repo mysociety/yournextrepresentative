@@ -67,7 +67,7 @@ def get_areas_from_postcode(postcode):
     if cached_result:
         return cached_result
     url = urljoin(settings.MAPIT_BASE_URL, '/postcode/' + urlquote(postcode))
-    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
+    r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
         areas = get_known_area_types(mapit_result['areas'])
@@ -101,7 +101,7 @@ def get_areas_from_coords(coords):
     if cached_result:
         return cached_result
 
-    r = requests.get(url, headers={'User-Agent': 'scraper/sym', })
+    r = requests.get(url)
     if r.status_code == 200:
         mapit_result = r.json()
         areas = get_known_area_types(mapit_result)
