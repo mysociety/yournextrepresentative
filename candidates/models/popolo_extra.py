@@ -23,7 +23,7 @@ from django_date_extensions.fields import ApproximateDate
 
 from elections.models import Election, AreaType
 from popolo.models import (
-    Person, Organization, Post, Membership, Area, Identifier
+    ContactDetail, Person, Organization, Post, Membership, Area, Identifier
 )
 from images.models import Image, HasImageMixin
 
@@ -234,6 +234,10 @@ class PersonExtraQuerySet(models.QuerySet):
             )
 
 
+class MultipleTwitterIdentifiers(Exception):
+    pass
+
+
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
@@ -388,6 +392,31 @@ class PersonExtra(HasImageMixin, models.Model):
             return result.extra.elected
 
         return None
+
+    @property
+    def twitter_identifiers(self):
+        screen_name = None
+        user_id = None
+        # Get the Twitter screen name and user ID if they exist:
+        try:
+            screen_name = self.base.contact_details \
+                .get(contact_type='twitter').value
+        except ContactDetail.DoesNotExist:
+            screen_name = None
+        except ContactDetail.MultipleObjectsReturned:
+            msg = "Multiple Twitter screen names found for {name} ({id})"
+            raise MultipleTwitterIdentifiers(
+                _(msg).format(name=self.base.name, id=self.base.id))
+        try:
+            user_id = self.base.identifiers \
+                .get(scheme='twitter').identifier
+        except Identifier.DoesNotExist:
+            user_id = None
+        except Identifier.MultipleObjectsReturned:
+            msg = "Multiple Twitter user IDs found for {name} ({id})"
+            raise MultipleTwitterIdentifiers(
+                _(msg).format(name=self.base.name, id=self.base.id))
+        return user_id, screen_name
 
     @property
     def version_diffs(self):
