@@ -42,11 +42,11 @@ IMAGES_TO_USE = {
     # Green Party
     'party:63': 'World with petals and Green Party name English',
     # Another Green Party
-    'party:305': 'Emblem 3',
+    'party:305': 'Emblem 1',
     # Plaid Cymru
     'party:77': 'emblem 3',
     # Ulster Unionist Party
-    'party:83': 'Emblem 2',
+    'party:83': 'Emblem 1',
     # Trade Unionist and Socialist Coalition
     'party:804': 'Emblem 3',
 }
