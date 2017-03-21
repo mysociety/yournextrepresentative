@@ -45,7 +45,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.camberwell_post_extra.save()
 
     def test_any_area_page_without_login(self):
-        response = self.app.get('/areas/WMC-65808/dulwich-and-west-norwood')
+        response = self.app.get('/areas/WMC--65808/dulwich-and-west-norwood')
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(
@@ -71,7 +71,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
 
     def test_unlocked_area_without_login(self):
-        response = self.app.get('/areas/WMC-65808/dulwich-and-west-norwood')
+        response = self.app.get('/areas/WMC--65808/dulwich-and-west-norwood')
 
         # no editing functions should be visible
         self.assertNotIn('Add a new candidate', response)
@@ -91,7 +91,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
 
     def test_locked_area_without_login(self):
-        response = self.app.get('/areas/WMC-65913/camberwell-and-peckham')
+        response = self.app.get('/areas/WMC--65913/camberwell-and-peckham')
 
         # no editing functions should be visible
         self.assertNotIn('Add a new candidate', response)
@@ -109,7 +109,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_unlocked_area_unauthorized(self):
         response = self.app.get(
-            '/areas/WMC-65808/dulwich-and-west-norwood',
+            '/areas/WMC--65808/dulwich-and-west-norwood',
             user=self.user_refused
         )
 
@@ -132,7 +132,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_locked_area_unauthorized(self):
         response = self.app.get(
-            '/areas/WMC-65913/camberwell-and-peckham',
+            '/areas/WMC--65913/camberwell-and-peckham',
             user=self.user_refused
         )
 
@@ -155,7 +155,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_unlocked_area_edit_authorized(self):
         response = self.app.get(
-            '/areas/WMC-65808/dulwich-and-west-norwood',
+            '/areas/WMC--65808/dulwich-and-west-norwood',
             user=self.user
         )
 
@@ -185,7 +185,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_locked_area_edit_authorized(self):
         response = self.app.get(
-            '/areas/WMC-65913/camberwell-and-peckham',
+            '/areas/WMC--65913/camberwell-and-peckham',
             user=self.user
         )
 
@@ -216,7 +216,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_unlocked_area_lock_authorized(self):
         response = self.app.get(
-            '/areas/WMC-65808/dulwich-and-west-norwood',
+            '/areas/WMC--65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock
         )
 
@@ -246,7 +246,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_locked_area_lock_authorized(self):
         response = self.app.get(
-            '/areas/WMC-65913/camberwell-and-peckham',
+            '/areas/WMC--65913/camberwell-and-peckham',
             user=self.user_who_can_lock
         )
 
@@ -276,7 +276,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_area_without_winner_record_result_authorized(self):
         response = self.app.get(
-            '/areas/WMC-65913/camberwell-and-peckham',
+            '/areas/WMC--65913/camberwell-and-peckham',
             user=self.user_who_can_record_results
         )
 
@@ -285,7 +285,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
 
     def test_no_candidates_without_login(self):
-        response = self.app.get('/areas/WMC-65730/aldershot')
+        response = self.app.get('/areas/WMC--65730/aldershot')
 
         # should see the no candidates message
         self.assertIn('We don’t know of any candidates', response)
@@ -300,7 +300,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_no_candidates_with_login(self):
         response = self.app.get(
-            '/areas/WMC-65730/aldershot',
+            '/areas/WMC--65730/aldershot',
             user=self.user
         )
 
@@ -352,7 +352,7 @@ class TestAreasView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def test_get_non_existent(self):
         response = self.app.get(
-            '/areas/WMC-11111111/imaginary-constituency',
+            '/areas/WMC--11111111/imaginary-constituency',
             expect_errors=True
         )
         self.assertEqual(response.status_code, 404)

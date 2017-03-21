@@ -65,7 +65,7 @@ def check_address(address_string, country=None):
     if settings.AREAS_TO_ALWAYS_RETURN:
         types_and_areas += settings.AREAS_TO_ALWAYS_RETURN
     types_and_areas_joined = ','.join(
-        '{area_type_code}-{area_id}'.format(**ta) for ta in types_and_areas
+        '{area_type_code}--{area_id}'.format(**ta) for ta in types_and_areas
     )
     area_slugs = [slugify(a[1]['name']) for a in sorted_mapit_results]
     ignored_slug = '-'.join(area_slugs)

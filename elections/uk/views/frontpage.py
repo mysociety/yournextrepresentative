@@ -34,7 +34,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         if settings.AREAS_TO_ALWAYS_RETURN:
             types_and_areas += settings.AREAS_TO_ALWAYS_RETURN
         types_and_areas_joined = ','.join(sorted(
-            '{0}-{1}'.format(*t) for t in types_and_areas
+            '{0}--{1}'.format(*t) for t in types_and_areas
         ))
         return HttpResponseRedirect(
             reverse('areas-view', kwargs={

@@ -121,7 +121,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/WMC-gss:E14000673',
+            '/areas/WMC--gss:E14000673',
         )
 
     def test_valid_postcode_redirects_to_multiple_areas(self, mock_requests):
@@ -181,7 +181,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/GLA-unit_id:41441,LAC-gss:E32000010,WMC-gss:E14000673',
+            '/areas/GLA--unit_id:41441,LAC--gss:E32000010,WMC--gss:E14000673',
         )
 
     def test_valid_postcode_redirects_to_only_real_areas(self, mock_requests):
@@ -229,7 +229,7 @@ class TestConstituencyPostcodeFinderView(WebTest):
         split_location = urlsplit(response.location)
         self.assertEqual(
             split_location.path,
-            '/areas/GLA-unit_id:41441,WMC-gss:E14000673',
+            '/areas/GLA--unit_id:41441,WMC--gss:E14000673',
         )
 
     def test_unknown_postcode_returns_to_finder_with_error(self, mock_requests):

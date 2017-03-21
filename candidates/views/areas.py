@@ -29,11 +29,10 @@ class AreasView(TemplateView):
     def get(self, request, *args, **kwargs):
         self.types_and_areas = []
         for type_and_area in kwargs['type_and_area_ids'].split(','):
-            m = re.search(r'^([A-Z0-9]+?)-([-a-zA-Z0-9\:_]+)$', type_and_area)
-            if not m:
+            if '--' not in type_and_area:
                 message = _("Malformed type and area: '{0}'")
                 return HttpResponseBadRequest(message.format(type_and_area))
-            self.types_and_areas.append(m.groups())
+            self.types_and_areas.append(type_and_area.split('--', 1))
         response = super(AreasView, self).get(request, *args, **kwargs)
         return response
 
@@ -52,9 +51,6 @@ class AreasView(TemplateView):
             if area_extras.exists():
                 any_area_found = True
             else:
-                continue
-            if area_type_code == "NODATA":
-                no_data_areas.append(area_extras.first())
                 continue
 
             for area_extra in area_extras:
@@ -166,7 +162,7 @@ class AreasOfTypeView(TemplateView):
                 reverse(
                     'areas-view',
                     kwargs={
-                        'type_and_area_ids': '{type}-{area_id}'.format(
+                        'type_and_area_ids': '{type}--{area_id}'.format(
                             type=requested_area_type,
                             area_id=area.base.identifier
                         ),

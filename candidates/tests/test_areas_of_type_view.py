@@ -45,11 +45,10 @@ class TestAreasOfTypeView(TestUserMixin, UK2015ExamplesMixin, WebTest):
     def test_any_areas_of_type_page_without_login(self):
         response = self.app.get('/areas-of-type/WMC/')
         self.assertEqual(response.status_code, 200)
-
         self.assertTrue(
             re.search(
                 r'''(?msx)
-  <a\s+href="/areas/WMC-65808/dulwich-and-west-norwood">
+  <a\s+href="/areas/WMC--65808/dulwich-and-west-norwood">
   Dulwich\s+and\s+West\s+Norwood</a>''',
                 response.text
             )

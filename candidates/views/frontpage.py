@@ -63,7 +63,7 @@ class GeoLocatorView(View):
             )
 
         ids_and_areas = [
-            "{0}-{1}".format(
+            "{0}--{1}".format(
                 area[1]['type'],
                 mapit.format_code_from_area(area[1]))
             for area in mapit_json

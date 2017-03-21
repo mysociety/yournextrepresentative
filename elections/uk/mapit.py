@@ -35,6 +35,7 @@ class MapItAreaNotFoundException(BaseMapItException):
 
 
 def get_known_area_types(ee_areas):
+
     result = []
     for election in ee_areas['results']:
         if election['group_type'] == 'election':
