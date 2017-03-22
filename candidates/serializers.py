@@ -395,6 +395,7 @@ class EmbeddedPostElectionSerializer(serializers.HyperlinkedModelSerializer):
             'url',
         )
     name = serializers.ReadOnlyField(source="election.name")
+    id = serializers.ReadOnlyField(source="election.slug")
     winner_count = serializers.ReadOnlyField()
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
