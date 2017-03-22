@@ -115,7 +115,7 @@ class Command(BaseCommand):
                     .select_related('base') \
                     .get(slug=party_id)
                 party = party_extra.base
-                print("Got the existing party:", party.name)
+                print("Got the existing party:", party.name.encode('utf-8'))
             except OrganizationExtra.DoesNotExist:
                 party = Organization.objects.create(name=party_name)
                 party_extra = OrganizationExtra.objects.create(
@@ -123,7 +123,7 @@ class Command(BaseCommand):
                 )
                 print(u"Couldn't find {0}, creating a new party {1}".format(
                     party_id, party_name
-                ))
+                ).encode('utf-8'))
 
             party.name = party_name
             party.classification = 'Party'
