@@ -385,6 +385,17 @@ class NoVersionPersonSerializer(PersonSerializer):
         )
 
 
+class EmbeddedPostElectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PostExtraElection
+        fields= (
+            'winner_count',
+            'name',
+            'id',
+            'url',
+        )
+    name = serializers.ReadOnlyField(source="election.name")
+    winner_count = serializers.ReadOnlyField()
 
 class PostExtraSerializer(MinimalPostExtraSerializer):
     class Meta:
@@ -413,7 +424,8 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
     organization = MinimalOrganizationExtraSerializer(
         source='base.organization.extra')
 
-    elections = MinimalElectionSerializer(many=True, read_only=True)
+    elections = EmbeddedPostElectionSerializer(
+        many=True, read_only=True, source="postextraelection_set")
 
 
 class LoggedActionSerializer(serializers.HyperlinkedModelSerializer):
