@@ -59,6 +59,7 @@
 {% endblock %}
 
 {% block hero %}
+
 <div class="person__hero">
   <div class="person__photo">
     {% if person.extra.primary_image %}
@@ -106,6 +107,17 @@
         <h4>{% blocktrans trimmed with name=person.name %}
             We don’t have an email address for {{ name }},
             <a href="{{ url }}">help out by adding one</a>!
+            {% endblocktrans %}</h4>
+    </div>
+    {% endif %}
+
+    {% if not has_current_elections %}
+    <div class="missing_field">
+        {% url 'person-update' person_id=person.id as person_edit_url %}
+        <h4 class="panel">{% blocktrans %}
+            These are the last details we have for this candidate.
+                They may not be current. Please <a href="{{ person_edit_url }} ">edit the details</a>
+                 if you have new information.
             {% endblocktrans %}</h4>
     </div>
     {% endif %}

@@ -124,6 +124,8 @@ class PersonView(TemplateView):
             context['elections_to_list'] = elections_by_date
         context['last_candidacy'] = self.person.extra.last_candidacy
         context['election_to_show'] = None
+        context['has_current_elections'] = any([
+                e.current for e in context['elections_to_list']])
         context['simple_fields'] = [
             field.name for field in SimplePopoloField.objects.all()
         ]
