@@ -6,12 +6,19 @@
 {% block title %}{% trans "API for candidates" %}{% endblock %}
 
 {% block hero %}
-  <h1>{% trans "Using this data via the API" %}</h1>
+  <h1>{% trans "Using the candidate data" %}</h1>
 {% endblock %}
 
 {% block content %}
 
 <div class="help-api">
+
+
+<p>{% blocktrans trimmed %}
+The data that's submitted to this site is available as a <a href="#csv">CSV/Excel download</a> and
+<a href="#api">programmatically via a RESTful API</a>.
+{% endblocktrans %}</p>
+
 
 <div class="panel callout radius">
   <h2>Using our data</h2>
@@ -38,11 +45,6 @@
 </div>
 
 
-<p>{% blocktrans trimmed %}
-The data that's submitted to this site is available as a CSV/Excel download and
-programmatically via a RESTful API.
-{% endblocktrans %}</p>
-
 <h2>{% trans "Election results" %}</h2>
 
 <p>{% blocktrans trimmed %}
@@ -50,7 +52,7 @@ There is <a href="{{ help_results_url }}">a separate page
 explaining how to get election results from this site</a>.
 {% endblocktrans %}</p>
 
-<h2>{% trans "CSV/Excel Download" %}</h2>
+<h2 id="csv">{% trans "CSV/Excel Download" %}</h2>
 
   <h3>{% trans "All Candidates" %}</h3>
 
@@ -86,7 +88,7 @@ explaining how to get election results from this site</a>.
   </div>
   {% endfor %}
 
-<h2>{% trans "API" %}</h2>
+<h2 id="api">{% trans "API" %}</h2>
 
 <h3>{% trans "This API is a work in progress" %}</h3>
 
