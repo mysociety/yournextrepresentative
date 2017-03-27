@@ -1,0 +1,2 @@
+{% extends 'generic_base.html' %}
+{% block country_wide_extra_head %}{% if "/person/" in request.path or "/election/" in request.path %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
