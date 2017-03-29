@@ -130,12 +130,12 @@ class Command(BaseCommand):
                 # the area:
                 try:
                     area = Area.objects.get(name=name)
-                except Area.DoesNotExist:
-                    print("Failed to find area for {0}".format(name))
-                    continue
+                except (Area.DoesNotExist, Area.MultipleObjectsReturned):
+                    pass
 
                 try:
-                    post = Post.objects.get(area=area)
+                    post = Post.objects.get(label=name, extra__elections=election)
+                    area = post.area
                 except Post.DoesNotExist:
                     print("Failed to find post with for {0}".format(name))
                     continue
