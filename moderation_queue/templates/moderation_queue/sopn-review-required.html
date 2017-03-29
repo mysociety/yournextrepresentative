@@ -7,10 +7,11 @@
 <ul>
 {% for postextraelection in object_list %}
     <li>
-
     <a href="{% url 'constituency' election=postextraelection.election.slug post_id=postextraelection.postextra.slug ignored_slug=postextraelection.postextra.short_label|slugify %}">
         {{ postextraelection.postextra.base.label }}
     </a>
+    <a href="{% url "bulk_add" postextraelection.election postextraelection.postextra.base.id %}" class="button tiny">
+        Bulk add</a>
     </li>
 {% endfor %}
 </ul>
