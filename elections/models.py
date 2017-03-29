@@ -88,6 +88,10 @@ class Election(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def in_past(self):
+        return self.election_date < date.today()
+
     @classmethod
     def group_and_order_elections(cls, include_posts=False,
                                   include_noncurrent=True,
