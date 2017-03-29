@@ -29,7 +29,7 @@
 
 <div class="timeline_item">
     <h4>Candidates verified and lock suggested</h4>
-    {% if not has_lock_suggestion  %}
+    {% if not has_lock_suggestion and not candidates_locked  %}
         {% if some_official_documents %}
         <div class="status_in_progress">
             <strong>No lock suggestions</strong> Please check this list against the uploaded document
