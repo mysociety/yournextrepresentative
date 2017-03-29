@@ -1,0 +1,21 @@
+.timeline_item h4 {
+    font-size:1em;
+    font-weight:bold;
+    color:#777;
+}
+.timeline_item + .timeline_item {
+    margin-top:0.5em;
+    border-top:1px solid #CCC;
+}
+.timeline_item div {
+    margin-left:1em;
+}
+.status_in_progress {
+    color:orange;
+}
+.status_not_started {
+    color:#AAA;
+}
+.status_done {
+    color:green;
+}
