@@ -1,71 +1,88 @@
 {% extends 'candidates/constituency.html' %}
 
-{% block other_resources %}
+{% block content %}
+<div class="row">
+    <div class="columns large-9">
+        {% if not candidates_locked %}
+        <div class="panel">
+            <p>These candidates haven't been confirmed by the official "nomination papers"
+                from the council yet. This means they might not all end up on the ballot paper.</p>
+            <p>We will manually verify each candidate when the nomination papers are published.</p>
+        </div>
+        {% endif %}
 
-{# TODO This is not a great way to do this! #}
-{# Basically, we can only support FPTP voting systems #}
-{% if 'local' in election %}
-  {% if show_results_feature %}
-     {% if post_obj.postresult_set.confirmed %}
-      {% if post_obj.postresult_set.all.0 %}
-      <section>
-        <h3>Results</h3>
-        {% with post_obj.postresult_set.all.0.result_sets.all.confirmed.latest as result %}
-          {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
-        {% endwith %}
-      </section>
-      {% endif %}
-
-      {% if not post_obj.postresult_set.all.0 %}
-      <a href="{% url "report-post-votes-view" post_data.id %}" class="button">
-        Report results for {{post_data.label}}
-      </a>
-      {% endif %}
-  {% endif %}
-  {% endif %}
-{% endif %}
-
-{% if not candidates_locked %}
-<a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
-{% endif %}
+        {% include 'candidates/_candidates_for_post.html' %}
 
 
-{% if request.user.is_authenticated %}
-  {% if not user_has_suggested_lock %}
-    {% if not candidates_locked %}
-      {% if election_data.show_official_documents and official_documents %}
-        <form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
-          {% csrf_token %}
-          <h3>Suggest locking</h3>
+        {# TODO This is not a great way to do this! #}
+        {# Basically, we can only support FPTP voting systems #}
+        {% if 'local' in election %}
+          {% if show_results_feature %}
+             {% if post_obj.postresult_set.confirmed %}
+              {% if post_obj.postresult_set.all.0 %}
+              <section>
+                <h3>Results</h3>
+                {% with post_obj.postresult_set.all.0.result_sets.all.confirmed.latest as result %}
+                  {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %}
+                {% endwith %}
+              </section>
+              {% endif %}
+
+              {% if not post_obj.postresult_set.all.0 %}
+              <a href="{% url "report-post-votes-view" post_data.id %}" class="button">
+                Report results for {{post_data.label}}
+              </a>
+              {% endif %}
+          {% endif %}
+          {% endif %}
+        {% endif %}
+
+        {% if not candidates_locked %}
+        <a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+          {% if not user_has_suggested_lock %}
+            {% if not candidates_locked %}
+                {% if election_data.show_official_documents and official_documents %}
+                <form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
+                    {% csrf_token %}
+                    <h3>Suggest locking</h3>
 
 
-          <p>If you think this list is complete, please suggest that we lock it.
-          Please only do this with good reason, for example if you have reviewed
-          one of the official lists of candidates ("Nomination papers" or
-          "Statement of Persons Nominated") linked to above.</p>
+                    <p>If you think this list is complete, please suggest that we lock it.
+                    Please only do this with good reason, for example if you have reviewed
+                    one of the official lists of candidates ("Nomination papers" or
+                    "Statement of Persons Nominated") linked to above.</p>
 
-          <p>Locking a list means that candidates can't be added or removed, but
-          their details can still be edited. This is useful when we know that
-          the list is final.</p>
+                    <p>Locking a list means that candidates can't be added or removed, but
+                    their details can still be edited. This is useful when we know that
+                    the list is final.</p>
 
 
-          {{ suggest_lock_form.post_extra }}
+                    {{ suggest_lock_form.post_extra }}
 
-          {{ suggest_lock_form.justification.label_tag }}
-          <label for="{{ suggest_lock_form.justification.id_for_label }}">{{ suggest_lock_form.justification.help_text }}</label>
-          {{ suggest_lock_form.justification }}
-          <button type="submit" class="button small secondary">Suggest locking</button>
-        </form>
-      {% endif %}
-    {% endif %}
-  {% else %}
-    <h3>Suggest locking</h3>
-    {% if candidates_locked %}
-    <p>Thanks! You suggested locking this list, and we did!</p>
-    {% else %}
-    <p>Thanks, you've suggested we lock this list – we'll review it soon.</p>
-    {% endif %}
-  {% endif %}
-{% endif %}
+                    {{ suggest_lock_form.justification.label_tag }}
+                    <label for="{{ suggest_lock_form.justification.id_for_label }}">{{ suggest_lock_form.justification.help_text }}</label>
+                    {{ suggest_lock_form.justification }}
+                    <button type="submit" class="button small secondary">Suggest locking</button>
+                </form>
+                {% endif %}
+            {% endif %}
+          {% else %}
+            <h3>Suggest locking</h3>
+            {% if candidates_locked %}
+            <p>Thanks! You suggested locking this list, and we did!</p>
+            {% else %}
+            <p>Thanks, you've suggested we lock this list – we'll review it soon.</p>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+
+    </div>
+    <div class="columns large-3">
+        {% include "uk/data_timeline.html" %}
+    </div>
+</div>
 
 {% endblock %}

@@ -1,0 +1,80 @@
+<h3>Data Timeline</h3>
+<div class="timeline_item">
+    <h4>Pre-nomination Candidates added</h4>
+    {% if not some_official_documents %}
+    <div class="status_in_progress">
+        <strong>In Progress</strong>: help by adding candidates
+    </div>
+    {% else %}
+    <div class="status_done">
+        <strong>Nominations closed</strong>
+    </div>
+    {% endif %}
+</div>
+
+<div class="timeline_item">
+    <h4>Nomination documents uploaded</h4>
+    {% if some_official_documents %}
+    <div class="status_done">
+        <strong>"SOPN" uploaded.</strong>
+    </div>
+    {% else %}
+    <div class="status_not_started">
+        <strong>No "SOPNs" uploaded.</strong>
+        <a href="https://docs.google.com/spreadsheets/d/112ksK71F2AJtJTnvzqGxfF_Ny9pWl2tmYShVOFJV3Ek/edit">
+            Add a link to one</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="timeline_item">
+    <h4>Candidates verified and lock suggested</h4>
+    {% if not has_lock_suggestion  %}
+    <div class="status_not_started">
+        <strong>No lock suggestions</strong> Upload a document before suggesting locking
+    </div>
+    {% else %}
+        {% if not candidates_locked %}
+        <div class="status_in_progress">
+            <strong>Suggested lock</strong> Waiting for verification.
+            You can help by adding more information on the candidates
+        </div>
+        {% else %}
+        <div class="status_done">
+            <strong>Suggested lock</strong> Suggestion has been accepted
+        </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="timeline_item">
+    <h4>Final verification and locked</h4>
+    {% if not candidates_locked %}
+    <div class="status_not_started">
+        <strong>Not verified or locked</strong>
+    </div>
+    {% else %}
+    <div class="status_done">
+        <strong>Candidates verified</strong>
+    </div>
+    {% endif %}
+</div>
+
+<div class="timeline_item">
+    <h4>Results recorded</h4>
+    {% if not election_data.in_past %}
+    <div class="status_not_started">
+        <strong>Waiting for election to happen</strong>
+    </div>
+    {% else %}
+        {% if has_elected %}
+        <div class="status_done">
+            <strong>Winner(s) recorded</strong>
+        </div>
+        {% else %}
+        <div class="status_in_progress">
+            <strong>Winner(s) unknown</strong>: Tell us who won!
+        </div>
+        {% endif %}
+    {% endif %}
+</div>

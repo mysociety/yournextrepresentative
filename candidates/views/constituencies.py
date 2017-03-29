@@ -103,7 +103,12 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         }
 
         context['candidates_locked'] = False
+
         if hasattr(mp_post, 'extra'):
+            context['has_lock_suggestion'] = any(
+                [spl.election_for_suggestion for spl in
+                SuggestedPostLock.objects.filter(post_extra=mp_post.extra)])
+
             context['candidates_locked'] = mp_post.extra.candidates_locked
 
             context['suggest_lock_form'] = SuggestedPostLockForm(
