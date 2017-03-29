@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.core.management.base import BaseCommand
 
 
@@ -17,10 +19,7 @@ class Command(BaseCommand):
         'local': 1,
         'gla.a': 1,
         'gla.c': 60,
-        'mayor.bristol': 90,
-        'mayor.liverpool': 80,
-        'mayor.london': 100,
-        'mayor.salford': 80,
+        'mayor': 100,
         'naw.c': 50,
         'naw.r': 10,
         'nia': 1,
@@ -33,6 +32,15 @@ class Command(BaseCommand):
         for field, field_weight in self.FIELD_WEIGHT.items():
             self.add_tasks_for_field(field, field_weight)
 
+    def override_election_weight(self, election):
+        if election.in_past:
+            return -100
+        days_to_election = election.election_date - date.today()
+        if days_to_election.days >= 40 and days_to_election.days <= 80:
+            return 50
+        if days_to_election.days >= 0 and days_to_election.days <= 40:
+            return 100
+        return 0
 
     def add_tasks_for_field(self, field, field_weight):
         for person in PersonExtra.objects.missing(field):
@@ -44,6 +52,9 @@ class Command(BaseCommand):
                     continue
                 for election in membership.post.extra.elections.filter(current=True):
                     for election_id, election_weight in self.ELECTION_WEIGHT.items():
+                        election_weight += self.override_election_weight(
+                            election
+                        )
                         if election.slug.startswith(election_id):
                             person_weight += election_weight
                             person_weight += field_weight
