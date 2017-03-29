@@ -8,11 +8,18 @@
 </style>
 <p><span class="big_number">{{ sopn_progress.posts_total }}</span> areas in total</p>
 
+<h3><strong>{{ sopn_progress.sopns_imported }}</strong> areas have SOPNs and are ready to verify</h3>
+<div class="radius progress success large-12" role="progressbar"
+    aria-valuenow="{{ sopn_progress.sopns_imported }}"
+    aria-valuemin="0" aria-valuemax="{{ sopn_progress.posts_total }}">
+  <span class="meter" style="width: {{ sopn_progress.sopns_imported_percent }}%"></span>
+</div>
+
 <h3><strong>{{ sopn_progress.posts_lock_suggested }}</strong> areas have suggested locks</h3>
 <div class="radius progress success large-12" role="progressbar"
     aria-valuenow="{{ sopn_progress.posts_lock_suggested }}"
     aria-valuemin="0" aria-valuemax="{{ sopn_progress.posts_total }}">
-  <span class="meter" style="width: {{ posts_locked_suggested_percent }}%"></span>
+  <span class="meter" style="width: {{ sopn_progress.posts_locked_suggested_percent }}%"></span>
 </div>
 
 <h3><strong>{{ sopn_progress.posts_locked }}</strong> areas verified</h3>
