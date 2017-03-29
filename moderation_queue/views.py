@@ -28,7 +28,8 @@ from candidates.management.images import get_file_md5sum
 from .forms import UploadPersonPhotoForm, PhotoReviewForm
 from .models import QueuedImage, SuggestedPostLock, PHOTO_REVIEWERS_GROUP_NAME
 
-from candidates.models import LoggedAction, ImageExtra, PersonExtra
+from candidates.models import (LoggedAction, ImageExtra,
+                               PersonExtra, PostExtraElection)
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 from popolo.models import Person
@@ -485,3 +486,17 @@ class SuggestLockReviewListView(ListView):
             post_extra__candidates_locked=False).select_related(
                 'user', 'post_extra__base',
             ).prefetch_related('post_extra__elections')
+
+class SOPNReviewRequiredView(ListView):
+    template_name = "moderation_queue/sopn-review-required.html"
+
+    def get_queryset(self):
+        """
+        PostExtras with a document but no lock suggestion
+        """
+        return PostExtraElection.objects.exclude(
+            postextra__base__officialdocument=None).filter(
+                postextra__suggestedpostlock=None,
+                election__current=True).select_related(
+                    'postextra__base', 'election').order_by(
+                        'election', 'postextra__base__label')

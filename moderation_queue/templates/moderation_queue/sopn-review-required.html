@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Posts that have a SOPN and no lock suggestions</h1>
+<p>For each of these, we need someone to look at the document and manually add or remove candidates
+    to make our list exactly the same as the SOPN.</p>
+<p>One you're happy that our list is correct, please 'suggest locking', and someone else will double check it.</p>
+<ul>
+{% for postextraelection in object_list %}
+    <li>
+
+    <a href="{% url 'constituency' election=postextraelection.election.slug post_id=postextraelection.postextra.slug ignored_slug=postextraelection.postextra.short_label|slugify %}">
+        {{ postextraelection.postextra.base.label }}
+    </a>
+    </li>
+{% endfor %}
+</ul>
+{% endblock content %}

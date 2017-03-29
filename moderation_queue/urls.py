@@ -4,7 +4,7 @@ from django.conf.urls import url
 
 from .views import (
     upload_photo, PhotoUploadSuccess, PhotoReviewList, PhotoReview,
-    SuggestLockView, SuggestLockReviewListView
+    SuggestLockView, SuggestLockReviewListView, SOPNReviewRequiredView
 )
 
 urlpatterns = [
@@ -26,4 +26,7 @@ urlpatterns = [
     url(r'^suggest-lock/$',
         SuggestLockReviewListView.as_view(),
         name="suggestions-to-lock-review-list"),
+    url(r'^sopn-review-required/$',
+        SOPNReviewRequiredView.as_view(),
+        name="sopn-review-required"),
 ]
