@@ -497,6 +497,7 @@ class SOPNReviewRequiredView(ListView):
         return PostExtraElection.objects.exclude(
             postextra__base__officialdocument=None).filter(
                 postextra__suggestedpostlock=None,
+                postextra__candidates_locked=False,
                 election__current=True).select_related(
                     'postextra__base', 'election').order_by(
                         'election', 'postextra__base__label')
