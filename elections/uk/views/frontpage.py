@@ -82,9 +82,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
                 float(context['posts_locked']) /
                 float(context['posts_total'])
                 * 100)
+
         context['posts_lock_suggested'] = pe_qs.exclude(
             suggestedpostlock=None).count()
-        context['posts_lock_suggested_percent'] = round(
+        context['posts_locked_suggested_percent'] = round(
                 float(context['posts_lock_suggested']) /
                 float(context['posts_total'])
                 * 100)
