@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
 from candidates.views.mixins import ContributorsMixin
+from candidates.models import PostExtra
 from tasks.models import PersonTask
 
 
@@ -64,6 +65,32 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     def form_valid(self, form):
         return self.process_postcode(form.cleaned_data['q'])
 
+
+    def sopn_progress_by_election(self, election_slug=None, election_qs=None):
+        assert any([election_qs, election_slug])
+        context = {}
+        if election_slug:
+            pe_qs = PostExtra.objects.filter(
+                elections__slug__startswith=election_slug)
+        if election_qs:
+            pe_qs = PostExtra.objects.filter(
+                elections__in=election_qs)
+
+        context['posts_total'] = pe_qs.count()
+        context['posts_locked'] = pe_qs.filter(candidates_locked=True).count()
+        context['posts_locked_percent'] = round(
+                float(context['posts_locked']) /
+                float(context['posts_total'])
+                * 100)
+        context['posts_lock_suggested'] = pe_qs.exclude(
+            suggestedpostlock=None).count()
+        context['posts_lock_suggested_percent'] = round(
+                float(context['posts_lock_suggested']) /
+                float(context['posts_total'])
+                * 100)
+        return context
+
+
     def get_context_data(self, **kwargs):
         context = super(ConstituencyPostcodeFinderView, self).get_context_data(**kwargs)
         context['postcode_form'] = kwargs.get('form') or PostcodeForm()
@@ -102,11 +129,43 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         else:
             context['votes_percent'] = 0
 
-
-
-
         # context['council_election_percent'] = council_confirmed / council_total * 100
-
+        election_qs = Election.objects.filter(slug__in=[
+            "local.aberdeen-city.2017-05-04",
+            "local.aberdeenshire.2017-05-04",
+            "local.angus.2017-05-04",
+            "local.argyll-and-bute.2017-05-04",
+            "local.clackmannanshire.2017-05-04",
+            "local.eilean-siar.2017-05-04",
+            "local.dumfries-and-galloway.2017-05-04",
+            "local.dundee-city.2017-05-04",
+            "local.east-ayrshire.2017-05-04",
+            "local.east-dunbartonshire.2017-05-04",
+            "local.east-lothian.2017-05-04",
+            "local.east-renfrewshire.2017-05-04",
+            "local.city-of-edinburgh.2017-05-04",
+            "local.falkirk.2017-05-04",
+            "local.fife.2017-05-04",
+            "local.glasgow-city.2017-05-04",
+            "local.highland.2017-05-04",
+            "local.inverclyde.2017-05-04",
+            "local.midlothian.2017-05-04",
+            "local.moray.2017-05-04",
+            "local.north-ayrshire.2017-05-04",
+            "local.north-lanarkshire.2017-05-04",
+            "local.orkney-islands.2017-05-04",
+            "local.perth-and-kinross.2017-05-04",
+            "local.renfrewshire.2017-05-04",
+            "local.the-scottish-borders.2017-05-04",
+            "local.shetland-islands.2017-05-04",
+            "local.south-ayrshire.2017-05-04",
+            "local.south-lanarkshire.2017-05-04",
+            "local.stirling.2017-05-04",
+            "local.west-dunbartonshire.2017-05-04",
+            "local.west-lothian.2017-05-04",
+        ])
+        context['scotland_sopn_progress'] = self.sopn_progress_by_election(
+            election_qs=election_qs)
 
         task_count = PersonTask.objects.unfinished_tasks().count()
         if task_count > 0:
