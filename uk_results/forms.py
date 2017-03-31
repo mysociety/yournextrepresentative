@@ -186,8 +186,12 @@ class ResultSetForm(forms.ModelForm):
         existing_fields = self.fields
         fields = OrderedDict()
 
-        # TODO sort by last name here
-        for membership in self.post.memberships.all():
+        memberships = self.post.memberships.all()
+        memberships = sorted(
+            memberships,
+            key=lambda member: member.person.name.split(' ')[-1]
+        )
+        for membership in memberships:
             name = 'memberships_%d' % membership.person.pk
 
             fields[name] =  forms.IntegerField(
