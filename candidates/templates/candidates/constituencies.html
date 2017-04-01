@@ -20,9 +20,14 @@ for that post:{% endblocktrans %}</p>
 <ul>
   {% for post_extra in all_constituencies %}
     <li>
-     <a href="{% url 'constituency' election=election post_id=post_extra.slug ignored_slug=post_extra.base.label|slugify %}">{{ post_extra.base.label }}</a>
-    </li>
-  {% endfor %}
+     <a href="{% url 'constituency' election=election post_id=post_extra.slug ignored_slug=post_extra.base.label|slugify %}">
+        {{ post_extra.base.label }}</a>
+        {% if post_extra.candidates_locked %}
+         - <abbr title="Candidates verified and post locked">🔒</abbr>
+        {% elif post_extra.suggestedpostlock_set.exists %}
+        - <abbr title="Someone suggested locking this post">🔓</abbr>
+        {% endif %}
+    </li>  {% endfor %}
 </ul>
 
 {% endblock %}
