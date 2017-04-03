@@ -157,8 +157,10 @@ def get_version_diff(from_data, to_data):
             operation['previous_value'] = \
                 jsonpointer.resolve_pointer(
                     from_data,
-                    operation['path']
+                    operation['path'],
+                    default=None
                 )
+
         attribute, election, leaf = m.groups() if m else (None, None, None)
         if attribute:
             explain_standing_in_and_party_memberships(operation, attribute, election, leaf)
