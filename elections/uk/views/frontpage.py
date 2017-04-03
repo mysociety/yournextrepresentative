@@ -67,14 +67,16 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
 
 
     def sopn_progress_by_election(self, election_slug=None, election_qs=None):
-        assert any([election_qs, election_slug])
         context = {}
+        pe_qs = None
         if election_slug:
             pe_qs = PostExtra.objects.filter(
                 elections__slug__startswith=election_slug)
         if election_qs:
             pe_qs = PostExtra.objects.filter(
                 elections__in=election_qs)
+        if not pe_qs:
+            return context
 
         context['posts_total'] = pe_qs.count()
         context['posts_locked'] = pe_qs.filter(candidates_locked=True).count()
