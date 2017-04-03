@@ -976,3 +976,146 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         sort_operations_for_comparison(versions_with_diffs)
 
         self.assertEqual(expected_result, versions_with_diffs)
+
+
+    def test_alternitive_names(self):
+        versions = [{
+            'data': {
+                'honorific_prefix': 'Mrs',
+                'honorific_suffix': '',
+                'id': '6704',
+                'identifiers': [{'id': '552f80d0ed1c6ee164eeae51',
+                'identifier': '13445',
+                'scheme': 'yournextmp-candidate'}],
+                'image': None,
+                'linkedin_url': '',
+                'name': 'Sarah Jones',
+                'other_names': [{
+                    'id': '552f80d0ed1c6ee164eeae50',
+                    'name': 'Sarah Smith',
+                    'note': 'Maiden name'
+                }],
+                'party_ppc_page_url': '',
+                'proxy_image': None,
+                'twitter_username': '',
+                'wikipedia_url': ''
+            },
+            'information_source': 'Made up 2',
+            'timestamp': '2015-05-08T01:52:27.061038',
+            'username': 'test',
+            'version_id': '3fc494d54f61a157'
+        },
+
+        {
+            'data': {
+                'honorific_prefix': 'Mrs',
+                'honorific_suffix': '',
+                'id': '6704',
+                'identifiers': [{
+                    'id': '5477866f737edc5252ce5938',
+                    'identifier': '13445',
+                    'scheme': 'yournextmp-candidate'
+                }],
+                'image': None,
+                'linkedin_url': '',
+                'name': 'Sarah Jones',
+                'other_names': [
+                    {'name': 'Sarah Smith'}
+                ],
+                'party_ppc_page_url': '',
+                'proxy_image': None,
+                'twitter_username': '',
+                'wikipedia_url': ''
+            },
+            'information_source': 'Made up 1',
+            'timestamp': '2015-03-10T05:35:15.297559',
+            'username': 'test',
+            'version_id': '2f07734529a83242'
+        }]
+
+        versions_with_diffs = get_version_diffs(versions)
+        sort_operations_for_comparison(versions_with_diffs)
+        expected_result = [{
+            'information_source': 'Made up 2',
+            'username': 'test',
+            'timestamp': '2015-05-08T01:52:27.061038',
+            'version_id': '3fc494d54f61a157',
+            'diff': [{
+                'path': 'other_names/0/note',
+                'previous_value': None,
+                'value': 'Maiden name',
+                'op': 'add'
+            }],
+            'data': {
+                'honorific_suffix': '',
+                'party_ppc_page_url': '',
+                'linkedin_url': '',
+                'image': None,
+                'twitter_username': '',
+                'id': '6704',
+                'name': 'Sarah Jones',
+                'identifiers': [{
+                    'scheme': 'yournextmp-candidate',
+                    'identifier': '13445'
+                }],
+                'other_names': [{
+                    'note': 'Maiden name',
+                    'name': 'Sarah Smith'
+                }],
+                'honorific_prefix': 'Mrs',
+                'wikipedia_url': ''
+            }
+        },
+        {
+            'information_source': 'Made up 1',
+            'username': 'test',
+            'timestamp': '2015-03-10T05:35:15.297559',
+            'version_id': '2f07734529a83242',
+            'diff': [
+                {
+                    'path': 'honorific_prefix',
+                    'value': 'Mrs',
+                    'op': 'add'
+                },
+                {
+                    'path': 'id',
+                    'value': '6704',
+                    'op': 'add'
+                },
+                {
+                    'path': 'identifiers',
+                    'value': [{
+                        'scheme': 'yournextmp-candidate',
+                        'identifier': '13445'
+                    }],
+                    'op': 'add'
+                },
+                {
+                    'path': 'name',
+                    'value': 'Sarah Jones',
+                    'op': 'add'
+                },
+                {
+                    'path': 'other_names',
+                    'value': [{
+                        'name': 'Sarah Smith'
+                    }],
+                    'op': 'add'
+                }
+            ],
+            'data': {
+                'honorific_suffix': '',
+                'party_ppc_page_url': '',
+                'linkedin_url': '',
+                'image': None,
+                'twitter_username': '',
+                'id': '6704',
+                'name': 'Sarah Jones',
+                'identifiers': [{'scheme': 'yournextmp-candidate',
+                'identifier': '13445'}],
+                'other_names': [{'name': 'Sarah Smith'}],
+                'honorific_prefix': 'Mrs',
+                'wikipedia_url': ''
+            }
+        }]
+        self.assertEqual(expected_result, versions_with_diffs)
