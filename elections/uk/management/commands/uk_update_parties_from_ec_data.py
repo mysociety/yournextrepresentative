@@ -77,7 +77,7 @@ class Command(BaseCommand):
         self.ni_parties, _ = PartySet.objects.get_or_create(slug='ni')
         start = 0
         per_page = 50
-        url = 'http://pefonline.electoralcommission.org.uk/api/search/Registrations'
+        url = 'http://search.electoralcommission.org.uk/api/search/Registrations'
         params = {
             'rows': per_page,
             'et': ["pp", "ppm"],
