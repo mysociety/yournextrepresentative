@@ -81,7 +81,7 @@ class Command(BaseCommand):
         params = {
             'rows': per_page,
             'et': ["pp", "ppm"],
-            'register': ["gb", "ni"],
+            'register': ["gb", "ni", 'none'],
             'regStatus': ["registered", "deregistered", "lapsed"],
         }
         with transaction.atomic():
