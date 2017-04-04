@@ -76,7 +76,7 @@ class Command(BaseCommand):
         self.gb_parties, _ = PartySet.objects.get_or_create(slug='gb')
         self.ni_parties, _ = PartySet.objects.get_or_create(slug='ni')
         start = 0
-        per_page = 50
+        per_page = 500
         url = 'http://search.electoralcommission.org.uk/api/search/Registrations'
         params = {
             'rows': per_page,
@@ -88,7 +88,8 @@ class Command(BaseCommand):
             total = None
             while total is None or start <= total:
                 params['start'] = start
-                resp = requests.get(url + '?' + urlencode(params, doseq=True)).json()
+                resp = requests.get(
+                    url + '?' + urlencode(params, doseq=True)).json()
                 if total is None:
                     total = resp['Total']
                 self.parse_data(resp['Result'])
@@ -107,7 +108,8 @@ class Command(BaseCommand):
                 )
             else:
                 register = ec_party['RegisterName']
-            party_name, party_dissolved = self.clean_name(ec_party['RegulatedEntityName'])
+            party_name, party_dissolved = self.clean_name(
+                ec_party['RegulatedEntityName'])
             party_founded = self.clean_date(ec_party['ApprovedDate'])
             # Does this party already exist?  If not, create a new one.
             try:
@@ -144,7 +146,8 @@ class Command(BaseCommand):
                 translation = d['translation']
                 if translation:
                     value = "{0} | {1}".format(value, translation)
-                party.other_names.create(name=value, note='registered-description')
+                party.other_names.create(
+                    name=value, note='registered-description')
             self.upload_images(ec_party['PartyEmblems'], party_extra)
             party.save()
             party_extra.save()
