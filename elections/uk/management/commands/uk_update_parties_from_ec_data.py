@@ -49,6 +49,8 @@ IMAGES_TO_USE = {
     'party:83': 'Emblem 1',
     # Trade Unionist and Socialist Coalition
     'party:804': 'Emblem 3',
+    # Socialist Labour Party
+    'party:73': 'Globe with map of Earth with wordsletters Socialist Labour PartySLP',
 }
 
 def sort_emblems(emblems, party_id):
