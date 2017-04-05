@@ -147,6 +147,9 @@ class BasePersonForm(forms.Form):
                 self.fields[field.name] = forms.URLField(**opts)
             elif field.info_type_key == 'email':
                 self.fields[field.name] = forms.EmailField(**opts)
+            elif field.info_type_key == 'text_multiline':
+                opts['widget'] = forms.Textarea
+                self.fields[field.name] = StrippedCharField(**opts)
             else:
                 self.fields[field.name] = StrippedCharField(**opts)
 
