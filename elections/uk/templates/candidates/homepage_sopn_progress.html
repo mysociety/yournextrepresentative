@@ -1,3 +1,4 @@
+{% load humanize %}
 <style>
 .big_number {
     font-size:3em;
@@ -6,7 +7,7 @@
     font-weight:bold;
 }
 </style>
-<p><span class="big_number">{{ sopn_progress.posts_total }}</span> areas in total</p>
+<p><span class="big_number">{{ sopn_progress.posts_total|intcomma }}</span> areas in total</p>
 
 <h3><strong>{{ sopn_progress.sopns_imported }}</strong> areas have SOPNs and are ready to verify</h3>
 <div class="radius progress success large-12" role="progressbar"

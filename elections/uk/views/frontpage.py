@@ -141,7 +141,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             context['votes_percent'] = 0
 
         # context['council_election_percent'] = council_confirmed / council_total * 100
-        election_qs = Election.objects.filter(slug__in=[
+        scotland_election_ids = [
             "local.aberdeen-city.2017-05-04",
             "local.aberdeenshire.2017-05-04",
             "local.angus.2017-05-04",
@@ -174,7 +174,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             "local.stirling.2017-05-04",
             "local.west-dunbartonshire.2017-05-04",
             "local.west-lothian.2017-05-04",
-        ])
+        ]
+
+        election_qs = Election.objects.filter(
+            election_date="2017-05-04").exclude(slug__in=scotland_election_ids)
         context['scotland_sopn_progress'] = self.sopn_progress_by_election(
             election_qs=election_qs)
 
