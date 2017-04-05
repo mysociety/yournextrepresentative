@@ -253,6 +253,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
             'crispy_forms',
+            'markdown_deux',
         ],
 
         'SITE_ID': 1,

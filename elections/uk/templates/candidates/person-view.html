@@ -4,6 +4,7 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load standing %}
+{% load markdown_deux_tags %}
 {% load metadescription %}
 {% load extra_field_value %}
 {% load thumbnail %}
@@ -147,7 +148,7 @@
     {% endif %}
     {% if 'biography' in simple_fields %}
       <dt>{% trans "Biography" %}</dt>
-      <dd>{% if person.biography %}{{ person.biography }}{% endif %}</dd>
+      <dd>{% if person.biography %}{{ person.biography|markdown }}{% endif %}</dd>
     {% endif %}
   </dl>
 
