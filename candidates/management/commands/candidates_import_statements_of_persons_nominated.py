@@ -125,7 +125,7 @@ class Command(BaseCommand):
                 )
             except Post.DoesNotExist:
                 msg = "Failed to find the post {0}, guessing it might be the area name instead"
-                print(msg.format(name))
+                # print(msg.format(name))
                 # If the post name isn't there, try getting it from
                 # the area:
                 try:
@@ -137,7 +137,7 @@ class Command(BaseCommand):
                     post = Post.objects.get(label=name, extra__elections=election)
                     area = post.area
                 except Post.DoesNotExist:
-                    print("Failed to find post with for {0}".format(name))
+                    # print("Failed to find post with for {0}".format(name))
                     continue
 
             # Check that the post is actually valid for this election:
@@ -148,7 +148,7 @@ class Command(BaseCommand):
             document_url_column = get_column_header(PDF_COLUMN_HEADERS_TO_TRY, row)
             document_url = row[document_url_column]
             if not document_url:
-                print("No URL for {0}".format(name))
+                # print("No URL for {0}".format(name))
                 continue
             existing_documents = OfficialDocument.objects.filter(
                 document_type=OfficialDocument.NOMINATION_PAPER,
@@ -161,7 +161,7 @@ class Command(BaseCommand):
                     existing_documents.delete()
                 else:
                     msg = "Skipping {0} since it already had documents for {1}"
-                    print(msg.format(name, election))
+                    # print(msg.format(name, election))
                     continue
             try:
                 downloaded_filename = download_file_cached(document_url)
