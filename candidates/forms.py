@@ -143,6 +143,12 @@ class BasePersonForm(forms.Form):
                 'required': field.required
             }
 
+            if field.name == "biography":
+                opts['help_text'] = _("""
+                    Markdown formatted text about the person. Make sure this
+                    text is a statement from the candidate and not your own
+                    biography.""")
+
             if field.info_type_key == 'url':
                 self.fields[field.name] = forms.URLField(**opts)
             elif field.info_type_key == 'email':
