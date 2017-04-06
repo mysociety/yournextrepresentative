@@ -67,7 +67,8 @@ class BulkAddView(BaseBulkAddView):
             )
 
         people_set = set()
-        for membership in context['post_extra'].base.memberships.all():
+        for membership in context['post_extra'].base.memberships.filter(
+                extra__election=context['election_obj']):
             person = membership.person
             person.party = membership.on_behalf_of
             people_set.add(person)
