@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
+import random
 
 from django.views.generic import RedirectView
 
+from candidates.models import PostExtraElection
 from elections.uk.lib import is_valid_postcode
 
 
@@ -73,3 +75,22 @@ class WhoPostcodeRedirect(RedirectView):
         else:
             return "/?who_postcode={}&postcode_invalid=1".format(postcode)
 
+
+class HelpOutCTAView(RedirectView):
+
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        pe_qs = PostExtraElection.objects.filter(
+            election__current=True,
+            postextra__suggestedpostlock=None
+            ).exclude(postextra__candidates_locked=True)
+
+        if pe_qs:
+            random_offset = random.randrange(min(50, pe_qs.count()))
+            postextra_election = pe_qs[random_offset]
+            return "/bulk_adding/{}/{}/".format(
+                postextra_election.election.slug,
+                postextra_election.postextra.slug
+            )
+        return "/?get_involved_link=1"

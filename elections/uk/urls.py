@@ -62,4 +62,7 @@ urlpatterns = [
     url(r'^postcode_redirect/$',
         views.WhoPostcodeRedirect.as_view()
     ),
+    url(r'^get_involved/$',
+        views.HelpOutCTAView.as_view()
+    ),
 ]
