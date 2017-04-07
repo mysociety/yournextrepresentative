@@ -12,11 +12,11 @@
     {% if form.name.value %}
       <h2>Candidate: {{ form.name.value }}</h2>
       {% if form.select_person.1 %}
-      <p>An existing person with this name has been found,
-          select them if you want to add them to the "{{ election }}: {{ post_id }}"</p>
+      <p>Some similar names have been found in our database. </p>
+          <p>If you're sure this is a new candidate, please select 'Add new person'.
+          Otherwise, please check the similar names, and if it is the same person, select their name instead. The system will update them with the new candidacy.</p>
       {% endif %}
       {% for choice in form.select_person %}
-        <li>
           <label for="id_{{ choice.name }}">
             {{ choice.tag }}
             {% if choice.choice_value != '_new' %}
@@ -29,7 +29,6 @@
            {{ form.name }}
            {{ form.source }}
            {{ form.party }}
-        </li>
       {% endfor %}
     {% endif %}
 
