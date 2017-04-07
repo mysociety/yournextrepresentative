@@ -17,7 +17,7 @@
           Otherwise, please check the similar names, and if it is the same person, select their name instead. The system will update them with the new candidacy.</p>
       {% endif %}
       {% for choice in form.select_person %}
-          <label for="id_{{ choice.name }}" style="font-size:1em">
+          <label for="{{ choice.id_for_label }}" style="font-size:1em">
             {{ choice.tag }}
             {% if choice.choice_value != '_new' %}
             Mark <a href="{% url 'person-view' choice.choice_value %}" target="_blank">
