@@ -89,4 +89,23 @@
   {% include 'candidates/_edits_disallowed_message.html' %}
 {% endif %}
 
+{% if user_can_merge %}
+<script>
+    function toTitleCase(str)
+    {
+        str = str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        str = str.replace(/\s\s+/g, ' ');
+        return str;
+    }
+    b = $('<button class="button tiny secondary">Title Case</botton>');
+    b.on('click', function() {
+            var name_val = $('#id_name').val();
+            $('#id_name').val(toTitleCase(name_val));
+            return false;
+    });
+    $('#id_name').after(b);
+
+</script>
+{% endif %}
+
 {% endblock %}
