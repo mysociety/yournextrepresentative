@@ -85,6 +85,12 @@ class Command(BaseCommand):
             'et': ["pp", "ppm"],
             'register': ["gb", "ni", 'none'],
             'regStatus': ["registered", "deregistered", "lapsed"],
+            'period': [
+                '127', '135', '136', '205', '207', '217', '2508', '2510',
+                '2512', '2514', '281', '289', '301', '303', '305', '3560',
+                '37', '38', '4', '404', '410', '445', '49', '60', '62',
+                '68', '74',
+            ]
         }
         with transaction.atomic():
             total = None
