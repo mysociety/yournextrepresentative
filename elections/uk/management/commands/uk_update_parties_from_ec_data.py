@@ -138,7 +138,7 @@ class Command(BaseCommand):
             party.name = party_name
             party.classification = 'Party'
             party.founding_date = party_founded
-            party.party_dissolved = party_dissolved
+            party.end_date = party_dissolved
             party_extra.register = register
             {
                 'Great Britain': self.gb_parties,
