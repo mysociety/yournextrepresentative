@@ -13,17 +13,17 @@
       <h2>Candidate: {{ form.name.value }}</h2>
       {% if form.select_person.1 %}
       <p>Some similar names have been found in our database. </p>
-          <p>If you're sure this is a new candidate, please select 'Add new person'.
+          <p>If you're sure this is a new candidate, please select 'Add {{ form.name.value }} as a new person'.
           Otherwise, please check the similar names, and if it is the same person, select their name instead. The system will update them with the new candidacy.</p>
       {% endif %}
       {% for choice in form.select_person %}
-          <label for="id_{{ choice.name }}">
+          <label for="id_{{ choice.name }}" style="font-size:1em">
             {{ choice.tag }}
             {% if choice.choice_value != '_new' %}
             Mark <a href="{% url 'person-view' choice.choice_value %}" target="_blank">
-              {{ choice.choice_label }}</a> as standing in "{{ election }}: {{ post_id }}"
+              {{ choice.choice_label }}</a> as standing in {{ election_obj.name }}: {{ post_extra.base.label }}
             {% else %}
-            {{ choice.choice_label }}
+            Add <strong>{{ form.name.value }}</strong> as a new person
             {% endif %}
            </label>
            {{ form.name }}
@@ -35,9 +35,9 @@
   {% endfor %}
   </table>
   <p>
+    <input type="checkbox" name="suggest_locking" id="suggest_locking">
     <label for="suggest_locking">Suggest locking this area – check this box if you
       are confident that this area is complete as per an official document</label>
-    <input type="checkbox" name="suggest_locking" id="suggest_locking">
   </p>
   <button type=submit>Next</button>
 </form>
