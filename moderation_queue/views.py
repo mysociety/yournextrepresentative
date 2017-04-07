@@ -501,3 +501,20 @@ class SOPNReviewRequiredView(ListView):
                 election__current=True).select_related(
                     'postextra__base', 'election').order_by(
                         'election', 'postextra__base__label')
+
+
+class PersonNameCleanupView(TemplateView):
+    template_name = "moderation_queue/person_name_cleanup.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            PersonNameCleanupView, self).get_context_data(**kwargs)
+
+        people = Person.objects.all().only('name')
+
+        regex = re.compile('[A-Z][A-Z]+')
+        context['two_upper'] = [
+            p for p in people if regex.search(p.name)
+        ]
+
+        return context

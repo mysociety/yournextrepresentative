@@ -1,0 +1,18 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2>People with two uppercase letters together in their name</h2>
+<p>A lot of the time this really is part of someone's name, but it can also
+    detect when someone has entered names as per SOPNs, eg, "UPPER, Lower"</p>
+<ul>
+    {% for person in two_upper %}
+    <li>
+        <a href="{% url 'person-view' person.id person.name|slugify %}" class="candidate-name">
+            {{ person.name }}</a> -
+            <a href="{% url 'person-update' person_id=person.id %}" class="button tiny secondary">
+                Edit</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
