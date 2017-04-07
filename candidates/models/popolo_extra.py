@@ -732,6 +732,22 @@ class PartySet(models.Model):
         result.insert(0, ('', ''))
         return result
 
+
+    def _format_party_name(self, party_dict):
+        for k, v in party_dict.items():
+            party_dict[k.replace('on_behalf_of__', '')] = v
+
+        if not party_dict.get('end_date'):
+            return party_dict['name']
+
+        party_end_date = parser.parse(party_dict['end_date']).date()
+        if date.today() > party_end_date:
+            party_dict['name'] = "{} (Deregistered {})".format(
+                party_dict['name'], party_dict['end_date']
+            )
+
+        return party_dict['name']
+
     def party_choices(self):
         # For various reasons, we've found it's best to order the
         # parties by those that have the most candidates - this means
@@ -759,22 +775,31 @@ class PartySet(models.Model):
             return self.party_choices_basic()
         result = [('', '')]
         parties_with_candidates = []
-        for party_tuple in qs \
-                .values('on_behalf_of', 'on_behalf_of__name') \
-                .order_by() \
-                .annotate(party_count=models.Count('pk')) \
-                .order_by('-party_count', 'on_behalf_of__name'):
+
+        ordered_parties = qs \
+            .values(
+                'on_behalf_of',
+                'on_behalf_of__name',
+                'on_behalf_of__end_date'
+            ).order_by().annotate(
+                party_count=models.Count('pk')
+            ).order_by('-party_count', 'on_behalf_of__name')
+
+        for party_tuple in ordered_parties:
             parties_with_candidates.append(party_tuple['on_behalf_of'])
             name_with_count = \
                 _('{party_name} ({number_of_candidates} candidates)').format(
-                    party_name=party_tuple['on_behalf_of__name'],
+                    party_name=self._format_party_name(party_tuple),
                     number_of_candidates=party_tuple['party_count']
                 )
-            result.append(
-                (party_tuple['on_behalf_of'], name_with_count)
-            )
-        result += self.parties.exclude(id__in=parties_with_candidates) \
-            .order_by('name').values_list('id', 'name')
+            result.append((party_tuple['on_behalf_of'], name_with_count))
+
+        # Add parties with no candidates
+        qs = self.parties.exclude(id__in=parties_with_candidates) \
+            .order_by('name').values('id', 'name', 'end_date')
+        for party in qs:
+            name = self._format_party_name(party)
+            result.append((party['id'], name))
         return result
 
 
