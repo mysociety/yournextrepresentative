@@ -78,7 +78,7 @@ class Command(BaseCommand):
         self.gb_parties, _ = PartySet.objects.get_or_create(slug='gb')
         self.ni_parties, _ = PartySet.objects.get_or_create(slug='ni')
         start = 0
-        per_page = 500
+        per_page = 30
         url = 'http://search.electoralcommission.org.uk/api/search/Registrations'
         params = {
             'rows': per_page,
