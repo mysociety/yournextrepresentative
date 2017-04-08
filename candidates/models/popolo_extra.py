@@ -733,20 +733,6 @@ class PartySet(models.Model):
         return result
 
 
-    def _format_party_name(self, party_dict):
-        for k, v in party_dict.items():
-            party_dict[k.replace('on_behalf_of__', '')] = v
-
-        if not party_dict.get('end_date'):
-            return party_dict['name']
-
-        party_end_date = parser.parse(party_dict['end_date']).date()
-        if date.today() > party_end_date:
-            party_dict['name'] = "{} (Deregistered {})".format(
-                party_dict['name'], party_dict['end_date']
-            )
-
-        return party_dict['name']
 
     def party_choices(self):
         # For various reasons, we've found it's best to order the
@@ -756,50 +742,54 @@ class PartySet(models.Model):
         # list of candidates if there are enough that such an ordering
         # makes sense.  Otherwise the fallback is to rank
         # alphabetically.
-        candidacies_current_qs = Membership.objects.filter(
-            extra__election__current=True,
-            role=models.F('extra__election__candidate_membership_role'),
-            on_behalf_of__party_sets=self,
-        )
-        candidacies_ever_qs =  Membership.objects.filter(
-            role=models.F('extra__election__candidate_membership_role'),
-            on_behalf_of__party_sets=self,
-        )
+        candidacies_ever_qs = self.parties.all().annotate(
+                membership_count=models.Count('memberships_on_behalf_of__pk')
+            ).order_by('-membership_count', 'name').only('end_date', 'name')
+
+        candidacies_current_qs = self.parties.filter(
+                models.Q(
+                    memberships_on_behalf_of__extra__election__current=True)
+                |
+                models.Q(
+                    memberships_on_behalf_of=None)
+            ).annotate(
+                membership_count=models.Count('memberships_on_behalf_of__pk')
+            ).order_by('-membership_count', 'name').only('end_date', 'name')
+
         minimum_count = settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
-        qs = None
-        if candidacies_current_qs.count() > minimum_count:
+
+        total_memberships = MembershipExtra.objects.all()
+        current_memberships = total_memberships.filter(election__current=True)
+
+        if current_memberships.count() > minimum_count:
             qs = candidacies_current_qs
-        elif candidacies_ever_qs.count() > minimum_count:
+        elif total_memberships.count() > minimum_count:
             qs = candidacies_ever_qs
         else:
             return self.party_choices_basic()
+
         result = [('', '')]
         parties_with_candidates = []
 
-        ordered_parties = qs \
-            .values(
-                'on_behalf_of',
-                'on_behalf_of__name',
-                'on_behalf_of__end_date'
-            ).order_by().annotate(
-                party_count=models.Count('pk')
-            ).order_by('-party_count', 'on_behalf_of__name')
-
-        for party_tuple in ordered_parties:
-            parties_with_candidates.append(party_tuple['on_behalf_of'])
-            name_with_count = \
-                _('{party_name} ({number_of_candidates} candidates)').format(
-                    party_name=self._format_party_name(party_tuple),
-                    number_of_candidates=party_tuple['party_count']
-                )
-            result.append((party_tuple['on_behalf_of'], name_with_count))
-
-        # Add parties with no candidates
-        qs = self.parties.exclude(id__in=parties_with_candidates) \
-            .order_by('name').values('id', 'name', 'end_date')
         for party in qs:
-            name = self._format_party_name(party)
-            result.append((party['id'], name))
+            parties_with_candidates.append(party)
+            count_string = ""
+            if party.membership_count:
+                count_string = " ({} candidates)".format(
+                    party.membership_count)
+
+            name = _('{party_name}{count_string}').format(
+                party_name=party.name,
+                count_string=count_string
+            )
+
+            if party.end_date:
+                party_end_date = parser.parse(party.end_date).date()
+                if date.today() > party_end_date:
+                    name = "{} (Deregistered {})".format(
+                        name, party.end_date
+                    )
+            result.append((party.pk, name),)
         return result
 
 
