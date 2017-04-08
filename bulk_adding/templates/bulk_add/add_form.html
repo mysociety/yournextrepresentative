@@ -31,7 +31,7 @@
 {% endif %}
 {% if known_people %}
 <h3>There {{ known_people|pluralize:"is,are" }} {{ known_people|length|apnumber }} candidate{{ known_people|pluralize }} listed in this area already:</h3>
-<p>If {{ known_people|pluralize:"this person is,any of these people are" }} not listed on the nomination paper, please pressedit and mark them as not standing in this specific election.</p>
+<p>If {{ known_people|pluralize:"this person is,any of these people are" }} not listed on the nomination paper, please press edit and mark them as not standing in this specific election.</p>
 <ul>
   {% for person in known_people %}
     <li><a href="{% url 'person-view' person.pk %}" target="_blank">{{ person }} ({{ person.party.name }})</a> <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">edit</a></li>
