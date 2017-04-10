@@ -26,6 +26,7 @@ class UK2015ExamplesMixin(object):
             slug='2010',
             name='2010 General Election',
             for_post_role='Member of Parliament',
+            current=False,
             area_types=(self.wmc_area_type,)
         )
         # Create some example parties:
