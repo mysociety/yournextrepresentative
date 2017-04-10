@@ -732,7 +732,8 @@ class PartySet(models.Model):
         result.insert(0, ('', ''))
         return result
 
-    def party_choices(self, include_descriptions=True):
+    def party_choices(self,
+            include_descriptions=True, exclude_deregistered=False):
         # For various reasons, we've found it's best to order the
         # parties by those that have the most candidates - this means
         # that the commonest parties to select are at the top of the
@@ -740,10 +741,10 @@ class PartySet(models.Model):
         # list of candidates if there are enough that such an ordering
         # makes sense.  Otherwise the fallback is to rank
         # alphabetically.
+
         candidacies_ever_qs = self.parties.all().annotate(
                 membership_count=models.Count('memberships_on_behalf_of__pk')
             ).order_by('-membership_count', 'name').only('end_date', 'name')
-
 
         parties_current_qs = self.parties.filter(
             memberships_on_behalf_of__extra__election__current=True
@@ -794,6 +795,8 @@ class PartySet(models.Model):
                 if party.end_date:
                     party_end_date = parser.parse(party.end_date).date()
                     if date.today() > party_end_date:
+                        if exclude_deregistered:
+                            continue
                         name = "{} (Deregistered {})".format(
                             name, party.end_date
                         )

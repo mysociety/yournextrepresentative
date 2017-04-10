@@ -150,6 +150,7 @@ class PartyFactory(factory.DjangoModelFactory):
         model = 'popolo.Organization'
 
     classification='Party'
+    end_date = "9999-12-31"
 
 
 class PartyExtraFactory(factory.DjangoModelFactory):

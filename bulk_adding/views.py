@@ -31,7 +31,8 @@ class BaseBulkAddView(LoginRequiredMixin, TemplateView):
     def add_election_and_post_to_context(self, context):
         context['post_extra'] = PostExtra.objects.get(slug=context['post_id'])
         context['election_obj'] = Election.objects.get(slug=context['election'])
-        context['parties'] = context['post_extra'].party_set.party_choices()
+        context['parties'] = context['post_extra'].party_set.party_choices(
+            exclude_deregistered=True)
         return context
 
     def post(self, request, *args, **kwargs):
