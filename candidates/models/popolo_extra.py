@@ -732,7 +732,7 @@ class PartySet(models.Model):
         result.insert(0, ('', ''))
         return result
 
-    def party_choices(self):
+    def party_choices(self, include_descriptions=True):
         # For various reasons, we've found it's best to order the
         # parties by those that have the most candidates - this means
         # that the commonest parties to select are at the top of the
@@ -777,6 +777,8 @@ class PartySet(models.Model):
         parties_with_candidates = []
 
         for qs in queries:
+            if include_descriptions:
+                qs = qs.prefetch_related('other_names')
             for party in qs:
                 parties_with_candidates.append(party)
                 count_string = ""
@@ -796,7 +798,13 @@ class PartySet(models.Model):
                             name, party.end_date
                         )
 
-                party_names = (party.pk, name)
+                if include_descriptions and party.other_names.exists():
+                    names = [(party.pk, party.name),]
+                    for other_name in party.other_names.all():
+                        names.append((party.pk, other_name.name))
+                    party_names = (name, (names))
+                else:
+                    party_names = (party.pk, name)
 
 
                 result.append(party_names)
