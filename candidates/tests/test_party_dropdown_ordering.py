@@ -81,3 +81,30 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 (self.labour_party_extra.base.id, u'Labour Party'),
             ],
         )
+
+    def test_enough_candidates_in_current_election_with_past_election(self):
+        self.create_lots_of_candidates(
+            self.election,
+            (
+                (self.ld_party_extra, 30),
+                (self.green_party_extra, 15),
+            )
+        )
+        self.create_lots_of_candidates(
+            self.earlier_election,
+            (
+                (self.conservative_party_extra, 30),
+                (self.labour_party_extra, 15),
+            )
+        )
+        party_choices = self.gb_parties.party_choices()
+        self.assertEqual(
+            party_choices,
+            [
+                (u'', u''),
+                (self.ld_party_extra.base.id, u'Liberal Democrats (30 candidates)'),
+                (self.green_party_extra.base.id, u'Green Party (15 candidates)'),
+                (self.conservative_party_extra.base.id, u'Conservative Party'),
+                (self.labour_party_extra.base.id, u'Labour Party'),
+            ],
+        )
