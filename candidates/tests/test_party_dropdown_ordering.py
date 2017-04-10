@@ -29,7 +29,7 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
         created = 0
         for party, candidates_to_create in parties_and_counts:
             for i in range(candidates_to_create):
-                person_id = created + 1
+                person_id = int("{}00{}".format(election.pk, created + 1))
                 pe = factories.PersonExtraFactory.create(
                     base__id=person_id,
                     base__name='John Doe {0}'.format(person_id),
