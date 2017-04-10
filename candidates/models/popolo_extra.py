@@ -732,8 +732,6 @@ class PartySet(models.Model):
         result.insert(0, ('', ''))
         return result
 
-
-
     def party_choices(self):
         # For various reasons, we've found it's best to order the
         # parties by those that have the most candidates - this means
@@ -746,50 +744,62 @@ class PartySet(models.Model):
                 membership_count=models.Count('memberships_on_behalf_of__pk')
             ).order_by('-membership_count', 'name').only('end_date', 'name')
 
-        candidacies_current_qs = self.parties.filter(
-                models.Q(
-                    memberships_on_behalf_of__extra__election__current=True)
-                |
-                models.Q(
-                    memberships_on_behalf_of=None)
+
+        parties_current_qs = self.parties.filter(
+            memberships_on_behalf_of__extra__election__current=True
             ).annotate(
                 membership_count=models.Count('memberships_on_behalf_of__pk')
             ).order_by('-membership_count', 'name').only('end_date', 'name')
+
+        parties_notcurrent_qs = self.parties.filter(
+                ~models.Q(
+                    memberships_on_behalf_of__extra__election__current=True)
+            ).annotate(
+                membership_count=models.Value(0, models.IntegerField()),
+            ).order_by('-membership_count', 'name').only('end_date', 'name')
+
 
         minimum_count = settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
 
         total_memberships = MembershipExtra.objects.all()
         current_memberships = total_memberships.filter(election__current=True)
 
+        queries = []
         if current_memberships.count() > minimum_count:
-            qs = candidacies_current_qs
+            queries.append(parties_current_qs)
+            queries.append(parties_notcurrent_qs)
         elif total_memberships.count() > minimum_count:
-            qs = candidacies_ever_qs
+            queries.append(candidacies_ever_qs)
         else:
             return self.party_choices_basic()
 
         result = [('', '')]
         parties_with_candidates = []
 
-        for party in qs:
-            parties_with_candidates.append(party)
-            count_string = ""
-            if party.membership_count:
-                count_string = " ({} candidates)".format(
-                    party.membership_count)
+        for qs in queries:
+            for party in qs:
+                parties_with_candidates.append(party)
+                count_string = ""
+                if party.membership_count:
+                    count_string = " ({} candidates)".format(
+                        party.membership_count)
 
-            name = _('{party_name}{count_string}').format(
-                party_name=party.name,
-                count_string=count_string
-            )
+                name = _('{party_name}{count_string}').format(
+                    party_name=party.name,
+                    count_string=count_string
+                )
 
-            if party.end_date:
-                party_end_date = parser.parse(party.end_date).date()
-                if date.today() > party_end_date:
-                    name = "{} (Deregistered {})".format(
-                        name, party.end_date
-                    )
-            result.append((party.pk, name),)
+                if party.end_date:
+                    party_end_date = parser.parse(party.end_date).date()
+                    if date.today() > party_end_date:
+                        name = "{} (Deregistered {})".format(
+                            name, party.end_date
+                        )
+
+                party_names = (party.pk, name)
+
+
+                result.append(party_names)
         return result
 
 
