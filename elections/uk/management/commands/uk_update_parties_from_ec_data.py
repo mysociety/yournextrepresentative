@@ -51,6 +51,8 @@ IMAGES_TO_USE = {
     'party:804': 'Emblem 3',
     # Socialist Labour Party
     'party:73': 'Globe with map of Earth with wordsletters Socialist Labour PartySLP',
+    # National Front
+    'party:2707': 'Emblem 2',
 }
 
 def sort_emblems(emblems, party_id):
