@@ -17,7 +17,7 @@ from .feeds import RecentChangesFeed
 from .constants import ELECTION_ID_REGEX, POST_ID_REGEX
 
 api_router = routers.DefaultRouter()
-api_router.register(r'persons', views.PersonViewSet)
+api_router.register(r'persons', views.PersonViewSet, base_name='person')
 api_router.register(r'organizations', views.OrganizationViewSet)
 api_router.register(r'posts', views.PostViewSet)
 api_router.register(r'areas', views.AreaViewSet)
