@@ -43,7 +43,9 @@
 </head>
 
 <body class="{% block body_class %}{% endblock %}">
-
+    {% if settings.SHOW_BANNER %}
+    {% include "banner.html" %}
+    {% endif %}
   <div class="header">
     <div class="header__masthead">
       <div class="container">

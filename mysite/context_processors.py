@@ -33,6 +33,7 @@ SETTINGS_TO_ADD = (
     'SITE_OWNER',
     'COPYRIGHT_HOLDER',
     'RUNNING_TESTS',
+    'SHOW_BANNER',
 )
 
 
@@ -41,7 +42,7 @@ def add_settings(request):
 
     return {
         'settings': {
-            k: getattr(settings, k) for k in SETTINGS_TO_ADD
+            k: getattr(settings, k, None) for k in SETTINGS_TO_ADD
         }
     }
 
