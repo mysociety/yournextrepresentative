@@ -442,6 +442,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         # Settings for restricting user activity to reduce abuse:
         'RESTRICT_RENAMES': conf.get('RESTRICT_RENAMES'),
         'EDITS_ALLOWED': conf.get('EDITS_ALLOWED', True),
+        'SHOW_BANNER': conf.get('SHOW_BANNER', False),
 
         # A bearer token for the Twitter API for mapping between
         # Twitter usernames and IDs.
