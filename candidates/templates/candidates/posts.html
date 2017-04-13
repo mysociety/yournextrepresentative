@@ -24,6 +24,13 @@
               {% for p in election_data.posts %}
                 <li>
                  <a href="{% url 'constituency' election=election.slug post_id=p.slug ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
+
+                 {% if p.candidates_locked %}
+                  - <abbr title="Candidates verified and post locked">🔒</abbr>
+                 {% elif p.suggestedpostlock_set.exists %}
+                 - <abbr title="Someone suggested locking this post">🔓</abbr>
+                 {% endif %}
+
                 </li>
               {% endfor %}
             </ul>

@@ -70,7 +70,7 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
             )
 
     def test_election_grouping_with_posts(self):
-        with self.assertNumQueries(2):
+        with self.assertNumQueries(3):
             self.assertEqual(
                 Election.group_and_order_elections(include_posts=True),
                 [

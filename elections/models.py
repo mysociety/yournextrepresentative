@@ -192,8 +192,9 @@ class Election(models.Model):
                 models.Prefetch(
                     'posts',
                     PostExtra.objects.select_related('base') \
-                        .order_by('base__label'),
-                )
+                        .order_by('base__label')\
+                        .prefetch_related('suggestedpostlock_set'),
+                ),
             )
         if not include_noncurrent:
             qs = qs.filter(current=True)
