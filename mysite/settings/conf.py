@@ -266,6 +266,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'login': 'mysite.forms.CustomLoginForm',
         },
         'ACCOUNT_USERNAME_REQUIRED': True,
+        'ACCOUNT_USERNAME_VALIDATORS': 'mysite.helpers.allauth_validators',
         'SOCIALACCOUNT_AUTO_SIGNUP': True,
 
         # use our own adapter that checks if user signup has been disabled
