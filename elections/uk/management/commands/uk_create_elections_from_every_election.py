@@ -89,8 +89,7 @@ class Command(BaseCommand):
         election_id = election_dict['election_id']
         election_date = election_dict['poll_open_date']
 
-        # TODO Set current from the API
-        current = True
+        current = election_dict['current']
 
         return Election.objects.update_or_create(
             slug=election_id,
