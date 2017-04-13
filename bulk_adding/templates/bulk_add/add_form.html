@@ -42,8 +42,6 @@
   {% if known_people %}
     <button type=submit>Review</button>
   {% endif %}
-<label for="one_source_to_rule_them_all">Single source for all</label>
-<input id="one_source_to_rule_them_all">
   {% csrf_token %}
   {{ formset.management_form }}
   {% for form in formset %}
@@ -55,49 +53,4 @@
   <button type=submit>Review</button>
 </form>
 
-<script>
-// Thanks to http://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-};
-
-$('.set_source_button').on('click', function(e, btn) {
-  $('[name*=-source]').val($(e.currentTarget).data('value'));
-  $('#one_source_to_rule_them_all').val($(e.currentTarget).data('value'));
-})
-
-$('#one_source_to_rule_them_all').keyup(function(el) {
-  $('[name*=-source]').val(el.currentTarget.value)
-})
-
-var source = getUrlParameter('source');
-
-$('[name*=-source]').val(source);
-
-$("#bulk_add_form").submit(function(e) {
-  $('[name*=-source]').each(function(e, source_el) {
-
-    var source_el = $(source_el);
-    var name_el = $($(source_el).parent().parent().find('input[id*=name]'));
-
-    if (name_el.val() == "") {
-      source_el.val("");
-    }
-
-  });
-})
-
-
-</script>
 {% endblock content %}

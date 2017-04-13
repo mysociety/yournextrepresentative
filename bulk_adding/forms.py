@@ -13,6 +13,9 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
         if 'parties' in kwargs:
             self.parties = kwargs['parties']
             del kwargs['parties']
+        if 'source' in kwargs:
+            self.source = kwargs['source']
+            del kwargs['source']
         super(BaseBulkAddFormSet, self).__init__(*args, **kwargs)
 
     def add_fields(self, form, index):
@@ -26,6 +29,10 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
 
         if 'party' in getattr(form, '_hide', []):
             form.fields["party"].widget = forms.HiddenInput()
+
+        if hasattr(self, 'source'):
+            form.fields["source"].initial = self.source
+            form.fields["source"].widget = forms.HiddenInput()
 
 
 class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
@@ -59,14 +66,12 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
         )
 
 
-
 class QuickAddSinglePersonForm(forms.Form):
     name = forms.CharField(required=True)
     source = forms.CharField(required=True)
 
 
 class ReviewSinglePersonForm(forms.Form):
-    # _hide = ['party']
     name = forms.CharField(
         required=False,
         widget=forms.HiddenInput(attrs={'readonly':'readonly'}))
