@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.views.decorators.cache import cache_page
 
 from rest_framework import routers
 
@@ -247,7 +248,7 @@ patterns_to_format = [
     },
     {
         'pattern': r'^post-id-to-party-set.json$',
-        'view': views.PostIDToPartySetView.as_view(),
+        'view': cache_page(60*60)(views.PostIDToPartySetView.as_view()),
         'name': 'post-id-to-party-set'
     },
     {
