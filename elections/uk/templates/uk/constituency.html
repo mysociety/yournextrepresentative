@@ -38,7 +38,9 @@
         {# {% endif %} #}
 
         {% if not candidates_locked %}
-        <a href="{% url "bulk_add" election post_data.id %}" class="button">Bulk add candidates in {{post_data.label}}</a>
+            {% if some_official_documents %}
+                <a href="{% url "bulk_add" election post_data.id %}" class="button">Add candidates from nomination paper in {{post_data.label}}</a>
+            {% endif %}
         {% endif %}
 
         {% if request.user.is_authenticated %}

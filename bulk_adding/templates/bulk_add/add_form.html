@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
 
-{% block title %}Bulk add candidates{% endblock %}
+{% block title %}Add candidates from nomination paper{% endblock %}
 
 {% block content %}
 <h2>Add candidates to {{ election_obj.name }}: <a href="{% url 'constituency' election=election_obj.slug post_id=post_extra.slug ignored_slug=post_extra.base.area.name|slugify %}">{{ post_extra.base.area.name }}</a></h2>

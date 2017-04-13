@@ -10,8 +10,10 @@
     <a href="{% url 'constituency' election=postextraelection.election.slug post_id=postextraelection.postextra.slug ignored_slug=postextraelection.postextra.short_label|slugify %}">
         {{ postextraelection.postextra.base.label }}
     </a>
+    {% if postextraelection.postextra.base.officialdocument_set.exists %}
     <a href="{% url "bulk_add" postextraelection.election.slug postextraelection.postextra.slug %}" class="button tiny">
-        Bulk add</a>
+        Add candidates from nomination paper</a>
+    {% endif %}
     </li>
 {% endfor %}
 </ul>
