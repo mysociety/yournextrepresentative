@@ -5,17 +5,15 @@
 
 {% block content %}
 <h2>Add candidates to {{ election_obj.name }}: <a href="{% url 'constituency' election=election_obj.slug post_id=post_extra.slug ignored_slug=post_extra.base.area.name|slugify %}">{{ post_extra.base.area.name }}</a></h2>
-{% if official_documents %}
+{% if official_document %}
 <h3>How to add or check candidates:</h3>
 <ol>
-  <li>Open the <a href="{{ official_documents.0.get_absolute_url }}" target="_blank">nomination paper</a>
+  <li>Open the <a href="{{ official_document.get_absolute_url }}" target="_blank">nomination paper</a>
     in a new window</li>
   <li>Find the part of the document about {{ post_extra.base.area.name }}</li>
   <li>Either
     <ol type="a">
-      <li>Add new candidates in the form below, (look out for tricky party
-        names, e.g. the Conservative Party is officially the ‘Conservative and
-        Unionist Party’),</li>
+      <li>Add new candidates in the form below,</li>
       <li>Or check that any list below is correct. </li>
     </ol>
   </li>
