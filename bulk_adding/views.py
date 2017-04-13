@@ -20,6 +20,7 @@ from candidates.views.people import get_call_to_action_flash_message
 from candidates.models import LoggedAction
 from popolo.models import Person, Membership, Organization
 from official_documents.models import OfficialDocument
+from official_documents.views import get_add_from_document_cta_flash_message
 from moderation_queue.models import SuggestedPostLock
 
 from . import forms
@@ -33,7 +34,18 @@ class BaseBulkAddView(LoginRequiredMixin, TemplateView):
         context['election_obj'] = Election.objects.get(slug=context['election'])
         context['parties'] = context['post_extra'].party_set.party_choices(
             exclude_deregistered=True)
+        context['official_document'] = OfficialDocument.objects.filter(
+            post__extra__slug=context['post_id'],
+            election__slug=context['election'],
+            ).first()
+        self.official_document = context['official_document']
         return context
+
+    def remaining_posts_for_sopn(self):
+        return OfficialDocument.objects.filter(
+            source_url=self.official_document.source_url,
+            post__extra__suggestedpostlock=None
+        )
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
@@ -50,10 +62,6 @@ class BulkAddView(BaseBulkAddView):
         context = super(BulkAddView, self).get_context_data(**kwargs)
         context.update(self.add_election_and_post_to_context(context))
 
-        context['official_document'] = OfficialDocument.objects.filter(
-            post__extra__slug=context['post_id'],
-            election__slug=context['election'],
-            ).first()
 
         form_kwargs = {
             'parties': context['parties'],
@@ -137,13 +145,6 @@ class BulkAddReviewView(BaseBulkAddView):
             source=change_metadata['information_source'],
         )
 
-        # Add a message to be displayed after redirect:
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            get_call_to_action_flash_message(person, new_person=True),
-            extra_tags='safe do-something-else'
-        )
         return person_extra
 
     def update_person(self, context, data, person_extra):
@@ -212,12 +213,26 @@ class BulkAddReviewView(BaseBulkAddView):
                     user=self.request.user,
                     post_extra=context['post_extra'],
                 )
+        if self.remaining_posts_for_sopn().exists():
+            messages.add_message(
+                self.request,
+                messages.SUCCESS,
+                get_add_from_document_cta_flash_message(
+                    self.official_document,
+                    self.remaining_posts_for_sopn()
+                ),
+                extra_tags='safe do-something-else'
+            )
 
-        url = reverse('constituency', kwargs={
-            'election': context['election'],
-            'post_id': context['post_extra'].slug,
-            'ignored_slug': slugify(context['post_extra'].base.label),
-        })
+            url = reverse('posts_for_document', kwargs={
+                'pk': self.official_document.pk
+            })
+        else:
+            url = reverse('constituency', kwargs={
+                'election': context['election'],
+                'post_id': context['post_extra'].slug,
+                'ignored_slug': slugify(context['post_extra'].base.label),
+            })
         return HttpResponseRedirect(url)
 
     def form_invalid(self, context):

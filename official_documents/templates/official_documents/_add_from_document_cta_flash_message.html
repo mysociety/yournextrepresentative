@@ -1,0 +1,12 @@
+<h1>Thanks!</h1>
+
+<p>…and while you're here…</p>
+<p>The document you have open has information on
+    <strong>{{ remaining_posts.count }}
+    more ward{{ remaining_posts.count|pluralize }}</strong>.</p>
+<p><a href="{% url 'bulk_add' election=remaining_posts.0.election.slug post_id=remaining_posts.0.post.extra.slug %}" class="button">Continue adding candidates</a></p>
+
+
+
+
+

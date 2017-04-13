@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load pipeline %}
+
+
+{% block extra_css %}
+{% stylesheet 'official_documents' %}
+{% endblock %}
+
+{% block hero %}<h1>{{ object.document_type }}</h1>{% endblock hero %}
+
+{% block content %}
+<p>The document we cached from <a href="{{ object.get_absolute_url }}">{{ object.source_url }}</a>
+    contains information on {{ document_posts.count }}
+    area{{ document_posts.count|pluralize }}.</p>
+
+<ul>
+  {% for document in document_posts %}
+    <li>
+     <a href="{% url 'constituency' election=document.election post_id=document.post.extra.slug ignored_slug=document.post.extra.base.label|slugify %}">
+        {{ document.post.extra.base.label }}</a>
+        {% if document.post.extra.candidates_locked %}
+         - <abbr title="Candidates verified and post locked">🔒</abbr>
+        {% elif document.post.extra.suggestedpostlock_set.exists %}
+        - <abbr title="Someone suggested locking this post">🔓</abbr>
+        {% else %}
+        <a href="{% url 'bulk_add' election=document.election.slug post_id=document.post.extra.slug %}" class="button tiny">
+        Add candidates</a>
+        {% endif %}
+
+
+
+    </li>  {% endfor %}
+</ul>
+
+
+
+{% endblock content %}

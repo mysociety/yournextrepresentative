@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
-from django.views.generic import CreateView, DetailView, TemplateView
+from django.views.generic import CreateView, DetailView
+from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 
 from auth_helpers.views import GroupRequiredMixin
@@ -43,3 +44,23 @@ class CreateDocumentView(ElectionMixin, GroupRequiredMixin, CreateView):
         context['post_label'] = post.label
         return context
 
+
+class PostsForDocumentView(DetailView):
+    model = OfficialDocument
+    template_name = "official_documents/posts_for_document.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PostsForDocumentView, self).get_context_data(**kwargs)
+        context['document_posts'] = OfficialDocument.objects.filter(
+            source_url=self.object.source_url)
+        return context
+
+
+def get_add_from_document_cta_flash_message(document, remaining_posts):
+    return render_to_string(
+        'official_documents/_add_from_document_cta_flash_message.html',
+        {
+            'document': document,
+            'remaining_posts': remaining_posts,
+        }
+    )
