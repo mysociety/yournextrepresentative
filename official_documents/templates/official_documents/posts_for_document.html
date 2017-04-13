@@ -17,7 +17,7 @@
 <ul>
   {% for document in document_posts %}
     <li>
-     <a href="{% url 'constituency' election=document.election post_id=document.post.extra.slug ignored_slug=document.post.extra.base.label|slugify %}">
+     <a href="{% url 'constituency' election=document.election.slug post_id=document.post.extra.slug ignored_slug=document.post.extra.base.label|slugify %}">
         {{ document.post.extra.base.label }}</a>
         {% if document.post.extra.candidates_locked %}
          - <abbr title="Candidates verified and post locked">🔒</abbr>
