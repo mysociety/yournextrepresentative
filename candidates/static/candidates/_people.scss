@@ -472,3 +472,16 @@
 .candidate-result-confirmed {
   font-weight: bold;
 }
+
+
+.person_biography {
+    margin-left:1em;
+    * {
+        font-size:12px;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+        font-size:0.9rem;
+        font-weight:bold;
+    }
+}
