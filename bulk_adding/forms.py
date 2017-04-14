@@ -44,12 +44,15 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
         Turn the whole form in to a value string
         """
         name = suggestion.name
-        if suggestion.object.memberships.all().exists():
-            name = "{} (previously stood in the {} as a {} candidate)".format(
-                name,
-                suggestion.object.memberships.all().first().extra.election,
-                suggestion.object.memberships.all().first().on_behalf_of.name,
-            )
+        try:
+            if suggestion.object.memberships.all().exists():
+                name = "{} (previously stood in the {} as a {} candidate)".format(
+                    name,
+                    suggestion.object.memberships.all().first().extra.election,
+                    suggestion.object.memberships.all().first().on_behalf_of.name,
+                )
+        except AttributeError:
+            pass
         return [suggestion.pk, name]
 
     def add_fields(self, form, index):
