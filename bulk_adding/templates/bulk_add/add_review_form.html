@@ -17,13 +17,19 @@
           Otherwise, please check the similar names, and if it is the same person, select their name instead. The system will update them with the new candidacy.</p>
       {% endif %}
       {% for choice in form.select_person %}
-          <label for="{{ choice.id_for_label }}" style="font-size:1em">
-            {{ choice.tag }}
+          <label for="{{ choice.id_for_label }}" style="font-size:1em;clear:both;margin-bottom:0.5em">
+            <div style="display:block;float:left;width:3em">
+                {{ choice.tag }}
+            </div>
             {% if choice.choice_value != '_new' %}
-            Mark <a href="{% url 'person-view' choice.choice_value %}" target="_blank">
-              {{ choice.choice_label }}</a> as standing in {{ election_obj.name }}: {{ post_extra.base.label }}
+            <div>
+                Mark <a href="{% url 'person-view' choice.choice_value %}" target="_blank">
+                {{ choice.choice_label }}</a> as standing in {{ election_obj.name }}: {{ post_extra.base.label }}
+            </div>
             {% else %}
-            Add <strong>{{ form.name.value }}</strong> as a new person
+            <div>
+                Add <strong>{{ form.name.value }}</strong> as a new person
+            </div>
             {% endif %}
            </label>
            {{ form.name }}
