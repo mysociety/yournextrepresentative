@@ -11,6 +11,7 @@
   {% for form in formset %}
     {% if form.name.value %}
       <h2>Candidate: {{ form.name.value }}</h2>
+      <h4><em>“{{ form.party_description.value }}”</em></h4>
       {% if form.select_person.1 %}
       <p>Some similar names have been found in our database. </p>
           <p>If you're sure this is a new candidate, please select 'Add {{ form.name.value }} as a new person'.

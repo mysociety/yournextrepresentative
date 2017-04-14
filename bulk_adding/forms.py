@@ -88,6 +88,9 @@ class ReviewSinglePersonForm(forms.Form):
     source = forms.CharField(
         required=False,
         widget=forms.HiddenInput(attrs={'readonly':'readonly'}))
+    party_description = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput())
 
 
 BulkAddFormSet = forms.formset_factory(

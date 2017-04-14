@@ -733,7 +733,8 @@ class PartySet(models.Model):
         return result
 
     def party_choices(self,
-            include_descriptions=True, exclude_deregistered=False):
+            include_descriptions=True, exclude_deregistered=False,
+            include_description_ids=False):
         # For various reasons, we've found it's best to order the
         # parties by those that have the most candidates - this means
         # that the commonest parties to select are at the top of the
@@ -805,8 +806,14 @@ class PartySet(models.Model):
                     names = [(party.pk, party.name),]
                     for other_name in party.other_names.all():
                         joint_text = re.compile(r'joint descriptions? with')
+                        party_id_str = str(party.pk)
+                        if include_description_ids:
+                            party_id_str = "{}__{}".format(
+                                party_id_str,
+                                other_name.pk
+                            )
                         if not joint_text.search(other_name.name.lower()):
-                            names.append((party.pk, other_name.name))
+                            names.append((party_id_str, other_name.name))
                     party_names = (name, (names))
                 else:
                     party_names = (party.pk, name)
