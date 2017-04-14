@@ -804,7 +804,9 @@ class PartySet(models.Model):
                 if include_descriptions and party.other_names.exists():
                     names = [(party.pk, party.name),]
                     for other_name in party.other_names.all():
-                        names.append((party.pk, other_name.name))
+                        joint_text = re.compile(r'joint descriptions? with')
+                        if not joint_text.search(other_name.name.lower()):
+                            names.append((party.pk, other_name.name))
                     party_names = (name, (names))
                 else:
                     party_names = (party.pk, name)
