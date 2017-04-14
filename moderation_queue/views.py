@@ -487,6 +487,7 @@ class SuggestLockReviewListView(ListView):
                 'user', 'post_extra__base',
             ).prefetch_related('post_extra__elections')
 
+
 class SOPNReviewRequiredView(ListView):
     template_name = "moderation_queue/sopn-review-required.html"
 

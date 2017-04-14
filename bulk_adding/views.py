@@ -33,7 +33,7 @@ class BaseBulkAddView(LoginRequiredMixin, TemplateView):
         context['post_extra'] = PostExtra.objects.get(slug=context['post_id'])
         context['election_obj'] = Election.objects.get(slug=context['election'])
         context['parties'] = context['post_extra'].party_set.party_choices(
-            exclude_deregistered=True)
+            exclude_deregistered=True, include_description_ids=True)
         context['official_document'] = OfficialDocument.objects.filter(
             post__extra__slug=context['post_id'],
             election__slug=context['election'],
@@ -109,7 +109,20 @@ class BulkAddReviewView(BaseBulkAddView):
         context = super(BulkAddReviewView, self).get_context_data(**kwargs)
         context.update(self.add_election_and_post_to_context(context))
 
-        initial = [form for form in self.request.session['bulk_add_data'] if form]
+        initial = []
+
+        for form in self.request.session['bulk_add_data']:
+            if form:
+                if '__' in form['party']:
+                    org_id, other_name_id = form['party'].split('__')
+                    org = Organization.objects.get(pk=org_id)
+                    desc = org.other_names.get(pk=other_name_id)
+                else:
+                    desc = Organization.objects.get(pk=form['party']).name
+
+                form['party_description'] = desc
+                initial.append(form)
+
         if self.request.POST:
             context['formset'] = forms.BulkAddReviewFormSet(
                 self.request.POST, parties=context['parties']
@@ -118,7 +131,6 @@ class BulkAddReviewView(BaseBulkAddView):
             context['formset'] = forms.BulkAddReviewFormSet(
                 initial=initial, parties=context['parties']
             )
-
         return context
 
     def add_person(self, person_data):
@@ -148,7 +160,7 @@ class BulkAddReviewView(BaseBulkAddView):
         return person_extra
 
     def update_person(self, context, data, person_extra):
-        party = Organization.objects.get(pk=data['party'])
+        party = Organization.objects.get(pk=data['party'].split('__')[0])
         post = context['post_extra'].base
         election = Election.objects.get(slug=context['election'])
 
