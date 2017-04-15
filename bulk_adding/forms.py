@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import json
 
 from django import forms
-from django.utils.safestring import SafeString
+from django.utils.safestring import SafeText
 
 from haystack.query import SearchQuerySet
 
@@ -52,7 +52,7 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
                     suggestion.object.memberships.all().first().extra.election,
                     suggestion.object.memberships.all().first().on_behalf_of.name,
                 )
-                name = SafeString(name)
+                name = SafeText(name)
         except AttributeError:
             pass
         return [suggestion.pk, name]
