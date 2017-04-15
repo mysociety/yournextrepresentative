@@ -58,4 +58,37 @@
   <button type=submit>Review</button>
 </form>
 
+<script>
+    function toTitleCase(str)
+    {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    }
+
+    suggest_correction = function(el, suggestion) {
+
+        suggestion_el = $('<a class="suggested">Change to <span>' + suggestion + '</span>?</a>');
+        suggestion_el.click(function(clicked_el) {
+            var this_link = $(this);
+            this_link.prev('input').val($(this_link).find('span').text());
+            $('.suggested').remove();
+        })
+        $('.suggested').remove();
+        $(el).after(suggestion_el);
+
+    };
+
+    $('[name*=-name]').on('paste keyup', function(e) {
+        var name = e.target.value;
+        var upper_first_matcher = /([A-Z]+,? [A-Za-z]+)/g;
+        var match = upper_first_matcher.exec(name);
+        if (match) {
+            var name_parts = name.split(' ');
+            var last_name = name_parts.shift();
+            var name = name_parts.join(' ') + ' ' + toTitleCase(last_name);
+            suggest_correction(e.target, name);
+        }
+    })
+
+</script>
+
 {% endblock content %}
