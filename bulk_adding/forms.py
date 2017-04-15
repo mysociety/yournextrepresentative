@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import json
 
 from django import forms
+from django.utils.safestring import SafeString
 
 from haystack.query import SearchQuerySet
 
@@ -46,11 +47,12 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
         name = suggestion.name
         try:
             if suggestion.object.memberships.all().exists():
-                name = "{} (previously stood in the {} as a {} candidate)".format(
+                name = "<strong>{}</strong> (previously stood in the {} as a {} candidate)".format(
                     name,
                     suggestion.object.memberships.all().first().extra.election,
                     suggestion.object.memberships.all().first().on_behalf_of.name,
                 )
+                name = SafeString(name)
         except AttributeError:
             pass
         return [suggestion.pk, name]
