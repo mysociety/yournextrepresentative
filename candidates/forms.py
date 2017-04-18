@@ -391,7 +391,7 @@ class AddElectionFieldsMixin(object):
         # slow, so cache these results, so they're not fetched from
         # the database again each time add_election_fields is called.
         return [
-            (party_set, party_set.party_choices())
+            (party_set, party_set.party_choices(include_descriptions=False))
             for party_set in PartySet.objects.all()
         ]
 
