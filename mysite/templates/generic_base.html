@@ -137,6 +137,15 @@
         </div>
       {% endif %}
 
+      {% if request.path != "/" %}
+      <div style="background-color:#FFFF8E;padding:0.5em;margin-bottom:1em;clear:both">
+        <h2>
+          <a href="https://democracyclub.org.uk/blog/2017/04/18/its-ge2017/">#GE2017 update</a>
+        </h2>
+        <p>There’s going to be a general election on 8 June. Read about how you can help, or <a href="https://democracyclub.org.uk/donate/">donate now</a> to support our work.</p>
+      </div>
+      {% endif %}
+
       {% block content %}
       {% endblock %}
     </div>
