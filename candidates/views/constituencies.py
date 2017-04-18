@@ -161,7 +161,7 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
                     ).select_related(
                         'person', 'person__extra', 'on_behalf_of',
                         'on_behalf_of__extra', 'organization'
-                    ).all()
+                    ).filter(extra__election__slug='2015')
                 )
 
         # HACK
