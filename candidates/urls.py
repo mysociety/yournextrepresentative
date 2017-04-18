@@ -133,7 +133,7 @@ patterns_to_format = [
     },
     {
         'pattern': r'^person/(?P<person_id>\d+)/update/single_election_form/{election}$',
-        'view': views.SingleElectionFormView.as_view(),
+        'view': cache_page(60*60)(views.SingleElectionFormView.as_view()),
         'name': 'person-update-single-election'
     },
     {
