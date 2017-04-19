@@ -145,9 +145,9 @@ class BasePersonForm(forms.Form):
 
             if field.name == "biography":
                 opts['help_text'] = _("""
-                    Markdown formatted text about the person. Make sure this
-                    text is a statement from the candidate and not your own
-                    biography.""")
+                    E.g. from the 'About' page of their website or
+                    campaign material""")
+                opts['label'] = _("Statement to voters")
 
             if field.info_type_key == 'url':
                 self.fields[field.name] = forms.URLField(**opts)

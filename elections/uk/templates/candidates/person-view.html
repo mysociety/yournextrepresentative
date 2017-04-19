@@ -4,7 +4,6 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load standing %}
-{% load markdown_deux_tags %}
 {% load metadescription %}
 {% load extra_field_value %}
 {% load thumbnail %}
@@ -147,8 +146,8 @@
       <dd>{% if person.summary %}{{ person.summary }}{% endif %}</dd>
     {% endif %}
     {% if 'biography' in simple_fields %}
-      <dt>{% trans "Biography" %}</dt>
-      <dd class="person_biography">{% if person.biography %}{{ person.biography|markdown|truncatewords_html:20 }}{% endif %}</dd>
+      <dt>{% trans "Statement to voters" %}</dt>
+      <dd class="person_biography">{% if person.biography %}{{ person.biography|linebreaks|truncatewords_html:200 }}{% endif %}</dd>
     {% endif %}
   </dl>
 
