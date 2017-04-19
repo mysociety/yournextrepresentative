@@ -19,7 +19,7 @@
         <h3>{{ role_data.role }}</h3>
         {% for election_data in role_data.elections %}
           {% with election=election_data.election %}
-            <h4>{{ election.name }}</h4>
+            <h4><a href="{% url 'constituencies' election=election.slug %}">{{ election.name }}</a></h4>
             <ul>
               {% for p in election_data.posts %}
                 <li>
