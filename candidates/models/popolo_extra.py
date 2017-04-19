@@ -806,14 +806,14 @@ class PartySet(models.Model):
                     names = [(party.pk, party.name),]
                     for other_name in party.other_names.all():
                         joint_text = re.compile(r'joint descriptions? with')
-                        party_id_str = str(party.pk)
+                        party_id_to_use = party.pk
                         if include_description_ids:
-                            party_id_str = "{}__{}".format(
-                                party_id_str,
+                            party_id_to_use = "{}__{}".format(
+                                party_id_to_use,
                                 other_name.pk
                             )
                         if not joint_text.search(other_name.name.lower()):
-                            names.append((party_id_str, other_name.name))
+                            names.append((party_id_to_use, other_name.name))
                     party_names = (name, (names))
                 else:
                     party_names = (party.pk, name)
