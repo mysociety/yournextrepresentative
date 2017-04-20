@@ -20,6 +20,9 @@
     <div class="form-item {% if simple_field.errors %}form-item--errors{% endif %}">
       <p>
         {{ simple_field.label_tag }}
+        {% if simple_field.help_text %}
+            <p class="help_text">{{ simple_field.help_text }}</p>
+        {% endif %}
         {{ simple_field }}
       </p>
       {{ simple_field.errors }}

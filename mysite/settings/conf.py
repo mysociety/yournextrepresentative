@@ -253,6 +253,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'allauth.socialaccount.providers.twitter',
             'corsheaders',
             'crispy_forms',
+            'markdown_deux',
         ],
 
         'SITE_ID': 1,
@@ -479,6 +480,16 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'GET',
             'OPTIONS',
         ),
+
+        'MARKDOWN_DEUX_STYLES': {
+            "default": {
+                "extras": {
+                    "code-friendly": None,
+                    "fenced-code-blocks": None,
+                },
+                "safe_mode": "escape",
+            },
+        }
     }
     if not conf.get('NEW_ACCOUNTS_ALLOWED', True):
         result['ACCOUNT_ADAPTER'] = \
