@@ -116,7 +116,7 @@ class Election(models.Model):
         [
           {
             'current': True,
-            'dates': OrderedDict([(datetime.date(2017, 1, 5), [
+            'dates': OrderedDict([(datetime.date(2015, 5, 7), [
               {
                 'role': 'Member of Parliament',
                 'elections': [
@@ -129,7 +129,9 @@ class Election(models.Model):
                     ]
                   }
                 ]
-              },
+              }
+            ]),
+            (datetime.date(2016, 5, 5), [
               {
                 'role': 'Member of the Scottish Parliament',
                 'elections': [
@@ -151,11 +153,11 @@ class Election(models.Model):
                   }
                 ]
               }
-            ])
+            ])])
           },
           {
             'current': False,
-            'dates': OrderedDict([(datetime.date(2017, 1, 5), [
+            'dates': OrderedDict([(datetime.date(2010, 5, 6), [
               {
                 'role': 'Member of Parliament',
                 'elections': [
@@ -169,8 +171,8 @@ class Election(models.Model):
                   }
                 ]
               }
-            ]
-          ]),
+            ])])
+          }
         ]
 
         """
