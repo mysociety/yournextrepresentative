@@ -211,10 +211,11 @@ class Election(models.Model):
             else:
                 election_date = election.election_date
             roles = result[current_index]['dates'].setdefault(election_date, [])
-            # If the role has changed, or we've switched from current
-            # elections to past elections, create a new array of
-            # elections to append to:
+            # If the role has changed, or the election date has changed,
+            # or we've switched from current elections to past elections,
+            # create a new array of elections to append to:
             if (role is None) or role['role'] != election.for_post_role or \
+               role['elections'][0]['election'].election_date != election_date or \
                (last_current is not None and last_current != election.current):
                 role = {
                     'role': election.for_post_role,
