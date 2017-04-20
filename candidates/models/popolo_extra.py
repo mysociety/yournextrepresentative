@@ -816,7 +816,7 @@ class PartySet(models.Model):
                             names.append((party_id_str, other_name.name))
                     party_names = (name, (names))
                 else:
-                    party_names = (party.pk, name)
+                    party_names = (str(party.pk), name)
 
 
                 result.append(party_names)

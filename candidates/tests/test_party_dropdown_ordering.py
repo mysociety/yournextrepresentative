@@ -55,10 +55,10 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
             party_choices,
             [
                 (u'', u''),
-                (self.labour_party_extra.base.id, u'Labour Party (16 candidates)'),
-                (self.ld_party_extra.base.id, u'Liberal Democrats (8 candidates)'),
-                (self.conservative_party_extra.base.id, u'Conservative Party'),
-                (self.green_party_extra.base.id, u'Green Party')
+                (str(self.labour_party_extra.base.id), u'Labour Party (16 candidates)'),
+                (str(self.ld_party_extra.base.id), u'Liberal Democrats (8 candidates)'),
+                (str(self.conservative_party_extra.base.id), u'Conservative Party'),
+                (str(self.green_party_extra.base.id), u'Green Party')
             ],
         )
 
@@ -75,10 +75,10 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
             party_choices,
             [
                 (u'', u''),
-                (self.ld_party_extra.base.id, u'Liberal Democrats (30 candidates)'),
-                (self.green_party_extra.base.id, u'Green Party (15 candidates)'),
-                (self.conservative_party_extra.base.id, u'Conservative Party'),
-                (self.labour_party_extra.base.id, u'Labour Party'),
+                (str(self.ld_party_extra.base.id), u'Liberal Democrats (30 candidates)'),
+                (str(self.green_party_extra.base.id), u'Green Party (15 candidates)'),
+                (str(self.conservative_party_extra.base.id), u'Conservative Party'),
+                (str(self.labour_party_extra.base.id), u'Labour Party'),
             ],
         )
 
@@ -101,20 +101,20 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
                     u'Liberal Democrats (30 candidates)', [
                         (self.ld_party_extra.base.id,
                         u'Liberal Democrats'),
-                        (self.ld_party_extra.base.id,
+                        (str(self.ld_party_extra.base.id),
                         u'Scottish Liberal Democrats')
                     ]
                 ),
                 (
-                    self.green_party_extra.base.id,
+                    str(self.green_party_extra.base.id),
                     u'Green Party (15 candidates)'
                 ),
                 (
-                    self.conservative_party_extra.base.id,
+                    str(self.conservative_party_extra.base.id),
                     u'Conservative Party'
                 ),
                 (
-                    self.labour_party_extra.base.id,
+                    str(self.labour_party_extra.base.id),
                     u'Labour Party'
                 ),
             ],
@@ -140,9 +140,9 @@ class TestPartyDropDownOrdering(TestUserMixin, UK2015ExamplesMixin, WebTest):
             party_choices,
             [
                 (u'', u''),
-                (self.ld_party_extra.base.id, u'Liberal Democrats (30 candidates)'),
-                (self.green_party_extra.base.id, u'Green Party (15 candidates)'),
-                (self.conservative_party_extra.base.id, u'Conservative Party'),
-                (self.labour_party_extra.base.id, u'Labour Party'),
+                (str(self.ld_party_extra.base.id), u'Liberal Democrats (30 candidates)'),
+                (str(self.green_party_extra.base.id), u'Green Party (15 candidates)'),
+                (str(self.conservative_party_extra.base.id), u'Conservative Party'),
+                (str(self.labour_party_extra.base.id), u'Labour Party'),
             ],
         )
