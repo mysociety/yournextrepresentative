@@ -145,8 +145,11 @@ class BasePersonForm(forms.Form):
 
             if field.name == "biography":
                 opts['help_text'] = _("""
-                    E.g. from the 'About' page of their website or
-                    campaign material""")
+                    This must be a message from the candidate to the
+                    electorate. Ideally this message will be uploaded by the
+                    candidate or their agent, but crowdsourcers may find such
+                    a statement on a candidate's 'About' webpage, or on
+                    campaign literature.""")
                 opts['label'] = _("Statement to voters")
 
             if field.info_type_key == 'url':
