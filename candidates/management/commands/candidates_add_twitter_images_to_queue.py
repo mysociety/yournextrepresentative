@@ -28,10 +28,13 @@ class Command(BaseCommand):
     help = "Add Twitter avatars for candidates without images to the moderation queue"
 
     def add_twitter_image_to_queue(self, person, image_url):
-        if person.queuedimage_set.exclude(decision="rejected").exists():
+        if person.queuedimage_set.exists():
             # Don't add an image to the queue if there is one already
-            # Ignoring rejected queued images
-            verbose(_("  That person already had in image, so skipping."))
+            # in the queue. It doesn't matter if that queued image has
+            # been moderated or not, or whether it's been rejected or
+            # not. At the moment we just want to be really careful not
+            # to make people check the same Twitter avatar twice.
+            verbose(_("  That person already had an image in the queue, so skipping."))
             return
 
         verbose(_("  Adding that person's Twitter avatar to the moderation queue"))
