@@ -17,6 +17,25 @@ class PersonSearchForm(SearchForm):
     def clean_q(self):
         return escape(self.cleaned_data['q'])
 
+    """
+    Becuase the default haystack operator is AND if you search for
+    John Quincy Adams then it looks for `John AND Quincy AND Adams'
+    and hence won't find John Adams. This results in missed matches
+    and duplicates. So if it looks like there's more than two names
+    split them and search using the whole name provided or just the
+    first and last. This results in
+    `(John AND Quincy AND Adams) OR (John AND Adams)` which is a bit
+    more tolerant.
+    """
+    def search(self):
+        sqs = super(PersonSearchForm, self).search()
+        parts = self.cleaned_data['q'].split()
+        if len(parts) >= 2:
+            short_name = ' '.join([parts[0], parts[-1]])
+            sqs = sqs.filter_or(content=short_name)
+
+        return sqs
+
 from elections.uk.lib import is_valid_postcode
 
 
