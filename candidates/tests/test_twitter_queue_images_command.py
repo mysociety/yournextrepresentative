@@ -55,6 +55,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             base__id='4',
             base__name='Person With No Twitter User ID')
 
+        self.existing_queued_image_ids = \
+            list(QueuedImage.objects.values_list('pk', flat=True))
 
     def test_command(self, mock_twitter_data, mock_requests):
 
@@ -69,11 +71,7 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         call_command('candidates_add_twitter_images_to_queue')
 
         new_queued_images = QueuedImage.objects.exclude(
-            id__in=[
-                self.existing_undecided_image.id,
-                self.existing_rejected_image.id
-            ]
-        )
+            id__in=self.existing_queued_image_ids)
 
         self.assertEqual(
             mock_requests.get.mock_calls,
@@ -120,11 +118,7 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         )
 
         new_queued_images = QueuedImage.objects.exclude(
-            id__in=[
-                self.existing_undecided_image.id,
-                self.existing_rejected_image.id
-            ]
-        )
+            id__in=self.existing_queued_image_ids)
 
         self.assertEqual(
             mock_requests.get.mock_calls,
