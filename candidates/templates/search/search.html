@@ -7,7 +7,7 @@
 <h2>{% trans 'Search candidates' %}</h2>
 
     <form class="search" method="get" action="{% url 'person-search' %}">
-        <input type="search" placeholder="{% trans 'Find a candidate…' %}" name="q" value="{{ form.q.value }}"/>
+        <input type="search" placeholder="{% trans 'Find a candidate…' %}" name="q" value="{{ form.q.value|default_if_none:'' }}"/>
         <button type="submit">{% trans "Search" %}</button>
     </form>
 
