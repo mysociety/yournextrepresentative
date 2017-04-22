@@ -48,7 +48,10 @@ class PhotoReviewForm(forms.Form):
     x_max = forms.IntegerField(min_value=1)
     y_min = forms.IntegerField(min_value=0)
     y_max = forms.IntegerField(min_value=1)
-    decision = forms.ChoiceField(choices=QueuedImage.DECISION_CHOICES)
+    decision = forms.ChoiceField(
+        choices=QueuedImage.DECISION_CHOICES,
+        widget=forms.widgets.RadioSelect
+    )
     make_primary = forms.BooleanField(required=False)
     rejection_reason = forms.CharField(
         widget=forms.Textarea(),
@@ -59,7 +62,8 @@ class PhotoReviewForm(forms.Form):
         required=False
     )
     moderator_why_allowed = forms.ChoiceField(
-        choices=CopyrightOptions.WHY_ALLOWED_CHOICES
+        choices=CopyrightOptions.WHY_ALLOWED_CHOICES,
+        widget=forms.widgets.RadioSelect,
     )
 
 class SuggestedPostLockForm(forms.ModelForm):

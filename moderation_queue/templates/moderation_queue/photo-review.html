@@ -45,7 +45,7 @@
   <a href="{{ google_image_search_url }}">Google Image search for candidate
   details</a> may be a good start.{% endblocktrans %}</p>
 
-  <p class="photo-source-advice">{% blocktrans trimmed %}
+  <p>{% blocktrans trimmed %}
   If you're trying to find the likely <em>source</em> of this image, you can
   also do a <a href="{{ google_reverse_image_search_url }}">reverse image
   search</a> on the uploaded image.{% endblocktrans %}</p>
@@ -140,32 +140,44 @@
     <h3>{% trans "Your decision" %}</h3>
 
     <div id="moderator-photo-decision">
-      <p>
+
+      <fieldset id="id_decision">
           {{ form.decision.errors }}
-          <label for="{{ form.decision.id_for_label }}">{% trans "Decision:" %}</label>
-          {{ form.decision }}
-      </p>
+          {% for radio in form.decision %}
+          <div class="multiple-choice">
+            {{ radio.tag }}
+            <label for="id_{{ form.decision.html_name }}_{{ forloop.counter0 }}">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
+      </fieldset>
 
-      <p class="make-primary">
-        {{ form.make_primary }}
-        <label for="{{ form.make_primary.id_for_label }}">{% trans "Make this the primary image of the candidate?" %}</label>
-      </p>
-
-      <p class="moderator-reason">
+      <fieldset class="moderator-reason">
+        <h4>{% trans "Why <em>you</em> think it's allowed" %}</h4>
           {{ form.moderator_why_allowed.errors }}
-          <label for="{{ moderator_why_allowed.id_for_label }}">
-          {% trans "Why <em>you</em> think it's allowed:" %}</label>
-          {{ form.moderator_why_allowed }}
-      </p>
+          {# <label for="{{ moderator_why_allowed.id_for_label }}"> #}
+          {# </label> #}
+          {% for radio in form.moderator_why_allowed %}
+          <div class="multiple-choice">
+            {{ radio.tag }}
+            <label for="id_{{ form.moderator_why_allowed.html_name }}_{{ forloop.counter0 }}">{{ radio.choice_label }}</label>
+          </div>
+          {% endfor %}
 
-      <p class="rejection_reason">
+          <div class="make-primary multiple-choice">
+            {{ form.make_primary }}
+            <label for="{{ form.make_primary.id_for_label }}">{% trans "Make this the primary image of the candidate?" %}</label>
+          </div>
+
+      </fieldset>
+
+      <fieldset class="rejection_reason">
           {{ form.rejection_reason.errors }}
           <label for="{{ form.rejection_reason.id_for_label }}">{% blocktrans trimmed %}
             Reason for rejection (<strong>Warning:</strong> this will be
             emailed to the user):{% endblocktrans %}
           </label>
           {{ form.rejection_reason }}
-      </p>
+      </fieldset>
 
       <input type="submit" id="decision-submit" class="button" value="{% trans "Submit" %}">
 
