@@ -55,21 +55,6 @@ class TestMergePeople(TestCase):
             }
         )
 
-    def test_merge_array_primary_null(self):
-        primary = {
-            'some-list': None,
-        }
-        secondary = {
-            'some-list': ['a', 'b', 'c'],
-        }
-        merged = merge_popit_people(primary, secondary)
-        self.assertEqual(
-            merged,
-            {
-                'some-list': ['a', 'b', 'c'],
-            }
-        )
-
     def test_merge_array_secondary_null(self):
         primary = {
             'some-list': ['a', 'b', 'c'],
