@@ -17,6 +17,8 @@ from .output import capture_output, split_output
 @patch('candidates.management.commands.candidates_add_twitter_images_to_queue.TwitterAPIData')
 class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
 
+    maxDiff = None
+
     def setUp(self):
         self.image_filename = join(
             dirname(__file__), '..', '..', 'moderation_queue', 'tests',
