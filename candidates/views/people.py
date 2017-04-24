@@ -231,6 +231,36 @@ class MergePeopleView(GroupRequiredMixin, View):
     http_method_names = ['post']
     required_group_name = TRUSTED_TO_MERGE_GROUP_NAME
 
+    def merge(self, primary_person_extra, secondary_person_extra, change_metadata):
+        primary_person = primary_person_extra.base
+        secondary_person = secondary_person_extra.base
+        # Merge the reduced JSON representations:
+        merged_person_version_data = merge_popit_people(
+            get_person_as_version_data(primary_person),
+            get_person_as_version_data(secondary_person),
+        )
+        revert_person_from_version_data(
+            primary_person,
+            primary_person_extra,
+            merged_person_version_data
+        )
+        # Make sure the secondary person's version history is appended, so it
+        # isn't lost.
+        primary_person_versions = json.loads(primary_person_extra.versions)
+        primary_person_versions += json.loads(secondary_person_extra.versions)
+        primary_person_extra.versions = json.dumps(primary_person_versions)
+        primary_person_extra.record_version(change_metadata)
+        primary_person_extra.save()
+        # Change the secondary person's images to point at the primary
+        # person instead:
+        existing_primary_image = \
+            primary_person_extra.images.filter(is_primary=True).exists()
+        for image in secondary_person.extra.images.all():
+            image.content_object = primary_person.extra
+            if existing_primary_image:
+                image.is_primary = False
+            image.save()
+
     def post(self, request, *args, **kwargs):
         # Check that the person IDs are well-formed:
         primary_person_id = self.kwargs['person_id']
@@ -253,36 +283,10 @@ class MergePeopleView(GroupRequiredMixin, View):
             ]
             primary_person = primary_person_extra.base
             secondary_person = secondary_person_extra.base
-            # Merge the reduced JSON representations:
-            merged_person_version_data = merge_popit_people(
-                get_person_as_version_data(primary_person),
-                get_person_as_version_data(secondary_person),
-            )
-            # Update the primary person in PopIt:
             change_metadata = get_change_metadata(
-                self.request, _('After merging person {0}').format(secondary_person_id)
+                self.request, _('After merging person {0}').format(secondary_person.id)
             )
-            revert_person_from_version_data(
-                primary_person,
-                primary_person_extra,
-                merged_person_version_data
-            )
-            # Make sure the secondary person's version history is appended, so it
-            # isn't lost.
-            primary_person_versions = json.loads(primary_person_extra.versions)
-            primary_person_versions += json.loads(secondary_person_extra.versions)
-            primary_person_extra.versions = json.dumps(primary_person_versions)
-            primary_person_extra.record_version(change_metadata)
-            primary_person_extra.save()
-            # Change the secondary person's images to point at the primary
-            # person instead:
-            existing_primary_image = \
-                primary_person_extra.images.filter(is_primary=True).exists()
-            for image in secondary_person.extra.images.all():
-                image.content_object = primary_person.extra
-                if existing_primary_image:
-                    image.is_primary = False
-                image.save()
+            self.merge(primary_person_extra, secondary_person_extra, change_metadata)
             # Now we delete the old person:
             secondary_person.delete()
             # Create a redirect from the old person to the new person:
