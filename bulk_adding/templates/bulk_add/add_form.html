@@ -26,6 +26,13 @@
   <li>Bask in the glow of making democracy better for everyone.</li>
   <li>Return to the home page to do another one!</li>
 </ol>
+{% else %}
+<p>
+This post doesn't have a nomination paper.
+            Can you help us by
+            <a href="{% url 'upload_document_view' election=election post_id=post_extra.slug %}">uploading
+            the PDF of the Statement of Persons Nominated?</a>
+</p>
 {% endif %}
 {% if known_people %}
 <h3>There {{ known_people|pluralize:"is,are" }} {{ known_people|length|apnumber }} candidate{{ known_people|pluralize }} listed in this area already:</h3>
