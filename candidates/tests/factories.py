@@ -144,6 +144,17 @@ class PostExtraFactory(factory.DjangoModelFactory):
                 )
 
 
+class OrganizationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'popolo.Organization'
+
+
+class OrganizationExtraFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = 'candidates.OrganizationExtra'
+    base = factory.SubFactory(OrganizationFactory)
+
+
 class PartyFactory(factory.DjangoModelFactory):
 
     class Meta:

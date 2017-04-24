@@ -14,6 +14,7 @@ from django_webtest import WebTest
 from popolo.models import Membership, Person
 
 from candidates.models import PersonRedirect, MembershipExtra, ImageExtra
+from candidates.models.versions import revert_person_from_version_data
 from mysite.helpers import mkdir_p
 from .auth import TestUserMixin
 from .uk_examples import UK2015ExamplesMixin
@@ -372,4 +373,185 @@ class TestMergePeopleView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         )
         self.assertEqual(
             non_primary_image.extra.user_notes, 'A photo of Shane Collins'
+        )
+
+    @patch('candidates.views.version_data.get_current_timestamp')
+    @patch('candidates.views.version_data.create_version_id')
+    def test_merge_regression(
+            self,
+            mock_create_version_id,
+            mock_get_current_timestamp,
+    ):
+        mock_get_current_timestamp.return_value = example_timestamp
+        mock_create_version_id.return_value = example_version_id
+
+        # Create the primary and secondary versions of Stuart Jeffrey
+        # that failed from their JSON serialization.
+        stuart_primary = factories.PersonExtraFactory.create(
+            base__id='2111',
+            base__name='Stuart Jeffrey',
+        ).base
+        stuart_secondary = factories.PersonExtraFactory.create(
+            base__id='12207',
+            base__name='Stuart Robert Jeffrey',
+        ).base
+
+        local_council = factories.OrganizationExtraFactory.create(
+            base__name='Maidstone',
+            slug='local-authority:maidstone',
+        ).base
+        # Make sure that the local election and post in that election exist:
+        local_election = factories.ElectionFactory.create(
+            slug='local.maidstone.2016-05-05',
+            organization=local_council,
+        )
+        factories.PostExtraFactory.create(
+            elections=(local_election,),
+            slug='DIW:E05005004',
+            base__label='Shepway South Ward',
+            party_set=self.gb_parties,
+            base__organization=local_council,
+            # base__area=area_extra.base,
+        )
+
+        # And create the two Westminster posts:
+        factories.PostExtraFactory.create(
+            elections=(self.election, self.earlier_election),
+            slug='65878',
+            base__label='Canterbury',
+            party_set=self.gb_parties,
+            base__organization=self.commons,
+            candidates_locked=True,
+        )
+        factories.PostExtraFactory.create(
+            elections=(self.election, self.earlier_election),
+            slug='65936',
+            base__label='Maidstone and The Weald',
+            party_set=self.gb_parties,
+            base__organization=self.commons,
+            candidates_locked=True,
+        )
+
+        # Update each of them from the versions that were merged, and merged badly:
+        revert_person_from_version_data(
+            stuart_primary,
+            stuart_primary.extra,
+            {
+                "birth_date": "1967-12-22",
+                "email": "sjeffery@fmail.co.uk",
+                "facebook_page_url": "",
+                "facebook_personal_url": "",
+                "gender": "male",
+                "homepage_url": "http://www.stuartjeffery.net/",
+                "honorific_prefix": "",
+                "honorific_suffix": "",
+                "id": "2111",
+                "identifiers": [
+                    {
+                        "identifier": "2111",
+                        "scheme": "popit-person"
+                    },
+                    {
+                        "identifier": "3476",
+                        "scheme": "yournextmp-candidate"
+                    },
+                    {
+                        "identifier": "15712527",
+                        "scheme": "twitter"
+                    }
+                ],
+                "image": "http://yournextmp.popit.mysociety.org/persons/2111/image/54bc790ecb19ebca71e2af8e",
+                "linkedin_url": "",
+                "name": "Stuart Jeffery",
+                "other_names": [],
+                "party_memberships": {
+                    "2010": {
+                        "id": "party:63",
+                        "name": "Green Party"
+                    },
+                    "2015": {
+                        "id": "party:63",
+                        "name": "Green Party"
+                    }
+                },
+                "party_ppc_page_url": "https://my.greenparty.org.uk/candidates/105873",
+                "standing_in": {
+                    "2010": {
+                        "name": "Maidstone and The Weald",
+                        "post_id": "65936"
+                    },
+                    "2015": {
+                        "elected": False,
+                        "name": "Canterbury",
+                        "post_id": "65878"
+                    }
+                },
+                "twitter_username": "stuartjeffery",
+                "wikipedia_url": ""
+            })
+
+        revert_person_from_version_data(
+            stuart_secondary,
+            stuart_secondary.extra,
+            {
+                "birth_date": "",
+                "email": "",
+                "facebook_page_url": "",
+                "facebook_personal_url": "",
+                "gender": "",
+                "homepage_url": "",
+                "honorific_prefix": "",
+                "honorific_suffix": "",
+                "id": "12207",
+                "image": None,
+                "linkedin_url": "",
+                "name": "Stuart Robert Jeffery",
+                "other_names": [],
+                "party_memberships": {
+                    "local.maidstone.2016-05-05": {
+                        "id": "party:63",
+                        "name": "Green Party"
+                    }
+                },
+                "party_ppc_page_url": "",
+                "standing_in": {
+                    "local.maidstone.2016-05-05": {
+                        "elected": False,
+                        "name": "Shepway South ward",
+                        "post_id": "DIW:E05005004"
+                    }
+                },
+                "twitter_username": "",
+                "wikipedia_url": "",
+            })
+
+        response = self.app.get('/person/2111/update', user=self.user_who_can_merge)
+        merge_form = response.forms['person-merge']
+        merge_form['other'] = '12207'
+        response = merge_form.submit()
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            'http://localhost:80/person/2111/stuart-jeffery'
+        )
+
+        merged_person = Person.objects.get(pk='2111')
+
+        candidacies = MembershipExtra.objects.filter(
+            base__person=merged_person,
+            base__role=F('election__candidate_membership_role')
+        ).values_list(
+            'election__slug',
+            'base__post__extra__slug',
+            'base__on_behalf_of__extra__slug',
+        ).order_by('election__slug')
+
+        self.assertEqual(
+            list(candidacies),
+            [
+                (u'2010', u'65936', u'party:63'),
+                (u'2015', u'65878', u'party:63'),
+                (u'local.maidstone.2016-05-05', u'DIW:E05005004', u'party:63')
+            ]
         )
