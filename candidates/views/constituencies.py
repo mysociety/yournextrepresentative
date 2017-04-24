@@ -70,7 +70,8 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context['post_id'] = post_id = kwargs['post_id']
         mp_post = get_object_or_404(
             Post.objects.select_related('extra'),
-            extra__slug=post_id
+            extra__slug=post_id,
+            extra__elections__slug=self.election,
         )
         context['post_obj'] = mp_post
 

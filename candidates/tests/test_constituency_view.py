@@ -6,8 +6,8 @@ from django_webtest import WebTest
 from .auth import TestUserMixin
 from .dates import date_in_near_future
 from .factories import (
-    AreaExtraFactory, CandidacyExtraFactory, MembershipFactory,
-    PersonExtraFactory, PostExtraFactory,
+    AreaExtraFactory, CandidacyExtraFactory, ElectionFactory, MembershipFactory,
+    OrganizationExtraFactory, PersonExtraFactory, PostExtraFactory,
 )
 from .uk_examples import UK2015ExamplesMixin
 
@@ -410,3 +410,28 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             response.location,
             "http://localhost:80/election/2015/post/65808/dulwich-and-west-norwood"
         )
+
+    def test_return_404_when_post_not_associated_with_election(self):
+        local_council = OrganizationExtraFactory.create(
+            base__name='Maidstone',
+            slug='local-authority:maidstone',
+        ).base
+        local_election = ElectionFactory.create(
+            slug='local.maidstone.2016-05-05',
+            organization=local_council,
+        )
+        PostExtraFactory(
+            elections=(local_election,),
+            slug='DIW:E05005004',
+            base__label='Shepway South Ward',
+            party_set=self.gb_parties,
+            base__organization=local_council,
+        ).base
+        # Now that post is not associated with the 2015 election, so
+        # viewing a page with election: 2015 and post: DIW:E05005004
+        # should return a 404.
+        response = self.app.get(
+            '/election/2015/post/DIW:E05005004/whatever',
+            expect_errors=True,
+        )
+        self.assertEqual(response.status_code, 404)
