@@ -155,6 +155,6 @@ class Command(BaseCommand):
         self.twitter_data.update_from_api()
         # Now go through every person in the database and check their
         # Twitter details:
-        for person in Person.objects.select_related('extra'):
+        for person in Person.objects.select_related('extra').order_by('name'):
             with transaction.atomic():
                 self.handle_person(person)

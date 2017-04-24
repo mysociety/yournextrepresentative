@@ -125,13 +125,11 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         new_queued_images = QueuedImage.objects.exclude(
             id__in=self.existing_queued_image_ids)
 
-        self.assertEqual(
-            set(c[1] for c in mock_requests.get.mock_calls),
-            {
-                ('https://pbs.twimg.com/profile_images/abc/foo.jpg',),
-                ('https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',),
-            }
-        )
+        mock_requests.get.mock_calls,
+        [
+            call('https://pbs.twimg.com/profile_images/abc/foo.jpg'),
+            call('https://pbs.twimg.com/profile_images/ghi/baz.jpg'),
+        ]
 
         self.assertEqual(new_queued_images.count(), 2)
         new_queued_images.get(person=self.p_no_images)
@@ -158,22 +156,22 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
-                'WARNING: Multiple Twitter user IDs found for Person ' \
-                'With No Existing Images ({0}), skipping'.format(
-                    self.p_no_images.id),
-                'Considering adding a photo for Person With An Existing ' \
-                'Image with Twitter user ID: 1002',
-                '  That person already had an image in the queue, so skipping.',
-                'Considering adding a photo for Person With Only Rejected ' \
-                'Images In The Queue with Twitter user ID: 1003',
-                '  That person already had an image in the queue, so skipping.',
                 'Considering adding a photo for Person With An Accepted ' \
                 'Image In The Queue with Twitter user ID: 1005',
                 '  That person already had an image in the queue, so skipping.',
                 'Considering adding a photo for Person With An Existing ' \
+                'Image with Twitter user ID: 1002',
+                '  That person already had an image in the queue, so skipping.',
+                'Considering adding a photo for Person With An Existing ' \
                 'Image But None In The Queue with Twitter user ID: 1006',
                 '  Adding that person\'s Twitter avatar to the moderation ' \
-                'queue'
+                'queue',
+                'WARNING: Multiple Twitter user IDs found for Person ' \
+                'With No Existing Images ({0}), skipping'.format(
+                    self.p_no_images.id),
+                'Considering adding a photo for Person With Only Rejected ' \
+                'Images In The Queue with Twitter user ID: 1003',
+                '  That person already had an image in the queue, so skipping.',
             ]
         )
 
