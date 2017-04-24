@@ -62,11 +62,14 @@ class BulkAddView(BaseBulkAddView):
         context = super(BulkAddView, self).get_context_data(**kwargs)
         context.update(self.add_election_and_post_to_context(context))
 
-
         form_kwargs = {
             'parties': context['parties'],
-            'source': context['official_document'].source_url,
         }
+
+        if 'official_document' in context and \
+                context['official_document'] is not None:
+            form_kwargs['source'] = context['official_document'].source_url,
+
         if self.request.POST:
             context['formset'] = forms.BulkAddFormSet(
                 self.request.POST, **form_kwargs

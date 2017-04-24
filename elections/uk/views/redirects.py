@@ -83,8 +83,11 @@ class HelpOutCTAView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         pe_qs = PostExtraElection.objects.filter(
             election__current=True,
-            postextra__suggestedpostlock=None
-            ).exclude(postextra__candidates_locked=True)
+            postextra__suggestedpostlock=None,
+            postextra__base__officialdocument__isnull=False
+            ).exclude(
+            postextra__candidates_locked=True,
+            ).distinct()
 
         if pe_qs:
             random_offset = random.randrange(min(50, pe_qs.count()))
