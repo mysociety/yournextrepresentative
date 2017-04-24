@@ -6,7 +6,7 @@ import json
 from django import forms
 from django.utils.safestring import SafeText
 
-from haystack.query import SearchQuerySet
+from candidates.views import search_person_by_name
 
 
 class BaseBulkAddFormSet(forms.BaseFormSet):
@@ -38,24 +38,8 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
 
 class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
     def suggested_people(self, person_name):
-        """
-        Becuase the default haystack operator is AND if you search for
-        John Quincy Adams then it looks for `John AND Quincy AND Adams'
-        and hence won't find John Adams. This results in missed matches
-        and duplicates. So if it looks like there's more than two names
-        split them and search using the whole name provided or just the
-        first and last. This results in
-        `(John AND Quincy AND Adams) OR (John AND Adams)` which is a bit
-        more tolerant.
-        """
-        parts = person_name.split()
-        if len(parts) <= 2:
-            return SearchQuerySet().filter(content=person_name)[:5]
-        else:
-            short_name = ' '.join([parts[0], parts[-1]])
-            return SearchQuerySet() \
-                .filter_or(content=person_name) \
-                .filter_or(content=short_name)[:5]
+        sqs = search_person_by_name(person_name)
+        return sqs[:5]
 
     def format_value(self, suggestion):
         """

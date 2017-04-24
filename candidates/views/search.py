@@ -2,8 +2,30 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.html import escape
 
+from haystack.query import SearchQuerySet
 from haystack.generic_views import SearchView
 from haystack.forms import SearchForm
+
+
+def search_person_by_name(name, sqs=None):
+    """
+    Becuase the default haystack operator is AND if you search for
+    John Quincy Adams then it looks for `John AND Quincy AND Adams'
+    and hence won't find John Adams. This results in missed matches
+    and duplicates. So if it looks like there's more than two names
+    split them and search using the whole name provided or just the
+    first and last. This results in
+    `(John AND Quincy AND Adams) OR (John AND Adams)` which is a bit
+    more tolerant.
+    """
+    parts = name.split()
+    if sqs is None:
+        sqs = SearchQuerySet().filter(content=name)
+    if len(parts) >= 2:
+        short_name = ' '.join([parts[0], parts[-1]])
+        sqs = sqs.filter_or(content=short_name)
+
+    return sqs
 
 
 class PersonSearchForm(SearchForm):
@@ -17,24 +39,10 @@ class PersonSearchForm(SearchForm):
     def clean_q(self):
         return escape(self.cleaned_data['q'])
 
-    """
-    Becuase the default haystack operator is AND if you search for
-    John Quincy Adams then it looks for `John AND Quincy AND Adams'
-    and hence won't find John Adams. This results in missed matches
-    and duplicates. So if it looks like there's more than two names
-    split them and search using the whole name provided or just the
-    first and last. This results in
-    `(John AND Quincy AND Adams) OR (John AND Adams)` which is a bit
-    more tolerant.
-    """
     def search(self):
         sqs = super(PersonSearchForm, self).search()
-        parts = self.cleaned_data['q'].split()
-        if len(parts) >= 2:
-            short_name = ' '.join([parts[0], parts[-1]])
-            sqs = sqs.filter_or(content=short_name)
+        return search_person_by_name(self.cleaned_data['q'], sqs)
 
-        return sqs
 
 from elections.uk.lib import is_valid_postcode
 
