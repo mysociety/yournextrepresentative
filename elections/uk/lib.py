@@ -105,3 +105,7 @@ def is_valid_postcode(postcode):
     if not postcode_regex.search(postcode):
         return False
     return True
+
+
+def additional_merge_actions(primary_person, secondary_person):
+    yield

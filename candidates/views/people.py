@@ -27,6 +27,7 @@ from elections.models import Election
 from elections.mixins import ElectionMixin
 
 from ..diffs import get_version_diffs
+from ..election_specific import additional_merge_actions
 from .version_data import get_client_ip, get_change_metadata
 from ..forms import NewPersonForm, UpdatePersonForm, SingleElectionForm
 from ..models import (
@@ -234,16 +235,17 @@ class MergePeopleView(GroupRequiredMixin, View):
     def merge(self, primary_person_extra, secondary_person_extra, change_metadata):
         primary_person = primary_person_extra.base
         secondary_person = secondary_person_extra.base
-        # Merge the reduced JSON representations:
-        merged_person_version_data = merge_popit_people(
-            get_person_as_version_data(primary_person),
-            get_person_as_version_data(secondary_person),
-        )
-        revert_person_from_version_data(
-            primary_person,
-            primary_person_extra,
-            merged_person_version_data
-        )
+        with additional_merge_actions(primary_person, secondary_person):
+            # Merge the reduced JSON representations:
+            merged_person_version_data = merge_popit_people(
+                get_person_as_version_data(primary_person),
+                get_person_as_version_data(secondary_person),
+            )
+            revert_person_from_version_data(
+                primary_person,
+                primary_person_extra,
+                merged_person_version_data
+            )
         # Make sure the secondary person's version history is appended, so it
         # isn't lost.
         primary_person_versions = json.loads(primary_person_extra.versions)
