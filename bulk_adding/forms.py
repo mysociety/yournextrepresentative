@@ -6,7 +6,7 @@ import json
 from django import forms
 from django.utils.safestring import SafeText
 
-from haystack.query import SearchQuerySet
+from candidates.views import search_person_by_name
 
 
 class BaseBulkAddFormSet(forms.BaseFormSet):
@@ -38,7 +38,8 @@ class BaseBulkAddFormSet(forms.BaseFormSet):
 
 class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
     def suggested_people(self, person_name):
-        return SearchQuerySet().filter(content=person_name)[:5]
+        sqs = search_person_by_name(person_name)
+        return sqs[:5]
 
     def format_value(self, suggestion):
         """

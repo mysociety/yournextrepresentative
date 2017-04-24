@@ -140,3 +140,12 @@ class TestSearchView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 response.text
             )
         )
+
+        # check that searching with middle names works
+        response = self.app.get('/search?q=Elizabeth+Mary+Bennet')
+        self.assertTrue(
+            re.search(
+                r'''<a[^>]*>Elizabeth Bennet''',
+                response.text
+            )
+        )
