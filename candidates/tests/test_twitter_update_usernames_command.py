@@ -47,8 +47,10 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
     def setUp(self):
         for person_details in [
             {
-                'attr': 'no_twitter',
-                'name': 'Person with no Twitter details',
+                'attr': 'just_screen_name',
+                'name': 'Person with just a Twitter screen name',
+                # We'll get the API to return 321 for their user_id
+                'screen_name': 'notreallyatwitteraccount',
             },
             {
                 'attr': 'just_userid',
@@ -56,10 +58,8 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                 'user_id': '987',
             },
             {
-                'attr': 'just_screen_name',
-                'name': 'Person with just a Twitter screen name',
-                # We'll get the API to return 321 for their user_id
-                'screen_name': 'notreallyatwitteraccount',
+                'attr': 'no_twitter',
+                'name': 'Person with no Twitter details',
             },
             {
                 'attr': 'screen_name_and_user_id',
@@ -129,11 +129,11 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
 
         self.assertEqual(
             split_output(out),
-            ['Person with no Twitter details had no Twitter account information',
+            ['Person with just a Twitter screen name has Twitter screen name (notreallyatwitteraccount) but no user ID',
+             'Adding the user ID 321',
              'Person with just a Twitter user ID has a Twitter user ID: 987',
              'Correcting the screen name from None to ascreennamewewereunawareof',
-             'Person with just a Twitter screen name has Twitter screen name (notreallyatwitteraccount) but no user ID',
-             'Adding the user ID 321',
+             'Person with no Twitter details had no Twitter account information',
              'Someone with a Twitter screen name and user ID has a Twitter user ID: 765',
              'The screen name (notatwitteraccounteither) was already correct'])
 
@@ -152,8 +152,8 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
-                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Adding the user ID 321',
+                'Correcting the screen name from None to ascreennamewewereunawareof',
             ]
         )
 
@@ -172,8 +172,8 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
-                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Adding the user ID 321',
+                'Correcting the screen name from None to ascreennamewewereunawareof',
             ]
         )
 
@@ -222,8 +222,8 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
-                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Adding the user ID 321',
+                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Correcting the screen name from notatwitteraccounteither to changedscreenname',
             ]
         )
@@ -271,12 +271,12 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
-                'Correcting the screen name from None to ascreennamewewereunawareof',
                 'Removing screen name notreallyatwitteraccount for Person ' \
                 'with just a Twitter screen name as it is not a valid ' \
                 'Twitter screen name. ' \
                 '/person/{0}/person-with-just-a-twitter-screen-name'.format(
                     self.just_screen_name.id),
+                'Correcting the screen name from None to ascreennamewewereunawareof',
             ]
         )
 
@@ -329,10 +329,10 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
         self.assertEqual(
             split_output(out),
             [
+                'Adding the user ID 321',
                 'Removing user ID 987 for Person with just a Twitter user ID ' \
                 'as it is not a valid Twitter user ID. '
                 '/person/{0}/person-with-just-a-twitter-user-id'.format(
                     self.just_userid.id),
-                'Adding the user ID 321',
             ]
         )
