@@ -4,9 +4,7 @@ import re
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from popolo.models import Identifier, Post
-
-from candidates.models import MembershipExtra
+from popolo.models import Post
 
 from .mapit import get_areas_from_postcode, get_areas_from_coords
 
