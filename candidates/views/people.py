@@ -509,4 +509,3 @@ class SingleElectionFormView(LoginRequiredMixin, FormView):
         )
         initial_data['election'] = election
         return initial_data
-
