@@ -673,6 +673,7 @@ class PostExtraElection(models.Model):
     postextra = models.ForeignKey(PostExtra)
     election = models.ForeignKey(Election)
 
+    candidates_locked = models.BooleanField(default=False)
     winner_count = models.IntegerField(blank=True, null=True)
 
 
