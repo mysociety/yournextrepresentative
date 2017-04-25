@@ -472,10 +472,10 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
 
     def __init__(self, *args, **kwargs):
         super(UpdatePersonForm, self).__init__(*args, **kwargs)
-        self.elections_with_fields = Election.objects.filter(
+        self.elections_with_fields = list(Election.objects.filter(
                 candidacies__base__person=self.initial['person'],
                 current=True
-            ).order_by('-election_date')
+            ).order_by('-election_date'))
         # The fields on this form depends on how many elections are
         # going on at the same time. (FIXME: this might be better done
         # with formsets?)
@@ -500,11 +500,12 @@ class UpdatePersonForm(AddElectionFieldsMixin, BasePersonForm):
     def clean(self):
         if 'extra_election_id' in self.data:
             # We're adding a new election
-            election = Election.objects.filter(
+            election = Election.objects.get(
                 slug=self.data['extra_election_id'])
 
             # Add this new election to elections_with_fields
-            self.elections_with_fields  = self.elections_with_fields | election
+            if election not in self.elections_with_fields:
+                self.elections_with_fields.append(election)
 
             # Then re-create the form with the new election in
             self.add_elections_fields(self.elections_with_fields)
