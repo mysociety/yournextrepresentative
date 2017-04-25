@@ -290,10 +290,7 @@ class NewPersonForm(BasePersonForm):
         self.fields['standing_' + election] = \
             forms.ChoiceField(**standing_field_kwargs)
 
-        self.elections_with_fields = [
-            election_data
-        ]
-
+        self.elections_with_fields = [election_data]
 
         post_field_kwargs = {
             'label': _("Post in the {election}").format(
