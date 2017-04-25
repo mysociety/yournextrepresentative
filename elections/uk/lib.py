@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
+from contextlib import contextmanager
 import re
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from popolo.models import Post
+
+from uk_results.models import CandidateResult
 
 from .mapit import get_areas_from_postcode, get_areas_from_coords
 
@@ -105,3 +108,35 @@ def is_valid_postcode(postcode):
     if not postcode_regex.search(postcode):
         return False
     return True
+
+
+@contextmanager
+def additional_merge_actions(primary_person, secondary_person):
+    # Before merging, save any CandidateResult objects that were
+    # attached to either person's memberships. (All the memberships
+    # are recreated as part when merging.)
+    saved_crs = [
+        (
+            cr,
+            {
+                'post': cr.membership.post,
+                'role': cr.membership.role,
+                'extra__election': cr.membership.extra.election,
+                'organization': cr.membership.organization,
+                'on_behalf_of': cr.membership.on_behalf_of,
+            }
+        )
+        for cr in
+        CandidateResult.objects.filter(
+            membership__person__in=(primary_person, secondary_person)
+        )
+    ]
+    # Then do the merge as normal:
+    yield
+    # Now reassociate any saved CandidateResult objects with the
+    # appropriate membership on the primary person:
+    for saved_cr, membership_attrs in saved_crs:
+        primary_membership = primary_person.memberships.get(
+            **membership_attrs)
+        saved_cr.membership = primary_membership
+        saved_cr.save()
