@@ -295,7 +295,7 @@ class PersonExtra(HasImageMixin, models.Model):
         result = self.base.memberships.filter(
             extra__election__current=True,
             role=models.F('extra__election__candidate_membership_role')
-        ).select_related('person', 'on_behalf_of', 'post') \
+        ).select_related('person', 'on_behalf_of', 'post', 'extra') \
             .prefetch_related('post__extra')
         return list(result)
 

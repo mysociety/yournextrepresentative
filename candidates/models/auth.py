@@ -16,6 +16,12 @@ class NameChangeDisallowedException(Exception):
 class ChangeToLockedConstituencyDisallowedException(Exception):
     pass
 
+def is_post_locked(post, election):
+    return post.extra.postextraelection_set.filter(
+        election=election,
+        candidates_locked=True,
+    ).exists()
+
 def get_constituency_lock_from_person_data(user, api, election, person_popit_data):
     """Return whether the constituency is locked and whether this user can edit"""
 
@@ -33,7 +39,7 @@ def get_edits_allowed(user, candidates_locked):
         (not candidates_locked)
     )
 
-def get_constituency_lock(user, post):
+def get_constituency_lock(user, post, election):
     """Return whether the constituency is locked and whether this user can edit
 
     You should make sure that 'extra' is populated on the post that's
@@ -43,14 +49,15 @@ def get_constituency_lock(user, post):
         return False, True
     # Use the cached version because it'll be faster than going to
     # PopIt, even if it brings in embeds that we don't need:
-    candidates_locked = post.extra.candidates_locked
+    candidates_locked = is_post_locked(post, election)
     edits_allowed = get_edits_allowed(user, candidates_locked)
     return candidates_locked, edits_allowed
 
 def check_creation_allowed(user, new_candidacies):
     for candidacy in new_candidacies:
         post = candidacy.post
-        dummy, edits_allowed = get_constituency_lock(user, post)
+        election = candidacy.extra.election
+        dummy, edits_allowed = get_constituency_lock(user, post, election)
         if not edits_allowed:
             raise ChangeToLockedConstituencyDisallowedException(
                 _("The candidates for this post are locked now")
@@ -69,10 +76,10 @@ def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidac
             ))
     # Check that none of the posts that the person's leaving or
     # joining were locked:
-    old_posts = set(c.post for c in old_candidacies)
-    new_posts = set(c.post for c in new_candidacies)
-    for post in old_posts ^ new_posts:
-        dummy, edits_allowed = get_constituency_lock(user, post)
+    old_posts = set((c.post, c.extra.election) for c in old_candidacies)
+    new_posts = set((c.post, c.extra.election) for c in new_candidacies)
+    for post, election in old_posts ^ new_posts:
+        dummy, edits_allowed = get_constituency_lock(user, post, election)
         if not edits_allowed:
             raise ChangeToLockedConstituencyDisallowedException(
                 _("That update isn't allowed because candidates for a locked "
@@ -82,10 +89,10 @@ def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidac
             )
     # Now check that they're not changing party in a locked
     # constituency:
-    for post in old_posts & new_posts:
+    for post, election in old_posts & new_posts:
         old_party = next(c.on_behalf_of for c in old_candidacies if c.post == post)
         new_party = next(c.on_behalf_of for c in new_candidacies if c.post == post)
-        dummy, edits_allowed = get_constituency_lock(user, post)
+        dummy, edits_allowed = get_constituency_lock(user, post, election)
         if not edits_allowed and (old_party != new_party):
             raise ChangeToLockedConstituencyDisallowedException(
                 _("That update isn't allowed because you can't change the party "

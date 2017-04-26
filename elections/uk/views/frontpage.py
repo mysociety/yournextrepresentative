@@ -79,7 +79,17 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             return context
 
         context['posts_total'] = pe_qs.count()
-        context['posts_locked'] = pe_qs.filter(candidates_locked=True).count()
+        if election_qs:
+            pe_qs = pe_qs.filter(
+                postextraelection__candidates_locked=True,
+                postextraelection__election__in=election_qs
+            )
+        else:
+            pe_qs = pe_qs.filter(
+                postextraelection__candidates_locked=True,
+                postextraelection__election__slug__startswith=election_slug
+            )
+        context['posts_locked'] = pe_qs.count()
         context['posts_locked_percent'] = round(
                 float(context['posts_locked']) /
                 float(context['posts_total'])

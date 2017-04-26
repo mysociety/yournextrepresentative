@@ -86,7 +86,7 @@ class HelpOutCTAView(RedirectView):
             postextra__suggestedpostlock=None,
             postextra__base__officialdocument__isnull=False
             ).exclude(
-            postextra__candidates_locked=True,
+            candidates_locked=True,
             ).distinct()
 
         if pe_qs:

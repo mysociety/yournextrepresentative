@@ -15,11 +15,11 @@
     area{{ document_posts.count|pluralize }}.</p>
 
 <ul>
-  {% for document in document_posts %}
+  {% for document, locked in document_posts %}
     <li>
      <a href="{% url 'constituency' election=document.election.slug post_id=document.post.extra.slug ignored_slug=document.post.extra.base.label|slugify %}">
         {{ document.post.extra.base.label }}</a>
-        {% if document.post.extra.candidates_locked %}
+        {% if locked %}
          - <abbr title="Candidates verified and post locked">🔒</abbr>
         {% elif document.post.extra.suggestedpostlock_set.exists %}
         - <abbr title="Someone suggested locking this post">🔓</abbr>

@@ -28,7 +28,7 @@ from .version_data import get_client_ip, get_change_metadata
 from ..csv_helpers import list_to_csv
 from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
-    TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed,
+    TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed, is_post_locked,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
     MembershipExtra, PartySet, SimplePopoloField, ExtraField, PostExtraElection
 )
@@ -103,14 +103,12 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
             'label': mp_post.label
         }
 
-        context['candidates_locked'] = False
+        context['candidates_locked'] = is_post_locked(mp_post, self.election_data)
 
         if hasattr(mp_post, 'extra'):
             context['has_lock_suggestion'] = any(
                 [spl.election_for_suggestion for spl in
                 SuggestedPostLock.objects.filter(post_extra=mp_post.extra)])
-
-            context['candidates_locked'] = mp_post.extra.candidates_locked
 
             context['suggest_lock_form'] = SuggestedPostLockForm(
                 initial={
@@ -287,10 +285,11 @@ class ConstituencyListView(ElectionMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ConstituencyListView, self).get_context_data(**kwargs)
         context['all_constituencies'] = \
-            PostExtra.objects.filter(
-                elections__slug=self.election
-            ).order_by('base__label').select_related('base') \
-            .prefetch_related('suggestedpostlock_set')
+            PostExtraElection.objects.filter(
+                election=self.election_data
+            ).order_by('postextra__base__label') \
+            .select_related('postextra__base') \
+            .prefetch_related('postextra__suggestedpostlock_set')
 
         return context
 
@@ -307,8 +306,12 @@ class ConstituencyLockView(ElectionMixin, GroupRequiredMixin, View):
             with transaction.atomic():
                 post = get_object_or_404(Post, extra__slug=post_id)
                 lock = form.cleaned_data['lock']
-                post.extra.candidates_locked = lock
-                post.extra.save()
+                extra_election = PostExtraElection.objects.get(
+                    postextra__base=post,
+                    election__slug=self.election
+                )
+                extra_election.candidates_locked = lock
+                extra_election.save()
                 post_name = post.extra.short_label
                 if lock:
                     suffix = '-lock'
@@ -348,20 +351,20 @@ class ConstituenciesUnlockedListView(ElectionMixin, TemplateView):
         keys = ('locked', 'unlocked')
         for k in keys:
             context[k] = []
-        posts = Post.objects.filter(
-            extra__elections=self.election_data
-        ).select_related('extra').all()
-        for post in posts:
+        postextraelections = PostExtraElection.objects.filter(
+            election=self.election_data
+        ).select_related('postextra').all()
+        for postextraelection in postextraelections:
             total_constituencies += 1
-            if post.extra.candidates_locked:
+            if postextraelection.candidates_locked:
                 context_field = 'locked'
                 total_locked += 1
             else:
                 context_field = 'unlocked'
             context[context_field].append(
                 {
-                    'id': post.extra.slug,
-                    'name': post.extra.short_label,
+                    'id': postextraelection.postextra.slug,
+                    'name': postextraelection.postextra.short_label,
                 }
             )
         for k in keys:
@@ -606,7 +609,7 @@ class OrderedPartyListView(ElectionMixin, TemplateView):
             'label': mp_post.label
         }
 
-        context['candidates_locked'] = mp_post.extra.candidates_locked
+        context['candidates_locked'] = is_post_locked(mp_post, self.election_data)
         context['lock_form'] = ToggleLockForm(
             initial={
                 'post_id': post_id,

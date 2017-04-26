@@ -69,7 +69,7 @@ def add_notification_data(request):
         result['photos_for_review'] = \
             QueuedImage.objects.filter(decision='undecided').count()
         result['suggestions_to_lock'] = \
-            SuggestedPostLock.objects.filter(post_extra__candidates_locked=False).count()
+            SuggestedPostLock.objects.filter(post_extra__postextraelection__candidates_locked=False).count()
     return result
 
 

@@ -9,12 +9,24 @@ from .auth import TestUserMixin
 from .factories import CandidacyExtraFactory, PersonExtraFactory
 from .uk_examples import UK2015ExamplesMixin
 
+
+def update_lock(post_extra, election, lock_status):
+    postextraelection = post_extra.postextraelection_set.get(
+        election=election
+    )
+    postextraelection.candidates_locked = lock_status
+    postextraelection.save()
+
+    return postextraelection
+
+
 class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyLockAndUnlock, self).setUp()
-        self.camberwell_post_extra.candidates_locked = True
-        self.camberwell_post_extra.save()
+        update_lock(
+            self.camberwell_post_extra, self.election, True
+        )
         self.post_extra_id = self.dulwich_post_extra.id
 
     def test_constituency_lock_unauthorized(self):
@@ -37,8 +49,7 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
 
     def test_constituency_lock_bad_submission(self):
         post_extra = PostExtra.objects.get(id=self.post_extra_id)
-        post_extra.candidates_locked = False
-        post_extra.save()
+        update_lock(post_extra, self.election, False)
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock,
@@ -58,8 +69,7 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
 
     def test_constituency_lock(self):
         post_extra = PostExtra.objects.get(id=self.post_extra_id)
-        post_extra.candidates_locked = False
-        post_extra.save()
+        postextraelection = update_lock(post_extra, self.election, False)
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock,
@@ -75,8 +85,8 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
             user=self.user_who_can_lock,
             expect_errors=True,
         )
-        post_extra.refresh_from_db()
-        self.assertEqual(True, post_extra.candidates_locked)
+        postextraelection.refresh_from_db()
+        self.assertEqual(True, postextraelection.candidates_locked)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.location,
@@ -85,8 +95,7 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
 
     def test_constituency_unlock(self):
         post_extra = PostExtra.objects.get(id=self.post_extra_id)
-        post_extra.candidates_locked = True
-        post_extra.save()
+        postextraelection = update_lock(post_extra, self.election, True)
         self.app.get(
             '/election/2015/post/65808/dulwich-and-west-norwood',
             user=self.user_who_can_lock,
@@ -102,8 +111,8 @@ class TestConstituencyLockAndUnlock(TestUserMixin, UK2015ExamplesMixin, WebTest)
             user=self.user_who_can_lock,
             expect_errors=True,
         )
-        post_extra.refresh_from_db()
-        self.assertEqual(False, post_extra.candidates_locked)
+        postextraelection.refresh_from_db()
+        self.assertEqual(False, postextraelection.candidates_locked)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.location,
@@ -123,8 +132,7 @@ class TestConstituencyLockWorks(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
         super(TestConstituencyLockWorks, self).setUp()
-        self.camberwell_post_extra.candidates_locked = True
-        self.camberwell_post_extra.save()
+        update_lock(self.camberwell_post_extra, self.election, True)
         post_extra_locked = self.camberwell_post_extra
         self.post_extra_id = self.dulwich_post_extra.id
         person_extra = PersonExtraFactory.create(

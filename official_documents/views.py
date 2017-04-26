@@ -12,6 +12,7 @@ from .forms import UploadDocumentForm
 from .models import DOCUMENT_UPLOADERS_GROUP_NAME, OfficialDocument
 
 from popolo.models import Post
+from candidates.models import is_post_locked
 
 
 class DocumentView(DetailView):
@@ -51,8 +52,24 @@ class PostsForDocumentView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostsForDocumentView, self).get_context_data(**kwargs)
-        context['document_posts'] = OfficialDocument.objects.filter(
-            source_url=self.object.source_url)
+        documents = OfficialDocument.objects.filter(
+            source_url=self.object.source_url
+        ).select_related(
+            'post__extra', 'election'
+        ).prefetch_related(
+            'post__extra__suggestedpostlock_set'
+        )
+
+        """
+        This might seem a bit inefficient but there's not likely to
+        be many posts here and this page isn't used much. And rewriting
+        the query to gather this information in a single go is going to
+        make the code and the template unpleasant.
+        """
+        context['document_posts'] = [
+            (document, is_post_locked(document.post, document.election))
+            for document in documents
+        ]
         return context
 
 

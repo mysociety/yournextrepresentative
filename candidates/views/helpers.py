@@ -12,7 +12,7 @@ from slugify import slugify
 
 from ..models import (
     MembershipExtra, PartySet, SimplePopoloField, ExtraField,
-    ComplexPopoloField
+    ComplexPopoloField, PostExtraElection
 )
 
 

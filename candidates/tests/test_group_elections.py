@@ -9,6 +9,12 @@ from .uk_examples import UK2015ExamplesMixin
 from .factories import ElectionFactory
 
 
+def get_election_extra(postextra, election):
+    return postextra.postextraelection_set.get(
+        election=election
+    )
+
+
 class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
 
     def setUp(self):
@@ -70,9 +76,33 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
             )
 
     def test_election_grouping_with_posts(self):
-        with self.assertNumQueries(3):
+        camberwell_postextraelection = get_election_extra(
+            self.camberwell_post_extra, self.election
+        )
+        dulwich_postextraelection = get_election_extra(
+            self.dulwich_post_extra, self.election
+        )
+        edinburgh_east_postextraelection = get_election_extra(
+            self.edinburgh_east_post_extra, self.election
+        )
+        edinburgh_north_postextraelection = get_election_extra(
+            self.edinburgh_north_post_extra, self.election
+        )
+        camberwell_earlier = get_election_extra(
+            self.camberwell_post_extra, self.earlier_election
+        )
+        dulwich_earlier = get_election_extra(
+            self.dulwich_post_extra, self.earlier_election
+        )
+        edinburgh_east_earlier = get_election_extra(
+            self.edinburgh_east_post_extra, self.earlier_election
+        )
+        edinburgh_north_earlier = get_election_extra(
+            self.edinburgh_north_post_extra, self.earlier_election
+        )
+        with self.assertNumQueries(4):
             self.assertEqual(
-                Election.group_and_order_elections(include_posts=True),
+                Election.group_and_order_elections(include_postextraelections=True),
                 [
                     {
                         'current': True,
@@ -81,11 +111,11 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                                 'role': 'Member of the Scottish Parliament',
                                 'elections': [
                                     {
-                                        'posts': [],
+                                        'postextraelections': [],
                                         'election': self.sp_c_election
                                     },
                                     {
-                                        'posts': [],
+                                        'postextraelections': [],
                                         'election': self.sp_r_election
                                     }
                                 ]
@@ -94,11 +124,11 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                                 'role': 'Member of Parliament',
                                 'elections': [
                                     {
-                                        'posts': [
-                                            self.camberwell_post_extra,
-                                            self.dulwich_post_extra,
-                                            self.edinburgh_east_post_extra,
-                                            self.edinburgh_north_post_extra,
+                                        'postextraelections': [
+                                            camberwell_postextraelection,
+                                            dulwich_postextraelection,
+                                            edinburgh_east_postextraelection,
+                                            edinburgh_north_postextraelection,
                                         ],
                                         'election': self.election
                                     }
@@ -113,11 +143,11 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                                 'role': 'Member of Parliament',
                                 'elections': [
                                     {
-                                        'posts': [
-                                            self.camberwell_post_extra,
-                                            self.dulwich_post_extra,
-                                            self.edinburgh_east_post_extra,
-                                            self.edinburgh_north_post_extra,
+                                        'postextraelections': [
+                                            camberwell_earlier,
+                                            dulwich_earlier,
+                                            edinburgh_east_earlier,
+                                            edinburgh_north_earlier,
                                         ],
                                         'election': self.earlier_election
                                     }

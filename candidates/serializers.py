@@ -390,6 +390,7 @@ class EmbeddedPostElectionSerializer(serializers.HyperlinkedModelSerializer):
         model = candidates_models.PostExtraElection
         fields= (
             'winner_count',
+            'candidates_locked',
             'name',
             'id',
             'url',
@@ -407,7 +408,6 @@ class PostExtraSerializer(MinimalPostExtraSerializer):
             'label',
             'role',
             'group',
-            'candidates_locked',
             'party_set',
             'organization',
             'area',
