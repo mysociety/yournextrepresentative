@@ -192,11 +192,9 @@
                     use it if the LANGUAGE is English.
                   {% endcomment %}
                   {% if LANGUAGE_CODE|slice:":2" == 'en' %}
-                    ({% blocktrans trimmed with dob=person.extra.dob_as_date|date:"jS E Y" %}Date of birth: {{ dob }}
-                     {% endblocktrans %})
+                    ({% blocktrans trimmed with dob=person.extra.dob_as_date|date:"jS E Y" %}Date of birth: {{ dob }}{% endblocktrans %})
                   {% else %}
-                    ({% blocktrans trimmed with dob=person.extra.dob_as_date|date:"j E Y" %}Date of birth: {{ dob }}
-                     {% endblocktrans %})
+                    ({% blocktrans trimmed with dob=person.extra.dob_as_date|date:"j E Y" %}Date of birth: {{ dob }}{% endblocktrans %})
                   {% endif %}
                 </small>
             {% endif %}
