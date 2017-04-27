@@ -33,6 +33,17 @@ class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             base__on_behalf_of=self.green_party_extra.base
         )
 
+    def test_update_person_should_not_lose_existing_not_standing(self):
+        # Pretend that we know she wasn't standing in the earlier election:
+        tessa = Person.objects.get(pk=2009)
+        tessa.extra.not_standing.add(self.earlier_election)
+        response = self.app.get('/person/2009/update', user=self.user)
+        form = response.forms['person-details']
+        form.submit()
+        self.assertEqual(
+            list(tessa.extra.not_standing.all()),
+            [self.earlier_election])
+
     def test_update_person_view_get_without_login(self):
         response = self.app.get('/person/2009/update')
         self.assertEqual(response.status_code, 302)
