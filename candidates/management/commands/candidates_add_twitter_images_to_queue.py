@@ -41,7 +41,13 @@ class Command(BaseCommand):
         # Add a new queued image
         image_url = image_url.replace('_normal.', '.')
         img_temp = NamedTemporaryFile(delete=True)
-        img_temp.write(requests.get(image_url).content)
+        r = requests.get(image_url)
+        if r.status_code != 200:
+            msg = _("  Ignoring an image URL with non-200 status code "
+                    "({status_code}): {url}")
+            verbose(msg.format(status_code=r.status_code, url=image_url))
+            return
+        img_temp.write(r.content)
         img_temp.flush()
 
         qi = QueuedImage(
