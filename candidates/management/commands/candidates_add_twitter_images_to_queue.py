@@ -12,6 +12,7 @@ from popolo.models import Person
 
 import requests
 
+from ..images import get_image_extension
 from ..twitter import TwitterAPIData
 
 
@@ -49,6 +50,13 @@ class Command(BaseCommand):
             return
         img_temp.write(r.content)
         img_temp.flush()
+
+        # Trying to get the image extension checks that this really is
+        # an image:
+        if get_image_extension(img_temp.name) is None:
+            msg = _("  The image at {url} wasn't of a know type")
+            verbose(msg.format(url=image_url))
+            return
 
         qi = QueuedImage(
             decision=QueuedImage.UNDECIDED,
