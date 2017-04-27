@@ -648,7 +648,6 @@ class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
     slug = models.CharField(max_length=256, blank=True, unique=True)
 
-    candidates_locked = models.BooleanField(default=False)
     elections = models.ManyToManyField(
         Election,
         related_name='posts',
