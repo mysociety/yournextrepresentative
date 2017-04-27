@@ -24,6 +24,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             dirname(__file__), '..', '..', 'moderation_queue', 'tests',
             'example-image.jpg'
         )
+        with open(self.image_filename, 'rb') as f:
+            self.example_image_binary_data = f.read()
 
         self.p_no_images = PersonExtraFactory.create(
             base__id='1',
@@ -118,7 +120,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
         }
 
-        mock_requests.get.return_value = Mock(content=b'', status_code=200)
+        mock_requests.get.return_value = \
+            Mock(content=self.example_image_binary_data, status_code=200)
 
         call_command('candidates_add_twitter_images_to_queue')
 
@@ -150,7 +153,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
         }
 
-        mock_requests.get.return_value = Mock(content=b'', status_code=200)
+        mock_requests.get.return_value = \
+            Mock(content=self.example_image_binary_data, status_code=200)
 
         with capture_output() as (out, err):
             call_command('candidates_add_twitter_images_to_queue', verbosity=3)
@@ -202,9 +206,9 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
 
         def fake_get(url, *args, **kwargs):
             if url == 'https://pbs.twimg.com/profile_images/abc/foo.jpg':
-                return Mock(content=b'', status_code=404)
+                return Mock(content=self.example_image_binary_data, status_code=404)
             else:
-                return Mock(content=b'', status_code=200)
+                return Mock(content=self.example_image_binary_data, status_code=200)
 
         mock_requests.get.side_effect = fake_get
 
