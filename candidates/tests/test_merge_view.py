@@ -433,16 +433,14 @@ class TestMergePeopleView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             slug='65878',
             base__label='Canterbury',
             party_set=self.gb_parties,
-            base__organization=self.commons,
-            candidates_locked=True,
+            base__organization=self.commons
         )
         factories.PostExtraFactory.create(
             elections=(self.election, self.earlier_election),
             slug='65936',
             base__label='Maidstone and The Weald',
             party_set=self.gb_parties,
-            base__organization=self.commons,
-            candidates_locked=True,
+            base__organization=self.commons
         )
 
         # Update each of them from the versions that were merged, and merged badly:
