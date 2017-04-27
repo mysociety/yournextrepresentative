@@ -125,11 +125,13 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         new_queued_images = QueuedImage.objects.exclude(
             id__in=self.existing_queued_image_ids)
 
-        mock_requests.get.mock_calls,
-        [
-            call('https://pbs.twimg.com/profile_images/abc/foo.jpg'),
-            call('https://pbs.twimg.com/profile_images/ghi/baz.jpg'),
-        ]
+        self.assertEqual(
+            mock_requests.get.mock_calls,
+            [
+                call('https://pbs.twimg.com/profile_images/mno/xyzzy.jpg'),
+                call('https://pbs.twimg.com/profile_images/abc/foo.jpg'),
+            ]
+        )
 
         self.assertEqual(new_queued_images.count(), 2)
         new_queued_images.get(person=self.p_no_images)
