@@ -41,37 +41,6 @@
                   <li><a href="{% url "parties_counts" election=election.id %}">{% trans "Candidates per party" %}</a></li>
                   <li><a href="{% url "constituencies-unlocked" election=election.id %}">{% trans "See progress towards locking all posts" %}</a></li>
                 </ul>
-                {% if election.prior_elections %}
-                  {% for prior_election in election.prior_elections %}
-                    {% with prior_election_name=prior_election.name %}
-                    <div "statistics-compared-to-prior-election">
-                      <h5>{% blocktrans %}Statistics compared to the {{ prior_election_name }}{% endblocktrans %}</h5>
-                      <ul>
-                        <li>{% blocktrans %}Total candidates in {{ prior_election_name }}:{% endblocktrans %}
-                          {{ prior_election.total }}
-                        </li>
-                        <li>{% blocktrans %}Percentage ({{ election_name }} / {{ prior_election_name }}):{% endblocktrans %}
-                          {{ prior_election.percentage|floatformat }}%
-                        </li>
-                        <li>{% blocktrans %}New candidates compared to the {{ prior_election_name }}:{% endblocktrans %}
-                          {{ prior_election.new_candidates|intcomma }}
-                        </li>
-                        <li>{% blocktrans %}Candidates standing again from the {{ prior_election_name }}:{% endblocktrans %}
-                          {{ prior_election.standing_again |intcomma }}
-                        </li>
-                        <li>{% blocktrans trimmed %}Candidates standing again from the {{ prior_election_name }}
-                          for the same party:{% endblocktrans %}
-                          {{ prior_election.standing_again_same_party|intcomma }}
-                        </li>
-                        <li>{% blocktrans trimmed %}Candidates standing again from the {{ prior_election_name }}
-                          for a different party:{% endblocktrans %}
-                          {{ prior_election.standing_again_different_party |intcomma }}
-                        </li>
-                      </ul>
-                    </div>
-                    {% endwith %}
-                  {% endfor %}
-                {% endif %}
               {% endwith %}
             </div>
           {% endfor %}
