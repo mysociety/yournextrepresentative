@@ -54,7 +54,7 @@ class Command(BaseCommand):
         # Trying to get the image extension checks that this really is
         # an image:
         if get_image_extension(img_temp.name) is None:
-            msg = _("  The image at {url} wasn't of a know type")
+            msg = _("  The image at {url} wasn't of a known type")
             verbose(msg.format(url=image_url))
             return
 
