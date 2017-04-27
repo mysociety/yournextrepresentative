@@ -24,6 +24,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             dirname(__file__), '..', '..', 'moderation_queue', 'tests',
             'example-image.jpg'
         )
+        with open(self.image_filename, 'rb') as f:
+            self.example_image_binary_data = f.read()
 
         self.p_no_images = PersonExtraFactory.create(
             base__id='1',
@@ -118,7 +120,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
         }
 
-        mock_requests.get.return_value = Mock(content=b'')
+        mock_requests.get.return_value = \
+            Mock(content=self.example_image_binary_data, status_code=200)
 
         call_command('candidates_add_twitter_images_to_queue')
 
@@ -150,7 +153,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
         }
 
-        mock_requests.get.return_value = Mock(content=b'')
+        mock_requests.get.return_value = \
+            Mock(content=self.example_image_binary_data, status_code=200)
 
         with capture_output() as (out, err):
             call_command('candidates_add_twitter_images_to_queue', verbosity=3)
@@ -187,5 +191,77 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
             ]
         )
 
+        self.assertEqual(new_queued_images.count(), 1)
+        new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+
+    def test_only_enqueue_from_200_status_code(self, mock_twitter_data, mock_requests):
+
+        mock_twitter_data.return_value.user_id_to_photo_url = {
+            '1001': 'https://pbs.twimg.com/profile_images/abc/foo.jpg',
+            '1002': 'https://pbs.twimg.com/profile_images/def/bar.jpg',
+            '1003': 'https://pbs.twimg.com/profile_images/ghi/baz.jpg',
+            '1005': 'https://pbs.twimg.com/profile_images/jkl/quux.jpg',
+            '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
+        }
+
+        def fake_get(url, *args, **kwargs):
+            if url == 'https://pbs.twimg.com/profile_images/abc/foo.jpg':
+                return Mock(content=self.example_image_binary_data, status_code=404)
+            else:
+                return Mock(content=self.example_image_binary_data, status_code=200)
+
+        mock_requests.get.side_effect = fake_get
+
+        call_command('candidates_add_twitter_images_to_queue')
+
+        new_queued_images = QueuedImage.objects.exclude(
+            id__in=self.existing_queued_image_ids)
+
+        self.assertEqual(
+            mock_requests.get.mock_calls,
+            [
+                call('https://pbs.twimg.com/profile_images/mno/xyzzy.jpg'),
+                call('https://pbs.twimg.com/profile_images/abc/foo.jpg'),
+            ]
+        )
+
+        # Out of the two URLs of images that were downloaded, only one
+        # had a 200 status code:
+        self.assertEqual(new_queued_images.count(), 1)
+        new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+
+    def test_only_enqueue_files_that_seem_to_be_images(self, mock_twitter_data, mock_requests):
+
+        mock_twitter_data.return_value.user_id_to_photo_url = {
+            '1001': 'https://pbs.twimg.com/profile_images/abc/foo.jpg',
+            '1002': 'https://pbs.twimg.com/profile_images/def/bar.jpg',
+            '1003': 'https://pbs.twimg.com/profile_images/ghi/baz.jpg',
+            '1005': 'https://pbs.twimg.com/profile_images/jkl/quux.jpg',
+            '1006': 'https://pbs.twimg.com/profile_images/mno/xyzzy.jpg',
+        }
+
+        def fake_get(url, *args, **kwargs):
+            if url == 'https://pbs.twimg.com/profile_images/abc/foo.jpg':
+                return Mock(content=b'I am not an image.', status_code=200)
+            else:
+                return Mock(content=self.example_image_binary_data, status_code=200)
+
+        mock_requests.get.side_effect = fake_get
+
+        call_command('candidates_add_twitter_images_to_queue')
+
+        new_queued_images = QueuedImage.objects.exclude(
+            id__in=self.existing_queued_image_ids)
+
+        self.assertEqual(
+            mock_requests.get.mock_calls,
+            [
+                call('https://pbs.twimg.com/profile_images/mno/xyzzy.jpg'),
+                call('https://pbs.twimg.com/profile_images/abc/foo.jpg'),
+            ]
+        )
+
+        # Out of the two URLs of images that were downloaded, only one
+        # had a 200 status code:
         self.assertEqual(new_queued_images.count(), 1)
         new_queued_images.get(person=self.p_existing_image_but_none_in_queue)

@@ -12,6 +12,7 @@ from popolo.models import Person
 
 import requests
 
+from ..images import get_image_extension
 from ..twitter import TwitterAPIData
 
 
@@ -41,8 +42,21 @@ class Command(BaseCommand):
         # Add a new queued image
         image_url = image_url.replace('_normal.', '.')
         img_temp = NamedTemporaryFile(delete=True)
-        img_temp.write(requests.get(image_url).content)
+        r = requests.get(image_url)
+        if r.status_code != 200:
+            msg = _("  Ignoring an image URL with non-200 status code "
+                    "({status_code}): {url}")
+            verbose(msg.format(status_code=r.status_code, url=image_url))
+            return
+        img_temp.write(r.content)
         img_temp.flush()
+
+        # Trying to get the image extension checks that this really is
+        # an image:
+        if get_image_extension(img_temp.name) is None:
+            msg = _("  The image at {url} wasn't of a known type")
+            verbose(msg.format(url=image_url))
+            return
 
         qi = QueuedImage(
             decision=QueuedImage.UNDECIDED,

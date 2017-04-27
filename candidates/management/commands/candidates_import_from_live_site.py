@@ -9,8 +9,6 @@ from os.path import dirname, exists, join
 import re
 import shutil
 
-from PIL import Image as PillowImage
-
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.files.storage import FileSystemStorage
@@ -27,15 +25,9 @@ from elections import models as emodels
 from popolo import models as pmodels
 from images.models import Image
 
-CACHE_DIRECTORY = join(dirname(__file__), '.download-cache')
+from ..images import get_image_extension
 
-PILLOW_FORMAT_EXTENSIONS = {
-    'JPEG': 'jpg',
-    'MPO': 'jpg',
-    'PNG': 'png',
-    'GIF': 'gif',
-    'BMP': 'bmp',
-}
+CACHE_DIRECTORY = join(dirname(__file__), '.download-cache')
 
 # n.b. There is some repeated code between here and
 # candidates/migrations/0009_migrate_to_django_popolo.py, but we want
@@ -154,19 +146,6 @@ class Command(BaseCommand):
                 shutil.copyfileobj(r.raw, f)
             print("done")
         return filename
-
-    def get_image_extension(self, image_filename):
-        with open(image_filename, 'rb') as f:
-            try:
-                pillow_image = PillowImage.open(f)
-            except IOError as e:
-                if 'cannot identify image file' in e.args[0]:
-                    print("Ignoring a non-image file {0}".format(
-                        image_filename
-                    ))
-                    return None
-                raise
-            return PILLOW_FORMAT_EXTENSIONS[pillow_image.format]
 
     def mirror_from_api(self):
         for extra_field in self.get_api_results('extra_fields'):
@@ -434,7 +413,7 @@ class Command(BaseCommand):
                 ).group(1)
                 full_url = self.base_url + image_data['image_url']
                 image_filename = self.get_url_cached(full_url)
-                extension = self.get_image_extension(image_filename)
+                extension = get_image_extension(image_filename)
                 if not extension:
                     continue
                 models.ImageExtra.objects.update_or_create_from_file(
