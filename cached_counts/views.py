@@ -16,53 +16,6 @@ from popolo.models import Membership, Person
 from .models import get_attention_needed_posts
 
 
-def get_prior_election_data(
-        total_current, current_election,
-        total_prior, prior_election
-):
-    # Find all those people who are standing in both elections:
-    persons_standing_again = list(Person.objects \
-        .filter(memberships__extra__election=current_election) \
-        .filter(memberships__extra__election=prior_election) \
-        .prefetch_related('memberships', 'memberships__extra')
-    )
-    # Now see how many are standing for the same party in both:
-    standing_again = len(persons_standing_again)
-    new_candidates = total_current - standing_again
-    standing_again_same_party = 0
-    for p in persons_standing_again:
-        current_party = None
-        prior_party = None
-        for m in p.memberships.all():
-            try:
-                extra = m.extra
-                if extra.election_id == current_election.id:
-                    current_party = m.on_behalf_of_id
-                elif extra.election_id == prior_election.id:
-                    prior_party = m.on_behalf_of_id
-            except MembershipExtra.DoesNotExist:
-                # We need this because some memberships may not have
-                # an extra.
-                pass
-        if current_party == prior_party:
-            standing_again_same_party += 1
-    standing_again_different_party = \
-        standing_again - standing_again_same_party
-    if total_prior:
-        percentage = 100 * float(total_current) / total_prior
-    else:
-        percentage = 0
-
-    return {
-        'name': prior_election.name,
-        'percentage': percentage,
-        'new_candidates': new_candidates,
-        'standing_again': standing_again,
-        'standing_again_different_party': standing_again_different_party,
-        'standing_again_same_party': standing_again_same_party,
-    }
-
-
 def get_counts(for_json=True):
     election_id_to_candidates = {
         d['extra__election']: d['count']
@@ -72,14 +25,6 @@ def get_counts(for_json=True):
             .annotate(count=Count('extra__election'))
     }
     grouped_elections = Election.group_and_order_elections(for_json=for_json)
-    past_elections = [
-        election_data['election']
-        for era_data in grouped_elections
-        for date, elections in era_data['dates'].items()
-        for role_data in elections
-        for election_data in role_data['elections']
-        if not era_data['current']
-    ]
     for era_data in grouped_elections:
         for date, elections in era_data['dates'].items():
             for role_data in elections:
@@ -92,15 +37,6 @@ def get_counts(for_json=True):
                         'name': e.name,
                         'total': total,
                     }
-                    if era_data['current']:
-                        election_counts['prior_elections'] = [
-                            get_prior_election_data(
-                                total, e,
-                                election_id_to_candidates.get(pe.id, 0), pe
-                            )
-                            for pe in past_elections
-                            if pe.for_post_role == e.for_post_role
-                        ]
                     election_data.update(election_counts)
                     del election_data['election']
     return grouped_elections

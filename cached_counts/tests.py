@@ -100,16 +100,6 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
                                         "html_id": "2015",
                                         "id": "2015",
                                         "name": "2015 General Election",
-                                        "prior_elections": [
-                                            {
-                                                "name": "2010 General Election",
-                                                "new_candidates": 16,
-                                                "percentage": 900.0,
-                                                "standing_again": 2,
-                                                "standing_again_different_party": 1,
-                                                "standing_again_same_party": 1
-                                            }
-                                        ],
                                         "total": 18
                                     }
                                 ],
