@@ -169,6 +169,34 @@ function showElectionsForm() {
   });
 }
 
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+suggest_correction = function(el, suggestion) {
+
+    suggestion_el = $('<a class="suggested">Change to <span>' + suggestion + '</span>?</a>');
+    suggestion_el.click(function(clicked_el) {
+        var this_link = $(this);
+        this_link.prev('input').val($(this_link).find('span').text());
+        $('.suggested').remove();
+    })
+    $('.suggested').remove();
+    $(el).after(suggestion_el);
+
+};
+
+function checkNameFormat(e) {
+    var name = e.target.value;
+    var upper_first_matcher = /([A-Z]+,? [A-Za-z]+)/g;
+    var match = upper_first_matcher.exec(name);
+    if (match) {
+        var name_parts = name.split(' ');
+        var last_name = name_parts.shift();
+        var name = name_parts.join(' ') + ' ' + toTitleCase(last_name);
+        suggest_correction(e.target, name);
+    }
+}
 
 $(document).ready(function() {
   $.getJSON('/post-id-to-party-set.json', function(data) {
@@ -180,5 +208,7 @@ $(document).ready(function() {
       /* Now enable the "add an extra election" button if it's present */
       $('#add_election_button').on('click', showElectionsForm);
       $('.add_more_elections_field').hide();
+      $('[name=name]').on('paste keyup', checkNameFormat);
+      $('[name*=-name]').on('paste keyup', checkNameFormat);
   });
 });
