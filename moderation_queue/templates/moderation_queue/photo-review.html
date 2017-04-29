@@ -170,14 +170,18 @@
 
       </fieldset>
 
-      <fieldset class="rejection_reason">
-          {{ form.rejection_reason.errors }}
-          <label for="{{ form.rejection_reason.id_for_label }}">{% blocktrans trimmed %}
-            Reason for rejection (<strong>Warning:</strong> this will be
-            emailed to the user):{% endblocktrans %}
-          </label>
-          {{ form.rejection_reason }}
-      </fieldset>
+      {% if queued_image.user %}
+        <fieldset class="rejection_reason">
+            {{ form.rejection_reason.errors }}
+            <label for="{{ form.rejection_reason.id_for_label }}">{% blocktrans trimmed %}
+              Reason for rejection (<strong>Warning:</strong> this will be
+              emailed to the user):{% endblocktrans %}
+            </label>
+            {{ form.rejection_reason }}
+        </fieldset>
+      {% else %}
+        <input type="hidden" id="id_rejection_reason" name="rejection_reason" value="">
+      {% endif %}
 
       <input type="submit" id="decision-submit" class="button" value="{% trans "Submit" %}">
 

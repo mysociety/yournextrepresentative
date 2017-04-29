@@ -132,6 +132,14 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             person=person_2007.base,
             user=self.test_reviewer
         )
+        self.q_no_uploading_user = QueuedImage.objects.create(
+            why_allowed = 'profile-photo',
+            justification_for_use='Auto imported from Twitter',
+            decision='undecided',
+            image=self.storage_filename,
+            person=person_2009.base,
+            user=None
+        )
 
     def tearDown(self):
         self.q1.delete()
@@ -197,7 +205,7 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         self.assertEqual(response.status_code, 200)
         queue_table = response.html.find('table')
         photo_rows = queue_table.find_all('tr')
-        self.assertEqual(2, len(photo_rows))
+        self.assertEqual(3, len(photo_rows))
         cells = photo_rows[1].find_all('td')
         self.assertEqual(cells[1].text, 'john')
         self.assertEqual(cells[2].text, '2009')
@@ -382,3 +390,93 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         self.assertEqual(la.user.username, 'jane')
         self.assertEqual(la.action_type, 'photo-ignore')
         self.assertEqual(la.person.id, 2009)
+
+    @patch('moderation_queue.views.send_mail')
+    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
+    def test_photo_review_upload_approved_privileged_no_uploading_user(
+            self,
+            mock_send_mail
+    ):
+        with self.settings(SITE_ID=self.site.id):
+            review_url = reverse(
+                'photo-review',
+                kwargs={'queued_image_id': self.q_no_uploading_user.id}
+            )
+            review_page_response = self.app.get(
+                review_url,
+                user=self.test_reviewer
+            )
+            form = review_page_response.forms['photo-review-form']
+            form['decision'] = 'approved'
+            form['moderator_why_allowed'] = 'profile-photo'
+            response = form.submit(user=self.test_reviewer)
+            self.assertEqual(response.status_code, 302)
+            split_location = urlsplit(response.location)
+            self.assertEqual('/moderation/photo/review', split_location.path)
+
+            mock_send_mail.assertFalse(mock_send_mail.called)
+
+            person = Person.objects.get(id=2009)
+            image = person.extra.images.last()
+
+            self.assertTrue(image.is_primary)
+            self.assertEqual(
+                'Uploaded by a script: Approved from photo moderation queue',
+                image.source
+            )
+            self.assertEqual(427, image.image.width)
+            self.assertEqual(639, image.image.height)
+
+            self.q_no_uploading_user.refresh_from_db()
+            self.assertEqual('profile-photo', self.q_no_uploading_user.why_allowed)
+            self.assertEqual('approved', self.q_no_uploading_user.decision)
+            las = LoggedAction.objects.all()
+            self.assertEqual(1, len(las))
+            la = las[0]
+            self.assertEqual(la.user.username, 'jane')
+            self.assertEqual(la.action_type, 'photo-approve')
+            self.assertEqual(la.person.id, 2009)
+
+            self.assertEqual(
+                QueuedImage.objects.get(
+                    pk=self.q_no_uploading_user.id).decision,
+                'approved')
+
+    @patch('moderation_queue.views.send_mail')
+    @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
+    @override_settings(SUPPORT_EMAIL='support@example.com')
+    def test_photo_review_upload_rejected_privileged_no_uploading_user(
+            self,
+            mock_send_mail
+    ):
+        with self.settings(SITE_ID=self.site.id):
+            review_url = reverse(
+                'photo-review',
+                kwargs={'queued_image_id': self.q_no_uploading_user.id}
+            )
+            review_page_response = self.app.get(
+                review_url,
+                user=self.test_reviewer
+            )
+            form = review_page_response.forms['photo-review-form']
+            form['decision'] = 'rejected'
+
+            response = form.submit(user=self.test_reviewer)
+            self.assertEqual(response.status_code, 302)
+            split_location = urlsplit(response.location)
+            self.assertEqual('/moderation/photo/review', split_location.path)
+
+            las = LoggedAction.objects.all()
+            self.assertEqual(1, len(las))
+            la = las[0]
+            self.assertEqual(la.user.username, 'jane')
+            self.assertEqual(la.action_type, 'photo-reject')
+            self.assertEqual(la.person.id, 2009)
+            self.assertEqual(la.source, 'Rejected a photo upload from a script')
+
+            self.assertFalse(mock_send_mail.called)
+
+            self.assertEqual(
+                QueuedImage.objects.get(
+                    pk=self.q_no_uploading_user.id).decision,
+                'rejected')
