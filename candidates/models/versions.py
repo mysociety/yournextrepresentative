@@ -1,5 +1,9 @@
 from __future__ import unicode_literals
 
+from collections import defaultdict
+from datetime import datetime
+import re
+
 from .fields import ExtraField, SimplePopoloField, ComplexPopoloField
 
 from django.db.models import F
@@ -172,3 +176,71 @@ def revert_person_from_version_data(person, person_extra, version_data):
         update_twitter_user_id(person)
     except TwitterAPITokenMissing:
         pass
+
+def version_timestamp_key(version):
+    return datetime.strptime(version['timestamp'], '%Y-%m-%dT%H:%M:%S.%f')
+
+def is_a_merge(version):
+    m = re.search(
+        r'^After merging person (\d+)', version['information_source'])
+    if m:
+        return m.group(1)
+    return None
+
+def get_versions_parent_map(versions_data):
+    version_id_to_parent_ids = {}
+    if not versions_data:
+        return version_id_to_parent_ids
+    canonical_person_id = versions_data[-1]['data']['id']
+    ordered_versions = sorted(versions_data, key=version_timestamp_key)
+    person_id_to_ordered_versions = defaultdict(list)
+    # Divide all the version with the same ID into separate ordered
+    # lists, and record the parent of each version that we get from
+    # doing that:
+    for version in ordered_versions:
+        version_id = version['version_id']
+        person_id = version['data']['id']
+        versions_for_person_id = person_id_to_ordered_versions[person_id]
+        if versions_for_person_id:
+            last_version_id = versions_for_person_id[-1]['version_id']
+            version_id_to_parent_ids[version_id] = [last_version_id]
+        else:
+            version_id_to_parent_ids[version_id] = []
+        versions_for_person_id.append(version)
+    # Now go through looking for versions that represent merges. Note
+    # that it's *possible* for someone to create a new version that
+    # doesn't represent a merge but which has a information_source
+    # message that makes it look like one. We try to raise an
+    # exception if this might have happened, by checking that (a) the
+    # person ID in the message also has history in this versions array
+    # and (b) the number of unique person IDs in the versions is one
+    # more than the number of versions that look like merges. We raise
+    # an exception in either of these situations.
+    number_of_person_ids = len(person_id_to_ordered_versions.keys())
+    number_of_merges = 0
+    for version in ordered_versions:
+        version_id = version['version_id']
+        merged_from = is_a_merge(version)
+        if merged_from is None:
+            continue
+        number_of_merges += 1
+        if merged_from not in person_id_to_ordered_versions:
+            msg = "Found a bogus merge version for person with " \
+                  "ID: {person_id} - no merged history of person " \
+                  "with ID {other_person_id} found"
+            raise Exception(msg.format(
+                person_id=canonical_person_id,
+                other_person_id=merged_from))
+        last_version_id_of_other = \
+            person_id_to_ordered_versions[merged_from][-1]['version_id']
+        version_id_to_parent_ids[version_id].append(last_version_id_of_other)
+    if (number_of_merges + 1) != number_of_person_ids:
+        msg = "It looks like there was a bogus merge version for person " \
+              "with ID {person_id}; there were {nm} merge versions and {np} " \
+              "person IDs."
+        raise Exception(msg.format(
+            person_id=canonical_person_id,
+            nm=number_of_merges,
+            np=number_of_person_ids,
+        ))
+    return version_id_to_parent_ids
