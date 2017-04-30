@@ -4,7 +4,7 @@
 <div class="person__versions">
     <h2>{% trans "All versions" %}</h2>
     {% for version in person.extra.version_diffs %}
-      <div class="version">
+      <div class="version" id="version-{{ version.version_id }}" data-parent-version-ids="{{ version.parent_version_ids|join:' ' }}">
         <dl>
           <dt>{% trans "Version" %}</dt>
           <dd>

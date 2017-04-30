@@ -221,6 +221,7 @@ def get_version_diffs(versions):
     result = []
     for v in versions:
         version_id = v['version_id']
+        v['parent_version_ids'] = id_to_parent_ids[version_id]
         version_with_diffs = v.copy()
         version_with_diffs['data'] = clean_version_data(
             version_with_diffs['data'])
