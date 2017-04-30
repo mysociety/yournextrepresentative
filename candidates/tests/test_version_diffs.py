@@ -15,6 +15,8 @@ def sort_operations_for_comparison(versions_with_diffs):
 
 class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
 
+    maxDiff = None
+
     def setUp(self):
         super(TestVersionDiffs, self).setUp()
 
