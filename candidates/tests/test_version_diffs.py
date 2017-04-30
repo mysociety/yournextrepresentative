@@ -8,7 +8,9 @@ from .uk_examples import UK2015ExamplesMixin
 
 def sort_operations_for_comparison(versions_with_diffs):
     for v in versions_with_diffs:
-        v['diff'].sort(key=lambda o: (o['op'], o['path']))
+        v['diffs'].sort(key=lambda pd: pd['parent_version_id'])
+        for parent_data in v['diffs']:
+            parent_data['parent_diff'].sort(key=lambda o: (o['op'], o['path']))
 
 
 class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
@@ -21,7 +23,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-06-10T05:35:15.297559',
+                'version_id': '8aa71db8f2f20bf8',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'beta',
                     'g': '',
@@ -31,7 +36,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '643dc3343880f168',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'LATIN SMALL LETTER B',
                     'd': 'delta',
@@ -42,7 +50,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-07T05:35:15.297559',
+                'version_id': '42648e36ff699179',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'beta',
                     'l': None,
@@ -54,30 +65,41 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-06-10T05:35:15.297559',
+                'version_id': '8aa71db8f2f20bf8',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'beta',
                     'g': '',
                     'h': None,
                     'l': 'lambda',
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'remove',
-                        'path': 'd',
-                        'previous_value': 'delta',
-                    },
-                    {
-                        'op': 'replace',
-                        'path': 'b',
-                        'previous_value': 'LATIN SMALL LETTER B',
-                        'value': 'beta',
+                        'parent_version_id': '643dc3343880f168',
+                        'parent_diff': [
+                            {
+                                'op': 'remove',
+                                'path': 'd',
+                                'previous_value': 'delta',
+                            },
+                            {
+                                'op': 'replace',
+                                'path': 'b',
+                                'previous_value': 'LATIN SMALL LETTER B',
+                                'value': 'beta',
+                            }
+                        ]
                     }
                 ]
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '643dc3343880f168',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'LATIN SMALL LETTER B',
                     'd': 'delta',
@@ -85,45 +107,63 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                     'h': '',
                     'l': 'lambda',
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'd',
-                        'value': 'delta',
-                    },
-                    {
-                        'op': 'add',
-                        'path': 'l',
-                        'previous_value': None,
-                        'value': 'lambda',
-                    },
-                    {
-                        'op': 'replace',
-                        'path': 'b',
-                        'previous_value': 'beta',
-                        'value': 'LATIN SMALL LETTER B',
-                    },
+                        'parent_version_id': '42648e36ff699179',
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'd',
+                                'value': 'delta',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'l',
+                                'previous_value': None,
+                                'value': 'lambda',
+                            },
+                            {
+                                'op': 'replace',
+                                'path': 'b',
+                                'previous_value': 'beta',
+                                'value': 'LATIN SMALL LETTER B',
+                            },
+                        ]
+                    }
                 ]
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-07T05:35:15.297559',
+                'version_id': '42648e36ff699179',
                 'data': {
+                    'id': '24680',
                     'a': 'alpha',
                     'b': 'beta',
                     'l': None,
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'a',
-                        'value': 'alpha',
-                    },
-                    {
-                        'op': 'add',
-                        'path': 'b',
-                        'value': 'beta',
-                    },
-                ]
+                        'parent_version_id': None,
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'a',
+                                'value': 'alpha',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'b',
+                                'value': 'beta',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+                            },
+                        ]
+                    }
+                ],
             },
         ]
 
@@ -136,7 +176,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         versions = [
             {
                 'information_source': 'After clicking "Standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '3aa8d7da968e10fa',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -153,7 +196,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'fd105d1cf3b5ed0f',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -168,7 +214,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'After clicking "Standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '3aa8d7da968e10fa',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -180,17 +229,25 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         },
                     }
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'standing_in/2015',
-                        'value': 'is known to be standing in Edinburgh North and Leith in the 2015 General Election',
+                        'parent_version_id': 'fd105d1cf3b5ed0f',
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'standing_in/2015',
+                                'value': 'is known to be standing in Edinburgh North and Leith in the 2015 General Election',
+                            }
+                        ]
                     }
                 ]
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'fd105d1cf3b5ed0f',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -198,11 +255,22 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         },
                     }
                 },
-                'diff':[
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'standing_in',
-                        'value': 'was known to be standing in South Cambridgeshire in the 2010 General Election',
+                        'parent_version_id': None,
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'standing_in',
+                                'value': 'was known to be standing in South Cambridgeshire in the 2010 General Election',
+                            },
+                        ]
                     }
                 ]
             },
@@ -217,7 +285,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         versions = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '698ae05960970b60',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -230,7 +301,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'd1fd9c3830d8d722',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -245,7 +319,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '698ae05960970b60',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -254,17 +331,25 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         '2015': None,
                     }
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'standing_in/2015',
-                        'value': 'is known not to be standing in the 2015 General Election',
+                        'parent_version_id': 'd1fd9c3830d8d722',
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'standing_in/2015',
+                                'value': 'is known not to be standing in the 2015 General Election',
+                            }
+                        ]
                     }
-                ]
+                ],
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'd1fd9c3830d8d722',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2010': {
                             'name': 'South Cambridgeshire',
@@ -272,11 +357,21 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         },
                     }
                 },
-                'diff':[
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'standing_in',
-                        'value': 'was known to be standing in South Cambridgeshire in the 2010 General Election',
+                        'parent_version_id': None,
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'standing_in',
+                                'value': 'was known to be standing in South Cambridgeshire in the 2010 General Election',
+                            }
+                        ]
                     }
                 ]
             },
@@ -291,7 +386,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         versions = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '95ac9c97c1d72ebb',
                 'data': {
+                    'id': '24680',
                     'party_memberships': {
                         '2010': {
                             'id': 'party:58',
@@ -306,7 +404,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '10fcaee60b9f5203',
                 'data': {
+                    'id': '24680',
                     'party_memberships': {
                         '2010': {
                             'id': 'party:58',
@@ -324,7 +425,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '95ac9c97c1d72ebb',
                 'data': {
+                    'id': '24680',
                     'party_memberships': {
                         '2010': {
                             'id': 'party:58',
@@ -336,24 +440,32 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         }
                     },
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'replace',
-                        'path': 'party_memberships/2015/id',
-                        'previous_value': 'is known to be standing for the party with ID party:58 in the 2015 General Election',
-                        'value': 'is known to be standing for the party with ID ynmp-party:2 in the 2015 General Election',
-                    },
-                    {
-                        'op': 'replace',
-                        'path': 'party_memberships/2015/name',
-                        'previous_value': 'is known to be standing for the party \'Mebyon Kernow - The Party for Cornwall\' in the 2015 General Election',
-                        'value': 'is known to be standing for the party \'Independent\' in the 2015 General Election',
-                    },
+                        'parent_version_id': '10fcaee60b9f5203',
+                        'parent_diff':  [
+                            {
+                                'op': 'replace',
+                                'path': 'party_memberships/2015/id',
+                                'previous_value': 'is known to be standing for the party with ID party:58 in the 2015 General Election',
+                                'value': 'is known to be standing for the party with ID ynmp-party:2 in the 2015 General Election',
+                            },
+                            {
+                                'op': 'replace',
+                                'path': 'party_memberships/2015/name',
+                                'previous_value': 'is known to be standing for the party \'Mebyon Kernow - The Party for Cornwall\' in the 2015 General Election',
+                                'value': 'is known to be standing for the party \'Independent\' in the 2015 General Election',
+                            },
+                        ],
+                    }
                 ]
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '10fcaee60b9f5203',
                 'data': {
+                    'id': '24680',
                     'party_memberships': {
                         '2010': {
                             'id': 'party:58',
@@ -365,11 +477,21 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         }
                     },
                 },
-                'diff':[
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'party_memberships',
-                        'value': 'is known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in the 2015 General Election and was known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in the 2010 General Election',
+                        'parent_version_id': None,
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'party_memberships',
+                                'value': 'is known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in the 2015 General Election and was known to be standing for the party "Mebyon Kernow - The Party for Cornwall" in the 2010 General Election',
+                            },
+                        ]
                     }
                 ]
             },
@@ -384,7 +506,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         versions = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '65c16b93a0f41b00',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2015': {'mapit_url': 'http://mapit.mysociety.org/area/65659',
                                  'name': 'Truro and Falmouth',
@@ -394,7 +519,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '1a5144605b4c1498',
                 'data': {
+                    'id': '24680',
                     "standing_in": {
                         "2015": {
                             "post_id": "65808",
@@ -409,30 +537,41 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'After clicking "Not standing again"',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '65c16b93a0f41b00',
                 'data': {
+                    'id': '24680',
                     'standing_in': {
                         '2015': {'name': 'Truro and Falmouth',
                                  'post_id': '65659'}
                     },
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'op': 'replace',
-                        'path': 'standing_in/2015/name',
-                        'previous_value': 'is known to be standing in Dulwich and West Norwood in the 2015 General Election',
-                        'value': 'is known to be standing in Truro and Falmouth in the 2015 General Election',
-                    },
-                    {
-                        'op': 'replace',
-                        'path': 'standing_in/2015/post_id',
-                        'previous_value': 'is known to be standing for the post with ID 65808 in the 2015 General Election',
-                        'value': 'is known to be standing for the post with ID 65659 in the 2015 General Election',
-                    },
+                        'parent_version_id': '1a5144605b4c1498',
+                        'parent_diff': [
+                            {
+                                'op': 'replace',
+                                'path': 'standing_in/2015/name',
+                                'previous_value': 'is known to be standing in Dulwich and West Norwood in the 2015 General Election',
+                                'value': 'is known to be standing in Truro and Falmouth in the 2015 General Election',
+                            },
+                            {
+                                'op': 'replace',
+                                'path': 'standing_in/2015/post_id',
+                                'previous_value': 'is known to be standing for the post with ID 65808 in the 2015 General Election',
+                                'value': 'is known to be standing for the post with ID 65659 in the 2015 General Election',
+                            },
+                        ]
+                    }
                 ]
             },
             {
                 'information_source': 'Original imported data',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '1a5144605b4c1498',
                 'data': {
+                    'id': '24680',
                     "standing_in": {
                         "2015": {
                             "post_id": "65808",
@@ -440,11 +579,21 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         },
                     },
                 },
-                'diff':[
+                'diffs': [
                     {
-                        'op': 'add',
-                        'path': 'standing_in',
-                        'value': 'is known to be standing in Dulwich and West Norwood in the 2015 General Election',
+                        'parent_version_id': None,
+                        'parent_diff': [
+                            {
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+                            },
+                            {
+                                'op': 'add',
+                                'path': 'standing_in',
+                                'value': 'is known to be standing in Dulwich and West Norwood in the 2015 General Election',
+                            },
+                        ]
                     }
                 ]
             },
@@ -460,7 +609,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-04-12T05:35:15.297559',
+                'version_id': 'e6dcd55bb903499e',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -481,7 +633,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '788a3291f1103de5',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -506,7 +661,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-04-12T05:35:15.297559',
+                'version_id': 'e6dcd55bb903499e',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -522,18 +680,26 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         }
                     ],
                 },
-                'diff': [
+                'diffs': [
                     {
-                        'path': 'other_names/0/name',
-                        'previous_value': 'Tessa J Jowell',
-                        'value': 'Tessa Jane Jowell',
-                        'op': 'replace'
+                        'parent_version_id': '788a3291f1103de5',
+                        'parent_diff': [
+                            {
+                                'path': 'other_names/0/name',
+                                'previous_value': 'Tessa J Jowell',
+                                'value': 'Tessa Jane Jowell',
+                                'op': 'replace'
+                            }
+                        ]
                     }
                 ],
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '788a3291f1103de5',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -549,28 +715,38 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
                         }
                     ]
                 },
-                'diff': [
+                'diffs': [
                     {
-                        "op": "add",
-                        "path": "identifiers",
-                        "value": [
+                        'parent_version_id': None,
+                        'parent_diff': [
                             {
-                                "identifier": "2009",
-                                "scheme": "yournextmp-candidate"
-                            }
-                        ]
-                    },
-                    {
-                        "op": "add",
-                        "path": "other_names",
-                        "value": [
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
+                            },
                             {
-                                "end_date": None,
-                                "name": "Tessa J Jowell",
-                                "note": "Full name",
-                                "start_date": None
+                                "op": "add",
+                                "path": "identifiers",
+                                "value": [
+                                    {
+                                        "identifier": "2009",
+                                        "scheme": "yournextmp-candidate"
+                                    }
+                                ]
+                            },
+                            {
+                                "op": "add",
+                                "path": "other_names",
+                                "value": [
+                                    {
+                                        "end_date": None,
+                                        "name": "Tessa J Jowell",
+                                        "note": "Full name",
+                                        "start_date": None
+                                    }
+                                ]
                             }
-                        ]
+                        ],
                     }
                 ],
             },
@@ -586,7 +762,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-04-12T05:35:15.297559',
+                'version_id': 'a2fd462d7b9ea219',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -618,7 +797,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '66b78855c5f19197',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -653,29 +835,37 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'Manual correction by a user',
-                'diff': [
+                'timestamp': '2015-04-12T05:35:15.297559',
+                'version_id': 'a2fd462d7b9ea219',
+                'diffs': [
                     {
-                        'path': 'other_names/0',
-                        'value': {
-                            'note': '',
-                            'name': 'Joey',
-                            'end_date': '',
-                            'start_date': ''
-                        },
-                        'op': 'add'
-                    },
-                    {
-                        'path': 'other_names/3',
-                        'previous_value': {
-                            'note': '',
-                            'name': 'Joey',
-                            'end_date': '',
-                            'start_date': ''
-                        },
-                        'op': 'remove'
+                        'parent_version_id': '66b78855c5f19197',
+                        'parent_diff': [
+                            {
+                                'path': 'other_names/0',
+                                'value': {
+                                    'note': '',
+                                    'name': 'Joey',
+                                    'end_date': '',
+                                    'start_date': ''
+                                },
+                                'op': 'add'
+                            },
+                            {
+                                'path': 'other_names/3',
+                                'previous_value': {
+                                    'note': '',
+                                    'name': 'Joey',
+                                    'end_date': '',
+                                    'start_date': ''
+                                },
+                                'op': 'remove'
+                            }
+                        ]
                     }
                 ],
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -706,43 +896,51 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
-                'diff': [
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': '66b78855c5f19197',
+                'diffs': [
                     {
-                        'path': 'identifiers',
-                        'value': [
+                        'parent_version_id': None,
+                        'parent_diff': [
                             {
-                                'scheme': 'yournextmp-candidate',
-                                'identifier': '2009'
-                            }
-                        ],
-                        'op': 'add'
-                    },
-                    {
-                        'path': 'other_names',
-                        'value': [
-                            {
-                                'note': '',
-                                'name': 'Joseph Tribbiani',
-                                'end_date': '',
-                                'start_date': ''
+                                'path': 'identifiers',
+                                'value': [
+                                    {
+                                        'scheme': 'yournextmp-candidate',
+                                        'identifier': '2009'
+                                    }
+                                ],
+                                'op': 'add'
                             },
                             {
-                                'note': 'Ballot paper',
-                                'name': 'Jonathan Francis Tribbiani',
-                                'end_date': '',
-                                'start_date': ''
-                            },
-                            {
-                                'note': '',
-                                'name': 'Joey',
-                                'end_date': '',
-                                'start_date': ''
+                                'path': 'other_names',
+                                'value': [
+                                    {
+                                        'note': '',
+                                        'name': 'Joseph Tribbiani',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    },
+                                    {
+                                        'note': 'Ballot paper',
+                                        'name': 'Jonathan Francis Tribbiani',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    },
+                                    {
+                                        'note': '',
+                                        'name': 'Joey',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    }
+                                ],
+                                'op': 'add'
                             }
                         ],
-                        'op': 'add'
                     }
                 ],
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -784,7 +982,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             {
                 'user': 'john',
                 'information_source': 'Manual correction by a user',
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '1d33caabf421c656',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -816,7 +1017,10 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'f7cc564751d31a2b',
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -851,29 +1055,37 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         expected_result = [
             {
                 'information_source': 'Manual correction by a user',
-                'diff': [
+                'timestamp': '2015-05-08T01:52:27.061038',
+                'version_id': '1d33caabf421c656',
+                'diffs': [
                     {
-                        'path': 'other_names/0',
-                        'value': {
-                            'note': '',
-                            'name': 'Joey',
-                            'end_date': '',
-                            'start_date': ''
-                        },
-                        'op': 'add'
-                    },
-                    {
-                        'path': 'other_names/3',
-                        'previous_value': {
-                            'note': '',
-                            'name': 'Joey',
-                            'end_date': '',
-                            'start_date': ''
-                        },
-                        'op': 'remove'
+                        'parent_version_id': 'f7cc564751d31a2b',
+                        'parent_diff': [
+                            {
+                                'path': 'other_names/0',
+                                'value': {
+                                    'note': '',
+                                    'name': 'Joey',
+                                    'end_date': '',
+                                    'start_date': ''
+                                },
+                                'op': 'add'
+                            },
+                            {
+                                'path': 'other_names/3',
+                                'previous_value': {
+                                    'note': '',
+                                    'name': 'Joey',
+                                    'end_date': '',
+                                    'start_date': ''
+                                },
+                                'op': 'remove'
+                            }
+                        ]
                     }
                 ],
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -904,43 +1116,56 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             },
             {
                 'information_source': 'Updated by a script',
-                'diff': [
+                'timestamp': '2015-03-10T05:35:15.297559',
+                'version_id': 'f7cc564751d31a2b',
+                'diffs': [
                     {
-                        'path': 'identifiers',
-                        'value': [
+                        'parent_version_id': None,
+                        'parent_diff': [
                             {
-                                'scheme': 'yournextmp-candidate',
-                                'identifier': '2009'
-                            }
-                        ],
-                        'op': 'add'
-                    },
-                    {
-                        'path': 'other_names',
-                        'value': [
-                            {
-                                'note': '',
-                                'name': 'Joseph Tribbiani',
-                                'end_date': '',
-                                'start_date': ''
+                                'op': 'add',
+                                'path': 'id',
+                                'value': '24680',
                             },
                             {
-                                'note': 'Ballot paper',
-                                'name': 'Jonathan Francis Tribbiani',
-                                'end_date': '',
-                                'start_date': ''
+                                'path': 'identifiers',
+                                'value': [
+                                    {
+                                        'scheme': 'yournextmp-candidate',
+                                        'identifier': '2009'
+                                    }
+                                ],
+                                'op': 'add'
                             },
                             {
-                                'note': '',
-                                'name': 'Joey',
-                                'end_date': '',
-                                'start_date': ''
+                                'path': 'other_names',
+                                'value': [
+                                    {
+                                        'note': '',
+                                        'name': 'Joseph Tribbiani',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    },
+                                    {
+                                        'note': 'Ballot paper',
+                                        'name': 'Jonathan Francis Tribbiani',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    },
+                                    {
+                                        'note': '',
+                                        'name': 'Joey',
+                                        'end_date': '',
+                                        'start_date': ''
+                                    }
+                                ],
+                                'op': 'add'
                             }
                         ],
-                        'op': 'add'
                     }
                 ],
                 'data': {
+                    'id': '24680',
                     'identifiers': [
                         {
                             'scheme': 'yournextmp-candidate',
@@ -1040,12 +1265,17 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             'username': 'test',
             'timestamp': '2015-05-08T01:52:27.061038',
             'version_id': '3fc494d54f61a157',
-            'diff': [{
-                'path': 'other_names/0/note',
-                'previous_value': None,
-                'value': 'Maiden name',
-                'op': 'add'
-            }],
+            'diffs': [
+                {
+                    'parent_version_id': '2f07734529a83242',
+                    'parent_diff': [{
+                        'path': 'other_names/0/note',
+                        'previous_value': None,
+                        'value': 'Maiden name',
+                        'op': 'add'
+                    }],
+                }
+            ],
             'data': {
                 'honorific_suffix': '',
                 'party_ppc_page_url': '',
@@ -1071,36 +1301,41 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             'username': 'test',
             'timestamp': '2015-03-10T05:35:15.297559',
             'version_id': '2f07734529a83242',
-            'diff': [
+            'diffs': [
                 {
-                    'path': 'honorific_prefix',
-                    'value': 'Mrs',
-                    'op': 'add'
-                },
-                {
-                    'path': 'id',
-                    'value': '6704',
-                    'op': 'add'
-                },
-                {
-                    'path': 'identifiers',
-                    'value': [{
-                        'scheme': 'yournextmp-candidate',
-                        'identifier': '13445'
-                    }],
-                    'op': 'add'
-                },
-                {
-                    'path': 'name',
-                    'value': 'Sarah Jones',
-                    'op': 'add'
-                },
-                {
-                    'path': 'other_names',
-                    'value': [{
-                        'name': 'Sarah Smith'
-                    }],
-                    'op': 'add'
+                    'parent_version_id': None,
+                    'parent_diff': [
+                        {
+                            'path': 'honorific_prefix',
+                            'value': 'Mrs',
+                            'op': 'add'
+                        },
+                        {
+                            'path': 'id',
+                            'value': '6704',
+                            'op': 'add'
+                        },
+                        {
+                            'path': 'identifiers',
+                            'value': [{
+                                'scheme': 'yournextmp-candidate',
+                                'identifier': '13445'
+                            }],
+                            'op': 'add'
+                        },
+                        {
+                            'path': 'name',
+                            'value': 'Sarah Jones',
+                            'op': 'add'
+                        },
+                        {
+                        'path': 'other_names',
+                            'value': [{
+                                'name': 'Sarah Smith'
+                            }],
+                            'op': 'add'
+                        }
+                    ],
                 }
             ],
             'data': {
