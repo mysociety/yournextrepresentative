@@ -5,6 +5,7 @@ import json
 
 from django import forms
 from django.utils.safestring import SafeText
+from django.utils.translation import ugettext_lazy as _
 
 from candidates.views import search_person_by_name
 
@@ -80,7 +81,9 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
 
 
 class QuickAddSinglePersonForm(forms.Form):
-    name = forms.CharField(required=True)
+    name = forms.CharField(
+        label=_("Name (style: Ali Smith, not SMITH Ali)"),
+        required=True)
     source = forms.CharField(required=True)
 
 

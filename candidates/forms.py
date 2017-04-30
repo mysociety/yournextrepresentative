@@ -152,6 +152,9 @@ class BasePersonForm(forms.Form):
                     campaign literature.""")
                 opts['label'] = _("Statement to voters")
 
+            if field.name == "name":
+                opts['label'] = _("Name (style: Ali Smith not SMITH Ali)")
+
             if field.info_type_key == 'url':
                 self.fields[field.name] = forms.URLField(**opts)
             elif field.info_type_key == 'email':
