@@ -208,16 +208,10 @@ def get_version_diffs(versions):
     result = []
     n = len(versions)
     for i, v in enumerate(versions):
-        # to_version_data = replace_empty_with_none(
-        #     versions[i]['data']
-        # )
         to_version_data = versions[i]['data']
         if i == (n - 1):
             from_version_data = {}
         else:
-            # from_version_data = replace_empty_with_none(
-            #     versions[i + 1]['data']
-            # )
             from_version_data = versions[i + 1]['data']
         clean_version_data(to_version_data)
         clean_version_data(from_version_data)
