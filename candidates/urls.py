@@ -14,7 +14,7 @@ from uk_results.views import (
     ResultSetViewSet,
 )
 
-from .feeds import RecentChangesFeed
+from .feeds import RecentChangesFeed, NeedsReviewFeed
 from .constants import ELECTION_ID_REGEX, POST_ID_REGEX
 
 api_router = routers.DefaultRouter()
@@ -220,6 +220,11 @@ patterns_to_format = [
         'pattern': r'^feeds/changes.xml$',
         'view': RecentChangesFeed(),
         'name': 'changes_feed'
+    },
+    {
+        'pattern': r'^feeds/needs-review.xml$',
+        'view': NeedsReviewFeed(),
+        'name': 'needs-review_feed'
     },
     {
         'pattern': r'^help/api$',
