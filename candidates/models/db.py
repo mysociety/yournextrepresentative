@@ -1,5 +1,8 @@
 from __future__ import unicode_literals
 
+from datetime import datetime, timedelta
+from functools import reduce
+
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -8,6 +11,30 @@ from django.db.models.signals import post_save
 from slugify import slugify
 
 from popolo.models import Person, Post
+
+from .needs_review import needs_review_fns
+
+
+def merge_dicts_with_list_values(dict_a, dict_b):
+    return {
+        k: dict_a.get(k, []) + dict_b.get(k, [])
+        for k in set(dict_a.keys()) | set(dict_b.keys())
+    }
+
+
+class LoggedActionQuerySet(models.QuerySet):
+
+    def in_recent_days(self, days=5):
+        return self.filter(
+            created__gte=(datetime.now() - timedelta(days=days)))
+
+    def needs_review(self):
+        '''Return a dict of LoggedAction -> list of reasons should be reviewed'''
+        return reduce(
+            merge_dicts_with_list_values,
+            [f(self) for f in needs_review_fns],
+            {}
+        )
 
 
 class LoggedAction(models.Model):
@@ -30,6 +57,8 @@ class LoggedAction(models.Model):
     source = models.TextField()
     note = models.TextField(blank=True, null=True)
     post = models.ForeignKey(Post, blank=True, null=True)
+
+    objects = LoggedActionQuerySet.as_manager()
 
     def __repr__(self):
         fmt = str("<LoggedAction username='{username}' action_type='{action_type}'>")

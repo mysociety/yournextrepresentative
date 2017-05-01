@@ -29,6 +29,8 @@ from .db import LoggedAction
 from .db import PersonRedirect
 from .db import UserTermsAgreement
 
+from .needs_review import needs_review_fns
+
 from .auth import TRUSTED_TO_MERGE_GROUP_NAME
 from .auth import TRUSTED_TO_LOCK_GROUP_NAME
 from .auth import TRUSTED_TO_RENAME_GROUP_NAME

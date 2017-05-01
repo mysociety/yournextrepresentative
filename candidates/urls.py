@@ -9,7 +9,7 @@ from rest_framework import routers
 
 import candidates.views as views
 
-from .feeds import RecentChangesFeed
+from .feeds import RecentChangesFeed, NeedsReviewFeed
 
 api_router = routers.DefaultRouter()
 api_router.register(r'persons', views.PersonViewSet)
@@ -203,6 +203,11 @@ patterns_to_format = [
         'pattern': r'^feeds/changes.xml$',
         'view': RecentChangesFeed(),
         'name': 'changes_feed'
+    },
+    {
+        'pattern': r'^feeds/needs-review.xml$',
+        'view': NeedsReviewFeed(),
+        'name': 'needs-review_feed'
     },
     {
         'pattern': r'^help/api$',
