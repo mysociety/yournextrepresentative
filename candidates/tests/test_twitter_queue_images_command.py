@@ -2,6 +2,7 @@ from __future__ import print_function, unicode_literals
 
 from mock import Mock, call, patch
 from os.path import dirname, join
+import re
 
 from django.core.management import call_command
 from django.test import TestCase
@@ -248,7 +249,12 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
 
         mock_requests.get.side_effect = fake_get
 
-        call_command('candidates_add_twitter_images_to_queue')
+        with capture_output() as (out, err):
+            call_command('candidates_add_twitter_images_to_queue')
+
+        output_lines = split_output(out)
+        self.assertEqual(len(output_lines), 1)
+        self.assertTrue(re.search(r'^Ignoring a non-image file \S+$', output_lines[0]))
 
         new_queued_images = QueuedImage.objects.exclude(
             id__in=self.existing_queued_image_ids)
