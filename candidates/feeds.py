@@ -14,7 +14,25 @@ from .models import LoggedAction
 lock_re = re.compile(r'^(?:Unl|L)ocked\s*constituency (.*) \((\d+)\)$')
 
 
-class RecentChangesFeed(Feed):
+class ChangesMixin(object):
+    def get_title(self, logged_action):
+        if logged_action.person:
+            return "{0} ({1}) - {2}".format(
+                logged_action.person.name,
+                logged_action.person_id,
+                logged_action.action_type,
+            )
+        elif logged_action.post:
+            return "{0} ({1}) - {2}".format(
+                logged_action.post.label,
+                logged_action.post.extra.slug,
+                logged_action.action_type,
+            )
+        else:
+            return logged_action.action_type
+
+
+class RecentChangesFeed(ChangesMixin, Feed):
     site_name = Site.objects.get_current().name
     title = _("{site_name} recent changes").format(site_name=site_name)
     description = _("Changes to {site_name} candidates").format(site_name=site_name)
@@ -25,10 +43,7 @@ class RecentChangesFeed(Feed):
         return LoggedAction.objects.order_by('-updated')[:50]
 
     def item_title(self, item):
-        return "{0} - {1}".format(
-            item.person_id,
-            item.action_type
-        )
+        return self.get_title(item)
 
     def item_description(self, item):
         updated = _("Updated at {0}").format(str(item.updated))
@@ -45,7 +60,7 @@ class RecentChangesFeed(Feed):
             return '/'
 
 
-class NeedsReviewFeed(Feed):
+class NeedsReviewFeed(ChangesMixin, Feed):
     site_name = Site.objects.get_current().name
     title = _('{site_name} changes for review').format(site_name=site_name)
     link = '/feeds/needs-review.xml'
@@ -59,20 +74,7 @@ class NeedsReviewFeed(Feed):
             reverse=True)
 
     def item_title(self, item):
-        if item[0].person:
-            return "{0} ({1}) - {2}".format(
-                item[0].person.name,
-                item[0].person_id,
-                item[0].action_type,
-            )
-        elif item[0].post:
-            return "{0} ({1}) - {2}".format(
-                item[0].post.label,
-                item[0].post.extra.slug,
-                item[0].action_type,
-            )
-        else:
-            return item[0].action_type
+        return self.get_title(item[0])
 
     def item_description(self, item):
         la = item[0]
