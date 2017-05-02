@@ -23,13 +23,13 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         # TODO Consider filtering on future or current elections?
-        # url = "{}api/elections?group_type=organisation".format(
-        #     self.EE_BASE_URL)
-        # while url:
-        #     req = requests.get(url)
-        #     data = req.json()
-        #     self.process_results(data['results'])
-        #     url = data.get('next')
+        url = "{}api/elections?group_type=organisation&current=1".format(
+            self.EE_BASE_URL)
+        while url:
+            req = requests.get(url)
+            data = req.json()
+            self.process_results(data['results'])
+            url = data.get('next')
 
         url = "{}api/elections?group_type=election".format(
             self.EE_BASE_URL)
@@ -89,8 +89,13 @@ class Command(BaseCommand):
     def get_election(self, election_dict):
         election_id = election_dict['election_id']
         election_date = election_dict['poll_open_date']
-
         current = election_dict['current']
+
+        if election_id.startswith('parl.'):
+            party_lists_in_use = False
+        else:
+            party_lists_in_use = \
+                election_dict['voting_system']['uses_party_lists']
 
         return Election.objects.update_or_create(
             slug=election_id,
@@ -101,8 +106,7 @@ class Command(BaseCommand):
                 "for_post_role": election_dict['election_type']['name'],
                 "candidate_membership_role": "Candidate",
                 "show_official_documents": True,
-                "party_lists_in_use":
-                    election_dict['voting_system']['uses_party_lists'],
+                "party_lists_in_use": party_lists_in_use
             }
         )[0]
 
