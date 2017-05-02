@@ -28,6 +28,10 @@ class LoggedAction(models.Model):
     note = models.TextField(blank=True, null=True)
     post = models.ForeignKey(Post, blank=True, null=True)
 
+    def __repr__(self):
+        fmt = str("<LoggedAction username='{username}' action_type='{action_type}'>")
+        return fmt.format(username=self.user.username, action_type=self.action_type)
+
 
 class PersonRedirect(models.Model):
     '''This represents a redirection from one person ID to another
