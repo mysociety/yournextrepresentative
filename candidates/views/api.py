@@ -137,7 +137,8 @@ class CandidatesAndElectionsForPostcodeViewSet(ViewSet):
                 election_kwargs['election_date__gte'] = request.GET['date_gte']
 
         results = []
-        for post in posts.all():
+        qs = posts.all().select_related('extra')
+        for post in qs:
             for election in post.extra.elections.filter(**election_kwargs):
                 candidates = []
                 for membership in post.memberships.filter(
