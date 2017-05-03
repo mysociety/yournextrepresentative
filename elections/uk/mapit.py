@@ -53,7 +53,9 @@ def get_known_area_types(ee_areas):
         ))
 
     area_ids = [r[1] for r in result]
-    known_areas = Area.objects.filter(identifier__in=area_ids)
+    known_areas = Area.objects.filter(identifier__in=area_ids).select_related(
+        'extra__type'
+    )
 
     return [(a.extra.type.name,a.identifier) for a in known_areas]
 
