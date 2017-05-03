@@ -245,6 +245,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'django.contrib.messages.middleware.MessageMiddleware',
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
             'usersettings.middleware.CurrentUserSettingsMiddleware',
+            'candidates.middleware.DisableCachingForAuthenticatedUsers',
         ),
 
         # django-allauth settings:
