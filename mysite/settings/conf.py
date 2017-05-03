@@ -270,6 +270,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'candidates.middleware.DisallowedUpdateMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
+            'candidates.middleware.DisableCachingForAuthenticatedUsers',
         ),
 
         # django-allauth settings:

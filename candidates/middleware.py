@@ -14,6 +14,8 @@ from django.shortcuts import render
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 
+from django.utils.cache import add_never_cache_headers
+
 from candidates.models.auth import (
     NameChangeDisallowedException,
     ChangeToLockedConstituencyDisallowedException
@@ -82,3 +84,19 @@ class CopyrightAssignmentMiddleware(object):
                 urlquote(request.path)
             )
             return HttpResponseRedirect(assign_copyright_url)
+
+
+class DisableCachingForAuthenticatedUsers(object):
+
+    EXCLUDED_PATHS = (
+        re.compile(r'^/static'),
+        re.compile(r'^/media'),
+    )
+
+    def process_response(self, request, response):
+        if request.user.is_authenticated():
+            if all(path_re.search(request.path) is None
+                    for path_re in self.EXCLUDED_PATHS):
+                add_never_cache_headers(response)
+
+        return response
