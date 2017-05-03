@@ -289,7 +289,8 @@ class ConstituencyListView(ElectionMixin, TemplateView):
         context['all_constituencies'] = \
             PostExtra.objects.filter(
                 elections__slug=self.election
-            ).order_by('base__label').select_related('base')
+            ).order_by('base__label').select_related('base') \
+            .prefetch_related('suggestedpostlock_set')
 
         return context
 
