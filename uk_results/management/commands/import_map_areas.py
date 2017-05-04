@@ -32,13 +32,6 @@ class Command(BaseCommand):
 
     def import_council_areas(self, qs):
         for council_election in qs:
-            try:
-                return ElectionArea.objects.get(
-                    area_gss=council_election.council.pk,
-                    election=council_election.election,
-                )
-            except ElectionArea.DoesNotExist:
-                pass
 
             geojson = self.get_geo_json_from_ee(council_election.council.pk)
             ElectionArea.objects.update_or_create(
