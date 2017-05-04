@@ -88,7 +88,7 @@ class ObjectWithImageField(serializers.RelatedField):
         kwargs = {'version': 'v0.9'}
         request = self.context['request']
         if isinstance(value, candidates_models.PersonExtra):
-            kwargs.update({'pk': value.base.id})
+            kwargs.update({'pk': value.base_id})
             return reverse('person-detail', kwargs=kwargs, request=request)
         elif isinstance(value, candidates_models.OrganizationExtra):
             kwargs.update({'slug': value.slug})
