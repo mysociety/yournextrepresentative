@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.views.decorators.cache import cache_page
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 from . import views
 
@@ -74,7 +75,7 @@ urlpatterns = [
     ),
     url(
         r'^map/embed$',
-        cache_page(60)(views.MapEmbedView.as_view()),
+        xframe_options_exempt(cache_page(60)(views.MapEmbedView.as_view())),
         name='map-embed-view'
     ),
 ]
