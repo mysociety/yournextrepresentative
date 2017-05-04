@@ -65,8 +65,6 @@ class MapAreaView(View):
     def get(self, request, *args, **kwargs):
         filter_kwargs = {
             'parent': None,
-            'election__election_date': RESULTS_DATE,
-            'election__slug__contains': "local",
         }
 
         if request.GET.get('parent'):
@@ -76,23 +74,28 @@ class MapAreaView(View):
         if request.GET.get('only'):
             filter_kwargs['election__slug'] = request.GET['only']
 
-        elections = Election.objects.annotate(
-                post_count=Count('postextraelection__postextra')
-            ).filter(post_count__gt=4).values_list('slug', flat=True)
+        elections = Election.objects.only('slug').annotate(
+            post_count=Count('postextraelection')
+        ).filter(
+            post_count__gt=4,
+            slug__startswith="local.",
+            election_date=RESULTS_DATE
+        ).values_list('pk', flat=True)
 
         qs = ElectionArea.objects.filter(**filter_kwargs)
         qs = qs.select_related('election', 'winning_party')
-        qs = qs.filter(election__slug__in=elections)
+        qs = qs.filter(election_id__in=elections)
 
         data = {}
         for area in qs:
             if not area.geo_json:
                 continue
             data[area.area_gss] = json.loads(area.geo_json)
-            data[area.area_gss]['election_name'] = "<a href='{}{}'>{}</a>".format(
-                "https://candidates.democracyclub.org.uk/uk_results/",
-                area.election.slug,
-                area.election.name,
+            data[area.area_gss]['election_name'] = \
+                "<a href='{}{}'>{}</a>".format(
+                    "/uk_results/",
+                    area.election.slug,
+                    area.election.name,
             )
             if area.winning_party:
                 data[area.area_gss]['hex'] = area.winning_party.hex_value
