@@ -43,7 +43,9 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
 
         ).count()
         context['votes_confirmed'] = PostResult.objects.filter(
-            confirmed=True).count()
+            confirmed=True,
+            post__extra__elections__election_date=RESULTS_DATE
+        ).count()
 
         if float(context['votes_confirmed']):
             context['votes_percent'] = round(
