@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 from candidates.models import PartySet
 from uk_results.models import Council, CouncilElection
 from elections.models import Election
-from .constants import RESULTS_DATE
+from uk_results.constants import RESULTS_DATE
 
 
 class Command(BaseCommand):
