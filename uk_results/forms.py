@@ -34,7 +34,8 @@ class ReportCouncilElectionControlForm(forms.ModelForm):
 
     def __init__(self, council_election, *args, **kwargs):
         super(ReportCouncilElectionControlForm, self).__init__(*args, **kwargs)
-        self.fields['controller'].choices = council_election.party_set.party_choices()
+        self.fields['controller'].choices = \
+            council_election.party_set.party_choices(include_descriptions=False)
         self.fields['controller'].label = "Controlling party"
         self.fields['noc'].label = "No overall control"
         self.fields['council_election'].initial = council_election.pk
