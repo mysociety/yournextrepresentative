@@ -6,7 +6,7 @@ from candidates.views.version_data import get_client_ip
 from candidates.models import LoggedAction
 from elections.models import Election
 
-from ..constants import CONFIRMED_STATUS
+from ..constants import CONFIRMED_STATUS, RESULTS_DATE
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
@@ -120,6 +120,8 @@ class LatestControlResults(BaseResultsViewMixin, ListView):
 
     def get_queryset(self):
         queryset = self.queryset
+        queryset.filter(council_election__election__election_date=RESULTS_DATE)
+
         status = self.request.GET.get('status')
         if status:
             if status == "confirmed":

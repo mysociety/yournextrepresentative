@@ -7,7 +7,7 @@ from candidates.models import LoggedAction
 
 from popolo.models import Post
 
-from ..constants import CONFIRMED_STATUS
+from ..constants import CONFIRMED_STATUS, RESULTS_DATE
 from ..models import PostResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
 from .base import BaseResultsViewMixin
@@ -139,6 +139,8 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
 
     def get_queryset(self):
         queryset = super(LatestVoteResults, self).get_queryset()
+        queryset = queryset.filter(
+            post_result__post__extra__elections__election_date=RESULTS_DATE)
         queryset = queryset.select_related('post_result',)
         queryset = queryset.select_related('post_result__post',)
         queryset = queryset.select_related('post_result__post__area',)
