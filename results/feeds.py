@@ -19,7 +19,7 @@ class BasicResultEventsFeed(Feed):
     description = _("A basic feed of election results")
 
     def items(self):
-        return ResultEvent.objects.filter(created__gt="2016-05-04")
+        return ResultEvent.objects.filter(created__gte="2017-05-04")
 
     def item_title(self, item):
         return _('{name} ({party}) won in {cons}').format(
