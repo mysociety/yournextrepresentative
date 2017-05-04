@@ -72,5 +72,10 @@ urlpatterns = [
         cache_page(60)(views.MapAreaView.as_view()),
         name='map-data-view'
     ),
+    url(
+        r'^map/embed$',
+        cache_page(60)(views.MapEmbedView.as_view()),
+        name='map-embed-view'
+    ),
 ]
 

@@ -107,3 +107,7 @@ class MapAreaView(View):
         return HttpResponse(
             json.dumps(data), content_type='application/json'
         )
+
+
+class MapEmbedView(TemplateView):
+    template_name = "uk_results/map_embed.html"
