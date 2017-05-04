@@ -12,7 +12,7 @@ from .map_models import ElectionArea, PartyWithColour
 class Council(models.Model):
     council_id = models.CharField(primary_key=True, max_length=100)
     council_type = models.CharField(blank=True, max_length=10)
-    mapit_id = models.CharField(blank=True, max_length=100)
+    slug = models.CharField(blank=True, max_length=100)
     name = models.CharField(blank=True, max_length=255)
     email = models.EmailField(blank=True)
     phone = models.CharField(blank=True, max_length=100)
@@ -29,7 +29,7 @@ class Council(models.Model):
 
 
 class CouncilElection(models.Model):
-    council = models.OneToOneField(Council)
+    council = models.ForeignKey(Council)
     election = models.OneToOneField(Election)
     party_set = models.ForeignKey(PartySet)
     confirmed = models.BooleanField(default=False)
