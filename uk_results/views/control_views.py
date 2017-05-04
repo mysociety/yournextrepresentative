@@ -18,7 +18,8 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CouncilsWithElections, self).get_context_data(**kwargs)
-        councils = CouncilElection.objects.all().order_by('council__name')
+        councils = CouncilElection.objects.all().order_by(
+            '-election__election_date', 'council__name')
         councils = councils.select_related(
             'council',
             'election',
@@ -66,7 +67,8 @@ class ReportCouncilElectionView(BaseResultsViewMixin, FormView):
     template_name = "uk_results/report_council_election_control.html"
 
     def get_context_data(self, **kwargs):
-        context = super(ReportCouncilElectionView, self).get_context_data(**kwargs)
+        context = super(
+            ReportCouncilElectionView, self).get_context_data(**kwargs)
         context['object'] = self.object
         return context
 

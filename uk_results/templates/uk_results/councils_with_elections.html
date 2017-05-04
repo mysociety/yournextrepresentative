@@ -2,20 +2,28 @@
 
 {% block results_content %}
 
+{% regroup council_elections by election.election_date as elections_by_date %}
+
+{% for elections in elections_by_date %}
+<h1>{{ elections.grouper }}</h1>
+
 
 <table>
-
   <thead>
     <th>Election</th>
+    <th>Date</th>
     <th>Control</th>
   </thead>
   <tbody>
-    {% for council_election in council_elections %}
+    {% for council_election in elections.list %}
     <tr>
       <td>
           <a href="{{ council_election.get_absolute_url }}">
             {{ council_election.election }}
           </a>
+      </td>
+      <td>
+          {{ council_election.election.election_date }}
       </td>
       <td>
         {% if council_election.controller_resultset and not council_election.controller_resultset.noc  %}
@@ -38,4 +46,8 @@
     {% endfor %}
   </tbody>
 </table>
+
+
+{% endfor %}
+
 {% endblock results_content %}

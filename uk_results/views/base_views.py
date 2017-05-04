@@ -2,9 +2,14 @@ import json
 
 from django.views.generic import TemplateView, View
 from django.http import HttpResponse
+from django.db.models import Count
+
+from elections.models import Election
 
 from ..models import ElectionArea
+from ..constants import RESULTS_DATE
 from .base import BaseResultsViewMixin
+
 
 class ResultsHomeView(BaseResultsViewMixin, TemplateView):
     template_name = "uk_results/home.html"
@@ -12,8 +17,16 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ResultsHomeView, self).get_context_data(**kwargs)
         from uk_results.models import CouncilElection
-        context['council_total'] = CouncilElection.objects.all().count()
-        context['council_confirmed'] = CouncilElection.objects.filter(
+
+
+        ec_qs = CouncilElection.objects.filter(
+            election__election_date=RESULTS_DATE)
+        ec_qs = ec_qs.annotate(
+            post_count=Count('election__postextraelection__postextra')
+            ).filter(post_count__gt=4)
+
+        context['council_total'] = ec_qs.count()
+        context['council_confirmed'] = ec_qs.filter(
             confirmed=True).count()
 
         context['council_election_percent'] = round(
@@ -22,10 +35,13 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
             * 100)
 
 
-        from candidates.models import PostExtra
+        from candidates.models import PostExtraElection
         from uk_results.models import PostResult
-        context['votes_total'] = PostExtra.objects.filter(
-            postextraelection__election__slug__contains="local").count()
+        context['votes_total'] = PostExtraElection.objects.filter(
+            election__slug__contains="local",
+            election__election_date=RESULTS_DATE,
+
+        ).count()
         context['votes_confirmed'] = PostResult.objects.filter(
             confirmed=True).count()
 
@@ -47,7 +63,11 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
 
 class MapAreaView(View):
     def get(self, request, *args, **kwargs):
-        filter_kwargs = {'parent': None}
+        filter_kwargs = {
+            'parent': None,
+            'election__election_date': RESULTS_DATE,
+            'election__slug__contains': "local",
+        }
 
         if request.GET.get('parent'):
             filter_kwargs['parent'] = ElectionArea.objects.get(
@@ -56,9 +76,18 @@ class MapAreaView(View):
         if request.GET.get('only'):
             filter_kwargs['election__slug'] = request.GET['only']
 
-        data = {}
+        elections = Election.objects.annotate(
+                post_count=Count('postextraelection__postextra')
+            ).filter(post_count__gt=4).values_list('slug', flat=True)
 
-        for area in ElectionArea.objects.filter(**filter_kwargs):
+        qs = ElectionArea.objects.filter(**filter_kwargs)
+        qs = qs.select_related('election', 'winning_party')
+        qs = qs.filter(election__slug__in=elections)
+
+        data = {}
+        for area in qs:
+            if not area.geo_json:
+                continue
             data[area.area_gss] = json.loads(area.geo_json)
             data[area.area_gss]['election_name'] = "<a href='{}{}'>{}</a>".format(
                 "https://candidates.democracyclub.org.uk/uk_results/",
