@@ -24,20 +24,30 @@
   {% endfor %}
 </table>
 
-<div class="pagination">
-    <span class="step-links">
-        {% if actions.has_previous %}
-            <a href="?page={{ actions.previous_page_number }}">{% trans "previous" %}</a>
-        {% endif %}
+<ul class="pagination" role="menubar" aria-label="Pagination">
+  {% if actions.has_previous %}
+    <li class="arrow">
+        <a role="menuitem" href="?page={{ actions.previous_page_number }}">{% trans "previous" %}</a>
+    </li>
+  {% else %}
+    <li class="arrow unavailable">
+        <a role="menuitem" aria-disabled="true">&laquo; {% trans "Previous" %}</a>
+    </li>
+  {% endif %}
 
-        <span class="current">
-            {% blocktrans with n=actions.number num=actions.paginator.num_pages %}Page {{ n }} of {{ num }}.{% endblocktrans %}
-        </span>
+  <li class="unavailable">
+    <a role="menuitem" aria-disabled="true">{% blocktrans with n=actions.number num=actions.paginator.num_pages %}Page {{ n }} of {{ num }}{% endblocktrans %}</a>
+  </li>
 
-        {% if actions.has_next %}
-            <a href="?page={{ actions.next_page_number }}">{% trans "next" %}</a>
-        {% endif %}
-    </span>
-</div>
+  {% if actions.has_next %}
+    <li class="arrow">
+        <a role="menuitem" href="?page={{ actions.next_page_number }}">{% trans "next" %}</a>
+    </li>
+  {% else %}
+    <li class="arrow unavailable">
+        <a role="menuitem" aria-disabled="true">{% trans "Next" %} &raquo;</a>
+    </li>
+  {% endif %}
+</ul>
 
 {% endblock %}
