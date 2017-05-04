@@ -11,18 +11,9 @@
 
 {% block content %}
 
-<table>
-  <tr>
-    <th>{% trans "User" %}</th>
-    <th>{% trans "Date and time" %}</th>
-    <th>{% trans "Action" %}</th>
-    <th>{% trans "Candidate edited" %}</th>
-    <th>{% trans "Information source" %}</th>
-  </tr>
-  {% for action in actions %}
-    {% include 'candidates/_recent-change.html' with action=action %}
-  {% endfor %}
-</table>
+{% for action in actions %}
+  {% include 'candidates/_recent-change.html' with action=action %}
+{% endfor %}
 
 <ul class="pagination" role="menubar" aria-label="Pagination">
   {% if actions.has_previous %}

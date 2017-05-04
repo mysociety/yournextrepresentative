@@ -1,0 +1,67 @@
+$recent-change-background-color: #F2F5F4 !default;
+$recent-change-warning-background-color: mix(#fff, $color-orange, 90%) !default;
+$recent-change-reviewed-background-color: mix(#fff, #62B356, 90%) !default;
+
+.recent-change {
+  margin: 2em 0;
+}
+
+.recent-change__change {
+  background-color: $recent-change-background-color;
+  padding: 1em 1.2em;
+  border-radius: $button-radius;
+  margin-bottom: 1em;
+
+  .recent-change--warning & {
+    background-color: $recent-change-warning-background-color;
+  }
+
+  .recent-change--reviewed & {
+    background-color: $recent-change-reviewed-background-color;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1em;
+    margin-top: 0;
+  }
+
+  p {
+    font-size: (14em/16); // 14px
+  }
+}
+
+.recent-change__moderation {
+  & > * {
+    margin-bottom: 0.5em;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.recent-change__moderation__warning {
+  color: $color-orange;
+}
+
+@media (min-width: $small-breakpoint) {
+  .recent-change {
+    @include flex-container();
+    @include flex-align(center);
+  }
+
+  .recent-change__change {
+    @include flex(1 1 auto);
+    margin-bottom: 0;
+    margin-right: 2em;
+  }
+
+  .recent-change__moderation {
+    @include flex(0 0 auto);
+    width: 14em;
+  }
+}

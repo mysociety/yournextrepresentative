@@ -73,3 +73,6 @@ $high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi
 @import "leaderboards";
 @import "search";
 @import "data_timeline";
+
+@import "user";
+@import "recent-change";

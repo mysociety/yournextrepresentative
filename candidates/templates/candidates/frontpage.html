@@ -78,85 +78,9 @@
       <h2><a href="{% url 'recent-changes' %}">{% trans "Recent changes" %}</a></h2>
       <ol>
         {% for action in recent_actions %}
-          <li>{% with username=action.user.username when=action.created|timesince person_id=action.person.id person_name=action.person.name %}
-            {% url 'person-view' person_id=person_id as person_url %}
-            {% if action.action_type == 'person-create' %}
-              {% if person_id %}
-              {% blocktrans trimmed %}
-                User <strong>{{ username }}</strong>
-                created <a href="{{ person_url }}">a new candidate</a>
-                <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-              {% else %}
-              {% blocktrans trimmed %}
-                User <strong>{{ username }}</strong> is creating a new candidate
-                <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-              {% endif %}
-            {% elif action.action_type == 'person-merge' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              merged another candidate into <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'photo-upload' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              uploaded a photo of <a href="{{ person_url }}">{{ person_name }}</a> for moderation
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'photo-approve' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              approved an uploaded photo of <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'photo-reject' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              rejected an uploaded photo of <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'person-revert' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              reverted to an earlier version of <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'candidacy-create' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              confirmed candidacy for <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'candidacy-delete' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              removed candidacy for <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'constituency-lock' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong> locked a constituency <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'constituency-unlock' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong> unlocked a constituency <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% elif action.action_type == 'set-candidate-elected' %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              marked <a href="{{ person_url }}">{{ person_name }}</a> as the winner
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% else %}
-              {% blocktrans trimmed %}
-              User <strong>{{ username }}</strong>
-              updated <a href="{{ person_url }}">{{ person_name }}</a>
-              <span class="when">{{ when }} ago</span>
-              {% endblocktrans %}
-            {% endif %}
-          {% endwith %}</li>
+          <li>
+            {% include 'candidates/_recent-change-summary.html' with action=action %}
+          </li>
         {% endfor %}
       </ol>
       <p class="more"><a href="{% url 'recent-changes' %}">{% trans "Show more changes…" %}</a></p>

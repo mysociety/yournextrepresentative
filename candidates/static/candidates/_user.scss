@@ -1,0 +1,29 @@
+$experienced-user-color: #62B356 !default; // green
+$inexperienced-user-color: #E04B4B !default; // red
+
+.user {
+  font-weight: normal;
+  color: $experienced-user-color;
+
+  &:after {
+    content: attr(data-xp);
+    display: inline-block;
+    vertical-align: 0.1em;
+    background: $experienced-user-color;
+    color: #fff;
+    margin-left: 0.3em;
+    font-size: 0.8em;
+    padding: 0.2em 0.3em;
+    border-radius: 0.2em;
+    line-height: 1em;
+  }
+}
+
+// TODO: Add this class to inexperienced users
+.user--inexperienced {
+  color: $inexperienced-user-color;
+
+  &:after {
+    background-color: $inexperienced-user-color;
+  }
+}

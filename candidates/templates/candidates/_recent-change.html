@@ -1,3 +1,51 @@
+{# TODO: add .recent-change--warning or .recent-change--reviewed classes #}
+<div class="recent-change">
+    <div class="recent-change__change">
+        <h2>
+            {# TODO: colour coding for user link based on xp level #}
+            {% include 'candidates/_recent-change-summary.html' with action=action %}
+        </h2>
+        {# TODO: inline JSON diff #}
+        {# TODO: automatically linkify URLs in action.source #}
+        <p><em>Source:</em> {{ action.source }}</p>
+    </div>
+    <div class="recent-change__moderation">
+      {% if action.action_type == 'person-create' %}
+        <p class="recent-change__moderation__warning">Person created</p>
+      {% elif action.action_type == 'person-update' %}
+        <p class="recent-change__moderation__warning">Person updated</p>
+      {% elif action.action_type == 'candidacy-create' %}
+        <p class="recent-change__moderation__warning">Candidacy created</p>
+      {% elif action.action_type == 'candidacy-delete' %}
+        <p class="recent-change__moderation__warning">Candidacy deleted</p>
+      {% endif %}
+
+      {# TODO: maybe show this only to moderators? #}
+      {% if action.user.loggedaction_set.count > 10 %}
+        <p class="recent-change__moderation__warning">Inexperienced author</p>
+      {% endif %}
+
+      {# TODO: show this only if action has been reviewed #}
+      {% if 0 %}
+        <p class="recent-change__moderation__reviewed">Reviewed by <strong class="user" data-xp="999">Example</strong></p>
+      {% endif %}
+
+      {# TODO: show this only if user is a moderator and has not reviewed this action yet #}
+      {% if 1 %}
+        <a class="recent-change__moderation__review">
+          {# TODO: toggle based on whether action has already been reviewed #}
+          {% if 0 %}
+            Add your review
+          {% else %}
+            Mark as reviewed
+          {% endif %}
+        </a>
+      {% endif %}
+    </div>
+</div>
+
+
+<!--
 <tr>
   <td>{{ action.user.username }}</td>
   <td>{{ action.created }}</td>
@@ -9,3 +57,4 @@
   {% endif %}
   <td>{{ action.source }}</td>
 </tr>
+-->
