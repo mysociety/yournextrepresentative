@@ -37,7 +37,7 @@ def fetch_posts_for_area(**kwargs):
     posts = Post.objects.filter(
         area__identifier__in=area_ids,
     ).select_related(
-        'area', 'area__extra__type', 'organization'
+        'area', 'area__extra__type', 'organization', 'extra',
     ).prefetch_related(
         'extra__elections'
     )
@@ -137,8 +137,7 @@ class CandidatesAndElectionsForPostcodeViewSet(ViewSet):
                 election_kwargs['election_date__gte'] = request.GET['date_gte']
 
         results = []
-        qs = posts.all().select_related('extra')
-        for post in qs:
+        for post in posts:
             for election in post.extra.elections.filter(**election_kwargs):
                 candidates = []
                 for membership in post.memberships.filter(
