@@ -69,7 +69,7 @@ def get_areas(url, cache_key, exception):
         return result
     elif r.status_code == 400:
         ee_result = r.json()
-        raise exception(ee_result['error'])
+        raise exception(ee_result['detail'])
     elif r.status_code == 404:
         raise exception(
             _('The url "{}" couldn’t be found').format(url)
