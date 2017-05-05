@@ -675,6 +675,9 @@ class PostExtraElection(models.Model):
     candidates_locked = models.BooleanField(default=False)
     winner_count = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        unique_together = ('election', 'postextra')
+
 
 class MembershipExtra(models.Model):
     base = models.OneToOneField(Membership, related_name='extra')
