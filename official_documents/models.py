@@ -39,7 +39,7 @@ class OfficialDocument(TimeStampedModel):
     uploaded_file = models.FileField(
         upload_to=document_file_name, max_length=800)
     post = models.ForeignKey(Post, blank=True, null=True)
-    source_url = models.URLField(blank=True,
+    source_url = models.URLField(
         help_text=_("The page that links to this document"),
         max_length=1000,
     )
