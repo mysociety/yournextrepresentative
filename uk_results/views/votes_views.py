@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.utils.six.moves.urllib_parse import urlencode
 
 from django.views.generic import (DetailView, FormView, UpdateView, ListView)
@@ -18,7 +19,7 @@ class PostResultsView(BaseResultsViewMixin, DetailView):
 
     def get_object(self):
         slug = self.kwargs.get('post_id')
-        post = Post.objects.get(extra__slug=slug)
+        post = get_object_or_404(Post, extra__slug=slug)
         return PostResult.objects.get_or_create(post=post)[0]
 
 
@@ -28,7 +29,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
 
     def get_object(self):
         slug = self.kwargs.get('post_id')
-        post = Post.objects.get(extra__slug=slug)
+        post = get_object_or_404(Post, extra__slug=slug)
         return PostResult.objects.get_or_create(post=post)[0]
 
     def get_context_data(self, **kwargs):
