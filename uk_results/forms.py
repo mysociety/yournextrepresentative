@@ -8,7 +8,7 @@ from django.db import transaction
 
 from popolo.models import Organization
 from candidates.views.version_data import get_change_metadata, get_client_ip
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, PostExtraElection
 
 from results.models import ResultEvent
 
@@ -267,9 +267,12 @@ class ResultSetForm(forms.ModelForm):
         instance.ip_address = get_client_ip(request)
         instance.save(request)
 
-        winner_count = self.memberships[0][0]\
-            .extra.election.postextraelection_set.filter(
-                postextra=self.memberships[0][0].post.extra)[0].winner_count
+        election = self.memberships[0][0].extra.election
+        postextra = self.post.extra
+        pee = PostExtraElection.objects.get(
+            postextra=postextra, election=election)
+
+        winner_count = pee.winner_count
 
         winners = dict(sorted(
             [("{}-{}".format(self[y].value(), x.person.id), x)
