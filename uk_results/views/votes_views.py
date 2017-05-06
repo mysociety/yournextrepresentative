@@ -6,10 +6,8 @@ from django.views.generic import (DetailView, FormView, UpdateView, ListView)
 from candidates.views.version_data import get_client_ip
 from candidates.models import LoggedAction
 
-from popolo.models import Post
-
 from ..constants import CONFIRMED_STATUS, RESULTS_DATE
-from ..models import PostResult, ResultSet
+from ..models import PostElectionResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
 from .base import BaseResultsViewMixin
 
@@ -17,20 +15,10 @@ from .base import BaseResultsViewMixin
 class PostResultsView(BaseResultsViewMixin, DetailView):
     template_name = "uk_results/posts/post_view.html"
 
-    def get_object(self):
-        slug = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, extra__slug=slug)
-        return PostResult.objects.get_or_create(post=post)[0]
-
 
 class PostReportVotesView(BaseResultsViewMixin, FormView):
-    model = PostResult
+    model = PostElectionResult
     template_name = "uk_results/report_council_election_control.html"
-
-    def get_object(self):
-        slug = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, extra__slug=slug)
-        return PostResult.objects.get_or_create(post=post)[0]
 
     def get_context_data(self, **kwargs):
         context = super(PostReportVotesView, self).get_context_data(**kwargs)
@@ -51,7 +39,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
         self.object = self.get_object()
 
         return ResultSetForm(
-            post_result=self.object,
+            post_election_result=self.object,
             **self.get_form_kwargs()
         )
 

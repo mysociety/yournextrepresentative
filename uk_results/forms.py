@@ -165,9 +165,9 @@ class ResultSetForm(forms.ModelForm):
             'source',
         )
 
-    def __init__(self, post_result, *args, **kwargs):
-        self.post = post_result.post
-        self.post_result = post_result
+    def __init__(self, post_election_result, *args, **kwargs):
+        self.post_election = post_election_result.post_election
+        self.post_election_result = post_election_result
         self.memberships = []
 
         initial_values = {}
@@ -187,7 +187,8 @@ class ResultSetForm(forms.ModelForm):
         existing_fields = self.fields
         fields = OrderedDict()
 
-        memberships = self.post.memberships.all()
+        memberships = self.post_election.postextra.base.memberships.filter(
+            extra__election=self.post_election.election)
         memberships = sorted(
             memberships,
             key=lambda member: member.person.name.split(' ')[-1]
@@ -261,18 +262,14 @@ class ResultSetForm(forms.ModelForm):
 
     def save(self, request):
         instance = super(ResultSetForm, self).save(commit=False)
-        instance.post_result = self.post_result
+        instance.post_election_result = self.post_election_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
         instance.ip_address = get_client_ip(request)
         instance.save(request)
 
-        election = self.memberships[0][0].extra.election
-        postextra = self.post.extra
-        pee = PostExtraElection.objects.get(
-            postextra=postextra, election=election)
-
-        winner_count = pee.winner_count
+        post_election = self.post_election_result.post_election
+        winner_count = post_election.winner_count
 
         winners = dict(sorted(
             [("{}-{}".format(self[y].value(), x.person.id), x)

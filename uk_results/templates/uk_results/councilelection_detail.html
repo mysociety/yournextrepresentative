@@ -35,7 +35,7 @@
 <h3>Wards</h3>
 <div class="row">
   <div class="columns large-6">
-    {% for post in posts %}
+    {% for post_election in post_elections %}
       {# <li class="area_{{ post.base.area.identifier }}"> #}
       {#   {{ post }} #}
       {#   {% if post.confirmed %} #}
@@ -47,8 +47,8 @@
       {% include "uk_results/includes/vote_result_item.html" with result=post.base.postresult_set.all.0.confirmed_resultset results=result.candidate_results.all show_heading=True show_post_name=True %}
       {% else %}
         <div>
-          <h3>{{ post }}</h3>
-          <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a>
+          <h3>{{ post_election.postextra.base.label }}</h3>
+          <a class="button tiny" href="{% url 'report-post-votes-view' post_election.pk %}">Report votes</a>
         </div>
       {% endif %}
     {% endfor %}

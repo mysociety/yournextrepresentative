@@ -9,11 +9,11 @@ from candidates.serializers import OrganizationExtraSerializer
 from candidates.views import ResultsSetPagination
 
 from ..serializers import (
-    CandidateResultSerializer, PostResultSerializer, ResultSetSerializer
+    CandidateResultSerializer, PostElectionResultSerializer, ResultSetSerializer
 )
 from ..models import (
     CandidateResult, CouncilElection, CouncilElectionResultSet,
-    PostResult, ResultSet,
+    PostElectionResult, ResultSet,
 )
 
 
@@ -114,8 +114,8 @@ class ResultSetViewSet(viewsets.ModelViewSet):
 
 
 
-class PostResultViewSet(viewsets.ModelViewSet):
-    queryset = PostResult.objects \
+class PostElectionResultViewSet(viewsets.ModelViewSet):
+    queryset = PostElectionResult.objects \
         .select_related('post__extra') \
         .prefetch_related(
             Prefetch(
@@ -139,6 +139,6 @@ class PostResultViewSet(viewsets.ModelViewSet):
             ),
         ) \
         .order_by('id')
-    serializer_class = PostResultSerializer
+    serializer_class = PostElectionResultSerializer
     pagination_class = ResultsSetPagination
     filter_fields = ('confirmed',)

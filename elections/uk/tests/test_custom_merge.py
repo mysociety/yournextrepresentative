@@ -5,8 +5,9 @@ from popolo.models import Person
 from candidates.tests import factories
 from candidates.tests.auth import TestUserMixin
 from candidates.tests.uk_examples import UK2015ExamplesMixin
+from candidates.models import PostExtraElection
 
-from uk_results.models import CandidateResult, PostResult, ResultSet
+from uk_results.models import CandidateResult, PostElectionResult, ResultSet
 
 
 @attr(country='uk')
@@ -60,8 +61,12 @@ class TestUKResultsPreserved(TestUserMixin, UK2015ExamplesMixin, WebTest):
         )
 
         # Now attach a vote count to the secondary person's candidacy:
-        post_result = PostResult.objects.create(
-            post=secondary_membership_extra.base.post,
+        pee = PostExtraElection.objects.get(
+            postextra=secondary_membership_extra.base.post.extra,
+            election=secondary_membership_extra.election
+        )
+        post_election_result = PostElectionResult.objects.create(
+            post_election=pee,
             confirmed=False,
         )
         result_set = ResultSet.objects.create(

@@ -54,10 +54,10 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CouncilElectionView, self).get_context_data(**kwargs)
-        context['posts'] = self.object.election.posts.select_related(
-            'base',
-            'base__area',
-        ).order_by('base__label')
+        context['post_elections'] = \
+            self.object.election.postextraelection_set.all().select_related(
+                'postextra__base', 'election'
+            )
         return context
 
 

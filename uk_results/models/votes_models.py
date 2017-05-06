@@ -6,27 +6,29 @@ from django.db import transaction
 from .base import BaseResultModel, ResultStatusMixin
 
 
-class PostResultManager(models.Manager):
+class PostElectionResultManager(models.Manager):
     def confirmed(self):
         return self.filter(confirmed=True)
 
 
-class PostResult(models.Model):
+class PostElectionResult(models.Model):
+    # post = models.ForeignKey('popolo.Post')
     post_election = models.ForeignKey('candidates.PostExtraElection')
     confirmed = models.BooleanField(default=False)
     confirmed_resultset = models.OneToOneField(
         'ResultSet', null=True)
 
-    objects = PostResultManager()
+    objects = PostElectionResultManager()
 
     @models.permalink
     def get_absolute_url(self):
-        return ('post-results-view', (), {'post_id': self.post.extra.slug})
+        return ('post-results-view', (), {
+            'post_election_id': self.post_election.pk})
 
 
 class ResultSet(BaseResultModel, ResultStatusMixin):
-    post_result = models.ForeignKey(
-        PostResult,
+    post_election_result = models.ForeignKey(
+        PostElectionResult,
         related_name='result_sets',
     )
 

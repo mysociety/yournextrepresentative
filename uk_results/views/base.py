@@ -1,8 +1,11 @@
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from braces.views import UserPassesTestMixin
-
 from auth_helpers.views import user_in_group
+
+from candidates.models import PostExtraElection
+from ..models import PostElectionResult
 
 
 class BaseResultsViewMixin(UserPassesTestMixin):
@@ -13,9 +16,12 @@ class BaseResultsViewMixin(UserPassesTestMixin):
         results_feature_active = getattr(
             settings, 'RESULTS_FEATURE_ACTIVE', False)
 
-        return any(
-                (in_group, results_feature_active)
-            )
+        return any((in_group, results_feature_active))
 
-
-
+    def get_object(self):
+        post_election_id = self.kwargs.get('post_election_id')
+        pee = get_object_or_404(
+            PostExtraElection,
+            pk=post_election_id,
+        )
+        return PostElectionResult.objects.get_or_create(post_election=pee)[0]
