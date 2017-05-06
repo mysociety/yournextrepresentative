@@ -12,7 +12,7 @@ class PostResultManager(models.Manager):
 
 
 class PostResult(models.Model):
-    post = models.ForeignKey('popolo.Post')
+    post_election = models.ForeignKey('candidates.PostExtraElection')
     confirmed = models.BooleanField(default=False)
     confirmed_resultset = models.OneToOneField(
         'ResultSet', null=True)
