@@ -68,7 +68,7 @@ class BulkAddView(BaseBulkAddView):
 
         if 'official_document' in context and \
                 context['official_document'] is not None:
-            form_kwargs['source'] = context['official_document'].source_url,
+            form_kwargs['source'] = context['official_document'].source_url
 
         if self.request.POST:
             context['formset'] = forms.BulkAddFormSet(
