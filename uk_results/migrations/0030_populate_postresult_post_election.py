@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 def set_post_election_from_post(apps, schema_editor):
     """
-    This is far from idea. Try to guess the PostExtraElection
+    This is far from ideal. Try to guess the PostExtraElection
     that this PostResult relates to. This will have to be done by looking
     and the related memberships and assuming they're correct (sometimes they
     won't be, and that will have to be fixed manually later).
@@ -20,6 +20,8 @@ def set_post_election_from_post(apps, schema_editor):
     for post_result in qs:
         pee = None
         elections = post_result.post.extra.elections.all()
+        if not elections.exists():
+            raise ValueError("Post with no elections found.")
         if elections.count() == 1:
             # This is an easy case – this post only has one known election
             pee = PostExtraElection.objects.get(
@@ -32,7 +34,7 @@ def set_post_election_from_post(apps, schema_editor):
         else:
             if not post_result.result_sets.exists():
                 # There are no results sets for this post_result
-                # so we cna just delete it
+                # so we can just delete it
                 post_result.delete()
                 continue
 
