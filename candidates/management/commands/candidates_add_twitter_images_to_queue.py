@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
     help = "Add Twitter avatars for candidates without images to the moderation queue"
 
-    def add_twitter_image_to_queue(self, person, image_url):
+    def add_twitter_image_to_queue(self, person, image_url, user_id):
         if person.queuedimage_set.exists():
             # Don't add an image to the queue if there is one already
             # in the queue. It doesn't matter if that queued image has
@@ -58,10 +58,13 @@ class Command(BaseCommand):
             verbose(msg.format(url=image_url))
             return
 
+        justification_for_use = "Auto imported from Twitter: " \
+            "https://twitter.com/intent/user?user_id={user_id}".format(
+                user_id=user_id)
         qi = QueuedImage(
             decision=QueuedImage.UNDECIDED,
             why_allowed=CopyrightOptions.PROFILE_PHOTO,
-            justification_for_use="Auto imported from Twitter",
+            justification_for_use=justification_for_use,
             person=person
         )
         qi.save()
@@ -79,7 +82,8 @@ class Command(BaseCommand):
                   "user ID: {user_id}"
             verbose(_(msg).format(person=person, user_id=user_id))
             self.add_twitter_image_to_queue(
-                person, self.twitter_data.user_id_to_photo_url[user_id])
+                person, self.twitter_data.user_id_to_photo_url[user_id],
+                user_id)
 
     def handle(self, *args, **options):
         global VERBOSE
