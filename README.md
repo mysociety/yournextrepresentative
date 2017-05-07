@@ -42,7 +42,7 @@ depending on what you're trying to do:
 * [A guide to setting up YourNextRepresentative for a new country](docs/new-instance.md)
   This is a work-in-progress, describing what's involved in
   setting up YourNextRepresentative in a new country.
-* [Notes on setting up a dev version of YourNextMP with vagrant](docs/ynmp-vagrant.md)
+* [Notes on setting up a dev version of YourNextMP with vagrant](docs/vagrant.md)
   This was created to make it easy for developers and designers
   to get started working on YourNextMP (the UK site), and may be
   still be of some use.
