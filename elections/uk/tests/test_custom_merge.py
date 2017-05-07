@@ -70,7 +70,7 @@ class TestUKResultsPreserved(TestUserMixin, UK2015ExamplesMixin, WebTest):
             confirmed=False,
         )
         result_set = ResultSet.objects.create(
-            post_result=post_result,
+            post_election_result=post_election_result,
             num_turnout_reported=51561,
             num_spoilt_ballots=42,
             ip_address='127.0.0.1',
@@ -120,12 +120,16 @@ class TestUKResultsPreserved(TestUserMixin, UK2015ExamplesMixin, WebTest):
         )
 
         # Now attach a vote count to the primary person's candidacy:
-        post_result = PostResult.objects.create(
-            post=primary_membership_extra.base.post,
+        pee = PostExtraElection.objects.get(
+            postextra=primary_membership_extra.base.post.extra,
+            election=primary_membership_extra.election
+        )
+        post_election_result = PostElectionResult.objects.create(
+            post_election=pee,
             confirmed=False,
         )
         result_set = ResultSet.objects.create(
-            post_result=post_result,
+            post_election_result=post_election_result,
             num_turnout_reported=46659,
             num_spoilt_ballots=42,
             ip_address='127.0.0.1',
