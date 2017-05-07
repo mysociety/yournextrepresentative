@@ -43,8 +43,8 @@
       {#   {% else %} #}
       {#   <a class="button tiny" href="{% url 'report-post-votes-view' post.slug %}">Report votes</a> #}
       {#   {% endif %} #}
-      {% if post.base.postresult_set.all.0.confirmed_resultset %}
-      {% include "uk_results/includes/vote_result_item.html" with result=post.base.postresult_set.all.0.confirmed_resultset results=result.candidate_results.all show_heading=True show_post_name=True %}
+      {% if post_election.postelectionresult_set.confirmed %}
+      {% include "uk_results/includes/vote_result_item.html" with result=post_election.postelectionresult_set.confirmed.confirmed_resultset show_heading=True show_post_name=True %}
       {% else %}
         <div>
           <h3>{{ post_election.postextra.base.label }}</h3>

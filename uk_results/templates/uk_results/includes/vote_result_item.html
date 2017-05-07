@@ -1,13 +1,14 @@
 <div class="vote_result">
   {% if show_heading %}
+
   <h4>
     {% if result.review_status == 'confirmed' %}
-    Result{% if show_post_name %}: {{ result.post_result.post.area.name }}{% endif %}
+    Result{% if show_post_name %}: {{ result.post_election_result.post_election.postextra.base.label }}{% endif %}
     {% else %}
-    Reported result{% if show_post_name %}: {{ result.post_result.post.area.name }}{% endif %}
+    Reported result{% if show_post_name %}: {{ result.post_election_result.post_election.postextra.base.label }}{% endif %}
     {% endif %}
   </h4>
-  <h5>{{result.post_result.post.extra.postextraelection_set.all.0.election}}</h5>
+  <h5>{{result.post_election_result.post_election.election}}</h5>
   {% endif %}
 
   {% if result.review_status == 'confirmed' %}
