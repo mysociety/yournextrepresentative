@@ -23,6 +23,9 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
         councils = councils.select_related(
             'council',
             'election',
+            'controller_resultset',
+            'controller_resultset__controller',
+            'controller_resultset__controller__partywithcolour',
             # 'reported_results',
         )
         councils = councils.prefetch_related(
@@ -31,6 +34,7 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
                 CouncilElectionResultSet.objects.select_related(
                     'council_election',
                     'council_election__election',
+                    'council_election__council',
                     'council_election__council',
                 )
             )

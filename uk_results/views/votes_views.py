@@ -79,7 +79,13 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
 
 class ReviewPostReportView(ResultsViewPermissionsMixin, UpdateView):
     template_name = "uk_results/posts/review_reported_votes.html"
-    queryset = ResultSet.objects.all()
+    queryset = ResultSet.objects.all().select_related(
+        'post_election_result',
+    ).prefetch_related(
+        'candidate_results__membership',
+        'candidate_results__membership__on_behalf_of__partywithcolour',
+        'candidate_results__membership__person',
+    )
     pk_url_kwarg = 'result_set_id'
 
     def get_form(self, form_class=None):
