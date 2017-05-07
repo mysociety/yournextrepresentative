@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
-from candidates.models import PostExtra
+from candidates.models import PostExtra, PostExtraElection
 
 from compat import python_2_unicode_compatible
 
@@ -96,6 +96,7 @@ class QueuedImage(models.Model):
 
 
 class SuggestedPostLock(models.Model):
+    postextraelection = models.ForeignKey(PostExtraElection, blank=True, null=True)
     post_extra = models.ForeignKey(PostExtra)
     user = models.ForeignKey(User, blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
