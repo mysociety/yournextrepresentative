@@ -1,10 +1,12 @@
-from django.shortcuts import get_object_or_404
 from django.utils.six.moves.urllib_parse import urlencode
+from django.http import Http404
+from django.core.urlresolvers import reverse
 
-from django.views.generic import (DetailView, FormView, UpdateView, ListView)
+from django.views.generic import (
+    DetailView, FormView, UpdateView, ListView, RedirectView)
 
 from candidates.views.version_data import get_client_ip
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, PostExtraElection
 
 from ..constants import CONFIRMED_STATUS, RESULTS_DATE
 from ..models import PostElectionResult, ResultSet
@@ -153,3 +155,28 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
         queryset = queryset.order_by(
             'post_election_result__post_election__election')
         return queryset
+
+
+class PostResultsRedirectView(RedirectView):
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        """
+        For historic reasons there are public URLs that only contain
+        a single PostExtra slug rather than an identifier for a
+        PostExtraElection.
+
+        To make these URLs continue to work, we redirect form them to
+        the newer style URLs.
+
+        This is a "better than nothing" guess. Because the URLs are old, we
+        assume the oldest PostExtraElection is the desired one.
+        """
+
+        pee = PostExtraElection.objects.filter(
+            postextra__slug=kwargs['post_slug']
+        ).order_by('election__election_date').first()
+        if not pee:
+            raise Http404("No post with that ID found")
+        return reverse('post-results-view', kwargs={
+            'post_election_id': pee.pk})

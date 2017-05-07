@@ -65,6 +65,12 @@ urlpatterns = [
         name='latest-votes-view'
     ),
 
+    url(
+        r'^posts/(?P<post_slug>[^/]+)/$',
+        views.PostResultsRedirectView.as_view(),
+        name='post-result-redirect-view'
+    ),
+
 
 
     # Map Views
