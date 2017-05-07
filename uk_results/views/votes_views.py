@@ -56,7 +56,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
                 action_type='record-council-result',
                 ip_address=get_client_ip(self.request),
                 source=form['source'].value(),
-                post=form.post,
+                post=form.post_election.postextra.base,
             )
 
         if 'report_and_confirm' in self.request.POST:
@@ -69,7 +69,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
                     action_type='confirm-council-result',
                     ip_address=get_client_ip(self.request),
                     source="Confirmed when reporting",
-                    post=form.post,
+                    post=form.post_election.postextra.base,
                 )
 
         return super(PostReportVotesView, self).form_valid(form)

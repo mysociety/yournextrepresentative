@@ -10,7 +10,7 @@ from ..constants import CONFIRMED_STATUS, RESULTS_DATE
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
-from .base import BaseResultsViewMixin
+from .base import BaseResultsViewMixin, ResultsViewPermissionsMixin
 
 
 class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
@@ -136,7 +136,7 @@ class LatestControlResults(BaseResultsViewMixin, ListView):
         return queryset
 
 
-class ConfirmControl(BaseResultsViewMixin, UpdateView):
+class ConfirmControl(ResultsViewPermissionsMixin, UpdateView):
     template_name = "uk_results/review_reported_control.html"
     queryset = CouncilElectionResultSet.objects.all()
 
