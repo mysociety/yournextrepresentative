@@ -8,7 +8,12 @@ from .base import BaseResultModel, ResultStatusMixin
 
 class PostElectionResultManager(models.Manager):
     def confirmed(self):
-        return self.filter(confirmed=True)
+        qs = self.filter(confirmed=True)
+        if qs.exists():
+            return qs.latest()
+        else:
+            return False
+
 
 
 class PostElectionResult(models.Model):
@@ -19,6 +24,9 @@ class PostElectionResult(models.Model):
         'ResultSet', null=True)
 
     objects = PostElectionResultManager()
+
+    class Meta:
+        get_latest_by = 'confirmed_resultset__created'
 
     @models.permalink
     def get_absolute_url(self):
@@ -48,7 +56,7 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
         return u"pk=%d user=%r post=%r" % (
             self.pk,
             self.user,
-            self.post_result,
+            self.post_election_result,
         )
 
     def save(self, *args, **kwargs):
