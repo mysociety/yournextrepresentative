@@ -14,28 +14,23 @@
         {% include 'candidates/_candidates_for_post.html' %}
 
 
-        {# TODO This is not a great way to do this! #}
-        {# Basically, we can only support FPTP voting systems #}
-        {# {% if 'local' in election %} #}
-        {#   {% if show_results_feature %} #}
-        {#      {% if post_obj.postresult_set.confirmed %} #}
-        {#       {% if post_obj.postresult_set.all.0 %} #}
-        {#       <section> #}
-        {#         <h3>Results</h3> #}
-        {#         {% with post_obj.postresult_set.all.0.result_sets.all.confirmed.latest as result %} #}
-        {#           {% include "uk_results/includes/vote_result_item.html" with result=result results=result.candidate_results.all %} #}
-        {#         {% endwith %} #}
-        {#       </section> #}
-        {#       {% endif %} #}
-        {#  #}
-        {#       {% if not post_obj.postresult_set.all.0 %} #}
-        {#       <a href="{% url "report-post-votes-view" post_data.id %}" class="button"> #}
-        {#         Report results for {{post_data.label}} #}
-        {#       </a> #}
-        {#       {% endif %} #}
-        {#   {% endif %} #}
-        {#   {% endif %} #}
-        {# {% endif %} #}
+        {# TODO Remove elections that aren't FPTP #}
+        {% if show_results_feature %}
+          {% if post_election.postelectionresult_set.confirmed %}
+            <section>
+            <h3>Results</h3>
+            {% with post_election.postelectionresult_set.confirmed.confirmed_resultset as confirmed_results %}
+            {% include "uk_results/includes/vote_result_item.html" with result=confirmed_results results=confirmed_results.confirmed_resultset.candidate_results.all %}
+            {% endwith %}
+            </section>
+          {% endif %}
+
+          {% if not post_election.postelectionresult_set.confirmed %}
+            <a href="{% url "report-post-votes-view" post_election.id %}" class="button">
+            Report results for {{post_data.label}}
+            </a>
+          {% endif %}
+        {% endif %}
 
         {% if not candidates_locked %}
             {% if some_official_documents %}
