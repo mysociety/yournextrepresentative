@@ -29,8 +29,8 @@ class CopyrightOptions:
            "on this site")),
         (PROFILE_PHOTO,
          _("This is the candidate's public profile photo from social "
-         "media (e.g. Twitter, Facebook) or their official campaign "
-         "page")),
+           "media (e.g. Twitter, Facebook) or their official campaign "
+           "page")),
         (OTHER,
          _("Other")),
     )
@@ -100,7 +100,8 @@ class SuggestedPostLock(models.Model):
     user = models.ForeignKey(User, blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    justification = models.TextField(blank=True,
+    justification = models.TextField(
+        blank=True,
         help_text="e.g I've reviewed the nomination paper for this area")
 
     @property
