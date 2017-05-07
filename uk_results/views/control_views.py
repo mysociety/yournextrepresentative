@@ -120,7 +120,10 @@ class LatestControlResults(BaseResultsViewMixin, ListView):
 
     def get_queryset(self):
         queryset = self.queryset
-        queryset.filter(council_election__election__election_date=RESULTS_DATE)
+        queryset = queryset.filter(
+            council_election__election__election_date=RESULTS_DATE)
+        queryset = queryset.select_related(
+            'controller', 'council_election__council')
 
         status = self.request.GET.get('status')
         if status:

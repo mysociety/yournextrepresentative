@@ -55,7 +55,7 @@ urlpatterns = [
         name='report-post-votes-view'
     ),
     url(
-        r'^posts/(?P<post_election_id>[\d]+)/review$',
+        r'^posts/(?P<result_set_id>[\d]+)/review$',
         views.ReviewPostReportView.as_view(),
         name='review-votes-view'
     ),

@@ -8,7 +8,7 @@ from candidates.models import PostExtraElection
 from ..models import PostElectionResult
 
 
-class BaseResultsViewMixin(UserPassesTestMixin):
+class ResultsViewPermissionsMixin(UserPassesTestMixin):
     raise_exception = True
     def test_func(self, user):
         in_group = user_in_group(self.request.user,
@@ -17,6 +17,9 @@ class BaseResultsViewMixin(UserPassesTestMixin):
             settings, 'RESULTS_FEATURE_ACTIVE', False)
 
         return any((in_group, results_feature_active))
+
+
+class BaseResultsViewMixin(ResultsViewPermissionsMixin):
 
     def get_object(self):
         post_election_id = self.kwargs.get('post_election_id')

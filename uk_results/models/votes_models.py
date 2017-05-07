@@ -54,11 +54,11 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
     def save(self, *args, **kwargs):
         super(ResultSet, self).save(*args, **kwargs)
         if self.review_status == "confirmed":
-            self.post_result.confirmed = True
-            self.post_result.confirmed_resultset = self
+            self.post_election_result.confirmed = True
+            self.post_election_result.confirmed_resultset = self
             if not self.review_source:
                 self.review_source = self.source
-            self.post_result.save()
+            self.post_election_result.save()
 
 
 

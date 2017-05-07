@@ -15,7 +15,7 @@
   {% else %}
   <p><strong>This result is not been confirmed</strong></p>
     {% if user_can_confirm_control %}
-    <a href="{% url 'review-votes-view' pk=result.pk %}" class="button tiny">
+    <a href="{% url 'review-votes-view' result_set_id=result.pk %}" class="button tiny">
       Review
     </a>
     {% endif %}
