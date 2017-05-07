@@ -88,7 +88,8 @@ class ReviewVotesForm(forms.ModelForm):
             'reviewed_by': forms.HiddenInput(),
             'review_source': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
-            )
+            ),
+            'review_status': forms.widgets.RadioSelect,
         }
 
     def __init__(self, request, review_result, *args, **kwargs):
