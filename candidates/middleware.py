@@ -98,7 +98,7 @@ class DisableCachingForAuthenticatedUsers(object):
     )
 
     def process_response(self, request, response):
-        if request.user.is_authenticated():
+        if hasattr(request, 'user') and request.user.is_authenticated():
             if all(path_re.search(request.path) is None
                     for path_re in self.EXCLUDED_PATHS):
                 add_never_cache_headers(response)

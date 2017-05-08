@@ -41,3 +41,21 @@ class TestCaching(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 )
 
         self.assertTrue(seen_cache)
+
+    def test_api_post_endpoint(self):
+        # This is a regression test for the error:
+        # Internal Server Error: /api/v0.9/posts/WMC:E14001021
+        # Traceback (most recent call last):
+        #   File "/var/www/ynr/env/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 223, in get_response
+        #     response = middleware_method(request, response)
+        #   File "/var/www/ynr/code/candidates/middleware.py", line 97, in process_response
+        #     if request.user.is_authenticated():
+        # AttributeError: 'WSGIRequest' object has no attribute 'user'
+        without_slash = '/api/v0.9/posts/{0}'.format(
+            self.edinburgh_east_post_extra.slug)
+        with_slash = without_slash + '/'
+        response = self.app.get(without_slash)
+        self.assertEqual(response.status_code, 301)
+        self.assertEqual(response.location, 'http://localhost:80' + with_slash)
+        response = self.app.get(with_slash)
+        self.assertEqual(response.status_code, 200)
