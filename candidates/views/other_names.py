@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.http import JsonResponse
 from django.utils.functional import cached_property
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -63,7 +64,39 @@ class PersonOtherNameCreateView(LoginRequiredMixin, PersonMixin, CreateView):
             )
             self.person.extra.record_version(change_metadata)
             self.person.extra.save()
+            """
+            On the bulk edit page this view is inlined and the data
+            sent over ajax so we have to return an ajax response, and
+            also the new list of names so we can show the new list of
+            alternative names as a confirmation it's all worked
+            """
+            if self.request.is_ajax():
+                qs = super(PersonOtherNameCreateView, self).get_queryset()
+                ct = ContentType.objects.get_for_model(Person)
+                qs = qs.filter(
+                    content_type=ct,
+                    object_id=self.person.id,
+                ).order_by('name', 'start_date', 'end_date')
+                data = {
+                    'success': True,
+                    'names': list(qs.values_list('name', flat=True))
+                }
+                return JsonResponse(data)
             return result
+
+    def form_invalid(self, form):
+        result = super(
+            PersonOtherNameCreateView, self
+        ).form_invalid(form)
+        if self.request.is_ajax():
+            data = {
+                'success': False,
+                'errors': form.errors
+            }
+            return JsonResponse(data)
+
+        return result
+
 
 
 class PersonOtherNameDeleteView(LoginRequiredMixin, PersonMixin, DeleteView):

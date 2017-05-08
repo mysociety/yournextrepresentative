@@ -47,7 +47,7 @@
         <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">
             Edit candidate
         </a>
-        <a href="#" class="button secondary tiny js-bulk-known-person-alternate-name">
+        <a href="{% url 'person-other-name-create' person.pk %}" class="button secondary tiny js-bulk-known-person-alternate-name">
             Nomination paper shows different name variant
         </a>
         <!-- <a href="#" class="button secondary tiny">
@@ -57,10 +57,14 @@
   {% endfor %}
 </ul>
 <script type="text/html" class="js-bulk-known-person-alternate-name-form">
-    <form action="." method="post">
+<form action="" method="post">
+        {% csrf_token %}
         <p>
             <label for="alt-name">Name as it appears on nomination paper:</label>
-            <input id="alt-name" type="text">
+            <input id="alt-name" name="name" type="text">
+        </p>
+        <p>
+            <input id="alt-source" name="source" type="hidden" value="{{ official_document.source_url }}">
         </p>
         <p>
             <button type="button" class="button secondary js-bulk-known-person-alternate-name-cancel">Cancel</button>
