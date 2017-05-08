@@ -246,6 +246,7 @@
       <p>{% trans "Please do add extra details about this candidate – it only takes a moment." %}</p>
       {% if user.is_authenticated %}
         <a href="{% url 'person-update' person_id=person.id %}" class="button">{% trans "Edit candidate" %}</a>
+        <a href="{% url 'photo-upload' person.id %}" class="button">{% trans "Upload candidate photo" %}</a>
       {% else %}
         <a href="{% url 'account_login' %}?next={{ redirect_after_login }}" class="button">{% trans "Log in to edit" %}</a>
       {% endif %}

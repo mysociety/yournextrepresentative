@@ -5,14 +5,17 @@ import re
 from django.test.utils import override_settings
 from django_webtest import WebTest
 
-from .auth import TestUserMixin
-from .dates import processors_before, processors_after
-from .factories import (
+from nose.plugins.attrib import attr
+
+from candidates.tests.auth import TestUserMixin
+from candidates.tests.dates import processors_before, processors_after
+from candidates.tests.factories import (
     CandidacyExtraFactory, PersonExtraFactory
 )
-from .uk_examples import UK2015ExamplesMixin
+from candidates.tests.uk_examples import UK2015ExamplesMixin
 
 
+@attr(country='uk')
 class TestPersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
     def setUp(self):
