@@ -54,6 +54,11 @@ def add_election_specific_settings(settings, full_election_app):
         getattr(elections_module, 'TEMPLATE_CONTEXT_PROCESSORS', ())
     settings['TEMPLATE_CONTEXT_PROCESSORS'] += extra_context_processors
 
+    # Get any election-specific people whose pages might be
+    # particularly subject to vandalism (e.g. party leaders):
+    settings['PEOPLE_LIABLE_TO_VANDALISM'] = \
+        getattr(elections_module, 'PEOPLE_LIABLE_TO_VANDALISM', set())
+
     # Add any election-specific INSTALLED_APPS:
     settings['INSTALLED_APPS'].extend(
         getattr(elections_module, 'INSTALLED_APPS', []))

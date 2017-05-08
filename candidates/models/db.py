@@ -1,10 +1,40 @@
 from __future__ import unicode_literals
 
-from django.db import models
+from datetime import datetime, timedelta
+from functools import reduce
+
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.db import models
 from django.db.models.signals import post_save
 
+from slugify import slugify
+
 from popolo.models import Person, Post
+
+from .needs_review import needs_review_fns
+
+
+def merge_dicts_with_list_values(dict_a, dict_b):
+    return {
+        k: dict_a.get(k, []) + dict_b.get(k, [])
+        for k in set(dict_a.keys()) | set(dict_b.keys())
+    }
+
+
+class LoggedActionQuerySet(models.QuerySet):
+
+    def in_recent_days(self, days=5):
+        return self.filter(
+            created__gte=(datetime.now() - timedelta(days=days)))
+
+    def needs_review(self):
+        '''Return a dict of LoggedAction -> list of reasons should be reviewed'''
+        return reduce(
+            merge_dicts_with_list_values,
+            [f(self) for f in needs_review_fns],
+            {}
+        )
 
 
 class LoggedAction(models.Model):
@@ -26,6 +56,43 @@ class LoggedAction(models.Model):
     ip_address = models.CharField(max_length=50, blank=True, null=True)
     source = models.TextField()
     post = models.ForeignKey(Post, blank=True, null=True)
+
+    objects = LoggedActionQuerySet.as_manager()
+
+    def __repr__(self):
+        fmt = str("<LoggedAction username='{username}' action_type='{action_type}'>")
+        return fmt.format(username=self.user.username, action_type=self.action_type)
+
+    @property
+    def subject_url(self):
+        if self.post:
+            # FIXME: Note that this won't always be correct because
+            # LoggedAction objects only reference Post at the moment,
+            # rather than a Post and an Election (or a PostExtraElection).
+            election = self.post.extra.elections.get(current=True)
+            return reverse('constituency', kwargs={
+                'election': election.slug,
+                'post_id': self.post.extra.slug,
+                'ignored_slug': slugify(self.post.extra.short_label),
+            })
+        elif self.person:
+            return reverse('person-view', kwargs={'person_id': self.person.id})
+        return None
+
+    @property
+    def subject_html(self):
+        if self.post:
+            return '<a href="{url}">{text} ({post_slug})</a>'.format(
+                url=self.subject_url,
+                text=self.post.extra.short_label,
+                post_slug=self.post.extra.slug,
+            )
+        elif self.person:
+            return '<a href="{url}">{text} ({person_id})</a>'.format(
+                url=self.subject_url,
+                text=self.person.name,
+                person_id=self.person.id)
+        return ''
 
 
 class PersonRedirect(models.Model):

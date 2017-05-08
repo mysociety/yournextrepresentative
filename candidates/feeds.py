@@ -6,14 +6,33 @@ from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Atom1Feed
-from django.utils.text import slugify
+from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from .models import LoggedAction
 
 lock_re = re.compile(r'^(?:Unl|L)ocked\s*constituency (.*) \((\d+)\)$')
 
-class RecentChangesFeed(Feed):
+
+class ChangesMixin(object):
+    def get_title(self, logged_action):
+        if logged_action.person:
+            return "{0} ({1}) - {2}".format(
+                logged_action.person.name,
+                logged_action.person_id,
+                logged_action.action_type,
+            )
+        elif logged_action.post:
+            return "{0} ({1}) - {2}".format(
+                logged_action.post.label,
+                logged_action.post.extra.slug,
+                logged_action.action_type,
+            )
+        else:
+            return logged_action.action_type
+
+
+class RecentChangesFeed(ChangesMixin, Feed):
     site_name = Site.objects.get_current().name
     title = _("{site_name} recent changes").format(site_name=site_name)
     description = _("Changes to {site_name} candidates").format(site_name=site_name)
@@ -24,10 +43,7 @@ class RecentChangesFeed(Feed):
         return LoggedAction.objects.order_by('-updated')[:50]
 
     def item_title(self, item):
-        return "{0} - {1}".format(
-            item.person_id,
-            item.action_type
-        )
+        return self.get_title(item)
 
     def item_description(self, item):
         updated = _("Updated at {0}").format(str(item.updated))
@@ -42,3 +58,40 @@ class RecentChangesFeed(Feed):
             return reverse('person-view', args=[item.person_id])
         else:
             return '/'
+
+
+class NeedsReviewFeed(ChangesMixin, Feed):
+    site_name = Site.objects.get_current().name
+    title = _('{site_name} changes for review').format(site_name=site_name)
+    link = '/feeds/needs-review.xml'
+    feed_type = Atom1Feed
+
+    def items(self):
+        # Consider changes in the last 5 days:
+        return sorted(
+            LoggedAction.objects.in_recent_days(5).needs_review().items(),
+            key=lambda t: t[0].created,
+            reverse=True)
+
+    def item_title(self, item):
+        return self.get_title(item[0])
+
+    def item_description(self, item):
+        la = item[0]
+        unescaped = '''
+<p>{action_type} of {subject} by {user} with source: &ldquo;{source}&rdquo;</p>
+<ul>
+{reasons_review_needed}
+</ul>
+<p>Updated at {timestamp}</p>'''.strip().format(
+            action_type=la.action_type,
+            subject=la.subject_html,
+            user=la.user.username,
+            source=la.source,
+            reasons_review_needed='\n'.join(
+                '<li>{0}</li>'.format(i) for i in item[1]),
+            timestamp=la.updated)
+        return escape(unescaped)
+
+    def item_link(self, item):
+        return item[0].subject_url
