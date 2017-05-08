@@ -4,7 +4,7 @@
 <div class="person__versions">
     <h2>{% trans "All versions" %}</h2>
     {% for version in person.extra.version_diffs %}
-      <div class="version">
+      <div class="version" id="version-{{ version.version_id }}" data-parent-version-ids="{{ version.parent_version_ids|join:' ' }}">
         <dl>
           <dt>{% trans "Version" %}</dt>
           <dd>
@@ -17,26 +17,36 @@
           <dd>{{ version.timestamp }}</dd>
           <dt>{% trans "Source" %}</dt>
           <dd>{{ version.information_source }}</dd>
-          <dt>{% trans "Changes made" %}</dt>
-          <dd>
-            <p class="version-diff">
-              {% for operation in version.diff %}
-                {% if operation.op == 'add' %}
-                   <span class="version-op-add">{% trans "Added:" %} {{ operation.path }} => {{ operation.value|prettyjson }}</span>
-                {% elif operation.op == 'remove' %}
-                   <span class="version-op-remove">{% trans "Removed:" %} {{ operation.path }}
-                    {% blocktrans trimmed with previous=operation.previous_value|prettyjson %}
-                    (previously it was {{ previous }}){% endblocktrans %}</span>
-                {% elif operation.op == 'replace' %}
-                   <span class="version-op-replace">{% blocktrans trimmed with field=operation.path previous=operation.previous_value|prettyjson current=operation.value|prettyjson %}
-                   At {{ field }} replaced {{ previous }} with {{ current }}</span>
-                   {% endblocktrans %}
-                {% else %}
-                   <span class="version-op-unknown">{% trans "UNEXPECTED OPERATION:" %} {{ operation|prettyjson }}</span>
-                {% endif %}<br/>
-              {% endfor %}
-            </p>
-          </dd>
+          {% for parent_data in version.diffs %}
+            {% with diff=parent_data.parent_diff parent_version_id=parent_data.parent_version_id %}
+              {% if parent_version_id %}
+                <dt>{% blocktrans trimmed %}
+                  Changes made compared to parent {{ parent_version_id }}
+                {% endblocktrans %}</dt>
+              {% else %}
+                <dt>{% trans "Changes made in initial version" %}</dt>
+              {% endif %}
+              <dd>
+                <p class="version-diff">
+                  {% for operation in diff %}
+                    {% if operation.op == 'add' %}
+                       <span class="version-op-add">{% trans "Added:" %} {{ operation.path }} => {{ operation.value|prettyjson }}</span>
+                    {% elif operation.op == 'remove' %}
+                       <span class="version-op-remove">{% trans "Removed:" %} {{ operation.path }}
+                        {% blocktrans trimmed with previous=operation.previous_value|prettyjson %}
+                        (previously it was {{ previous }}){% endblocktrans %}</span>
+                    {% elif operation.op == 'replace' %}
+                       <span class="version-op-replace">{% blocktrans trimmed with field=operation.path previous=operation.previous_value|prettyjson current=operation.value|prettyjson %}
+                       At {{ field }} replaced {{ previous }} with {{ current }}</span>
+                       {% endblocktrans %}
+                    {% else %}
+                       <span class="version-op-unknown">{% trans "UNEXPECTED OPERATION:" %} {{ operation|prettyjson }}</span>
+                    {% endif %}<br/>
+                  {% endfor %}
+                </p>
+              </dd>
+            {% endwith %}
+          {% endfor %}
           {% if user.is_authenticated and not forloop.first %}
           <dt>{% trans "Revert to this" %}</dt>
           <dd>

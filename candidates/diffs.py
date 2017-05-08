@@ -12,6 +12,7 @@ from django.http import Http404
 import jsonpatch
 import jsonpointer
 
+from candidates.models.versions import get_versions_parent_map
 from elections.models import Election
 
 
@@ -189,6 +190,7 @@ def get_version_diff(from_data, to_data):
     return result
 
 def clean_version_data(data):
+    data = data.copy()
     for election_slug, standing_in in data.get('standing_in', {}).items():
         if standing_in:
             standing_in.pop('mapit_url', None)
@@ -200,6 +202,13 @@ def clean_version_data(data):
     data.pop('last_party', None)
     data.pop('proxy_image', None)
     data.pop('date_of_birth', None)
+    return data
+
+def get_parents_version_data(parents, id_to_version):
+    if parents:
+        return [(p, id_to_version[p]['data']) for p in parents]
+    # If there are no parents, then compare to an empty dictionary
+    return [(None, {})]
 
 def get_version_diffs(versions):
     """Add a diff to each of an array of version dicts
@@ -207,24 +216,26 @@ def get_version_diffs(versions):
     The first version is the most recent; the last is the original
     version."""
 
+    id_to_parent_ids = get_versions_parent_map(versions)
+    id_to_version = {v['version_id']: v for v in versions}
     result = []
-    n = len(versions)
-    for i, v in enumerate(versions):
-        # to_version_data = replace_empty_with_none(
-        #     versions[i]['data']
-        # )
-        to_version_data = versions[i]['data']
-        if i == (n - 1):
-            from_version_data = {}
-        else:
-            # from_version_data = replace_empty_with_none(
-            #     versions[i + 1]['data']
-            # )
-            from_version_data = versions[i + 1]['data']
-        clean_version_data(to_version_data)
-        clean_version_data(from_version_data)
-        version_with_diff = versions[i].copy()
-        version_with_diff['diff'] = \
-            get_version_diff(from_version_data, to_version_data)
-        result.append(version_with_diff)
+    for v in versions:
+        version_id = v['version_id']
+        v['parent_version_ids'] = id_to_parent_ids[version_id]
+        version_with_diffs = v.copy()
+        version_with_diffs['data'] = clean_version_data(
+            version_with_diffs['data'])
+        version_with_diffs['parent_version_ids'] = id_to_parent_ids[version_id]
+        version_with_diffs['diffs'] = [
+            {
+                'parent_version_id': parent_with_data[0],
+                'parent_diff': get_version_diff(
+                    clean_version_data(parent_with_data[1]),
+                    version_with_diffs['data']
+                )
+            } for parent_with_data in
+            get_parents_version_data(
+                id_to_parent_ids[version_id], id_to_version)
+        ]
+        result.append(version_with_diffs)
     return result

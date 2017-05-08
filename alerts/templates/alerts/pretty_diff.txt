@@ -4,17 +4,21 @@
 {% trans 'User' %}: {{ changes.username }}
 {% trans 'Time' %}: {{ changes.timestamp }}
 {% trans 'Source' %}: {{ changes.information_source }}
-{% trans 'Changes made' %}:
-{% for operation in changes.diff %}
+{% for parent_data in changes.diffs %}{% with diff=parent_data.parent_diff parent_version_id=parent_data.parent_version_id %}
+{% if parent_version_id %}{% blocktrans trimmed %}
+Changes made compared to parent {{ parent_version_id }}
+{% endblocktrans %}{% else %}{% trans "Changes made in initial version" %}{% endif %}
+{% for operation in parent_data.parent_diff %}
   {% if operation.op == 'add' %}
-     {% trans 'Added:' %} {{ operation.path }} => {{ operation.value }}
+     {% trans 'Added:' %} {{ operation.path }} => {{ operation.value|safe }}
   {% elif operation.op == 'remove' %}
      {% trans 'Removed:' %} {{ operation.path }}
-     {% blocktrans with previous=operation.previous %}(previously it was {{ previous }}){% endblocktrans %}
+     {% blocktrans with previous=operation.previous %}(previously it was {{ previous|safe }}){% endblocktrans %}
   {% elif operation.op == 'replace' %}
      {% blocktrans trimmed with field=operation.path previous=operation.previous_value current=operation.value %}
-     At {{ field }} replaced {{ previous }} with {{ current }}{% endblocktrans %}
+     At {{ field }} replaced {{ previous|safe }} with {{ current|safe }}{% endblocktrans %}
   {% else %}
     {% trans 'UNEXPECTED OPERATION' %}: {{ operation }}
   {% endif %}
 {% endfor %}
+{% endwith %}{% endfor %}
