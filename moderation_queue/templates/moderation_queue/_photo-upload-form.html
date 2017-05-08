@@ -23,10 +23,10 @@
   {% csrf_token %}
   <p>
     {% if queued_images %}{% blocktrans trimmed with name=person.name %}
-    If you still want to upload another photo of {{ name }}, first select an image from your computer:
+    If you still want to upload another photo of {{ name }}, first select an image from your computer (maximum size: 50 MB):
     {% endblocktrans %}
     {% else %}
-    {% trans "First, select an image from your computer:" %}
+    {% trans "First, select an image from your computer (maximum size: 50 MB):" %}
     {% endif %}
   </p>
   <p>
