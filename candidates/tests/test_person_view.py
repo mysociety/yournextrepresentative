@@ -1,5 +1,3 @@
-# Smoke tests for viewing a candidate's page
-
 from __future__ import unicode_literals
 
 import re
@@ -59,3 +57,9 @@ class TestPersonView(UK2015ExamplesMixin, WebTest):
             expect_errors=True
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_shows_no_edit_buttons_if_user_not_authenticated(self):
+        response = self.app.get('/person/2009/tessa-jowell')
+        edit_buttons = response.html.find_all('a', attrs={'class': 'button'})
+        self.assertEqual(len(edit_buttons), 1)
+        self.assertEqual(edit_buttons[0].string, 'Log in to edit')
