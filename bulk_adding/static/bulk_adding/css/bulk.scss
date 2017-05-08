@@ -1,0 +1,12 @@
+.bulk-add__known-people {
+    li {
+        & > :first-child {
+            display: block;
+            margin-bottom: 0.2em;
+        }
+
+        .button {
+            margin-right: 0.5em;
+        }
+    }
+}

@@ -364,6 +364,12 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                     ),
                     'output_filename': 'css/official_documents.css',
                 },
+                'bulk_adding': {
+                    'source_filenames': (
+                        'bulk_adding/css/bulk.scss',
+                    ),
+                    'output_filename': 'css/bulk_adding.css',
+                },
                 'all': {
                     'source_filenames': (
                         'candidates/style.scss',
@@ -385,6 +391,12 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                         'moderation_queue/js/crop.js',
                     ),
                     'output_filename': 'js/image-review.js',
+                },
+                'bulk_adding': {
+                    'source_filenames': (
+                        'bulk_adding/js/bulk.js',
+                    ),
+                    'output_filename': 'js/bulk_adding.js',
                 },
                 'all': {
                     'source_filenames': (
