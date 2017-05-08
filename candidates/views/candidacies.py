@@ -21,13 +21,13 @@ from ..forms import CandidacyCreateForm, CandidacyDeleteForm
 from ..models import LoggedAction, TRUSTED_TO_LOCK_GROUP_NAME
 
 
-def raise_if_locked(request, post):
+def raise_if_locked(request, post, election):
     # If you're a user who's trusted to toggle the constituency lock,
     # they're allowed to edit candidacy:
     if user_in_group(request.user, TRUSTED_TO_LOCK_GROUP_NAME):
         return
     # Otherwise, if the constituency is locked, raise an exception:
-    if post.extra.candidates_locked:
+    if post.extra.postextraelection_set.get(election=election).candidates_locked:
         raise Exception(_("Attempt to edit a candidacy in a locked constituency"))
 
 
@@ -39,7 +39,7 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
     def form_valid(self, form):
         post_id = form.cleaned_data['post_id']
         post = get_object_or_404(Post, extra__slug=post_id)
-        raise_if_locked(self.request, post)
+        raise_if_locked(self.request, post, self.election_data)
         change_metadata = get_change_metadata(
             self.request, form.cleaned_data['source']
         )
@@ -96,7 +96,7 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
         post_id = form.cleaned_data['post_id']
         with transaction.atomic():
             post = get_object_or_404(Post, extra__slug=post_id)
-            raise_if_locked(self.request, post)
+            raise_if_locked(self.request, post, self.election_data)
             change_metadata = get_change_metadata(
                 self.request, form.cleaned_data['source']
             )

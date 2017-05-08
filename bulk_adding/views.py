@@ -262,13 +262,16 @@ class UnlockedWithDocumentsView(TemplateView):
             UnlockedWithDocumentsView, self).get_context_data(**kwargs)
 
         SOPNs_qs = OfficialDocument.objects.filter(
-            election__current=True).select_related('election', 'post__extra')
+            election__current=True).select_related(
+                'election', 'post__extra',
+                'post__extra__postextraelection'
+            )
 
         SOPNs_qs = SOPNs_qs.exclude(
             post__in=SuggestedPostLock.objects.all().values(
                 'post_extra__base'))
 
         context['unlocked_sopns'] = SOPNs_qs.filter(
-            post__extra__candidates_locked=False)
+            post__extra__postextraelection__candidates_locked=False)
 
         return context

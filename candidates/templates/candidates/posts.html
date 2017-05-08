@@ -21,13 +21,13 @@
           {% with election=election_data.election %}
             <h4><a href="{% url 'constituencies' election=election.slug %}">{{ election.name }}</a></h4>
             <ul>
-              {% for p in election_data.posts %}
+              {% for p in election_data.postextraelections %}
                 <li>
-                 <a href="{% url 'constituency' election=election.slug post_id=p.slug ignored_slug=p.short_label|slugify %}">{{ p.base.label }}</a>
+                 <a href="{% url 'constituency' election=election.slug post_id=p.postextra.slug ignored_slug=p.postextra.short_label|slugify %}">{{ p.postextra.base.label }}</a>
 
                  {% if p.candidates_locked %}
                   - <abbr title="Candidates verified and post locked">🔒</abbr>
-                 {% elif p.suggestedpostlock_set.exists %}
+                 {% elif p.postextra.suggestedpostlock_set.exists %}
                  - <abbr title="Someone suggested locking this post">🔓</abbr>
                  {% endif %}
 

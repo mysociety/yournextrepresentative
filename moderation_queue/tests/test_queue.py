@@ -20,10 +20,12 @@ from io import BytesIO
 from django_webtest import WebTest
 from webtest import Upload
 from mock import patch
+from nose.plugins.attrib import attr
 
 from popolo.models import Person
-from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
+from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME, SuggestedPostLock
 from candidates.models import LoggedAction, ImageExtra
+from official_documents.models import OfficialDocument
 from mysite.helpers import mkdir_p
 
 from candidates.tests.factories import (
@@ -33,6 +35,7 @@ from candidates.tests.factories import (
     PartyFactory, PartySetFactory, AreaFactory
 )
 from candidates.tests.uk_examples import UK2015ExamplesMixin
+from candidates.tests.auth import TestUserMixin
 
 TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
@@ -480,3 +483,101 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
                 QueuedImage.objects.get(
                     pk=self.q_no_uploading_user.id).decision,
                 'rejected')
+
+
+class SuggestedLockReviewTests(UK2015ExamplesMixin, TestUserMixin, WebTest):
+    def setUp(self):
+        super(SuggestedLockReviewTests, self).setUp()
+        person_2009 = PersonExtraFactory.create(
+            base__id='2009',
+            base__name='Tessa Jowell'
+        )
+        person_2007 = PersonExtraFactory.create(
+            base__id='2007',
+            base__name='Tessa Jowell'
+        )
+        CandidacyExtraFactory.create(
+            election=self.election,
+            base__person=person_2009.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
+            )
+        CandidacyExtraFactory.create(
+            election=self.election,
+            base__person=person_2007.base,
+            base__post=self.dulwich_post_extra.base,
+            base__on_behalf_of=self.labour_party_extra.base
+            )
+
+    def test_suggested_lock_review_view_no_suggestions(self):
+        url = reverse('suggestions-to-lock-review-list')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, '<h3>')
+
+    def test_suggested_lock_review_view_with_suggestions(self):
+        SuggestedPostLock.objects.create(
+            post_extra=self.dulwich_post_extra,
+            user=self.user,
+            justification='test data'
+        )
+        url = reverse('suggestions-to-lock-review-list')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<h3>')
+
+
+@attr(country='uk')
+class SOPNReviewRequiredTest(UK2015ExamplesMixin, TestUserMixin, WebTest):
+
+    def test_sopn_review_view_no_reviews(self):
+        url = reverse('sopn-review-required')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'Add candidates')
+
+    def test_sopn_review_view_with_reviews(self):
+        OfficialDocument.objects.create(
+            election=self.election,
+            document_type=OfficialDocument.NOMINATION_PAPER,
+            post=self.dulwich_post_extra.base,
+            source_url="http://example.com"
+        )
+        url = reverse('sopn-review-required')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Dulwich')
+
+    def test_sopn_review_view_document_with_suggested_lock_not_included(self):
+        SuggestedPostLock.objects.create(
+            post_extra=self.dulwich_post_extra,
+            user=self.user,
+            justification='test data'
+        )
+        OfficialDocument.objects.create(
+            election=self.election,
+            document_type=OfficialDocument.NOMINATION_PAPER,
+            post=self.dulwich_post_extra.base,
+            source_url="http://example.com"
+        )
+        url = reverse('sopn-review-required')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'Dulwich')
+
+    def test_sopn_review_view_document_with_lock_not_included(self):
+        postextraelection = self.dulwich_post_extra.postextraelection_set.get(
+            election=self.election
+        )
+        postextraelection.candidates_locked = True
+        postextraelection.save()
+        OfficialDocument.objects.create(
+            election=self.election,
+            document_type=OfficialDocument.NOMINATION_PAPER,
+            post=self.dulwich_post_extra.base,
+            source_url="http://example.com"
+        )
+        url = reverse('sopn-review-required')
+        response = self.app.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'Dulwich')

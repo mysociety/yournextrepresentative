@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 
 from candidates.models import AreaExtra, MembershipExtra
-from candidates.models.auth import get_edits_allowed
+from candidates.models.auth import get_edits_allowed, is_post_locked
 
 from elections.models import AreaType, Election
 
@@ -66,7 +66,7 @@ class AreasView(TemplateView):
                         continue
                     else:
                         posts_seen.add(post.id)
-                    locked = post_extra.candidates_locked
+                    locked = is_post_locked(post, election)
                     extra_qs = MembershipExtra.objects.select_related('election')
                     current_candidacies, _ = split_candidacies(
                         election,

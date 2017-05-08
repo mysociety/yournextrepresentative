@@ -295,7 +295,7 @@ class PersonExtra(HasImageMixin, models.Model):
         result = self.base.memberships.filter(
             extra__election__current=True,
             role=models.F('extra__election__candidate_membership_role')
-        ).select_related('person', 'on_behalf_of', 'post') \
+        ).select_related('person', 'on_behalf_of', 'post', 'extra') \
             .prefetch_related('post__extra')
         return list(result)
 
@@ -648,7 +648,6 @@ class PostExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Post, related_name='extra')
     slug = models.CharField(max_length=256, blank=True, unique=True)
 
-    candidates_locked = models.BooleanField(default=False)
     elections = models.ManyToManyField(
         Election,
         related_name='posts',
@@ -673,7 +672,11 @@ class PostExtraElection(models.Model):
     postextra = models.ForeignKey(PostExtra)
     election = models.ForeignKey(Election)
 
+    candidates_locked = models.BooleanField(default=False)
     winner_count = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('election', 'postextra')
 
 
 class MembershipExtra(models.Model):

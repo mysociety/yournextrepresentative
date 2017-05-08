@@ -299,7 +299,6 @@ class Command(BaseCommand):
                 pe = models.PostExtra(
                     base=p,
                     slug=post_data['id'],
-                    candidates_locked=post_data['candidates_locked'],
                     group=post_data['group'],
                 )
                 if post_data.get('party_set'):
@@ -312,7 +311,8 @@ class Command(BaseCommand):
                         emodels.Election.objects.get(slug=election_data['id'])
                     models.PostExtraElection.objects.get_or_create(
                         postextra=pe,
-                        election=election
+                        election=election,
+                        candidates_locked=election_data['candidates_locked'],
                     )
         extra_fields = {
             ef.key: ef for ef in models.ExtraField.objects.all()

@@ -18,13 +18,13 @@ Follow one of the links below to see the known candidates
 for that post:{% endblocktrans %}</p>
 
 <ul>
-  {% for post_extra in all_constituencies %}
+  {% for postextraelection in all_constituencies %}
     <li>
-     <a href="{% url 'constituency' election=election post_id=post_extra.slug ignored_slug=post_extra.base.label|slugify %}">
-        {{ post_extra.base.label }}</a>
-        {% if post_extra.candidates_locked %}
+     <a href="{% url 'constituency' election=election post_id=postextraelection.postextra.slug ignored_slug=postextraelection.postextra.base.label|slugify %}">
+        {{ postextraelection.postextra.base.label }}</a>
+        {% if postextraelection.candidates_locked %}
          - <abbr title="Candidates verified and post locked">🔒</abbr>
-        {% elif post_extra.suggestedpostlock_set.exists %}
+        {% elif postextraelection.postextra.suggestedpostlock_set.exists %}
         - <abbr title="Someone suggested locking this post">🔓</abbr>
         {% endif %}
     </li>  {% endfor %}

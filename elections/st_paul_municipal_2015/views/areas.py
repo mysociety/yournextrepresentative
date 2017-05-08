@@ -54,7 +54,7 @@ class StPaulAreasView(TemplateView):
             for post in area.posts.all():
                 post_extra = post.extra
                 election = post_extra.elections.get(current=True)
-                locked = post_extra.candidates_locked
+                locked = post_extra.postextraelection_set.get(election=election).candidates_locked
                 extra_qs = MembershipExtra.objects.select_related('election')
                 current_candidacies, created = split_candidacies(
                     election,

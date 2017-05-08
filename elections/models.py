@@ -93,7 +93,7 @@ class Election(models.Model):
         return self.election_date < date.today()
 
     @classmethod
-    def group_and_order_elections(cls, include_posts=False,
+    def group_and_order_elections(cls, include_postextraelections=False,
                                   include_noncurrent=True,
                                   for_json=False):
         """Group elections in a helpful order
@@ -105,11 +105,11 @@ class Election(models.Model):
               Group by for_post_role (ordered alphabetically)
                 Order by election name
 
-        If the parameter include_posts is set to True, then the posts
-        will be included as well. If for_json is True, the returned data
-        should be safe to serialize to JSON (e.g. the election dates will
-        be ISO 8601 date strings (i.e. YYYY-MM-DD) rather than
-        datetime.date objects).
+        If the parameter include_postextraelections is set to True, then
+        the postextraelections will be included as well. If for_json is
+        True, the returned data should be safe to serialize to JSON (e.g.
+        the election dates will be ISO 8601 date strings (i.e. YYYY-MM-DD)
+        rather than datetime.date objects).
 
         e.g. An example of the returned data structure:
 
@@ -122,7 +122,7 @@ class Election(models.Model):
                 'elections': [
                   {
                     'election': <Election: 2015 General Election>,
-                    'posts': [
+                    'postextraelections': [
                       <PostExtra: Member of Parliament for Aberavon>,
                       <PostExtra: Member of Parliament for Aberconwy>,
                       ...
@@ -137,7 +137,7 @@ class Election(models.Model):
                 'elections': [
                   {
                     'election': <Election: 2016 Scottish Parliament Election (Regions)>,
-                     'posts': [
+                     'postextraelections': [
                        <PostExtra: Member of the Scottish Parliament for Central Scotland>,
                        <PostExtra: Member of the Scottish Parliament for Glasgow>,
                        ...
@@ -145,7 +145,7 @@ class Election(models.Model):
                   },
                   {
                     'election': <Election: 2016 Scottish Parliament Election (Constituencies)>,
-                    'posts': [
+                    'postextraelections': [
                       <PostExtra: Member of the Scottish Parliament for Aberdeen Central>,
                       <PostExtra: Member of the Scottish Parliament for Aberdeen Donside>,
                       ...
@@ -163,7 +163,7 @@ class Election(models.Model):
                 'elections': [
                   {
                     'election': <Election: 2010 General Election>,
-                    'posts': [
+                    'postextraelections': [
                       <PostExtra: Member of Parliament for Aberavon>,
                       <PostExtra: Member of Parliament for Aberconwy>,
                       ...
@@ -176,7 +176,7 @@ class Election(models.Model):
         ]
 
         """
-        from candidates.models import PostExtra
+        from candidates.models import PostExtraElection
         result = [
             {'current': True, 'dates': OrderedDict()},
         ]
@@ -187,20 +187,20 @@ class Election(models.Model):
         qs = cls.objects.order_by(
             'election_date', '-current', 'for_post_role', 'name',
         )
-        # If we've been asked to include posts as well, add a prefetch
+        # If we've been asked to include postextraelections as well, add a prefetch
         # to the queryset:
-        if include_posts:
+        if include_postextraelections:
             qs = qs.prefetch_related(
                 models.Prefetch(
-                    'posts',
-                    PostExtra.objects.select_related('base') \
-                        .order_by('base__label')\
-                        .prefetch_related('suggestedpostlock_set'),
+                    'postextraelection_set',
+                    PostExtraElection.objects.select_related('postextra__base') \
+                        .order_by('postextra__base__label')\
+                        .prefetch_related('postextra__suggestedpostlock_set')
                 ),
             )
         if not include_noncurrent:
             qs = qs.filter(current=True)
-        # The elections and posts are already sorted into the right
+        # The elections and postextraelections are already sorted into the right
         # order, but now need to be grouped into the useful
         # data structure described in the docstring.
         last_current = None
@@ -225,8 +225,8 @@ class Election(models.Model):
             d = {
                 'election': election
             }
-            if include_posts:
-                d['posts'] = list(election.posts.all())
+            if include_postextraelections:
+                d['postextraelections'] = list(election.postextraelection_set.all())
             role['elections'].append(d)
             last_current = election.current
         return result

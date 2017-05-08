@@ -1,6 +1,7 @@
 from .auth import get_constituency_lock
 from .auth import get_constituency_lock_from_person_data
 from .auth import get_edits_allowed
+from .auth import is_post_locked
 
 from .constraints import check_constraints
 from .constraints import check_paired_models
