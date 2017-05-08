@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import codecs
 from io import BytesIO
+from mock import patch
 import os
 import re
 
@@ -40,7 +41,7 @@ def canonicalize_xml(xml_bytes):
     parsed.getroottree().write_c14n(out)
     return out.getvalue()
 
-
+@patch('candidates.models.db.datetime')
 @override_settings(PEOPLE_LIABLE_TO_VANDALISM={2811})
 class TestNeedsReview(TestUserMixin, WebTest):
 
@@ -48,7 +49,7 @@ class TestNeedsReview(TestUserMixin, WebTest):
 
     def setUp(self):
         super(TestNeedsReview, self).setUp()
-        current_datetime = datetime(2017, 5, 2, 18, 10, 5, 0)
+        self.current_datetime = datetime(2017, 5, 2, 18, 10, 5, 0)
         # Reuse existing users created in TestUserMixin:
         for username, u in (
                 ('lapsed_experienced', self.user),
@@ -65,9 +66,10 @@ class TestNeedsReview(TestUserMixin, WebTest):
         ).base
 
         # Create old edits for the experienced user:
-        date_ages_ago = current_datetime - timedelta(days=365)
+        date_ages_ago = self.current_datetime - timedelta(days=365)
         for i in range(20):
             la = LoggedAction.objects.create(
+                id=(1000 + i),
                 user=self.lapsed_experienced,
                 action_type='person-update',
                 person=example_person,
@@ -79,36 +81,39 @@ class TestNeedsReview(TestUserMixin, WebTest):
         # ... and a couple of new edits for the experienced user:
         for i in range(2):
             la = LoggedAction.objects.create(
+                id=(1500 + i),
                 user=self.lapsed_experienced,
                 action_type='person-update',
                 person=example_person,
                 popit_person_new_version=random_person_id(),
                 source='Just for tests...',
             )
-            dt = current_datetime - timedelta(minutes=i*5)
+            dt = self.current_datetime - timedelta(minutes=i*5)
             change_updated_and_created(la, dt)
 
         # Create lots of very recent edits for a new user:
         for i in range(10):
             la = LoggedAction.objects.create(
+                id=(2000 + i),
                 user=self.new_suddenly_lots,
                 action_type='person-update',
                 person=example_person,
                 popit_person_new_version=random_person_id(),
                 source='Just for tests',
             )
-            dt = current_datetime - timedelta(minutes=i*7)
+            dt = self.current_datetime - timedelta(minutes=i*7)
             change_updated_and_created(la, dt)
 
         # Create a single recent edit for a new user:
         la = LoggedAction.objects.create(
+            id=(2500 + i),
             user=self.new_only_one,
             action_type='person-update',
             person=example_person,
             popit_person_new_version=random_person_id(),
             source='Just for tests',
         )
-        dt = current_datetime - timedelta(minutes=2)
+        dt = self.current_datetime - timedelta(minutes=2)
         change_updated_and_created(la, dt)
 
         # Create a candidate with a death date, and edit of that
@@ -120,6 +125,7 @@ class TestNeedsReview(TestUserMixin, WebTest):
             base__death_date='2015-04-13'
         ).base
         la = LoggedAction.objects.create(
+            id=3000,
             user=self.morbid_vandal,
             action_type='person-update',
             person=dead_person,
@@ -128,7 +134,7 @@ class TestNeedsReview(TestUserMixin, WebTest):
             updated=dt,
             created=dt,
         )
-        dt = current_datetime - timedelta(minutes=4)
+        dt = self.current_datetime - timedelta(minutes=4)
         change_updated_and_created(la, dt)
 
         prime_minister = factories.PersonExtraFactory.create(
@@ -137,16 +143,18 @@ class TestNeedsReview(TestUserMixin, WebTest):
         ).base
         # Create a candidate on the "liable to vandalism" list.
         la = LoggedAction.objects.create(
+            id=4000,
             user=self.lapsed_experienced,
             action_type='person-update',
             person=prime_minister,
             popit_person_new_version=random_person_id(),
             source='Just for tests...',
         )
-        dt = current_datetime - timedelta(minutes=33)
+        dt = self.current_datetime - timedelta(minutes=33)
         change_updated_and_created(la, dt)
 
-    def test_needs_review_as_expected(self):
+    def test_needs_review_as_expected(self, mock_datetime):
+        mock_datetime.now.return_value = self.current_datetime
         needs_review_dict = LoggedAction.objects.in_recent_days(5).needs_review()
         # Here we're expecting the following LoggedActions to be picked out:
         #    1 edit of a dead candidate (by 'morbid_vandal'
@@ -183,79 +191,9 @@ class TestNeedsReview(TestUserMixin, WebTest):
               'person-update',
               ['One of the first 3 edits of user new_only_one'])])
 
-    def test_xml_feed(self):
+    def test_xml_feed(self, mock_datetime):
+        mock_datetime.now.return_value = self.current_datetime
         response = self.app.get('/feeds/needs-review.xml')
-        removed_updated = re.sub(
-            r'<updated>.*</updated>',
-            '<updated></updated>',
-            response.content.decode())
-        got = canonicalize_xml(removed_updated.encode())
-        expected = b'<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-gb">' \
-                   b'<title>example.com changes for review</title>' \
-                   b'<link href="http://example.com/feeds/needs-review.xml" rel="alternate"></link>' \
-                   b'<link href="http://example.com/feeds/needs-review.xml" rel="self"></link>' \
-                   b'<id>http://example.com/feeds/needs-review.xml</id>' \
-                   b'<updated></updated>' \
-                   b'<entry>' \
-                   b'<title>Tessa Jowell (2009) - person-update</title>' \
-                   b'<link href="http://example.com/person/2009" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/2009</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_only_one with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;One of the first 3 edits of user new_only_one&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 17:08:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'<entry>' \
-                   b'<title>The Eurovisionary Ronnie Carroll (7448) - person-update</title>' \
-                   b'<link href="http://example.com/person/7448" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/7448</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/7448&amp;quot;&amp;gt;The Eurovisionary Ronnie Carroll (7448)&amp;lt;/a&amp;gt; by morbid_vandal with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;One of the first 3 edits of user morbid_vandal&amp;lt;/li&amp;gt;
-&amp;lt;li&amp;gt;Edit of a candidate who has died&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 17:06:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'<entry>' \
-                   b'<title>Theresa May (2811) - person-update</title>' \
-                   b'<link href="http://example.com/person/2811" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/2811</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2811&amp;quot;&amp;gt;Theresa May (2811)&amp;lt;/a&amp;gt; by lapsed_experienced with source: &amp;amp;ldquo;Just for tests...&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;Edit of a candidate whose record may be particularly liable to vandalism&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 16:37:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'<entry>' \
-                   b'<title>Tessa Jowell (2009) - person-update</title>' \
-                   b'<link href="http://example.com/person/2009" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/2009</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 16:21:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'<entry>' \
-                   b'<title>Tessa Jowell (2009) - person-update</title>' \
-                   b'<link href="http://example.com/person/2009" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/2009</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 16:14:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'<entry>' \
-                   b'<title>Tessa Jowell (2009) - person-update</title>' \
-                   b'<link href="http://example.com/person/2009" rel="alternate"></link>' \
-                   b'<id>http://example.com/person/2009</id>' \
-                   b'''<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;
-&amp;lt;ul&amp;gt;
-&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&amp;lt;p&amp;gt;Updated at 2017-05-02 16:07:05+00:00&amp;lt;/p&amp;gt;</summary>''' \
-                   b'</entry>' \
-                   b'</feed>'
+        got = canonicalize_xml(response.content)
+        expected = b'''<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-gb"><title>example.com changes for review</title><link href="http://example.com/feeds/needs-review.xml" rel="alternate"></link><link href="http://example.com/feeds/needs-review.xml" rel="self"></link><id>http://example.com/feeds/needs-review.xml</id><updated>2017-05-02T17:08:05+00:00</updated><entry><title>Tessa Jowell (2009) - person-update</title><link href="http://example.com/person/2009" rel="alternate"></link><updated>2017-05-02T17:08:05+00:00</updated><author><name>new_only_one</name></author><id>needs-review:2509</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_only_one with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user new_only_one&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 17:08:05+00:00&amp;lt;/p&amp;gt;</summary></entry><entry><title>The Eurovisionary Ronnie Carroll (7448) - person-update</title><link href="http://example.com/person/7448" rel="alternate"></link><updated>2017-05-02T17:06:05+00:00</updated><author><name>morbid_vandal</name></author><id>needs-review:3000</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/7448&amp;quot;&amp;gt;The Eurovisionary Ronnie Carroll (7448)&amp;lt;/a&amp;gt; by morbid_vandal with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user morbid_vandal&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;Edit of a candidate who has died&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 17:06:05+00:00&amp;lt;/p&amp;gt;</summary></entry><entry><title>Theresa May (2811) - person-update</title><link href="http://example.com/person/2811" rel="alternate"></link><updated>2017-05-02T16:37:05+00:00</updated><author><name>lapsed_experienced</name></author><id>needs-review:4000</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2811&amp;quot;&amp;gt;Theresa May (2811)&amp;lt;/a&amp;gt; by lapsed_experienced with source: &amp;amp;ldquo;Just for tests...&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;Edit of a candidate whose record may be particularly liable to vandalism&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 16:37:05+00:00&amp;lt;/p&amp;gt;</summary></entry><entry><title>Tessa Jowell (2009) - person-update</title><link href="http://example.com/person/2009" rel="alternate"></link><updated>2017-05-02T16:21:05+00:00</updated><author><name>new_suddenly_lots</name></author><id>needs-review:2007</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 16:21:05+00:00&amp;lt;/p&amp;gt;</summary></entry><entry><title>Tessa Jowell (2009) - person-update</title><link href="http://example.com/person/2009" rel="alternate"></link><updated>2017-05-02T16:14:05+00:00</updated><author><name>new_suddenly_lots</name></author><id>needs-review:2008</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 16:14:05+00:00&amp;lt;/p&amp;gt;</summary></entry><entry><title>Tessa Jowell (2009) - person-update</title><link href="http://example.com/person/2009" rel="alternate"></link><updated>2017-05-02T16:07:05+00:00</updated><author><name>new_suddenly_lots</name></author><id>needs-review:2009</id><summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_suddenly_lots with source: &amp;amp;ldquo;Just for tests&amp;amp;rdquo;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user new_suddenly_lots&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;\n&amp;lt;p&amp;gt;Updated at 2017-05-02 16:07:05+00:00&amp;lt;/p&amp;gt;</summary></entry></feed>'''
         self.assertEqual(got, expected)
