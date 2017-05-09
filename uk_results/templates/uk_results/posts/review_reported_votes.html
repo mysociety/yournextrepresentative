@@ -24,7 +24,7 @@
 </form>
 
 {% if user_can_confirm_control %}
-<a href="{% url 'report-post-votes-view' object.post_result.post.role %}?{{ edit_querystring }}" class="button warning">Edit these results</a>
+<a href="{% url 'report-post-votes-view' object.post_election_result.post_election_id %}?{{ edit_querystring }}" class="button warning">Edit these results</a>
 {% endif %}
 
 {% endblock results_content %}

@@ -24,7 +24,7 @@ def get_candidacy(person, election):
                     'result',
                     CandidateResult.objects.select_related(
                         'result_set',
-                        'result_set__post_result',
+                        'result_set__post_election_result',
                     )
                 )
             )
@@ -44,10 +44,11 @@ def get_known_candidacy_prefix_and_suffix(candidacy):
     prefix = ''
     suffix = ''
     if 'uk_results' in settings.INSTALLED_APPS:
-        candidate_results = list(candidacy.result.all())
-        if candidate_results:
+        candidate_results = candidacy.result.all().order_by(
+            'membership').distinct('membership')
+        if candidate_results.exists():
             for candidate_result in candidate_results:
-                if candidate_result.result_set.post_result.confirmed:
+                if candidate_result.result_set.post_election_result.confirmed:
                     # Then we're OK to display this result:
                     suffix += '<br>'
                     if candidate_result.is_winner:

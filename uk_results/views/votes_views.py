@@ -1,36 +1,26 @@
-from django.shortcuts import get_object_or_404
 from django.utils.six.moves.urllib_parse import urlencode
+from django.http import Http404
+from django.core.urlresolvers import reverse
 
-from django.views.generic import (DetailView, FormView, UpdateView, ListView)
+from django.views.generic import (
+    DetailView, FormView, UpdateView, ListView, RedirectView)
 
 from candidates.views.version_data import get_client_ip
-from candidates.models import LoggedAction
-
-from popolo.models import Post
+from candidates.models import LoggedAction, PostExtraElection
 
 from ..constants import CONFIRMED_STATUS, RESULTS_DATE
-from ..models import PostResult, ResultSet
+from ..models import PostElectionResult, ResultSet
 from ..forms import ResultSetForm, ReviewVotesForm
-from .base import BaseResultsViewMixin
+from .base import BaseResultsViewMixin, ResultsViewPermissionsMixin
 
 
 class PostResultsView(BaseResultsViewMixin, DetailView):
     template_name = "uk_results/posts/post_view.html"
 
-    def get_object(self):
-        slug = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, extra__slug=slug)
-        return PostResult.objects.get_or_create(post=post)[0]
-
 
 class PostReportVotesView(BaseResultsViewMixin, FormView):
-    model = PostResult
+    model = PostElectionResult
     template_name = "uk_results/report_council_election_control.html"
-
-    def get_object(self):
-        slug = self.kwargs.get('post_id')
-        post = get_object_or_404(Post, extra__slug=slug)
-        return PostResult.objects.get_or_create(post=post)[0]
 
     def get_context_data(self, **kwargs):
         context = super(PostReportVotesView, self).get_context_data(**kwargs)
@@ -51,7 +41,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
         self.object = self.get_object()
 
         return ResultSetForm(
-            post_result=self.object,
+            post_election_result=self.object,
             **self.get_form_kwargs()
         )
 
@@ -68,7 +58,7 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
                 action_type='record-council-result',
                 ip_address=get_client_ip(self.request),
                 source=form['source'].value(),
-                post=form.post,
+                post=form.post_election.postextra.base,
             )
 
         if 'report_and_confirm' in self.request.POST:
@@ -81,15 +71,22 @@ class PostReportVotesView(BaseResultsViewMixin, FormView):
                     action_type='confirm-council-result',
                     ip_address=get_client_ip(self.request),
                     source="Confirmed when reporting",
-                    post=form.post,
+                    post=form.post_election.postextra.base,
                 )
 
         return super(PostReportVotesView, self).form_valid(form)
 
 
-class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
+class ReviewPostReportView(ResultsViewPermissionsMixin, UpdateView):
     template_name = "uk_results/posts/review_reported_votes.html"
-    queryset = ResultSet.objects.all()
+    queryset = ResultSet.objects.all().select_related(
+        'post_election_result',
+    ).prefetch_related(
+        'candidate_results__membership',
+        'candidate_results__membership__on_behalf_of__partywithcolour',
+        'candidate_results__membership__person',
+    )
+    pk_url_kwarg = 'result_set_id'
 
     def get_form(self, form_class=None):
         kwargs = self.get_form_kwargs()
@@ -101,7 +98,7 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
         )
 
     def get_success_url(self):
-        return self.object.post_result.get_absolute_url()
+        return self.object.post_election_result.get_absolute_url()
 
     def get_edit_url(self):
         data = {
@@ -118,7 +115,6 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
         context['edit_querystring'] = self.get_edit_url()
         return context
 
-
     def form_valid(self, form):
         form.save()
         if self.request.user.is_authenticated():
@@ -128,7 +124,7 @@ class ReviewPostReportView(BaseResultsViewMixin, UpdateView):
                 action_type='confirm-council-result',
                 ip_address=get_client_ip(self.request),
                 source=form['review_source'].value(),
-                post=form.post,
+                post=form.post_election.post_election.postextra.base,
             )
         return super(ReviewPostReportView, self).form_valid(form)
 
@@ -141,15 +137,16 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
     def get_queryset(self):
         queryset = super(LatestVoteResults, self).get_queryset()
         queryset = queryset.filter(
-            post_result__post__extra__elections__election_date=RESULTS_DATE)
-        queryset = queryset.select_related('post_result',)
-        queryset = queryset.select_related('post_result__post',)
-        queryset = queryset.select_related('post_result__post__area',)
+            post_election_result__post_election__election__election_date=RESULTS_DATE)
+        queryset = queryset.select_related(
+            'post_election_result',
+            'post_election_result__post_election',
+            'post_election_result__post_election__postextra',
+        )
         queryset = queryset.prefetch_related(
             'candidate_results__membership__person',)
         queryset = queryset.prefetch_related(
             'candidate_results__membership__on_behalf_of__partywithcolour',)
-
 
         status = self.request.GET.get('status')
         if status:
@@ -158,9 +155,34 @@ class LatestVoteResults(BaseResultsViewMixin, ListView):
             if status == "unconfirmed":
                 queryset = queryset.unconfirmed()
                 queryset = queryset.filter(
-                    post_result__confirmed_resultset=None)
+                    post_election_result__confirmed_resultset=None)
             if status == "rejected":
                 queryset = queryset.rejected()
         queryset = queryset.order_by(
-            'post_result__post__extra__postextraelection__election')
+            'post_election_result__post_election__election')
         return queryset
+
+
+class PostResultsRedirectView(RedirectView):
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        """
+        For historic reasons there are public URLs that only contain
+        a single PostExtra slug rather than an identifier for a
+        PostExtraElection.
+
+        To make these URLs continue to work, we redirect form them to
+        the newer style URLs.
+
+        This is a "better than nothing" guess. Because the URLs are old, we
+        assume the oldest PostExtraElection is the desired one.
+        """
+
+        pee = PostExtraElection.objects.filter(
+            postextra__slug=kwargs['post_slug']
+        ).order_by('election__election_date').first()
+        if not pee:
+            raise Http404("No post with that ID found")
+        return reverse('post-results-view', kwargs={
+            'post_election_id': pee.pk})

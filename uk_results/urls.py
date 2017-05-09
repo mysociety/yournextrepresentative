@@ -44,18 +44,18 @@ urlpatterns = [
 
     # Votes
     url(
-        r'^posts/(?P<post_id>[^/]+)/$',
+        r'^posts/(?P<post_election_id>[\d]+)/$',
         views.PostResultsView.as_view(),
         name='post-results-view'
     ),
 
     url(
-        r'^posts/(?P<post_id>[^/]+)/report$',
+        r'^posts/(?P<post_election_id>[\d]+)/report$',
         views.PostReportVotesView.as_view(),
         name='report-post-votes-view'
     ),
     url(
-        r'^posts/(?P<pk>[^/]+)/review$',
+        r'^posts/(?P<result_set_id>[\d]+)/review$',
         views.ReviewPostReportView.as_view(),
         name='review-votes-view'
     ),
@@ -63,6 +63,12 @@ urlpatterns = [
         r'^posts$',
         views.LatestVoteResults.as_view(),
         name='latest-votes-view'
+    ),
+
+    url(
+        r'^posts/(?P<post_slug>[^/]+)/$',
+        views.PostResultsRedirectView.as_view(),
+        name='post-result-redirect-view'
     ),
 
 

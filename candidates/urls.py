@@ -10,8 +10,8 @@ from rest_framework import routers
 
 import candidates.views as views
 from uk_results.views import (
-    CouncilElectionViewSet, CandidateResultViewSet, PostResultViewSet,
-    ResultSetViewSet,
+    CouncilElectionViewSet, CandidateResultViewSet,
+    PostElectionResultViewSet, ResultSetViewSet,
 )
 
 from .feeds import RecentChangesFeed, NeedsReviewFeed
@@ -35,7 +35,7 @@ api_router.register(r'complex_fields', views.ComplexPopoloFieldViewSet)
 
 api_router.register(r'council_elections', CouncilElectionViewSet)
 api_router.register(r'candidate_results', CandidateResultViewSet)
-api_router.register(r'post_results', PostResultViewSet)
+api_router.register(r'post_results', PostElectionResultViewSet)
 api_router.register(r'result_sets', ResultSetViewSet)
 
 api_router.register(

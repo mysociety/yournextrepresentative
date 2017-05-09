@@ -88,19 +88,20 @@ class ReviewVotesForm(forms.ModelForm):
             'reviewed_by': forms.HiddenInput(),
             'review_source': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
-            )
+            ),
+            'review_status': forms.widgets.RadioSelect,
         }
 
     def __init__(self, request, review_result, *args, **kwargs):
         self.request = request
-        self.post = review_result.post_result.post
+        self.post_election = review_result.post_election_result
 
         super(ReviewVotesForm, self).__init__(*args, **kwargs)
 
     def mark_candidates_as_winner(self, request, instance):
         for candidate_result in instance.candidate_results.all():
             membership = candidate_result.membership
-            post = instance.post_result.post
+            post_election = instance.post_election_result.post_election
             election = membership.extra.election
 
             source = instance.review_source
@@ -121,8 +122,8 @@ class ReviewVotesForm(forms.ModelForm):
                     election=election,
                     winner=membership.person,
                     winner_person_name=membership.person.name,
-                    post_id=post.extra.slug,
-                    post_name=post.label,
+                    post_id=post_election.postextra.slug,
+                    post_name=post_election.postextra.base.label,
                     winner_party_id=membership.on_behalf_of.extra.slug,
                     source=source,
                     user=instance.reviewed_by,
@@ -165,9 +166,9 @@ class ResultSetForm(forms.ModelForm):
             'source',
         )
 
-    def __init__(self, post_result, *args, **kwargs):
-        self.post = post_result.post
-        self.post_result = post_result
+    def __init__(self, post_election_result, *args, **kwargs):
+        self.post_election = post_election_result.post_election
+        self.post_election_result = post_election_result
         self.memberships = []
 
         initial_values = {}
@@ -187,7 +188,8 @@ class ResultSetForm(forms.ModelForm):
         existing_fields = self.fields
         fields = OrderedDict()
 
-        memberships = self.post.memberships.all()
+        memberships = self.post_election.postextra.base.memberships.filter(
+            extra__election=self.post_election.election)
         memberships = sorted(
             memberships,
             key=lambda member: member.person.name.split(' ')[-1]
@@ -261,18 +263,14 @@ class ResultSetForm(forms.ModelForm):
 
     def save(self, request):
         instance = super(ResultSetForm, self).save(commit=False)
-        instance.post_result = self.post_result
+        instance.post_election_result = self.post_election_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
         instance.ip_address = get_client_ip(request)
         instance.save(request)
 
-        election = self.memberships[0][0].extra.election
-        postextra = self.post.extra
-        pee = PostExtraElection.objects.get(
-            postextra=postextra, election=election)
-
-        winner_count = pee.winner_count
+        post_election = self.post_election_result.post_election
+        winner_count = post_election.winner_count
 
         winners = dict(sorted(
             [("{}-{}".format(self[y].value(), x.person.id), x)

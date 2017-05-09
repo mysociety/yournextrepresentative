@@ -67,13 +67,19 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         from ..election_specific import shorten_post_label
         context = super(ConstituencyDetailView, self).get_context_data(**kwargs)
 
-        context['post_id'] = post_id = kwargs['post_id']
-        mp_post = get_object_or_404(
-            Post.objects.select_related('extra'),
-            extra__slug=post_id,
-            extra__elections__slug=self.election,
+        context['post_election'] = get_object_or_404(
+            PostExtraElection.objects.all().select_related(
+                'postextra__base',
+                'election',
+                ),
+            postextra__slug=context['post_id'],
+            election__slug=kwargs['election']
         )
+
+        context['post_id'] = post_id = kwargs['post_id']
+        mp_post = context['post_election'].postextra.base
         context['post_obj'] = mp_post
+
 
         documents_by_type = {}
         # Make sure that every available document type has a key in

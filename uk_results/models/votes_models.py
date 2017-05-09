@@ -6,27 +6,37 @@ from django.db import transaction
 from .base import BaseResultModel, ResultStatusMixin
 
 
-class PostResultManager(models.Manager):
+class PostElectionResultManager(models.Manager):
     def confirmed(self):
-        return self.filter(confirmed=True)
+        qs = self.filter(confirmed=True)
+        if qs.exists():
+            return qs.latest()
+        else:
+            return False
 
 
-class PostResult(models.Model):
-    post = models.ForeignKey('popolo.Post')
+
+class PostElectionResult(models.Model):
+    # post = models.ForeignKey('popolo.Post')
+    post_election = models.ForeignKey('candidates.PostExtraElection')
     confirmed = models.BooleanField(default=False)
     confirmed_resultset = models.OneToOneField(
         'ResultSet', null=True)
 
-    objects = PostResultManager()
+    objects = PostElectionResultManager()
+
+    class Meta:
+        get_latest_by = 'confirmed_resultset__created'
 
     @models.permalink
     def get_absolute_url(self):
-        return ('post-results-view', (), {'post_id': self.post.extra.slug})
+        return ('post-results-view', (), {
+            'post_election_id': self.post_election.pk})
 
 
 class ResultSet(BaseResultModel, ResultStatusMixin):
-    post_result = models.ForeignKey(
-        PostResult,
+    post_election_result = models.ForeignKey(
+        PostElectionResult,
         related_name='result_sets',
     )
 
@@ -46,17 +56,17 @@ class ResultSet(BaseResultModel, ResultStatusMixin):
         return u"pk=%d user=%r post=%r" % (
             self.pk,
             self.user,
-            self.post_result,
+            self.post_election_result,
         )
 
     def save(self, *args, **kwargs):
         super(ResultSet, self).save(*args, **kwargs)
         if self.review_status == "confirmed":
-            self.post_result.confirmed = True
-            self.post_result.confirmed_resultset = self
+            self.post_election_result.confirmed = True
+            self.post_election_result.confirmed_resultset = self
             if not self.review_source:
                 self.review_source = self.source
-            self.post_result.save()
+            self.post_election_result.save()
 
 
 

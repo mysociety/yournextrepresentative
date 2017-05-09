@@ -10,7 +10,7 @@ from ..constants import CONFIRMED_STATUS, RESULTS_DATE
 from ..models import CouncilElection, CouncilElectionResultSet
 from ..forms import (ReportCouncilElectionControlForm,
                      ReviewControlForm)
-from .base import BaseResultsViewMixin
+from .base import BaseResultsViewMixin, ResultsViewPermissionsMixin
 
 
 class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
@@ -23,6 +23,9 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
         councils = councils.select_related(
             'council',
             'election',
+            'controller_resultset',
+            'controller_resultset__controller',
+            'controller_resultset__controller__partywithcolour',
             # 'reported_results',
         )
         councils = councils.prefetch_related(
@@ -31,6 +34,7 @@ class CouncilsWithElections(BaseResultsViewMixin, TemplateView):
                 CouncilElectionResultSet.objects.select_related(
                     'council_election',
                     'council_election__election',
+                    'council_election__council',
                     'council_election__council',
                 )
             )
@@ -54,10 +58,10 @@ class CouncilElectionView(BaseResultsViewMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(CouncilElectionView, self).get_context_data(**kwargs)
-        context['posts'] = self.object.election.posts.select_related(
-            'base',
-            'base__area',
-        ).order_by('base__label')
+        context['post_elections'] = \
+            self.object.election.postextraelection_set.all().select_related(
+                'postextra__base', 'election'
+            )
         return context
 
 
@@ -120,7 +124,10 @@ class LatestControlResults(BaseResultsViewMixin, ListView):
 
     def get_queryset(self):
         queryset = self.queryset
-        queryset.filter(council_election__election__election_date=RESULTS_DATE)
+        queryset = queryset.filter(
+            council_election__election__election_date=RESULTS_DATE)
+        queryset = queryset.select_related(
+            'controller', 'council_election__council')
 
         status = self.request.GET.get('status')
         if status:
@@ -133,7 +140,7 @@ class LatestControlResults(BaseResultsViewMixin, ListView):
         return queryset
 
 
-class ConfirmControl(BaseResultsViewMixin, UpdateView):
+class ConfirmControl(ResultsViewPermissionsMixin, UpdateView):
     template_name = "uk_results/review_reported_control.html"
     queryset = CouncilElectionResultSet.objects.all()
 

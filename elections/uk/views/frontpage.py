@@ -124,10 +124,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             context['council_election_percent'] = 0
 
         from candidates.models import PostExtra
-        from uk_results.models import PostResult
+        from uk_results.models import PostElectionResult
         context['votes_total'] = PostExtra.objects.filter(
             postextraelection__election__slug__contains="local").count()
-        context['votes_confirmed'] = PostResult.objects.filter(
+        context['votes_confirmed'] = PostElectionResult.objects.filter(
             confirmed=True).count()
 
         if float(context['votes_confirmed']):

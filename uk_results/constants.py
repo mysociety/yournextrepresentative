@@ -19,6 +19,7 @@ CONFIRMED_STATUS = 'confirmed'
 REJECTED_STATUS = 'rejected'
 
 REPORTED_RESULT_STATUSES = (
+    (None, 'Unreviewed'),
     (UNCONFIRMED_STATUS, 'Unconfirmed'),
     (CONFIRMED_STATUS, 'Confirmed'),
     (REJECTED_STATUS, 'Rejected'),

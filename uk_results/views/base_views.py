@@ -36,15 +36,16 @@ class ResultsHomeView(BaseResultsViewMixin, TemplateView):
 
 
         from candidates.models import PostExtraElection
-        from uk_results.models import PostResult
+        from uk_results.models import PostElectionResult
         context['votes_total'] = PostExtraElection.objects.filter(
             election__slug__contains="local",
             election__election_date=RESULTS_DATE,
 
         ).count()
-        context['votes_confirmed'] = PostResult.objects.filter(
+
+        context['votes_confirmed'] = PostElectionResult.objects.filter(
             confirmed=True,
-            post__extra__elections__election_date=RESULTS_DATE
+            post_election__election__election_date=RESULTS_DATE
         ).count()
 
         if float(context['votes_confirmed']):
