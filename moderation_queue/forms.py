@@ -69,9 +69,9 @@ class PhotoReviewForm(forms.Form):
 class SuggestedPostLockForm(forms.ModelForm):
     class Meta:
         model = SuggestedPostLock
-        fields = ['justification', 'post_extra',]
+        fields = ['justification', 'postextraelection',]
         widgets = {
-            'post_extra': forms.HiddenInput(),
+            'postextraelection': forms.HiddenInput(),
             'justification': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
             )

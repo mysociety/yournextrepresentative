@@ -24,7 +24,7 @@ from nose.plugins.attrib import attr
 
 from popolo.models import Person
 from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME, SuggestedPostLock
-from candidates.models import LoggedAction, ImageExtra
+from candidates.models import LoggedAction, ImageExtra, PostExtraElection
 from official_documents.models import OfficialDocument
 from mysite.helpers import mkdir_p
 
@@ -516,8 +516,12 @@ class SuggestedLockReviewTests(UK2015ExamplesMixin, TestUserMixin, WebTest):
         self.assertNotContains(response, '<h3>')
 
     def test_suggested_lock_review_view_with_suggestions(self):
+        pee = PostExtraElection.objects.get(
+            postextra=self.dulwich_post_extra,
+            election=self.election
+        )
         SuggestedPostLock.objects.create(
-            post_extra=self.dulwich_post_extra,
+            postextraelection=pee,
             user=self.user,
             justification='test data'
         )
@@ -549,8 +553,11 @@ class SOPNReviewRequiredTest(UK2015ExamplesMixin, TestUserMixin, WebTest):
         self.assertContains(response, 'Dulwich')
 
     def test_sopn_review_view_document_with_suggested_lock_not_included(self):
+        postextraelection = self.dulwich_post_extra.postextraelection_set.get(
+            election=self.election
+        )
         SuggestedPostLock.objects.create(
-            post_extra=self.dulwich_post_extra,
+            postextraelection=postextraelection,
             user=self.user,
             justification='test data'
         )

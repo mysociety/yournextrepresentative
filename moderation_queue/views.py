@@ -12,6 +12,7 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
@@ -21,6 +22,7 @@ from django.views.generic import ListView, TemplateView, CreateView
 
 from PIL import Image as PillowImage
 from braces.views import LoginRequiredMixin
+from slugify import slugify
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
@@ -457,8 +459,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
 
 
 class SuggestLockView(LoginRequiredMixin, CreateView):
+    '''This handles creating a SuggestedPostLock from a form submission'''
+
     model = SuggestedPostLock
-    fields = ['justification', 'post_extra']
+    fields = ['justification', 'postextraelection']
 
     def form_valid(self, form):
         user = self.request.user
@@ -474,30 +478,38 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('constituency', kwargs={
                 'election': self.kwargs['election_id'],
-                'post_id': self.object.post_extra.slug,
-                'ignored_slug': self.object.post_extra.slug
+                'post_id': self.object.postextraelection.postextra.slug,
+                'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
             })
 
 class SuggestLockReviewListView(ListView):
+    '''This is the view which lists all post lock suggestions that need review
+
+    Most people will get to this by clicking on the red highlighted 'Post lock suggestions'
+    counter in the header.'''
+
     template_name = "moderation_queue/suggestedpostlock_review.html"
 
     def get_queryset(self):
         return SuggestedPostLock.objects.filter(
-            post_extra__postextraelection__candidates_locked=False).select_related(
-                'user', 'post_extra__base',
-            ).prefetch_related('post_extra__elections')
+            postextraelection__candidates_locked=False).select_related(
+                'user', 'postextraelection__postextra__base', 'postextraelection__election'
+            )
 
 
 class SOPNReviewRequiredView(ListView):
+    '''List all post that have a nominations paper, but no lock suggestion'''
+
     template_name = "moderation_queue/sopn-review-required.html"
 
     def get_queryset(self):
         """
-        PostExtras with a document but no lock suggestion
+        PostExtraElection objects with a document but no lock suggestion
         """
-        return PostExtraElection.objects.exclude(
-            postextra__base__officialdocument=None).filter(
-                postextra__suggestedpostlock=None,
+        return PostExtraElection.objects \
+            .filter(
+                postextra__base__officialdocument__election=F('election'),
+                suggestedpostlock__isnull=True,
                 candidates_locked=False,
                 election__current=True).select_related(
                     'postextra__base', 'election').order_by(

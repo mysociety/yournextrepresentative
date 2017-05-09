@@ -106,21 +106,25 @@ class ConstituencyDetailView(ElectionMixin, TemplateView):
         context['candidates_locked'] = is_post_locked(mp_post, self.election_data)
 
         if hasattr(mp_post, 'extra'):
-            context['has_lock_suggestion'] = any(
-                [spl.election_for_suggestion for spl in
-                SuggestedPostLock.objects.filter(post_extra=mp_post.extra)])
+            # FIXME: Sym has a pending change which adds the
+            # PostExtraElection to the context earlier anyway, so this
+            # is just temporary.
+            pee = PostExtraElection.objects.get(
+                postextra=mp_post.extra,
+                election=self.election_data)
+
+            context['has_lock_suggestion'] = \
+                SuggestedPostLock.objects.filter(postextraelection=pee).exists()
 
             context['suggest_lock_form'] = SuggestedPostLockForm(
-                initial={
-                    'post_extra': mp_post.extra
-                },
+                initial={'postextraelection': pee},
             )
 
             if self.request.user.is_authenticated():
                 context['user_has_suggested_lock'] = \
                     SuggestedPostLock.objects.filter(
                         user=self.request.user,
-                        post_extra=mp_post.extra
+                        postextraelection=pee,
                     ).exists()
 
         context['lock_form'] = ToggleLockForm(
@@ -289,7 +293,7 @@ class ConstituencyListView(ElectionMixin, TemplateView):
                 election=self.election_data
             ).order_by('postextra__base__label') \
             .select_related('postextra__base') \
-            .prefetch_related('postextra__suggestedpostlock_set')
+            .prefetch_related('suggestedpostlock_set')
 
         return context
 

@@ -2,11 +2,10 @@
 
 {% block content %}
 <h1>Posts with lock suggestions</h1>
-{% regroup object_list by post_extra.base.label as suggestions_list %}
+{% regroup object_list by postextraelection as suggestions_list %}
 {% for suggestion_post in suggestions_list %}
     {% with suggestion_post.list.0 as suggestion %}
-        {% if suggestion.election_for_suggestion %}
-                <h3><a href="{% url 'constituency' election=suggestion.election_for_suggestion.slug post_id=suggestion.post_extra.slug ignored_slug=suggestion.post_extra.base.label|slugify %}">{{ suggestion_post.grouper }}</a></h3>
+        <h3><a href="{% url 'constituency' election=suggestion_post.grouper.election.slug post_id=suggestion_post.grouper.postextra.slug ignored_slug=suggestion_post.grouper.postextra.short_label|slugify %}">{{ suggestion_post.grouper.postextra.short_label }} in the {{ suggestion_post.grouper.election.name }}</a></h3>
         <ul>
         {% for suggestion in suggestion_post.list %}
         <li>
@@ -18,7 +17,6 @@
         </li>
         {% endfor %}
         </ul>
-        {% endif %}
     {% endwith %}
 {% endfor %}
 <ul>

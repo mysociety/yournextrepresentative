@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
-from candidates.models import PostExtra
+from candidates.models import PostExtra, PostExtraElection
 
 from compat import python_2_unicode_compatible
 
@@ -29,8 +29,8 @@ class CopyrightOptions:
            "on this site")),
         (PROFILE_PHOTO,
          _("This is the candidate's public profile photo from social "
-         "media (e.g. Twitter, Facebook) or their official campaign "
-         "page")),
+           "media (e.g. Twitter, Facebook) or their official campaign "
+           "page")),
         (OTHER,
          _("Other")),
     )
@@ -96,21 +96,10 @@ class QueuedImage(models.Model):
 
 
 class SuggestedPostLock(models.Model):
-    post_extra = models.ForeignKey(PostExtra)
+    postextraelection = models.ForeignKey(PostExtraElection)
     user = models.ForeignKey(User, blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    justification = models.TextField(blank=True,
+    justification = models.TextField(
+        blank=True,
         help_text="e.g I've reviewed the nomination paper for this area")
-
-    @property
-    def election_for_suggestion(self):
-        # This might look like a poor alternative to:
-        #    self.post_extra.elections.filter(current=True)[0]
-        # However, that would negate any advantage from prefetching
-        # the elections in the get_queryset of SuggestLockReviewListView.
-        # Calling .filter() on a prefetched relationship causes an extra
-        # query where as iterating over .all() doesn't.
-        for election in self.post_extra.elections.all():
-            if election.current:
-                return election

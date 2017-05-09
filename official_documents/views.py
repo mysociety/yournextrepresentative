@@ -56,8 +56,6 @@ class PostsForDocumentView(DetailView):
             source_url=self.object.source_url
         ).select_related(
             'post__extra', 'election'
-        ).prefetch_related(
-            'post__extra__suggestedpostlock_set'
         )
 
         """
@@ -67,7 +65,14 @@ class PostsForDocumentView(DetailView):
         make the code and the template unpleasant.
         """
         context['document_posts'] = [
-            (document, is_post_locked(document.post, document.election))
+            (
+                document,
+                is_post_locked(document.post, document.election),
+                SuggestedPostLock.objects.filter(
+                    postextraelection__postextra=document.post.extra,
+                    postextraelection__election=document.election,
+                ).exists()
+            )
             for document in documents
         ]
         return context
