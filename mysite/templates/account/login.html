@@ -6,7 +6,7 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block hero %}
-  <h1>{% trans "Sign in, or create an account" %}</h1>
+  <h1>{% trans "Sign in" %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -14,27 +14,13 @@
 {% get_providers as socialaccount_providers %}
 
 {% if socialaccount_providers  %}
-<p>
-    {% blocktrans trimmed with site.name as site_name %}
-    If you've created an account on this site before then
-     please sign in with your username and password or one of the social account providers below.
-    {% endblocktrans %}
-</p>
-
-<div class="socialaccount_ballot">
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
-  <p class="login-or">{% trans 'Or sign in with your email/username and password:' %}</p>
-
-</div>
-
-{% include "socialaccount/snippets/login_extra.html" %}
-
-{% else %}
-<p>{% blocktrans trimmed %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+  <div class="socialaccount_ballot">
+    <ul class="socialaccount_providers">
+      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    </ul>
+    <p class="login-or"><span>{% trans 'Or' %}</span></p>
+  </div>
+  {% include "socialaccount/snippets/login_extra.html" %}
 {% endif %}
 
 <form class="login" method="POST" action="{% url 'account_login' %}">
@@ -43,11 +29,15 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button class="button primaryAction" type="submit">{% trans "Sign in" %}</button>
-  <a class="button secondary secondaryAction tiny" href="{% url 'account_reset_password' %}">{% trans "Forgot password?" %}</a>
+  <p>
+    <button class="button" type="submit">{% trans "Sign in" %}</button>
+    <a class="button secondary" href="{% url 'account_reset_password' %}">{% trans "Forgot password?" %}</a>
+  </p>
 </form>
 
-<p>Or if you've not used this site before, create a new account:</p>
+<h2>Don’t have an account?</h2>
+
+<p>If you’ve not used this site before, create a new account:</p>
 <p><a href="{{ signup_url }}" class="button primaryAction">Create an account</a></p>
 
 {% endblock %}
