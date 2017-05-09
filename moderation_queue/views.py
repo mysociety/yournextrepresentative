@@ -12,6 +12,7 @@ from django.contrib.sites.models import Site
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
@@ -494,15 +495,18 @@ class SuggestLockReviewListView(ListView):
 
 
 class SOPNReviewRequiredView(ListView):
+    '''List all post that have a nominations paper, but no lock suggestion'''
+
     template_name = "moderation_queue/sopn-review-required.html"
 
     def get_queryset(self):
         """
-        PostExtras with a document but no lock suggestion
+        PostExtraElection objects with a document but no lock suggestion
         """
-        return PostExtraElection.objects.exclude(
-            postextra__base__officialdocument=None).filter(
-                postextra__suggestedpostlock=None,
+        return PostExtraElection.objects \
+            .filter(
+                postextra__base__officialdocument__election=F('election'),
+                suggestedpostlock__isnull=True,
                 candidates_locked=False,
                 election__current=True).select_related(
                     'postextra__base', 'election').order_by(

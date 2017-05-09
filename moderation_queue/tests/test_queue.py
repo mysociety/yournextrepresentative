@@ -553,8 +553,11 @@ class SOPNReviewRequiredTest(UK2015ExamplesMixin, TestUserMixin, WebTest):
         self.assertContains(response, 'Dulwich')
 
     def test_sopn_review_view_document_with_suggested_lock_not_included(self):
+        postextraelection = self.dulwich_post_extra.postextraelection_set.get(
+            election=self.election
+        )
         SuggestedPostLock.objects.create(
-            post_extra=self.dulwich_post_extra,
+            postextraelection=postextraelection,
             user=self.user,
             justification='test data'
         )
