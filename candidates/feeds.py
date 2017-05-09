@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import re
@@ -116,11 +117,10 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     def item_description(self, item):
         la = item[0]
         unescaped = '''
-<p>{action_type} of {subject} by {user} with source: &ldquo;{source}&rdquo;</p>
+<p>{action_type} of {subject} by {user} with source: “{source}”;</p>
 <ul>
 {reasons_review_needed}
-</ul>
-<p>Updated at {timestamp}</p>'''.strip().format(
+</ul></p>'''.strip().format(
             action_type=la.action_type,
             subject=la.subject_html,
             user=la.user.username,
