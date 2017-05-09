@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import transaction
+from django.db.models import F
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -13,7 +14,7 @@ from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
 from elections.models import Election
-from candidates.models import PostExtra, PersonExtra, MembershipExtra
+from candidates.models import PostExtra, PostExtraElection, PersonExtra, MembershipExtra
 from candidates.models.auth import check_creation_allowed, check_update_allowed
 from candidates.views.version_data import get_change_metadata, get_client_ip
 from candidates.views.people import get_call_to_action_flash_message
@@ -44,7 +45,8 @@ class BaseBulkAddView(LoginRequiredMixin, TemplateView):
     def remaining_posts_for_sopn(self):
         return OfficialDocument.objects.filter(
             source_url=self.official_document.source_url,
-            post__extra__suggestedpostlock=None
+            post__extra__postextraelection__election=F('election'),
+            post__extra__postextraelection__suggestedpostlock=None,
         )
 
     def post(self, request, *args, **kwargs):
@@ -224,9 +226,13 @@ class BulkAddReviewView(BaseBulkAddView):
                         base__pk=int(data['select_person']))
                 self.update_person(context, data, person_extra)
             if self.request.POST.get('suggest_locking') == 'on':
+                pee = PostExtraElection.objects.get(
+                    postextra=context['post_extra'],
+                    election=Election.objects.get(slug=context['election']),
+                )
                 SuggestedPostLock.objects.create(
                     user=self.request.user,
-                    post_extra=context['post_extra'],
+                    postextraelection=pee,
                 )
         if self.remaining_posts_for_sopn().exists():
             messages.add_message(
