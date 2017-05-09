@@ -1,0 +1,54 @@
+.socialaccount_ballot {
+    max-width: 30em; // to match form.login
+}
+
+.socialaccount_providers {
+    list-style: none;
+    margin-left: 0;
+
+    @media (min-width: $small-breakpoint) {
+        @include flex-container();
+        margin: 1em -0.5em;
+
+        li {
+            margin: 0 0.5em;
+        }
+    }
+}
+
+.socialaccount_provider {
+    @include button-base();
+    @include button-size($button-med, true);
+    @include single-transition(background-color);
+
+    &.facebook {
+        $bg: #3b5998;
+        $bg-hover: scale-color($bg, $lightness: $button-function-factor);
+        @include button-style($bg, $button-radius, false, $bg-hover, $bg-hover);
+    }
+
+    &.google {
+        $bg: #ea4335;
+        $bg-hover: scale-color($bg, $lightness: $button-function-factor);
+        @include button-style($bg, $button-radius, false, $bg-hover, $bg-hover);
+    }
+
+    &.twitter {
+        $bg: #1da1f2;
+        $bg-hover: scale-color($bg, $lightness: $button-function-factor);
+        @include button-style($bg, $button-radius, false, $bg-hover, $bg-hover);
+    }
+}
+
+.login-or {
+    border-top: 1px solid #ddd;
+    text-align: center;
+    margin-bottom: 0.5em;
+
+    span {
+        position: relative;
+        top: -0.75em;
+        background: #fff;
+        padding: 0 1em;
+    }
+}
