@@ -22,6 +22,7 @@ from django.views.generic import ListView, TemplateView, CreateView
 
 from PIL import Image as PillowImage
 from braces.views import LoginRequiredMixin
+from slugify import slugify
 
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
@@ -458,8 +459,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
 
 
 class SuggestLockView(LoginRequiredMixin, CreateView):
+    '''This handles creating a SuggestedPostLock from a form submission'''
+
     model = SuggestedPostLock
-    fields = ['justification', 'post_extra']
+    fields = ['justification', 'postextraelection']
 
     def form_valid(self, form):
         user = self.request.user
@@ -475,8 +478,8 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('constituency', kwargs={
                 'election': self.kwargs['election_id'],
-                'post_id': self.object.post_extra.slug,
-                'ignored_slug': self.object.post_extra.slug
+                'post_id': self.object.postextraelection.postextra.slug,
+                'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
             })
 
 class SuggestLockReviewListView(ListView):
