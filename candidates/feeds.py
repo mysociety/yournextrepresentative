@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import re
@@ -95,9 +96,14 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     id_format = 'needs-review:{0}'
 
     def items(self):
-        # Consider changes in the last 5 days:
+        # Consider changes in the last 5 days. We exclude any photo
+        # related activity since that has its own reviewing system.
         return sorted(
-            LoggedAction.objects.in_recent_days(5).order_by('-created').needs_review().items(),
+            LoggedAction.objects \
+                .exclude(action_type__startswith='photo-') \
+                .in_recent_days(5) \
+                .order_by('-created') \
+                .needs_review().items(),
             key=lambda t: t[0].created,
             reverse=True)
 
@@ -116,11 +122,10 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     def item_description(self, item):
         la = item[0]
         unescaped = '''
-<p>{action_type} of {subject} by {user} with source: &ldquo;{source}&rdquo;</p>
+<p>{action_type} of {subject} by {user} with source: “{source}”;</p>
 <ul>
 {reasons_review_needed}
-</ul>
-<p>Updated at {timestamp}</p>'''.strip().format(
+</ul></p>'''.strip().format(
             action_type=la.action_type,
             subject=la.subject_html,
             user=la.user.username,
