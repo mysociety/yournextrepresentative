@@ -479,13 +479,18 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
             })
 
 class SuggestLockReviewListView(ListView):
+    '''This is the view which lists all post lock suggestions that need review
+
+    Most people will get to this by clicking on the red highlighted 'Post lock suggestions'
+    counter in the header.'''
+
     template_name = "moderation_queue/suggestedpostlock_review.html"
 
     def get_queryset(self):
         return SuggestedPostLock.objects.filter(
-            post_extra__postextraelection__candidates_locked=False).select_related(
-                'user', 'post_extra__base',
-            ).prefetch_related('post_extra__elections')
+            postextraelection__candidates_locked=False).select_related(
+                'user', 'postextraelection__postextra__base', 'postextraelection__election'
+            )
 
 
 class SOPNReviewRequiredView(ListView):
