@@ -181,6 +181,17 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         self.assertEqual(queued_image.person.id, 2009)
         self.assertEqual(queued_image.user, self.test_upload_user)
 
+    def test_shows_photo_policy_text_in_photo_upload_page(self):
+        upload_form_url = reverse(
+            'photo-upload',
+            kwargs={'person_id': '2009'}
+        )
+        response = self.app.get(
+            upload_form_url,
+            user=self.test_upload_user
+        )
+        self.assertContains(response, 'Photo policy')
+
     def test_photo_review_queue_view_not_logged_in(self):
         queue_url = reverse('photo-review-list')
         response = self.app.get(queue_url)
@@ -234,7 +245,7 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         response = self.app.get(review_url, user=self.test_reviewer)
         self.assertEqual(response.status_code, 200)
 
-    def test_shows_photo_policy_text(self):
+    def test_shows_photo_policy_text_in_photo_review_page(self):
         review_url = reverse(
             'photo-review',
             kwargs={'queued_image_id': self.q1.id}
