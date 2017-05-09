@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
 
 from candidates.views.mixins import ContributorsMixin
-from candidates.models import PostExtra
+from candidates.models import PostExtra, PostExtraElection
 from tasks.models import PersonTask
 
 
@@ -65,45 +65,33 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
     def form_valid(self, form):
         return self.process_postcode(form.cleaned_data['q'])
 
+    def sopn_progress_by_election_slug_prefix(self, election_slug_prefix):
+        election_qs = Election.objects.filter(slug__startswith=election_slug_prefix)
+        return self.sopn_progress_by_election(election_qs)
 
-    def sopn_progress_by_election(self, election_slug=None, election_qs=None):
+    def sopn_progress_by_election(self, election_qs):
         context = {}
-        pe_qs = None
-        if election_slug:
-            pe_qs = PostExtra.objects.filter(
-                elections__slug__startswith=election_slug)
-        if election_qs:
-            pe_qs = PostExtra.objects.filter(
-                elections__in=election_qs)
-        if not pe_qs:
+        if not election_qs.exists():
             return context
+        pee_qs = PostExtraElection.objects.filter(election__in=election_qs)
 
-        context['posts_total'] = pe_qs.count()
-        if election_qs:
-            pe_qs = pe_qs.filter(
-                postextraelection__candidates_locked=True,
-                postextraelection__election__in=election_qs
-            )
-        else:
-            pe_qs = pe_qs.filter(
-                postextraelection__candidates_locked=True,
-                postextraelection__election__slug__startswith=election_slug
-            )
-        context['posts_locked'] = pe_qs.count()
+        context['posts_total'] = pee_qs.count()
+        pee_qs = pee_qs.filter(candidates_locked=True, election__in=election_qs)
+        context['posts_locked'] = pee_qs.count()
         context['posts_locked_percent'] = round(
                 float(context['posts_locked']) /
                 float(context['posts_total'])
                 * 100)
 
-        context['posts_lock_suggested'] = pe_qs.exclude(
+        context['posts_lock_suggested'] = pee_qs.exclude(
             suggestedpostlock=None).count()
         context['posts_locked_suggested_percent'] = round(
                 float(context['posts_lock_suggested']) /
                 float(context['posts_total'])
                 * 100)
 
-        context['sopns_imported'] = pe_qs.exclude(
-            base__officialdocument=None).count()
+        context['sopns_imported'] = pee_qs.exclude(
+            postextra__base__officialdocument=None).count()
         context['sopns_imported_percent'] = round(
                 float(context['sopns_imported']) /
                 float(context['posts_total'])
