@@ -49,7 +49,7 @@
             <ul class="other-names">
               <li>Other names:</li>
             {% endif %}
-            <li>{{ name }}</li>
+            <li class="other-name">{{ name }}</li>
             {% if forloop.last %}</ul>{% endif %}
         {% endfor %}
         <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">

@@ -20,6 +20,10 @@
             padding: 0 0.5em;
             display: inline-block;
             list-style: none;
+
+            &.highlight {
+                background-color: gold;
+            }
         }
     }
 

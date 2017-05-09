@@ -12,17 +12,34 @@ $(function(){
             $form.find('#altnameerr').remove();
             $form.find('.alert').remove();
             $form.find('.errorlist').remove();
+            $name = $form.find('input[name="name"]').val();
             $.ajax({
                 url: $link.attr('href'),
                 type: "POST",
                 data: {
                     csrfmiddlewaretoken: $form.find('input[type="hidden"]').val(),
-                    name : $form.find('input[name="name"]').val(),
+                    name : $name,
                     source : $form.find('input[name="source"]').val()
                 },
 
                 success: function(json) {
                     if (json['success']) {
+                        $other = $person.find('.other-names');
+                        if ($other.length == 0) {
+                            $first_name = $person.find('>:first-child');
+                            $first_name.after('<ul class="other-names"><li>Other names:</li></ul>');
+                            $other = $person.find('.other-names');
+                        }
+                        $names = $other.find('.other-name');
+                        $names.remove()
+                        for (var i = 0; i < json.names.length; i++) {
+                            var name = json.names[i];
+                            var highlight = '';
+                            if (name == $name) {
+                                highlight = ' highlight';
+                            }
+                            $other.append('<li class="other-name' + highlight + '">' + json.names[i] + '</li>');
+                        }
                         $form.remove();
                     } else {
                         if (json['errors']) {
