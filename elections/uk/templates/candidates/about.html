@@ -90,6 +90,14 @@ The privacy policy of this site can be found
 <a href="{{ url }}">here</a>.
 {% endblocktrans %}</p>
 
+<h3>{% trans "Photo Policy" %}</h3>
+
+{% url 'help-photo-policy' as url %}
+<p>{% blocktrans trimmed %}
+The photo policy of this site can be found
+<a href="{{ url }}">here</a>.
+{% endblocktrans %}</p>
+
 <h3>{% trans "Disclaimer" %}</h3>
 
 <p>{% blocktrans trimmed %}
