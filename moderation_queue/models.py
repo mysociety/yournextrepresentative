@@ -97,7 +97,6 @@ class QueuedImage(models.Model):
 
 class SuggestedPostLock(models.Model):
     postextraelection = models.ForeignKey(PostExtraElection)
-    post_extra = models.ForeignKey(PostExtra)
     user = models.ForeignKey(User, blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
