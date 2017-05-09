@@ -46,7 +46,7 @@
         {% if request.user.is_authenticated %}
           {% if not user_has_suggested_lock %}
             {% if not candidates_locked %}
-                {% if election_data.show_official_documents and official_documents %}
+                {% if election_data.show_official_documents and some_official_documents %}
                 <form method=post id="suggest_lock_form" action="{% url 'constituency-suggest-lock' election_id=election %}">
                     {% csrf_token %}
                     <h3>Suggest locking</h3>
@@ -62,7 +62,7 @@
                     the list is final.</p>
 
 
-                    {{ suggest_lock_form.post_extra }}
+                    {{ suggest_lock_form.postextraelection }}
 
                     {{ suggest_lock_form.justification.label_tag }}
                     <label for="{{ suggest_lock_form.justification.id_for_label }}">{{ suggest_lock_form.justification.help_text }}</label>
