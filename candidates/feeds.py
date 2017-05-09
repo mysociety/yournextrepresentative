@@ -31,6 +31,23 @@ class ChangesMixin(object):
         else:
             return logged_action.action_type
 
+    def get_guid(self, logged_action):
+        return self.id_format(logged_action.id)
+
+    def get_updated(self, logged_action):
+        # Note that we're using the created attribute rather than
+        # updated, since any save() of the LoggedAction will cause
+        # updated to be set to now, but the item won't really have
+        # changed in a sense that means we'd want it to appear again
+        # in an RSS feed.
+        return logged_action.created
+
+    def get_author(self, logged_action):
+        if logged_action.user:
+            return logged_action.user.username
+        else:
+            return "Automated change"
+
 
 class RecentChangesFeed(ChangesMixin, Feed):
     site_name = Site.objects.get_current().name
@@ -38,6 +55,7 @@ class RecentChangesFeed(ChangesMixin, Feed):
     description = _("Changes to {site_name} candidates").format(site_name=site_name)
     link = "/feeds/changes.xml"
     feed_type = Atom1Feed
+    id_format = 'changes:{0}'
 
     def items(self):
         return LoggedAction.objects.order_by('-updated')[:50]
@@ -50,6 +68,15 @@ class RecentChangesFeed(ChangesMixin, Feed):
         description = "{0}\n\n{1}\n".format(item.source, updated)
 
         return description
+
+    def item_guid(self, item):
+        return self.id_format.format(item.id)
+
+    def item_updateddate(self, item):
+        return self.get_updated(item)
+
+    def item_author_name(self, item):
+        return self.get_author(item)
 
     def item_link(self, item):
         # As a hack for the moment, constituencies are just mentioned
@@ -65,16 +92,26 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     title = _('{site_name} changes for review').format(site_name=site_name)
     link = '/feeds/needs-review.xml'
     feed_type = Atom1Feed
+    id_format = 'needs-review:{0}'
 
     def items(self):
         # Consider changes in the last 5 days:
         return sorted(
-            LoggedAction.objects.in_recent_days(5).needs_review().items(),
+            LoggedAction.objects.in_recent_days(5).order_by('-created').needs_review().items(),
             key=lambda t: t[0].created,
             reverse=True)
 
     def item_title(self, item):
         return self.get_title(item[0])
+
+    def item_guid(self, item):
+        return self.id_format.format(item[0].id)
+
+    def item_updateddate(self, item):
+        return self.get_updated(item[0])
+
+    def item_author_name(self, item):
+        return self.get_author(item[0])
 
     def item_description(self, item):
         la = item[0]
