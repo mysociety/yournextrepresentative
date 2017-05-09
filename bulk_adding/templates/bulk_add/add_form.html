@@ -46,8 +46,8 @@
         </a>
         {% for name in person.other_names.all %}
             {% if forloop.first %}
-            <ul class="other-names">
-              <li>Other names:</li>
+            <ul class="other-names clearfix">
+              <li>Also known as:</li>
             {% endif %}
             <li class="other-name">{{ name }}</li>
             {% if forloop.last %}</ul>{% endif %}

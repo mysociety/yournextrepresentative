@@ -11,19 +11,18 @@
     }
 
     .other-names {
-        margin-left: 0;
-        & > :first-child {
-            padding: 0;
-        }
-        li {
-            font-size: 0.8em;
-            padding: 0 0.5em;
-            display: inline-block;
-            list-style: none;
+        font-size: 0.9em;
+        margin: 0 -0.5em 0.5em -0.5em;
 
-            &.highlight {
-                background-color: gold;
-            }
+        li {
+            list-style: none;
+            float: left;
+            margin: 0 0.5em;
+        }
+
+        .highlight {
+            background-color: gold;
+            padding: 0 0.4em;
         }
     }
 
