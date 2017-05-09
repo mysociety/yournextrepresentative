@@ -36,8 +36,10 @@ class TestCaching(TestUserMixin, UK2015ExamplesMixin, WebTest):
         for header, value in headers:
             if header == 'Cache-Control':
                 seen_cache = True
-                self.assertTrue(
-                    value == 'no-cache, no-store, must-revalidate, max-age=0'
+                values = set(value.split(', '))
+                self.assertEqual(
+                    values,
+                    {'no-cache', 'no-store', 'must-revalidate', 'max-age=0'}
                 )
 
         self.assertTrue(seen_cache)
