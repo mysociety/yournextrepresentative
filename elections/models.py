@@ -195,7 +195,7 @@ class Election(models.Model):
                     'postextraelection_set',
                     PostExtraElection.objects.select_related('postextra__base') \
                         .order_by('postextra__base__label')\
-                        .prefetch_related('postextra__suggestedpostlock_set')
+                        .prefetch_related('suggestedpostlock_set')
                 ),
             )
         if not include_noncurrent:
