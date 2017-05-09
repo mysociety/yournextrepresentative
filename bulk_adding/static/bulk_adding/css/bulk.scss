@@ -9,4 +9,18 @@
             margin-right: 0.5em;
         }
     }
+
+    .other-names {
+        margin-left: 0;
+        & > :first-child {
+            padding: 0;
+        }
+        li {
+            font-size: 0.8em;
+            padding: 0 0.5em;
+            display: inline-block;
+            list-style: none;
+        }
+    }
+
 }

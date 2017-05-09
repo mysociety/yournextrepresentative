@@ -44,6 +44,14 @@
         <a href="{% url 'person-view' person.pk %}" target="_blank">
             <strong>{{ person }}</strong> ({{ person.party.name }})
         </a>
+        {% for name in person.other_names.all %}
+            {% if forloop.first %}
+            <ul class="other-names">
+              <li>Other names:</li>
+            {% endif %}
+            <li>{{ name }}</li>
+            {% if forloop.last %}</ul>{% endif %}
+        {% endfor %}
         <a href="{% url 'person-update' person.pk%}" class="button secondary tiny">
             Edit candidate
         </a>
