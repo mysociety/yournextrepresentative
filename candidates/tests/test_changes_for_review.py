@@ -153,6 +153,18 @@ class TestNeedsReview(TestUserMixin, WebTest):
         dt = self.current_datetime - timedelta(minutes=33)
         change_updated_and_created(la, dt)
 
+        # Create a photo-upload action - this should not be included:
+        la = LoggedAction.objects.create(
+            id=4500,
+            user=self.lapsed_experienced,
+            action_type='photo-upload',
+            person=example_person,
+            popit_person_new_version=random_person_id(),
+            source='Just for tests...',
+        )
+        dt = self.current_datetime - timedelta(minutes=41)
+        change_updated_and_created(la, dt)
+
     def test_needs_review_as_expected(self, mock_datetime):
         mock_datetime.now.return_value = self.current_datetime
         needs_review_dict = LoggedAction.objects.in_recent_days(5).needs_review()

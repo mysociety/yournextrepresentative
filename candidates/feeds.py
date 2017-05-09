@@ -96,9 +96,14 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     id_format = 'needs-review:{0}'
 
     def items(self):
-        # Consider changes in the last 5 days:
+        # Consider changes in the last 5 days. We exclude any photo
+        # related activity since that has its own reviewing system.
         return sorted(
-            LoggedAction.objects.in_recent_days(5).order_by('-created').needs_review().items(),
+            LoggedAction.objects \
+                .exclude(action_type__startswith='photo-') \
+                .in_recent_days(5) \
+                .order_by('-created') \
+                .needs_review().items(),
             key=lambda t: t[0].created,
             reverse=True)
 
