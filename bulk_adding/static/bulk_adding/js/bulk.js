@@ -61,7 +61,12 @@ $(function(){
 
         $person = $(this).parents('li');
         $link = $person.find('.js-bulk-known-person-alternate-name')
-        $form = $( $('.js-bulk-known-person-alternate-name-form').html() );
+        $form = $person.find('form');
+        // don't add the form twice
+        if ($form.length == 0) {
+            $form = $( $('.js-bulk-known-person-alternate-name-form').html() );
+            $form.appendTo($person);
+        }
         $form.appendTo($person);
         $form.find('input[type="text"]').focus();
 
