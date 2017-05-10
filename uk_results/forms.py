@@ -146,11 +146,11 @@ class ReviewVotesForm(forms.ModelForm):
                 membership.extra.elected = False
                 membership.extra.save()
     def save(self):
+        instance.review_status = CONFIRMED_STATUS
         instance = super(ReviewVotesForm, self).save(commit=True)
 
-        if instance.review_status == CONFIRMED_STATUS:
-            with transaction.atomic():
-                self.mark_candidates_as_winner(self.request, instance)
+        with transaction.atomic():
+            self.mark_candidates_as_winner(self.request, instance)
 
         return instance
 
@@ -263,6 +263,7 @@ class ResultSetForm(forms.ModelForm):
 
     def save(self, request):
         instance = super(ResultSetForm, self).save(commit=False)
+        instance.review_status = CONFIRMED_STATUS
         instance.post_election_result = self.post_election_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
@@ -286,8 +287,8 @@ class ResultSetForm(forms.ModelForm):
                 num_ballots_reported=self[field_name].value(),
             )
 
-        if instance.review_status == CONFIRMED_STATUS:
-            with transaction.atomic():
-                self.mark_candidates_as_winner(request, instance)
+
+        with transaction.atomic():
+            self.mark_candidates_as_winner(request, instance)
 
         return instance
