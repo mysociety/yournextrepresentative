@@ -40,3 +40,11 @@ $high_dpi_screen: '-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi
   display: -webkit-flex;
   display: flex;
 }
+
+@mixin flex($values) {
+  -webkit-box-flex: $values;
+  -moz-box-flex: $values;
+  -webkit-flex: $values;
+  -ms-flex: $values;
+  flex: $values;
+}
