@@ -23,6 +23,11 @@
   {% include "socialaccount/snippets/login_extra.html" %}
 {% endif %}
 
+<div class="login-signup-tabs">
+    <span>I have an account</span>
+    <a href="{{ signup_url }}">I don’t have an account</a>
+</div>
+
 <form class="login" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
   {{ form.as_p }}
@@ -34,10 +39,5 @@
     <a class="button secondary" href="{% url 'account_reset_password' %}">{% trans "Forgot password?" %}</a>
   </p>
 </form>
-
-<h2>Don’t have an account?</h2>
-
-<p>If you’ve not used this site before, create a new account:</p>
-<p><a href="{{ signup_url }}" class="button primaryAction">Create an account</a></p>
 
 {% endblock %}
