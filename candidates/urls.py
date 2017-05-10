@@ -247,6 +247,11 @@ patterns_to_format = [
         'name': 'help-privacy'
     },
     {
+        'pattern': r'^help/photo-policy$',
+        'view': TemplateView.as_view(template_name="candidates/photo-policy.html"),
+        'name': 'help-photo-policy'
+    },
+    {
         'pattern': r'^copyright-question$',
         'view': views.AskForCopyrightAssigment.as_view(),
         'name': 'ask-for-copyright-assignment'

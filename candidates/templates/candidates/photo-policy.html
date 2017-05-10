@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body_class %}{% endblock %}
+
+{% block title %}{% trans "Photo policy" %}{% endblock %}
+
+{% block hero %}
+  <h1>{% trans "Photo policy" %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="help-about">
+{% include 'moderation_queue/_photo-policy.html' %}
+</div>
+
+{% endblock %}

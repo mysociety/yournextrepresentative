@@ -2,7 +2,6 @@
 
 from __future__ import unicode_literals
 
-import os
 from os.path import join, realpath, dirname
 import re
 from shutil import rmtree
@@ -24,15 +23,12 @@ from nose.plugins.attrib import attr
 
 from popolo.models import Person
 from ..models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME, SuggestedPostLock
-from candidates.models import LoggedAction, ImageExtra, PostExtraElection
+from candidates.models import LoggedAction, PostExtraElection
 from official_documents.models import OfficialDocument
 from mysite.helpers import mkdir_p
 
 from candidates.tests.factories import (
-    AreaTypeFactory, ElectionFactory, PostExtraFactory,
-    ParliamentaryChamberFactory, PersonExtraFactory,
-    CandidacyExtraFactory, PartyExtraFactory,
-    PartyFactory, PartySetFactory, AreaFactory
+    PersonExtraFactory, CandidacyExtraFactory,
 )
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 from candidates.tests.auth import TestUserMixin
@@ -85,13 +81,13 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             base__person=person_2009.base,
             base__post=self.dulwich_post_extra.base,
             base__on_behalf_of=self.labour_party_extra.base
-            )
+        )
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_2007.base,
             base__post=self.dulwich_post_extra.base,
             base__on_behalf_of=self.labour_party_extra.base
-            )
+        )
 
         self.site = Site.objects.create(domain='example.com', name='YNR')
         self.test_upload_user = User.objects.create_user(
@@ -136,7 +132,7 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
             user=self.test_reviewer
         )
         self.q_no_uploading_user = QueuedImage.objects.create(
-            why_allowed = 'profile-photo',
+            why_allowed='profile-photo',
             justification_for_use='Auto imported from Twitter',
             decision='undecided',
             image=self.storage_filename,
@@ -184,6 +180,17 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         )
         self.assertEqual(queued_image.person.id, 2009)
         self.assertEqual(queued_image.user, self.test_upload_user)
+
+    def test_shows_photo_policy_text_in_photo_upload_page(self):
+        upload_form_url = reverse(
+            'photo-upload',
+            kwargs={'person_id': '2009'}
+        )
+        response = self.app.get(
+            upload_form_url,
+            user=self.test_upload_user
+        )
+        self.assertContains(response, 'Photo policy')
 
     def test_photo_review_queue_view_not_logged_in(self):
         queue_url = reverse('photo-review-list')
@@ -237,7 +244,14 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         )
         response = self.app.get(review_url, user=self.test_reviewer)
         self.assertEqual(response.status_code, 200)
-        # For the moment this is just a smoke test...
+
+    def test_shows_photo_policy_text_in_photo_review_page(self):
+        review_url = reverse(
+            'photo-review',
+            kwargs={'queued_image_id': self.q1.id}
+        )
+        response = self.app.get(review_url, user=self.test_reviewer)
+        self.assertContains(response, 'Photo policy')
 
     @patch('moderation_queue.views.send_mail')
     @override_settings(DEFAULT_FROM_EMAIL='admins@example.com')
@@ -501,13 +515,13 @@ class SuggestedLockReviewTests(UK2015ExamplesMixin, TestUserMixin, WebTest):
             base__person=person_2009.base,
             base__post=self.dulwich_post_extra.base,
             base__on_behalf_of=self.labour_party_extra.base
-            )
+        )
         CandidacyExtraFactory.create(
             election=self.election,
             base__person=person_2007.base,
             base__post=self.dulwich_post_extra.base,
             base__on_behalf_of=self.labour_party_extra.base
-            )
+        )
 
     def test_suggested_lock_review_view_no_suggestions(self):
         url = reverse('suggestions-to-lock-review-list')
