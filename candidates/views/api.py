@@ -4,7 +4,7 @@ import json
 from os.path import dirname
 import subprocess
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from dateutil import parser
 
 import django
@@ -37,12 +37,32 @@ def fetch_posts_for_area(**kwargs):
     posts = Post.objects.filter(
         area__identifier__in=area_ids,
     ).select_related(
-        'area', 'area__extra__type', 'organization'
+        'area', 'area__extra__type', 'organization', 'extra',
     ).prefetch_related(
         'extra__elections'
     )
     return posts
 
+
+def parse_date(date_text):
+    if date_text == 'today':
+        return date.today()
+    try:
+        return datetime.strptime(date_text, '%Y-%m-%d').date()
+    except ValueError:
+        return None
+
+
+def handle_election(election, request, only_upcoming=False):
+    if only_upcoming:
+        only_after = date.today()
+    else:
+        only_after = parse_date(request.GET.get('date_gte', ''))
+    if (only_after is not None) and (election.election_date < only_after):
+        return False
+    if election.current or request.GET.get('all_elections'):
+        return True
+    return False
 
 
 class UpcomingElectionsView(View):
@@ -73,15 +93,10 @@ class UpcomingElectionsView(View):
             )
 
         results = []
-        for post in posts.all():
-            try:
-                election = post.extra.elections.get(
-                    current=True,
-                    election_date__gte=date.today()
-                )
-            except:
-                continue
-            if election:
+        for post in posts:
+            for election in post.extra.elections.all():
+                if not handle_election(election, request, only_upcoming=True):
+                    continue
                 results.append({
                     'post_name': post.label,
                     'post_slug': post.extra.slug,
@@ -124,22 +139,11 @@ class CandidatesAndElectionsForPostcodeViewSet(ViewSet):
         except Exception as e:
             return self._error(e.message)
 
-
-        election_kwargs = {
-            'current': True,
-        }
-        if 'all_elections' in request.GET:
-            del election_kwargs['current']
-        if 'date_gte' in request.GET:
-            if request.GET['date_gte'] == "today":
-                election_kwargs['election_date__gte'] = date.today()
-            else:
-                election_kwargs['election_date__gte'] = request.GET['date_gte']
-
         results = []
-        qs = posts.all().select_related('extra')
-        for post in qs:
-            for election in post.extra.elections.filter(**election_kwargs):
+        for post in posts:
+            for election in post.extra.elections.all():
+                if not handle_election(election, request):
+                    continue
                 candidates = []
                 for membership in post.memberships.filter(
                         extra__election=election,
