@@ -6,10 +6,10 @@
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit" class="button">Report results</button>
-  {% if user_can_confirm_control %}
-  <button type="submit" class="button warning" name="report_and_confirm" value="yes">
-    Report and confirm
-  </button>
-  {% endif %}
+  {# {% if user_can_confirm_control %} #}
+  {# <button type="submit" class="button warning" name="report_and_confirm" value="yes"> #}
+  {#   Report and confirm #}
+  {# </button> #}
+  {# {% endif %} #}
 </form>
 {% endblock results_content %}

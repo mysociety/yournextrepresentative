@@ -11,16 +11,18 @@
   <h5>{{result.post_election_result.post_election.election}}</h5>
   {% endif %}
 
-  {% if result.review_status == 'confirmed' %}
-  <p>This result has been <strong>confirmed</strong></p>
-  {% else %}
-  <p><strong>This result is not been confirmed</strong></p>
-    {% if user_can_confirm_control %}
-    <a href="{% url 'review-votes-view' result_set_id=result.pk %}" class="button tiny">
-      Review
-    </a>
-    {% endif %}
-  {% endif %}
+  {# {% if result.review_status == 'confirmed' %} #}
+  {# <p>This result has been <strong>confirmed</strong></p> #}
+  {# {% else %} #}
+  {# <p><strong>This result is not been confirmed</strong></p> #}
+  {#   {% if user_can_confirm_control %} #}
+  {#   {{ result }} #}
+  {#   {# <a href="{% url 'review-votes-view' result_set_id=result.post_election_result.post_election.pk %}" class="button tiny"> #}
+  {#     Review #}
+  {#   </a> #}
+  {#   {% endif %} #}
+  {# {% endif %} #}
+  <p>Source:</p>
   <blockquote>
     {{ result.source|urlize }}
   </blockquote>

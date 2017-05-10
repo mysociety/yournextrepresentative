@@ -146,11 +146,11 @@ class ReviewVotesForm(forms.ModelForm):
                 membership.extra.elected = False
                 membership.extra.save()
     def save(self):
+        instance.review_status = CONFIRMED_STATUS
         instance = super(ReviewVotesForm, self).save(commit=True)
 
-        if instance.review_status == CONFIRMED_STATUS:
-            with transaction.atomic():
-                self.mark_candidates_as_winner(self.request, instance)
+        with transaction.atomic():
+            self.mark_candidates_as_winner(self.request, instance)
 
         return instance
 
@@ -215,8 +215,8 @@ class ResultSetForm(forms.ModelForm):
     def mark_candidates_as_winner(self, request, instance):
         for candidate_result in instance.candidate_results.all():
             membership = candidate_result.membership
-            post = instance.post_result.post
-            election = membership.extra.election
+            post_election = instance.post_election_result.post_election
+            election = post_election.election
 
             source = instance.review_source
             if not source:
@@ -236,8 +236,8 @@ class ResultSetForm(forms.ModelForm):
                     election=election,
                     winner=membership.person,
                     winner_person_name=membership.person.name,
-                    post_id=post.extra.slug,
-                    post_name=post.label,
+                    post_id=post_election.postextra.slug,
+                    post_name=post_election.postextra.base.label,
                     winner_party_id=membership.on_behalf_of.extra.slug,
                     source=source,
                     user=instance.reviewed_by,
@@ -263,6 +263,7 @@ class ResultSetForm(forms.ModelForm):
 
     def save(self, request):
         instance = super(ResultSetForm, self).save(commit=False)
+        instance.review_status = CONFIRMED_STATUS
         instance.post_election_result = self.post_election_result
         instance.user = request.user if \
             request.user.is_authenticated() else None
@@ -286,8 +287,8 @@ class ResultSetForm(forms.ModelForm):
                 num_ballots_reported=self[field_name].value(),
             )
 
-        if instance.review_status == CONFIRMED_STATUS:
-            with transaction.atomic():
-                self.mark_candidates_as_winner(request, instance)
+
+        with transaction.atomic():
+            self.mark_candidates_as_winner(request, instance)
 
         return instance
