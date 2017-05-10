@@ -64,16 +64,36 @@ class LoggedAction(models.Model):
         return fmt.format(username=self.user.username, action_type=self.action_type)
 
     @property
-    def subject_url(self):
+    def post_election_guess(self):
+        """
+        FIXME: Note that this won't always be correct because
+        LoggedAction objects only reference Post at the moment,
+        rather than a Post and an Election (or a PostExtraElection).
+        """
+        from candidates.models import PostExtraElection
+        from elections.models import Election
         if self.post:
-            # FIXME: Note that this won't always be correct because
-            # LoggedAction objects only reference Post at the moment,
-            # rather than a Post and an Election (or a PostExtraElection).
-            election = self.post.extra.elections.get(current=True)
+            try:
+                election = self.post.extra.elections.get(current=True)
+            except Election.DoesNotExist:
+                election = self.post.extra.elections.first()
+
+            pee = PostExtraElection.objects.get(
+                election=election,
+                postextra=self.post.extra
+            )
+
+            return pee
+
+
+    @property
+    def subject_url(self):
+        pee = self.post_election_guess
+        if pee:
             return reverse('constituency', kwargs={
-                'election': election.slug,
-                'post_id': self.post.extra.slug,
-                'ignored_slug': slugify(self.post.extra.short_label),
+                'election': pee.election.slug,
+                'post_id': pee.postextra.slug,
+                'ignored_slug': slugify(pee.postextra.short_label),
             })
         elif self.person:
             return reverse('person-view', kwargs={'person_id': self.person.id})
@@ -81,11 +101,12 @@ class LoggedAction(models.Model):
 
     @property
     def subject_html(self):
-        if self.post:
+        pee = self.post_election_guess
+        if pee:
             return '<a href="{url}">{text} ({post_slug})</a>'.format(
                 url=self.subject_url,
-                text=self.post.extra.short_label,
-                post_slug=self.post.extra.slug,
+                text=pee.postextra.short_label,
+                post_slug=pee.postextra.slug,
             )
         elif self.person:
             return '<a href="{url}">{text} ({person_id})</a>'.format(
