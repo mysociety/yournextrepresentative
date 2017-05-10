@@ -215,8 +215,8 @@ class ResultSetForm(forms.ModelForm):
     def mark_candidates_as_winner(self, request, instance):
         for candidate_result in instance.candidate_results.all():
             membership = candidate_result.membership
-            post = instance.post_result.post
-            election = membership.extra.election
+            post_election = instance.post_election_result.post_election
+            election = post_election.election
 
             source = instance.review_source
             if not source:
@@ -236,8 +236,8 @@ class ResultSetForm(forms.ModelForm):
                     election=election,
                     winner=membership.person,
                     winner_person_name=membership.person.name,
-                    post_id=post.extra.slug,
-                    post_name=post.label,
+                    post_id=post_election.postextra.slug,
+                    post_name=post_election.postextra.base.label,
                     winner_party_id=membership.on_behalf_of.extra.slug,
                     source=source,
                     user=instance.reviewed_by,
