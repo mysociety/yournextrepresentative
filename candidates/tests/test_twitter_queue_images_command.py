@@ -138,8 +138,14 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         )
 
         self.assertEqual(new_queued_images.count(), 2)
-        new_queued_images.get(person=self.p_no_images)
-        new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+        newly_enqueued_a = new_queued_images.get(person=self.p_no_images)
+        self.assertEqual(
+            newly_enqueued_a.justification_for_use,
+            'Auto imported from Twitter: https://twitter.com/intent/user?user_id=1001')
+        newly_enqueued_b = new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+        self.assertEqual(
+            newly_enqueued_b.justification_for_use,
+            'Auto imported from Twitter: https://twitter.com/intent/user?user_id=1006')
 
     def test_multiple_twitter_identifiers(self, mock_twitter_data, mock_requests):
         self.p_no_images.identifiers.create(
@@ -193,7 +199,12 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         )
 
         self.assertEqual(new_queued_images.count(), 1)
-        new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+        newly_enqueued = new_queued_images.get()
+        self.assertEqual(newly_enqueued.person, self.p_existing_image_but_none_in_queue)
+        self.assertEqual(
+            newly_enqueued.justification_for_use,
+            'Auto imported from Twitter: https://twitter.com/intent/user?user_id=1006')
+
 
     def test_only_enqueue_from_200_status_code(self, mock_twitter_data, mock_requests):
 
@@ -230,6 +241,11 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         # had a 200 status code:
         self.assertEqual(new_queued_images.count(), 1)
         new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+        newly_enqueued = new_queued_images.get()
+        self.assertEqual(newly_enqueued.person, self.p_existing_image_but_none_in_queue)
+        self.assertEqual(
+            newly_enqueued.justification_for_use,
+            'Auto imported from Twitter: https://twitter.com/intent/user?user_id=1006')
 
     def test_only_enqueue_files_that_seem_to_be_images(self, mock_twitter_data, mock_requests):
 
@@ -270,4 +286,8 @@ class TestTwitterImageQueueCommand(TestUserMixin, TestCase):
         # Out of the two URLs of images that were downloaded, only one
         # had a 200 status code:
         self.assertEqual(new_queued_images.count(), 1)
-        new_queued_images.get(person=self.p_existing_image_but_none_in_queue)
+        newly_enqueued = new_queued_images.get()
+        self.assertEqual(newly_enqueued.person, self.p_existing_image_but_none_in_queue)
+        self.assertEqual(
+            newly_enqueued.justification_for_use,
+            'Auto imported from Twitter: https://twitter.com/intent/user?user_id=1006')
