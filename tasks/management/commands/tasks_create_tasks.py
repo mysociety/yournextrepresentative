@@ -20,6 +20,7 @@ class Command(BaseCommand):
         'gla.a': 1,
         'gla.c': 60,
         'mayor': 100,
+        'parl': 200,
         'naw.c': 50,
         'naw.r': 10,
         'nia': 1,
