@@ -15,7 +15,7 @@ def migrate_post_extra_to_postextraelection(apps, schema_editor):
         use_for_original, use_for_new_list = \
             postextraelections[0], postextraelections[1:]
         # Update the SuggestedPostLock on the original:
-        spl.use_for_original.postextraelection = use_for_original
+        spl.postextraelection = use_for_original
         spl.save()
         # Then if there are any other PostExtraElection objects
         # associated with the post, create new SuggestPostLocks with
