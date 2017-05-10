@@ -294,15 +294,10 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                             'screen_name': 'notreallyatwitteraccount',
                             'profile_image_url_https': 'https://example.com/a.jpg',
                         },
-                        {
-                            'id': 765,
-                            'screen_name': 'notatwitteraccounteither',
-                            'profile_image_url_https': 'https://example.com/b.jpg',
-                        },
                     ]
                     return mock_result
             if 'user_id' in data:
-                if data['user_id'] == '987':
+                if data['user_id'] == '765,987':
                     mock_result.json.return_value = {
                         "errors": [
                             {
@@ -327,6 +322,13 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             0)
 
         self.assertEqual(
+            self.screen_name_and_user_id.contact_details.filter(contact_type='twitter').count(),
+            0)
+        self.assertEqual(
+            self.screen_name_and_user_id.identifiers.filter(scheme='twitter').count(),
+            0)
+
+        self.assertEqual(
             split_output(out),
             [
                 'Adding the user ID 321',
@@ -334,5 +336,9 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                 'as it is not a valid Twitter user ID. '
                 '/person/{0}/person-with-just-a-twitter-user-id'.format(
                     self.just_userid.id),
+                'Removing user ID 765 for Someone with a Twitter screen name ' \
+                'and user ID as it is not a valid Twitter user ID. ' \
+                '/person/{0}/someone-with-a-twitter-screen-name-and-user-id'.format(
+                    self.screen_name_and_user_id.id),
             ]
         )

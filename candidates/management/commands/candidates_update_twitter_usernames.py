@@ -85,6 +85,8 @@ class Command(BaseCommand):
                     person_url=person.extra.get_absolute_url(),
                 ))
                 self.remove_twitter_user_id(person, user_id)
+                if screen_name:
+                    self.remove_twitter_screen_name(person, screen_name)
                 return
             correct_screen_name = self.twitter_data.user_id_to_screen_name[user_id]
             if (screen_name is None) or (screen_name != correct_screen_name):
