@@ -296,6 +296,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         'ACCOUNT_EMAIL_REQUIRED': True,
         'ACCOUNT_FORMS': {
             'login': 'mysite.forms.CustomLoginForm',
+            'signup': 'mysite.forms.CustomSignupForm',
         },
         'ACCOUNT_USERNAME_REQUIRED': True,
         'ACCOUNT_USERNAME_VALIDATORS': 'mysite.helpers.allauth_validators',
