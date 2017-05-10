@@ -93,7 +93,7 @@ class LoggedAction(models.Model):
             return reverse('constituency', kwargs={
                 'election': pee.election.slug,
                 'post_id': pee.postextra.slug,
-                'ignored_slug': slugify(self.postextra.short_label),
+                'ignored_slug': slugify(pee.postextra.short_label),
             })
         elif self.person:
             return reverse('person-view', kwargs={'person_id': self.person.id})
