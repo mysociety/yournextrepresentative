@@ -1,0 +1,29 @@
+.bulk-add__known-people {
+    li {
+        & > :first-child {
+            display: block;
+            margin-bottom: 0.2em;
+        }
+
+        .button {
+            margin-right: 0.5em;
+        }
+    }
+
+    .other-names {
+        font-size: 0.9em;
+        margin: 0 -0.5em 0.5em -0.5em;
+
+        li {
+            list-style: none;
+            float: left;
+            margin: 0 0.5em;
+        }
+
+        .highlight {
+            background-color: gold;
+            padding: 0 0.4em;
+        }
+    }
+
+}
