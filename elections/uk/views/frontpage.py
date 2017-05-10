@@ -105,7 +105,7 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         context['postcode_form'] = kwargs.get('form') or PostcodeForm()
         context['show_postcode_form'] = True
         context['show_name_form'] = False
-        context['top_users'] = self.get_leaderboards()[1]['rows'][:8]
+        context['top_users'] = self.get_leaderboards(all_time=False)[0]['rows'][:8]
         context['recent_actions'] = self.get_recent_changes_queryset()[:5]
         context['election_data'] = Election.objects.current().by_date().last()
         context['hide_search_form'] = True

@@ -51,7 +51,7 @@ class LoggedAction(models.Model):
     person = models.ForeignKey(Person, blank=True, null=True)
     action_type = models.CharField(max_length=64)
     popit_person_new_version = models.CharField(max_length=32)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)
     source = models.TextField()
