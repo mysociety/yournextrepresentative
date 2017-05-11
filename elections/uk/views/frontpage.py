@@ -141,10 +141,10 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         # context['council_election_percent'] = council_confirmed / council_total * 100
 
 
-        # election_qs = Election.objects.filter(
-        #     election_date="2017-05-04").exclude(slug__in=scotland_election_ids)
-        # context['scotland_sopn_progress'] = self.sopn_progress_by_election(
-        #     election_qs=election_qs)
+        election_qs = Election.objects.filter(
+            election_date="2017-06-08")
+        context['sopn_progress'] = self.sopn_progress_by_election(
+            election_qs=election_qs)
 
         task_count = PersonTask.objects.unfinished_tasks().count()
         if task_count > 0:
