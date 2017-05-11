@@ -122,7 +122,7 @@ class NeedsReviewFeed(ChangesMixin, Feed):
     def item_description(self, item):
         la = item[0]
         unescaped = '''
-<p>{action_type} of {subject} by {user} with source: “{source}”;</p>
+<p>{action_type} of {subject} by {user} with source: “ {source} ”;</p>
 <ul>
 {reasons_review_needed}
 </ul></p>'''.strip().format(
