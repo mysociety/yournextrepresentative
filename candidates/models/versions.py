@@ -191,7 +191,7 @@ def get_versions_parent_map(versions_data):
     version_id_to_parent_ids = {}
     if not versions_data:
         return version_id_to_parent_ids
-    canonical_person_id = versions_data[-1]['data']['id']
+    canonical_person_id = versions_data[0]['data']['id']
     ordered_versions = sorted(versions_data, key=version_timestamp_key)
     person_id_to_ordered_versions = defaultdict(list)
     # Divide all the version with the same ID into separate ordered

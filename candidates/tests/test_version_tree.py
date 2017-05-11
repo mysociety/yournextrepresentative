@@ -320,6 +320,6 @@ class TestVersionTree(TestCase):
         with self.assertRaisesRegexp(
                 Exception,
                 r'It looks like there was a bogus merge version for person ' \
-                r'with ID 567; there were 2 merge versions and 2 person IDs.'
+                r'with ID 2009; there were 2 merge versions and 2 person IDs.'
         ):
             get_versions_parent_map(versions)
