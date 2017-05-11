@@ -27,7 +27,7 @@ from slugify import slugify
 from auth_helpers.views import GroupRequiredMixin
 from candidates.management.images import get_file_md5sum
 
-from .forms import UploadPersonPhotoForm, PhotoReviewForm
+from .forms import UploadPersonPhotoImageForm, PhotoReviewForm
 from .models import QueuedImage, SuggestedPostLock, PHOTO_REVIEWERS_GROUP_NAME
 
 from candidates.models import (LoggedAction, ImageExtra,
@@ -41,7 +41,7 @@ from popolo.models import Person
 def upload_photo(request, person_id):
     person = get_object_or_404(Person, id=person_id)
     if request.method == 'POST':
-        form = UploadPersonPhotoForm(request.POST, request.FILES)
+        form = UploadPersonPhotoImageForm(request.POST, request.FILES)
         if form.is_valid():
             # Make sure that we save the user that made the upload
             queued_image = form.save(commit=False)
@@ -63,7 +63,7 @@ def upload_photo(request, person_id):
                 }
             ))
     else:
-        form = UploadPersonPhotoForm(
+        form = UploadPersonPhotoImageForm(
             initial={
                 'person': person
             }

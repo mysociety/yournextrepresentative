@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from .models import QueuedImage, CopyrightOptions, SuggestedPostLock
 
 
-class UploadPersonPhotoForm(forms.ModelForm):
+class UploadPersonPhotoImageForm(forms.ModelForm):
 
     class Meta:
         model = QueuedImage
@@ -25,7 +25,7 @@ class UploadPersonPhotoForm(forms.ModelForm):
         }
 
     def clean(self):
-        cleaned_data = super(UploadPersonPhotoForm, self).clean()
+        cleaned_data = super(UploadPersonPhotoImageForm, self).clean()
         justification_for_use = cleaned_data.get(
             'justification_for_use', ''
         ).strip()
