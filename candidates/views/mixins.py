@@ -24,7 +24,7 @@ class ContributorsMixin(object):
         for title, since in boards:
             interesting_actions=LoggedAction.objects.exclude(
                 action_type='set-candidate-not-elected'
-            ).select_related('user')
+            )
 
             if since:
                 qs = interesting_actions.filter(created__gt=since)

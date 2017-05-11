@@ -139,45 +139,12 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             context['votes_percent'] = 0
 
         # context['council_election_percent'] = council_confirmed / council_total * 100
-        scotland_election_ids = [
-            "local.aberdeen-city.2017-05-04",
-            "local.aberdeenshire.2017-05-04",
-            "local.angus.2017-05-04",
-            "local.argyll-and-bute.2017-05-04",
-            "local.clackmannanshire.2017-05-04",
-            "local.eilean-siar.2017-05-04",
-            "local.dumfries-and-galloway.2017-05-04",
-            "local.dundee-city.2017-05-04",
-            "local.east-ayrshire.2017-05-04",
-            "local.east-dunbartonshire.2017-05-04",
-            "local.east-lothian.2017-05-04",
-            "local.east-renfrewshire.2017-05-04",
-            "local.city-of-edinburgh.2017-05-04",
-            "local.falkirk.2017-05-04",
-            "local.fife.2017-05-04",
-            "local.glasgow-city.2017-05-04",
-            "local.highland.2017-05-04",
-            "local.inverclyde.2017-05-04",
-            "local.midlothian.2017-05-04",
-            "local.moray.2017-05-04",
-            "local.north-ayrshire.2017-05-04",
-            "local.north-lanarkshire.2017-05-04",
-            "local.orkney-islands.2017-05-04",
-            "local.perth-and-kinross.2017-05-04",
-            "local.renfrewshire.2017-05-04",
-            "local.the-scottish-borders.2017-05-04",
-            "local.shetland-islands.2017-05-04",
-            "local.south-ayrshire.2017-05-04",
-            "local.south-lanarkshire.2017-05-04",
-            "local.stirling.2017-05-04",
-            "local.west-dunbartonshire.2017-05-04",
-            "local.west-lothian.2017-05-04",
-        ]
 
-        election_qs = Election.objects.filter(
-            election_date="2017-05-04").exclude(slug__in=scotland_election_ids)
-        context['scotland_sopn_progress'] = self.sopn_progress_by_election(
-            election_qs=election_qs)
+
+        # election_qs = Election.objects.filter(
+        #     election_date="2017-05-04").exclude(slug__in=scotland_election_ids)
+        # context['scotland_sopn_progress'] = self.sopn_progress_by_election(
+        #     election_qs=election_qs)
 
         task_count = PersonTask.objects.unfinished_tasks().count()
         if task_count > 0:
