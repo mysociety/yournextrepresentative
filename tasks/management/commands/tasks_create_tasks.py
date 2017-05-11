@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 
 from candidates.models import PersonExtra
@@ -43,10 +44,25 @@ class Command(BaseCommand):
             return 100
         return 0
 
+    @transaction.atomic
     def add_tasks_for_field(self, field, field_weight):
-        for person in PersonExtra.objects.missing(field):
+        qs = PersonExtra.objects.filter(
+            base__memberships__extra__election__current=True)
+        qs = qs.select_related('base')
+        qs = qs.prefetch_related('base__memberships')
+        qs = qs.missing(field)
+
+        person_tasks = []
+
+        PersonTask.objects.filter(task_field=field).delete()
+
+        for person in qs:
             person_weight = 0
-            for membership in person.base.memberships.all():
+            membership_qs = person.base.memberships.all()
+            membership_qs = membership_qs.select_related(
+                'post__extra'
+            ).prefetch_related('post__extra__elections')
+            for membership in membership_qs:
                 try:
                     getattr(membership.post, 'extra')
                 except:
@@ -59,10 +75,11 @@ class Command(BaseCommand):
                         if election.slug.startswith(election_id):
                             person_weight += election_weight
                             person_weight += field_weight
-                            PersonTask.objects.update_or_create(
-                                person=person.base,
-                                task_field=field,
-                                defaults={
-                                    'task_priority': person_weight
-                                }
+                            person_tasks.append(
+                                PersonTask(
+                                    person=person.base,
+                                    task_field=field,
+                                    task_priority=person_weight,
+                                )
                             )
+        PersonTask.objects.bulk_create(person_tasks)
