@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView
+from django.db.models import F
 
 from candidates.views.mixins import ContributorsMixin
 from candidates.models import PostExtra, PostExtraElection
@@ -75,6 +76,12 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
             return context
         pee_qs = PostExtraElection.objects.filter(election__in=election_qs)
 
+        context['sopns_imported'] = pee_qs.filter(
+                postextra__base__officialdocument__election=F('election'),
+            ).count()
+
+
+
         context['posts_total'] = pee_qs.count()
         pee_qs = pee_qs.filter(candidates_locked=True, election__in=election_qs)
         context['posts_locked'] = pee_qs.count()
@@ -90,8 +97,6 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
                 float(context['posts_total'])
                 * 100)
 
-        context['sopns_imported'] = pee_qs.exclude(
-            postextra__base__officialdocument=None).count()
         context['sopns_imported_percent'] = round(
                 float(context['sopns_imported']) /
                 float(context['posts_total'])
