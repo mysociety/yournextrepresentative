@@ -47,6 +47,7 @@ from .helpers import (
 from popolo.models import Person
 from tasks.forms import PersonTaskForm
 
+
 def get_call_to_action_flash_message(person, new_person=False):
     """Get HTML for a flash message after a person has been created or updated"""
 
@@ -70,12 +71,13 @@ def get_call_to_action_flash_message(person, new_person=False):
                     election_data.name
                 )
                 for election_data in Election.objects.filter(
-                        candidacies__base__person=person,
-                        current=True
+                    candidacies__base__person=person,
+                    current=True
                 )
             ]
         }
     )
+
 
 def get_extra_fields(person):
     """Get all the additional fields and their values for a person"""
@@ -126,7 +128,7 @@ class PersonView(TemplateView):
         context['last_candidacy'] = self.person.extra.last_candidacy
         context['election_to_show'] = None
         context['has_current_elections'] = any([
-                e.current for e in context['elections_to_list']])
+            e.current for e in context['elections_to_list']])
         context['simple_fields'] = [
             field.name for field in SimplePopoloField.objects.all()
         ]
@@ -227,6 +229,7 @@ class RevertPersonView(LoginRequiredMixin, View):
             )
         )
 
+
 class MergePeopleView(GroupRequiredMixin, View):
 
     http_method_names = ['post']
@@ -314,6 +317,7 @@ class MergePeopleView(GroupRequiredMixin, View):
             })
         )
 
+
 class UpdatePersonView(LoginRequiredMixin, FormView):
     template_name = 'candidates/person-edit.html'
     form_class = UpdatePersonForm
@@ -354,7 +358,6 @@ class UpdatePersonView(LoginRequiredMixin, FormView):
                     'task_field': self.request.GET['highlight_field'],
                     'person': person.pk,
                 })
-
 
         return context
 
@@ -432,7 +435,6 @@ class NewPersonSelectElectionView(LoginRequiredMixin, TemplateView):
         context['elections'] = elections
 
         return context
-
 
 
 class NewPersonView(ElectionMixin, LoginRequiredMixin, FormView):

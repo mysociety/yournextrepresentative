@@ -65,10 +65,17 @@
       {% thumbnail person.extra.primary_image "x80" as im %}
         <img class="person-avatar" src="{{ im.url }}"/>
       {% endthumbnail %}
-    {% elif person.gender|lower == 'female' %}
-      <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
     {% else %}
-      <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+      {% if person.gender|lower == 'female' %}
+        <img class="person-avatar" src="{% static 'candidates/img/blank-woman.png' %}"/>
+      {% else %}
+        <img class="person-avatar" src="{% static 'candidates/img/blank-man.png' %}"/>
+      {% endif %}
+      {% if user.is_authenticated %}
+        <a class="upload-photo" href="{% url 'photo-upload' person.id %}">
+          {% trans 'Upload photo' %}
+        </a>
+      {% endif %}
     {% endif %}
   </div>
   <h1>{{ person.name }}</h1>
@@ -246,6 +253,7 @@
       <p>{% trans "Please do add extra details about this candidate – it only takes a moment." %}</p>
       {% if user.is_authenticated %}
         <a href="{% url 'person-update' person_id=person.id %}" class="button">{% trans "Edit candidate" %}</a>
+        <a href="{% url 'photo-upload' person.id %}" class="button">{% trans "Upload candidate photo" %}</a>
       {% else %}
         <a href="{% url 'account_login' %}?next={{ redirect_after_login }}" class="button">{% trans "Log in to edit" %}</a>
       {% endif %}
