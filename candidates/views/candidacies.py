@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from django.utils.translation import ugettext as _
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.http import JsonResponse
 
 from braces.views import LoginRequiredMixin
 
@@ -121,7 +122,22 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
 
             person.extra.record_version(change_metadata)
             person.extra.save()
+        if self.request.is_ajax():
+            return JsonResponse({'success': True})
         return get_redirect_to_post(self.election, post)
+
+    def form_invalid(self, form):
+        result = super(
+            CandidacyDeleteView, self
+        ).form_invalid(form)
+        if self.request.is_ajax():
+            data = {
+                'success': False,
+                'errors': form.errors
+            }
+            return JsonResponse(data)
+
+        return result
 
     def get_context_data(self, **kwargs):
         context = super(CandidacyDeleteView, self).get_context_data(**kwargs)

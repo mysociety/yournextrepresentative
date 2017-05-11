@@ -26,4 +26,15 @@
         }
     }
 
+    .js-bulk-known-person-not-standing {
+        display: none;
+    }
+}
+
+.js {
+    .bulk-add__known-people {
+        .js-bulk-known-person-not-standing {
+            display: inline;
+        }
+    }
 }

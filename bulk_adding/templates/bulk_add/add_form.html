@@ -58,9 +58,9 @@
         <a href="{% url 'person-other-name-create' person.pk %}" class="button secondary tiny js-bulk-known-person-alternate-name">
             Nomination paper shows different name variant
         </a>
-        <!-- <a href="#" class="button secondary tiny">
+        <a data-person-id="{{ person.pk }}" data-post-id="{{ post_extra.slug }}" href="{% url 'candidacy-delete' election=election %}" class="button secondary tiny js-bulk-known-person-not-standing">
             Not standing
-        </a> -->
+        </a>
     </li>
   {% endfor %}
 </ul>
@@ -77,6 +77,19 @@
         <p>
             <button type="button" class="button secondary js-bulk-known-person-alternate-name-cancel">Cancel</button>
             <button type="submit" class="button primary">Add alternate name</button>
+        </p>
+    </form>
+</script>
+<script type="text/html" class="js-bulk-known-person-not-standing-form">
+<form action="" method="post">
+        {% csrf_token %}
+        <p>
+            Are you sure you want to mark this candidate as not standing?
+            <input id="alt-source" name="source" type="hidden" value="{{ official_document.source_url }}">
+        </p>
+        <p>
+            <button type="button" class="button secondary js-bulk-known-person-not-standing-cancel">Cancel</button>
+            <button type="submit" class="button primary">Mark Not Standing</button>
         </p>
     </form>
 </script>
