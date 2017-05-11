@@ -163,7 +163,7 @@ class TestVersionTree(TestCase):
             }
         )
 
-    def test_bogus_merge_unknown_other(self):
+    def test_secondary_history_missing(self):
         versions = [
             {
                 "data": {
@@ -192,12 +192,14 @@ class TestVersionTree(TestCase):
                 "version_id": "53e1260ec3946bbf"
             }
         ]
-        with self.assertRaisesRegexp(
-                Exception,
-                r'Found a bogus merge version for person with ID: 2009 - no '
-                r'merged history of person with ID 123456789 found'
-        ):
-            get_versions_parent_map(versions)
+        self.assertEqual(
+            get_versions_parent_map(versions),
+            {
+                '53e1260ec3946bbf': [],
+                '36198267ad42acb1': ['53e1260ec3946bbf'],
+                '407db6845dbb0007': ['36198267ad42acb1'],
+            }
+        )
 
     def test_other_person_earlier(self):
         versions = [
@@ -320,6 +322,6 @@ class TestVersionTree(TestCase):
         with self.assertRaisesRegexp(
                 Exception,
                 r'It looks like there was a bogus merge version for person ' \
-                r'with ID 567; there were 2 merge versions and 2 person IDs.'
+                r'with ID 2009; there were 2 merge versions and 2 person IDs.'
         ):
             get_versions_parent_map(versions)
