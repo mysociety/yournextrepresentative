@@ -223,14 +223,13 @@ def get_versions_parent_map(versions_data):
         merged_from = is_a_merge(version)
         if merged_from is None:
             continue
-        number_of_merges += 1
         if merged_from not in person_id_to_ordered_versions:
-            msg = "Found a bogus merge version for person with " \
-                  "ID: {person_id} - no merged history of person " \
-                  "with ID {other_person_id} found"
-            raise Exception(msg.format(
-                person_id=canonical_person_id,
-                other_person_id=merged_from))
+            # This can happen because for some time there was a bug
+            # where the history of the secondary person wasn't
+            # included on merging; just treat this as any other
+            # version in that case.
+            continue
+        number_of_merges += 1
         last_version_id_of_other = \
             person_id_to_ordered_versions[merged_from][-1]['version_id']
         version_id_to_parent_ids[version_id].append(last_version_id_of_other)
