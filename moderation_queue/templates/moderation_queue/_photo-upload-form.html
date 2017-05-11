@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form id="person-upload-photo" action="{% url 'photo-upload' person_id %}" method="post" enctype="multipart/form-data">
+<form id="person-upload-photo-image" action="{% url 'photo-upload' person_id %}" method="post" enctype="multipart/form-data">
 
   {% if queued_images %}
     <p>
