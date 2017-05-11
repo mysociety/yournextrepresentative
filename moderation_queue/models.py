@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from popolo.models import Person
 
-from candidates.models import PostExtra, PostExtraElection
+from candidates.models import PostExtraElection
 
 from compat import python_2_unicode_compatible
 

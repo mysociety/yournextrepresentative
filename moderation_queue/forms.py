@@ -1,12 +1,11 @@
 from __future__ import unicode_literals
 
-import re
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 from .models import QueuedImage, CopyrightOptions, SuggestedPostLock
+
 
 class UploadPersonPhotoForm(forms.ModelForm):
 
@@ -33,7 +32,7 @@ class UploadPersonPhotoForm(forms.ModelForm):
         why_allowed = cleaned_data.get('why_allowed')
         if why_allowed == 'other' and not justification_for_use:
             message = _("If you checked 'Other' then you must provide a "
-                "justification for why we can use it.")
+                        "justification for why we can use it.")
             raise ValidationError(message)
         return cleaned_data
 
@@ -66,14 +65,14 @@ class PhotoReviewForm(forms.Form):
         widget=forms.widgets.RadioSelect,
     )
 
+
 class SuggestedPostLockForm(forms.ModelForm):
     class Meta:
         model = SuggestedPostLock
-        fields = ['justification', 'postextraelection',]
+        fields = ['justification', 'postextraelection']
         widgets = {
             'postextraelection': forms.HiddenInput(),
             'justification': forms.Textarea(
                 attrs={'rows': 1, 'columns': 72}
             )
-
         }

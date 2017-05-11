@@ -35,7 +35,7 @@ from candidates.models import (LoggedAction, ImageExtra,
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 from popolo.models import Person
-from images.models import Image
+
 
 @login_required
 def upload_photo(request, person_id):
@@ -167,7 +167,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             value_if_none(self.queued_image.crop_max_y, max_y),
         ]
         context['form'] = PhotoReviewForm(
-            initial = {
+            initial={
                 'queued_image_id': self.queued_image.id,
                 'decision': self.queued_image.decision,
                 'x_min': guessed_crop_bounds[0],
@@ -185,14 +185,13 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         # and it's convenient to be able to follow them. However, make
         # sure that any maliciously added HTML tags have been stripped
         # before linkifying any URLs:
-        context['justification_for_use'] = \
-            bleach.linkify(
-                bleach.clean(
-                    self.queued_image.justification_for_use,
-                    tags=[],
-                    strip=True
-                )
+        context['justification_for_use'] = bleach.linkify(
+            bleach.clean(
+                self.queued_image.justification_for_use,
+                tags=[],
+                strip=True
             )
+        )
         context['google_image_search_url'] = self.get_google_image_search_url(
             person
         )
@@ -274,6 +273,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             self.queued_image.get_absolute_url()
         )
         site_name = Site.objects.get_current().name
+
         def flash(level, message):
             messages.add_message(
                 self.request,
@@ -304,9 +304,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 )
             self.queued_image.save()
 
-            update_message = _('Approved a photo upload from '
-                '{uploading_user} who provided the message: '
-                '"{message}"').format(
+            sentence = 'Approved a photo upload from {uploading_user}'
+            ' who provided the message: "{message}"'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by,
                 message=self.queued_image.justification_for_use,
             )
@@ -353,8 +354,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         elif decision == 'rejected':
             self.queued_image.decision = 'rejected'
             self.queued_image.save()
-            update_message = _('Rejected a photo upload from '
-                '{uploading_user}').format(
+
+            sentence = 'Rejected a photo upload from {uploading_user}'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by,
             )
             LoggedAction.objects.create(
@@ -418,8 +421,11 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         elif decision == 'ignore':
             self.queued_image.decision = 'ignore'
             self.queued_image.save()
-            update_message = _('Ignored a photo upload from '
-                '{uploading_user} (This usually means it was a duplicate)').format(
+
+            sentence = 'Ignored a photo upload from {uploading_user}'
+            ' (This usually means it was a duplicate)'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by)
             LoggedAction.objects.create(
                 user=self.request.user,
@@ -477,10 +483,11 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('constituency', kwargs={
-                'election': self.kwargs['election_id'],
-                'post_id': self.object.postextraelection.postextra.slug,
-                'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
-            })
+            'election': self.kwargs['election_id'],
+            'post_id': self.object.postextraelection.postextra.slug,
+            'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
+        })
+
 
 class SuggestLockReviewListView(LoginRequiredMixin, TemplateView):
     '''This is the view which lists all post lock suggestions that need review
