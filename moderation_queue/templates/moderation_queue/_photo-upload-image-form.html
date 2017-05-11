@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form id="person-upload-photo-image" action="{% url 'photo-upload' person_id %}" method="post" enctype="multipart/form-data">
+<form id="person-upload-photo-image" action="{% url 'photo-upload-image' person_id %}" method="post" enctype="multipart/form-data">
 
   {% if queued_images %}
     <p>
@@ -19,8 +19,9 @@
     </p>
   {% endif %}
 
-  {{ form.non_field_errors }}
+  {{ image_form.non_field_errors }}
   {% csrf_token %}
+
   <p>
     {% if queued_images %}{% blocktrans trimmed with name=person.name %}
     If you still want to upload another photo of {{ name }}, first select an image from your computer (maximum size: 50 MB):
@@ -30,26 +31,27 @@
     {% endif %}
   </p>
   <p>
-    {{ form.image.errors }}
+    {{ image_form.image.errors }}
   </p>
   <p>
-    {{ form.image }}
+    {{ image_form.image }}
   </p>
+
   <p>{% blocktrans trimmed %}
   Now let us know about the copyright of this image by selecting one of
     these options or explaining why we can use it:{% endblocktrans %}</p>
   <div class="photo-why-allowed-radio-buttons">
-    {{ form.why_allowed.errors }}
-    {{ form.why_allowed }}
+    {{ image_form.why_allowed.errors }}
+    {{ image_form.why_allowed }}
   </div>
   <p>
-    {{ form.justification_for_use.errors }}
-    <label for="{{ form.justification_for_use.id_for_label }}">{% blocktrans trimmed %}
+    {{ image_form.justification_for_use.errors }}
+    <label for="{{ image_form.justification_for_use.id_for_label }}">{% blocktrans trimmed %}
     Here is my justification for why this photo may be reasonably used on the
     website, including the source URL:{% endblocktrans %}</label>
-    {{ form.justification_for_use }}
+    {{ image_form.justification_for_use }}
   </p>
-  {{ form.person }}
-  {{ form.decision }}
+  {{ image_form.person }}
+  {{ image_form.decision }}
   <input type="submit" class="button" value="{% trans "Upload" %}">
 </form>

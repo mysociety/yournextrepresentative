@@ -40,43 +40,57 @@ from popolo.models import Person
 @login_required
 def upload_photo(request, person_id):
     person = get_object_or_404(Person, id=person_id)
-    if request.method == 'POST':
-        form = UploadPersonPhotoImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Make sure that we save the user that made the upload
-            queued_image = form.save(commit=False)
-            queued_image.user = request.user
-            queued_image.save()
-            # Record that action:
-            LoggedAction.objects.create(
-                user=request.user,
-                action_type='photo-upload',
-                ip_address=get_client_ip(request),
-                popit_person_new_version='',
-                person=person,
-                source=form.cleaned_data['justification_for_use'],
-            )
-            return HttpResponseRedirect(reverse(
-                'photo-upload-success',
-                kwargs={
-                    'person_id': person.id
-                }
-            ))
-    else:
-        form = UploadPersonPhotoImageForm(
-            initial={
-                'person': person
-            }
-        )
+    image_form = UploadPersonPhotoImageForm(initial={'person': person})
     return render(
         request,
         'moderation_queue/photo-upload-new.html',
-        {'form': form,
-         'queued_images': QueuedImage.objects.filter(
-             person=person,
-             decision='undecided',
-         ).order_by('created'),
-         'person': person}
+        {
+            'image_form': image_form,
+            'queued_images': QueuedImage.objects.filter(
+                person=person,
+                decision='undecided',
+            ).order_by('created'),
+            'person': person
+        }
+    )
+
+
+@login_required
+def upload_photo_image(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    image_form = UploadPersonPhotoImageForm(request.POST, request.FILES)
+    if image_form.is_valid():
+        # Make sure that we save the user that made the upload
+        queued_image = image_form.save(commit=False)
+        queued_image.user = request.user
+        queued_image.save()
+        # Record that action:
+        LoggedAction.objects.create(
+            user=request.user,
+            action_type='photo-upload',
+            ip_address=get_client_ip(request),
+            popit_person_new_version='',
+            person=person,
+            source=image_form.cleaned_data['justification_for_use'],
+        )
+        return HttpResponseRedirect(reverse(
+            'photo-upload-success',
+            kwargs={
+                'person_id': person.id
+            }
+        ))
+
+    return render(
+        request,
+        'moderation_queue/photo-upload-new.html',
+        {
+            'image_form': image_form,
+            'queued_images': QueuedImage.objects.filter(
+                person=person,
+                decision='undecided',
+            ).order_by('created'),
+            'person': person
+        }
     )
 
 
