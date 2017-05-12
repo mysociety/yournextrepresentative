@@ -78,7 +78,7 @@ explaining how to get election results from this site</a>.
             <ul>
               {% for election in role_data.elections %}
                 {% with slug=election.election.slug title=election.election.name %}
-                  <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download of the {{ title }} candidates {% endblocktrans %}</a></li>
+                  <li><a href="{{ MEDIA_URL }}candidates-{{ slug }}.csv">{% blocktrans %}Download the {{ title }} candidates{% endblocktrans %}</a></li>
                 {% endwith %}
               {% endfor %}
             </ul>
