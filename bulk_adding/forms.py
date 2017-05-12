@@ -48,11 +48,18 @@ class BaseBulkAddReviewFormSet(BaseBulkAddFormSet):
         """
         name = suggestion.name
         try:
-            if suggestion.object.memberships.all().exists():
-                name = "<strong>{}</strong> (previously stood in the {} as a {} candidate)".format(
-                    name,
-                    suggestion.object.memberships.all().first().extra.election,
-                    suggestion.object.memberships.all().first().on_behalf_of.name,
+            candidacy = suggestion.object.memberships \
+                        .select_related(
+                            'post__extra',
+                            'on_behalf_of',
+                            'extra__election') \
+                        .order_by('-extra__election__election_date').first()
+            if candidacy:
+                name = "<strong>{name}</strong> (previously stood in {post} in the {election} as a {party} candidate)".format(
+                    name=name,
+                    post=candidacy.post.extra.short_label,
+                    election=candidacy.extra.election.name,
+                    party=candidacy.on_behalf_of.name,
                 )
                 name = SafeText(name)
         except AttributeError:
