@@ -78,7 +78,7 @@ class LoggedAction(models.Model):
             })
         elif self.person:
             return reverse('person-view', kwargs={'person_id': self.person.id})
-        return None
+        return '/'
 
     @property
     def subject_html(self):
