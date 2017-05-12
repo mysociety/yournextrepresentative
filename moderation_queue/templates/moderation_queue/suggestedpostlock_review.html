@@ -2,26 +2,32 @@
 
 {% block content %}
 <h1>Posts with lock suggestions</h1>
-{% regroup object_list by postextraelection as suggestions_list %}
-{% for suggestion_post in suggestions_list %}
-    {% with suggestion_post.list.0 as suggestion %}
-        <h3><a href="{% url 'constituency' election=suggestion_post.grouper.election.slug post_id=suggestion_post.grouper.postextra.slug ignored_slug=suggestion_post.grouper.postextra.short_label|slugify %}">{{ suggestion_post.grouper.postextra.short_label }} in the {{ suggestion_post.grouper.election.name }}</a></h3>
-        <ul>
-        {% for suggestion in suggestion_post.list %}
-        <li>
-          User {{ suggestion.user }} suggested locking this.
-          {% if suggestion.justification %}
-          They said:
-          <blockquote>{{ suggestion.justification }}</blockquote>
-          {% endif %}
-        </li>
-        {% endfor %}
-        </ul>
-    {% endwith %}
+{% for object_list in others_and_my_suggestions %}
+  {% if forloop.first %}
+    <h2>Suggestions to review</h2>
+  {% endif %}
+  {% if forloop.last %}
+    <h2>My own lock suggestions</h2>
+    <p>Someone else needs to review these:</p>
+  {% endif %}
+
+  {% regroup object_list by postextraelection as suggestions_list %}
+  {% for suggestion_post in suggestions_list %}
+      {% with suggestion_post.list.0 as suggestion %}
+          <h3><a href="{% url 'constituency' election=suggestion_post.grouper.election.slug post_id=suggestion_post.grouper.postextra.slug ignored_slug=suggestion_post.grouper.postextra.short_label|slugify %}">{{ suggestion_post.grouper.postextra.short_label }} in the {{ suggestion_post.grouper.election.name }}</a></h3>
+          <ul>
+          {% for suggestion in suggestion_post.list %}
+          <li>
+            User {{ suggestion.user }} suggested locking this.
+            {% if suggestion.justification %}
+            They said:
+            <blockquote>{{ suggestion.justification }}</blockquote>
+            {% endif %}
+          </li>
+          {% endfor %}
+          </ul>
+      {% endwith %}
+  {% endfor %}
+
 {% endfor %}
-<ul>
-  {# {% for suggestion in  %} #}
-  {# <li>{{ suggestion.post_extra.base.label }}</li> #}
-  {# {% endfor %} #}
-</ul>
 {% endblock content %}

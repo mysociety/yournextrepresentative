@@ -523,9 +523,17 @@ class SuggestedLockReviewTests(UK2015ExamplesMixin, TestUserMixin, WebTest):
             base__on_behalf_of=self.labour_party_extra.base
         )
 
-    def test_suggested_lock_review_view_no_suggestions(self):
+    def test_login_required(self):
         url = reverse('suggestions-to-lock-review-list')
         response = self.app.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.location,
+            'http://localhost:80/accounts/login/?next=/moderation/suggest-lock/')
+
+    def test_suggested_lock_review_view_no_suggestions(self):
+        url = reverse('suggestions-to-lock-review-list')
+        response = self.app.get(url, user=self.user)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, '<h3>')
 
@@ -540,7 +548,7 @@ class SuggestedLockReviewTests(UK2015ExamplesMixin, TestUserMixin, WebTest):
             justification='test data'
         )
         url = reverse('suggestions-to-lock-review-list')
-        response = self.app.get(url)
+        response = self.app.get(url, user=self.user)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<h3>')
 

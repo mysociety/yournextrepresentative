@@ -482,7 +482,7 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
                 'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
             })
 
-class SuggestLockReviewListView(ListView):
+class SuggestLockReviewListView(LoginRequiredMixin, TemplateView):
     '''This is the view which lists all post lock suggestions that need review
 
     Most people will get to this by clicking on the red highlighted 'Post lock suggestions'
@@ -490,11 +490,23 @@ class SuggestLockReviewListView(ListView):
 
     template_name = "moderation_queue/suggestedpostlock_review.html"
 
-    def get_queryset(self):
-        return SuggestedPostLock.objects.filter(
-            postextraelection__candidates_locked=False).select_related(
-                'user', 'postextraelection__postextra__base', 'postextraelection__election'
-            )
+    def get_lock_suggestions(self, mine):
+        method = 'filter' if mine else 'exclude'
+        return getattr(
+            SuggestedPostLock.objects.filter(
+                postextraelection__candidates_locked=False),
+            method)(user=self.request.user).select_related(
+                'user', 'postextraelection__postextra__base',
+                'postextraelection__election')
+
+    def get_context_data(self, **kwargs):
+        context = super(SuggestLockReviewListView, self).get_context_data(**kwargs)
+        context['others_and_my_suggestions'] = [
+            self.get_lock_suggestions(mine=False),
+            self.get_lock_suggestions(mine=True),
+
+        ]
+        return context
 
 
 class SOPNReviewRequiredView(ListView):
