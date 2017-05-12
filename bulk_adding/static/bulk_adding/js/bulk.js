@@ -89,7 +89,7 @@ $(function(){
                         $other = $person.find('.other-names');
                         if ($other.length == 0) {
                             $first_name = $person.find('>:first-child');
-                            $first_name.after('<ul class="other-names"><li>Other names:</li></ul>');
+                            $first_name.after('<ul class="other-names clearfix"><li>Other names:</li></ul>');
                             $other = $person.find('.other-names');
                         }
                         $names = $other.find('.other-name');
