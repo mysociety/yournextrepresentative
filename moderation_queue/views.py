@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import bleach
+import os
 import re
+
 from os.path import join
 from tempfile import NamedTemporaryFile
 
@@ -10,26 +12,27 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.core.files import File
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, TemplateView, CreateView
-
 from PIL import Image as PillowImage
 from braces.views import LoginRequiredMixin
 from slugify import slugify
 
 from auth_helpers.views import GroupRequiredMixin
-from candidates.management.images import get_file_md5sum
 
-from .forms import UploadPersonPhotoImageForm, PhotoReviewForm
+from .forms import UploadPersonPhotoImageForm, UploadPersonPhotoURLForm, PhotoReviewForm
 from .models import QueuedImage, SuggestedPostLock, PHOTO_REVIEWERS_GROUP_NAME
 
+from candidates.management.images import (
+    get_file_md5sum, ImageDownloadException, download_image_from_url)
 from candidates.models import (LoggedAction, ImageExtra,
                                PersonExtra, PostExtraElection)
 from candidates.views.version_data import get_client_ip, get_change_metadata
@@ -41,11 +44,13 @@ from popolo.models import Person
 def upload_photo(request, person_id):
     person = get_object_or_404(Person, id=person_id)
     image_form = UploadPersonPhotoImageForm(initial={'person': person})
+    url_form = UploadPersonPhotoURLForm(initial={'person': person})
     return render(
         request,
         'moderation_queue/photo-upload-new.html',
         {
             'image_form': image_form,
+            'url_form': url_form,
             'queued_images': QueuedImage.objects.filter(
                 person=person,
                 decision='undecided',
@@ -59,6 +64,7 @@ def upload_photo(request, person_id):
 def upload_photo_image(request, person_id):
     person = get_object_or_404(Person, id=person_id)
     image_form = UploadPersonPhotoImageForm(request.POST, request.FILES)
+    url_form = UploadPersonPhotoURLForm(initial={'person': person})
     if image_form.is_valid():
         # Make sure that we save the user that made the upload
         queued_image = image_form.save(commit=False)
@@ -85,6 +91,7 @@ def upload_photo_image(request, person_id):
         'moderation_queue/photo-upload-new.html',
         {
             'image_form': image_form,
+            'url_form': url_form,
             'queued_images': QueuedImage.objects.filter(
                 person=person,
                 decision='undecided',
@@ -92,6 +99,61 @@ def upload_photo_image(request, person_id):
             'person': person
         }
     )
+
+
+@login_required
+def upload_photo_url(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    image_form = UploadPersonPhotoImageForm(initial={'person': person})
+    url_form = UploadPersonPhotoURLForm(request.POST)
+
+    if url_form.is_valid():
+        image_url = url_form.cleaned_data['image_url']
+        try:
+            img_temp_filename = download_image_from_url(image_url)
+        except ImageDownloadException as ide:
+            return HttpResponseBadRequest(unicode(ide).encode('utf-8'))
+        try:
+            queued_image = QueuedImage(
+                why_allowed=url_form.cleaned_data['why_allowed_url'],
+                justification_for_use=url_form.cleaned_data['justification_for_use_url'],
+                person=person,
+                user=request.user
+            )
+            queued_image.save()
+            with open(img_temp_filename , 'rb') as f:
+                queued_image.image.save(image_url, File(f))
+            queued_image.save()
+            LoggedAction.objects.create(
+                user=request.user,
+                action_type='photo-upload',
+                ip_address=get_client_ip(request),
+                popit_person_new_version='',
+                person=person,
+                source=url_form.cleaned_data['justification_for_use_url'],
+            )
+            return HttpResponseRedirect(reverse(
+                'photo-upload-success',
+                kwargs={
+                    'person_id': person.id
+                }
+            ))
+        finally:
+            os.remove(img_temp_filename)
+    else:
+        return render(
+            request,
+            'moderation_queue/photo-upload-new.html',
+            {
+                'image_form': image_form,
+                'url_form': url_form,
+                'queued_images': QueuedImage.objects.filter(
+                    person=person,
+                    decision='undecided',
+                ).order_by('created'),
+                'person': person
+            }
+        )
 
 
 class PhotoUploadSuccess(TemplateView):

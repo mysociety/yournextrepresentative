@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<h2>{% trans 'Upload a photo from a URL' %}</h2>
+
+<form id="person-upload-photo-url" action="{% url 'photo-upload-url' person_id %}" method="post" enctype="multipart/form-data">
+
+  {{ url_form.non_field_errors }}
+  {% csrf_token %}
+
+  <p>
+    {% if queued_images %}{% blocktrans trimmed with name=person.name %}
+    If you still want to upload another photo of {{ name }}, you can also paste a URL for the image (maximum size: 50 MB):
+    {% endblocktrans %}
+    {% else %}
+    {% trans "Alternatively, you can paste a URL for the image (maximum size: 50 MB):" %}
+    {% endif %}
+  </p>
+  <p>
+    {{ url_form.image_url.errors }}
+  </p>
+  <p>
+    {{ url_form.image_url }}
+  </p>
+
+  <p>{% blocktrans trimmed %}
+  Now let us know about the copyright of this image by selecting one of
+    these options or explaining why we can use it:{% endblocktrans %}</p>
+  <div class="photo-why-allowed-radio-buttons">
+    {{ url_form.why_allowed_url.errors }}
+    {{ url_form.why_allowed_url }}
+  </div>
+  <p>
+    {{ url_form.justification_for_use_url.errors }}
+    <label for="{{ url_form.justification_for_use_url.id_for_label }}">{% blocktrans trimmed %}
+    Here is my justification for why this photo may be reasonably used on the
+    website, including URL of the page that embeds the image:{% endblocktrans %}</label>
+    {{ url_form.justification_for_use_url }}
+  </p>
+  <input type="submit" class="button" value="{% trans "Upload" %}">
+</form>

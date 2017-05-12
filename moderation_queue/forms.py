@@ -6,6 +6,8 @@ from django.utils.translation import ugettext as _
 
 from .models import QueuedImage, CopyrightOptions, SuggestedPostLock
 
+from candidates.forms import StrippedCharField
+
 
 class UploadPersonPhotoImageForm(forms.ModelForm):
 
@@ -35,6 +37,20 @@ class UploadPersonPhotoImageForm(forms.ModelForm):
                         "justification for why we can use it.")
             raise ValidationError(message)
         return cleaned_data
+
+
+class UploadPersonPhotoURLForm(forms.Form):
+    image_url = StrippedCharField(
+        widget=forms.URLInput(),
+    )
+    why_allowed_url = forms.ChoiceField(
+        choices=CopyrightOptions.WHY_ALLOWED_CHOICES,
+        widget=forms.RadioSelect()
+    )
+    justification_for_use_url = StrippedCharField(
+        widget=forms.Textarea(attrs={'rows': 1, 'columns': 72}),
+        required=False
+    )
 
 
 class PhotoReviewForm(forms.Form):

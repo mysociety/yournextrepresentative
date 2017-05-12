@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 from django.conf.urls import url
 
 from .views import (
-    upload_photo, upload_photo_image, PhotoUploadSuccess,
-    PhotoReviewList, PhotoReview, SuggestLockView,
-    SuggestLockReviewListView, SOPNReviewRequiredView,
-    PersonNameCleanupView
+    upload_photo, upload_photo_image, upload_photo_url,
+    PhotoUploadSuccess, PhotoReviewList, PhotoReview,
+    SuggestLockView, SuggestLockReviewListView,
+    SOPNReviewRequiredView, PersonNameCleanupView
 )
 
 urlpatterns = [
@@ -16,6 +16,9 @@ urlpatterns = [
     url(r'^photo/upload/image/(?P<person_id>\d+)$',
         upload_photo_image,
         name="photo-upload-image"),
+    url(r'^photo/upload/url/(?P<person_id>\d+)$',
+        upload_photo_url,
+        name="photo-upload-url"),
     url(r'^photo/review$',
         PhotoReviewList.as_view(),
         name="photo-review-list"),
