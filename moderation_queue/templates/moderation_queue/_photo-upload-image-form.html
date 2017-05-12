@@ -1,5 +1,7 @@
 {% load i18n %}
 
+<h2>{% trans 'Upload a photo from your computer' %}</h2>
+
 <form id="person-upload-photo-image" action="{% url 'photo-upload-image' person_id %}" method="post" enctype="multipart/form-data">
 
   {% if queued_images %}
@@ -24,10 +26,10 @@
 
   <p>
     {% if queued_images %}{% blocktrans trimmed with name=person.name %}
-    If you still want to upload another photo of {{ name }}, first select an image from your computer (maximum size: 50 MB):
+    If you still want to upload another photo of {{ name }}, select an image from your computer (maximum size: 50 MB):
     {% endblocktrans %}
     {% else %}
-    {% trans "First, select an image from your computer (maximum size: 50 MB):" %}
+    {% trans "Select an image from your computer (maximum size: 50 MB):" %}
     {% endif %}
   </p>
   <p>

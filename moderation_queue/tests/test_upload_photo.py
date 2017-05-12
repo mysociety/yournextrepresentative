@@ -25,7 +25,7 @@ TEST_MEDIA_ROOT = realpath(join(dirname(__file__), 'media'))
 
 
 @override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
-class PhotoUploadTests(UK2015ExamplesMixin, WebTest):
+class PhotoUploadImageTests(UK2015ExamplesMixin, WebTest):
 
     example_image_filename = join(
         settings.BASE_DIR, 'moderation_queue', 'tests', 'example-image.jpg'
@@ -33,7 +33,7 @@ class PhotoUploadTests(UK2015ExamplesMixin, WebTest):
 
     @classmethod
     def setUpClass(cls):
-        super(PhotoUploadTests, cls).setUpClass()
+        super(PhotoUploadImageTests, cls).setUpClass()
         storage = FileSystemStorage()
         desired_storage_path = join('queued-images', 'pilot.jpg')
         with open(cls.example_image_filename, 'rb') as f:
@@ -43,10 +43,10 @@ class PhotoUploadTests(UK2015ExamplesMixin, WebTest):
     @classmethod
     def tearDownClass(cls):
         rmtree(TEST_MEDIA_ROOT)
-        super(PhotoUploadTests, cls).tearDownClass()
+        super(PhotoUploadImageTests, cls).tearDownClass()
 
     def setUp(self):
-        super(PhotoUploadTests, self).setUp()
+        super(PhotoUploadImageTests, self).setUp()
         PersonExtraFactory.create(
             base__id='2009',
             base__name='Tessa Jowell'
@@ -60,7 +60,7 @@ class PhotoUploadTests(UK2015ExamplesMixin, WebTest):
         self.test_upload_user.terms_agreement.save()
 
     def tearDown(self):
-        super(PhotoUploadTests, self).tearDown()
+        super(PhotoUploadImageTests, self).tearDown()
         self.test_upload_user.delete()
 
     def test_photo_upload_through_image_field(self):
