@@ -165,6 +165,21 @@ class TestNeedsReview(TestUserMixin, WebTest):
         dt = self.current_datetime - timedelta(minutes=41)
         change_updated_and_created(la, dt)
 
+        # Let's say a new user is has locked a constituency - this is
+        # a useful test because (because of a bug) locked
+        # constituencies have neither a post nor a person set:
+        la = LoggedAction.objects.create(
+            id=5000,
+            user=self.morbid_vandal,
+            action_type='constituency-lock',
+            person=None,
+            post=None,
+            popit_person_new_version='',
+            source='Testing no post and no person'
+        )
+        dt = self.current_datetime - timedelta(minutes=13)
+        change_updated_and_created(la, dt)
+
     def test_needs_review_as_expected(self, mock_datetime):
         mock_datetime.now.return_value = self.current_datetime
         needs_review_dict = LoggedAction.objects.in_recent_days(5).needs_review()
@@ -175,7 +190,8 @@ class TestNeedsReview(TestUserMixin, WebTest):
         #    1 first edit from 'new_only_one'
         #    1 edit from a user who was mostly active in the past to the
         #      prime minister's record
-        self.assertEqual(len(needs_review_dict), 1 + 3 + 1 + 1)
+        #    1 constituency-lock from a new user
+        self.assertEqual(len(needs_review_dict), 1 + 3 + 1 + 1 + 1)
         results = [
             (la.user.username, la.action_type, reasons)
             for la, reasons in
@@ -195,6 +211,9 @@ class TestNeedsReview(TestUserMixin, WebTest):
              ('lapsed_experienced',
               'person-update',
               ['Edit of a candidate whose record may be particularly liable to vandalism']),
+             (u'morbid_vandal',
+              u'constituency-lock',
+              [u'One of the first 3 edits of user morbid_vandal']),
              ('morbid_vandal',
               'person-update',
               ['One of the first 3 edits of user morbid_vandal',
@@ -217,7 +236,9 @@ class TestNeedsReview(TestUserMixin, WebTest):
                    b'<author><name>new_only_one</name></author><id>needs-review:2509</id>' \
                    b'<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2009&amp;quot;&amp;gt;Tessa Jowell (2009)&amp;lt;/a&amp;gt; by new_only_one with source: \xe2\x80\x9c Just for tests \xe2\x80\x9d;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user new_only_one&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;&amp;lt;/p&amp;gt;</summary></entry><entry><title>The Eurovisionary Ronnie Carroll (7448) - person-update</title><link href="http://example.com/person/7448" rel="alternate"></link><updated>2017-05-02T17:06:05+00:00</updated>' \
                    b'<author><name>morbid_vandal</name></author><id>needs-review:3000</id>' \
-                   b'<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/7448&amp;quot;&amp;gt;The Eurovisionary Ronnie Carroll (7448)&amp;lt;/a&amp;gt; by morbid_vandal with source: \xe2\x80\x9c Just for tests \xe2\x80\x9d;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user morbid_vandal&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;Edit of a candidate who has died&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;&amp;lt;/p&amp;gt;</summary></entry><entry><title>Theresa May (2811) - person-update</title><link href="http://example.com/person/2811" rel="alternate"></link><updated>2017-05-02T16:37:05+00:00</updated>' \
+                   b'<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/7448&amp;quot;&amp;gt;The Eurovisionary Ronnie Carroll (7448)&amp;lt;/a&amp;gt; by morbid_vandal with source: \xe2\x80\x9c Just for tests \xe2\x80\x9d;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user morbid_vandal&amp;lt;/li&amp;gt;\n&amp;lt;li&amp;gt;Edit of a candidate who has died&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;&amp;lt;/p&amp;gt;</summary></entry>' \
+                   b'<entry><title>constituency-lock</title><link href="http://example.com/" rel="alternate"></link><updated>2017-05-02T16:57:05+00:00</updated><author><name>morbid_vandal</name></author><id>needs-review:5000</id><summary type="html">&amp;lt;p&amp;gt;constituency-lock of  by morbid_vandal with source: \xe2\x80\x9c Testing no post and no person \xe2\x80\x9d;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;One of the first 3 edits of user morbid_vandal&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;&amp;lt;/p&amp;gt;</summary></entry>' \
+                   b'<entry><title>Theresa May (2811) - person-update</title><link href="http://example.com/person/2811" rel="alternate"></link><updated>2017-05-02T16:37:05+00:00</updated>' \
                    b'<author><name>lapsed_experienced</name></author><id>needs-review:4000</id>' \
                    b'<summary type="html">&amp;lt;p&amp;gt;person-update of &amp;lt;a href=&amp;quot;/person/2811&amp;quot;&amp;gt;Theresa May (2811)&amp;lt;/a&amp;gt; by lapsed_experienced with source: \xe2\x80\x9c Just for tests... \xe2\x80\x9d;&amp;lt;/p&amp;gt;\n&amp;lt;ul&amp;gt;\n&amp;lt;li&amp;gt;Edit of a candidate whose record may be particularly liable to vandalism&amp;lt;/li&amp;gt;\n&amp;lt;/ul&amp;gt;&amp;lt;/p&amp;gt;</summary></entry><entry><title>Tessa Jowell (2009) - person-update</title><link href="http://example.com/person/2009" rel="alternate"></link><updated>2017-05-02T16:21:05+00:00</updated>' \
                    b'<author><name>new_suddenly_lots</name></author><id>needs-review:2007</id>' \
