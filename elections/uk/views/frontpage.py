@@ -75,18 +75,13 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
         if not election_qs.exists():
             return context
         pee_qs = PostExtraElection.objects.filter(election__in=election_qs)
+        context['posts_total'] = pee_qs.count()
 
         context['sopns_imported'] = pee_qs.filter(
                 postextra__base__officialdocument__election=F('election'),
             ).count()
-
-
-
-        context['posts_total'] = pee_qs.count()
-        pee_qs = pee_qs.filter(candidates_locked=True, election__in=election_qs)
-        context['posts_locked'] = pee_qs.count()
-        context['posts_locked_percent'] = round(
-                float(context['posts_locked']) /
+        context['sopns_imported_percent'] = round(
+                float(context['sopns_imported']) /
                 float(context['posts_total'])
                 * 100)
 
@@ -97,10 +92,15 @@ class ConstituencyPostcodeFinderView(ContributorsMixin, FormView):
                 float(context['posts_total'])
                 * 100)
 
-        context['sopns_imported_percent'] = round(
-                float(context['sopns_imported']) /
+
+
+        pee_qs = pee_qs.filter(candidates_locked=True)
+        context['posts_locked'] = pee_qs.count()
+        context['posts_locked_percent'] = round(
+                float(context['posts_locked']) /
                 float(context['posts_total'])
                 * 100)
+
 
         return context
 
