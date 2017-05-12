@@ -19,7 +19,7 @@ class TestApiHelpView(WebTest):
         self.assertEqual(response.status_code, 200)
 
         self.assertIn(
-            'Download of the 2015 General Election candidates',
+            'Download the 2015 General Election candidates',
             response)
 
         self.assertIn(
