@@ -102,7 +102,7 @@ class CandidateResultViewSet(viewsets.ModelViewSet):
 class ResultSetViewSet(viewsets.ModelViewSet):
     queryset = ResultSet.objects \
         .select_related(
-            'post_result__post__extra',
+            'post_election_result__post_election__postextra',
             'user',
         ) \
         .order_by('id')
@@ -116,12 +116,12 @@ class ResultSetViewSet(viewsets.ModelViewSet):
 
 class PostElectionResultViewSet(viewsets.ModelViewSet):
     queryset = PostElectionResult.objects \
-        .select_related('post__extra') \
+        .select_related('post_election__postextra') \
         .prefetch_related(
             Prefetch(
                 'result_sets',
                 ResultSet.objects.select_related(
-                    'post_result__post__extra',
+                    'post_election_result__post_election__postextra',
                     'user',
                 ) \
                 .prefetch_related(
