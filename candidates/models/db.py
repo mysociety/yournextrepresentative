@@ -74,7 +74,8 @@ class LoggedAction(models.Model):
         from elections.models import Election
         if self.post:
             try:
-                election = self.post.extra.elections.get(current=True)
+                election = self.post.extra.elections.filter(
+                    current=True).first()
             except Election.DoesNotExist:
                 election = self.post.extra.elections.first()
 
