@@ -1,5 +1,15 @@
 from __future__ import unicode_literals
 
+from datetime import datetime
+import json
+from mock import patch
+import os
+from os.path import exists, join
+from shutil import rmtree
+from tempfile import mkdtemp
+
+from django.core.management import call_command
+
 from django_webtest import WebTest
 
 from .factories import (
@@ -327,3 +337,55 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.text.startswith('test('))
+
+    @patch('candidates.management.commands.candidates_cache_persons_api.datetime')
+    def test_persons_api_to_directory(self, mock_datetime):
+        # current
+        # timestamped
+        # timestamped
+        mock_datetime.now.return_value = datetime(2017, 5, 14, 12, 33, 5, 0)
+        target_directory = mkdtemp()
+        try:
+            call_command(
+                'candidates_cache_persons_api',
+                target_directory,
+                'https://example.com/media/api-cache-for-wcivf',
+                page_size='3',
+            )
+            expected_leafname = '2017-05-14T12:33:05'
+            expected_timestamped_directory = \
+                join(target_directory, expected_leafname)
+            expected_symlink = join(target_directory, 'latest')
+            self.assertTrue(exists(expected_timestamped_directory))
+            self.assertTrue(exists(expected_symlink))
+            # Check that the symlink points to to the timestamped directory:
+            self.assertEqual(os.readlink(expected_symlink), expected_leafname)
+            # Check that the files in that directory are as expected:
+            entries = os.listdir(expected_timestamped_directory)
+            page_1_leafname = 'page-000001.json'
+            page_2_leafname = 'page-000002.json'
+            self.assertEqual(set(entries), {page_1_leafname, page_2_leafname})
+            # Get the data from those pages:
+            with open(join(expected_timestamped_directory, page_1_leafname)) as f:
+                page_1_data = json.load(f)
+            with open(join(expected_timestamped_directory, page_2_leafname)) as f:
+                page_2_data = json.load(f)
+            # Check the previous and next links are as we expect:
+            self.assertEqual(
+                page_1_data['next'],
+                'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
+                    expected_leafname, page_2_leafname))
+            self.assertEqual(page_1_data['previous'], None)
+            self.assertEqual(page_2_data['next'], None)
+            self.assertEqual(
+                page_2_data['previous'],
+                'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
+                    expected_leafname, page_1_leafname))
+            # Check that the URL of the first person is as expected,
+            # as well as it being the right person:
+            first = page_1_data['results'][0]
+            self.assertEqual(first['id'], 818)
+            self.assertEqual(first['name'], 'Sheila Gilmore')
+            self.assertEqual(first['url'], 'https://example.com/api/v0.9/persons/818/?format=json')
+        finally:
+            rmtree(target_directory)
