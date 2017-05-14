@@ -140,6 +140,10 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
                 'PASSWORD': conf.get('YNMP_DB_PASS'),
                 'HOST':     conf.get('YNMP_DB_HOST'),
                 'PORT':     conf.get('YNMP_DB_PORT'),
+                # Note that there are various comments on the web
+                # suggesting that settings CONN_MAX_AGE != 0 is a bad
+                # idea when eventlet or gevent workers are being used.
+                'CONN_MAX_AGE': 0 if debug else 60,
             }
         }
     else:
