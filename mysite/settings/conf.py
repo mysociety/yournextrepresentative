@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import importlib
 from os.path import dirname, exists, join, realpath
+import raven
 import re
 import yaml
 
@@ -263,6 +264,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'corsheaders',
             'crispy_forms',
             'markdown_deux',
+            'raven.contrib.django.raven_compat',
         ],
 
         'SITE_ID': 1,
@@ -542,6 +544,10 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
     if conf.get('NGINX_SSL'):
         result['SECURE_PROXY_SSL_HEADER'] = ('HTTP_X_FORWARDED_PROTO', 'https')
         result['ACCOUNT_DEFAULT_HTTP_PROTOCOL'] = 'https'
+
+    # optionally configure the raven client for sentry.io
+    if conf.get('RAVEN_DSN'):
+        result['RAVEN_CONFIG'] = {'dsn': conf.get('RAVEN_DSN')}
 
     add_election_specific_settings(result, election_app_fully_qualified)
 

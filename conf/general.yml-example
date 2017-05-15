@@ -125,3 +125,6 @@ CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST: 20
 # Or see https://dev.twitter.com/oauth/application-only for more
 # details.
 TWITTER_APP_ONLY_BEARER_TOKEN: ''
+
+# Optional configuration of Raven client for Sentry.io
+RAVEN_DSN: ''
