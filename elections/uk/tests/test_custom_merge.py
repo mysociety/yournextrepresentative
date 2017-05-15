@@ -23,22 +23,6 @@ class TestUKResultsPreserved(TestUserMixin, UK2015ExamplesMixin, WebTest):
             base__id='10000',
             base__name='Harriet Ruth Harman',
         ).base
-        # And an extra election to create a candidacy of:
-        local_council = factories.OrganizationExtraFactory.create(
-            base__name='Maidstone',
-            slug='local-authority:maidstone',
-        ).base
-        self.local_election = factories.ElectionFactory.create(
-            slug='local.maidstone.2016-05-05',
-            organization=local_council,
-        )
-        self.local_post = factories.PostExtraFactory.create(
-            elections=(self.local_election,),
-            slug='DIW:E05005004',
-            base__label='Shepway South Ward',
-            party_set=self.gb_parties,
-            base__organization=local_council,
-        )
 
     def test_uk_results_for_secondary_preserved(self):
         factories.CandidacyExtraFactory.create(

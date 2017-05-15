@@ -409,24 +409,6 @@ class TestMergePeopleView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             base__name='Stuart Robert Jeffrey',
         ).base
 
-        local_council = factories.OrganizationExtraFactory.create(
-            base__name='Maidstone',
-            slug='local-authority:maidstone',
-        ).base
-        # Make sure that the local election and post in that election exist:
-        local_election = factories.ElectionFactory.create(
-            slug='local.maidstone.2016-05-05',
-            organization=local_council,
-        )
-        factories.PostExtraFactory.create(
-            elections=(local_election,),
-            slug='DIW:E05005004',
-            base__label='Shepway South Ward',
-            party_set=self.gb_parties,
-            base__organization=local_council,
-            # base__area=area_extra.base,
-        )
-
         # And create the two Westminster posts:
         factories.PostExtraFactory.create(
             elections=(self.election, self.earlier_election),

@@ -225,7 +225,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         organizations = organizations_resp.json
 
         self.assertEqual(organizations['count'], len(organizations['results']))
-        self.assertEqual(organizations['count'], 6)
+        self.assertEqual(organizations['count'], 7)
 
     def test_api_organization(self):
         organizations_resp = self.app.get('/api/v0.9/organizations/')
@@ -250,7 +250,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         elections = elections_resp.json
 
         self.assertEqual(elections['count'], len(elections['results']))
-        self.assertEqual(elections['count'], 2)
+        self.assertEqual(elections['count'], 3)
 
     def test_api_election(self):
         elections_resp = self.app.get('/api/v0.9/elections/')
@@ -275,7 +275,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         posts = posts_resp.json
 
         self.assertEqual(posts['count'], len(posts['results']))
-        self.assertEqual(posts['count'], 4)
+        self.assertEqual(posts['count'], 5)
 
     def test_api_post(self):
         posts_resp = self.app.get('/api/v0.9/posts/')

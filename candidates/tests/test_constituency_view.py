@@ -413,21 +413,6 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         )
 
     def test_return_404_when_post_not_associated_with_election(self):
-        local_council = OrganizationExtraFactory.create(
-            base__name='Maidstone',
-            slug='local-authority:maidstone',
-        ).base
-        local_election = ElectionFactory.create(
-            slug='local.maidstone.2016-05-05',
-            organization=local_council,
-        )
-        PostExtraFactory(
-            elections=(local_election,),
-            slug='DIW:E05005004',
-            base__label='Shepway South Ward',
-            party_set=self.gb_parties,
-            base__organization=local_council,
-        ).base
         # Now that post is not associated with the 2015 election, so
         # viewing a page with election: 2015 and post: DIW:E05005004
         # should return a 404.
