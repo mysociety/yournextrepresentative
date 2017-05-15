@@ -17,6 +17,8 @@ def get_election_extra(postextra, election):
 
 class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
 
+    maxDiff = None
+
     def setUp(self):
         super(TestElectionGrouping, self).setUp()
         self.sp_c_election = ElectionFactory(
