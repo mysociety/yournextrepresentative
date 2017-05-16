@@ -169,16 +169,9 @@ class BulkAddReviewView(BaseBulkAddView):
         post = context['post_extra'].base
         election = Election.objects.get(slug=context['election'])
 
-        previous_memberships_in_this_election = Membership.objects.filter(
-            person=person_extra.base,
-            extra__election=election,
-            role=election.candidate_membership_role,
-        )
-
-        previous_memberships_in_this_election.delete()
         person_extra.not_standing.remove(election)
 
-        membership, _ = Membership.objects.get_or_create(
+        membership, _ = Membership.objects.update_or_create(
             post=post,
             person=person_extra.base,
             extra__election=election,
@@ -196,6 +189,20 @@ class BulkAddReviewView(BaseBulkAddView):
                 'elected': False,
             }
         )
+
+        # Now remove other memberships in this election for that
+        # person, although we raise an exception if there is any
+        # object (other than its MembershipExtra) that has a
+        # ForeignKey to the membership, since that would result in
+        # losing data.
+        for old_membership in Membership.objects \
+            .exclude(pk=membership.pk) \
+            .filter(
+                person=person_extra.base,
+                extra__election=election,
+                role=election.candidate_membership_role,
+            ):
+            old_membership.delete()
 
         change_metadata = get_change_metadata(
             self.request, data['source']

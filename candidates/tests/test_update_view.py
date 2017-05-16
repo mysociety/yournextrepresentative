@@ -7,14 +7,19 @@ import json
 from django.utils.six.moves.urllib_parse import urlsplit
 
 from django_webtest import WebTest
+from webtest.forms import Text
 
 from .auth import TestUserMixin
 
-from popolo.models import Person
+from popolo.models import Person, Membership
 
 from candidates.models import ExtraField
 from .factories import CandidacyExtraFactory, PersonExtraFactory
 from .uk_examples import UK2015ExamplesMixin
+
+
+def membership_id_set(person):
+    return set(person.memberships.values_list('pk', flat=True))
 
 
 class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
@@ -76,6 +81,7 @@ class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
         self.assertEqual('next=/person/2009/update', split_location.query)
 
     def test_update_person_submission(self):
+        memberships_before = membership_id_set(Person.objects.get(pk=2009))
         response = self.app.get(
             '/person/2009/update',
             user=self.user_who_can_lock,
@@ -102,8 +108,12 @@ class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
             '/person/2009',
             split_location.path
         )
+        self.assertEqual(
+            memberships_before,
+            membership_id_set(person))
 
     def test_update_dd_mm_yyyy_birth_date(self):
+        memberships_before = membership_id_set(Person.objects.get(pk=2009))
         response = self.app.get(
             '/person/2009/update',
             user=self.user_who_can_lock,
@@ -119,8 +129,12 @@ class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
 
         person = Person.objects.get(id='2009')
         self.assertEqual(person.birth_date, '1875-04-01')
+        self.assertEqual(
+            memberships_before,
+            membership_id_set(person))
 
     def test_update_person_extra_fields(self):
+        memberships_before = membership_id_set(Person.objects.get(pk=2009))
         ExtraField.objects.create(
             type='url',
             key='cv',
@@ -155,3 +169,41 @@ class TestUpdatePersonView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'notes': '',
             }
         )
+        self.assertEqual(
+            memberships_before,
+            membership_id_set(person))
+
+    def test_update_person_add_new_candidacy(self):
+        memberships_before = membership_id_set(Person.objects.get(pk=2009))
+        response = self.app.get('/person/2009/update', user=self.user)
+        # Now fake the addition of elements to the form as would
+        # happen with the Javascript addition of a new candidacy.
+        form = response.forms['person-details']
+        for name, value in [
+                ('extra_election_id', 'local.maidstone.2016-05-05'),
+                ('party_gb_local.maidstone.2016-05-05', self.labour_party_extra.base.id),
+                ('constituency_local.maidstone.2016-05-05', 'DIW:E05005004'),
+                ('standing_local.maidstone.2016-05-05', 'standing'),
+                ('source', 'Testing dynamic election addition'),
+        ]:
+            field = Text(form, 'input', None, None, value)
+            form.fields[name] = [field]
+            form.field_order.append((name, field))
+        response = form.submit()
+        self.assertEqual(response.status_code, 302)
+        split_location = urlsplit(response.location)
+        self.assertEqual('/person/2009', split_location.path)
+
+        person = Person.objects.get(pk=2009)
+        memberships_afterwards = membership_id_set(person)
+        extra_membership_ids = memberships_afterwards - memberships_before
+        self.assertEqual(len(extra_membership_ids), 1)
+        new_candidacy = Membership.objects.get(pk=list(extra_membership_ids)[0])
+        self.assertEqual(
+            new_candidacy.post.label, 'Shepway South Ward')
+        self.assertEqual(
+            new_candidacy.extra.election.slug, 'local.maidstone.2016-05-05')
+        self.assertEqual(
+            new_candidacy.on_behalf_of.name, 'Labour Party')
+        same_before_and_after = memberships_before & memberships_afterwards
+        self.assertEqual(len(same_before_and_after), 1)
