@@ -15,7 +15,6 @@ def set_post_election_from_post(apps, schema_editor):
     PostResult = apps.get_model('uk_results', 'PostResult')
     PostExtraElection = apps.get_model('candidates', 'PostExtraElection')
 
-    print(PostResult.objects.all().count())
     qs = PostResult.objects.all().select_related('post__extra')
     for post_result in qs:
         pee = None
