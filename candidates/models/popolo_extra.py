@@ -6,6 +6,7 @@ from os.path import join
 import re
 
 from django.conf import settings
+from django.contrib.admin.util import NestedObjects
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ObjectDoesNotExist
@@ -141,6 +142,7 @@ def mark_as_standing(person_extra, election_data, post, party, party_list_positi
     # Now remove any memberships that shouldn't now be there:
     for membership_to_remove in Membership.objects.filter(
             pk__in=membership_ids_to_remove):
+        raise_if_unsafe_to_delete(membership_to_remove)
         membership_to_remove.delete()
 
 
@@ -155,6 +157,7 @@ def mark_as_not_standing(person_extra, election_data, post):
         # this line:
         # post__extra__slug=post_slug,
     ):
+        raise_if_unsafe_to_delete(membership)
         membership.delete()
     from .constraints import check_no_candidancy_for_election
     check_no_candidancy_for_election(person_extra.base, election_data)
@@ -168,10 +171,37 @@ def mark_as_unsure_if_standing(person_extra, election_data, post):
         role=election_data.candidate_membership_role,
         person__extra=person_extra
     ):
+        raise_if_unsafe_to_delete(membership)
         membership.delete()
     # Now remove any entry that indicates that they're standing in
     # this election:
     person_extra.not_standing.remove(election_data)
+
+
+class UnsafeToDelete(Exception):
+    pass
+
+
+def raise_if_unsafe_to_delete(base_object):
+    if not paired_object_safe_to_delete(base_object):
+        msg = 'Trying to delete a {model} (pk={pk}) that other ' \
+              'objects that depend on'
+        raise UnsafeToDelete(msg.format(
+            model=base_object._meta.model.__name__,
+            pk=base_object.id))
+
+
+def paired_object_safe_to_delete(base_object):
+    collector = NestedObjects(using='default')
+    collector.collect([base_object])
+    collected = collector.nested()
+    if len(collected) > 2:
+        return False
+    assert collected[0] == base_object
+    if len(collected[1]) != 1:
+        return False
+    assert collected[1][0] == base_object.extra
+    return True
 
 
 class localparserinfo(parser.parserinfo):

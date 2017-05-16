@@ -11,7 +11,7 @@ from braces.views import LoginRequiredMixin
 from auth_helpers.views import user_in_group
 
 from popolo.models import Membership, Person, Post
-from candidates.models import MembershipExtra
+from candidates.models import MembershipExtra, raise_if_unsafe_to_delete
 from candidates.models.constraints import check_no_candidancy_for_election
 
 from elections.mixins import ElectionMixin
@@ -111,11 +111,14 @@ class CandidacyDeleteView(ElectionMixin, LoginRequiredMixin, FormView):
                 source=change_metadata['information_source'],
             )
 
-            person.memberships.filter(
+            memberships_to_delete = person.memberships.filter(
                 post=post,
                 role=self.election_data.candidate_membership_role,
                 extra__election=self.election_data,
-            ).delete()
+            )
+            for m in memberships_to_delete:
+                raise_if_unsafe_to_delete(m)
+                m.delete()
 
             check_no_candidancy_for_election(person, self.election_data)
             person.extra.not_standing.add(self.election_data)

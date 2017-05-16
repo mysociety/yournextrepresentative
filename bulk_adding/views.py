@@ -14,7 +14,9 @@ from braces.views import LoginRequiredMixin
 
 from auth_helpers.views import GroupRequiredMixin, user_in_group
 from elections.models import Election
-from candidates.models import PostExtra, PostExtraElection, PersonExtra, MembershipExtra
+from candidates.models import (
+    PostExtra, PostExtraElection, PersonExtra, MembershipExtra,
+    raise_if_unsafe_to_delete)
 from candidates.models.auth import check_creation_allowed, check_update_allowed
 from candidates.views.version_data import get_change_metadata, get_client_ip
 from candidates.views.people import get_call_to_action_flash_message
@@ -202,6 +204,7 @@ class BulkAddReviewView(BaseBulkAddView):
                 extra__election=election,
                 role=election.candidate_membership_role,
             ):
+            raise_if_unsafe_to_delete(old_membership)
             old_membership.delete()
 
         change_metadata = get_change_metadata(
