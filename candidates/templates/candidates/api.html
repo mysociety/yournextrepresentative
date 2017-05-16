@@ -117,10 +117,14 @@ explaining how to get election results from this site</a>.
 
 <p>{% blocktrans trimmed %}
 In order to look up candidates for a constituency, you have
-to find the ID of that constituency. The IDs that we use for
-constituencies are the IDs for Westminster constituencies areas
-in another web
-service, <a href="http://mapit.mysociety.org">MapIt</a>.
+to find the ID of that constituency. As of the 2016 local and
+regional elections we use a combination of area type and
+<a href="https://en.wikipedia.org/wiki/ONS_coding_system">GSS</a>
+codes. You can look up the GSS codes using another web
+service, <a href="http://mapit.mysociety.org">MapIt</a>. There's
+a list of
+<a href="https://mapit.mysociety.org/docs/#api-multiple_areas">
+area types in the MapIt API documentation</a>.
 {% endblocktrans %}</p>
 
 <h4>{% trans "... from a postcode" %}</h4>
@@ -137,14 +141,19 @@ following URL:
 
 <p>{% blocktrans trimmed %}
 This <a href="http://mapit.mysociety.org/postcode/SW1A1AA">returns
-a JSON object</a>, wherein the constituency ID can be found
-at <tt>.shortcuts.WMC</tt>.
+a JSON object</a>, which contains the details of all the admistrative
+areas that cover that postcode. You need to loop over the <tt>areas</tt> object
+till you find the area with the correct <tt>type</tt> - for Westminster
+constitiencies this is <tt>WMC</tt>. The GSS code for that area is in
+<tt>codes.gss</tt>.
 {% endblocktrans %}</p>
 
 <p>{% blocktrans trimmed %}
 There's more documentation available
 on <a href="http://mapit.mysociety.org/#api-by_postcode">postcode
-lookups on the MapIt front-page</a>.
+lookups on the MapIt front-page</a> and
+<a href="https://mapit.mysociety.org/docs/#api-multiple_areas">
+area codes in MapIt API documentation</a>.
 {% endblocktrans %}</p>
 
 <h4>{% trans "... from a latitude / longitude or other coordinate" %}</h4>
@@ -163,8 +172,8 @@ latitude 52.205083 and longitude 0.115194 could be looked up with:
 
 {% blocktrans trimmed %}
 (Note that the longitude comes before the latitude, which might
-not be what you expect.) The only key in that object is the
-constituency ID.
+not be what you expect.) The returned object should have a single
+key and inside the value the GSS code is in <tt>codes.gss</tt>.
 {% endblocktrans %}
 
 <p>{% blocktrans trimmed %}
@@ -187,10 +196,8 @@ of all Westminster constituencies in the UK from this request:
 
 <p>{% blocktrans trimmed %}
 The <a href="http://mapit.mysociety.org/areas/WMC">returned
-data from that request</a> has the constituency ID as its keys;
-the values are objects that include (among other things)
-a <tt>name</tt> element that gives you the official name of the
-constituency.
+data from that request</a> includes a set of keys, the values
+of which contains the GSS code in <tt>codes.gss</tt>.
 {% endblocktrans %}</p>
 
 <h3>{% trans "Find Candidates for a Constituency" %}</h3>
@@ -200,8 +207,8 @@ constituency.
     You can request all the candidates in that constituency by
     querying posts with the <tt>extra_slug</tt> filter
     parameter.  For example, for Dulwich and West Norwood, which
-    has the ID <tt>65808</tt>, you would make the request:
-    <a href="{{ base_api_url }}posts/65808/">{{ base_api_url }}posts/65808/</a>
+    has the GSS code <tt>E14000673</tt>, you would make the request:
+    <a href="{{ base_api_url }}posts/WMC:E14000673/">{{ base_api_url }}posts/WMC:E14000673/</a>
   {% endblocktrans %}
 </p>
 
@@ -213,5 +220,25 @@ constituency.
     tells you which election that candidacy is for.
   {% endblocktrans %}
 </p>
+
+<h4>{% trans 'Pre 2016 data' %}</h4>
+
+<p>
+  {% blocktrans trimmed %}
+  Prior to the 2016 local and regional elections we used the MapIt codes
+  for areas. For postcode lookups this is available from <tt>shortcuts.wmc</tt>
+  in the returned object. For the point lookup and by type lookups the
+  MapIt ID are contained in the keys of the returned object.
+  {% endblocktrans %}
+</p>
+
+<p>
+  {% blocktrans trimmed %}
+  Dulwich and West Norwood as a MapIt ID of 65808 so to look up the pre 2016
+  results you would make the request:
+  <a href="{{ base_api_url }}posts/65808/">{{ base_api_url }}posts/65808/</a>
+  {% endblocktrans %}
+</p>
+
 
 {% endblock %}
