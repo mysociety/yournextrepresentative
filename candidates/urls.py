@@ -32,6 +32,7 @@ api_router.register(r'logged_actions', views.LoggedActionViewSet)
 api_router.register(r'extra_fields', views.ExtraFieldViewSet)
 api_router.register(r'simple_fields', views.SimplePopoloFieldViewSet)
 api_router.register(r'complex_fields', views.ComplexPopoloFieldViewSet)
+api_router.register(r'person_redirects', views.PersonRedirectViewSet)
 
 api_router.register(r'council_elections', CouncilElectionViewSet)
 api_router.register(r'candidate_results', CandidateResultViewSet)
