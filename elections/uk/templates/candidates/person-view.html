@@ -154,7 +154,7 @@
     {% endif %}
     {% if 'biography' in simple_fields %}
       <dt>{% trans "Statement to voters" %}</dt>
-      <dd class="person_biography">{% if person.biography %}{{ person.biography|linebreaks|truncatewords_html:200 }}{% endif %}</dd>
+      <dd class="person_biography">{% if person.biography %}{{ person.biography|linebreaks }}{% endif %}</dd>
     {% endif %}
   </dl>
 
