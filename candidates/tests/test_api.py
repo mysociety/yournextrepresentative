@@ -338,7 +338,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.text.startswith('test('))
 
-    @patch('candidates.management.commands.candidates_cache_persons_api.datetime')
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.datetime')
     def test_persons_api_to_directory(self, mock_datetime):
         # current
         # timestamped
@@ -347,7 +347,7 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
         target_directory = mkdtemp()
         try:
             call_command(
-                'candidates_cache_persons_api',
+                'candidates_cache_api_to_directory',
                 target_directory,
                 'https://example.com/media/api-cache-for-wcivf',
                 page_size='3',
