@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 from functools import reduce
 
@@ -124,6 +125,16 @@ class PersonRedirect(models.Model):
     after two people are merged'''
     old_person_id = models.IntegerField()
     new_person_id = models.IntegerField()
+
+    @classmethod
+    def all_redirects_dict(cls):
+        new_to_sorted_old = defaultdict(list)
+        for old, new in cls.objects.values_list(
+                'old_person_id', 'new_person_id'):
+            new_to_sorted_old[new].append(old)
+        for v in new_to_sorted_old.values():
+            v.sort()
+        return new_to_sorted_old
 
 
 class UserTermsAgreement(models.Model):

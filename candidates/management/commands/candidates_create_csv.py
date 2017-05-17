@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import reset_queries
 
 from candidates.csv_helpers import list_to_csv
-from candidates.models import PersonExtra
+from candidates.models import PersonExtra, PersonRedirect
 from candidates.models.fields import get_complex_popolo_fields
 from elections.models import Election
 
@@ -73,7 +73,8 @@ class Command(BaseCommand):
         ):
             for d in person_extra.as_list_of_dicts(
                 election,
-                base_url=self.options['site_base_url']
+                base_url=self.options['site_base_url'],
+                redirects=self.redirects,
             ):
                 all_people.append(d)
                 if d['elected'] == 'True':
@@ -92,6 +93,7 @@ class Command(BaseCommand):
 
         self.options = options
         self.complex_popolo_fields = get_complex_popolo_fields()
+        self.redirects = PersonRedirect.all_redirects_dict()
 
         for election in all_elections:
             if election is None:
