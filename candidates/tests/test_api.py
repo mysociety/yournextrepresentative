@@ -18,7 +18,7 @@ from .factories import (
 )
 from .uk_examples import UK2015ExamplesMixin
 
-from candidates.models import LoggedAction
+from candidates.models import LoggedAction, PersonRedirect
 
 
 class TestAPI(UK2015ExamplesMixin, WebTest):
@@ -298,6 +298,28 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
             post['label'],
             'Member of Parliament for Dulwich and West Norwood'
         )
+
+    def test_api_person_redirects(self):
+        PersonRedirect.objects.create(old_person_id='1234', new_person_id='42')
+        PersonRedirect.objects.create(old_person_id='5678', new_person_id='12')
+        person_redirects_resp = self.app.get('/api/v0.9/person_redirects/')
+        person_redirects = person_redirects_resp.json
+        self.assertEqual(
+            person_redirects['results'][0]['old_person_id'], 1234)
+        self.assertEqual(
+            person_redirects['results'][0]['new_person_id'], 42)
+        self.assertEqual(
+            person_redirects['results'][1]['old_person_id'], 5678)
+        self.assertEqual(
+            person_redirects['results'][1]['new_person_id'], 12)
+
+    def test_api_person_redirect(self):
+        PersonRedirect.objects.create(old_person_id='1234', new_person_id='42')
+        url = '/api/v0.9/person_redirects/1234/'
+        person_redirect_resp = self.app.get(url)
+        person_redirect = person_redirect_resp.json
+        self.assertEqual(person_redirect['old_person_id'], 1234)
+        self.assertEqual(person_redirect['new_person_id'], 42)
 
     def test_api_version_info(self):
         version_resp = self.app.get('/version.json')

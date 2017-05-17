@@ -472,3 +472,15 @@ class ComplexPopoloFieldSerializer(serializers. HyperlinkedModelSerializer):
             'info_type_key', 'info_type', 'old_info_type', 'info_value_key',
             'order',
         )
+
+
+class PersonRedirectSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = candidates_models.PersonRedirect
+        fields = ('id', 'url', 'old_person_id', 'new_person_id')
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='personredirect-detail',
+        lookup_field='old_person_id',
+        lookup_url_kwarg='old_person_id',
+    )
