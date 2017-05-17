@@ -30,8 +30,8 @@ def page_from_url(url):
     return 1
 
 
-def page_filename(page_number):
-    return 'page-{0:06d}.json'.format(page_number)
+def page_filename(endpoint, page_number):
+    return '{0}-{1:06d}.json'.format(endpoint, page_number)
 
 
 def update_latest_symlink(output_directory, subdirectory):
@@ -45,7 +45,9 @@ def update_latest_symlink(output_directory, subdirectory):
 
 class Command(BaseCommand):
 
-    help = "Cache the output of the /api/v0.9/persons endpoint to a directory"
+    help = "Cache the output of the persons and posts endpoints to a directory"
+
+    endpoints = ('persons', 'posts')
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -57,14 +59,14 @@ class Command(BaseCommand):
         parser.add_argument(
             '--page-size',
             type=int,
-            help='How many people should be output per file (max 200)'
+            help='How many results should be output per file (max 200)'
         )
 
-    def rewrite_link(self, url):
+    def rewrite_link(self, endpoint, url):
         if not url:
             return None
         page = page_from_url(url)
-        filename = page_filename(page)
+        filename = page_filename(endpoint, page)
         return '{0}{1}/{2}'.format(self.directory_url, self.timestamp, filename)
 
     def get(self, url):
@@ -74,22 +76,23 @@ class Command(BaseCommand):
             kwargs['secure'] = True
         return self.client.get(url, **kwargs)
 
-    def rewrite_next_and_previous_links(self, data):
-        data['next'] = self.rewrite_link(data['next'])
-        data['previous'] = self.rewrite_link(data['previous'])
+    def rewrite_next_and_previous_links(self, endpoint, data):
+        data['next'] = self.rewrite_link(endpoint, data['next'])
+        data['previous'] = self.rewrite_link(endpoint, data['previous'])
 
-    def get_api_results_to_directory(self, json_directory, page_size):
-        url = '/api/v0.9/persons/?page_size={0}&format=json'.format(page_size)
+    def get_api_results_to_directory(self, endpoint, json_directory, page_size):
+        url = '/api/v0.9/{endpoint}/?page_size={page_size}&format=json'.format(
+            page_size=page_size, endpoint=endpoint)
         while url:
             page = page_from_url(url)
-            output_filename = join(json_directory, page_filename(page))
+            output_filename = join(json_directory, page_filename(endpoint, page))
             response = self.get(url)
             if response.status_code != 200:
                 msg = "Unexpected response {0} from {1}"
                 raise Exception(msg.format(response.status_code, url))
             data = json.loads(response.content.decode('utf-8'))
             original_next_url = data['next']
-            self.rewrite_next_and_previous_links(data)
+            self.rewrite_next_and_previous_links(endpoint, data)
             with open(output_filename, 'w') as f:
                 json.dump(data, f, indent=4, sort_keys=True)
             # Now make sure the next URL works with the test client:
@@ -111,5 +114,6 @@ class Command(BaseCommand):
         page_size = options['page_size']
         if not page_size:
             page_size = 200
-        self.get_api_results_to_directory(json_directory, page_size)
+        for endpoint in self.endpoints:
+            self.get_api_results_to_directory(endpoint, json_directory, page_size)
         update_latest_symlink(options['OUTPUT-DIRECTORY'], self.timestamp)
