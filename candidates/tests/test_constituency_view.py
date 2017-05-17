@@ -153,6 +153,7 @@ class TestConstituencyDetailView(TestUserMixin, UK2015ExamplesMixin, WebTest):
                 'party_list_position': '',
                 'image_copyright': '',
                 'name': 'Tessa Jowell',
+                'old_person_ids': '',
                 'gender': '',
                 'linkedin_url': '',
                 'image_uploading_user': '',

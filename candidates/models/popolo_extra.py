@@ -15,6 +15,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _l
+from django.utils.six import text_type
 from django.utils.six.moves.urllib_parse import urljoin, quote_plus
 
 from dateutil import parser
@@ -508,10 +509,12 @@ class PersonExtra(HasImageMixin, models.Model):
         update_person_from_form(person, person_extra, form)
         return person_extra
 
-    def as_list_of_dicts(self, election, base_url=None):
+    def as_list_of_dicts(self, election, base_url=None, redirects=None):
         result = []
         if not base_url:
             base_url = ''
+        if not redirects:
+            redirects = {}
         # Find the list of relevant candidacies. So as not to cause
         # extra queries, we don't use filter but instead iterate over
         # all objects:
@@ -574,6 +577,8 @@ class PersonExtra(HasImageMixin, models.Model):
             for identifier in self.base.identifiers.all():
                 if identifier.scheme == 'twitter':
                     twitter_user_id = identifier.identifier
+            old_person_ids = ';'.join(
+                text_type(i) for i in redirects.get(self.base.id, []))
 
             row = {
                 'id': self.base.id,
@@ -607,6 +612,7 @@ class PersonExtra(HasImageMixin, models.Model):
                 'image_copyright': image_copyright,
                 'image_uploading_user': image_uploading_user,
                 'image_uploading_user_notes': image_uploading_user_notes,
+                'old_person_ids': old_person_ids,
             }
             from ..election_specific import get_extra_csv_values
             extra_csv_data = get_extra_csv_values(self.base, election, post)

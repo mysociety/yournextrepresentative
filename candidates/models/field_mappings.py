@@ -32,4 +32,5 @@ CSV_ROW_FIELDS = [
     'election_current',
     'party_lists_in_use',
     'party_list_position',
+    'old_person_ids',
 ]

@@ -30,7 +30,8 @@ from ..forms import NewPersonForm, ToggleLockForm, ConstituencyRecordWinnerForm
 from ..models import (
     TRUSTED_TO_LOCK_GROUP_NAME, get_edits_allowed, is_post_locked,
     RESULT_RECORDERS_GROUP_NAME, LoggedAction, PostExtra, OrganizationExtra,
-    MembershipExtra, PartySet, SimplePopoloField, ExtraField, PostExtraElection
+    MembershipExtra, PartySet, SimplePopoloField, ExtraField, PostExtraElection,
+    PersonRedirect
 )
 from official_documents.models import OfficialDocument
 from results.models import ResultEvent
@@ -265,6 +266,7 @@ class ConstituencyDetailCSVView(ElectionMixin, View):
     http_method_names = ['get']
 
     def get(self, request, *args, **kwargs):
+        redirects = PersonRedirect.all_redirects_dict()
         post = Post.objects \
             .select_related('extra') \
             .get(extra__slug=kwargs['post_id'])
@@ -276,7 +278,8 @@ class ConstituencyDetailCSVView(ElectionMixin, View):
                 ) \
                 .select_related('base__person') \
                 .prefetch_related('base__person__extra'):
-            for d in me.base.person.extra.as_list_of_dicts(self.election_data):
+            for d in me.base.person.extra.as_list_of_dicts(
+                    self.election_data, redirects=redirects):
                 all_people.append(d)
 
         filename = "{election}-{constituency_slug}.csv".format(
