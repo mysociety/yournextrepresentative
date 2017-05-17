@@ -362,30 +362,54 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
             self.assertEqual(os.readlink(expected_symlink), expected_leafname)
             # Check that the files in that directory are as expected:
             entries = os.listdir(expected_timestamped_directory)
-            page_1_leafname = 'page-000001.json'
-            page_2_leafname = 'page-000002.json'
-            self.assertEqual(set(entries), {page_1_leafname, page_2_leafname})
+            persons_1_leafname = 'persons-000001.json'
+            persons_2_leafname = 'persons-000002.json'
+            posts_1_leafname = 'posts-000001.json'
+            posts_2_leafname = 'posts-000002.json'
+            self.assertEqual(set(entries), {
+                persons_1_leafname, persons_2_leafname,
+                posts_1_leafname, posts_2_leafname,
+            })
             # Get the data from those pages:
-            with open(join(expected_timestamped_directory, page_1_leafname)) as f:
-                page_1_data = json.load(f)
-            with open(join(expected_timestamped_directory, page_2_leafname)) as f:
-                page_2_data = json.load(f)
+            with open(join(expected_timestamped_directory, persons_1_leafname)) as f:
+                persons_1_data = json.load(f)
+            with open(join(expected_timestamped_directory, persons_2_leafname)) as f:
+                persons_2_data = json.load(f)
+            with open(join(expected_timestamped_directory, posts_1_leafname)) as f:
+                posts_1_data = json.load(f)
+            with open(join(expected_timestamped_directory, posts_2_leafname)) as f:
+                posts_2_data = json.load(f)
             # Check the previous and next links are as we expect:
             self.assertEqual(
-                page_1_data['next'],
+                persons_1_data['next'],
                 'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
-                    expected_leafname, page_2_leafname))
-            self.assertEqual(page_1_data['previous'], None)
-            self.assertEqual(page_2_data['next'], None)
+                    expected_leafname, persons_2_leafname))
+            self.assertEqual(persons_1_data['previous'], None)
+            self.assertEqual(persons_2_data['next'], None)
             self.assertEqual(
-                page_2_data['previous'],
+                persons_2_data['previous'],
                 'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
-                    expected_leafname, page_1_leafname))
+                    expected_leafname, persons_1_leafname))
+            self.assertEqual(
+                posts_1_data['next'],
+                'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
+                    expected_leafname, posts_2_leafname))
+            self.assertEqual(posts_1_data['previous'], None)
+            self.assertEqual(posts_2_data['next'], None)
+            self.assertEqual(
+                posts_2_data['previous'],
+                'https://example.com/media/api-cache-for-wcivf/{0}/{1}'.format(
+                    expected_leafname, posts_1_leafname))
             # Check that the URL of the first person is as expected,
             # as well as it being the right person:
-            first = page_1_data['results'][0]
-            self.assertEqual(first['id'], 818)
-            self.assertEqual(first['name'], 'Sheila Gilmore')
-            self.assertEqual(first['url'], 'https://example.com/api/v0.9/persons/818/?format=json')
+            first_person = persons_1_data['results'][0]
+            self.assertEqual(first_person['id'], 818)
+            self.assertEqual(first_person['name'], 'Sheila Gilmore')
+            self.assertEqual(first_person['url'], 'https://example.com/api/v0.9/persons/818/?format=json')
+            # Similarly, check that the URL of the first post is as expected:
+            first_post = posts_1_data['results'][0]
+            self.assertEqual(first_post['id'], self.edinburgh_east_post_extra.slug)
+            self.assertEqual(first_post['label'], 'Member of Parliament for Edinburgh East')
+            self.assertEqual(first_post['url'], 'https://example.com/api/v0.9/posts/14419/?format=json')
         finally:
             rmtree(target_directory)
