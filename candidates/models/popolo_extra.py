@@ -232,6 +232,11 @@ class PersonExtraQuerySet(models.QuerySet):
                 'base__identifiers',
                 'base__links',
                 'images__extra__uploading_user',
+                models.Prefetch(
+                    'base__extra_field_values',
+                    PersonExtraFieldValue.objects \
+                    .select_related('field')
+                ),
             )
 
 
