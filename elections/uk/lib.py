@@ -25,6 +25,7 @@ EXTRA_CSV_ROW_FIELDS = [
     'parlparse_id',
     'theyworkforyou_url',
     'party_ec_id',
+    'favourite_biscuits',
 ]
 
 def get_extra_csv_values(person, election, post):
@@ -64,11 +65,16 @@ def get_extra_csv_values(person, election, post):
             if i.scheme == 'gss':
                 gss_code = i.identifier
         break
+    favourite_biscuits = ''
+    for efv in person.extra_field_values.all():
+        if efv.field.key == 'favourite_biscuits':
+            favourite_biscuits = efv.value
     return {
         'gss_code': gss_code,
         'parlparse_id': parlparse_id,
         'theyworkforyou_url': theyworkforyou_url,
-        'party_ec_id': party_ec_id
+        'party_ec_id': party_ec_id,
+        'favourite_biscuits': favourite_biscuits,
     }
 
 
