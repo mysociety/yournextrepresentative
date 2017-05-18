@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
+
 from . import factories
 
 class UK2015ExamplesMixin(object):
@@ -115,3 +117,23 @@ class UK2015ExamplesMixin(object):
                 group=cons['country'],
             )
             setattr(self, cons['attr'], pe)
+
+        # Also create a local election and post:
+        self.local_council = factories.OrganizationExtraFactory.create(
+            base__name='Maidstone',
+            slug='local-authority:maidstone',
+        ).base
+        self.local_election = factories.ElectionFactory.create(
+            slug='local.maidstone.2016-05-05',
+            organization=self.local_council,
+            name='Maidstone local election',
+            for_post_role='Local Councillor',
+            election_date=date(2016, 5, 5),
+        )
+        self.local_post = factories.PostExtraFactory.create(
+            elections=(self.local_election,),
+            slug='DIW:E05005004',
+            base__label='Shepway South Ward',
+            party_set=self.gb_parties,
+            base__organization=self.local_council,
+        )

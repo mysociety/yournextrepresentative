@@ -105,7 +105,20 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
                                 ],
                                 "role": "Member of Parliament"
                             }
-                        ]
+                        ],
+                        text_type(self.local_election.election_date.isoformat()): [
+                            {
+                                "elections": [
+                                    {
+                                        "html_id": "local-maidstone-2016-05-05",
+                                        "id": "local.maidstone.2016-05-05",
+                                        "name": "Maidstone local election",
+                                        "total": 0,
+                                    }
+                                ],
+                                "role": "Local Councillor",
+                            },
+                        ],
                     }
                 },
                 {
@@ -140,6 +153,9 @@ class CachedCountTestCase(UK2015ExamplesMixin, WebTest):
             [
                 ('<td>2015 General Election</td>',
                  '<td><a href="/election/2015/post/65913/camberwell-and-peckham">Member of Parliament for Camberwell and Peckham</a></td>',
+                 '<td>0</td>'),
+                ('<td>Maidstone local election</td>',
+                 '<td><a href="/election/local.maidstone.2016-05-05/post/DIW:E05005004/shepway-south-ward">Shepway South Ward</a></td>',
                  '<td>0</td>'),
                 ('<td>2015 General Election</td>',
                  '<td><a href="/election/2015/post/14420/edinburgh-north-and-leith">Member of Parliament for Edinburgh North and Leith</a></td>',

@@ -17,6 +17,8 @@ def get_election_extra(postextra, election):
 
 class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
 
+    maxDiff = None
+
     def setUp(self):
         super(TestElectionGrouping, self).setUp()
         self.sp_c_election = ElectionFactory(
@@ -42,12 +44,18 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                         'dates': OrderedDict([
                             (datetime.date(2016, 5, 5), [
                                 {
+                                    'role': 'Local Councillor',
+                                    'elections': [
+                                        {'election': self.local_election},
+                                    ]
+                                },
+                                {
                                     'role': 'Member of the Scottish Parliament',
                                     'elections': [
                                         {'election': self.sp_c_election},
                                         {'election': self.sp_r_election},
                                     ]
-                                }
+                                },
                             ]),
                             (self.election.election_date, [
                                 {
@@ -100,6 +108,9 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
         edinburgh_north_earlier = get_election_extra(
             self.edinburgh_north_post_extra, self.earlier_election
         )
+        local_council_pee = get_election_extra(
+            self.local_post, self.local_election
+        )
         with self.assertNumQueries(4):
             self.assertEqual(
                 Election.group_and_order_elections(include_postextraelections=True),
@@ -108,6 +119,17 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                         'current': True,
                         'dates': OrderedDict([
                             (datetime.date(2016, 5, 5), [{
+                                'role': 'Local Councillor',
+                                'elections': [
+                                    {
+                                        'postextraelections': [
+                                            local_council_pee
+                                        ],
+                                        'election': self.local_election,
+                                    }
+                                ]
+                            },
+                            {
                                 'role': 'Member of the Scottish Parliament',
                                 'elections': [
                                     {
@@ -168,6 +190,11 @@ class TestElectionGrouping(UK2015ExamplesMixin, TestCase):
                     {
                         'current': True,
                         'dates': OrderedDict([
+                            (self.local_election.election_date, [{
+                                'role': 'Local Councillor', 'elections': [
+                                    {'election': self.local_election}
+                                ]
+                            }]),
                             (self.election.election_date, [{
                                 'role': 'Member of Parliament', 'elections': [
                                     {'election': self.election}

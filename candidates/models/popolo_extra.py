@@ -6,6 +6,7 @@ from os.path import join
 import re
 
 from django.conf import settings
+from django.contrib.admin.util import NestedObjects
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ObjectDoesNotExist
@@ -47,6 +48,7 @@ want a join or not.
 
 """
 
+
 def update_person_from_form(person, person_extra, form):
     form_data = form.cleaned_data.copy()
     # The date is returned as a datetime.date, so if that's set, turn
@@ -73,6 +75,7 @@ def update_person_from_form(person, person_extra, form):
     except TwitterAPITokenMissing:
         pass
     for election_data in form.elections_with_fields:
+        # Interpret the form data relating to this election:
         post_id = form_data.get('constituency_' + election_data.slug)
         standing = form_data.pop('standing_' + election_data.slug, 'standing')
         if post_id:
@@ -86,42 +89,119 @@ def update_person_from_form(person, person_extra, form):
         else:
             party = None
             party_list_position = None
-        # Get a queryset of the existing candidacies:
-        candidacy_qs = Membership.objects.filter(
-            extra__election=election_data,
-            role=election_data.candidate_membership_role,
-            person__extra=person_extra
-        )
-        # Preserve the 'elected' property of MembershipExtra, which
-        # isn't in the form:
-        elected_saved = dict(
-            candidacy_qs.values_list('extra__election__slug', 'extra__elected')
-        )
-        # Remove any existing memberships; we'll recreate them if the
-        # person's actually standing. (Since MembershipExtra depends
-        # on Membership, this will delete any corresponding Membership.)
-        candidacy_qs.delete()
-        # Remove any indication that they're not standing in that
-        # election. Similarly we'll recreate it if necessary:
-        person_extra.not_standing.remove(election_data)
+            post = None
+        # Now update the candidacies and not_standing based on those values:
         if standing == 'standing':
-            # Create the new membership:
-            membership = Membership.objects.create(
-                post=post,
-                on_behalf_of=party,
-                person=person,
-                role=election_data.candidate_membership_role,
-            )
-            MembershipExtra.objects.create(
-                base=membership,
-                party_list_position=party_list_position,
-                election=election_data,
-                elected=elected_saved.get(election_data.slug)
-            )
+            mark_as_standing(
+                person_extra, election_data, post, party, party_list_position)
         elif standing == 'not-standing':
-            from .constraints import check_no_candidancy_for_election
-            check_no_candidancy_for_election(person, election_data)
-            person_extra.not_standing.add(election_data)
+            mark_as_not_standing(person_extra, election_data, post)
+        else:
+            mark_as_unsure_if_standing(person_extra, election_data, post)
+
+
+def mark_as_standing(person_extra, election_data, post, party, party_list_position):
+    # First, if the person is marked as "not standing" in that
+    # election, remove that record:
+    person_extra.not_standing.remove(election_data)
+    membership_ids_to_remove = set()
+    membership = None
+    # This person might already be marked as standing for this
+    # post. In that case, we need to make sure we preserve that
+    # existing membership, since there may be metadata attached to it
+    # (such as the extra.elected property or CandidateResult records)
+    # which would be lost if we deleted and recreated the membership.
+    # Go through the person's existing candidacies for this election:
+    for existing_membership in Membership.objects.filter(
+        extra__election=election_data,
+        role=election_data.candidate_membership_role,
+        person__extra=person_extra,
+    ):
+        if existing_membership.post == post:
+            membership = existing_membership
+        else:
+            membership_ids_to_remove.add(existing_membership.id)
+    # If there was no existing membership, we need to create one:
+    if not membership:
+        membership = Membership.objects.create(
+            post=post,
+            person=person_extra.base,
+            role=election_data.candidate_membership_role,
+        )
+        MembershipExtra.objects.create(
+            base=membership,
+            election=election_data,
+        )
+    # Update the party list position in case it's changed:
+    membership_extra = membership.extra
+    membership_extra.party_list_position = party_list_position
+    membership_extra.save()
+    # Update the party, in case it's changed:
+    membership.on_behalf_of = party
+    membership.save()
+    # Now remove any memberships that shouldn't now be there:
+    for membership_to_remove in Membership.objects.filter(
+            pk__in=membership_ids_to_remove):
+        raise_if_unsafe_to_delete(membership_to_remove)
+        membership_to_remove.delete()
+
+
+def mark_as_not_standing(person_extra, election_data, post):
+    # Remove any existing candidacy:
+    for membership in Membership.objects.filter(
+        extra__election=election_data,
+        role=election_data.candidate_membership_role,
+        person__extra=person_extra,
+        # n.b. we are planning to make "not standing" post
+        # specific in the future, in which case we would also want
+        # this line:
+        # post__extra__slug=post_slug,
+    ):
+        raise_if_unsafe_to_delete(membership)
+        membership.delete()
+    from .constraints import check_no_candidancy_for_election
+    check_no_candidancy_for_election(person_extra.base, election_data)
+    person_extra.not_standing.add(election_data)
+
+
+def mark_as_unsure_if_standing(person_extra, election_data, post):
+    # Remove any existing candidacy:
+    for membership in Membership.objects.filter(
+        extra__election=election_data,
+        role=election_data.candidate_membership_role,
+        person__extra=person_extra
+    ):
+        raise_if_unsafe_to_delete(membership)
+        membership.delete()
+    # Now remove any entry that indicates that they're standing in
+    # this election:
+    person_extra.not_standing.remove(election_data)
+
+
+class UnsafeToDelete(Exception):
+    pass
+
+
+def raise_if_unsafe_to_delete(base_object):
+    if not paired_object_safe_to_delete(base_object):
+        msg = 'Trying to delete a {model} (pk={pk}) that other ' \
+              'objects that depend on'
+        raise UnsafeToDelete(msg.format(
+            model=base_object._meta.model.__name__,
+            pk=base_object.id))
+
+
+def paired_object_safe_to_delete(base_object):
+    collector = NestedObjects(using='default')
+    collector.collect([base_object])
+    collected = collector.nested()
+    if len(collected) > 2:
+        return False
+    assert collected[0] == base_object
+    if len(collected[1]) != 1:
+        return False
+    assert collected[1][0] == base_object.extra
+    return True
 
 
 class localparserinfo(parser.parserinfo):

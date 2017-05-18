@@ -247,7 +247,8 @@ class MergePeopleView(GroupRequiredMixin, View):
             revert_person_from_version_data(
                 primary_person,
                 primary_person_extra,
-                merged_person_version_data
+                merged_person_version_data,
+                part_of_merge=True,
             )
         # Make sure the secondary person's version history is appended, so it
         # isn't lost.
