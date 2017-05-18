@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import bleach
+import os
 import re
+
 from os.path import join
 from tempfile import NamedTemporaryFile
 
@@ -10,51 +12,125 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from django.contrib import messages
+from django.core.files import File
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.http import urlquote
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, TemplateView, CreateView
-
 from PIL import Image as PillowImage
 from braces.views import LoginRequiredMixin
 from slugify import slugify
 
 from auth_helpers.views import GroupRequiredMixin
-from candidates.management.images import get_file_md5sum
 
-from .forms import UploadPersonPhotoForm, PhotoReviewForm
+from .forms import UploadPersonPhotoImageForm, UploadPersonPhotoURLForm, PhotoReviewForm
 from .models import QueuedImage, SuggestedPostLock, PHOTO_REVIEWERS_GROUP_NAME
 
+from candidates.management.images import (
+    get_file_md5sum, ImageDownloadException, download_image_from_url)
 from candidates.models import (LoggedAction, ImageExtra,
                                PersonExtra, PostExtraElection)
 from candidates.views.version_data import get_client_ip, get_change_metadata
 
 from popolo.models import Person
-from images.models import Image
+
 
 @login_required
 def upload_photo(request, person_id):
     person = get_object_or_404(Person, id=person_id)
-    if request.method == 'POST':
-        form = UploadPersonPhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Make sure that we save the user that made the upload
-            queued_image = form.save(commit=False)
-            queued_image.user = request.user
+    image_form = UploadPersonPhotoImageForm(initial={'person': person})
+    url_form = UploadPersonPhotoURLForm(initial={'person': person})
+    return render(
+        request,
+        'moderation_queue/photo-upload-new.html',
+        {
+            'image_form': image_form,
+            'url_form': url_form,
+            'queued_images': QueuedImage.objects.filter(
+                person=person,
+                decision='undecided',
+            ).order_by('created'),
+            'person': person
+        }
+    )
+
+
+@login_required
+def upload_photo_image(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    image_form = UploadPersonPhotoImageForm(request.POST, request.FILES)
+    url_form = UploadPersonPhotoURLForm(initial={'person': person})
+    if image_form.is_valid():
+        # Make sure that we save the user that made the upload
+        queued_image = image_form.save(commit=False)
+        queued_image.user = request.user
+        queued_image.save()
+        # Record that action:
+        LoggedAction.objects.create(
+            user=request.user,
+            action_type='photo-upload',
+            ip_address=get_client_ip(request),
+            popit_person_new_version='',
+            person=person,
+            source=image_form.cleaned_data['justification_for_use'],
+        )
+        return HttpResponseRedirect(reverse(
+            'photo-upload-success',
+            kwargs={
+                'person_id': person.id
+            }
+        ))
+
+    return render(
+        request,
+        'moderation_queue/photo-upload-new.html',
+        {
+            'image_form': image_form,
+            'url_form': url_form,
+            'queued_images': QueuedImage.objects.filter(
+                person=person,
+                decision='undecided',
+            ).order_by('created'),
+            'person': person
+        }
+    )
+
+
+@login_required
+def upload_photo_url(request, person_id):
+    person = get_object_or_404(Person, id=person_id)
+    image_form = UploadPersonPhotoImageForm(initial={'person': person})
+    url_form = UploadPersonPhotoURLForm(request.POST)
+
+    if url_form.is_valid():
+        image_url = url_form.cleaned_data['image_url']
+        try:
+            img_temp_filename = download_image_from_url(image_url)
+        except ImageDownloadException as ide:
+            return HttpResponseBadRequest(unicode(ide).encode('utf-8'))
+        try:
+            queued_image = QueuedImage(
+                why_allowed=url_form.cleaned_data['why_allowed_url'],
+                justification_for_use=url_form.cleaned_data['justification_for_use_url'],
+                person=person,
+                user=request.user
+            )
             queued_image.save()
-            # Record that action:
+            with open(img_temp_filename , 'rb') as f:
+                queued_image.image.save(image_url, File(f))
+            queued_image.save()
             LoggedAction.objects.create(
                 user=request.user,
                 action_type='photo-upload',
                 ip_address=get_client_ip(request),
                 popit_person_new_version='',
                 person=person,
-                source=form.cleaned_data['justification_for_use'],
+                source=url_form.cleaned_data['justification_for_use_url'],
             )
             return HttpResponseRedirect(reverse(
                 'photo-upload-success',
@@ -62,22 +138,22 @@ def upload_photo(request, person_id):
                     'person_id': person.id
                 }
             ))
+        finally:
+            os.remove(img_temp_filename)
     else:
-        form = UploadPersonPhotoForm(
-            initial={
+        return render(
+            request,
+            'moderation_queue/photo-upload-new.html',
+            {
+                'image_form': image_form,
+                'url_form': url_form,
+                'queued_images': QueuedImage.objects.filter(
+                    person=person,
+                    decision='undecided',
+                ).order_by('created'),
                 'person': person
             }
         )
-    return render(
-        request,
-        'moderation_queue/photo-upload-new.html',
-        {'form': form,
-         'queued_images': QueuedImage.objects.filter(
-             person=person,
-             decision='undecided',
-         ).order_by('created'),
-         'person': person}
-    )
 
 
 class PhotoUploadSuccess(TemplateView):
@@ -167,7 +243,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             value_if_none(self.queued_image.crop_max_y, max_y),
         ]
         context['form'] = PhotoReviewForm(
-            initial = {
+            initial={
                 'queued_image_id': self.queued_image.id,
                 'decision': self.queued_image.decision,
                 'x_min': guessed_crop_bounds[0],
@@ -185,14 +261,13 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         # and it's convenient to be able to follow them. However, make
         # sure that any maliciously added HTML tags have been stripped
         # before linkifying any URLs:
-        context['justification_for_use'] = \
-            bleach.linkify(
-                bleach.clean(
-                    self.queued_image.justification_for_use,
-                    tags=[],
-                    strip=True
-                )
+        context['justification_for_use'] = bleach.linkify(
+            bleach.clean(
+                self.queued_image.justification_for_use,
+                tags=[],
+                strip=True
             )
+        )
         context['google_image_search_url'] = self.get_google_image_search_url(
             person
         )
@@ -274,6 +349,7 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
             self.queued_image.get_absolute_url()
         )
         site_name = Site.objects.get_current().name
+
         def flash(level, message):
             messages.add_message(
                 self.request,
@@ -304,9 +380,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
                 )
             self.queued_image.save()
 
-            update_message = _('Approved a photo upload from '
-                '{uploading_user} who provided the message: '
-                '"{message}"').format(
+            sentence = 'Approved a photo upload from {uploading_user}'
+            ' who provided the message: "{message}"'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by,
                 message=self.queued_image.justification_for_use,
             )
@@ -353,8 +430,10 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         elif decision == 'rejected':
             self.queued_image.decision = 'rejected'
             self.queued_image.save()
-            update_message = _('Rejected a photo upload from '
-                '{uploading_user}').format(
+
+            sentence = 'Rejected a photo upload from {uploading_user}'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by,
             )
             LoggedAction.objects.create(
@@ -418,8 +497,11 @@ class PhotoReview(GroupRequiredMixin, TemplateView):
         elif decision == 'ignore':
             self.queued_image.decision = 'ignore'
             self.queued_image.save()
-            update_message = _('Ignored a photo upload from '
-                '{uploading_user} (This usually means it was a duplicate)').format(
+
+            sentence = 'Ignored a photo upload from {uploading_user}'
+            ' (This usually means it was a duplicate)'
+
+            update_message = _(sentence).format(
                 uploading_user=uploaded_by)
             LoggedAction.objects.create(
                 user=self.request.user,
@@ -477,10 +559,11 @@ class SuggestLockView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('constituency', kwargs={
-                'election': self.kwargs['election_id'],
-                'post_id': self.object.postextraelection.postextra.slug,
-                'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
-            })
+            'election': self.kwargs['election_id'],
+            'post_id': self.object.postextraelection.postextra.slug,
+            'ignored_slug': slugify(self.object.postextraelection.postextra.short_label),
+        })
+
 
 class SuggestLockReviewListView(LoginRequiredMixin, TemplateView):
     '''This is the view which lists all post lock suggestions that need review

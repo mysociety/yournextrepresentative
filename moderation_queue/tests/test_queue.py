@@ -17,7 +17,6 @@ from django.utils.six.moves.urllib_parse import urlsplit
 from PIL import Image
 from io import BytesIO
 from django_webtest import WebTest
-from webtest import Upload
 from mock import patch
 from nose.plugins.attrib import attr
 
@@ -148,49 +147,6 @@ class PhotoReviewTests(UK2015ExamplesMixin, WebTest):
         self.test_reviewer.delete()
         self.site.delete()
         super(PhotoReviewTests, self).tearDown()
-
-    def test_photo_upload(self):
-        queued_images = QueuedImage.objects.all()
-        initial_count = queued_images.count()
-        upload_form_url = reverse(
-            'photo-upload',
-            kwargs={'person_id': '2009'}
-        )
-        form_page_response = self.app.get(
-            upload_form_url,
-            user=self.test_upload_user
-        )
-        form = form_page_response.forms['person-upload-photo']
-        with open(self.example_image_filename, 'rb') as f:
-            form['image'] = Upload('pilot.jpg', f.read())
-        form['why_allowed'] = 'copyright-assigned'
-        form['justification_for_use'] = 'I took this photo'
-        upload_response = form.submit()
-        self.assertEqual(upload_response.status_code, 302)
-        split_location = urlsplit(upload_response.location)
-        self.assertEqual('/moderation/photo/upload/2009/success', split_location.path)
-        queued_images = QueuedImage.objects.all()
-        self.assertEqual(initial_count + 1, queued_images.count())
-        queued_image = queued_images.last()
-        self.assertEqual(queued_image.decision, 'undecided')
-        self.assertEqual(queued_image.why_allowed, 'copyright-assigned')
-        self.assertEqual(
-            queued_image.justification_for_use,
-            'I took this photo'
-        )
-        self.assertEqual(queued_image.person.id, 2009)
-        self.assertEqual(queued_image.user, self.test_upload_user)
-
-    def test_shows_photo_policy_text_in_photo_upload_page(self):
-        upload_form_url = reverse(
-            'photo-upload',
-            kwargs={'person_id': '2009'}
-        )
-        response = self.app.get(
-            upload_form_url,
-            user=self.test_upload_user
-        )
-        self.assertContains(response, 'Photo policy')
 
     def test_photo_review_queue_view_not_logged_in(self):
         queue_url = reverse('photo-review-list')
