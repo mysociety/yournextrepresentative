@@ -12,6 +12,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
+from django.utils.six import text_type
 from django.utils.six.moves.urllib_parse import urlsplit
 
 from django_webtest import WebTest
@@ -22,6 +23,9 @@ from ..models import QueuedImage
 from mysite.helpers import mkdir_p
 
 from candidates.models import LoggedAction
+from candidates.management.images import (
+    ImageDownloadException, download_image_from_url)
+
 from candidates.tests.factories import PersonExtraFactory
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
@@ -176,7 +180,14 @@ class PhotoUploadURLTests(UK2015ExamplesMixin, WebTest):
                 setattr(
                     mock_method,
                     'return_value',
-                    Mock(content=image_data, status_code=200, headers=headers))
+                    Mock(
+                        status_code=200,
+                        headers=headers,
+                        # The chunk size is larger than the example
+                        # image, so we don't need to worry about
+                        # returning subsequent chunks.
+                        iter_content=lambda **kwargs: [image_data],
+                    ))
 
     def unsuccessful_get_image(self, *all_mock_requests):
         for mock_method in self.get_and_head_methods(
@@ -249,3 +260,11 @@ class PhotoUploadURLTests(UK2015ExamplesMixin, WebTest):
         self.successful_get_image(*all_mock_requests)
         upload_response = self.invalid_form().submit()
         self.assertContains(upload_response, '<h1>Upload a photo of Tessa Jowell</h1>')
+
+    def test_upload_size_restriction_works(self, *all_mock_requests):
+        self.successful_get_image(*all_mock_requests)
+        with self.assertRaises(ImageDownloadException) as context:
+            download_image_from_url('http://foo.com/bar.jpg', max_size_bytes=512)
+        self.assertEqual(
+            text_type(context.exception),
+            'The image exceeded the maximum allowed size')
