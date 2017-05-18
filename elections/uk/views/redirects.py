@@ -68,6 +68,8 @@ class OfficialDocumentsRedirect(RedirectView):
 
 class WhoPostcodeRedirect(RedirectView):
 
+    permanent = False
+
     def get_redirect_url(self, *args, **kwargs):
         postcode = self.request.GET.get('postcode', '')
         if is_valid_postcode(postcode):
