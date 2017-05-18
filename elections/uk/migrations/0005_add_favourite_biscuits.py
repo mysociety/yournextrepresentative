@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         ExtraField.objects.using(db_alias).update_or_create(
             key='favourite_biscuits',
             defaults={
-                'label': 'Favourite Biscuit 🍪',
+                'label': 'Favourite biscuit 🍪',
                 'type': 'line',
                 'order': 1,
             }
