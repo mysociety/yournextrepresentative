@@ -4,6 +4,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
+import requests
+import cgi
+
 from .models import QueuedImage, CopyrightOptions, SuggestedPostLock
 
 from candidates.forms import StrippedCharField
@@ -51,6 +54,21 @@ class UploadPersonPhotoURLForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 1, 'columns': 72}),
         required=False
     )
+    def clean_image_url(self):
+        image_url = self.cleaned_data['image_url']
+        # At least do a HEAD request to check that the Content-Type
+        # looks reasonable:
+        response = requests.head(image_url, allow_redirects=True)
+        if (400 <= response.status_code < 500) or \
+           (500 <= response.status_code < 600):
+            msg = _('That URL produced an HTTP error status code: {0}')
+            raise ValidationError(msg.format(response.status_code))
+        content_type = response.headers['content-type']
+        main, sub = cgi.parse_header(content_type)
+        if not main.startswith('image/'):
+            msg = _("This URL isn't for an image - it had Content-Type: {0}")
+            raise ValidationError(msg.format(main))
+        return image_url
 
 
 class PhotoReviewForm(forms.Form):
