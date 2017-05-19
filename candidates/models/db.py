@@ -72,21 +72,14 @@ class LoggedAction(models.Model):
         rather than a Post and an Election (or a PostExtraElection).
         """
         from candidates.models import PostExtraElection
-        from elections.models import Election
         if self.post:
-            try:
-                election = self.post.extra.elections.filter(
-                    current=True).first()
-            except Election.DoesNotExist:
-                election = self.post.extra.elections.first()
-
-            pee = PostExtraElection.objects.get(
+            election = self.post.extra.elections.filter(
+                current=True).first() or \
+                self.post.extra.elections.first()
+            return PostExtraElection.objects.get(
                 election=election,
                 postextra=self.post.extra
             )
-
-            return pee
-
 
     @property
     def subject_url(self):
