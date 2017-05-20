@@ -6,6 +6,7 @@ from requests.adapters import ConnectionError
 
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
@@ -100,3 +101,12 @@ class DisableCachingForAuthenticatedUsers(object):
                 add_never_cache_headers(response)
 
         return response
+
+
+class LogoutDisabledUsersMiddleware(object):
+
+    def process_request(self, request):
+        if hasattr(request, 'user') and \
+           request.user.is_authenticated() and \
+           not request.user.is_active:
+            logout(request)
