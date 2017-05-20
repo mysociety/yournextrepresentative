@@ -240,6 +240,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
             'django.middleware.common.CommonMiddleware',
             'django.middleware.csrf.CsrfViewMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
+            'candidates.middleware.LogoutDisabledUsersMiddleware',
             'candidates.middleware.CopyrightAssignmentMiddleware',
             'candidates.middleware.DisallowedUpdateMiddleware',
             'django.contrib.messages.middleware.MessageMiddleware',
