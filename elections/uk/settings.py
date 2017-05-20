@@ -13,6 +13,8 @@ PEOPLE_LIABLE_TO_VANDALISM = {
     8372, # Nicola Sturgeon
     737, # Ruth Davidson
 
+    34605, # Matt Furey-King (due to a vandalism incident)
+
     # Below we include the person ID of anyone who is currently a minister.
     # This list was generated from:
     #
