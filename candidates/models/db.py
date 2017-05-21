@@ -95,6 +95,13 @@ class LoggedAction(models.Model):
                 person_id=self.person.id)
         return ''
 
+    @property
+    def diff_html(self):
+        if not self.person:
+            return ''
+        return self.person.extra.diff_for_version(
+            self.popit_person_new_version, inline_style=True)
+
 
 class PersonRedirect(models.Model):
     '''This represents a redirection from one person ID to another
