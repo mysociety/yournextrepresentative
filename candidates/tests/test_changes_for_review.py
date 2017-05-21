@@ -4,14 +4,11 @@ import codecs
 from io import BytesIO
 from mock import patch
 import os
-import re
 
 from datetime import datetime, timedelta
 
 from django_webtest import WebTest
-from django.test import TestCase
 from django.test.utils import override_settings
-from django.utils import six
 
 from lxml import etree
 
