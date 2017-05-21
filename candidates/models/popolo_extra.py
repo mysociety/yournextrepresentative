@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.template import loader, Context
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _l
@@ -510,6 +511,24 @@ class PersonExtra(HasImageMixin, models.Model):
         if not versions:
             versions = []
         return get_version_diffs(json.loads(versions))
+
+    def diff_for_version(self, version_id, inline_style=False):
+        versions = self.versions or []
+        all_version_diffs = get_version_diffs(json.loads(versions))
+        right_version_diff = None
+        for version_diff in all_version_diffs:
+            if version_diff['version_id'] == version_id:
+                right_version_diff = version_diff
+                break
+        if not right_version_diff:
+            msg = "Couldn't find version {0} for person with ID {1}"
+            raise Exception(msg.format(version_id, self.base.id))
+        template = loader.get_template('candidates/_diffs_against_parents.html')
+        context = Context({
+            'diffs_against_all_parents': right_version_diff['diffs']
+        })
+        rendered = template.render(context)
+        return '<dl>{0}</dl>'.format(rendered)
 
     def record_version(self, change_metadata):
         versions = []

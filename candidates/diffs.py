@@ -144,7 +144,7 @@ def get_version_diff(from_data, to_data):
 
     basic_patch = jsonpatch.make_patch(from_data, to_data)
     result = []
-    for operation in basic_patch:
+    for operation in sorted(basic_patch, key=lambda o: (o['op'], o['path'])):
         op = operation['op']
         ignore = False
         # We deal with standing_in and party_memberships slightly
