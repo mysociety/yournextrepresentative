@@ -1222,7 +1222,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         self.assertEqual(expected_result, versions_with_diffs)
 
 
-    def test_alternitive_names(self):
+    def test_alternative_names(self):
         versions = [{
             'data': {
                 'honorific_prefix': 'Mrs',
