@@ -94,5 +94,4 @@ class Command(BaseCommand):
         # should add their Twitter avatar to the image moderation
         # queue:
         for person in Person.objects.select_related('extra').order_by('name'):
-            with transaction.atomic():
-                self.handle_person(person)
+            self.handle_person(person)
