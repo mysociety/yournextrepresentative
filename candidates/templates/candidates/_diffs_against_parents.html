@@ -14,13 +14,13 @@
       <p class="version-diff">
         {% for operation in diff %}
           {% if operation.op == 'add' %}
-             <span class="version-op-add">{% trans "Added:" %} {{ operation.path }} => {{ operation.value|prettyjson }}</span>
+             <span class="version-op-add"{% if inline_style %} style="color: #0a6b0c"{% endif %}>{% trans "Added:" %} {{ operation.path }} => {{ operation.value|prettyjson }}</span>
           {% elif operation.op == 'remove' %}
-             <span class="version-op-remove">{% trans "Removed:" %} {{ operation.path }}
+             <span class="version-op-remove"{% if inline_style %} style="color: #8e2424"{% endif %}>{% trans "Removed:" %} {{ operation.path }}
               {% blocktrans trimmed with previous=operation.previous_value|prettyjson %}
               (previously it was {{ previous }}){% endblocktrans %}</span>
           {% elif operation.op == 'replace' %}
-             <span class="version-op-replace">{% blocktrans trimmed with field=operation.path previous=operation.previous_value|prettyjson current=operation.value|prettyjson %}
+             <span class="version-op-replace"{% if inline_style %} style="color: #27248e"{% endif %}>{% blocktrans trimmed with field=operation.path previous=operation.previous_value|prettyjson current=operation.value|prettyjson %}
              At {{ field }} replaced {{ previous }} with {{ current }}</span>
              {% endblocktrans %}
           {% else %}

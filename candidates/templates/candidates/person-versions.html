@@ -17,7 +17,7 @@
           <dd>{{ version.timestamp }}</dd>
           <dt>{% trans "Source" %}</dt>
           <dd>{{ version.information_source }}</dd>
-          {% include 'candidates/_diffs_against_parents.html' with diffs_against_all_parents=version.diffs %}
+          {% include 'candidates/_diffs_against_parents.html' with diffs_against_all_parents=version.diffs inline_style=False %}
           {% if user.is_authenticated and not forloop.first %}
           <dt>{% trans "Revert to this" %}</dt>
           <dd>

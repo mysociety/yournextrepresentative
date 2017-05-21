@@ -525,7 +525,8 @@ class PersonExtra(HasImageMixin, models.Model):
             raise Exception(msg.format(version_id, self.base.id))
         template = loader.get_template('candidates/_diffs_against_parents.html')
         context = Context({
-            'diffs_against_all_parents': right_version_diff['diffs']
+            'diffs_against_all_parents': right_version_diff['diffs'],
+            'inline_style': inline_style,
         })
         rendered = template.render(context)
         return '<dl>{0}</dl>'.format(rendered)
