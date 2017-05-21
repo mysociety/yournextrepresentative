@@ -140,7 +140,16 @@ class Command(BaseCommand):
         self.twitter_data = TwitterAPIData()
         self.twitter_data.update_from_api()
         # Now go through every person in the database and check their
-        # Twitter details:
-        for person in Person.objects.select_related('extra').order_by('name'):
+        # Twitter details. This can take a long time, so use one
+        # transaction per person.
+        for person_id in Person.objects.order_by('name').values_list('pk', flat=True):
             with transaction.atomic():
+                # n.b. even though it's inefficient query-wise, we get
+                # each person from the database based on their ID
+                # within the transaction because the loop we're in
+                # takes a long time, other otherwise we might end up
+                # with out of date information (e.g. this has happened
+                # with the person.extra.versions field, with confusing
+                # results...)
+                person = Person.objects.select_related('extra').get(pk=person_id)
                 self.handle_person(person)
