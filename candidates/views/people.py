@@ -183,25 +183,25 @@ class RevertPersonView(LoginRequiredMixin, View):
         person_id = self.kwargs['person_id']
         source = self.request.POST['source']
 
-        person_extra = get_object_or_404(
-            PersonExtra.objects.select_related('base'),
-            base__id=person_id
-        )
-        person = person_extra.base
-
-        versions = json.loads(person_extra.versions)
-
-        data_to_revert_to = None
-        for version in versions:
-            if version['version_id'] == version_id:
-                data_to_revert_to = version['data']
-                break
-
-        if not data_to_revert_to:
-            message = _("Couldn't find the version {0} of person {1}")
-            raise Exception(message.format(version_id, person_id))
-
         with transaction.atomic():
+
+            person_extra = get_object_or_404(
+                PersonExtra.objects.select_related('base'),
+                base__id=person_id
+            )
+            person = person_extra.base
+
+            versions = json.loads(person_extra.versions)
+
+            data_to_revert_to = None
+            for version in versions:
+                if version['version_id'] == version_id:
+                    data_to_revert_to = version['data']
+                    break
+
+            if not data_to_revert_to:
+                message = _("Couldn't find the version {0} of person {1}")
+                raise Exception(message.format(version_id, person_id))
 
             change_metadata = get_change_metadata(self.request, source)
 

@@ -511,10 +511,10 @@ class ConstituencyRetractWinnerView(ElectionMixin, GroupRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         post_id = self.kwargs['post_id']
-        post = get_object_or_404(Post, extra__slug=post_id)
-        constituency_name = post.extra.short_label
-
         with transaction.atomic():
+            post = get_object_or_404(Post, extra__slug=post_id)
+            constituency_name = post.extra.short_label
+
             all_candidacies = post.memberships.filter(
                 role=self.election_data.candidate_membership_role,
                 extra__election=self.election_data,

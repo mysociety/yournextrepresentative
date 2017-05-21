@@ -262,33 +262,33 @@ class ResultSetForm(forms.ModelForm):
 
 
     def save(self, request):
-        instance = super(ResultSetForm, self).save(commit=False)
-        instance.review_status = CONFIRMED_STATUS
-        instance.post_election_result = self.post_election_result
-        instance.user = request.user if \
-            request.user.is_authenticated() else None
-        instance.ip_address = get_client_ip(request)
-        instance.save(request)
-
-        post_election = self.post_election_result.post_election
-        winner_count = post_election.winner_count
-
-        winners = dict(sorted(
-            [("{}-{}".format(self[y].value(), x.person.id), x)
-                for x, y in self.memberships],
-            reverse=True,
-            key=lambda votes: int(votes[0].split('-')[0])
-        )[:winner_count])
-
-        for membership, field_name in self.memberships:
-            instance.candidate_results.create(
-                membership=membership,
-                is_winner=bool(membership in winners.values()),
-                num_ballots_reported=self[field_name].value(),
-            )
-
-
         with transaction.atomic():
+
+            instance = super(ResultSetForm, self).save(commit=False)
+            instance.review_status = CONFIRMED_STATUS
+            instance.post_election_result = self.post_election_result
+            instance.user = request.user if \
+                request.user.is_authenticated() else None
+            instance.ip_address = get_client_ip(request)
+            instance.save(request)
+
+            post_election = self.post_election_result.post_election
+            winner_count = post_election.winner_count
+
+            winners = dict(sorted(
+                [("{}-{}".format(self[y].value(), x.person.id), x)
+                    for x, y in self.memberships],
+                reverse=True,
+                key=lambda votes: int(votes[0].split('-')[0])
+            )[:winner_count])
+
+            for membership, field_name in self.memberships:
+                instance.candidate_results.create(
+                    membership=membership,
+                    is_winner=bool(membership in winners.values()),
+                    num_ballots_reported=self[field_name].value(),
+                )
+
             self.mark_candidates_as_winner(request, instance)
 
         return instance

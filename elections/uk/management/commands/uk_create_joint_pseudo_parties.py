@@ -53,6 +53,7 @@ joint_description_re = re.compile(
 class Command(BaseCommand):
     help = "Create joint pseudo-parties based on parties with joint descriptions"
 
+    @transaction.atomic
     def handle(self, **options):
         joint_party_to_sub_parties = defaultdict(list)
         for party_extra in OrganizationExtra.objects.filter(
@@ -72,20 +73,18 @@ class Command(BaseCommand):
                     continue
                 joint_name = fix_joint_party_name(m.group('joint_name'))
                 joint_party_to_sub_parties[joint_name].append(party)
-        with transaction.atomic():
-            for joint_name, sub_parties in joint_party_to_sub_parties.items():
-                if len(sub_parties) < 2:
-                    message = 'Ignoring "{joint_name}"' \
-                        ' (only made up of one party: "{sub_party}")'
-                    print(message.format(
-                        joint_name=joint_name,
-                        sub_party=sub_parties[0].name
-                    ))
-                    continue
-                message = 'Creating "{joint_name}", made up of: {sub_parties}'
+        for joint_name, sub_parties in joint_party_to_sub_parties.items():
+            if len(sub_parties) < 2:
+                message = 'Ignoring "{joint_name}"' \
+                    ' (only made up of one party: "{sub_party}")'
                 print(message.format(
                     joint_name=joint_name,
-                    sub_parties=sub_parties,
+                    sub_party=sub_parties[0].name
                 ))
-
-                create_or_update_party(joint_name, sub_parties)
+                continue
+            message = 'Creating "{joint_name}", made up of: {sub_parties}'
+            print(message.format(
+                joint_name=joint_name,
+                sub_parties=sub_parties,
+            ))
+            create_or_update_party(joint_name, sub_parties)
