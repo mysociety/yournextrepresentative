@@ -125,14 +125,15 @@ class NeedsReviewFeed(ChangesMixin, Feed):
 <p>{action_type} of {subject} by {user} with source: “ {source} ”;</p>
 <ul>
 {reasons_review_needed}
-</ul></p>'''.strip().format(
+</ul></p>{diff}'''.strip().format(
             action_type=la.action_type,
             subject=la.subject_html,
             user=la.user.username,
             source=la.source,
             reasons_review_needed='\n'.join(
                 '<li>{0}</li>'.format(i) for i in item[1]),
-            timestamp=la.updated)
+            timestamp=la.updated,
+            diff=la.diff_html)
         return escape(unescaped)
 
     def item_link(self, item):
