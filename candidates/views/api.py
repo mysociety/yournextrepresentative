@@ -342,8 +342,11 @@ class PostViewSet(viewsets.ModelViewSet):
             'party_set',
         ) \
         .prefetch_related(
-            'elections',
-            'elections__area_types',
+            Prefetch(
+                'postextraelection_set',
+                extra_models.PostExtraElection.objects \
+                    .select_related('election')
+            ),
             'base__area__other_identifiers',
             Prefetch(
                 'base__memberships',
