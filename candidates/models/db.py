@@ -73,9 +73,7 @@ class LoggedAction(models.Model):
         """
         from candidates.models import PostExtraElection
         if self.post:
-            election = self.post.extra.elections.filter(
-                current=True).first() or \
-                self.post.extra.elections.first()
+            election = self.post.extra.elections.order_by('-current').first()
             return PostExtraElection.objects.get(
                 election=election,
                 postextra=self.post.extra
