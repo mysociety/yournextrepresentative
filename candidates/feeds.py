@@ -7,7 +7,6 @@ from django.contrib.sites.models import Site
 from django.contrib.syndication.views import Feed
 from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Atom1Feed
-from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from .models import LoggedAction
@@ -121,19 +120,19 @@ class NeedsReviewFeed(ChangesMixin, Feed):
 
     def item_description(self, item):
         la = item[0]
-        unescaped = '''
+        return '''
 <p>{action_type} of {subject} by {user} with source: “ {source} ”;</p>
 <ul>
 {reasons_review_needed}
-</ul></p>'''.strip().format(
+</ul></p>{diff}'''.strip().format(
             action_type=la.action_type,
             subject=la.subject_html,
             user=la.user.username,
             source=la.source,
             reasons_review_needed='\n'.join(
                 '<li>{0}</li>'.format(i) for i in item[1]),
-            timestamp=la.updated)
-        return escape(unescaped)
+            timestamp=la.updated,
+            diff=la.diff_html)
 
     def item_link(self, item):
         return item[0].subject_url

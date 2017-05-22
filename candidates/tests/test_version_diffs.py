@@ -1,8 +1,11 @@
 from __future__ import unicode_literals
 
+import re
+
 from django.test import TestCase
 
 from candidates.diffs import get_version_diffs
+from . import factories
 from .uk_examples import UK2015ExamplesMixin
 
 
@@ -11,6 +14,11 @@ def sort_operations_for_comparison(versions_with_diffs):
         v['diffs'].sort(key=lambda pd: pd['parent_version_id'])
         for parent_data in v['diffs']:
             parent_data['parent_diff'].sort(key=lambda o: (o['op'], o['path']))
+
+
+def tidy_html_whitespace(html):
+    tidied = re.sub(r'(?ms)>\s+<', '><', html.strip())
+    return re.sub(r'(?ms)\s+', ' ', tidied)
 
 
 class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
@@ -1222,7 +1230,7 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
         self.assertEqual(expected_result, versions_with_diffs)
 
 
-    def test_alternitive_names(self):
+    def test_alternative_names(self):
         versions = [{
             'data': {
                 'honorific_prefix': 'Mrs',
@@ -1375,3 +1383,90 @@ class TestVersionDiffs(UK2015ExamplesMixin, TestCase):
             }
         }]
         self.assertEqual(expected_result, versions_with_diffs)
+
+class TestSingleVersionRendering(UK2015ExamplesMixin, TestCase):
+
+    maxDiff = None
+
+    def setUp(self):
+        super(TestSingleVersionRendering, self).setUp()
+        self.example_person_extra = factories.PersonExtraFactory.create(
+            base__name='Sarah Jones',
+            versions='''[{
+                "data": {
+                    "honorific_prefix": "Mrs",
+                    "honorific_suffix": "",
+                    "id": "6704",
+                    "identifiers": [{"id": "552f80d0ed1c6ee164eeae51",
+                    "identifier": "13445",
+                    "scheme": "yournextmp-candidate"}],
+                    "image": null,
+                    "linkedin_url": "",
+                    "name": "Sarah Jones",
+                    "other_names": [{
+                        "id": "552f80d0ed1c6ee164eeae50",
+                        "name": "Sarah Smith",
+                        "note": "Maiden name"
+                    }],
+                    "party_ppc_page_url": "",
+                    "proxy_image": null,
+                    "twitter_username": "",
+                    "wikipedia_url": ""
+                },
+                "information_source": "Made up 2",
+                "timestamp": "2015-05-08T01:52:27.061038",
+                "username": "test",
+                "version_id": "3fc494d54f61a157"
+            },
+            {
+                "data": {
+                    "honorific_prefix": "Mrs",
+                    "honorific_suffix": "",
+                    "id": "6704",
+                    "identifiers": [{
+                        "id": "5477866f737edc5252ce5938",
+                        "identifier": "13445",
+                        "scheme": "yournextmp-candidate"
+                    }],
+                    "image": null,
+                    "linkedin_url": "",
+                    "name": "Sarah Jones",
+                    "other_names": [
+                        {"name": "Sarah Smith"}
+                    ],
+                    "party_ppc_page_url": "",
+                    "proxy_image": null,
+                    "twitter_username": "",
+                    "wikipedia_url": ""
+                },
+                "information_source": "Made up 1",
+                "timestamp": "2015-03-10T05:35:15.297559",
+                "username": "test",
+                "version_id": "2f07734529a83242"
+            }]'''
+        )
+
+    def test_get_single_parent_diff(self):
+        self.assertEqual(
+            tidy_html_whitespace(
+                self.example_person_extra.diff_for_version('3fc494d54f61a157')),
+            '<dl>'
+            '<dt>Changes made compared to parent 2f07734529a83242</dt>'
+            '<dd><p class="version-diff"><span class="version-op-add">Added: other_names/0/note => &quot;Maiden name&quot;</span><br/></p></dd>'
+            '</dl>')
+
+    def test_get_zero_parent_diff(self):
+        self.assertEqual(
+            tidy_html_whitespace(
+                self.example_person_extra.diff_for_version('2f07734529a83242')),
+            '''<dl><dt>Changes made in initial version</dt><dd><p class="version-diff"><span class="version-op-add">Added: honorific_prefix => &quot;Mrs&quot;</span><br/><span class="version-op-add">Added: id => &quot;6704&quot;</span><br/><span class="version-op-add">Added: identifiers => [ { &quot;identifier&quot;: &quot;13445&quot;, &quot;scheme&quot;: &quot;yournextmp-candidate&quot; } ]</span><br/><span class="version-op-add">Added: name => &quot;Sarah Jones&quot;</span><br/><span class="version-op-add">Added: other_names => [ { &quot;name&quot;: &quot;Sarah Smith&quot; } ]</span><br/></p></dd></dl>''')
+
+    def test_include_inline_style_colouring(self):
+        self.assertEqual(
+            tidy_html_whitespace(
+                self.example_person_extra.diff_for_version(
+                    '3fc494d54f61a157', inline_style=True)),
+            '<dl>'
+            '<dt>Changes made compared to parent 2f07734529a83242</dt>'
+            '<dd><p class="version-diff"><span class="version-op-add" style="color: #0a6b0c">Added: other_names/0/note => &quot;Maiden name&quot;</span><br/></p></dd>'
+            '</dl>')
