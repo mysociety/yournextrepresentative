@@ -100,7 +100,7 @@ class NeedsReviewFeed(ChangesMixin, Feed):
         return sorted(
             LoggedAction.objects \
                 .exclude(action_type__startswith='photo-') \
-                .in_recent_days(5) \
+                .in_recent_days(1) \
                 .order_by('-created') \
                 .needs_review().items(),
             key=lambda t: t[0].created,
