@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 import json
-from mock import patch
+from mock import call, patch
 import os
 from os.path import exists, join
 from shutil import rmtree
@@ -18,6 +18,8 @@ from .factories import (
 )
 from .uk_examples import UK2015ExamplesMixin
 
+from candidates.management.commands.candidates_cache_api_to_directory \
+    import prune
 from candidates.models import LoggedAction, PersonRedirect
 
 
@@ -433,5 +435,82 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
             self.assertEqual(first_post['id'], self.edinburgh_east_post_extra.slug)
             self.assertEqual(first_post['label'], 'Member of Parliament for Edinburgh East')
             self.assertEqual(first_post['url'], 'https://example.com/api/v0.9/posts/14419/?format=json')
+        finally:
+            rmtree(target_directory)
+
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.rmtree')
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.datetime')
+    def test_cache_api_to_directory_prune(self, mock_datetime, mock_rmtree):
+        # Need to make sure datetime.strptime still works:
+        mock_datetime.strptime.side_effect = datetime.strptime
+        mock_datetime.now.return_value = datetime(2017, 5, 14, 12, 33, 5, 0)
+        target_directory = mkdtemp()
+        try:
+            for d in (
+                    '2017-05-12T08:00:00',
+                    '2017-05-12T10:00:00',
+                    '2017-05-12T12:00:00',
+                    '2017-05-14T08:00:00',
+                    '2017-05-14T10:00:00',
+                    '2017-05-14T12:00:00',
+            ):
+                os.makedirs(join(target_directory, d))
+            os.symlink('2017-05-12T08:00:00', join(target_directory, 'latest'))
+            prune(target_directory)
+            # That should have kept the last 4 + the one that latest
+            # points to, so there should only have been one call to rmtree:
+            self.assertEqual(mock_rmtree.call_count, 1)
+            self.assertEqual(
+                mock_rmtree.mock_calls[0],
+                call(join(target_directory, '2017-05-12T10:00:00')))
+        finally:
+            rmtree(target_directory)
+
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.rmtree')
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.datetime')
+    def test_cache_api_to_directory_prune_four_old(self, mock_datetime, mock_rmtree):
+        # Need to make sure datetime.strptime still works:
+        mock_datetime.strptime.side_effect = datetime.strptime
+        mock_datetime.now.return_value = datetime(2017, 5, 14, 12, 33, 5, 0)
+        target_directory = mkdtemp()
+        try:
+            for d in (
+                    '2017-05-12T06:00:00',
+                    '2017-05-12T08:00:00',
+                    '2017-05-12T10:00:00',
+                    '2017-05-12T12:00:00',
+            ):
+                os.makedirs(join(target_directory, d))
+            prune(target_directory)
+            # Even though all of those directories are more than 36
+            # hours old, they should all be kept because they're the
+            # most recent 4:
+            self.assertEqual(mock_rmtree.call_count, 0)
+        finally:
+            rmtree(target_directory)
+
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.rmtree')
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.datetime')
+    def test_cache_api_to_directory_prune_lots_very_recent(self, mock_datetime, mock_rmtree):
+        # Need to make sure datetime.strptime still works:
+        mock_datetime.strptime.side_effect = datetime.strptime
+        mock_datetime.now.return_value = datetime(2017, 5, 14, 12, 33, 5, 0)
+        target_directory = mkdtemp()
+        try:
+            for d in (
+                    '2017-05-13T22:00:00',
+                    '2017-05-14T00:00:00',
+                    '2017-05-14T02:00:00',
+                    '2017-05-14T04:00:00',
+                    '2017-05-14T06:00:00',
+                    '2017-05-14T08:00:00',
+                    '2017-05-14T10:00:00',
+                    '2017-05-14T12:00:00',
+            ):
+                os.makedirs(join(target_directory, d))
+            prune(target_directory)
+            # All of those are too recent to be removed, so there
+            # should be no calls to rmtree:
+            self.assertEqual(mock_rmtree.call_count, 0)
         finally:
             rmtree(target_directory)

@@ -1,10 +1,11 @@
 from __future__ import print_function, unicode_literals
 
 import json
+from datetime import datetime, timedelta
 import os
-from datetime import datetime
-from os.path import exists, join
-
+from os.path import basename, exists, isdir, join
+import re
+from shutil import rmtree
 
 from django.core.management.base import BaseCommand
 from django.test import Client
@@ -43,6 +44,34 @@ def update_latest_symlink(output_directory, subdirectory):
     os.rename(tmp_symlink_location, symlink_location)
 
 
+def is_timestamped_dir(directory):
+    dir_basename = basename(directory)
+    return isdir(directory) and \
+        re.search(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$', dir_basename)
+
+
+def prune(output_directory):
+    timestamped_directories_to_remove = set(sorted(
+        e for e in os.listdir(output_directory)
+        if is_timestamped_dir(join(output_directory, e))
+    )[:-4]) # Make sure we always leave at least the last 4 directories
+    latest_symlink = join(output_directory, 'latest')
+    if exists(latest_symlink):
+        current_timestamped_directory = os.readlink(latest_symlink)
+        timestamped_directories_to_remove.remove(
+            current_timestamped_directory)
+    # Don't remove any directory dated in the last 36 hours:
+    remove_before = datetime.now() - timedelta(hours=36)
+    too_recent = set(
+        e for e in timestamped_directories_to_remove
+        if datetime.strptime(e, '%Y-%m-%dT%H:%M:%S') >= remove_before)
+    for e in too_recent:
+        timestamped_directories_to_remove.remove(e)
+    # Now remove any of those directories that are left:
+    for e in sorted(timestamped_directories_to_remove):
+        rmtree(join(output_directory, e))
+
+
 class Command(BaseCommand):
 
     help = "Cache the output of the persons and posts endpoints to a directory"
@@ -60,6 +89,13 @@ class Command(BaseCommand):
             '--page-size',
             type=int,
             help='How many results should be output per file (max 200)'
+        )
+        parser.add_argument(
+            '--prune',
+            action='store_true',
+            help=('Prune older timestamped directories (those over 36 hours '
+                  'old, never deleting the latest successfully generated one '
+                  'or any of the 4 most recent)')
         )
 
     def rewrite_link(self, endpoint, url):
@@ -117,3 +153,5 @@ class Command(BaseCommand):
         for endpoint in self.endpoints:
             self.get_api_results_to_directory(endpoint, json_directory, page_size)
         update_latest_symlink(options['OUTPUT-DIRECTORY'], self.timestamp)
+        if options['prune']:
+            prune(options['OUTPUT-DIRECTORY'])
