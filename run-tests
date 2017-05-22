@@ -34,7 +34,7 @@ for TEST_SETTINGS_MODULE in "${TEST_SETTINGS_MODULES[@]}"
 do
     if [ "$1" = "--coverage" ]
     then
-        COMMAND="coverage run -a --source=candidates,cached_counts,tasks,moderation_queue,elections --branch manage.py test --nologcapture --noinput --settings=$TEST_SETTINGS_MODULE"
+        COMMAND="coverage run -a --source=alerts,auth_helpers,bulk_adding,cached_counts,candidates,compat,elections,moderation_queue,official_documents,tasks,uk_results --branch manage.py test --nologcapture --noinput --settings=$TEST_SETTINGS_MODULE"
     else
         COMMAND="./manage.py test --nologcapture --noinput --settings=$TEST_SETTINGS_MODULE"
     fi
