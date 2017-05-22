@@ -8,14 +8,16 @@ import os
 from datetime import datetime, timedelta
 
 from django_webtest import WebTest
+from django.test import TestCase
 from django.test.utils import override_settings
 
 from lxml import etree
 
 from candidates.models import LoggedAction, PersonExtra
 
-from .auth import TestUserMixin
 from . import factories
+from .auth import TestUserMixin
+from .test_version_diffs import tidy_html_whitespace
 
 
 def random_person_id():
@@ -260,3 +262,83 @@ class TestNeedsReview(TestUserMixin, WebTest):
             b'<author><name>new_suddenly_lots</name></author><id>needs-review:2009</id>' \
             b'<summary type="html">&lt;p&gt;person-update of &lt;a href="/person/2009"&gt;Tessa Jowell (2009)&lt;/a&gt; by new_suddenly_lots with source: \xe2\x80\x9c Just for tests \xe2\x80\x9d;&lt;/p&gt;\n&lt;ul&gt;\n&lt;li&gt;One of the first 3 edits of user new_suddenly_lots&lt;/li&gt;\n&lt;/ul&gt;&lt;/p&gt;&lt;div style="color: red"&gt;Fake diff&lt;/div&gt;</summary></entry></feed>'
         self.assertEqual(got, expected)
+
+
+class TestDiffHTML(TestCase):
+
+    def test_missing_version(self):
+        person = factories.PersonExtraFactory.create(
+            base__name='John Smith',
+            base__id='1234567',
+            versions='[]',
+        ).base
+        la = LoggedAction.objects.create(
+            person=person,
+            popit_person_new_version='1376abcd9234')
+        self.assertEqual(
+            la.diff_html,
+            '<p>Couldn&#39;t find version 1376abcd9234 for person with ID '
+            '1234567</p>'
+        )
+
+    def test_found_version(self):
+        person = factories.PersonExtraFactory.create(
+            base__name='Sarah Jones',
+            base__id='1234567',
+            versions='''[{
+                "data": {
+                    "honorific_prefix": "Mrs",
+                    "honorific_suffix": "",
+                    "id": "6704",
+                    "identifiers": [{"id": "552f80d0ed1c6ee164eeae51",
+                    "identifier": "13445",
+                    "scheme": "yournextmp-candidate"}],
+                    "image": null,
+                    "linkedin_url": "",
+                    "name": "Sarah Jones",
+                    "party_ppc_page_url": "",
+                    "proxy_image": null,
+                    "twitter_username": "",
+                    "wikipedia_url": ""
+                },
+                "information_source": "Made up 2",
+                "timestamp": "2015-05-08T01:52:27.061038",
+                "username": "test",
+                "version_id": "3fc494d54f61a157"
+            },
+            {
+                "data": {
+                    "email": "sarah@example.com",
+                    "honorific_prefix": "Mrs",
+                    "honorific_suffix": "",
+                    "id": "6704",
+                    "identifiers": [{
+                        "id": "5477866f737edc5252ce5938",
+                        "identifier": "13445",
+                        "scheme": "yournextmp-candidate"
+                    }],
+                    "image": null,
+                    "linkedin_url": "",
+                    "name": "Sarah Jones",
+                    "party_ppc_page_url": "",
+                    "proxy_image": null,
+                    "twitter_username": "",
+                    "wikipedia_url": ""
+                },
+                "information_source": "Made up 1",
+                "timestamp": "2015-03-10T05:35:15.297559",
+                "username": "test",
+                "version_id": "2f07734529a83242"
+            }]''',
+        ).base
+        la = LoggedAction.objects.create(
+            person=person,
+            popit_person_new_version='3fc494d54f61a157')
+        self.assertEqual(
+            tidy_html_whitespace(la.diff_html),
+            '<dl><dt>Changes made compared to parent 2f07734529a83242</dt>'
+            '<dd><p class="version-diff">'
+            '<span class="version-op-remove" style="color: #8e2424">'
+            'Removed: email (previously it was &quot;sarah@example.com&quot;)'
+            '</span><br/></p></dd></dl>'
+        )

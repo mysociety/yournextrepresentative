@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils.html import escape
+from django.utils.six import text_type
 
 from slugify import slugify
 
@@ -97,10 +99,14 @@ class LoggedAction(models.Model):
 
     @property
     def diff_html(self):
+        from candidates.models import VersionNotFound
         if not self.person:
             return ''
-        return self.person.extra.diff_for_version(
-            self.popit_person_new_version, inline_style=True)
+        try:
+            return self.person.extra.diff_for_version(
+                self.popit_person_new_version, inline_style=True)
+        except VersionNotFound as e:
+            return '<p>{0}</p>'.format(escape(text_type(e)))
 
 
 class PersonRedirect(models.Model):

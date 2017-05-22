@@ -10,6 +10,7 @@ from .merge import merge_popit_people
 
 from .popolo_extra import AreaExtra
 from .popolo_extra import MultipleTwitterIdentifiers
+from .popolo_extra import VersionNotFound
 from .popolo_extra import PersonExtra
 from .popolo_extra import OrganizationExtra
 from .popolo_extra import PostExtra
