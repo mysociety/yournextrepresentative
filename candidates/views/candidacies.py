@@ -39,12 +39,12 @@ class CandidacyView(ElectionMixin, LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         post_id = form.cleaned_data['post_id']
-        post = get_object_or_404(Post, extra__slug=post_id)
-        raise_if_locked(self.request, post, self.election_data)
-        change_metadata = get_change_metadata(
-            self.request, form.cleaned_data['source']
-        )
         with transaction.atomic():
+            post = get_object_or_404(Post, extra__slug=post_id)
+            raise_if_locked(self.request, post, self.election_data)
+            change_metadata = get_change_metadata(
+                self.request, form.cleaned_data['source']
+            )
             person = get_object_or_404(Person, id=form.cleaned_data['person_id'])
             LoggedAction.objects.create(
                 user=self.request.user,
