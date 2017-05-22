@@ -325,6 +325,10 @@ class MultipleTwitterIdentifiers(Exception):
     pass
 
 
+class VersionNotFound(Exception):
+    pass
+
+
 @python_2_unicode_compatible
 class PersonExtra(HasImageMixin, models.Model):
     base = models.OneToOneField(Person, related_name='extra')
@@ -522,7 +526,7 @@ class PersonExtra(HasImageMixin, models.Model):
                 break
         if not right_version_diff:
             msg = "Couldn't find version {0} for person with ID {1}"
-            raise Exception(msg.format(version_id, self.base.id))
+            raise VersionNotFound(msg.format(version_id, self.base.id))
         template = loader.get_template('candidates/_diffs_against_parents.html')
         context = Context({
             'diffs_against_all_parents': right_version_diff['diffs'],
