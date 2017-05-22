@@ -769,6 +769,16 @@ class PostExtraElection(models.Model):
     class Meta:
         unique_together = ('election', 'postextra')
 
+    def __repr__(self):
+        '''Note that this repr may cause two extra queries'''
+
+        fmt = "<PostExtraElection election__slug='{e}' postextra__slug='{p}'{l}{w}>"
+        return fmt.format(
+            e=self.election.slug,
+            p=self.postextra.slug,
+            l=(' candidates_locked=True' if self.candidates_locked else ''),
+            w=(' winner_count={0}'.format(self.winner_count)
+               if (self.winner_count is not None) else ''))
 
 class MembershipExtra(models.Model):
     base = models.OneToOneField(Membership, related_name='extra')
