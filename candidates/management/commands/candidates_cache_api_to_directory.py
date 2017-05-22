@@ -58,7 +58,7 @@ def prune(output_directory):
     latest_symlink = join(output_directory, 'latest')
     if exists(latest_symlink):
         current_timestamped_directory = os.readlink(latest_symlink)
-        timestamped_directories_to_remove.remove(
+        timestamped_directories_to_remove.discard(
             current_timestamped_directory)
     # Don't remove any directory dated in the last 36 hours:
     remove_before = datetime.now() - timedelta(hours=36)
