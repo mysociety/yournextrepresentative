@@ -125,6 +125,16 @@ def update_person_from_form(person, person_extra, form):
             person_extra.not_standing.add(election_data)
 
 
+def squash_whitespace(s):
+    # Take any run of more than one whitespace character, and replace
+    # it either with a newline (if that replaced text contained a
+    # newline) or a space (otherwise).
+    return re.sub(
+        r'(?ims)\s+',
+        lambda m: '\n' if '\n' in m.group(0) else ' ',
+        s)
+
+
 class localparserinfo(parser.parserinfo):
     MONTHS = [
         ('Jan', _l('Jan'), 'January', _l('January')),
@@ -450,7 +460,7 @@ class PersonExtra(HasImageMixin, models.Model):
             'inline_style': inline_style,
         })
         rendered = template.render(context)
-        return '<dl>{0}</dl>'.format(rendered)
+        return squash_whitespace('<dl>{0}</dl>'.format(rendered))
 
     def record_version(self, change_metadata):
         versions = []
