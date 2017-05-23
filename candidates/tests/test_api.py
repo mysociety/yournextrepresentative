@@ -514,3 +514,30 @@ class TestAPI(UK2015ExamplesMixin, WebTest):
             self.assertEqual(mock_rmtree.call_count, 0)
         finally:
             rmtree(target_directory)
+
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.rmtree')
+    @patch('candidates.management.commands.candidates_cache_api_to_directory.datetime')
+    def test_cache_api_prune_when_latest_is_in_last_four(self, mock_datetime, mock_rmtree):
+        # Need to make sure datetime.strptime still works:
+        mock_datetime.strptime.side_effect = datetime.strptime
+        mock_datetime.now.return_value = datetime(2017, 5, 14, 12, 33, 5, 0)
+        target_directory = mkdtemp()
+        try:
+            for d in (
+                    '2017-05-13T22:00:00',
+                    '2017-05-14T00:00:00',
+                    '2017-05-14T02:00:00',
+                    '2017-05-14T04:00:00',
+                    '2017-05-14T06:00:00',
+                    '2017-05-14T08:00:00',
+                    '2017-05-14T10:00:00',
+                    '2017-05-14T12:00:00',
+            ):
+                os.makedirs(join(target_directory, d))
+            os.symlink('2017-05-14T12:00:00', join(target_directory, 'latest'))
+            prune(target_directory)
+            # All of those are too recent to be removed, so there
+            # should be no calls to rmtree:
+            self.assertEqual(mock_rmtree.call_count, 0)
+        finally:
+            rmtree(target_directory)
