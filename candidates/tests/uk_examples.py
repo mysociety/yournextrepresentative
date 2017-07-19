@@ -13,7 +13,8 @@ class UK2015ExamplesMixin(object):
         self.ni_parties = factories.PartySetFactory.create(
             slug='ni', name='Northern Ireland'
         )
-        self.commons = factories.ParliamentaryChamberFactory.create()
+        commons_extra = factories.ParliamentaryChamberExtraFactory.create()
+        self.commons = commons_extra.base
         # Create the 2010 and 2015 general elections:
         self.election = factories.ElectionFactory.create(
             slug='2015',
