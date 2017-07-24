@@ -36,38 +36,53 @@ GOV_ORG_SLUG = 'county-governors'
 WARD_ORG_NAME_SUFFIX = 'County Assembly'
 WARD_ORG_SLUG_SUFFIX = 'county-assembly'
 
-PRESIDENCY_ELECTION_NAME = '2017 Presidential Election'
-PRESIDENCY_ELECTION_SLUG = 'pres-2017'
-PRESIDENCY_POST_SLUG = 'president'
-PRESIDENCY_POST_ROLE = 'President'
 
-SENATE_CANDIDATES_FILE = '2017_candidates_senate.csv'
-SENATE_ELECTION_NAME = '2017 Senate Election'
-SENATE_ELECTION_SLUG = 'senate-2017'
-SENATE_POST_ROLE = 'Senator'
-SENATE_POST_SLUG_PREFIX = 'senator'
-SENATE_POST_LABEL_PREFIX = 'Senator for '
-
-WR_CANDIDATES_FILE = '2017_candidates_wr.csv'
-WR_ELECTION_NAME = '2017 Women Representatives Election'
-WR_ELECTION_SLUG = 'wr-2017'
-WR_POST_ROLE = 'Women Representative'
-WR_POST_SLUG_PREFIX = 'wr'
-WR_POST_LABEL_PREFIX = 'Women Representative for '
-
-GOV_CANDIDATES_FILE = '2017_candidates_governors.csv'
-GOV_ELECTION_NAME = '2017 County Governor Elections'
-GOV_ELECTION_SLUG = 'governor-2017'
-GOV_POST_ROLE = 'County Governor'
-GOV_POST_SLUG_PREFIX = 'governor'
-GOV_POST_LABEL_PREFIX = 'County Governor for '
-
-ASSEMBLY_CANDIDATES_FILE = '2017_candidates_assembly.csv'
-ASSEMBLY_ELECTION_NAME = '2017 National Assembly Election'
-ASSEMBLY_ELECTION_SLUG = 'assembly-2017'
-ASSEMBLY_POST_ROLE = 'Assembly Member'
-ASSEMBLY_POST_SLUG_PREFIX = 'assembly'
-ASSEMBLY_POST_LABEL_PREFIX = 'Assembly Member for '
+ELECTIONS = [
+    {
+        'CANDIDATES_FILE': '2017_candidates_presidency.csv',
+        'ELECTION_NAME': '2017 Presidential Election',
+        'ELECTION_SLUG': 'pres-2017',
+        'POST_SLUG': 'president',
+        'POST_ROLE': 'President',
+        'AREA_TYPE': 'KECTR',
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_senate.csv',
+        'ELECTION_NAME': '2017 Senate Election',
+        'ELECTION_SLUG': 'senate-2017',
+        'POST_ROLE': 'Senator',
+        'POST_SLUG_PREFIX': 'senator',
+        'POST_LABEL_PREFIX': 'Senator for ',
+        'AREA_TYPE': 'KEDIS',
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_wr.csv',
+        'ELECTION_NAME': '2017 Women Representatives Election',
+        'ELECTION_SLUG': 'wr-2017',
+        'POST_ROLE': 'Women Representative',
+        'POST_SLUG_PREFIX': 'wr',
+        'POST_LABEL_PREFIX': 'Women Representative for ',
+        'AREA_TYPE': 'KEDIS',
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_governors.csv',
+        'ELECTION_NAME': '2017 County Governor Elections',
+        'ELECTION_SLUG': 'governor-2017',
+        'POST_ROLE': 'County Governor',
+        'POST_SLUG_PREFIX': 'governor',
+        'POST_LABEL_PREFIX': 'County Governor for ',
+        'AREA_TYPE': 'KEDIS',
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_assembly.csv',
+        'ELECTION_NAME': '2017 National Assembly Election',
+        'ELECTION_SLUG': 'assembly-2017',
+        'POST_ROLE': 'Assembly Member',
+        'POST_SLUG_PREFIX': 'assembly',
+        'POST_LABEL_PREFIX': 'Assembly Member for ',
+        'AREA_TYPE': 'KECON',
+    }
+]
 
 WARD_CANDIDATES_FILE = '2017_candidates_county_assemblies.csv'
 WARD_ELECTION_NAME_PREFIX = '2017'
@@ -134,6 +149,32 @@ class Command(BaseCommand):
 
         return post
 
+
+    def areas_from_csv(self, csv_filename, code_column, name_column):
+        # At this point we have the election, organisation and area types ready.
+        # Iterate over the senators CSV to build our lists of other things to add.
+
+        areas = {}
+
+        reader = csv.DictReader(open('elections/kenya/data/' + csv_filename))
+        for row in reader:
+
+            # In this script we only care about the areas, because we're building the posts
+            # Actual candidates (and their parties) are done elsewhere
+
+            area_id = row[code_column]
+
+            # Do we already have this area?
+            if area_id not in areas:
+
+                # This is a dict rather than just a name in case we need to easily add anything in future.
+                areas[area_id] = {
+                    'id': area_id,
+                    'name': row[name_column].title()
+                }
+
+        return areas
+
     def handle(self, *args, **options):
 
         # Make sure the PartySet exists
@@ -152,453 +193,97 @@ class Command(BaseCommand):
             'area_generation': 3,
         }
 
-        # PRESIDENCY
-        with transaction.atomic():
+        for election_metadata in ELECTIONS:
 
-            # Set up the election
-            election_data = {
-                'slug': PRESIDENCY_ELECTION_SLUG,
-                'for_post_role': PRESIDENCY_POST_ROLE,
-                'name': PRESIDENCY_ELECTION_NAME,
-                'organization_name': PRESIDENCY_ORG_NAME,
-                'organization_slug': PRESIDENCY_ORG_SLUG,
-                'party_lists_in_use': False,
-            }
+            with transaction.atomic():
 
-            org = self.get_or_create_organization(
-                election_data['organization_slug'],
-                election_data['organization_name'],
-            )
+                # Set up the election
+                election_data = {
+                    'slug': election_metadata['ELECTION_SLUG'],
+                    'for_post_role': election_metadata['POST_ROLE'],
+                    'name': election_metadata['ELECTION_NAME'],
+                    'organization_name': election_metadata['ORG_NAME'],
+                    'organization_slug': election_metadata['ORG_SLUG'],
+                    'party_lists_in_use': False,
+                }
 
-            del election_data['organization_name']
-            del election_data['organization_slug']
-            election_data['organization'] = org
+                org = self.get_or_create_organization(
+                    election_data['organization_slug'],
+                    election_data['organization_name'],
+                )
 
-            election_slug = election_data.pop('slug')
-            election_data.update(consistent_election_data)
-            election, created = Election.objects.update_or_create(
-                slug=election_slug,
-                defaults=election_data,
-            )
+                del election_data['organization_name']
+                del election_data['organization_slug']
+                election_data['organization'] = org
 
-            # Create the AreaType for the country
-            # CTR is the Kenya MapIt type for Country
-            area_type, created = AreaType.objects.get_or_create(
-                name='KECTR',
-                defaults={'source': 'MapIt'},
-            )
+                election_slug = election_data.pop('slug')
+                election_data.update(consistent_election_data)
+                election, created = Election.objects.update_or_create(
+                    slug=election_slug,
+                    defaults=election_data,
+                )
 
-            # Tie the AreaType to the election
-            election.area_types.add(area_type)
+                # Create the AreaType for the country
+                # DIS is the Kenya MapIt type for County/District
+                area_type, created = AreaType.objects.get_or_create(
+                    name=election_metadata['AREA_TYPE'],
+                    defaults={'source': 'MapIt'},
+                )
 
-            # Create the area (only one for the whole country)
-            area = self.get_or_create_area(
-                identifier='country:1',
-                name='Kenya',
-                classification='Country',
-                area_type=area_type
-            )
+                # Tie the AreaType to the election
+                election.area_types.add(area_type)
 
-            # Create and flesh out the actual post
-            post = self.get_or_create_post(
-                slug=PRESIDENCY_POST_SLUG,
-                label=PRESIDENCY_POST_ROLE,
-                organization=election.organization,
-                area=area,
-                role=election.for_post_role,
-                election=election,
-                party_set=party_set
-            )
+                code_column, name_column, area_id_prefix, classification = {
+                    'KEDIS': ('County Code', 'County Name', 'county:', 'County'),
+                    'KECON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
+                }[election_metadata['AREA_TYPE']]
 
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # SENATE
-        with transaction.atomic():
-
-            # Set up the election
-            election_data = {
-                'slug': SENATE_ELECTION_SLUG,
-                'for_post_role': SENATE_POST_ROLE,
-                'name': SENATE_ELECTION_NAME,
-                'organization_name': SENATE_ORG_NAME,
-                'organization_slug': SENATE_ORG_SLUG,
-                'party_lists_in_use': False,
-            }
-
-            org = self.get_or_create_organization(
-                election_data['organization_slug'],
-                election_data['organization_name'],
-            )
-
-            del election_data['organization_name']
-            del election_data['organization_slug']
-            election_data['organization'] = org
-
-            election_slug = election_data.pop('slug')
-            election_data.update(consistent_election_data)
-            election, created = Election.objects.update_or_create(
-                slug=election_slug,
-                defaults=election_data,
-            )
-
-            # Create the AreaType for the country
-            # DIS is the Kenya MapIt type for County/District
-            area_type, created = AreaType.objects.get_or_create(
-                name='KEDIS',
-                defaults={'source': 'MapIt'},
-            )
-
-            # Tie the AreaType to the election
-            election.area_types.add(area_type)
-
-
-            # At this point we have the election, organisation and area types ready.
-            # Iterate over the senators CSV to build our lists of other things to add.
-
-            counties = {}
-
-            reader = csv.DictReader(open('elections/kenya/data/' + SENATE_CANDIDATES_FILE))
-            for row in reader:
-
-                # In this script we only care about the counties, because we're building the posts
-                # Actual candidates (and their parties) are done elsewhere
-
-                county_id = row['County Code']
-
-                # Do we already have this county?
-                if county_id not in counties:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    counties[county_id] = {
-                        'id': county_id,
-                        'name': row['County Name'].title()
+                if election_metadata['POST_SLUG'] == 'president':
+                    areas = {
+                        'country:1': {
+                            'id': 'country:1',
+                            'name': 'Kenya',
+                        }
                     }
-
-            # By now counties should contain one of each county.
-
-            # Common stuff
-            organization = election.organization
-            post_role = election.for_post_role
-
-            # For each county, make sure the area exists and make sure a senate post exists.
-            for id, county in counties.iteritems():
-
-                area = self.get_or_create_area(
-                    identifier='county:' + county['id'],
-                    name=county['name'],
-                    classification='County',
-                    area_type=area_type
-                )
-
-                post_label = SENATE_POST_LABEL_PREFIX + ' ' + county['name']
-                post_slug = SENATE_POST_SLUG_PREFIX + '-' + county['id']
-
-                post = self.get_or_create_post(
-                    slug=post_slug,
-                    label=post_label,
-                    organization=organization,
-                    area=area,
-                    role=post_role,
-                    election=election,
-                    party_set=party_set
-                )
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # WOMEN REPRESENTATIVES
-        with transaction.atomic():
-
-            # Set up the election
-            election_data = {
-                'slug': WR_ELECTION_SLUG,
-                'for_post_role': WR_POST_ROLE,
-                'name': WR_ELECTION_NAME,
-                'organization_name': ASSEMBLY_ORG_NAME,
-                'organization_slug': ASSEMBLY_ORG_SLUG,
-                'party_lists_in_use': False,
-            }
-
-            org = self.get_or_create_organization(
-                election_data['organization_slug'],
-                election_data['organization_name'],
-            )
-
-            del election_data['organization_name']
-            del election_data['organization_slug']
-            election_data['organization'] = org
-
-            election_slug = election_data.pop('slug')
-            election_data.update(consistent_election_data)
-            election, created = Election.objects.update_or_create(
-                slug=election_slug,
-                defaults=election_data,
-            )
-
-            # Create the AreaType for the country
-            # DIS is the Kenya MapIt type for County/District
-            area_type, created = AreaType.objects.get_or_create(
-                name='KEDIS',
-                defaults={'source': 'MapIt'},
-            )
-
-            # Tie the AreaType to the election
-            election.area_types.add(area_type)
-
-
-            # At this point we have the election, organisation and area types ready.
-            # Iterate over the senators CSV to build our lists of other things to add.
-
-            counties = {}
-
-            reader = csv.DictReader(open('elections/kenya/data/' + WR_CANDIDATES_FILE))
-            for row in reader:
-
-                # In this script we only care about the counties, because we're building the posts
-                # Actual candidates (and their parties) are done elsewhere
-
-                county_id = row['County Code']
-
-                # Do we already have this county?
-                if county_id not in counties:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    counties[county_id] = {
-                        'id': county_id,
-                        'name': row['County Name'].title()
-                    }
-
-            # By now counties should contain one of each county.
-
-            # Common stuff
-            organization = election.organization
-            post_role = election.for_post_role
-
-            # For each county, make sure the area exists and make sure a senate post exists.
-            for id, county in counties.iteritems():
-
-                area = self.get_or_create_area(
-                    identifier='county:' + county['id'],
-                    name=county['name'],
-                    classification='County',
-                    area_type=area_type
-                )
-
-                post_label = WR_POST_LABEL_PREFIX + ' ' + county['name']
-                post_slug = WR_POST_SLUG_PREFIX + '-' + county['id']
-
-                post = self.get_or_create_post(
-                    slug=post_slug,
-                    label=post_label,
-                    organization=organization,
-                    area=area,
-                    role=post_role,
-                    election=election,
-                    party_set=party_set
-                )
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # COUNTY GOVERNORS
-        with transaction.atomic():
-
-            # Set up the election
-            election_data = {
-                'slug': GOV_ELECTION_SLUG,
-                'for_post_role': GOV_POST_ROLE,
-                'name': GOV_ELECTION_NAME,
-                'organization_name': GOV_ORG_NAME,
-                'organization_slug': GOV_ORG_SLUG,
-                'party_lists_in_use': False,
-            }
-
-            org = self.get_or_create_organization(
-                election_data['organization_slug'],
-                election_data['organization_name'],
-            )
-
-            del election_data['organization_name']
-            del election_data['organization_slug']
-            election_data['organization'] = org
-
-            election_slug = election_data.pop('slug')
-            election_data.update(consistent_election_data)
-            election, created = Election.objects.update_or_create(
-                slug=election_slug,
-                defaults=election_data,
-            )
-
-            # Create the AreaType for the country
-            # DIS is the Kenya MapIt type for County/District
-            area_type, created = AreaType.objects.get_or_create(
-                name='KEDIS',
-                defaults={'source': 'MapIt'},
-            )
-
-            # Tie the AreaType to the election
-            election.area_types.add(area_type)
-
-
-            # At this point we have the election, organisation and area types ready.
-            # Iterate over the senators CSV to build our lists of other things to add.
-
-            counties = {}
-
-            reader = csv.DictReader(open('elections/kenya/data/' + GOV_CANDIDATES_FILE))
-            for row in reader:
-
-                # In this script we only care about the counties, because we're building the posts
-                # Actual candidates (and their parties) are done elsewhere
-
-                county_id = row['County Code']
-
-                # Do we already have this county?
-                if county_id not in counties:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    counties[county_id] = {
-                        'id': county_id,
-                        'name': row['County Name'].title()
-                    }
-
-            # By now counties should contain one of each county.
-
-            # Common stuff
-            organization = election.organization
-            post_role = election.for_post_role
-
-            # For each county, make sure the area exists and make sure a senate post exists.
-            for id, county in counties.iteritems():
-
-                area = self.get_or_create_area(
-                    identifier='county:' + county['id'],
-                    name=county['name'],
-                    classification='County',
-                    area_type=area_type
-                )
-
-                post_label = GOV_POST_LABEL_PREFIX + ' ' + county['name']
-                post_slug = GOV_POST_SLUG_PREFIX + '-' + county['id']
-
-                post = self.get_or_create_post(
-                    slug=post_slug,
-                    label=post_label,
-                    organization=organization,
-                    area=area,
-                    role=post_role,
-                    election=election,
-                    party_set=party_set
-                )
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # ASSEMBLY MEMBERS
-        with transaction.atomic():
-
-            # Set up the election
-            election_data = {
-                'slug': ASSEMBLY_ELECTION_SLUG,
-                'for_post_role': ASSEMBLY_POST_ROLE,
-                'name': ASSEMBLY_ELECTION_NAME,
-                'organization_name': ASSEMBLY_ORG_NAME,
-                'organization_slug': ASSEMBLY_ORG_SLUG,
-                'party_lists_in_use': False,
-            }
-
-            org = self.get_or_create_organization(
-                election_data['organization_slug'],
-                election_data['organization_name'],
-            )
-
-            del election_data['organization_name']
-            del election_data['organization_slug']
-            election_data['organization'] = org
-
-            election_slug = election_data.pop('slug')
-            election_data.update(consistent_election_data)
-            election, created = Election.objects.update_or_create(
-                slug=election_slug,
-                defaults=election_data,
-            )
-
-            # Create the AreaType for the country
-            # CON is the Kenya MapIt type for Constituency
-            area_type, created = AreaType.objects.get_or_create(
-                name='KECON',
-                defaults={'source': 'MapIt'},
-            )
-
-            # Tie the AreaType to the election
-            election.area_types.add(area_type)
-
-
-            # At this point we have the election, organisation and area types ready.
-            # Iterate over the senators CSV to build our lists of other things to add.
-
-            constituencies = {}
-
-            reader = csv.DictReader(open('elections/kenya/data/' + ASSEMBLY_CANDIDATES_FILE))
-            for row in reader:
-
-                # In this script we only care about the constituencies, because we're building the posts
-                # Actual candidates (and their parties) are done elsewhere
-
-                constituency_id = row['Constituency Code']
-
-                # Do we already have this constituency?
-                if constituency_id not in constituencies:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    constituencies[constituency_id] = {
-                        'id': constituency_id,
-                        'name': row['Constituency Name'].title()
-                    }
-
-            # By now constituencies should contain one of each county.
-
-            # Common stuff
-            organization = election.organization
-            post_role = election.for_post_role
-
-            # For each county, make sure the area exists and make sure a senate post exists.
-            for id, constituency in constituencies.iteritems():
-
-                area = self.get_or_create_area(
-                    identifier='constituency:' + constituency['id'],
-                    name=constituency['name'],
-                    classification='Constituency',
-                    area_type=area_type
-                )
-
-                post_label = ASSEMBLY_POST_LABEL_PREFIX + ' ' + constituency['name']
-                post_slug = ASSEMBLY_POST_SLUG_PREFIX + '-' + constituency['id']
-
-                post = self.get_or_create_post(
-                    slug=post_slug,
-                    label=post_label,
-                    organization=organization,
-                    area=area,
-                    role=post_role,
-                    election=election,
-                    party_set=party_set
-                )
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
+                else:
+                    areas = self.areas_from_csv(
+                        election_metadata['CANDIDATES_FILE'], 'County Code', 'County Name')
+
+                # By now areas should contain one of each area.
+
+                # Common stuff
+                organization = election.organization
+                post_role = election.for_post_role
+
+                # For each area, make sure the area exists and make sure a post exists.
+                for id, area in areas.iteritems():
+
+                    area = self.get_or_create_area(
+                        identifier=area_id_prefix + area['id'],
+                        name=area['name'],
+                        classification=classification,
+                        area_type=area_type
+                    )
+
+                    post_label = election_metadata['POST_LABEL_PREFIX'] + ' ' + area['name']
+                    post_slug = election_metadata['POST_SLUG_PREFIX'] + '-' + area['id']
+
+                    post = self.get_or_create_post(
+                        slug=post_slug,
+                        label=post_label,
+                        organization=organization,
+                        area=area,
+                        role=post_role,
+                        election=election,
+                        party_set=party_set
+                    )
+
+                errors = check_constraints()
+                if errors:
+                    print errors
+                    raise Exception('Constraint errors detected. Aborting.')
+
+        return
 
         # COUNTY ASSEMBLY MEMBERS
         with transaction.atomic():
