@@ -44,7 +44,11 @@ ELECTIONS = [
         'ELECTION_SLUG': 'pres-2017',
         'POST_SLUG': 'president',
         'POST_ROLE': 'President',
+        'POST_SLUG_PREFIX': 'president',
+        'POST_LABEL_PREFIX': 'President of ',
         'AREA_TYPE': 'KECTR',
+        'ORG_NAME': 'The Presidency',
+        'ORG_SLUG': 'the-presidency'
     },
     {
         'CANDIDATES_FILE': '2017_candidates_senate.csv',
@@ -54,6 +58,8 @@ ELECTIONS = [
         'POST_SLUG_PREFIX': 'senator',
         'POST_LABEL_PREFIX': 'Senator for ',
         'AREA_TYPE': 'KEDIS',
+        'ORG_NAME': 'Senate of Kenya',
+        'ORG_SLUG': 'senate-of-kenya'
     },
     {
         'CANDIDATES_FILE': '2017_candidates_wr.csv',
@@ -63,6 +69,8 @@ ELECTIONS = [
         'POST_SLUG_PREFIX': 'wr',
         'POST_LABEL_PREFIX': 'Women Representative for ',
         'AREA_TYPE': 'KEDIS',
+        'ORG_NAME': 'National Assembly',
+        'ORG_SLUG': 'national-assembly'
     },
     {
         'CANDIDATES_FILE': '2017_candidates_governors.csv',
@@ -72,6 +80,8 @@ ELECTIONS = [
         'POST_SLUG_PREFIX': 'governor',
         'POST_LABEL_PREFIX': 'County Governor for ',
         'AREA_TYPE': 'KEDIS',
+        'ORG_NAME': 'County Governors',
+        'ORG_SLUG': 'county-governors'
     },
     {
         'CANDIDATES_FILE': '2017_candidates_assembly.csv',
@@ -81,6 +91,8 @@ ELECTIONS = [
         'POST_SLUG_PREFIX': 'assembly',
         'POST_LABEL_PREFIX': 'Assembly Member for ',
         'AREA_TYPE': 'KECON',
+        'ORG_NAME': 'National Assembly',
+        'ORG_SLUG': 'national-assembly'
     }
 ]
 
@@ -234,11 +246,12 @@ class Command(BaseCommand):
                 election.area_types.add(area_type)
 
                 code_column, name_column, area_id_prefix, classification = {
+                    'KECTR': (None, None, 'country:', 'Country'),
                     'KEDIS': ('County Code', 'County Name', 'county:', 'County'),
                     'KECON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
                 }[election_metadata['AREA_TYPE']]
 
-                if election_metadata['POST_SLUG'] == 'president':
+                if election_metadata['POST_ROLE'] == 'President':
                     areas = {
                         'country:1': {
                             'id': 'country:1',
@@ -258,7 +271,7 @@ class Command(BaseCommand):
                 # For each area, make sure the area exists and make sure a post exists.
                 for id, area in areas.iteritems():
 
-                    area = self.get_or_create_area(
+                    area_object = self.get_or_create_area(
                         identifier=area_id_prefix + area['id'],
                         name=area['name'],
                         classification=classification,
@@ -272,7 +285,7 @@ class Command(BaseCommand):
                         slug=post_slug,
                         label=post_label,
                         organization=organization,
-                        area=area,
+                        area=area_object,
                         role=post_role,
                         election=election,
                         party_set=party_set
