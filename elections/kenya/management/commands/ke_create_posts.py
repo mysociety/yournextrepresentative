@@ -144,6 +144,14 @@ class Command(BaseCommand):
             }
         )
 
+        consistent_election_data = {
+            'candidate_membership_role': 'Candidate',
+            'election_date': date(2017, 8, 8),
+            'current': True,
+            'use_for_candidate_suggestions': False,
+            'area_generation': 3,
+        }
+
         # PRESIDENCY
         with transaction.atomic():
 
@@ -166,17 +174,8 @@ class Command(BaseCommand):
             del election_data['organization_slug']
             election_data['organization'] = org
 
-            consistent_data = {
-                'candidate_membership_role': 'Candidate',
-                'election_date': date(2017, 8, 8),
-                'current': True,
-                'use_for_candidate_suggestions': False,
-                'area_generation': 3,
-                'organization': org,
-            }
-
             election_slug = election_data.pop('slug')
-            election_data.update(consistent_data)
+            election_data.update(consistent_election_data)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_data,
@@ -238,17 +237,8 @@ class Command(BaseCommand):
             del election_data['organization_slug']
             election_data['organization'] = org
 
-            consistent_data = {
-                'candidate_membership_role': 'Candidate',
-                'election_date': ELECTION_DATE,
-                'current': True,
-                'use_for_candidate_suggestions': False,
-                'area_generation': 3,
-                'organization': org,
-            }
-
             election_slug = election_data.pop('slug')
-            election_data.update(consistent_data)
+            election_data.update(consistent_election_data)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_data,
@@ -343,17 +333,8 @@ class Command(BaseCommand):
             del election_data['organization_slug']
             election_data['organization'] = org
 
-            consistent_data = {
-                'candidate_membership_role': 'Candidate',
-                'election_date': ELECTION_DATE,
-                'current': True,
-                'use_for_candidate_suggestions': False,
-                'area_generation': 3,
-                'organization': org,
-            }
-
             election_slug = election_data.pop('slug')
-            election_data.update(consistent_data)
+            election_data.update(consistent_election_data)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_data,
@@ -448,17 +429,8 @@ class Command(BaseCommand):
             del election_data['organization_slug']
             election_data['organization'] = org
 
-            consistent_data = {
-                'candidate_membership_role': 'Candidate',
-                'election_date': ELECTION_DATE,
-                'current': True,
-                'use_for_candidate_suggestions': False,
-                'area_generation': 3,
-                'organization': org,
-            }
-
             election_slug = election_data.pop('slug')
-            election_data.update(consistent_data)
+            election_data.update(consistent_election_data)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_data,
@@ -553,17 +525,8 @@ class Command(BaseCommand):
             del election_data['organization_slug']
             election_data['organization'] = org
 
-            consistent_data = {
-                'candidate_membership_role': 'Candidate',
-                'election_date': ELECTION_DATE,
-                'current': True,
-                'use_for_candidate_suggestions': False,
-                'area_generation': 3,
-                'organization': org,
-            }
-
             election_slug = election_data.pop('slug')
-            election_data.update(consistent_data)
+            election_data.update(consistent_election_data)
             election, created = Election.objects.update_or_create(
                 slug=election_slug,
                 defaults=election_data,
@@ -696,17 +659,8 @@ class Command(BaseCommand):
                 del election_data['organization_slug']
                 election_data['organization'] = org
 
-                consistent_data = {
-                    'candidate_membership_role': 'Candidate',
-                    'election_date': ELECTION_DATE,
-                    'current': True,
-                    'use_for_candidate_suggestions': False,
-                    'area_generation': 3,
-                    'organization': org,
-                }
-
                 election_slug = election_data.pop('slug')
-                election_data.update(consistent_data)
+                election_data.update(consistent_election_data)
                 election, created = Election.objects.update_or_create(
                     slug=election_slug,
                     defaults=election_data,
