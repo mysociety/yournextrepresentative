@@ -207,10 +207,13 @@ class Command(BaseCommand):
             # Make sure the election exists
             election = Election.objects.get(slug=SENATE_ELECTION_SLUG)
 
-            # Get the candidates
+            i = 0
 
+            # Get the candidates
             reader = csv.DictReader(open('elections/kenya/data/' + SENATE_CANDIDATES_FILE))
             for row in reader:
+
+                i += 1
 
                 # Assemble a coherent name
                 surname = row['Surname'].title()
@@ -253,6 +256,9 @@ class Command(BaseCommand):
                     election=election
                 )
 
+                if not i % 50:
+                    print('Imported ' + str(i))
+
             errors = check_constraints()
             if errors:
                 print errors
@@ -265,10 +271,13 @@ class Command(BaseCommand):
             # Make sure the election exists
             election = Election.objects.get(slug=WR_ELECTION_SLUG)
 
-            # Get the candidates
+            i = 0
 
+            # Get the candidates
             reader = csv.DictReader(open('elections/kenya/data/' + WR_CANDIDATES_FILE))
             for row in reader:
+
+                i += 1
 
                 # Assemble a coherent name
                 surname = row['Surname'].title()
@@ -311,6 +320,9 @@ class Command(BaseCommand):
                     election=election
                 )
 
+                if not i % 50:
+                    print('Imported ' + str(i))
+
             errors = check_constraints()
             if errors:
                 print errors
@@ -323,10 +335,13 @@ class Command(BaseCommand):
             # Make sure the election exists
             election = Election.objects.get(slug=GOV_ELECTION_SLUG)
 
-            # Get the candidates
+            i = 0
 
+            # Get the candidates
             reader = csv.DictReader(open('elections/kenya/data/' + GOV_CANDIDATES_FILE))
             for row in reader:
+
+                i += 1
 
                 # Assemble a coherent name
                 surname = row['Surname'].title()
@@ -369,6 +384,9 @@ class Command(BaseCommand):
                     election=election
                 )
 
+                if not i % 50:
+                    print('Imported ' + str(i))
+
             errors = check_constraints()
             if errors:
                 print errors
@@ -381,10 +399,13 @@ class Command(BaseCommand):
             # Make sure the election exists
             election = Election.objects.get(slug=ASSEMBLY_ELECTION_SLUG)
 
-            # Get the candidates
+            i = 0
 
+            # Get the candidates
             reader = csv.DictReader(open('elections/kenya/data/' + ASSEMBLY_CANDIDATES_FILE))
             for row in reader:
+
+                i += 1
 
                 # Assemble a coherent name
                 surname = row['Surname'].title()
@@ -426,6 +447,9 @@ class Command(BaseCommand):
                     party=party,
                     election=election
                 )
+
+                if not i % 100:
+                    print('Imported ' + str(i))
 
             errors = check_constraints()
             if errors:
