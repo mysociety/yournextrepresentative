@@ -576,7 +576,7 @@ class Command(BaseCommand):
 
                 constituency_id = row['Constituency Code']
 
-                # Do we already have this county?
+                # Do we already have this constituency?
                 if constituency_id not in constituencies:
 
                     # This is a dict rather than just a name in case we need to easily add anything in future.
@@ -595,7 +595,7 @@ class Command(BaseCommand):
             for id, constituency in constituencies.iteritems():
 
                 area = self.get_or_create_area(
-                    identifier='constituency:' + county['id'],
+                    identifier='constituency:' + constituency['id'],
                     name=constituency['name'],
                     classification='Constituency',
                     area_type=area_type
