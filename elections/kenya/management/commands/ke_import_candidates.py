@@ -43,7 +43,7 @@ ASSEMBLY_POST_SLUG_PREFIX = 'assembly'
 
 class Command(BaseCommand):
 
-    def get_or_create_person(self, scheme, identifier, name, surname, other_names):
+    def get_or_create_person(self, scheme, identifier, name, surname, other_names, gender=None):
 
         try:
             person = Person.objects.get(
@@ -63,6 +63,9 @@ class Command(BaseCommand):
 
         person.family_name = surname
         person.given_name = other_names
+
+        if gender:
+            person.gender = gender
 
         person.save()
 
@@ -155,7 +158,8 @@ class Command(BaseCommand):
                     id,
                     name,
                     surname,
-                    other_names
+                    other_names,
+                    string.capwords(row['Gender'])
                 )
 
                 # Add the party!
@@ -212,7 +216,8 @@ class Command(BaseCommand):
                     id,
                     name,
                     surname,
-                    other_names
+                    other_names,
+                    string.capwords(row['Gender'])
                 )
 
                 # Add the party!
@@ -268,7 +273,8 @@ class Command(BaseCommand):
                     id,
                     name,
                     surname,
-                    other_names
+                    other_names,
+                    string.capwords(row['Gender'])
                 )
 
                 # Add the party!
@@ -324,7 +330,8 @@ class Command(BaseCommand):
                     id,
                     name,
                     surname,
-                    other_names
+                    other_names,
+                    string.capwords(row['Gender'])
                 )
 
                 # Add the party!
@@ -380,7 +387,8 @@ class Command(BaseCommand):
                     id,
                     name,
                     surname,
-                    other_names
+                    other_names,
+                    string.capwords(row['Gender'])
                 )
 
                 # Add the party!
