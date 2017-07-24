@@ -151,7 +151,7 @@ class Command(BaseCommand):
                 ])
 
                 person = self.get_or_create_person(
-                    'mz-presidency-import-id',
+                    'iebc-presidency-import-id',
                     id,
                     name,
                     surname,
@@ -208,7 +208,7 @@ class Command(BaseCommand):
                 ])
 
                 person = self.get_or_create_person(
-                    'mz-senate-import-id',
+                    'iebc-senate-import-id',
                     id,
                     name,
                     surname,
@@ -264,7 +264,7 @@ class Command(BaseCommand):
                 ])
 
                 person = self.get_or_create_person(
-                    'mz-wr-import-id',
+                    'iebc-wr-import-id',
                     id,
                     name,
                     surname,
@@ -320,7 +320,7 @@ class Command(BaseCommand):
                 ])
 
                 person = self.get_or_create_person(
-                    'mz-gov-import-id',
+                    'iebc-gov-import-id',
                     id,
                     name,
                     surname,
@@ -376,7 +376,7 @@ class Command(BaseCommand):
                 ])
 
                 person = self.get_or_create_person(
-                    'mz-assembly-import-id',
+                    'iebc-assembly-import-id',
                     id,
                     name,
                     surname,
