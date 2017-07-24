@@ -14,7 +14,6 @@ from popolo.models import Area, Organization, Post
 
 import csv
 import string
-import re
 
 
 PARTY_SET_SLUG = 'kenya_2017'
