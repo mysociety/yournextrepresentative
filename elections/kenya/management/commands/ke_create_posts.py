@@ -17,6 +17,7 @@ import string
 
 
 PARTY_SET_SLUG = 'kenya_2017'
+PARTY_SET_NAME = 'Register of Politial Parties'
 
 ELECTION_DATE = date(2017, 8, 8)
 
@@ -136,7 +137,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Make sure the PartySet exists
-        party_set, created = PartySet.objects.get_or_create(slug=PARTY_SET_SLUG)
+        party_set, created = PartySet.objects.update_or_create(
+            slug=PARTY_SET_SLUG,
+            defaults={
+                'name': PARTY_SET_NAME
+            }
+        )
 
         # PRESIDENCY
         with transaction.atomic():

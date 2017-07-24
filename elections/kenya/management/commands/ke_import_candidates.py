@@ -19,6 +19,7 @@ from candidates.utils import strip_accents
 
 
 PARTY_SET_SLUG = 'kenya_2017'
+PARTY_SET_NAME = 'Register of Politial Parties'
 
 PRESIDENCY_CANDIDATES_FILE = '2017_candidates_presidency.csv'
 PRESIDENCY_ELECTION_SLUG = 'pres-2017'
@@ -132,7 +133,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Make sure the PartySet exists
-        party_set, created = PartySet.objects.get_or_create(slug=PARTY_SET_SLUG)
+        party_set, created = PartySet.objects.update_or_create(
+            slug=PARTY_SET_SLUG,
+            defaults={
+                'name': PARTY_SET_NAME
+            }
+        )
 
         # PRESIDENCY
 
