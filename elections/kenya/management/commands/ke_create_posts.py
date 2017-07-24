@@ -32,6 +32,9 @@ ASSEMBLY_ORG_SLUG = 'national-assembly'
 GOV_ORG_NAME = 'County Governors'
 GOV_ORG_SLUG = 'county-governors'
 
+WARD_ORG_NAME_SUFFIX = 'County Assembly'
+WARD_ORG_SLUG_SUFFIX = 'county-assembly'
+
 PRESIDENCY_ELECTION_NAME = '2017 Presidential Election'
 PRESIDENCY_ELECTION_SLUG = 'pres-2017'
 PRESIDENCY_POST_SLUG = 'president'
@@ -64,6 +67,14 @@ ASSEMBLY_ELECTION_SLUG = 'assembly-2017'
 ASSEMBLY_POST_ROLE = 'Assembly Member'
 ASSEMBLY_POST_SLUG_PREFIX = 'assembly'
 ASSEMBLY_POST_LABEL_PREFIX = 'Assembly Member for '
+
+WARD_CANDIDATES_FILE = '2017_candidates_county_assemblies.csv'
+WARD_ELECTION_NAME_PREFIX = '2017'
+WARD_ELECTION_NAME_SUFFIX = 'County Assembly Election'
+WARD_ELECTION_SLUG_PREFIX = 'county-assembly-2017'
+WARD_POST_ROLE = 'County Assembly Member'
+WARD_POST_SLUG_PREFIX = 'county-assembly'
+WARD_POST_LABEL_PREFIX = 'County Assembly Member for '
 
 
 class Command(BaseCommand):
@@ -603,6 +614,133 @@ class Command(BaseCommand):
 
                 post_label = ASSEMBLY_POST_LABEL_PREFIX + ' ' + constituency['name']
                 post_slug = ASSEMBLY_POST_SLUG_PREFIX + '-' + constituency['id']
+
+                post = self.get_or_create_post(
+                    slug=post_slug,
+                    label=post_label,
+                    organization=organization,
+                    area=area,
+                    role=post_role,
+                    election=election,
+                    party_set=party_set
+                )
+
+            errors = check_constraints()
+            if errors:
+                print errors
+                raise Exception('Constraint errors detected. Aborting.')
+
+
+        # COUNTY ASSEMBLY MEMBERS
+        with transaction.atomic():
+
+            # Iterate over the members CSV to build our lists of other things to add.
+
+            counties = {}
+            wards = {}
+
+            reader = csv.DictReader(open('elections/kenya/data/' + WARD_CANDIDATES_FILE))
+            for row in reader:
+
+                # In this script we only care about the constituencies, because we're building the posts
+                # Actual candidates (and their parties) are done elsewhere
+
+                county_id = row['County Code']
+                ward_id = row['Ward Code']
+
+                # Do we already have this county?
+                if county_id not in counties:
+
+                    # This is a dict rather than just a name in case we need to easily add anything in future.
+                    counties[county_id] = {
+                        'id': county_id,
+                        'name': row['County Name'].title()
+                    }
+
+                # Do we already have this ward?
+                if ward_id not in wards:
+
+                    # This is a dict rather than just a name in case we need to easily add anything in future.
+                    wards[ward_id] = {
+                        'id': ward_id,
+                        'name': row['Ward Name'].title(),
+                        'county_id': row['County Code']
+                    }
+
+            # These elections happen once for each county
+
+            for id, county in counties.iteritems():
+
+                # Set up the election
+                election_data = {
+                    'slug': 'county-' + id + '-' + WARD_ELECTION_SLUG_PREFIX,
+                    'for_post_role': WARD_POST_ROLE,
+                    'name': WARD_ELECTION_NAME_PREFIX + ' ' + county['name'] + ' ' + WARD_ELECTION_NAME_SUFFIX,
+                    'organization_name': county['name'] + ' ' + WARD_ORG_NAME_SUFFIX,
+                    'organization_slug': 'county:' + id + '-' + WARD_ORG_SLUG_SUFFIX,
+                    'party_lists_in_use': False,
+                }
+
+                org = self.get_or_create_organization(
+                    election_data['organization_slug'],
+                    election_data['organization_name'],
+                )
+
+                del election_data['organization_name']
+                del election_data['organization_slug']
+                election_data['organization'] = org
+
+                consistent_data = {
+                    'candidate_membership_role': 'Candidate',
+                    'election_date': ELECTION_DATE,
+                    'current': True,
+                    'use_for_candidate_suggestions': False,
+                    'area_generation': 3,
+                    'organization': org,
+                }
+
+                election_slug = election_data.pop('slug')
+                election_data.update(consistent_data)
+                election, created = Election.objects.update_or_create(
+                    slug=election_slug,
+                    defaults=election_data,
+                )
+
+            # The area and post generation happens per ward
+
+            for id, ward in wards.iteritems():
+
+                # Create the AreaType for the country
+                # WRD is the Kenya MapIt type for Ward
+                area_type, created = AreaType.objects.get_or_create(
+                    name='KEWRD',
+                    defaults={'source': 'MapIt'},
+                )
+
+                # Get the relevant election
+                election_slug = 'county-' + ward['county_id'] + '-' + WARD_ELECTION_SLUG_PREFIX
+                election = Election.objects.get(slug=election_slug)
+
+                # Tie the AreaType to the election
+                election.area_types.add(area_type)
+
+                # At this point we have the election, organisation and area types ready
+
+                # By now constituencies should contain one of each county.
+
+                # Common stuff
+                organization = election.organization
+                post_role = election.for_post_role
+
+                area = self.get_or_create_area(
+                    identifier='ward:' + ward['id'],
+                    name=ward['name'],
+                    classification='Ward',
+                    area_type=area_type
+                )
+
+                post_label = WARD_POST_LABEL_PREFIX + ' ' + ward['name']
+                post_slug = WARD_POST_SLUG_PREFIX + '-' + ward['id']
 
                 post = self.get_or_create_post(
                     slug=post_slug,

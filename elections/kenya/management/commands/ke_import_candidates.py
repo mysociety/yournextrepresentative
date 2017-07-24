@@ -40,6 +40,10 @@ ASSEMBLY_CANDIDATES_FILE = '2017_candidates_assembly.csv'
 ASSEMBLY_ELECTION_SLUG = 'assembly-2017'
 ASSEMBLY_POST_SLUG_PREFIX = 'assembly'
 
+WARD_CANDIDATES_FILE = '2017_candidates_county_assemblies.csv'
+WARD_ELECTION_SLUG_PREFIX = 'county-assembly-2017'
+WARD_POST_SLUG_PREFIX = 'county-assembly'
+
 
 class Command(BaseCommand):
 
@@ -131,6 +135,8 @@ class Command(BaseCommand):
         party_set, created = PartySet.objects.get_or_create(slug=PARTY_SET_SLUG)
 
         # PRESIDENCY
+
+        print('Beginning import of presidency candidates.')
         with transaction.atomic():
 
             # Make sure the election exists
@@ -189,6 +195,7 @@ class Command(BaseCommand):
                 raise Exception('Constraint errors detected. Aborting.')
 
         # SENATE
+        print('Beginning import of senate candidates.')
         with transaction.atomic():
 
             # Make sure the election exists
@@ -246,6 +253,7 @@ class Command(BaseCommand):
                 raise Exception('Constraint errors detected. Aborting.')
 
         # WOMEN REPRESENTATIVES
+        print('Beginning import of women representative candidates.')
         with transaction.atomic():
 
             # Make sure the election exists
@@ -303,6 +311,7 @@ class Command(BaseCommand):
                 raise Exception('Constraint errors detected. Aborting.')
 
         # COUNTY GOVERNORS
+        print('Beginning import of county governor candidates.')
         with transaction.atomic():
 
             # Make sure the election exists
@@ -360,6 +369,7 @@ class Command(BaseCommand):
                 raise Exception('Constraint errors detected. Aborting.')
 
         # ASSEMBLY MEMBERS
+        print('Beginning import of assembly member candidates.')
         with transaction.atomic():
 
             # Make sure the election exists
@@ -410,6 +420,75 @@ class Command(BaseCommand):
                     party=party,
                     election=election
                 )
+
+            errors = check_constraints()
+            if errors:
+                print errors
+                raise Exception('Constraint errors detected. Aborting.')
+
+        # COUNTY ASSEMBLY MEMBERS
+        print('Beginning import of county assembly member candidates.')
+        with transaction.atomic():
+
+            # We keep this dict of elections, otherwise we make thousands of queries
+            elections = {}
+
+            i = 0
+
+            # Get the candidates
+            reader = csv.DictReader(open('elections/kenya/data/' + WARD_CANDIDATES_FILE))
+            for row in reader:
+
+                i += 1
+
+                # Make sure the election exists
+                election_slug = 'county-' + row['County Code'] + '-' + WARD_ELECTION_SLUG_PREFIX
+
+                election = elections.get(election_slug, Election.objects.get(slug=election_slug))
+
+                # Assemble a coherent name
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
+
+                name = other_names + ' ' + surname
+
+                # Build an identifier
+                id = '-'.join([
+                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
+                    re.sub('[^\w]*', '', row['Abbrv'].lower())
+                ])
+
+                person = self.get_or_create_person(
+                    'iebc-ward-import-id',
+                    id,
+                    name,
+                    surname,
+                    other_names,
+                    row['Gender'].title()
+                )
+
+                # Add the party!
+                party = self.get_or_create_party(
+                    identifier=row['Party Code'],
+                    name=row['Political Party Name'].title(),
+                    party_set=party_set
+                )
+
+                # At this point we have a person and a party, so we can go ahead and create a membership
+
+                # First, get the post.
+                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
+                post = Post.objects.get(extra__slug=WARD_POST_SLUG_PREFIX + '-' + row['Ward Code'])
+
+                membership = self.get_or_create_membership(
+                    person=person,
+                    post=post,
+                    party=party,
+                    election=election
+                )
+
+                if not i % 100:
+                    print('Imported ' + str(i))
 
             errors = check_constraints()
             if errors:
