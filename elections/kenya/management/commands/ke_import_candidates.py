@@ -142,8 +142,8 @@ class Command(BaseCommand):
             for row in reader:
 
                 # Assemble a coherent name
-                surname = string.capwords(row['Surname'])
-                other_names = string.capwords(row['Other Names'])
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
 
                 name = other_names + ' ' + surname
 
@@ -159,13 +159,13 @@ class Command(BaseCommand):
                     name,
                     surname,
                     other_names,
-                    string.capwords(row['Gender'])
+                    row['Gender'].title()
                 )
 
                 # Add the party!
                 party = self.get_or_create_party(
                     identifier=row['PartyCode'],
-                    name=string.capwords(row['Political Party Name']),
+                    name=row['Political Party Name'].title(),
                     party_set=party_set
                 )
 
@@ -200,8 +200,8 @@ class Command(BaseCommand):
             for row in reader:
 
                 # Assemble a coherent name
-                surname = string.capwords(row['Surname'])
-                other_names = string.capwords(row['Other Names'])
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
 
                 name = other_names + ' ' + surname
 
@@ -217,13 +217,13 @@ class Command(BaseCommand):
                     name,
                     surname,
                     other_names,
-                    string.capwords(row['Gender'])
+                    row['Gender'].title()
                 )
 
                 # Add the party!
                 party = self.get_or_create_party(
                     identifier=row['Party Code'],
-                    name=string.capwords(row['Political Party Name']),
+                    name=row['Political Party Name'].title(),
                     party_set=party_set
                 )
 
@@ -257,8 +257,8 @@ class Command(BaseCommand):
             for row in reader:
 
                 # Assemble a coherent name
-                surname = string.capwords(row['Surname'])
-                other_names = string.capwords(row['Other Names'])
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
 
                 name = other_names + ' ' + surname
 
@@ -274,13 +274,13 @@ class Command(BaseCommand):
                     name,
                     surname,
                     other_names,
-                    string.capwords(row['Gender'])
+                    row['Gender'].title()
                 )
 
                 # Add the party!
                 party = self.get_or_create_party(
                     identifier=row['Party Code'],
-                    name=string.capwords(row['Political Party Name']),
+                    name=row['Political Party Name'].title(),
                     party_set=party_set
                 )
 
@@ -314,8 +314,8 @@ class Command(BaseCommand):
             for row in reader:
 
                 # Assemble a coherent name
-                surname = string.capwords(row['Surname'])
-                other_names = string.capwords(row['Other Names'])
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
 
                 name = other_names + ' ' + surname
 
@@ -331,13 +331,13 @@ class Command(BaseCommand):
                     name,
                     surname,
                     other_names,
-                    string.capwords(row['Gender'])
+                    row['Gender'].title()
                 )
 
                 # Add the party!
                 party = self.get_or_create_party(
                     identifier=row['Party Code'],
-                    name=string.capwords(row['Political Party Name']),
+                    name=row['Political Party Name'].title(),
                     party_set=party_set
                 )
 
@@ -371,8 +371,8 @@ class Command(BaseCommand):
             for row in reader:
 
                 # Assemble a coherent name
-                surname = string.capwords(row['Surname'])
-                other_names = string.capwords(row['Other Names'])
+                surname = row['Surname'].title()
+                other_names = row['Other Names'].title()
 
                 name = other_names + ' ' + surname
 
@@ -388,13 +388,13 @@ class Command(BaseCommand):
                     name,
                     surname,
                     other_names,
-                    string.capwords(row['Gender'])
+                    row['Gender'].title()
                 )
 
                 # Add the party!
                 party = self.get_or_create_party(
                     identifier=row['Party Code'],
-                    name=string.capwords(row['Political Party Name']),
+                    name=row['Political Party Name'].title(),
                     party_set=party_set
                 )
 

@@ -267,7 +267,7 @@ class Command(BaseCommand):
                     # This is a dict rather than just a name in case we need to easily add anything in future.
                     counties[county_id] = {
                         'id': county_id,
-                        'name': string.capwords(row['County Name'])
+                        'name': row['County Name'].title()
                     }
 
             # By now counties should contain one of each county.
@@ -372,7 +372,7 @@ class Command(BaseCommand):
                     # This is a dict rather than just a name in case we need to easily add anything in future.
                     counties[county_id] = {
                         'id': county_id,
-                        'name': string.capwords(row['County Name'])
+                        'name': row['County Name'].title()
                     }
 
             # By now counties should contain one of each county.
@@ -477,7 +477,7 @@ class Command(BaseCommand):
                     # This is a dict rather than just a name in case we need to easily add anything in future.
                     counties[county_id] = {
                         'id': county_id,
-                        'name': string.capwords(row['County Name'])
+                        'name': row['County Name'].title()
                     }
 
             # By now counties should contain one of each county.
@@ -582,7 +582,7 @@ class Command(BaseCommand):
                     # This is a dict rather than just a name in case we need to easily add anything in future.
                     constituencies[constituency_id] = {
                         'id': constituency_id,
-                        'name': string.capwords(row['Constituency Name'])
+                        'name': row['Constituency Name'].title()
                     }
 
             # By now constituencies should contain one of each county.
