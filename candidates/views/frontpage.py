@@ -83,7 +83,7 @@ class GeoLocatorView(View):
 class AddressFinderView(ContributorsMixin, FormView):
     template_name = 'candidates/frontpage.html'
     form_class = AddressForm
-    country = None
+    country = settings.GEOCODE_COUNTRY
 
     @method_decorator(cache_control(max_age=(60 * 10)))
     @method_decorator(csrf_exempt)

@@ -10,6 +10,10 @@ def default_fetch_area_ids(**kwargs):
 
     return areas
 
+
+def default_get_local_area_id(area):
+    return area[0]
+
 # This is actually taken from Pombola's country-specific code package
 # in pombola/country/__init__.py. You should add to this list anything
 # country-specific you want to be available through an import from
@@ -20,6 +24,7 @@ imports_and_defaults = (
     ('shorten_post_label', lambda post_label: post_label),
     ('get_extra_csv_values', lambda person, election, post: {}),
     ('fetch_area_ids', default_fetch_area_ids),
+    ('get_local_area_id', default_get_local_area_id),
 )
 
 # Note that one could do this without the dynamic import and use of
