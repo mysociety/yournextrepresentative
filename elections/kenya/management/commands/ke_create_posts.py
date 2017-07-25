@@ -128,7 +128,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'County Assembly Member',
                 'POST_SLUG_PREFIX': 'co',
                 'POST_LABEL_PREFIX': 'County Assembly Member for ',
-                'AREA_TYPE_FOR_POSTS': 'KEWRD',
+                'AREA_TYPE_FOR_POSTS': 'WRD',
                 'ORG_NAME': '{0} County Assembly'.format(county_area['name']),
                 'ORG_SLUG': 'county:{0}-county-assembly'.format(county_area['id']),
                 'COUNTY_ID_RESTRICTION': county_area['id'],
@@ -146,7 +146,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'President',
                 'POST_SLUG_PREFIX': 'pr',
                 'POST_LABEL_PREFIX': 'President of ',
-                'AREA_TYPE_FOR_POSTS': 'KECTR',
+                'AREA_TYPE_FOR_POSTS': 'CTR',
                 'ORG_NAME': 'The Presidency',
                 'ORG_SLUG': 'the-presidency'
             },
@@ -157,7 +157,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'Senator',
                 'POST_SLUG_PREFIX': 'se',
                 'POST_LABEL_PREFIX': 'Senator for ',
-                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'AREA_TYPE_FOR_POSTS': 'DIS',
                 'ORG_NAME': 'Senate of Kenya',
                 'ORG_SLUG': 'senate-of-kenya'
             },
@@ -168,7 +168,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'Women Representative',
                 'POST_SLUG_PREFIX': 'wo',
                 'POST_LABEL_PREFIX': 'Women Representative for ',
-                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'AREA_TYPE_FOR_POSTS': 'DIS',
                 'ORG_NAME': 'National Assembly',
                 'ORG_SLUG': 'national-assembly'
             },
@@ -179,7 +179,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'County Governor',
                 'POST_SLUG_PREFIX': 'go',
                 'POST_LABEL_PREFIX': 'County Governor for ',
-                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'AREA_TYPE_FOR_POSTS': 'DIS',
                 'ORG_NAME': 'County Governors',
                 'ORG_SLUG': 'county-governors'
             },
@@ -190,7 +190,7 @@ class Command(BaseCommand):
                 'POST_ROLE': 'Member of the National Assembly',
                 'POST_SLUG_PREFIX': 'na',
                 'POST_LABEL_PREFIX': 'Member of the National Assembly for ',
-                'AREA_TYPE_FOR_POSTS': 'KECON',
+                'AREA_TYPE_FOR_POSTS': 'CON',
                 'ORG_NAME': 'National Assembly',
                 'ORG_SLUG': 'national-assembly'
             }
@@ -247,10 +247,10 @@ class Command(BaseCommand):
             election.area_types.add(area_type)
 
             code_column, name_column, area_id_prefix, classification = {
-                'KECTR': (None, None, 'country:', 'Country'),
-                'KEDIS': ('County Code', 'County Name', 'county:', 'County'),
-                'KECON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
-                'KEWRD': ('Ward Code', 'Ward Name', 'ward:', 'Ward')
+                'CTR': (None, None, 'country:', 'Country'),
+                'DIS': ('County Code', 'County Name', 'county:', 'County'),
+                'CON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
+                'WRD': ('Ward Code', 'Ward Name', 'ward:', 'Ward')
             }[election_metadata['AREA_TYPE_FOR_POSTS']]
 
             if election_metadata['POST_ROLE'] == 'President':
