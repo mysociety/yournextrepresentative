@@ -156,6 +156,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
 
         # Email addresses that error emails are sent to when DEBUG = False
         'ADMINS': conf['ADMINS'],
+        'DEFAULT_FROM_EMAIL': conf['DEFAULT_FROM_EMAIL'],
 
         # SECURITY WARNING: keep the secret key used in production secret!
         'SECRET_KEY': conf['SECRET_KEY'],
