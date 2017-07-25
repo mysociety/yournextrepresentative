@@ -21,18 +21,6 @@ PARTY_SET_NAME = 'Register of Politial Parties'
 
 ELECTION_DATE = date(2017, 8, 8)
 
-PRESIDENCY_ORG_NAME = 'The Presidency'
-PRESIDENCY_ORG_SLUG = 'the-presidency'
-
-SENATE_ORG_NAME = 'Senate of Kenya'
-SENATE_ORG_SLUG = 'senate-of-kenya'
-
-ASSEMBLY_ORG_NAME = 'National Assembly'
-ASSEMBLY_ORG_SLUG = 'national-assembly'
-
-GOV_ORG_NAME = 'County Governors'
-GOV_ORG_SLUG = 'county-governors'
-
 WARD_ORG_NAME_SUFFIX = 'County Assembly'
 WARD_ORG_SLUG_SUFFIX = 'county-assembly'
 
