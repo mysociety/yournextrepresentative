@@ -126,7 +126,7 @@ class Command(BaseCommand):
                 'ELECTION_NAME': '2017 {0} County Assembly Election'.format(county_area['name']),
                 'ELECTION_SLUG': 'co-{0}-2017'.format(county_area['id']),
                 'POST_ROLE': 'County Assembly Member',
-                'POST_SLUG_PREFIX': 'county-assembly',
+                'POST_SLUG_PREFIX': 'co',
                 'POST_LABEL_PREFIX': 'County Assembly Member for ',
                 'AREA_TYPE_FOR_POSTS': 'KEWRD',
                 'ORG_NAME': '{0} County Assembly'.format(county_area['name']),
