@@ -21,9 +21,6 @@ PARTY_SET_NAME = 'Register of Politial Parties'
 
 ELECTION_DATE = date(2017, 8, 8)
 
-WARD_ORG_NAME_SUFFIX = 'County Assembly'
-WARD_ORG_SLUG_SUFFIX = 'county-assembly'
-
 CONSISTENT_ELECTION_DATA = {
     'candidate_membership_role': 'Candidate',
     'election_date': date(2017, 8, 8),
@@ -31,73 +28,6 @@ CONSISTENT_ELECTION_DATA = {
     'use_for_candidate_suggestions': False,
     'area_generation': 3,
 }
-
-ELECTIONS = [
-    {
-        'CANDIDATES_FILE': '2017_candidates_presidency.csv',
-        'ELECTION_NAME': '2017 Presidential Election',
-        'ELECTION_SLUG': 'pres-2017',
-        'POST_SLUG': 'president',
-        'POST_ROLE': 'President',
-        'POST_SLUG_PREFIX': 'president',
-        'POST_LABEL_PREFIX': 'President of ',
-        'AREA_TYPE': 'KECTR',
-        'ORG_NAME': 'The Presidency',
-        'ORG_SLUG': 'the-presidency'
-    },
-    {
-        'CANDIDATES_FILE': '2017_candidates_senate.csv',
-        'ELECTION_NAME': '2017 Senate Election',
-        'ELECTION_SLUG': 'senate-2017',
-        'POST_ROLE': 'Senator',
-        'POST_SLUG_PREFIX': 'senator',
-        'POST_LABEL_PREFIX': 'Senator for ',
-        'AREA_TYPE': 'KEDIS',
-        'ORG_NAME': 'Senate of Kenya',
-        'ORG_SLUG': 'senate-of-kenya'
-    },
-    {
-        'CANDIDATES_FILE': '2017_candidates_wr.csv',
-        'ELECTION_NAME': '2017 Women Representatives Election',
-        'ELECTION_SLUG': 'wr-2017',
-        'POST_ROLE': 'Women Representative',
-        'POST_SLUG_PREFIX': 'wr',
-        'POST_LABEL_PREFIX': 'Women Representative for ',
-        'AREA_TYPE': 'KEDIS',
-        'ORG_NAME': 'National Assembly',
-        'ORG_SLUG': 'national-assembly'
-    },
-    {
-        'CANDIDATES_FILE': '2017_candidates_governors.csv',
-        'ELECTION_NAME': '2017 County Governor Elections',
-        'ELECTION_SLUG': 'governor-2017',
-        'POST_ROLE': 'County Governor',
-        'POST_SLUG_PREFIX': 'governor',
-        'POST_LABEL_PREFIX': 'County Governor for ',
-        'AREA_TYPE': 'KEDIS',
-        'ORG_NAME': 'County Governors',
-        'ORG_SLUG': 'county-governors'
-    },
-    {
-        'CANDIDATES_FILE': '2017_candidates_assembly.csv',
-        'ELECTION_NAME': '2017 National Assembly Election',
-        'ELECTION_SLUG': 'assembly-2017',
-        'POST_ROLE': 'Assembly Member',
-        'POST_SLUG_PREFIX': 'assembly',
-        'POST_LABEL_PREFIX': 'Assembly Member for ',
-        'AREA_TYPE': 'KECON',
-        'ORG_NAME': 'National Assembly',
-        'ORG_SLUG': 'national-assembly'
-    }
-]
-
-WARD_CANDIDATES_FILE = '2017_candidates_county_assemblies.csv'
-WARD_ELECTION_NAME_PREFIX = '2017'
-WARD_ELECTION_NAME_SUFFIX = 'County Assembly Election'
-WARD_ELECTION_SLUG_PREFIX = 'county-assembly-2017'
-WARD_POST_ROLE = 'County Assembly Member'
-WARD_POST_SLUG_PREFIX = 'county-assembly'
-WARD_POST_LABEL_PREFIX = 'County Assembly Member for '
 
 
 class Command(BaseCommand):
@@ -156,8 +86,7 @@ class Command(BaseCommand):
 
         return post
 
-
-    def areas_from_csv(self, csv_filename, code_column, name_column):
+    def areas_from_csv(self, csv_filename, code_column, name_column, county_id_restriction):
         # At this point we have the election, organisation and area types ready.
         # Iterate over the senators CSV to build our lists of other things to add.
 
@@ -165,6 +94,9 @@ class Command(BaseCommand):
 
         reader = csv.DictReader(open('elections/kenya/data/' + csv_filename))
         for row in reader:
+
+            if (county_id_restriction is not None) and county_id_restriction != row.get('County Code'):
+                continue
 
             # In this script we only care about the areas, because we're building the posts
             # Actual candidates (and their parties) are done elsewhere
@@ -182,6 +114,90 @@ class Command(BaseCommand):
 
         return areas
 
+    def get_county_assembly_elections(self):
+        county_areas = self.areas_from_csv(
+            '2017_candidates_county_assemblies.csv',
+            'County Code',
+            'County Name',
+            None)
+        return [
+            {
+                'CANDIDATES_FILE': '2017_candidates_county_assemblies.csv',
+                'ELECTION_NAME': '2017 {0} County Assembly Election'.format(county_area['name']),
+                'ELECTION_SLUG': 'co-{0}-2017'.format(county_area['id']),
+                'POST_ROLE': 'County Assembly Member',
+                'POST_SLUG_PREFIX': 'county-assembly',
+                'POST_LABEL_PREFIX': 'County Assembly Member for ',
+                'AREA_TYPE_FOR_POSTS': 'KEWRD',
+                'ORG_NAME': '{0} County Assembly'.format(county_area['name']),
+                'ORG_SLUG': 'county:{0}-county-assembly'.format(county_area['id']),
+                'COUNTY_ID_RESTRICTION': county_area['id'],
+            }
+            for county_area in county_areas.values()
+        ]
+
+    def get_all_elections(self):
+        elections = [
+            {
+                'CANDIDATES_FILE': '2017_candidates_presidency.csv',
+                'ELECTION_NAME': '2017 Presidential Election',
+                'ELECTION_SLUG': 'pr-2017',
+                'POST_SLUG': 'president',
+                'POST_ROLE': 'President',
+                'POST_SLUG_PREFIX': 'pr',
+                'POST_LABEL_PREFIX': 'President of ',
+                'AREA_TYPE_FOR_POSTS': 'KECTR',
+                'ORG_NAME': 'The Presidency',
+                'ORG_SLUG': 'the-presidency'
+            },
+            {
+                'CANDIDATES_FILE': '2017_candidates_senate.csv',
+                'ELECTION_NAME': '2017 Senate Election',
+                'ELECTION_SLUG': 'se-2017',
+                'POST_ROLE': 'Senator',
+                'POST_SLUG_PREFIX': 'se',
+                'POST_LABEL_PREFIX': 'Senator for ',
+                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'ORG_NAME': 'Senate of Kenya',
+                'ORG_SLUG': 'senate-of-kenya'
+            },
+            {
+                'CANDIDATES_FILE': '2017_candidates_wr.csv',
+                'ELECTION_NAME': '2017 Women Representatives Election',
+                'ELECTION_SLUG': 'wo-2017',
+                'POST_ROLE': 'Women Representative',
+                'POST_SLUG_PREFIX': 'wo',
+                'POST_LABEL_PREFIX': 'Women Representative for ',
+                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'ORG_NAME': 'National Assembly',
+                'ORG_SLUG': 'national-assembly'
+            },
+            {
+                'CANDIDATES_FILE': '2017_candidates_governors.csv',
+                'ELECTION_NAME': '2017 County Governor Elections',
+                'ELECTION_SLUG': 'go-2017',
+                'POST_ROLE': 'County Governor',
+                'POST_SLUG_PREFIX': 'go',
+                'POST_LABEL_PREFIX': 'County Governor for ',
+                'AREA_TYPE_FOR_POSTS': 'KEDIS',
+                'ORG_NAME': 'County Governors',
+                'ORG_SLUG': 'county-governors'
+            },
+            {
+                'CANDIDATES_FILE': '2017_candidates_assembly.csv',
+                'ELECTION_NAME': '2017 National Assembly Election',
+                'ELECTION_SLUG': 'na-2017',
+                'POST_ROLE': 'Member of the National Assembly',
+                'POST_SLUG_PREFIX': 'na',
+                'POST_LABEL_PREFIX': 'Member of the National Assembly for ',
+                'AREA_TYPE_FOR_POSTS': 'KECON',
+                'ORG_NAME': 'National Assembly',
+                'ORG_SLUG': 'national-assembly'
+            }
+        ]
+        return elections + self.get_county_assembly_elections()
+
+    @transaction.atomic
     def handle(self, *args, **options):
 
         # Make sure the PartySet exists
@@ -192,206 +208,90 @@ class Command(BaseCommand):
             }
         )
 
-        for election_metadata in ELECTIONS:
+        for election_metadata in self.get_all_elections():
 
-            with transaction.atomic():
+            # Set up the election
+            election_data = {
+                'slug': election_metadata['ELECTION_SLUG'],
+                'for_post_role': election_metadata['POST_ROLE'],
+                'name': election_metadata['ELECTION_NAME'],
+                'organization_name': election_metadata['ORG_NAME'],
+                'organization_slug': election_metadata['ORG_SLUG'],
+                'party_lists_in_use': False,
+            }
 
-                # Set up the election
-                election_data = {
-                    'slug': election_metadata['ELECTION_SLUG'],
-                    'for_post_role': election_metadata['POST_ROLE'],
-                    'name': election_metadata['ELECTION_NAME'],
-                    'organization_name': election_metadata['ORG_NAME'],
-                    'organization_slug': election_metadata['ORG_SLUG'],
-                    'party_lists_in_use': False,
+            org = self.get_or_create_organization(
+                election_data['organization_slug'],
+                election_data['organization_name'],
+            )
+
+            del election_data['organization_name']
+            del election_data['organization_slug']
+            election_data['organization'] = org
+
+            election_slug = election_data.pop('slug')
+            election_data.update(CONSISTENT_ELECTION_DATA)
+            election, created = Election.objects.update_or_create(
+                slug=election_slug,
+                defaults=election_data,
+            )
+
+            # Create the AreaType for the country
+            # DIS is the Kenya MapIt type for County/District
+            area_type, created = AreaType.objects.get_or_create(
+                name=election_metadata['AREA_TYPE_FOR_POSTS'],
+                defaults={'source': 'MapIt'},
+            )
+
+            # Tie the AreaType to the election
+            election.area_types.add(area_type)
+
+            code_column, name_column, area_id_prefix, classification = {
+                'KECTR': (None, None, 'country:', 'Country'),
+                'KEDIS': ('County Code', 'County Name', 'county:', 'County'),
+                'KECON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
+                'KEWRD': ('Ward Code', 'Ward Name', 'ward:', 'Ward')
+            }[election_metadata['AREA_TYPE_FOR_POSTS']]
+
+            if election_metadata['POST_ROLE'] == 'President':
+                areas_for_posts = {
+                    'country:1': {
+                        'id': 'country:1',
+                        'name': 'Kenya',
+                    }
                 }
-
-                org = self.get_or_create_organization(
-                    election_data['organization_slug'],
-                    election_data['organization_name'],
+            else:
+                areas_for_posts = self.areas_from_csv(
+                    election_metadata['CANDIDATES_FILE'],
+                    code_column,
+                    name_column,
+                    election_metadata.get('COUNTY_ID_RESTRICTION')
                 )
 
-                del election_data['organization_name']
-                del election_data['organization_slug']
-                election_data['organization'] = org
+            # By now areas_for_posts should contain one of each area.
 
-                election_slug = election_data.pop('slug')
-                election_data.update(CONSISTENT_ELECTION_DATA)
-                election, created = Election.objects.update_or_create(
-                    slug=election_slug,
-                    defaults=election_data,
-                )
+            # Common stuff
+            organization = election.organization
+            post_role = election.for_post_role
 
-                # Create the AreaType for the country
-                # DIS is the Kenya MapIt type for County/District
-                area_type, created = AreaType.objects.get_or_create(
-                    name=election_metadata['AREA_TYPE'],
-                    defaults={'source': 'MapIt'},
-                )
+            # For each area, make sure the area exists and make sure a post exists.
+            for id, area in areas_for_posts.iteritems():
 
-                # Tie the AreaType to the election
-                election.area_types.add(area_type)
-
-                code_column, name_column, area_id_prefix, classification = {
-                    'KECTR': (None, None, 'country:', 'Country'),
-                    'KEDIS': ('County Code', 'County Name', 'county:', 'County'),
-                    'KECON': ('Constituency Code', 'Constituency Name', 'constituency:', 'Constituency'),
-                }[election_metadata['AREA_TYPE']]
-
-                if election_metadata['POST_ROLE'] == 'President':
-                    areas = {
-                        'country:1': {
-                            'id': 'country:1',
-                            'name': 'Kenya',
-                        }
-                    }
-                else:
-                    areas = self.areas_from_csv(
-                        election_metadata['CANDIDATES_FILE'], 'County Code', 'County Name')
-
-                # By now areas should contain one of each area.
-
-                # Common stuff
-                organization = election.organization
-                post_role = election.for_post_role
-
-                # For each area, make sure the area exists and make sure a post exists.
-                for id, area in areas.iteritems():
-
-                    area_object = self.get_or_create_area(
-                        identifier=area_id_prefix + area['id'],
-                        name=area['name'],
-                        classification=classification,
-                        area_type=area_type
-                    )
-
-                    post_label = election_metadata['POST_LABEL_PREFIX'] + ' ' + area['name']
-                    post_slug = election_metadata['POST_SLUG_PREFIX'] + '-' + area['id']
-
-                    post = self.get_or_create_post(
-                        slug=post_slug,
-                        label=post_label,
-                        organization=organization,
-                        area=area_object,
-                        role=post_role,
-                        election=election,
-                        party_set=party_set
-                    )
-
-                errors = check_constraints()
-                if errors:
-                    print errors
-                    raise Exception('Constraint errors detected. Aborting.')
-
-        return
-
-        # COUNTY ASSEMBLY MEMBERS
-        with transaction.atomic():
-
-            # Iterate over the members CSV to build our lists of other things to add.
-
-            counties = {}
-            wards = {}
-
-            reader = csv.DictReader(open('elections/kenya/data/' + WARD_CANDIDATES_FILE))
-            for row in reader:
-
-                # In this script we only care about the constituencies, because we're building the posts
-                # Actual candidates (and their parties) are done elsewhere
-
-                county_id = row['County Code']
-                ward_id = row['Ward Code']
-
-                # Do we already have this county?
-                if county_id not in counties:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    counties[county_id] = {
-                        'id': county_id,
-                        'name': row['County Name'].title()
-                    }
-
-                # Do we already have this ward?
-                if ward_id not in wards:
-
-                    # This is a dict rather than just a name in case we need to easily add anything in future.
-                    wards[ward_id] = {
-                        'id': ward_id,
-                        'name': row['Ward Name'].title(),
-                        'county_id': row['County Code']
-                    }
-
-            # These elections happen once for each county
-
-            for id, county in counties.iteritems():
-
-                # Set up the election
-                election_data = {
-                    'slug': 'county-' + id + '-' + WARD_ELECTION_SLUG_PREFIX,
-                    'for_post_role': WARD_POST_ROLE,
-                    'name': WARD_ELECTION_NAME_PREFIX + ' ' + county['name'] + ' ' + WARD_ELECTION_NAME_SUFFIX,
-                    'organization_name': county['name'] + ' ' + WARD_ORG_NAME_SUFFIX,
-                    'organization_slug': 'county:' + id + '-' + WARD_ORG_SLUG_SUFFIX,
-                    'party_lists_in_use': False,
-                }
-
-                org = self.get_or_create_organization(
-                    election_data['organization_slug'],
-                    election_data['organization_name'],
-                )
-
-                del election_data['organization_name']
-                del election_data['organization_slug']
-                election_data['organization'] = org
-
-                election_slug = election_data.pop('slug')
-                election_data.update(CONSISTENT_ELECTION_DATA)
-                election, created = Election.objects.update_or_create(
-                    slug=election_slug,
-                    defaults=election_data,
-                )
-
-            # The area and post generation happens per ward
-
-            for id, ward in wards.iteritems():
-
-                # Create the AreaType for the country
-                # WRD is the Kenya MapIt type for Ward
-                area_type, created = AreaType.objects.get_or_create(
-                    name='KEWRD',
-                    defaults={'source': 'MapIt'},
-                )
-
-                # Get the relevant election
-                election_slug = 'county-' + ward['county_id'] + '-' + WARD_ELECTION_SLUG_PREFIX
-                election = Election.objects.get(slug=election_slug)
-
-                # Tie the AreaType to the election
-                election.area_types.add(area_type)
-
-                # At this point we have the election, organisation and area types ready
-
-                # By now constituencies should contain one of each county.
-
-                # Common stuff
-                organization = election.organization
-                post_role = election.for_post_role
-
-                area = self.get_or_create_area(
-                    identifier='ward:' + ward['id'],
-                    name=ward['name'],
-                    classification='Ward',
+                area_object = self.get_or_create_area(
+                    identifier=area_id_prefix + area['id'],
+                    name=area['name'],
+                    classification=classification,
                     area_type=area_type
                 )
 
-                post_label = WARD_POST_LABEL_PREFIX + ' ' + ward['name']
-                post_slug = WARD_POST_SLUG_PREFIX + '-' + ward['id']
+                post_label = election_metadata['POST_LABEL_PREFIX'] + ' ' + area['name']
+                post_slug = election_metadata['POST_SLUG_PREFIX'] + '-' + area['id']
 
-                post = self.get_or_create_post(
+                self.get_or_create_post(
                     slug=post_slug,
                     label=post_label,
                     organization=organization,
-                    area=area,
+                    area=area_object,
                     role=post_role,
                     election=election,
                     party_set=party_set
