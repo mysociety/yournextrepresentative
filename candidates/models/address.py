@@ -13,6 +13,8 @@ import requests
 
 from elections.models import Election
 
+from candidates.election_specific import get_local_area_id
+
 # We use this both for validation of address and the results of the
 # lookup, so the MapIt and geocoder lookups should be cached so we
 # don't make double requests:
@@ -58,7 +60,7 @@ def check_address(address_string, country=None):
     types_and_areas = [
         {
             'area_type_code': a[1]['type'],
-            'area_id': a[0],
+            'area_id': get_local_area_id(a),
         }
         for a in sorted_mapit_results
     ]
