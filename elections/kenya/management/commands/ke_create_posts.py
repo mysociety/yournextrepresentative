@@ -255,8 +255,8 @@ class Command(BaseCommand):
 
             if election_metadata['POST_ROLE'] == 'President':
                 areas_for_posts = {
-                    'country:1': {
-                        'id': 'country:1',
+                    '1': {
+                        'id': '1',
                         'name': 'Kenya',
                     }
                 }
