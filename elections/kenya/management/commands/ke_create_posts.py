@@ -24,6 +24,13 @@ ELECTION_DATE = date(2017, 8, 8)
 WARD_ORG_NAME_SUFFIX = 'County Assembly'
 WARD_ORG_SLUG_SUFFIX = 'county-assembly'
 
+CONSISTENT_ELECTION_DATA = {
+    'candidate_membership_role': 'Candidate',
+    'election_date': date(2017, 8, 8),
+    'current': True,
+    'use_for_candidate_suggestions': False,
+    'area_generation': 3,
+}
 
 ELECTIONS = [
     {
@@ -185,14 +192,6 @@ class Command(BaseCommand):
             }
         )
 
-        consistent_election_data = {
-            'candidate_membership_role': 'Candidate',
-            'election_date': date(2017, 8, 8),
-            'current': True,
-            'use_for_candidate_suggestions': False,
-            'area_generation': 3,
-        }
-
         for election_metadata in ELECTIONS:
 
             with transaction.atomic():
@@ -217,7 +216,7 @@ class Command(BaseCommand):
                 election_data['organization'] = org
 
                 election_slug = election_data.pop('slug')
-                election_data.update(consistent_election_data)
+                election_data.update(CONSISTENT_ELECTION_DATA)
                 election, created = Election.objects.update_or_create(
                     slug=election_slug,
                     defaults=election_data,
@@ -346,7 +345,7 @@ class Command(BaseCommand):
                 election_data['organization'] = org
 
                 election_slug = election_data.pop('slug')
-                election_data.update(consistent_election_data)
+                election_data.update(CONSISTENT_ELECTION_DATA)
                 election, created = Election.objects.update_or_create(
                     slug=election_slug,
                     defaults=election_data,
