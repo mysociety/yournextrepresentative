@@ -12,7 +12,6 @@ from elections.models import Election
 from popolo.models import Organization, Post, Person, Membership
 
 import csv
-import string
 import re
 
 from candidates.utils import strip_accents
@@ -44,6 +43,45 @@ ASSEMBLY_POST_SLUG_PREFIX = 'assembly'
 WARD_CANDIDATES_FILE = '2017_candidates_county_assemblies.csv'
 WARD_ELECTION_SLUG_PREFIX = 'county-assembly-2017'
 WARD_POST_SLUG_PREFIX = 'county-assembly'
+
+ELECTIONS = [
+    {
+        'CANDIDATES_FILE': '2017_candidates_presidency.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'pr-2017',
+        'ROW_TO_POST_ID': lambda row: 'pr-1',
+        'CANDIDATE_ID_PREFIX': 'pr'
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_senate.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'se-2017',
+        'ROW_TO_POST_ID': lambda row: 'se-{0}'.format(row['County Code']),
+        'CANDIDATE_ID_PREFIX': 'se'
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_wr.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'wo-2017',
+        'ROW_TO_POST_ID': lambda row: 'wo-{0}'.format(row['County Code']),
+        'CANDIDATE_ID_PREFIX': 'wo'
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_governors.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'go-2017',
+        'ROW_TO_POST_ID': lambda row: 'go-{0}'.format(row['County Code']),
+        'CANDIDATE_ID_PREFIX': 'go'
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_assembly.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'na-2017',
+        'ROW_TO_POST_ID': lambda row: 'na-{0}'.format(row['Constituency Code']),
+        'CANDIDATE_ID_PREFIX': 'na'
+    },
+    {
+        'CANDIDATES_FILE': '2017_candidates_county_assemblies.csv',
+        'ROW_TO_ELECTION_SLUG': lambda row: 'co-{0}-2017'.format(row['County Code']),
+        'ROW_TO_POST_ID': lambda row: 'co-{0}'.format(row['Ward Code']),
+        'CANDIDATE_ID_PREFIX': 'co'
+    }
+]
 
 
 class Command(BaseCommand):
@@ -130,6 +168,67 @@ class Command(BaseCommand):
         person.extra.record_version(change_metadata)
         person.extra.save()
 
+    def import_candidates_for_election(self, election, party_set):
+
+        # Get the candidates
+        reader = csv.DictReader(open('elections/kenya/data/' + election['CANDIDATES_FILE']))
+
+        election_objects = {}
+
+        for i, row in enumerate(reader):
+
+            election_slug = election['ROW_TO_ELECTION_SLUG'](row)
+
+            # Make sure the election exists
+            election_object = election_objects.get(
+                election_slug,
+                Election.objects.get(slug=election_slug)
+            )
+
+            # Assemble a coherent name
+            surname = row['Surname'].title()
+            other_names = row['Other Names'].title()
+
+            name = other_names + ' ' + surname
+
+            # Build an identifier
+            identifier = '{0}-{1}'.format(election['CANDIDATE_ID_PREFIX'], row['No'])
+
+            person = self.get_or_create_person(
+                'iebc-{0}-import-id'.format(election['CANDIDATE_ID_PREFIX']),
+                identifier,
+                name,
+                surname,
+                other_names,
+                row['Gender'].title()
+            )
+
+            # Add the party!
+            party = self.get_or_create_party(
+                identifier=row['Party Code'],
+                name=row['Political Party Name'].title(),
+                party_set=party_set
+            )
+
+            # At this point we have a person and a party, so we can go ahead and create a membership
+
+            # First, get the post.
+            # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
+            post_slug = election['ROW_TO_POST_ID'](row)
+            post = Post.objects.get(extra__slug=post_slug)
+
+            membership = self.get_or_create_membership(
+                person=person,
+                post=post,
+                party=party,
+                election=election_object
+            )
+
+            if not (i + 1) % 50:
+                print('Imported {}'.format(i + 1))
+
+
+    @transaction.atomic
     def handle(self, *args, **options):
 
         # Make sure the PartySet exists
@@ -140,387 +239,11 @@ class Command(BaseCommand):
             }
         )
 
-        # PRESIDENCY
-
-        print('Beginning import of presidency candidates.')
-        with transaction.atomic():
-
-            # Make sure the election exists
-            election = Election.objects.get(slug=PRESIDENCY_ELECTION_SLUG)
-
-            # Get the candidates
-
-            reader = csv.DictReader(open('elections/kenya/data/' + PRESIDENCY_CANDIDATES_FILE))
-            for row in reader:
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-presidency-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['PartyCode'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # Because this is the presidency, there's only the one.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=PRESIDENCY_POST_SLUG)
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # SENATE
-        print('Beginning import of senate candidates.')
-        with transaction.atomic():
-
-            # Make sure the election exists
-            election = Election.objects.get(slug=SENATE_ELECTION_SLUG)
-
-            i = 0
-
-            # Get the candidates
-            reader = csv.DictReader(open('elections/kenya/data/' + SENATE_CANDIDATES_FILE))
-            for row in reader:
-
-                i += 1
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-senate-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['Party Code'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=SENATE_POST_SLUG_PREFIX + '-' + row['County Code'])
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-                if not i % 50:
-                    print('Imported ' + str(i))
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # WOMEN REPRESENTATIVES
-        print('Beginning import of women representative candidates.')
-        with transaction.atomic():
-
-            # Make sure the election exists
-            election = Election.objects.get(slug=WR_ELECTION_SLUG)
-
-            i = 0
-
-            # Get the candidates
-            reader = csv.DictReader(open('elections/kenya/data/' + WR_CANDIDATES_FILE))
-            for row in reader:
-
-                i += 1
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-wr-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['Party Code'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=WR_POST_SLUG_PREFIX + '-' + row['County Code'])
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-                if not i % 50:
-                    print('Imported ' + str(i))
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # COUNTY GOVERNORS
-        print('Beginning import of county governor candidates.')
-        with transaction.atomic():
-
-            # Make sure the election exists
-            election = Election.objects.get(slug=GOV_ELECTION_SLUG)
-
-            i = 0
-
-            # Get the candidates
-            reader = csv.DictReader(open('elections/kenya/data/' + GOV_CANDIDATES_FILE))
-            for row in reader:
-
-                i += 1
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-gov-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['Party Code'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=GOV_POST_SLUG_PREFIX + '-' + row['County Code'])
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-                if not i % 50:
-                    print('Imported ' + str(i))
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # ASSEMBLY MEMBERS
-        print('Beginning import of assembly member candidates.')
-        with transaction.atomic():
-
-            # Make sure the election exists
-            election = Election.objects.get(slug=ASSEMBLY_ELECTION_SLUG)
-
-            i = 0
-
-            # Get the candidates
-            reader = csv.DictReader(open('elections/kenya/data/' + ASSEMBLY_CANDIDATES_FILE))
-            for row in reader:
-
-                i += 1
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-assembly-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['Party Code'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=ASSEMBLY_POST_SLUG_PREFIX + '-' + row['Constituency Code'])
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-                if not i % 100:
-                    print('Imported ' + str(i))
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
-
-        # COUNTY ASSEMBLY MEMBERS
-        print('Beginning import of county assembly member candidates.')
-        with transaction.atomic():
-
-            # We keep this dict of elections, otherwise we make thousands of queries
-            elections = {}
-
-            i = 0
-
-            # Get the candidates
-            reader = csv.DictReader(open('elections/kenya/data/' + WARD_CANDIDATES_FILE))
-            for row in reader:
-
-                i += 1
-
-                # Make sure the election exists
-                election_slug = 'county-' + row['County Code'] + '-' + WARD_ELECTION_SLUG_PREFIX
-
-                election = elections.get(election_slug, Election.objects.get(slug=election_slug))
-
-                # Assemble a coherent name
-                surname = row['Surname'].title()
-                other_names = row['Other Names'].title()
-
-                name = other_names + ' ' + surname
-
-                # Build an identifier
-                id = '-'.join([
-                    re.sub('[^\w]*', '', re.sub(r' ', '-', strip_accents(name.lower()))),
-                    re.sub('[^\w]*', '', row['Abbrv'].lower())
-                ])
-
-                person = self.get_or_create_person(
-                    'iebc-ward-import-id',
-                    id,
-                    name,
-                    surname,
-                    other_names,
-                    row['Gender'].title()
-                )
-
-                # Add the party!
-                party = self.get_or_create_party(
-                    identifier=row['Party Code'],
-                    name=row['Political Party Name'].title(),
-                    party_set=party_set
-                )
-
-                # At this point we have a person and a party, so we can go ahead and create a membership
-
-                # First, get the post.
-                # If this post doesn't exist, we should drop out because someone hasn't run the posts script.
-                post = Post.objects.get(extra__slug=WARD_POST_SLUG_PREFIX + '-' + row['Ward Code'])
-
-                membership = self.get_or_create_membership(
-                    person=person,
-                    post=post,
-                    party=party,
-                    election=election
-                )
-
-                if not i % 100:
-                    print('Imported ' + str(i))
-
-            errors = check_constraints()
-            if errors:
-                print errors
-                raise Exception('Constraint errors detected. Aborting.')
+        for election in ELECTIONS:
+            print('Importing candidates for election: {}'.format(election['CANDIDATES_FILE']))
+            self.import_candidates_for_election(election, party_set)
+
+        errors = check_constraints()
+        if errors:
+            print errors
+            raise Exception('Constraint errors detected. Aborting.')
