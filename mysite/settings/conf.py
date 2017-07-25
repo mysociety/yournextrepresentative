@@ -467,6 +467,7 @@ def get_settings(conf_file_leafname, election_app=None, tests=False):
         result['ACCOUNT_DEFAULT_HTTP_PROTOCOL'] = 'https'
     for optional_election_app_setting, default in (
             ('AREAS_TO_ALWAYS_RETURN', []),
+            ('GEOCODE_COUNTRY', None),
     ):
         try:
             result[optional_election_app_setting] = \
