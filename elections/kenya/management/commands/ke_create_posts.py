@@ -109,7 +109,7 @@ class Command(BaseCommand):
                 # This is a dict rather than just a name in case we need to easily add anything in future.
                 areas[area_id] = {
                     'id': area_id,
-                    'name': row[name_column].title()
+                    'name': string.capwords(row[name_column])
                 }
 
         return areas

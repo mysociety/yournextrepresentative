@@ -13,6 +13,7 @@ from popolo.models import Organization, Post, Person, Membership
 
 import csv
 import re
+import string
 
 from candidates.utils import strip_accents
 
@@ -186,8 +187,8 @@ class Command(BaseCommand):
             )
 
             # Assemble a coherent name
-            surname = row['Surname'].title()
-            other_names = row['Other Names'].title()
+            surname = string.capwords(row['Surname'])
+            other_names = string.capwords(row['Other Names'])
 
             name = other_names + ' ' + surname
 
