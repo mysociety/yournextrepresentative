@@ -284,7 +284,7 @@ class Command(BaseCommand):
                     area_type=area_type
                 )
 
-                post_label = election_metadata['POST_LABEL_PREFIX'] + ' ' + area['name']
+                post_label = election_metadata['POST_LABEL_PREFIX'] + area['name']
                 post_slug = election_metadata['POST_SLUG_PREFIX'] + '-' + area['id']
 
                 self.get_or_create_post(
