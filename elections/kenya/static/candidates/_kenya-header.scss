@@ -1,0 +1,81 @@
+.header {
+    background-color: $color-offwhite;
+    border-bottom: 1px solid darken($color-offwhite, 10%);
+    color: inherit;
+
+    .lead {
+        color: mix($color-offwhite, #000, 50%);
+    }
+}
+
+.header__masthead {
+    background-color: $color-green;
+    color: #fff;
+    padding: 10px 0; // plus 40px logo = 60px total header height to match mzalendo.com
+
+    @media (min-width: 960px) {
+        background-image: url(/static/img/mzalendo-header-background.svg), -webkit-linear-gradient(90deg, #000 50%, $color-red 50%);
+        background-image: url(/static/img/mzalendo-header-background.svg), linear-gradient(90deg, #000 50%, $color-red 50%);
+        background-size: 1060px 100%,100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .nav-links {
+        margin-top: 0.4em; // vertically align in new, taller header
+    }
+}
+
+a.header__masthead__logo {
+    display: block;
+    width: 165px;
+    height: 0;
+    padding-top: 40px;
+    overflow: hidden;
+    background: transparent url(/static/img/mzalendo-logo.png) 0 0 no-repeat;
+    background-image: url(/static/img/mzalendo-logo.svg), none;
+    background-size: 165px 40px;
+
+    &:hover,
+    &:focus {
+        border-bottom: none;
+        margin-bottom: 0;
+        display: block;
+    }
+}
+
+.header__nav {
+    padding-top: 1em; // down from a completely bizarre 2em
+}
+
+.header__nav,
+.header__hero {
+    // Header background is cream now, so link underlines need to match.
+    a {
+        &:hover,
+        &:focus {
+            border-bottom-color: mix($color-offwhite, #000, 70%);
+        }
+    }
+}
+
+.header__nav__search {
+    input,
+    input:focus {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: inherit;
+
+        @include placeholder-style() {
+            color: #999;
+        }
+    }
+}
+
+.nav-language {
+    display: none;
+}
+
+.person__hero h1 + p {
+    color: mix($color-offwhite, #000, 50%);
+}

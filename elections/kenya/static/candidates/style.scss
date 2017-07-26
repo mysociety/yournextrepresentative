@@ -5,15 +5,15 @@
 // country have a garish colour scheme instead, as a reminder to people
 // to change it (this is what FixMyStreet does).
 
-$color-green: #009e49;
-$color-red: #ef2b2d;
+$color-green: #009f57;
+$color-red: #d40000;
 $color-gold: #fcd116;
 
 $color-darkgreen: darken($color-green, 20%);
 $color-lightgreen: lighten($color-green, 10%);
 $color-palegreen: mix($color-green, #fff, 50%);
 
-$color-offwhite: #f3f3f3;
+$color-offwhite: #f2f0e7;
 $color-cream: #e4dfdb;
 $color-yellow: #fdf2d5;
 $color-cyan: #029db9;
@@ -60,6 +60,8 @@ $button-lrg: rem-calc(14);
 $button-radius: 3px;
 $code-font-family: Consolas, Monaco, 'Liberation Mono', Courier, monospace;
 
+$row-width: rem-calc(960);
+
 @import "../foundation/scss/normalize";
 @import "../foundation/scss/foundation";
 
@@ -101,10 +103,6 @@ a {
     }
 }
 
-.finder__forms {
-  background-color: $color-gold;
-
-  label {
-    color: #333;
-  }
-}
+@import "kenya-header";
+@import "kenya-finder";
+@import "kenya-footer";

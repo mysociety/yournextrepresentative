@@ -1,0 +1,12 @@
+@media #{$medium-up} {
+    .finder__forms {
+        background-color: #fff;
+        border: 1px solid rgba(#000, 0.1);
+    }
+}
+
+.geolocation-link {
+    &:before {
+        @include high-dpi-background-image('img/location-green', 16px, 16px);
+    }
+}
