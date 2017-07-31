@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -246,5 +246,6 @@ class Command(BaseCommand):
 
         errors = check_constraints()
         if errors:
-            print errors
+            for e in errors:
+                print(e)
             raise Exception('Constraint errors detected. Aborting.')

@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 from django.test import TestCase
 from popolo.models import Post
@@ -17,7 +17,7 @@ class PairedConstraintCheckTests(UK2015ExamplesMixin, TestCase):
     def test_no_problems_normally(self):
         errors = check_paired_models()
         for e in errors:
-            print e
+            print(e)
         self.assertEqual(0, len(errors))
 
     def test_base_with_no_extra_detected(self):
