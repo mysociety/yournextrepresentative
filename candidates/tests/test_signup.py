@@ -4,13 +4,25 @@ from __future__ import unicode_literals
 
 from usersettings.shortcuts import get_current_usersettings
 
+from allauth.socialaccount.models import SocialApp
 from django_webtest import WebTest
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 
 from .settings import SettingsMixin
 
-
 class SettingsTests(SettingsMixin, WebTest):
+
+    def setUp(self):
+        super(SettingsTests, self).setUp()
+        social_account = SocialApp.objects.create(
+            provider='facebook',
+            name='Fake Facebook SocialAccount',
+            client_id='abcdefghijklm',
+            secret='AAAAAAAAAAAAAAAA',
+        )
+        site = Site.objects.get()
+        social_account.sites.add(site)
 
     def test_signup_allowed(self):
         settings_url = reverse(
