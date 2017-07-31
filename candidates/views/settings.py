@@ -29,8 +29,10 @@ class SettingsView(GroupRequiredMixin, FormView):
         # by those conveninence method, including the
         # self.request.usersettings attribute set by the middleware,
         # may not be in sync with the database any more.
-        kwargs['instance'] = SiteSettings.objects.get(
-            site_id=settings.SITE_ID)
+        kwargs['instance'], _ = SiteSettings.objects.get_or_create(
+            site_id=settings.SITE_ID,
+            defaults={'user': self.request.user}
+        )
         return kwargs
 
     def form_valid(self, form):
