@@ -36,3 +36,4 @@ from .auth import RESULT_RECORDERS_GROUP_NAME
 from .auth import EDIT_SETTINGS_GROUP_NAME
 
 from .sitesettings import SiteSettings
+from .sitesettings import get_site_setting

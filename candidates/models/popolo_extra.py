@@ -36,6 +36,7 @@ from .fields import (
 )
 from ..diffs import get_version_diffs
 from ..twitter_api import update_twitter_user_id, TwitterAPITokenMissing
+from .sitesettings import get_site_setting
 from .versions import get_person_as_version_data
 
 """Extensions to the base django-popolo classes for YourNextRepresentative
@@ -706,8 +707,8 @@ class PartySet(models.Model):
             role=models.F('extra__election__candidate_membership_role'),
             on_behalf_of__party_sets=self,
         )
-        user_settings = get_current_usersettings()
-        minimum_count = user_settings.CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST
+        minimum_count = get_site_setting(
+            'CANDIDATES_REQUIRED_FOR_WEIGHTED_PARTY_LIST')
         qs = None
         if candidacies_current_qs.count() > minimum_count:
             qs = candidacies_current_qs

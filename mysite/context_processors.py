@@ -10,7 +10,8 @@ from candidates.models import (
     TRUSTED_TO_LOCK_GROUP_NAME,
     TRUSTED_TO_RENAME_GROUP_NAME,
     RESULT_RECORDERS_GROUP_NAME,
-    EDIT_SETTINGS_GROUP_NAME
+    EDIT_SETTINGS_GROUP_NAME,
+    get_site_setting,
 )
 from moderation_queue.models import QueuedImage, PHOTO_REVIEWERS_GROUP_NAME
 from official_documents.models import DOCUMENT_UPLOADERS_GROUP_NAME
@@ -44,9 +45,8 @@ def add_settings(request):
         k: getattr(settings, k) for k in SETTINGS_TO_ADD
     }
 
-    current = get_current_usersettings()
     usersettings = {
-        k: getattr(current, k) for k in USERSETTINGS_TO_ADD
+        k: get_site_setting(k) for k in USERSETTINGS_TO_ADD
     }
 
     all_settings.update(usersettings)
@@ -93,7 +93,7 @@ def add_group_permissions(request):
             ('user_can_edit_settings', EDIT_SETTINGS_GROUP_NAME),
         )
     }
-    result['user_can_edit'] = request.usersettings.EDITS_ALLOWED or request.user.is_staff
+    result['user_can_edit'] = get_site_setting('EDITS_ALLOWED') or request.user.is_staff
     return result
 
 def add_site(request):

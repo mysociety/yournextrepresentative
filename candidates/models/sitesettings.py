@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from usersettings.models import UserSettings
+from usersettings.shortcuts import get_current_usersettings
 
 
 class SiteSettings(UserSettings):
@@ -181,3 +182,19 @@ least.
     class Meta:
         verbose_name = 'Site Settings'
         verbose_name_plural = 'Site Settings'
+
+
+def get_sitesettings_default(field_name):
+    field = SiteSettings._meta.get_field(field_name)
+    if field.has_default():
+        return field.default
+    else:
+        return None
+
+
+def get_site_setting(key):
+    user_settings = get_current_usersettings()
+    return getattr(
+        user_settings,
+        key,
+        get_sitesettings_default(key))
