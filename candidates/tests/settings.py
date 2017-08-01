@@ -30,7 +30,11 @@ class SettingsMixin(object):
             EDITS_ALLOWED=True,
             HOIST_ELECTED_CANDIDATES=True,
             DD_MM_DATE_FORMAT_PREFERRED=True,
+            TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken',
         )
+        # usersettings.chortcuts.get_current_usersettings may be
+        # caching old SiteSettings, so clear the cache:
+        SiteSettings.objects.clear_cache()
 
     def tearDown(self):
         self.sitesettings.delete()

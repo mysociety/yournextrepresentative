@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 
 from popolo.models import ContactDetail, Identifier
 import requests
-from usersettings.shortcuts import get_current_usersettings
+from candidates.models import get_site_setting
 
 
 def none_found_error(parsed_result):
@@ -26,8 +26,7 @@ class TwitterAPIData(object):
     MAX_IN_A_REQUEST = 100
 
     def __init__(self):
-        settings = get_current_usersettings()
-        self.token = settings.TWITTER_APP_ONLY_BEARER_TOKEN
+        self.token = get_site_setting('TWITTER_APP_ONLY_BEARER_TOKEN')
         if not self.token:
             raise Exception(_("TWITTER_APP_ONLY_BEARER_TOKEN was not set"))
         self.headers = {

@@ -2,11 +2,14 @@ from __future__ import print_function, unicode_literals
 
 from mock import Mock, PropertyMock,call, patch
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
+from usersettings.shortcuts import get_current_usersettings
+from candidates.models import SiteSettings
 
 from candidates.management.twitter import TwitterAPIData
 
 from .factories import PersonExtraFactory
+from .settings import SettingsMixin
 
 
 def fake_twitter_api_post(*args, **kwargs):
@@ -53,15 +56,19 @@ def fake_twitter_api_post(*args, **kwargs):
     raise Exception("No Twitter API stub for {0} {1}".format(args, kwargs))
 
 
-class TestTwitterData(TestCase):
+class TestTwitterData(SettingsMixin, TestCase):
 
     def test_error_on_missing_token(self):
+        self.sitesettings.TWITTER_APP_ONLY_BEARER_TOKEN = ''
+        self.sitesettings.save()
+        # Clear the cache so that get_current_usersettings gets the
+        # updated settings:
+        SiteSettings.objects.clear_cache()
         with self.assertRaisesRegexp(
                 Exception,
                 r'TWITTER_APP_ONLY_BEARER_TOKEN was not set'):
             TwitterAPIData()
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     @patch('candidates.management.twitter.requests')
     def test_makes_requests(self, mock_requests):
         TwitterAPIData.MAX_IN_A_REQUEST = 2
@@ -92,7 +99,6 @@ class TestTwitterData(TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     @patch('candidates.management.twitter.requests')
     def test_zero_results_for_screen_name_lookup(self, mock_requests):
         twitter_data = TwitterAPIData()
@@ -102,7 +108,6 @@ class TestTwitterData(TestCase):
             ['onlynonexistent']))
         self.assertEqual(twitter_results, [])
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     @patch('candidates.management.twitter.requests')
     def test_zero_results_for_user_id_lookup(self, mock_requests):
         twitter_data = TwitterAPIData()
@@ -112,7 +117,6 @@ class TestTwitterData(TestCase):
             ['13984716923847632']))
         self.assertEqual(twitter_results, [])
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_all_screen_names(self):
         joe = PersonExtraFactory.create(
             base__id='1',
@@ -133,7 +137,6 @@ class TestTwitterData(TestCase):
             sorted(twitter_data.all_screen_names)
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def tests_all_user_ids(self):
         joe = PersonExtraFactory.create(
             base__id='1',
@@ -154,7 +157,6 @@ class TestTwitterData(TestCase):
             sorted(twitter_data.all_user_ids)
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_update_individual_data(self):
         twitter_data = TwitterAPIData()
         twitter_data.update_id_mapping(
@@ -174,7 +176,6 @@ class TestTwitterData(TestCase):
             twitter_data.user_id_to_photo_url,
             {'42': 'https://example.com/foo.jpg'})
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     @patch('candidates.management.twitter.requests')
     @patch('candidates.management.twitter.TwitterAPIData.update_id_mapping')
     @patch('candidates.management.twitter.TwitterAPIData.all_user_ids', new_callable=PropertyMock)
@@ -203,7 +204,6 @@ class TestTwitterData(TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     @patch('candidates.management.twitter.requests')
     def test_unfaked_urls_raise_exception(self, mock_requests):
         TwitterAPIData.MAX_IN_A_REQUEST = 2
