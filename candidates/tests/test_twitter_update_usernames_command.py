@@ -8,6 +8,7 @@ from django.test import TestCase, override_settings
 from .auth import TestUserMixin
 from .factories import PersonExtraFactory
 from .output import capture_output, split_output
+from .settings import SettingsMixin
 
 
 def fake_post_for_username_updater(*args, **kwargs):
@@ -42,9 +43,10 @@ def fake_post_for_username_updater(*args, **kwargs):
 
 
 @patch('candidates.management.twitter.requests')
-class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
+class TestUpdateTwitterUsernamesCommand(SettingsMixin, TestUserMixin, TestCase):
 
     def setUp(self):
+        super(TestUpdateTwitterUsernamesCommand, self).setUp()
         for person_details in [
             {
                 'attr': 'just_screen_name',
@@ -81,7 +83,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                     value=person_details['screen_name'],
                     contact_type='twitter')
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_warns_on_multiple_screen_names(self, mock_requests):
 
         self.just_screen_name.contact_details.create(
@@ -100,7 +101,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                 self.just_screen_name.id),
             split_output(out))
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_warns_on_multiple_user_ids(self, mock_requests):
 
         self.just_userid.identifiers.create(
@@ -119,7 +119,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
                 self.just_userid.id),
             split_output(out))
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_verbose_output(self, mock_requests):
 
         mock_requests.post.side_effect = fake_post_for_username_updater
@@ -137,7 +136,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
              'Someone with a Twitter screen name and user ID has a Twitter user ID: 765',
              'The screen name (notatwitteraccounteither) was already correct'])
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_adds_screen_name(self, mock_requests):
 
         mock_requests.post.side_effect = fake_post_for_username_updater
@@ -157,7 +155,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_adds_user_id(self, mock_requests):
 
         mock_requests.post.side_effect = fake_post_for_username_updater
@@ -177,7 +174,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_screen_name_was_wrong(self, mock_requests):
 
         def fake_post_screen_name_wrong(*args, **kwargs):
@@ -228,7 +224,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_screen_name_disappeared(self, mock_requests):
 
         def fake_post_screen_name_disappeared(*args, **kwargs):
@@ -280,7 +275,6 @@ class TestUpdateTwitterUsernamesCommand(TestUserMixin, TestCase):
             ]
         )
 
-    @override_settings(TWITTER_APP_ONLY_BEARER_TOKEN='madeuptoken')
     def test_commmand_user_id_disappeared(self, mock_requests):
 
         def fake_post_user_id_disappeared(*args, **kwargs):
