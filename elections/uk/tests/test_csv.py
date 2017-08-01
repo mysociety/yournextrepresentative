@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from nose.plugins.attrib import attr
 
-from candidates.models import PersonExtra
+from candidates.models import PersonExtra, SiteSettings
 from candidates.tests import factories
 from candidates.tests.uk_examples import UK2015ExamplesMixin
 
@@ -66,6 +66,9 @@ class CSVTests(UK2015ExamplesMixin, TestCase):
     def test_as_list_single_dict(self):
         person_extra = PersonExtra.objects \
             .joins_for_csv_output().get(pk=self.gb_person_extra.id)
+        # So that we predictably do need to perform the settings query
+        # below, make sure it isn't cached:
+        SiteSettings.objects.clear_cache()
         # After the select_related and prefetch_related calls
         # PersonExtra there should two more queries - that to
         # find the complex fields mapping and another for settings:
