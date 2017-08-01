@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
 from django.db import models, migrations
 
 def add_missing_classifications(apps):
@@ -28,6 +29,8 @@ def add_missing_classifications(apps):
 
 
 def add_classification_to_slugs(apps, schema_editor):
+    if not settings.ELECTION_APP == 'uk':
+        return
     add_missing_classifications(apps)
     OrganizationExtra = apps.get_model('candidates', 'OrganizationExtra')
 
@@ -40,6 +43,8 @@ def add_classification_to_slugs(apps, schema_editor):
             ox.save()
 
 def remove_classification_from_slugs(apps, schema_editor):
+    if not settings.ELECTION_APP == 'uk':
+        return
     OrganizationExtra = apps.get_model('candidates', 'OrganizationExtra')
 
     for ox in OrganizationExtra.objects.all():
