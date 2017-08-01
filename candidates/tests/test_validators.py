@@ -29,6 +29,8 @@ class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
         )
 
     def test_twitter_fine(self):
+        self.sitesettings.TWITTER_APP_ONLY_BEARER_TOKEN = ''
+        self.sitesettings.save()
         form = BasePersonForm({
             'name': 'John Doe',
             'twitter_username': 'madeuptwitteraccount',
@@ -41,6 +43,8 @@ class TestValidators(SettingsMixin, UK2015ExamplesMixin, TestCase):
         )
 
     def test_twitter_full_url(self):
+        self.sitesettings.TWITTER_APP_ONLY_BEARER_TOKEN = ''
+        self.sitesettings.save()
         form = BasePersonForm({
             'name': 'John Doe',
             'twitter_username': 'https://twitter.com/madeuptwitteraccount',
