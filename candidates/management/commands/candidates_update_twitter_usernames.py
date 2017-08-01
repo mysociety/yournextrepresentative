@@ -17,9 +17,10 @@ from ..twitter import TwitterAPIData
 VERBOSE = False
 
 
-def verbose(*args, **kwargs):
+def verbose(stdout, message):
     if VERBOSE:
-        print(*args, **kwargs)
+        stdout.write(message.encode('utf-8'), ending=b'\n')
+
 
 def no_users_found(error_data):
     """Return True if this means no users matched the query"""
@@ -91,34 +92,32 @@ class Command(BaseCommand):
         # (which should be rare).  If the user ID is not a valid
         # Twitter user ID, it is deleted.
         if user_id:
-            verbose(_("{person} has a Twitter user ID: {user_id}").format(
-                person=person, user_id=user_id
-            ).encode('utf-8'))
+            verbose(self.stdout, _("{person} has a Twitter user ID: {user_id}").format(
+                person=person, user_id=user_id))
             if user_id not in self.twitter_data.user_id_to_screen_name:
-                print(_("Removing user ID {user_id} for {person_name} as it is not a valid Twitter user ID. {person_url}").format(
+                self.stdout.write(_("Removing user ID {user_id} for {person_name} as it is not a valid Twitter user ID. {person_url}").format(
                     user_id=user_id,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
-                ).encode('utf-8'))
+                ).encode('utf-8'), ending=b'\n')
                 self.remove_twitter_user_id(person, user_id)
                 if screen_name:
                     self.remove_twitter_screen_name(person, screen_name)
                 return
             correct_screen_name = self.twitter_data.user_id_to_screen_name[user_id]
             if (screen_name is None) or (screen_name != correct_screen_name):
-                print(_("Correcting the screen name from {old_screen_name} to {correct_screen_name}").format(
+                self.stdout.write(_("Correcting the screen name from {old_screen_name} to {correct_screen_name}").format(
                     old_screen_name=screen_name,
                     correct_screen_name=correct_screen_name
-                ))
+                ).encode('utf-8'), ending=b'\n')
                 person.contact_details.update_or_create(
                     contact_type='twitter',
                     defaults={'value': correct_screen_name},
                 )
                 self.record_new_version(person)
             else:
-                verbose(_("The screen name ({screen_name}) was already correct").format(
-                    screen_name=screen_name
-                ))
+                verbose(self.stdout, _("The screen name ({screen_name}) was already correct").format(
+                    screen_name=screen_name))
 
         # Otherwise, if they have a Twitter screen name (but no
         # user ID, since we already dealt with that case) then
@@ -126,29 +125,27 @@ class Command(BaseCommand):
         # If the screen name is not a valid Twitter screen name, it
         # is deleted.
         elif screen_name:
-            verbose(_("{person} has Twitter screen name ({screen_name}) but no user ID").format(
-                person=person, screen_name=screen_name
-            ).encode('utf-8'))
+            verbose(self.stdout, _("{person} has Twitter screen name ({screen_name}) but no user ID").format(
+                person=person, screen_name=screen_name))
             if screen_name.lower() not in self.twitter_data.screen_name_to_user_id:
-                print(_("Removing screen name {screen_name} for {person_name} as it is not a valid Twitter screen name. {person_url}").format(
+                self.stdout.write(_("Removing screen name {screen_name} for {person_name} as it is not a valid Twitter screen name. {person_url}").format(
                     screen_name=screen_name,
                     person_name=person.name,
                     person_url=person.extra.get_absolute_url(),
-                ).encode('utf-8'))
+                ).encode('utf-8'), ending=b'\n')
                 self.remove_twitter_screen_name(person, screen_name)
                 return
-            print(_("Adding the user ID {user_id}").format(
+            self.stdout.write(_("Adding the user ID {user_id}").format(
                 user_id=self.twitter_data.screen_name_to_user_id[screen_name.lower()]
-            ))
+            ).encode('utf-8'), ending=b'\n')
             person.identifiers.create(
                 scheme='twitter',
                 identifier=self.twitter_data.screen_name_to_user_id[screen_name.lower()]
             )
             self.record_new_version(person)
         else:
-            verbose(_("{person} had no Twitter account information").format(
-                person=person
-            ).encode('utf-8'))
+            verbose(self.stdout, _("{person} had no Twitter account information").format(
+                person=person))
 
     def handle(self, *args, **options):
         global VERBOSE
