@@ -87,18 +87,20 @@
           <input type="submit" value="Set language">
         </form>
         <ul class="nav-links">
-          {% if user.is_authenticated %}
-            <li class="nav-links__item">{% blocktrans with username=user.username %}Signed in as <strong>{{ username }}</strong>{% endblocktrans %}</li>
-            {% if user_can_review_photos and photos_for_review > 0 %}
-              <li class="nav-links__item"><a href="{% url 'photo-review-list' %}"><span class="notification">{{ photos_for_review }}</span> Photos for review</a></li>
+          {% block masthead_links %}
+            {% if user.is_authenticated %}
+              <li class="nav-links__item">{% blocktrans with username=user.username %}Signed in as <strong>{{ username }}</strong>{% endblocktrans %}</li>
+              {% if user_can_review_photos and photos_for_review > 0 %}
+                <li class="nav-links__item"><a href="{% url 'photo-review-list' %}"><span class="notification">{{ photos_for_review }}</span> Photos for review</a></li>
+              {% endif %}
+              {% if user_can_edit_settings %}
+                <li class="nav-links__item"><a href="{% url 'settings' %}">{% trans "Site settings" %}</a></li>
+              {% endif %}
+              <li class="nav-links__item"><a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}">{% trans "Sign out" %}</a></li>
+            {% else %}
+              <li class="nav-links__item"><a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="header__nav__login">{% trans "Sign in to edit" %}</a></li>
             {% endif %}
-            {% if user_can_edit_settings %}
-              <li class="nav-links__item"><a href="{% url 'settings' %}">{% trans "Site settings" %}</a></li>
-            {% endif %}
-            <li class="nav-links__item"><a href="{% url 'account_logout' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}">{% trans "Sign out" %}</a></li>
-          {% else %}
-            <li class="nav-links__item"><a href="{% url 'account_login' %}{% if redirect_after_login %}?next={{ redirect_after_login }}{% endif %}" class="header__nav__login">{% trans "Sign in to edit" %}</a></li>
-          {% endif %}
+          {% endblock %}
         </ul>
       </div>
     </div>
