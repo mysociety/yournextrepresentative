@@ -24,6 +24,18 @@
     .nav-links {
         margin-top: 0.4em; // vertically align in new, taller header
     }
+
+    .header__masthead__logo {
+        font-weight: normal;
+    }
+
+    a[href="http://info.mzalendo.com"] {
+        display: inline-block;
+        padding-right: 26px;
+        background: transparent url(/static/img/back-arrow.png) 100% 50% no-repeat;
+        background-image: url(/static/img/back-arrow.svg), none;
+        background-size: 16px 15px;
+    }
 }
 
 a.header__masthead__logo {
@@ -41,6 +53,16 @@ a.header__masthead__logo {
         border-bottom: none;
         margin-bottom: 0;
         display: block;
+    }
+
+    @media #{$medium-up} {
+        width: auto;
+        height: 40px;
+        line-height: 40px;
+        padding-top: 0;
+        padding-left: 180px;
+        overflow: visible;
+        color: mix(#fff, $color-green, 70%);
     }
 }
 
