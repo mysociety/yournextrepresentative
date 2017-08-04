@@ -47,12 +47,17 @@
   padding: 2em 0 1em 0;
 
   .nav-links {
-    float: left;
     font-weight: bold;
   }
 
-  .header__nav__search {
-    float: right;
+  @media #{$medium-up} {
+    .nav-links {
+      float: left;
+    }
+
+    .header__nav__search {
+      float: right;
+    }
   }
 }
 
@@ -145,7 +150,11 @@
 
 .header__nav__search {
   position: relative;
-  margin-top: -0.5em; // line up with the .nav-links to the left
+  margin-top: 0.5em;
+
+  @media #{$medium-up} {
+    margin-top: -0.5em; // line up with the .nav-links to the left
+  }
 
   input {
     margin: 0;
