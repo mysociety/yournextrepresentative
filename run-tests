@@ -28,6 +28,7 @@ TEST_SETTINGS_MODULES=(
     'mysite.settings.tests_cr'
     'mysite.settings.tests_uk'
     'mysite.settings.tests_st_paul'
+    'mysite.settings.tests_kenya'
 )
 
 for TEST_SETTINGS_MODULE in "${TEST_SETTINGS_MODULES[@]}"
