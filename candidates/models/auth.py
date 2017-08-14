@@ -9,6 +9,7 @@ from auth_helpers.views import user_in_group
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
 TRUSTED_TO_LOCK_GROUP_NAME = 'Trusted To Lock'
 TRUSTED_TO_RENAME_GROUP_NAME = 'Trusted To Rename'
+TRUSTED_TO_MARK_FOR_REVIEW_GROUP_NAME = 'Trusted To Mark For Review'
 RESULT_RECORDERS_GROUP_NAME = 'Result Recorders'
 EDIT_SETTINGS_GROUP_NAME = 'Can Edit Settings'
 
