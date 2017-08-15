@@ -354,13 +354,15 @@ class UpdatePersonView(LoginRequiredMixin, PersonMixin, FormView):
             old_name = self.person.name
             person_extra = self.person.extra
             old_candidacies = person_extra.current_candidacies
+            old_marked_for_review = person_extra.marked_for_review
             person_extra.update_from_form(form)
             new_name = person_extra.base.name
             new_candidacies = person_extra.current_candidacies
+            new_marked_for_review = person_extra.marked_for_review
             check_update_allowed(
                 self.request.user,
-                old_name, old_candidacies,
-                new_name, new_candidacies
+                old_name, old_candidacies, old_marked_for_review,
+                new_name, new_candidacies, new_marked_for_review,
             )
             change_metadata = get_change_metadata(
                 self.request, form.cleaned_data.pop('source')

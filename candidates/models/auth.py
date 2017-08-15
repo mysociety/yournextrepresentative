@@ -19,6 +19,9 @@ class NameChangeDisallowedException(Exception):
 class ChangeToLockedConstituencyDisallowedException(Exception):
     pass
 
+class UnauthorizedAttemptToChangeMarkedForReview(Exception):
+    pass
+
 def get_constituency_lock_from_person_data(user, api, election, person_popit_data):
     """Return whether the constituency is locked and whether this user can edit"""
 
@@ -59,7 +62,10 @@ def check_creation_allowed(user, new_candidacies):
                 _("The candidates for this post are locked now")
             )
 
-def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidacies):
+def check_update_allowed(
+        user,
+        old_name, old_candidacies, old_marked_for_review,
+        new_name, new_candidacies, new_marked_for_review):
     # Check whether an unauthorized user has tried to rename someone
     # while RESTRICT_RENAMES is set:
     usersettings = get_current_usersettings()
@@ -84,6 +90,12 @@ def check_update_allowed(user, old_name, old_candidacies, new_name, new_candidac
                       post_label=post.label
                   )
             )
+    # Now check that if they're changing the "marked for review" flag,
+    # that the user is in the required group:
+    if old_marked_for_review != new_marked_for_review:
+        if not user_in_group(user, TRUSTED_TO_MARK_FOR_REVIEW_GROUP_NAME):
+            msg = 'Unauthorized user {0} tried to change marked_for_review'
+            raise UnauthorizedAttemptToChangeMarkedForReview(msg.format(user))
     # Now check that they're not changing party in a locked
     # constituency:
     for post in old_posts & new_posts:
