@@ -22,7 +22,7 @@ from django.views.generic import FormView, TemplateView, View
 
 from braces.views import LoginRequiredMixin
 
-from auth_helpers.views import GroupRequiredMixin, user_in_group
+from auth_helpers.views import GroupRequiredMixin
 from elections.models import Election
 from elections.mixins import ElectionMixin
 
@@ -328,11 +328,6 @@ class UpdatePersonView(LoginRequiredMixin, PersonMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super(UpdatePersonView, self).get_context_data(**kwargs)
-
-        context['user_can_merge'] = user_in_group(
-            self.request.user,
-            TRUSTED_TO_MERGE_GROUP_NAME
-        )
 
         context['versions'] = get_version_diffs(
             json.loads(self.person.extra.versions)
