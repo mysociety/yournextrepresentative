@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
+from contextlib import contextmanager
+
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from usersettings.shortcuts import get_current_usersettings
 from auth_helpers.views import user_in_group
+from popolo.models import Person
 
 TRUSTED_TO_MERGE_GROUP_NAME = 'Trusted To Merge'
 TRUSTED_TO_LOCK_GROUP_NAME = 'Trusted To Lock'
@@ -62,7 +65,27 @@ def check_creation_allowed(user, new_candidacies):
                 _("The candidates for this post are locked now")
             )
 
-def check_update_allowed(
+@contextmanager
+def check_update_allowed(user, person):
+    old_name = person.name
+    person_extra = person.extra
+    old_candidacies = person_extra.current_candidacies
+    old_marked_for_review = person_extra.marked_for_review
+    yield
+    # Refetch the person from the database so we don't get cached
+    # data:
+    new_person = Person.objects.get(pk=person.pk)
+    new_person_extra = new_person.extra
+    new_name = new_person.name
+    new_candidacies = new_person_extra.current_candidacies
+    new_marked_for_review = new_person_extra.marked_for_review
+    check_update_allowed_inner(
+        user,
+        old_name, old_candidacies, old_marked_for_review,
+        new_name, new_candidacies, new_marked_for_review,
+    )
+
+def check_update_allowed_inner(
         user,
         old_name, old_candidacies, old_marked_for_review,
         new_name, new_candidacies, new_marked_for_review):
