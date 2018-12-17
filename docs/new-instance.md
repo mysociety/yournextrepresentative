@@ -20,8 +20,6 @@ successful new YourNextRepresentative site are:
 * Having a core community of moderators who are happy to check
   all the recent changes and follow-up by email with anyone
   making badly sourced edits.
-* Giving us early feedback (to <ynr@mysociety.org>) when you
-  encounter any problems or bugs - this is still alpha software!
 
 ## Components of a YourNextRepresentative site
 
