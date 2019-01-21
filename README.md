@@ -19,11 +19,6 @@ The codebase is internationalized; if you want to help to
 translate the project into a new language, we use
 [Transifex to allow anyone to contribute translations](https://www.transifex.com/mysociety/yournextmp/).
 
-This project is still under active development, so please
-[get in touch with us](mailto:ynr@mysociety.org) to let us know
-of your plans, and requirements you have and hopefully we can
-provide support for your project.
-
 ## Known Bugs
 
 You can find a list of known issues to work on here:

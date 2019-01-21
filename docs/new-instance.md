@@ -67,14 +67,9 @@ various options you have here:
   in YNR - there are more details here:  https://github.com/mysociety/yournextrepresentative/issues/507)
 
 * If you have access to shapefiles for those boundaries
-  (e.g. from an official source like a mapping agency) then you
-  have two options:
-  * You can
-    [set up your own MapIt](http://mapit.poplus.org/docs/self-hosted/)
-    and import those boundaries.
-  * You can [ask us](mailto:ynr@mysociety.org) to import the
-    boundaries into our MapIt instance for boundaries whose
-    licensing isn't compatible with OpenStreetMap.
+  (e.g. from an official source like a mapping agency) then you can [set up
+  your own MapIt](http://mapit.poplus.org/docs/self-hosted/) and import those
+  boundaries.
 
 ### Create an elections app for the country you're collecting candidates for
 
